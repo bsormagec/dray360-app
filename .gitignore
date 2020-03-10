@@ -2,6 +2,10 @@
 /public/hot
 /public/storage
 /storage/*.key
+/public/css/
+/public/img/
+/public/js/
+resources/views/index.blade.php
 /vendor
 .env
 .env.backup
