@@ -1,8 +1,22 @@
 # OrderMaster
 
+General setup instructions for getting local dev environment running
 
 
-#### Setup a fresh database
+
+
+
+### Generate a new `.env` file and APP_KEY
+
+````bash
+cp .env.example .env
+php artisan key:generate
+````
+
+
+
+
+### Setup a fresh database
 
 ````bash
 
@@ -57,10 +71,36 @@ echo "" >/tmp/nothing.sql
 source ~/tcvars2.sh
 recreateDatabase ${OM_DBNAME} /tmp/nothing.sql ${OM_DBUSER} "secret" # password set to "secret"
 
+````
+
+
+
+### Update local `.env` file
+
+Change these settings, as appropriate
+
+````env
+APP_URL=https://local.ordermaster.com
+
+DB_DATABASE=omdb
+DB_USERNAME=omuser
+DB_PASSWORD=secret
+
+MAIL_DRIVER=log
+````
+
+
+
+### Finish database setup
+
 # run migrations
 php artisan migrate
 
-# seed database from PBN local copy
+
+
+
+### seed database from PBN local copy
+````bash
 mysql --password=secret --database=omdb <ocr_dev-dump-20200225-155454.sql
 mysql --password=secret --database=omdb <ocr_dev_PT-dump-20200225-154623.sql
 
@@ -79,7 +119,7 @@ mysql --password=secret --database=omdb <ocr_dev_PT-dump-20200225-154623.sql
 
 Generate templates
 
-````
+````bash
 php artisan make:model Models/Account --migration
 php artisan make:model Models/Address --migration
 php artisan make:model Models/CanonicalAddress --migration
@@ -97,7 +137,7 @@ php artisan make:model Models/TMSProvider --migration
 
 Overwrite model templates from POC repo
 
-````
+````bash
 cp ~/repos/tcompanies/poc-ordermaster/app/Models/Account.php ./app/Models/
 cp ~/repos/tcompanies/poc-ordermaster/app/Models/Address.php ./app/Models/
 cp ~/repos/tcompanies/poc-ordermaster/app/Models/CanonicalAddress.php ./app/Models/
@@ -114,7 +154,7 @@ cp ~/repos/tcompanies/poc-ordermaster/app/Models/TMSProvider.php ./app/Models/
 
 Remove new migration templates
 
-````
+````bash
 rm ./database/migrations/2020_03_11_150832_create_addresses_table.php
 rm ./database/migrations/2020_03_11_150833_create_companies_table.php
 rm ./database/migrations/2020_03_11_150834_create_contacts_table.php
@@ -130,7 +170,7 @@ rm ./database/migrations/2020_03_11_151401_create_accounts_table.php
 
 Copy migration templates from POC repo
 
-````
+````bash
 cp ~/repos/tcompanies/poc-ordermaster/database/migrations/2020_03_03_231123_create_t_orders_table.php ./database/migrations/
 cp ~/repos/tcompanies/poc-ordermaster/database/migrations/2020_03_04_211747_create_t_addresses_table.php ./database/migrations/
 cp ~/repos/tcompanies/poc-ordermaster/database/migrations/2020_03_04_213942_create_t_companies_table.php ./database/migrations/
