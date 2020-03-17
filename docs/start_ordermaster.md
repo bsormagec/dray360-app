@@ -5,6 +5,42 @@
 
 see: https://medium.com/@devandtechtest/laravel-rest-api-project-with-oauth-password-grant-for-authentication-spatie-for-permissions-963d933c53b4
 
+
+also see: https://medium.com/swlh/create-an-admin-middleware-for-with-spatie-laravel-permission-6419152049cf
+
+ASDF RESUME AT "Step 0: Add a test"
+
+
+
+ASDF SEE: https://scotch.io/tutorials/user-authorization-in-laravel-54-with-spatie-laravel-permission
+AND UNDERSTAND WHY WE DO NOT WANT "user_has_permissions" TABLE
+AND HOW THAT CAN BE REMOVED BETWEEN LVL5.4 AND LVL7.0???
+WHY REMOVED FROM '/home/pbnelson/repos/tcompanies/ordermaster/config/permission.php'
+THESE LINES:
+```php
+/*
+* When using the "HasRoles" trait from this package, we need to know which
+* table should be used to retrieve your users permissions. We have chosen a
+* basic default value but you may easily change it to any table you like.
+*/
+
+'user_has_permissions' => 'user_has_permissions',
+```
+```text
+The v1 table names which are no longer used in v2 are:
+role_has_permissions, user_has_roles, user_has_permissions
+```
+
+THESE WERE REPLACED WITH "MODEL" AS IN
+```list
+role_has_permissions
+model_has_roles
+model_has_permissions
+roles
+permissions
+```
+
+
 ````bash
 composer require laravel/passport
 php artisan migrate
@@ -36,7 +72,14 @@ Fix VisualCode error with PHPCS configuration
 composer require --dev squizlabs/php_codesniffer
 ````
 
+### Create seeder
 
+````bash
+php artisan make:seeder RolesAndPermissionsSeeder
+# edit database/seeds/RolesAndPermissionsSeeder.php
+php artisan db:seed --class=RolesAndPermissionsSeeder
+
+````
 
 
 
