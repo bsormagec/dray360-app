@@ -42,6 +42,7 @@ permissions
 
 
 ````bash
+composer require laravel/ui "^2.0"  # per https://laravel.com/docs/7.x/upgrade#authentication-scaffolding
 composer require laravel/passport
 php artisan migrate
 php artisan passport:install
@@ -66,7 +67,9 @@ Client secret: eXJICT1J1CgVStvpuK19YSUJpB4TGlSRbJAAKdnz
 ````
 
 
-Fix VisualCode error with PHPCS configuration
+Fix VisualCode error with PHPCS configuration:
+
+__phpcs: Request workspace/configuration failed with message: Unable to locate phpcs. Please add phpcs to your global path or use composer dependency manager to install it in your project locally.__
 
 ````bash
 composer require --dev squizlabs/php_codesniffer
