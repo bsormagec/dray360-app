@@ -1,6 +1,6 @@
 <?php
 
-// to use: ./vendor/bin/phpunit --filter RolesAccessTest
+// to use : ./vendor/bin/phpunit --filter RolesAccessTest
 
 namespace Tests\Feature;
 
