@@ -85,6 +85,12 @@ php artisan db:seed --class=RolesAndPermissionsSeeder
 ````
 
 
+### Create Resource
+
+````bash
+php artisan make:resource Orders
+````
+
 
 
 ### Running the app

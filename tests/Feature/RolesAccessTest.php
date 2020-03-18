@@ -1,5 +1,7 @@
 <?php
 
+// to use: ./vendor/bin/phpunit --filter RolesAccessTest
+
 namespace Tests\Feature;
 
 use Illuminate\Foundation\Testing\RefreshDatabase;
