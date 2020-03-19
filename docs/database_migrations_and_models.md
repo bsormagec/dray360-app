@@ -33,10 +33,10 @@ export USERIFY_USERNAME=pnelson # or aadrian, abryden, rhayle, chorton, etc.
 export OM_VHOST=localom
 export OM_HOSTNAME_ALT=local.ordermaster.com
 export OM_VHOST_IP=127.0.0.8 # pick another IP if this is in use already
-export OM_DBNAME=om
+export OM_DBNAME=omdb
 export OM_DBUSER=omuser
 export OM_DUMP=/home/pbnelson/Downloads/notready.sql
-export OM_REPO=poc-ordermaster
+export OM_REPO=ordermaster
 export OM_ROOT=${GIT_FOLDER}/${OM_REPO} # don't change this derivative variable
 
 EOF
