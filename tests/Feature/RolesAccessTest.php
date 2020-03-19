@@ -1,6 +1,6 @@
 <?php
 
-// to use: ./vendor/bin/phpunit --filter RolesAccessTest
+// to use : ./vendor/bin/phpunit --filter RolesAccessTest
 
 namespace Tests\Feature;
 
@@ -37,6 +37,9 @@ class RolesAccessTest extends TestCase
         parent::tearDown();
     }
 
+
+    // http://local.ordermaster.com/api/user
+    // http://local.ordermaster.com/login
 
 
     /**
