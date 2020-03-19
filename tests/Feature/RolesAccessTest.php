@@ -38,6 +38,9 @@ class RolesAccessTest extends TestCase
     }
 
 
+    // http://local.ordermaster.com/api/user
+    // http://local.ordermaster.com/login
+
 
     /**
      * Admin can access to admin dashboard

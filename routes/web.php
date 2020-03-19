@@ -20,12 +20,14 @@ use Illuminate\Support\Facades\Route;
 //Route::get('/', function () {
 //    return view('welcome');
 //});
-// Auth::routes();
-// Route::get('/admin/dashboard', function() {
-//     return 'Welcome Admin!';
-// })->name('admin.dashboard');
-// Route::get('/home', 'VueController@index')->name('home');
 
+/*
+Auth::routes();
+Route::get('/admin/dashboard', function() {
+    return 'Welcome Admin!';
+})->name('admin.dashboard');
+Route::get('/home', 'VueController@index')->name('home');
+*/
 
 // Default VUECONTROLLER route
 Route::get('/{any}', 'VueController@index')->where('any', '.*');

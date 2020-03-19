@@ -2,7 +2,7 @@ module.exports = {
   // proxy API requests to Valet during development
   //TODO - get this right - use env var?
   devServer: {
-    proxy: 'http://om.test'
+    proxy: process.env.APP_URL // was hardcoded: 'http://laracon.test'
   },
 
   // output built static files to Laravel's public dir.

@@ -1,7 +1,43 @@
+# THESE ARE SETUP NOTES BY PBN. DO NOT USE.
 
+
+
+
+
+### Installing Airlock
+
+Passport was *NOT* what we wanted. We wanted airlock instead.
+
+https://laravel.com/docs/master/airlock
+https://redfern.dev/vue-js-auth-using-laravel-airlock/
+
+
+
+### Seeding database
+
+https://laravel.com/docs/6.x/seeding#writing-seeders
+https://laravel-news.com/seeding-data-testing
+
+
+
+
+### Writing Order Resource
+
+https://laravel.com/docs/7.x/eloquent-resources
+https://scotch.io/tutorials/laravel-eloquent-api-resources
+
+
+
+
+### php artisan command reference
+
+https://quickadminpanel.com/blog/list-of-21-artisan-make-commands-with-parameters/
 
 
 ### Installing the passport (oauth2) and spatie (permissions)
+
+NOTE, PASSPORT NO LONGER WANTED.
+
 
 see: https://medium.com/@devandtechtest/laravel-rest-api-project-with-oauth-password-grant-for-authentication-spatie-for-permissions-963d933c53b4
 
@@ -74,6 +110,20 @@ __phpcs: Request workspace/configuration failed with message: Unable to locate p
 ````bash
 composer require --dev squizlabs/php_codesniffer
 ````
+
+
+### Convert passport to airlock
+
+https://laravel.com/docs/master/airlock
+
+````bash
+composer remove laravel/passport
+
+````
+
+
+
+
 
 ### Create seeder
 
