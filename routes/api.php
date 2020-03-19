@@ -14,6 +14,12 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
+Route::get('/orders', function () {
+    $orders = \App\Models\Order::paginate(25);
+
+    return \App\Http\Resources\Orders::collection($orders);
+});
+
 Route::middleware('auth:api')->get('/user', function (Request $request) {
     return $request->user();
 });
