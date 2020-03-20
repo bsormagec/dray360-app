@@ -2,24 +2,24 @@
   <div class="orders">
     <Sidebar />
 
-    <div class="orders__center">
-      center
-    </div>
+    <OrdersList />
 
-    <div class="orders__right">
-      right
+    <div class="orders__create">
+      create
     </div>
   </div>
 </template>
 
 <script>
 import Sidebar from '@/components/Sidebar'
+import OrdersList from '@/views/Orders/OrdersList'
 
 export default {
   name: 'Orders',
 
   components: {
-    Sidebar
+    Sidebar,
+    OrdersList
   }
 }
 </script>
@@ -31,13 +31,13 @@ export default {
   height: 100%;
 }
 
-.orders__center {
+.orders__list {
   padding: 5.2rem 7.5rem;
   padding-bottom: 3rem;
   flex-grow: 1;
 }
 
-.orders__right {
+.orders__create {
   width: 27%;
   padding: 5.2rem 3.6rem;
   padding-bottom: 3rem;

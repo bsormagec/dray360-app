@@ -1,6 +1,6 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
-import Orders from '@/views/Orders'
+import Orders from '@/views/Orders/Orders'
 
 Vue.use(VueRouter)
 
