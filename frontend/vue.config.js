@@ -1,4 +1,12 @@
 module.exports = {
+  css: {
+    loaderOptions: {
+      scss: {
+        prependData: '@import "@/assets/styles/variables.scss";'
+      }
+    }
+  },
+
   // proxy API requests to Valet during development
   // TODO - get this right - use env var?
   devServer: {
