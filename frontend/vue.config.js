@@ -15,4 +15,3 @@ module.exports = {
     ? '../resources/views/index.blade.php'
     : 'index.html'
 }
-
