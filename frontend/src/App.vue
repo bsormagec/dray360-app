@@ -1,8 +1,6 @@
 <template>
   <v-app>
-    <div class="app-root">
-      <router-view />
-    </div>
+    <router-view />
   </v-app>
 </template>
 
@@ -13,12 +11,11 @@ export default {
 </script>
 
 <style lang="scss">
-body {
-  font-size: map-get($font, base-size);
+html {
+  font-size: map-get($font, base-size) !important;
 }
 
-.app-root {
-  font-size: 1rem;
-  height: 100%;
+body {
+  font-size: 1.6rem;
 }
 </style>
