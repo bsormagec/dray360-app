@@ -1,7 +1,7 @@
 <template>
   <div class="orders">
     <Sidebar />
-    hello
+    <p>hello</p>
   </div>
 </template>
 
@@ -16,3 +16,10 @@ export default {
   }
 }
 </script>
+
+<style lang="scss" scoped>
+.orders {
+  display: flex;
+  height: 100%;
+}
+</style>
