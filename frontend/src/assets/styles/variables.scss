@@ -1,12 +1,15 @@
 $colors: (
-	white: #FFFFFF,
+  white: #FFFFFF,
+  black: #303435,
   grey: rgba(173, 188, 192, 0.15),
-  grey-2: #C4C4C4
+  grey-2: #C4C4C4,
+  grey3: #DADDDD,
 );
 
 $properties: (
   inset-shadow-right: inset -16px 0px 8px -8px rgba(173, 188, 192, 0.15),
   inset-shadow-left: inset 16px 0px 8px -8px rgba(173, 188, 192, 0.15),
+  table-shadow: 0px 2px 8px -3px rgba(173, 188, 192, 0.6)
 );
 
 $font: (
