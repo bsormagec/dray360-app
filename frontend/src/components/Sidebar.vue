@@ -13,7 +13,6 @@ export default {
 
 <style lang="scss" scoped>
 $sidebar-width: 13.5%;
-$box-shadow: inset -16px 0px 8px -8px rgba(173, 188, 192, 0.15);
 $cushing-logo: url("../assets/images/cushing_logo.svg");
 $ordermaster-logo: url("../assets/images/ordermaster_logo.svg");
 
@@ -23,7 +22,7 @@ $ordermaster-logo: url("../assets/images/ordermaster_logo.svg");
   align-items: center;
   width: $sidebar-width;
   background-color: map-get($colors, grey);
-  box-shadow: $box-shadow;
+  box-shadow: map-get($properties, inset-shadow-right);
   padding-top: 4rem;
   padding-bottom: 3rem;
 }
