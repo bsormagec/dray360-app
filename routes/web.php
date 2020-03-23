@@ -16,20 +16,11 @@ use Illuminate\Support\Facades\Route;
 
 
 
-// testing roles and permissions
-//Route::get('/', function () {
-//    return view('welcome');
-//});
-
-/*
+// need for testing sanctum (formerly airlock)
 Auth::routes();
-Route::get('/admin/dashboard', function() {
-    return 'Welcome Admin!';
-})->name('admin.dashboard');
-Route::get('/home', 'VueController@index')->name('home');
-*/
+Route::get('/home', 'HomeController@index')->name('home');
+
+
 
 // Default VUECONTROLLER route
 Route::get('/{any}', 'VueController@index')->where('any', '.*');
-
-

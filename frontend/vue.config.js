@@ -1,6 +1,6 @@
 module.exports = {
   // proxy API requests to Valet during development
-  //TODO - get this right - use env var?
+  // TODO - test this use of the env var is working right
   devServer: {
     proxy: process.env.APP_URL // was hardcoded: 'http://laracon.test'
   },

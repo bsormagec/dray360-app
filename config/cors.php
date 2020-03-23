@@ -15,7 +15,12 @@ return [
     |
     */
 
-    'paths' => ['api/*'],
+    'paths' => [
+        'api/*',
+        'sanctum/csrf-cookie',
+        'login',
+        'register',
+    ],
 
     'allowed_methods' => ['*'],
 
@@ -29,6 +34,8 @@ return [
 
     'max_age' => false,
 
-    'supports_credentials' => false,
+    // PBN, as recommended by Laravel for SPA Authentication, here:
+    // https://laravel.com/docs/master/sanctum#spa-authentication
+    'supports_credentials' => true,
 
 ];
