@@ -92,6 +92,8 @@
 </template>
 
 <script>
+import axios from '@/axios'
+
 export default {
   name: 'HelloWorld',
 
@@ -146,6 +148,29 @@ export default {
         href: 'https://vuetifyjs.com/getting-started/frequently-asked-questions'
       }
     ]
-  })
+  }),
+  mounted () {
+    axios.get('/sanctum/csrf-cookie').then(response => {
+      // TODO - build routes don't be stuoid
+      //   axios.post('api/signup', {
+      //     email: 'abryden@gmail.com',
+      //     password: '12345678',
+      //     name: 'aaron'
+      //   })
+
+      axios.post('api/login', {
+        email: 'abryden@gmail.com',
+        password: '12345678'
+      })
+        .then(response => {
+          axios.post('api/orders', {
+
+          })
+        })
+        .catch(function (error) {
+          console.error(error)
+        })
+    })
+  }
 }
 </script>

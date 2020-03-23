@@ -8,8 +8,14 @@
 
 Passport was *NOT* what we wanted. We wanted airlock instead.
 
-https://laravel.com/docs/master/airlock
+https://laravel.com/docs/master/sanctum
 https://redfern.dev/vue-js-auth-using-laravel-airlock/
+https://github.com/laravel/sanctum
+BUGGY: https://medium.com/@JillevdWeerd/app-authentication-with-laravel-airlock-36e3d2027994
+https://serversideup.net/using-laravel-sanctum-airlock-with-nuxtjs/
+https://medium.com/@godilite/using-laravel-airlock-with-vuejs-1d343ee6f10
+
+
 
 
 
@@ -79,7 +85,7 @@ permissions
 
 ````bash
 composer require laravel/ui "^2.0"  # per https://laravel.com/docs/7.x/upgrade#authentication-scaffolding
-composer require laravel/passport
+#composer require laravel/passport
 php artisan migrate
 php artisan passport:install
 composer require spatie/laravel-permission
@@ -121,6 +127,38 @@ composer remove laravel/passport
 
 ````
 
+Use medium.com page to reverse steps taken when installing
+
+````bash
+composer require laravel/ui "^2.0"
+php artisan ui vue --auth
+
+````
+
+````bash
+#composer require laravel/airlock
+#php artisan vendor:publish --provider="Laravel\Airlock\AirlockServiceProvider"
+#php artisan vendor:publish --tag=airlock-config # maybe not needed?
+#php artisan vendor:publish --tag=airlock-migrations # maybe not needed?
+#php artisan migrate
+
+# after SANCTUM rename
+composer require laravel/sanctum
+composer update
+php artisan vendor:publish --provider="Laravel\Sanctum\SanctumServiceProvider"
+php artisan migrate
+composer require fruitcake/laravel-cors
+
+
+````
+
+````bash
+php artisan make:migration add_remember_token_to_users_table --table=users
+````
+
+
+php artisan migrate:make add_paid_to_users
+
 
 
 
@@ -156,3 +194,20 @@ see: https://local.ordermaster.com/
 see: http://192.168.8.25:8080/
 see: http://localhost:8080/
 
+
+
+
+
+### API USAGE (POSTMAN)
+
+TYPE: POST
+URL: https://local.ordermaster.com/api/login
+Body: x-www-form-urlencoded
+password mongomongo
+email peter@peternelson.com
+
+
+
+### HTTP-Request server status codes
+
+Reference: https://tools.ietf.org/html/rfc7231#page-49
