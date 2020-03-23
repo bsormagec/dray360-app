@@ -13,6 +13,9 @@ https://redfern.dev/vue-js-auth-using-laravel-airlock/
 https://github.com/laravel/sanctum
 BUGGY: https://medium.com/@JillevdWeerd/app-authentication-with-laravel-airlock-36e3d2027994
 https://serversideup.net/using-laravel-sanctum-airlock-with-nuxtjs/
+https://medium.com/@godilite/using-laravel-airlock-with-vuejs-1d343ee6f10
+
+
 
 
 
@@ -203,3 +206,8 @@ Body: x-www-form-urlencoded
 password mongomongo
 email peter@peternelson.com
 
+
+
+### HTTP-Request server status codes
+
+Reference: https://tools.ietf.org/html/rfc7231#page-49

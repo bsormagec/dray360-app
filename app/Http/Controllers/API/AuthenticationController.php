@@ -79,6 +79,8 @@ class AuthenticationController extends Controller
 
         $token->save();
 
+        /*
+        // to return a bearer token
         return response()->json([
             'access_token' => $token->token,
             'token_type' => 'Bearer',
@@ -86,6 +88,12 @@ class AuthenticationController extends Controller
                 $tokenResult->accessToken->expires_at //was: $tokenResult->token->expires_at
             )->toDateTimeString()
         ]);
+        */
+
+        // to simply return the cookie
+        return response()->json([
+            'message' => 'Successful login!'
+        ], 200);
     }
 
 
