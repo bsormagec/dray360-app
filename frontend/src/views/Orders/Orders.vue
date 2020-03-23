@@ -2,11 +2,7 @@
   <div class="orders">
     <Sidebar />
 
-    <OrdersList
-      :items="list"
-      :links="links"
-      :meta="meta"
-    />
+    <OrdersList />
 
     <div class="orders__create">
       create
@@ -22,6 +18,7 @@ import orders, { types } from '@/store/modules/orders'
 import Sidebar from '@/components/Sidebar'
 import OrdersList from '@/views/Orders/OrdersList'
 import { listFormat } from '@/views/Orders/inner_utils'
+import { providerStateName, providerMethodsName } from '@/views/Orders/inner_types'
 
 export default {
   name: 'Orders',
@@ -31,13 +28,13 @@ export default {
     OrdersList
   },
 
-  computed: {
+  data: () => ({
     ...mapState(orders.moduleName, {
       list: state => listFormat(state.list),
       links: state => state.links,
       meta: state => state.meta
     })
-  },
+  }),
 
   async mounted () {
     await this.fetchOrdersList()
@@ -51,6 +48,21 @@ export default {
 
       if (status === reqStatus.success) return console.log('success')
       console.log('error')
+    }
+  },
+
+  provide () {
+    const { list, links, meta, fetchOrdersList } = this
+
+    return {
+      [providerStateName]: {
+        list,
+        links,
+        meta
+      },
+      [providerMethodsName]: {
+        fetchOrdersList
+      }
     }
   }
 }

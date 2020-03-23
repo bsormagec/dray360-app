@@ -28,24 +28,26 @@
 
 <script>
 import arrayFromNumber from '@/utils/arrayFromNumber'
+import { providerStateName, providerMethodsName } from '@/views/Orders/inner_types'
 
 export default {
   name: 'OrdersListFooter',
 
-  props: {
-    links: {
-      type: Object,
-      required: true
-    },
-    meta: {
-      type: Object,
-      required: true
+  inject: [providerStateName, providerMethodsName],
+
+  data () {
+    const { meta } = this[providerStateName]
+    const { fetchOrdersList } = this[providerMethodsName]
+
+    return {
+      meta,
+      fetchOrdersList
     }
   },
 
   computed: {
     indicatorText () {
-      const { from, to, total } = this.meta
+      const { from, to, total } = this.meta()
       const notLoaded = !from || !to || !total
 
       if (notLoaded) return '--'
@@ -53,6 +55,8 @@ export default {
     },
 
     navigationButtons () {
+      const { last_page: lastPage } = this.meta()
+
       return [
         {
           id: 'first',
@@ -64,7 +68,7 @@ export default {
           text: 'Prev',
           action: () => { }
         },
-        ...arrayFromNumber({ length: this.meta.last_page, from: 1 }).map(n => ({
+        ...arrayFromNumber({ length: lastPage, from: 1 }).map(n => ({
           id: n,
           text: n,
           action: () => { }
