@@ -2,7 +2,7 @@
   <div class="orders">
     <Sidebar />
 
-    <OrdersList />
+    <OrdersList :items="list" />
 
     <div class="orders__create">
       create
@@ -12,11 +12,12 @@
 
 <script>
 import { mapState, mapActions } from 'vuex'
-import orders, { types } from '@/store/modules/orders'
 import { reqStatus } from '@/enums/req_status'
+import orders, { types } from '@/store/modules/orders'
 
 import Sidebar from '@/components/Sidebar'
 import OrdersList from '@/views/Orders/OrdersList'
+import { listFormat } from '@/views/Orders/inner_utils'
 
 export default {
   name: 'Orders',
@@ -28,7 +29,7 @@ export default {
 
   computed: {
     ...mapState(orders.moduleName, {
-      list: state => state.list
+      list: state => listFormat(state.list)
     })
   },
 
