@@ -7,12 +7,16 @@ export const types = {
 }
 
 const initialState = {
-  list: []
+  list: [],
+  links: {},
+  meta: {}
 }
 
 const mutations = {
-  [types.setOrders] (state, orders) {
-    state.list = orders
+  [types.setOrders] (state, { data, links, meta }) {
+    state.list = data
+    state.links = links
+    state.meta = meta
   }
 }
 
