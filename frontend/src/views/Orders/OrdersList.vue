@@ -7,17 +7,38 @@
     <v-data-table
       :headers="headers"
       :items="items"
+      :items-per-page="items.length"
+      :hide-default-footer="true"
+    />
+
+    <OrdersListFooter
+      :links="links"
+      :meta="meta"
     />
   </div>
 </template>
 
 <script>
+import OrdersListFooter from '@/views/Orders/OrdersListFooter'
+
 export default {
   name: 'OrdersList',
+
+  components: {
+    OrdersListFooter
+  },
 
   props: {
     items: {
       type: Array,
+      required: true
+    },
+    links: {
+      type: Object,
+      required: true
+    },
+    meta: {
+      type: Object,
       required: true
     }
   },

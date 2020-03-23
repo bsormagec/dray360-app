@@ -2,7 +2,11 @@
   <div class="orders">
     <Sidebar />
 
-    <OrdersList :items="list" />
+    <OrdersList
+      :items="list"
+      :links="links"
+      :meta="meta"
+    />
 
     <div class="orders__create">
       create
@@ -29,7 +33,9 @@ export default {
 
   computed: {
     ...mapState(orders.moduleName, {
-      list: state => listFormat(state.list)
+      list: state => listFormat(state.list),
+      links: state => state.links,
+      meta: state => state.meta
     })
   },
 
