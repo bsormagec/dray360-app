@@ -14,12 +14,19 @@
 import Sidebar from '@/components/Sidebar'
 import OrdersList from '@/views/Orders/OrdersList'
 
+import { getOrders } from '@/store/api_calls/orders.js'
+
 export default {
   name: 'Orders',
 
   components: {
     Sidebar,
     OrdersList
+  },
+
+  async mounted () {
+    const res = await getOrders()
+    console.log(res)
   }
 }
 </script>
