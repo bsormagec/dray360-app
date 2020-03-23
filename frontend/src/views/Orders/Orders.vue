@@ -11,10 +11,12 @@
 </template>
 
 <script>
+import { mapState, mapActions } from 'vuex'
+import orders, { types } from '@/store/modules/orders'
+import { reqStatus } from '@/enums/req_status'
+
 import Sidebar from '@/components/Sidebar'
 import OrdersList from '@/views/Orders/OrdersList'
-
-import { getOrders } from '@/store/api_calls/orders.js'
 
 export default {
   name: 'Orders',
@@ -24,15 +26,30 @@ export default {
     OrdersList
   },
 
+  computed: {
+    ...mapState(orders.moduleName, {
+      list: state => state.list
+    })
+  },
+
   async mounted () {
-    const res = await getOrders()
-    console.log(res)
+    await this.fetchOrdersList()
+  },
+
+  methods: {
+    ...mapActions(orders.moduleName, [types.getOrders]),
+
+    async fetchOrdersList () {
+      const status = await this[types.getOrders]()
+
+      if (status === reqStatus.success) return console.log('success')
+      console.log('error')
+    }
   }
 }
 </script>
 
 <style lang="scss" scoped>
-
 .orders {
   display: flex;
   height: 100%;
