@@ -3,15 +3,29 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use Auth;
+use Carbon\Carbon;
+use App\User;
+//use User;
 
 class AuthenticationController extends Controller
 {
+
+    /**
+     * Create new user account
+     *
+     * @param  [string] email
+     * @param  [string] password
+     * @param  [string] name
+     * @return [string] success message
+     */
     public function signup(Request $request)
     {
         $request->validate([
             'name' => 'required|string',
             'email' => 'required|string|email|unique:users',
-            'password' => 'required|string|confirmed'
+            'password' => 'required|string' // bad: 'password' => 'required|string|confirmed'
+
         ]);
 
         $user = new User([
@@ -51,12 +65,12 @@ class AuthenticationController extends Controller
         if(!Auth::attempt($credentials))
         {
             return response()->json([
-                'message' => 'Sin autorización'
+                'message' => 'Not authorized'
             ], 401);
         }
         $user = Auth::user();
         $tokenResult = $user->createToken('ApiPassToken');
-        $token = $tokenResult->token;
+        $token = $tokenResult->accessToken; // was: $token = $tokenResult->token;
 
         if ($request->remember_me)
         {
@@ -65,18 +79,28 @@ class AuthenticationController extends Controller
 
         $token->save();
 
+        /*
+        // to return a bearer token
         return response()->json([
-            'access_token' => $tokenResult->accessToken,
+            'access_token' => $token->token,
             'token_type' => 'Bearer',
             'expires_at' => Carbon::parse(
-                $tokenResult->token->expires_at
+                $tokenResult->accessToken->expires_at //was: $tokenResult->token->expires_at
             )->toDateTimeString()
         ]);
+        */
+
+        // to simply return the cookie
+        return response()->json([
+            'message' => 'Successful login!'
+        ], 200);
     }
 
 
     /**
      * Logout user (Revoke the token)
+     *
+     * ASDF NOT WORKING?
      *
      * @return [string] message
      */
@@ -90,7 +114,9 @@ class AuthenticationController extends Controller
 
 
     /**
-     * Get the authenticated User
+     * Get the currently authenticated User
+     *
+     * ASDF NOT WORKING?
      *
      * @return [json] user object
      */
@@ -102,4 +128,3 @@ class AuthenticationController extends Controller
     }
 
 }
-
