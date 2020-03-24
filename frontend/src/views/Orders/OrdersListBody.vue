@@ -11,7 +11,7 @@
 import { providerStateName } from '@/views/Orders/inner_types'
 
 export default {
-  name: 'OrdersList',
+  name: 'OrdersListBody',
 
   inject: [providerStateName],
 
