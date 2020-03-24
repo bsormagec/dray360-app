@@ -9,6 +9,7 @@
         solo
         dense
         hide-details
+        @change="jumpToPage"
       />
     </div>
 
@@ -16,14 +17,15 @@
       <div
         v-for="btn in navigationButtons"
         :key="btn.text"
-        class="navigation__btn"
+        :class="`navigation__btn ${btn.type}`"
       >
         <v-btn
-          :class="`btn__single ${btn.id}`"
+          class="btn__single"
           color="primary"
-          :disabled="isDots(btn.id)"
-          :outlined="!isDots(btn.id)"
-          :text="isDots(btn.id)"
+          :disabled="isDots(btn.type)"
+          :outlined="isOutlined(btn)"
+          :text="isDots(btn.type)"
+          @click="btn.action ? btn.action(btn.text) : () => {}"
         >
           {{ btn.text || '...' }}
         </v-btn>
@@ -34,24 +36,44 @@
 
 <script>
 import arrayFromNumber from '@/utils/arrayFromNumber'
-import { providerStateName, providerMethodsName } from '@/views/Orders/inner_types'
+import { providerStateName } from '@/views/Orders/inner_types'
+
+const mockLastPage = 10 // only for testing
 
 export default {
   name: 'OrdersListFooter',
 
-  inject: [providerStateName, providerMethodsName],
+  inject: [providerStateName],
+
+  props: {
+    activePage: {
+      type: Number,
+      required: true
+    },
+
+    setActivePage: {
+      type: Function,
+      required: true
+    }
+  },
 
   data () {
     const { meta } = this[providerStateName]
-    const { fetchOrdersList } = this[providerMethodsName]
 
     return {
       meta,
-      fetchOrdersList
+      cut: 3,
+      navStart: 1,
+      navEnd: 3
     }
   },
 
   computed: {
+    pagesArray () {
+      const { last_page: lastPage } = this.meta()
+      return arrayFromNumber({ length: mockLastPage || lastPage, from: 1 })
+    },
+
     indicatorText () {
       const { from, to, total } = this.meta()
       const notLoaded = !from || !to || !total
@@ -60,50 +82,88 @@ export default {
       return `${from} - ${to} of ${total}`
     },
 
-    pagesArray () {
-      const { last_page: lastPage } = this.meta()
-      return arrayFromNumber({ length: lastPage, from: 1 })
+    allNBtns () {
+      return this.pagesArray.map((n, i) => ({
+        type: 'numberedButton',
+        text: n,
+        action: this.handleBtnNavigation
+      }))
+    },
+
+    slicedNBtns () {
+      return this.allNBtns.filter(({ text }) => Number(text) >= this.navStart && Number(text) <= this.navEnd)
     },
 
     navigationButtons () {
+      const lastPage = mockLastPage || this.meta().last_page
+
       return [
         {
-          id: 'first',
+          type: 'first',
           text: 'First',
-          action: () => { }
+          action: async () => this.setActivePage(1)
         },
         {
-          id: 'dots-left'
+          type: 'dots-left'
         },
-        ...this.pagesArray.map((n, i) => ({
-          id: this.navBtnId({ index: i, length: this.pagesArray.length }),
-          text: n,
-          action: () => { }
-        })),
+        ...this.slicedNBtns,
         {
-          id: 'dots-right'
+          type: 'dots-right'
         },
         {
-          id: 'last',
+          type: 'last',
           text: 'Last',
-          action: () => { }
+          action: async () => this.setActivePage(lastPage)
         }
       ]
     }
   },
 
   methods: {
-    isDots (id) {
-      return String(id).includes('dots')
+    isDots (type) {
+      return String(type).includes('dots')
     },
 
-    navBtnId ({ index, length }) {
-      const isLeft = index === 0
-      const isRight = index === length - 1
+    isOutlined ({ type, text }) {
+      return !this.isDots(type) && text !== this.activePage
+    },
 
-      if (isLeft) return 'navbtn-left'
-      if (isRight) return 'navbtn-right'
-      return 'navbtn'
+    async jumpToPage (n) {
+      const page = Number(n)
+
+      if (isNaN(page) || page <= 0) return
+      await this.setActivePage(page)
+    },
+
+    async handleBtnNavigation (n) {
+      /*
+        TODO: - Refactor this function
+              - Add and write logic for prev/next btns
+              - write logic for first/last btns
+      */
+      await this.setActivePage(n)
+
+      if (n === this.navStart) {
+        if (this.allNBtns[this.navStart - 1]) {
+          this.navStart = n
+
+          if (this.allNBtns[this.navStart + (this.cut)]) {
+            this.navEnd = this.navStart + (this.cut - 1)
+          } else {
+            this.navEnd = this.allNBtns.length
+          }
+        }
+      } else if (n === this.navEnd) {
+        if (this.allNBtns[this.navEnd]) {
+          this.navStart = this.navEnd
+
+          if (this.allNBtns[this.navStart + (this.cut - 1)]) {
+            this.navEnd = this.navStart + (this.cut - 1)
+          } else {
+            this.navEnd = this.allNBtns.length
+          }
+        }
+      }
     }
   }
 }
@@ -125,7 +185,7 @@ export default {
 .footer__jump {
   display: flex;
   align-items: center;
-  width: 12rem;
+  width: 14rem;
   margin-right: 2.1rem;
 
   span {
@@ -139,21 +199,20 @@ export default {
 .footer__navigation {
   display: flex;
 
-  .btn__single {
-    min-width: 3rem !important;
-
-    &.navbtn {
+  .navigation__btn {
+    &.numberedButton:not(:first-child) .btn__single,
+    &.numberedButton:not(:last-child) .btn__single {
       border-radius: unset;
     }
 
-    &.navbtn-left {
-      border-top-right-radius: unset;
-      border-bottom-right-radius: unset;
+    &.numberedButton-last .btn__single {
+      border-top-right-radius: 0.4rem !important;
+      border-bottom-right-radius: 0.4rem !important;
     }
 
-    &.navbtn-right {
-      border-top-left-radius: unset;
-      border-bottom-left-radius: unset;
+    &.numberedButton-first .btn__single {
+      border-top-left-radius: 0.4rem !important;
+      border-bottom-left-radius: 0.4rem !important;
     }
   }
 }
