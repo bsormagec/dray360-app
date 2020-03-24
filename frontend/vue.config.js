@@ -1,8 +1,15 @@
 module.exports = {
+  css: {
+    loaderOptions: {
+      scss: {
+        prependData: '@import "@/assets/styles/variables.scss";'
+      }
+    }
+  },
+
   // proxy API requests to Valet during development
-  // TODO - test this use of the env var is working right
   devServer: {
-    proxy: process.env.APP_URL // was hardcoded: 'http://laracon.test'
+    proxy: process.env.APP_URL
   },
 
   // output built static files to Laravel's public dir.
