@@ -34,7 +34,14 @@ export default {
       { text: 'Shipment Designation', value: 'shipment_designation' },
       { text: 'Eq. Type', value: 'equipment_type' }
     ]
-  })
+  }),
+
+  methods: {
+    async setActivePage (n) {
+      this.activePage = n
+      await this[providerMethodsName].fetchOrdersList(n)
+    }
+  }
 }
 </script>
 
