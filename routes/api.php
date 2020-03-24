@@ -18,7 +18,7 @@ use Illuminate\Support\Facades\Route;
 */
 
 // needed?
-Auth::routes();
+Auth::routes(); // asdf needed????
 
 
 // API interface for login/signup, etc.
@@ -28,21 +28,52 @@ Route::post('signup', 'AuthenticationController@signup')->name('signup');
 Route::post('user', 'AuthenticationController@user')->name('user');
 
 
-// API for returning all orders, unauthenticated
+// Unauthenticated API for returning all orders
 Route::get('/orders', function () {
     $orders = \App\Models\Order::paginate(25);
     return \App\Http\Resources\Orders::collection($orders);
 });
 
 
-// test route to get a user
+// Authenticated test route to get a user
 Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
 });
 
 
-// asdf
+// Authenticated API for returning all orders
 Route::middleware('auth:sanctum')->post('/orders', function () {
     $orders = \App\Models\Order::paginate(25);
     return \App\Http\Resources\Orders::collection($orders);
 });
+
+
+/////////////////////////////////////////////////////////////////////
+
+// TESTING KRUFT #01! UN-authenticated API for returning all orders
+Route::post('/orders01', function () {
+    $orders = \App\Models\Order::paginate(25);
+    return \App\Http\Resources\Orders::collection($orders);
+});
+
+// TESTING KRUFT #02! Authenticated API for returning all orders
+Route::middleware('auth:sanctum')->get('/orders02', function () {
+    $orders = \App\Models\Order::paginate(25);
+    return \App\Http\Resources\Orders::collection($orders);
+});
+
+
+// TESTING KRUFT #03! Authenticated API for returning all orders
+Route::middleware('auth')->post('/orders03', function () {
+    $orders = \App\Models\Order::paginate(25);
+    return \App\Http\Resources\Orders::collection($orders);
+});
+
+
+// TESTING KRUFT #04! Authenticated API for returning all orders
+Route::post('/orders04', function () {
+    $orders = \App\Models\Order::paginate(25);
+    return \App\Http\Resources\Orders::collection($orders);
+})->middleware('auth:sanctum');
+
+
