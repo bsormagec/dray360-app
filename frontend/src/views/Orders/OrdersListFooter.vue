@@ -13,15 +13,21 @@
     </div>
 
     <div class="footer__navigation">
-      <v-btn
+      <div
         v-for="btn in navigationButtons"
-        :key="btn.id"
+        :key="btn.text"
         class="navigation__btn"
-        color="primary"
-        outlined
       >
-        {{ btn.text }}
-      </v-btn>
+        <v-btn
+          :class="`btn__single ${btn.id}`"
+          color="primary"
+          :disabled="isDots(btn.id)"
+          :outlined="!isDots(btn.id)"
+          :text="isDots(btn.id)"
+        >
+          {{ btn.text || '...' }}
+        </v-btn>
+      </div>
     </div>
   </div>
 </template>
@@ -54,9 +60,12 @@ export default {
       return `${from} - ${to} of ${total}`
     },
 
-    navigationButtons () {
+    pagesArray () {
       const { last_page: lastPage } = this.meta()
+      return arrayFromNumber({ length: lastPage, from: 1 })
+    },
 
+    navigationButtons () {
       return [
         {
           id: 'first',
@@ -64,19 +73,15 @@ export default {
           action: () => { }
         },
         {
-          id: 'prev',
-          text: 'Prev',
-          action: () => { }
+          id: 'dots-left'
         },
-        ...arrayFromNumber({ length: lastPage, from: 1 }).map(n => ({
-          id: n,
+        ...this.pagesArray.map((n, i) => ({
+          id: this.navBtnId({ index: i, length: this.pagesArray.length }),
           text: n,
           action: () => { }
         })),
         {
-          id: 'next',
-          text: 'Next',
-          action: () => { }
+          id: 'dots-right'
         },
         {
           id: 'last',
@@ -84,6 +89,21 @@ export default {
           action: () => { }
         }
       ]
+    }
+  },
+
+  methods: {
+    isDots (id) {
+      return String(id).includes('dots')
+    },
+
+    navBtnId ({ index, length }) {
+      const isLeft = index === 0
+      const isRight = index === length - 1
+
+      if (isLeft) return 'navbtn-left'
+      if (isRight) return 'navbtn-right'
+      return 'navbtn'
     }
   }
 }
@@ -117,9 +137,24 @@ export default {
 }
 
 .footer__navigation {
-  .navigation__btn:not(:last-child) {
-    margin-right: 1rem;
-    min-width: 4.4rem;
+  display: flex;
+
+  .btn__single {
+    min-width: 3rem !important;
+
+    &.navbtn {
+      border-radius: unset;
+    }
+
+    &.navbtn-left {
+      border-top-right-radius: unset;
+      border-bottom-right-radius: unset;
+    }
+
+    &.navbtn-right {
+      border-top-left-radius: unset;
+      border-bottom-left-radius: unset;
+    }
   }
 }
 </style>
