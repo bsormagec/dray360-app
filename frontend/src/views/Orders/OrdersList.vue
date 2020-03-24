@@ -4,12 +4,7 @@
       Orders
     </h1>
 
-    <v-data-table
-      :headers="headers"
-      :items="list()"
-      :items-per-page="list().length"
-      :hide-default-footer="true"
-    />
+    <OrdersListBody :headers="headers" />
 
     <OrdersListFooter />
   </div>
@@ -17,37 +12,29 @@
 
 <script>
 import OrdersListFooter from '@/views/Orders/OrdersListFooter'
-import { providerStateName } from '@/views/Orders/inner_types'
-
-const tableHeaders = [
-  {
-    text: 'Id',
-    sortable: false,
-    value: 'id'
-  },
-  { text: 'Date', value: 'created_at' },
-  { text: 'Shipment Direction', value: 'shipment_direction' },
-  { text: 'Shipment Designation', value: 'shipment_designation' },
-  { text: 'Eq. Type', value: 'equipment_type' }
-]
+import OrdersListBody from '@/views/Orders/OrdersListBody'
 
 export default {
   name: 'OrdersList',
 
-  inject: [providerStateName],
-
   components: {
+    OrdersListBody,
     OrdersListFooter
   },
 
-  data () {
-    const { list } = this[providerStateName]
-
-    return {
-      headers: tableHeaders,
-      list
-    }
-  }
+  data: () => ({
+    headers: [
+      {
+        text: 'Id',
+        sortable: false,
+        value: 'id'
+      },
+      { text: 'Date', value: 'created_at' },
+      { text: 'Shipment Direction', value: 'shipment_direction' },
+      { text: 'Shipment Designation', value: 'shipment_designation' },
+      { text: 'Eq. Type', value: 'equipment_type' }
+    ]
+  })
 }
 </script>
 
