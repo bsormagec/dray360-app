@@ -6,16 +6,22 @@
 
     <OrdersListBody :headers="headers" />
 
-    <OrdersListFooter />
+    <OrdersListFooter
+      :active-page="activePage"
+      :set-active-page="setActivePage"
+    />
   </div>
 </template>
 
 <script>
-import OrdersListFooter from '@/views/Orders/OrdersListFooter'
 import OrdersListBody from '@/views/Orders/OrdersListBody'
+import OrdersListFooter from '@/views/Orders/OrdersListFooter'
+import { providerMethodsName } from '@/views/Orders/inner_types'
 
 export default {
   name: 'OrdersList',
+
+  inject: [providerMethodsName],
 
   components: {
     OrdersListBody,
@@ -23,6 +29,7 @@ export default {
   },
 
   data: () => ({
+    activePage: 1,
     headers: [
       {
         text: 'Id',
