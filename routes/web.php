@@ -15,12 +15,5 @@ use Illuminate\Support\Facades\Route;
 */
 
 
-
-// need for testing sanctum (formerly airlock)
-//Auth::routes();
-//Route::get('/home', 'HomeController@index')->name('home');
-
-
-
 // Default VUECONTROLLER route
 Route::get('/{any}', 'VueController@index')->where('any', '.*');
