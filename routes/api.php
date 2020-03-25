@@ -18,19 +18,19 @@ use Illuminate\Support\Facades\Route;
 
 
 
-// API interface for login/signup, etc.
+// Non-authenticated routes for signup/login/logout
 Route::post('login', 'AuthenticationController@login')->name('login');
 Route::post('logout', 'AuthenticationController@logout')->name('logout');
 Route::post('signup', 'AuthenticationController@signup')->name('signup');
 
 
-// Authenticated test route to get a user
+// Authenticated route to get current user
 Route::get('user', 'AuthenticationController@user')
-    ->name('user')
+    ->name('user') // shows up in `php artisan route:list` command output
     ->middleware('auth:sanctum');
 
 
-// Authenticated API for returning all orders
+// Authenticated route to return all orders
 Route::get('orders', 'OrderController@orders')
-    ->name('order')
+    ->name('orders')
     ->middleware('auth:sanctum');
