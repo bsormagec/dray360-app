@@ -135,35 +135,28 @@ export default {
       await this.setActivePage(page)
     },
 
-    async handleBtnNavigation (n) {
+    handleBtnNavigation (n) {
       /*
-        TODO: - Refactor this function
+        TODO: - Refactor this function*
               - Add and write logic for prev/next btns
               - write logic for first/last btns
       */
-      await this.setActivePage(n)
+      const isLastItem = n === this.navEnd
+      const itemNextToEnd = this.allNBtns[this.navEnd]
+      const shouldMove = isLastItem && itemNextToEnd
+      const cutFromStart = () => this.navStart + (this.cut - 1)
+      const ableToCutFromStart = () => this.allNBtns[cutFromStart()]
 
-      if (n === this.navStart) {
-        if (this.allNBtns[this.navStart - 1]) {
-          this.navStart = n
-
-          if (this.allNBtns[this.navStart + (this.cut)]) {
-            this.navEnd = this.navStart + (this.cut - 1)
-          } else {
-            this.navEnd = this.allNBtns.length
-          }
-        }
-      } else if (n === this.navEnd) {
-        if (this.allNBtns[this.navEnd]) {
-          this.navStart = this.navEnd
-
-          if (this.allNBtns[this.navStart + (this.cut - 1)]) {
-            this.navEnd = this.navStart + (this.cut - 1)
-          } else {
-            this.navEnd = this.allNBtns.length
-          }
+      if (shouldMove) {
+        this.navStart = this.navEnd
+        if (ableToCutFromStart()) {
+          this.navEnd = cutFromStart()
+        } else {
+          this.navEnd = this.allNBtns.length
         }
       }
+
+      this.setActivePage(n)
     }
   }
 }
