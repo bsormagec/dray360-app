@@ -34,10 +34,3 @@ Route::get('user', 'AuthenticationController@user')
 Route::get('orders', 'OrderController@orders')
     ->name('order')
     ->middleware('auth:sanctum');
-
-/*
-Route::middleware('auth:sanctum')->get('/orders', function () {
-    $orders = \App\Models\Order::paginate(25);
-    return \App\Http\Resources\Orders::collection($orders);
-});
-*/
