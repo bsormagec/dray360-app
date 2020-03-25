@@ -74,24 +74,18 @@ class AuthenticationController extends Controller
     /**
      * Get the currently authenticated User
      *
-     * TODO: NOT WORKING. FIX THIS.
-     *
      * @param  [Request] $request
-     * @param  [integer] $request->id
      * @return [json] user object
      */
     public function user(Request $request)
     {
-        $request->validate(['id' => 'required|integer']);
-        $user = User::with('roles.permissions')->where('id', '=', $request->id)->firstOrFail();
-        return response()->json($user);
-    }
-
-    public function user_orig_does_not_work(Request $request)
-    {
         $authUser = $request->user();
-        $user = User::with('roles.permissions')->where('id', '=', $authUser->id)->firstOrFail();
-        return response()->json($user);
+        if (!is_object($authUser)) {
+            return response()->json(['message' => 'Not authorized'], 401);
+        } else {
+            $user = User::with('roles.permissions')->where('id', '=', $authUser->id)->firstOrFail();
+            return response()->json($user);
+        }
     }
 
 }

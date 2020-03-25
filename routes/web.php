@@ -17,8 +17,8 @@ use Illuminate\Support\Facades\Route;
 
 
 // need for testing sanctum (formerly airlock)
-Auth::routes();
-Route::get('/home', 'HomeController@index')->name('home');
+//Auth::routes();
+//Route::get('/home', 'HomeController@index')->name('home');
 
 
 
