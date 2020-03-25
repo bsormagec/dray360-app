@@ -2,8 +2,7 @@
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
-//use App\Http\Controllers\AuthenticationController; //pbn
-// use App\Http\Controllers\API\AuthenticationController;
+
 
 
 /*
@@ -17,32 +16,21 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-// needed?
-Auth::routes();
 
 
-// API interface for login/signup, etc.
+// Non-authenticated routes for signup/login/logout
 Route::post('login', 'AuthenticationController@login')->name('login');
 Route::post('logout', 'AuthenticationController@logout')->name('logout');
 Route::post('signup', 'AuthenticationController@signup')->name('signup');
-Route::post('user', 'AuthenticationController@user')->name('user');
 
 
-// API for returning all orders, unauthenticated
-Route::get('/orders', function () {
-    $orders = \App\Models\Order::paginate(25);
-    return \App\Http\Resources\Orders::collection($orders);
-});
+// Authenticated route to get current user
+Route::get('user', 'AuthenticationController@user')
+    ->name('user') // shows up in `php artisan route:list` command output
+    ->middleware('auth:sanctum');
 
 
-// test route to get a user
-Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
-    return $request->user();
-});
-
-
-// asdf
-Route::middleware('auth:sanctum')->post('/orders', function () {
-    $orders = \App\Models\Order::paginate(25);
-    return \App\Http\Resources\Orders::collection($orders);
-});
+// Authenticated route to return all orders
+Route::get('orders', 'OrderController@orders')
+    ->name('orders')
+    ->middleware('auth:sanctum');
