@@ -8,6 +8,7 @@ module.exports = {
   },
 
   // proxy API requests to Valet during development
+  // reference: https://cli.vuejs.org/config/#devserver
   devServer: {
     proxy: process.env.APP_URL
   },
