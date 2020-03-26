@@ -185,3 +185,37 @@ cp ~/repos/tcompanies/poc-ordermaster/database/migrations/2020_03_05_231254_crea
 
 ````
 
+
+
+#### Backup/restore local dev database
+
+If you want to backup/restore your local ordermaster database, do this
+
+###### Backup local dev database
+
+````bash
+source ~/tcvars2.sh
+export omdumpfilename="$(pwd)/om_localdev-dump-`date +%Y%m%d-%H%M%S`.sql"
+time mysqldump \
+    --routines \
+    --compress \
+    --opt \
+    --triggers \
+    --events \
+    --set-gtid-purged=OFF \
+    --max_allowed_packet=512M \
+    --column-statistics=0 \
+    ${OM_DBNAME} \
+    > ${omdumpfilename}
+time tar -czvf ${omdumpfilename}.tar.gz $(basename "${omdumpfilename}")
+
+````
+
+###### Restore local dev database from backup
+
+````bash
+source ~/tcvars.sh
+omdumpfilename="om_localdev-dump-20200326-094049.sql" # for example, set this appropriately
+sudo mysql --database=${OM_DBNAME} <${omdumpfilename}
+
+````
