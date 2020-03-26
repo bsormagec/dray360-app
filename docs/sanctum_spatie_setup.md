@@ -8,13 +8,18 @@
 
 Passport was *NOT* what we wanted. We wanted airlock instead.
 
-https://laravel.com/docs/master/sanctum
-https://redfern.dev/vue-js-auth-using-laravel-airlock/
+https://divinglaravel.com/authentication-and-laravel-airlock
 https://github.com/laravel/sanctum
-BUGGY: https://medium.com/@JillevdWeerd/app-authentication-with-laravel-airlock-36e3d2027994
-https://serversideup.net/using-laravel-sanctum-airlock-with-nuxtjs/
+https://laravel-news.com/laravel-airlock
+https://laravel.com/docs/7.x/authentication#protecting-routes
+https://laravel.com/docs/7.x/sanctum#spa-authentication
+https://laravel.com/docs/master/sanctum
 https://medium.com/@godilite/using-laravel-airlock-with-vuejs-1d343ee6f10
+https://medium.com/@JillevdWeerd/app-authentication-with-laravel-airlock-36e3d2027994 (BUGGY)
+https://redfern.dev/vue-js-auth-using-laravel-airlock/
+https://serversideup.net/using-laravel-sanctum-airlock-with-nuxtjs/
 
+for postman/cors issue, see: https://github.com/laravel/sanctum/issues/11
 
 
 
@@ -211,3 +216,23 @@ email peter@peternelson.com
 ### HTTP-Request server status codes
 
 Reference: https://tools.ietf.org/html/rfc7231#page-49
+
+
+
+
+### DEBUGGING: to see HTTP request headers in auth:middleware
+
+edit `./vendor/laravel/framework/src/Illuminate/Auth/Middleware/Authenticate.php`
+
+find function `protected function authenticate($request, array $guards)`
+currently at line 56
+for the first line of the function, insert `var_dump($request);`
+
+
+Here are some working tokens, for debugging...
+````text
+Accept application/json, text/plain, */*
+X-XSRF-TOKEN eyJpdiI6IksyU0lDSGFTOW1EV0U1MFVER0dGeEE9PSIsInZhbHVlIjoiL0ZRKys4Y1dQMEVSRjVaL203Qm11cFRVT3lRYWtST2R0c3k5KzBVakJ1ZEV1MzRlNTRhNW10L3FPaWhZN3JRaiIsIm1hYyI6IjIxYmY1M2VmY2NkMGE0M2VkNTZmN2NjZThlNDQ2OWYzYTYzNmFiYTY5ZTk0M2MyMDhlODUxNTQ1NTUxYjBlZjIifQ==
+Referer https://local.ordermaster.com/
+Cookie laravel_session=eyJpdiI6InBiTkUwdlNTTEFkUVlpcEhJVXJHWlE9PSIsInZhbHVlIjoiREkvTTZVR1c5cmxXTjByWlNsTEZWWkNUaW1VbmlYUFBLSis0WFZQd1pFVDhFSWw5UjhXZXBxbGl6V2NkL3J2ZiIsIm1hYyI6ImM0NTM2OGQ4ODBjODdmYWMzZGI5ZDQxNWMyNzdlMzlhMDA1OGRiODllZTAzNWYxZDAwZDZiZWI1NjhlZmZiMjIifQ%3D%3D
+````
