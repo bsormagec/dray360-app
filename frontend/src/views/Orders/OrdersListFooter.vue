@@ -14,20 +14,21 @@
     </div>
 
     <div class="footer__navigation">
-      <div
-        v-for="btn in navigationButtons"
-        :key="btn.value"
-        :class="`navigation__btn ${btn.type}`"
-      >
-        <v-btn
-          class="btn__single"
-          color="primary"
-          :outlined="isOutlined(btn)"
-          @click="btn.action(btn.value + 1)"
-        >
-          {{ typeof btn.value === 'number' ? btn.value + 1 : btn.value }}
-        </v-btn>
-      </div>
+      <OrdersListFooterButtons
+        :active-page="activePage"
+        :buttons-list="navigationButtons.left"
+      />
+
+      <OrdersListFooterButtons
+        alt-style
+        :active-page="activePage"
+        :buttons-list="navigationButtons.center"
+      />
+
+      <OrdersListFooterButtons
+        :active-page="activePage"
+        :buttons-list="navigationButtons.right"
+      />
     </div>
   </div>
 </template>
@@ -36,12 +37,18 @@
 import arrayFromNumber from '@/utils/arrayFromNumber'
 import { providerStateName } from '@/views/Orders/inner_types'
 
+import OrdersListFooterButtons from '@/views/Orders/OrdersListFooterButtons'
+
 const mockLastPage = 10 // only for testing
 
 export default {
   name: 'OrdersListFooter',
 
   inject: [providerStateName],
+
+  components: {
+    OrdersListFooterButtons
+  },
 
   props: {
     activePage: {
@@ -101,29 +108,29 @@ export default {
     },
 
     navigationButtons () {
-      return [
-        {
-          type: 'first',
-          value: 'First',
-          action: this.firstBtn
-        },
-        {
-          type: 'prev',
-          value: 'Prev',
-          action: this.prevBtn
-        },
-        ...this.slicedNBtns[this.showingSlice],
-        {
-          type: 'next',
-          value: 'Next',
-          action: this.nextBtn
-        },
-        {
-          type: 'last',
-          value: 'Last',
-          action: this.lastBtn
-        }
-      ]
+      return {
+        left: [
+          {
+            value: 'First',
+            action: this.firstBtn
+          },
+          {
+            value: 'Prev',
+            action: this.prevBtn
+          }
+        ],
+        center: [...this.slicedNBtns[this.showingSlice]],
+        right: [
+          {
+            value: 'Next',
+            action: this.nextBtn
+          },
+          {
+            value: 'Last',
+            action: this.lastBtn
+          }
+        ]
+      }
     },
 
     indicatorText () {
@@ -174,10 +181,6 @@ export default {
       const lastButton = lastSlice[this.slicedNBtns[lastSliceIndex].length - 1]
       this.showingSlice = lastSliceIndex
       await this.setActivePage(lastButton.value + 1)
-    },
-
-    isOutlined ({ value }) {
-      return value + 1 !== this.activePage
     }
   }
 }
@@ -212,22 +215,5 @@ export default {
 
 .footer__navigation {
   display: flex;
-
-  // .navigation__btn {
-  //   &.numberedButton:not(:first-child) .btn__single,
-  //   &.numberedButton:not(:last-child) .btn__single {
-  //     border-radius: unset;
-  //   }
-
-  //   &.numberedButton-last .btn__single {
-  //     border-top-right-radius: 0.4rem !important;
-  //     border-bottom-right-radius: 0.4rem !important;
-  //   }
-
-  //   &.numberedButton-first .btn__single {
-  //     border-top-left-radius: 0.4rem !important;
-  //     border-bottom-left-radius: 0.4rem !important;
-  //   }
-  // }
 }
 </style>
