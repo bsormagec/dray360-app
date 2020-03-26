@@ -10,6 +10,7 @@ resources/views/index.blade.php
 .env
 .env.backup
 .env.development
+.env.production
 .phpunit.result.cache
 Homestead.json
 Homestead.yaml

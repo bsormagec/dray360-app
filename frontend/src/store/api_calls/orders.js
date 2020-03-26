@@ -1,3 +1,3 @@
 import axios from '@/store/api_calls/axios_config'
 
-export const getOrders = async (page) => axios.get(`/orders?page=${page}`).then(data => [undefined, data.data]).catch(e => [e])
+export const getOrders = async () => axios.get('/api/orders').then(data => [undefined, data.data]).catch(e => [e])
