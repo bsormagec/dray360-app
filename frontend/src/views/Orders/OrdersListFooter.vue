@@ -191,6 +191,10 @@ export default {
   display: flex;
   align-items: center;
   margin-top: 2.4rem;
+
+  @media screen and (max-width: 1670px){
+    flex-wrap: wrap;
+  }
 }
 
 .footer__indicator {
@@ -211,9 +215,19 @@ export default {
     font-weight: bold;
     margin-right: 0.8rem;
   }
+
+  @media screen and (max-width: 1670px){
+    margin-right: unset;
+  }
 }
 
 .footer__navigation {
   display: flex;
+
+  @media screen and (max-width: 1670px){
+    width: 100%;
+    justify-content: center;
+    margin-top: 1rem;
+  }
 }
 </style>
