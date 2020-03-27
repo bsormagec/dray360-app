@@ -16,4 +16,4 @@ use Illuminate\Support\Facades\Route;
 
 
 // Default VUECONTROLLER route
-Route::get('/{any}', 'VueController@index')->where('any', '.*');
+Route::get('/{any}', 'VueController@index')->where('any', '^(?!nova).*$');
