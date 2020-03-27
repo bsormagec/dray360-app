@@ -21,8 +21,8 @@ const mutations = {
 }
 
 const actions = {
-  async [types.getOrders] ({ commit }) {
-    const [error, data] = await getOrders()
+  async [types.getOrders] ({ commit }, page = 1) {
+    const [error, data] = await getOrders(page)
 
     if (error) return reqStatus.error
 

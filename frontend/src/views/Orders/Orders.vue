@@ -2,7 +2,7 @@
   <div class="orders">
     <Sidebar />
 
-    <OrdersList />
+    <OrdersList v-if="meta().last_page" />
 
     <div class="orders__create">
       create
@@ -43,8 +43,8 @@ export default {
   methods: {
     ...mapActions(orders.moduleName, [types.getOrders]),
 
-    async fetchOrdersList () {
-      const status = await this[types.getOrders]()
+    async fetchOrdersList (n) {
+      const status = await this[types.getOrders](n)
 
       if (status === reqStatus.success) return console.log('success')
       console.log('error')
