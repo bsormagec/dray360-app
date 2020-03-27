@@ -1,8 +1,9 @@
 <template>
   <div class="list">
-    <h1 class="list__title">
-      Orders
-    </h1>
+    <OrdersListHeader
+      :headers="headers"
+      :set-headers="setHeaders"
+    />
 
     <OrdersListBody :headers="headers" />
 
@@ -14,6 +15,7 @@
 </template>
 
 <script>
+import OrdersListHeader from '@/views/Orders/OrdersListHeader'
 import OrdersListBody from '@/views/Orders/OrdersListBody'
 import OrdersListFooter from '@/views/Orders/OrdersListFooter'
 import { providerMethodsName } from '@/views/Orders/inner_types'
@@ -24,6 +26,7 @@ export default {
   inject: [providerMethodsName],
 
   components: {
+    OrdersListHeader,
     OrdersListBody,
     OrdersListFooter
   },
@@ -44,6 +47,10 @@ export default {
   }),
 
   methods: {
+    setHeaders (newHeaders) {
+      this.headers = newHeaders
+    },
+
     async setActivePage (n) {
       this.activePage = n
       await this[providerMethodsName].fetchOrdersList(n)
@@ -57,9 +64,5 @@ export default {
   padding: 5.2rem 7.5rem;
   padding-bottom: 3rem;
   flex-grow: 1;
-}
-
-.list__title {
-  margin-bottom: 1.5rem;
 }
 </style>
