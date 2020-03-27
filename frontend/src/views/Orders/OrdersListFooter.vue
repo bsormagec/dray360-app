@@ -13,7 +13,9 @@
       />
     </div>
 
-    <div class="footer__navigation">
+    <div
+      class="footer__navigation"
+    >
       <OrdersListFooterButtons
         :active-page="activePage"
         :buttons-list="navigationButtons.left"
@@ -38,8 +40,6 @@ import arrayFromNumber from '@/utils/arrayFromNumber'
 import { providerStateName } from '@/views/Orders/inner_types'
 
 import OrdersListFooterButtons from '@/views/Orders/OrdersListFooterButtons'
-
-const mockLastPage = 10 // only for testing
 
 export default {
   name: 'OrdersListFooter',
@@ -67,15 +67,14 @@ export default {
 
     return {
       meta,
-      cut: 4,
+      cut: 3,
       showingSlice: 0
     }
   },
 
   computed: {
     pagesArray () {
-      const { last_page: lastPage } = this.meta()
-      return arrayFromNumber({ length: mockLastPage || lastPage })
+      return arrayFromNumber({ length: this.meta().last_page, from: 1 })
     },
 
     allNBtns () {
@@ -89,21 +88,21 @@ export default {
     slicedNBtns () {
       // Array of arrays
       // E.g. [[1,2,3,4],[5,6,7,8],[9,10]]
-      let count = 0
+      let count = 1
       let current = []
       const sliced = []
 
       this.allNBtns.forEach((btn, i) => {
         count++
         current.push(btn)
-        if (count >= this.cut) {
-          count = 0
+        if (count > this.cut) {
+          count = 1
           sliced.push(current)
           current = []
         }
       })
 
-      if (sliced.length) sliced.push(current)
+      if (current.length) sliced.push(current)
       return sliced
     },
 
@@ -149,7 +148,7 @@ export default {
 
       let index
       this.slicedNBtns.forEach((slice, i) => {
-        if (slice.find(btn => btn.value + 1 === page)) {
+        if (slice.find(btn => btn.value === page)) {
           index = i
         }
       })
@@ -166,13 +165,13 @@ export default {
     async prevBtn () {
       if (!this.slicedNBtns[this.showingSlice - 1]) return
       this.showingSlice -= 1
-      this.setActivePage(this.slicedNBtns[this.showingSlice][0].value + 1)
+      this.setActivePage(this.slicedNBtns[this.showingSlice][0].value)
     },
 
     async nextBtn () {
       if (!this.slicedNBtns[this.showingSlice + 1]) return
       this.showingSlice += 1
-      this.setActivePage(this.slicedNBtns[this.showingSlice][0].value + 1)
+      this.setActivePage(this.slicedNBtns[this.showingSlice][0].value)
     },
 
     async lastBtn () {
@@ -180,7 +179,7 @@ export default {
       const lastSlice = this.slicedNBtns[lastSliceIndex]
       const lastButton = lastSlice[this.slicedNBtns[lastSliceIndex].length - 1]
       this.showingSlice = lastSliceIndex
-      await this.setActivePage(lastButton.value + 1)
+      await this.setActivePage(lastButton.value)
     }
   }
 }

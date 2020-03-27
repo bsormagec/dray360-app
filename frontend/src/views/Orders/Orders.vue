@@ -2,7 +2,7 @@
   <div class="orders">
     <Sidebar />
 
-    <OrdersList />
+    <OrdersList v-if="meta().last_page" />
 
     <div class="orders__create">
       create
