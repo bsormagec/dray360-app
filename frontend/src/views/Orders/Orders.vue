@@ -1,5 +1,8 @@
 <template>
-  <div class="orders">
+  <div
+    class="orders"
+    data-testid="test-orders"
+  >
     <Sidebar />
 
     <OrdersList v-if="meta().last_page" />
@@ -11,7 +14,7 @@
 </template>
 
 <script>
-import { mapState, mapActions } from 'vuex'
+import { mapState, mapActions } from '@/utils/vuex_mappings'
 import { reqStatus } from '@/enums/req_status'
 import orders, { types } from '@/store/modules/orders'
 
