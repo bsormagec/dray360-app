@@ -1,5 +1,8 @@
 <template>
-  <div class="list">
+  <div
+    class="list"
+    data-testid="test-list"
+  >
     <OrdersListHeader
       :headers="headers"
       :set-headers="setHeaders"
