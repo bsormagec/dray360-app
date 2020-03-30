@@ -5,7 +5,7 @@
   "scripts": {
     "serve": "vue-cli-service serve",
     "build": "rm -rf ../public/{js,css,img} && vue-cli-service build --no-clean",
-    "test": "jest --watchAll",
+    "test": "node tests.config.js",
     "lint": "vue-cli-service lint . --ext .js,.vue --fix"
   },
   "dependencies": {
@@ -27,6 +27,7 @@
     "babel-eslint": "^10.0.3",
     "babel-jest": "^25.2.3",
     "babel-preset-env": "^1.7.0",
+    "dotenv": "^8.2.0",
     "eslint": "^6.7.2",
     "eslint-config-standard": "^14.1.0",
     "eslint-loader": "^3.0.3",
@@ -48,7 +49,6 @@
       "<rootDir>/src/**/?(*.)(spec|test).{js,jsx}"
     ],
     "testEnvironment": "jsdom",
-    "testURL": "http://localhost",
     "transformIgnorePatterns": [
       "[/\\\\]node_modules[/\\\\].+\\.(js|jsx|vue)$",
       "^.+\\.module\\.(css|sass|scss)$"
