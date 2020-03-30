@@ -1,39 +1,33 @@
-import axios from '@/store/api_calls/axios_config'
+import { getCsrfCookie, postLogin, getUser } from '@/store/api_calls/auth'
 
 const initialState = {
-  currentUser: null,
+  currentUser: undefined,
   currentUserLoading: false
 }
 
 const mutations = {
-  auth_success (state) {
-    state.loggedIn = true
-  },
-  logout (state) {
-    state.loggedIn = false
-  },
+  auth_success: (state) => (state.loggedIn = true),
+  logout: (state) => (state.loggedIn = false),
   currentUser: (state, user) => (state.currentUser = user),
   currentUserLoading: (state, isPending) => (state.currentUserLoading = !!isPending)
 }
 
 const actions = {
   async login ({ commit }, authData) {
-    await axios.get('/sanctum/csrf-cookie')
-    await axios.post('/api/login', authData)
-    commit('auth_success')
+    await getCsrfCookie()
+    const [error] = await postLogin(authData)
+
+    if (!error) commit('auth_success')
   },
   async getCurrentUser ({ commit, state }, force = false) {
-    if (state.currentUser && !force) {
-      return
-    }
+    const shouldntProceed = state.currentUser && !force
+    if (shouldntProceed) return
 
-    try {
-      commit('currentUserLoading', true)
-      const user = await (await axios.get('api/user')).data
-      commit('currentUser', { user })
-    } finally {
-      commit('currentUserLoading', false)
-    }
+    commit('currentUserLoading', true)
+    const [error, user] = await getUser()
+
+    if (!error) commit('currentUser', { user })
+    commit('currentUserLoading', false)
   }
 }
 
