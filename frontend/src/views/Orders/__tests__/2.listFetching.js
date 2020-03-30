@@ -1,6 +1,6 @@
 import { render, waitFor } from '@testing-library/vue'
-import elNotFound from '@/utils/for_tests/elNotFound'
-import authTestUser from '@/utils/for_tests/authTestUser'
+import elNotFound from '@/utils/for_tests/el_not_found'
+import authTestUser from '@/utils/for_tests/auth_test_user'
 import Orders from '@/views/Orders/Orders'
 import store from '@/store/modules/orders'
 
