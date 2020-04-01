@@ -1,22 +1,18 @@
-import { waitFor } from '@testing-library/vue'
-import renderAuthenticated from '@/utils/for_tests/render_authenticated'
-import elNotFound from '@/utils/for_tests/el_not_found'
 import Orders from '@/views/Orders/Orders'
 import store from '@/store/modules/orders'
+import mount from '@/utils/for_tests/mount_authenticated'
+import waitForResponse from '@/utils/for_tests/wait_for_response.js'
 
 export default () =>
   describe('listFetching', () => {
     it('doesnt render list items before fetch', async () => {
-      const { getByTestId } = await renderAuthenticated(Orders, { store })
-      expect(elNotFound({ getFn: getByTestId, elTestId: 'test-list' })).toBeTruthy()
+      const wrapper = await mount(Orders, { store })
+      expect(wrapper.find('.listbody').exists()).toBe(false)
     })
 
     it('renders list items after fetch', async () => {
-      const { getByTestId } = await renderAuthenticated(Orders, { store })
-      const listTable = await waitFor(() =>
-        getByTestId('test-list')
-      )
-
-      expect(listTable).toBeTruthy()
+      const wrapper = await mount(Orders, { store })
+      await waitForResponse.wait()
+      expect(wrapper.find('.listbody').exists()).toBe(true)
     })
   })

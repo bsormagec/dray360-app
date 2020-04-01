@@ -1,7 +1,6 @@
 <template>
   <div
     class="list"
-    data-testid="test-list"
   >
     <OrdersListHeader
       :headers="headers"
