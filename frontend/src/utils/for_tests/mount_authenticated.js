@@ -8,7 +8,14 @@ Vue.config.silent = true
 Vue.use(Vuex)
 Vue.use(Vuetify)
 
+const appendDataApp = () => {
+  const el = document.createElement('div')
+  el.setAttribute('data-app', true)
+  document.body.appendChild(el)
+}
+
 export default async (component, options, shouldAuth = true) => {
+  appendDataApp()
   if (shouldAuth) await authTestUser()
   const vuexStore = options.store ? new Vuex.Store(options.store) : {}
 
