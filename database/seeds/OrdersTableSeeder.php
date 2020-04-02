@@ -2,6 +2,9 @@
 
 // usage: php artisan db:seed --class=OrdersTableSeeder
 
+// Note, if you get error about column port_ramp_of_origon not existing, run this in mysql:
+//   alter table t_orders change port_ramp_of_origon port_ramp_of_origin varchar(64);
+
 
 use Illuminate\Database\Seeder;
 use Carbon\Carbon;
