@@ -23,6 +23,7 @@ export default async (component, options, shouldAuth = true) => {
     ...options,
     store: vuexStore,
     localVue: Vue,
+    sync: false,
     vuetify: new Vuetify()
   })
 }
