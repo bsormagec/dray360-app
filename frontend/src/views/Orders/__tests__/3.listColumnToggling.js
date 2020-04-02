@@ -39,9 +39,3 @@ export default () =>
       expect(headerCell.exists()).toBe(true)
     })
   })
-
-function sleep () {
-  return new Promise((resolve, reject) => {
-    setTimeout(resolve, 500)
-  })
-}
