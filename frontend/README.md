@@ -20,5 +20,15 @@ npm run build
 npm run lint
 ```
 
+### Run tests
+first 
+```
+npm run serve
+```
+then in another terminal
+```
+npm run test
+```
+
 ### Customize configuration
 See [Configuration Reference](https://cli.vuejs.org/config/).
