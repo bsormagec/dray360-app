@@ -2,9 +2,9 @@ import { getCsrfCookie, postLogin } from '@/store/api_calls/auth'
 
 export default async () => {
   const credentials = {
-    password: 'mongomongo',
-    email: 'peter+test13@peternelson.com',
-    name: 'test user'
+    password: process.env.VUE_APP_TEST_USER_PASSWORD,
+    email: process.env.VUE_APP_TEST_USER_EMAIL,
+    name: process.env.VUE_APP_TEST_USER_NAME
   }
 
   const [cookieError] = await getCsrfCookie()
