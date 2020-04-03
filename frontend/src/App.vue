@@ -62,6 +62,10 @@ td {
 .upload__input .v-input {
   .v-input__control {
     order: -1 !important;
+
+    button[aria-label="clear icon"] {
+      margin: unset !important;
+    }
   }
 }
 
@@ -75,9 +79,11 @@ td {
     margin: 0;
     opacity: 0;
   }
+
   .v-input__control {
     display: none;
   }
+
   .v-input__prepend-outer {
     margin: unset;
     margin-right: unset !important;

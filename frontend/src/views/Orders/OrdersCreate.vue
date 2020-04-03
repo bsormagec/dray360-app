@@ -20,6 +20,8 @@
 
       <div class="upload__input">
         <v-file-input
+          v-model="files"
+          multiple
           solo
           dense
           hide-details
@@ -33,9 +35,17 @@
         </span>
       </div>
 
-      <div class="upload__area">
+      <div
+        class="upload__area"
+        @dragenter.prevent.stop
+        @dragover.prevent.stop
+        @dragleave.prevent.stop
+        @drop.prevent.stop="handleDrop"
+      >
         <span class="area__legend">... or drag documents here to upload</span>
         <v-file-input
+          v-model="files"
+          multiple
           accept=".pdf"
         />
       </div>
@@ -46,10 +56,17 @@
         Submitted Documents
       </h2>
 
-      <div class="submitted__file">
+      <div
+        v-for="(file, i) in files"
+        :key="i"
+        class="submitted__file"
+      >
         <v-icon>mdi-file-outline</v-icon>
-        <span>Document1-2019.pdf</span>
-        <v-icon color="red">
+        <span>{{ file.name }}</span>
+        <v-icon
+          color="red"
+          @click="deleteFile(file)"
+        >
           mdi-delete
         </v-icon>
       </div>
@@ -57,7 +74,7 @@
 
     <v-btn
       color="primary"
-      :style="{ marginLeft: 'auto', marginTop: '3.5rem' }"
+      :style="{ marginLeft: 'auto', marginTop: '1.1rem' }"
     >
       create order
     </v-btn>
@@ -66,7 +83,22 @@
 
 <script>
 export default {
-  name: 'OrdersCreate'
+  name: 'OrdersCreate',
+
+  data: () => ({
+    files: []
+  }),
+
+  methods: {
+    deleteFile (file) {
+      this.files = this.files.filter(f => f.name !== file.name)
+    },
+
+    handleDrop (e) {
+      const dt = e.dataTransfer
+      this.files = [...dt.files].filter(f => f.name.includes('.pdf'))
+    }
+  }
 }
 </script>
 
@@ -145,6 +177,7 @@ export default {
 .submitted__file {
   display: flex;
   align-items: center;
+  margin-bottom: 2.4rem;
 
   span {
     margin-left: 0.7rem;
