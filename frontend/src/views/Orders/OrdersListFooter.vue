@@ -36,7 +36,7 @@
 </template>
 
 <script>
-import arrayFromNumber from '@/utils/arrayFromNumber'
+import arrayFromNumber from '@/utils/array_from_number'
 import { providerStateName } from '@/views/Orders/inner_types'
 
 import OrdersListFooterButtons from '@/views/Orders/OrdersListFooterButtons'

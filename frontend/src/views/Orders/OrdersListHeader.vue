@@ -61,7 +61,7 @@ export default {
 <style lang="scss" scoped>
 .header {
   display: flex;
-  align-items: start;
+  align-items: flex-start;
 }
 
 .header__title {

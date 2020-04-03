@@ -1,5 +1,7 @@
 <template>
-  <div class="list">
+  <div
+    class="list"
+  >
     <OrdersListHeader
       :headers="headers"
       :set-headers="setHeaders"

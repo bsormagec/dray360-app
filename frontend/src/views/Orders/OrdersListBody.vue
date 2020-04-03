@@ -1,10 +1,12 @@
 <template>
-  <v-data-table
-    :headers="headers"
-    :items="list()"
-    :items-per-page="list().length"
-    :hide-default-footer="true"
-  />
+  <div class="listbody">
+    <v-data-table
+      :headers="headers"
+      :items="list()"
+      :items-per-page="list().length"
+      :hide-default-footer="true"
+    />
+  </div>
 </template>
 
 <script>
