@@ -7,9 +7,7 @@
 
     <OrdersList v-if="meta().last_page" />
 
-    <div class="orders__create">
-      create
-    </div>
+    <OrdersCreate />
   </div>
 </template>
 
@@ -20,6 +18,7 @@ import orders, { types } from '@/store/modules/orders'
 
 import Sidebar from '@/components/Sidebar'
 import OrdersList from '@/views/Orders/OrdersList'
+import OrdersCreate from '@/views/Orders/OrdersCreate'
 import { listFormat } from '@/views/Orders/inner_utils'
 import { providerStateName, providerMethodsName } from '@/views/Orders/inner_types'
 
@@ -28,7 +27,8 @@ export default {
 
   components: {
     Sidebar,
-    OrdersList
+    OrdersList,
+    OrdersCreate
   },
 
   data: () => ({
@@ -75,19 +75,5 @@ export default {
 .orders {
   display: flex;
   height: 100%;
-}
-
-.orders__list {
-  padding: 5.2rem 7.5rem;
-  padding-bottom: 3rem;
-  flex-grow: 1;
-}
-
-.orders__create {
-  width: 27%;
-  padding: 5.2rem 3.6rem;
-  padding-bottom: 3rem;
-  box-shadow: map-get($properties, inset-shadow-left);
-  border-left: 0.1rem solid map-get($colors, grey-2);
 }
 </style>

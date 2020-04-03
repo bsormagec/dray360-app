@@ -36,6 +36,10 @@ td {
   color: map-get($colors, black);
 }
 
+/*
+  Global overrides
+*/
+
 .v-data-table {
   border-radius: unset;
   box-shadow: map-get($properties, table-shadow);
@@ -52,6 +56,40 @@ td {
 
   .v-data-footer {
     border: unset !important;
+  }
+}
+
+.upload__input .v-input {
+  .v-input__control {
+    order: -1 !important;
+  }
+}
+
+.upload__area {
+  position: relative;
+  .v-input {
+    position: absolute;
+    padding: unset;
+    width: 100%;
+    height: 100%;
+    margin: 0;
+    opacity: 0;
+  }
+  .v-input__control {
+    display: none;
+  }
+  .v-input__prepend-outer {
+    margin: unset;
+    margin-right: unset !important;
+    width: 100%;
+    height: 100%;
+    .v-input__icon.v-input__icon--prepend {
+      height: 100%;
+      button {
+        width: 100%;
+        height: 100%;
+      }
+    }
   }
 }
 </style>
