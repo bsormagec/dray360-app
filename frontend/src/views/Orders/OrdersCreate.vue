@@ -12,7 +12,8 @@
 
     <OrdersCreateUpload
       :files="files"
-      :handle-drop="handleDrop"
+      :add-files="addFiles"
+      :delete-all="deleteAll"
     />
 
     <OrdersCreateSubmitted
@@ -50,9 +51,22 @@ export default {
       this.files = this.files.filter(f => f.name !== file.name)
     },
 
-    handleDrop (e) {
-      const dt = e.dataTransfer
-      this.files = [...dt.files].filter(f => f.name.includes('.pdf'))
+    deleteAll () {
+      this.files = []
+    },
+
+    addFiles (newFiles) {
+      const filtered = [...this.files, ...newFiles].filter(f => f.name.includes('.pdf'))
+      const unique = []
+      const uniqueNames = []
+
+      filtered.forEach(fil => {
+        if (uniqueNames.includes(fil.name)) return
+        uniqueNames.push(fil.name)
+        unique.push(fil)
+      })
+
+      this.files = unique
     }
   }
 }

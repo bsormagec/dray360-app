@@ -9,14 +9,16 @@
 
     <div class="upload__input">
       <v-file-input
-        v-model="files"
         multiple
         solo
         dense
         hide-details
         append
-        :accept="accept"
         label="File input"
+        :value="files"
+        :accept="accept"
+        @change="(files) => addFiles(files)"
+        @click:clear="deleteAll()"
       />
 
       <span class="input__legend">
@@ -33,9 +35,10 @@
     >
       <span class="area__legend">... or drag documents here to upload</span>
       <v-file-input
-        v-model="files"
         multiple
         :accept="accept"
+        :value="files"
+        @change="(files) => addFiles(files)"
       />
     </div>
   </div>
@@ -50,7 +53,11 @@ export default {
       type: Array,
       required: true
     },
-    handleDrop: {
+    addFiles: {
+      type: Function,
+      required: true
+    },
+    deleteAll: {
       type: Function,
       required: true
     }
@@ -58,7 +65,14 @@ export default {
 
   data: () => ({
     accept: '.pdf'
-  })
+  }),
+
+  methods: {
+    handleDrop (e) {
+      const dt = e.dataTransfer
+      this.addFiles(dt.files)
+    }
+  }
 }
 </script>
 
