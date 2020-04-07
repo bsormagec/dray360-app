@@ -25,6 +25,12 @@ $ordermaster-logo: url("../assets/images/ordermaster_logo.svg");
   box-shadow: map-get($properties, inset-shadow-right);
   padding-top: 4rem;
   padding-bottom: 3rem;
+
+  @media screen and (max-width: 1200px) {
+    flex-direction: row;
+    justify-content: space-between;
+    padding: 1.5rem;
+  }
 }
 
 .sidebar__logo {

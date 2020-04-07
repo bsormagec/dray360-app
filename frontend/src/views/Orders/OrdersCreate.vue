@@ -81,6 +81,10 @@ export default {
   padding-bottom: 3rem;
   box-shadow: map-get($properties, inset-shadow-left);
   border-left: 0.1rem solid map-get($colors, grey-2);
+
+  @media screen and (max-width: 1330px) {
+    width: 35%;
+  }
 }
 
 .create__header {

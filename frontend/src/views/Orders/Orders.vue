@@ -1,9 +1,8 @@
 <template>
   <div
     class="orders"
-    data-testid="test-orders"
   >
-    <Sidebar />
+    <Sidebar class="orders__sidebar" />
 
     <OrdersList v-if="meta().last_page" />
 
@@ -75,5 +74,15 @@ export default {
 .orders {
   display: flex;
   height: 100%;
+
+  @media screen and (max-width: 1200px) {
+    flex-wrap: wrap;
+  }
+}
+
+.orders__sidebar {
+  @media screen and (max-width: 1200px) {
+    width: 100%;
+  }
 }
 </style>
