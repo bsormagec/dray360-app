@@ -66,10 +66,6 @@ export default {
   padding: 5.2rem 7.5rem;
   padding-bottom: 3rem;
   flex-grow: 1;
-
-  @media screen and (max-width: 1200px) {
-    flex-grow: unset;
-    width: 65%;
-  }
+  width: 100%;
 }
 </style>

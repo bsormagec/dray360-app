@@ -1,6 +1,12 @@
 <template>
   <div class="header">
     <h1 class="header__title">
+      <v-icon
+        :style="{ marginRight: '1.5rem' }"
+        @click="toggleMobileSidebar"
+      >
+        mdi-menu
+      </v-icon>
       Orders
     </h1>
 
@@ -23,8 +29,12 @@
 </template>
 
 <script>
+import { providerMethodsName } from '@/views/Orders/inner_types'
+
 export default {
   name: 'OrdersListHeader',
+
+  inject: [providerMethodsName],
 
   props: {
     headers: {
@@ -53,6 +63,10 @@ export default {
     handleSelection (items) {
       const newHeaders = this.cachedHeaders.filter(({ text }) => this.selectedItems.find(selected => text === selected))
       this.setHeaders(newHeaders)
+    },
+
+    toggleMobileSidebar () {
+      this[providerMethodsName].toggleMobileSidebar()
     }
   }
 }
@@ -65,8 +79,15 @@ export default {
 }
 
 .header__title {
-  display: block;
+  display: flex;
+  align-items: center;
   width: 100%;
+
+  button {
+    @media screen and (min-width: 1024px) {
+      display: none;
+    }
+  }
 }
 
 .header__dropdown {

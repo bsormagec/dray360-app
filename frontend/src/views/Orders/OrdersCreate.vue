@@ -76,14 +76,14 @@ export default {
 .create {
   display: flex;
   flex-direction: column;
-  width: 27%;
+  width: 100%;
   padding: 5.2rem 3.6rem;
   padding-bottom: 3rem;
   box-shadow: map-get($properties, inset-shadow-left);
   border-left: 0.1rem solid map-get($colors, grey-2);
 
-  @media screen and (max-width: 1330px) {
-    width: 35%;
+  @media screen and (min-width: 1024px) {
+    width: 27%;
   }
 }
 
