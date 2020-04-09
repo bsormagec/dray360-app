@@ -120,5 +120,9 @@ export default {
   font-size: 1.4rem !important;
   font-weight: bold;
   color: map-get($colors, grey-4);
+
+  @media screen and (min-width: map-get($breakpoints, med)) {
+    font-size: 1.2rem !important;
+  }
 }
 </style>

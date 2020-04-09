@@ -56,6 +56,9 @@ export default {
     font-weight: bold;
     color: map-get($colors, blue);
     text-decoration-line: underline;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
   }
 }
 </style>

@@ -8,7 +8,7 @@
     <div
       v-for="btn in buttonsList"
       :key="btn.value"
-      class="buttons__single"
+      :class="`buttons__single ${btn.value}`"
     >
       <v-btn
         color="primary"
@@ -79,5 +79,13 @@ export default {
 
 .buttons__single:not(:last-child) {
   margin-right: 1rem;
+}
+
+.First, .Last {
+  display: none;
+
+  @media screen and (min-width: map-get($breakpoints, lg)) {
+    display: block;
+  }
 }
 </style>

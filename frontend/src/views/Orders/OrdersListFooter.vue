@@ -191,7 +191,9 @@ export default {
   align-items: center;
   margin-top: 2.4rem;
 
-  @media screen and (max-width: 1670px){
+  @media screen and (min-width: map-get($breakpoints , lg)) {
+    align-items: center;
+    justify-content: center;
     flex-wrap: wrap;
   }
 }
@@ -200,13 +202,22 @@ export default {
   margin-right: auto;
   font-size: 1.44rem !important;
   font-weight: bold;
+  display: none;
+
+  @media screen and (min-width: map-get($breakpoints , lg)) {
+    display: flex;
+  }
 }
 
 .footer__jump {
-  display: flex;
+  display: none;
   align-items: center;
   width: 14rem;
   margin-right: 2.1rem;
+
+  @media screen and (min-width: map-get($breakpoints , lg)) {
+    display: flex;
+  }
 
   span {
     min-width: 8rem;
@@ -214,19 +225,14 @@ export default {
     font-weight: bold;
     margin-right: 0.8rem;
   }
-
-  @media screen and (max-width: 1670px){
-    margin-right: unset;
-  }
 }
 
 .footer__navigation {
   display: flex;
+  margin: 0 auto;
 
-  @media screen and (max-width: 1670px){
-    width: 100%;
-    justify-content: center;
-    margin-top: 1rem;
+  @media screen and (min-width: map-get($breakpoints , lg)) {
+    margin: unset;
   }
 }
 </style>

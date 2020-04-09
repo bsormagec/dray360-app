@@ -1,30 +1,140 @@
 <template>
-  <div class="sidebar">
+  <div
+    :class="{sidebar: true, desktop: !isMobile}"
+  >
     <div class="sidebar__logo" />
     <div class="sidebar__footer" />
+
+    <transition name="slide-fade">
+      <div
+        v-if="isOpen && isMobile"
+        class="sidebar__background"
+      >
+        <div class="sidebar__close">
+          <v-icon @click="toggleMobileSidebar">
+            mdi-close
+          </v-icon>
+        </div>
+
+        <div class="sidebar__logo" />
+
+        <div class="sidebar__mobile-options">
+          <v-btn
+            color="primary"
+            :outlined="activeMobileTab !== tabs.list"
+            :style="{marginBottom: '1rem'}"
+            @click="changeMobileTab(tabs.list)"
+          >
+            orders list
+          </v-btn>
+          <v-btn
+            color="primary"
+            :outlined="activeMobileTab !== tabs.create"
+            @click="changeMobileTab(tabs.create)"
+          >
+            create order
+          </v-btn>
+        </div>
+
+        <div class="sidebar__footer" />
+      </div>
+    </transition>
+
+    <transition name="fade">
+      <div
+        v-if="isOpen && isMobile"
+        class="sidebar__backdrop"
+        @click="toggleMobileSidebar"
+      />
+    </transition>
   </div>
 </template>
 
 <script>
+import isMobile from '@/mixins/is_mobile'
+import { tabs } from '@/views/Orders/inner_enums'
+
 export default {
-  name: 'Sidebar'
+  name: 'Sidebar',
+
+  mixins: [isMobile],
+
+  props: {
+    activeMobileTab: {
+      type: String,
+      required: true
+    },
+    changeMobileTab: {
+      type: Function,
+      required: true
+    },
+    toggleMobileSidebar: {
+      type: Function,
+      required: true
+    },
+    isOpen: {
+      type: Boolean,
+      required: true
+    }
+  },
+
+  data: () => ({
+    tabs
+  })
 }
 </script>
 
 <style lang="scss" scoped>
-$sidebar-width: 13.5%;
 $cushing-logo: url("../assets/images/cushing_logo.svg");
 $ordermaster-logo: url("../assets/images/ordermaster_logo.svg");
 
-.sidebar {
-  display: flex;
+.sidebar.desktop {
+  z-index: 1;
+  display: none;
+  position: fixed;
+  width: map-get($sizes, sidebar-desktop-width);
+  height: 100%;
   flex-direction: column;
   align-items: center;
-  width: $sidebar-width;
   background-color: map-get($colors, grey);
   box-shadow: map-get($properties, inset-shadow-right);
   padding-top: 4rem;
   padding-bottom: 3rem;
+
+  @media screen and (min-width: map-get($breakpoints, med)) {
+    display: flex;
+  }
+}
+
+.sidebar__background {
+  top: 0;
+  z-index: 2;
+  position: fixed;
+  width: 52vw;
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  background-color: map-get($colors, grey);
+  box-shadow: map-get($properties, inset-shadow-right);
+  padding-top: 6.1rem;
+  padding-bottom: 3rem;
+}
+
+.sidebar__backdrop {
+  top: 0;
+  z-index: 1;
+  position: fixed;
+  height: 100vh;
+  width: 100vw;
+  flex-grow: 1;
+  background: rgba(0, 0, 0, 0.4)
+}
+
+.sidebar__close {
+  position: absolute;
+  top: 2.4rem;
+  left: 1.5rem;
 }
 
 .sidebar__logo {
@@ -44,5 +154,12 @@ $ordermaster-logo: url("../assets/images/ordermaster_logo.svg");
   background-image: $ordermaster-logo;
   background-size: contain;
   background-position: center center;
+}
+
+.sidebar__mobile-options {
+  display: flex;
+  flex-direction: column;
+  margin-top: 3.8rem;
+  margin-bottom: auto;
 }
 </style>
