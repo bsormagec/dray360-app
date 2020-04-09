@@ -5,6 +5,7 @@
       :items="list()"
       :items-per-page="list().length"
       :hide-default-footer="true"
+      mobile-breakpoint="319"
     />
   </div>
 </template>

@@ -1,5 +1,14 @@
 <template>
   <div class="create">
+    <div class="create__close">
+      <v-icon
+        :style="{ position: 'absolute', top: '2.4rem', left: '1.5rem' }"
+        @click="toggleMobileSidebar"
+      >
+        mdi-menu
+      </v-icon>
+    </div>
+
     <div class="create__header">
       <v-btn
         class="header__btn"
@@ -42,6 +51,13 @@ export default {
     OrdersCreateSubmitted
   },
 
+  props: {
+    toggleMobileSidebar: {
+      type: Function,
+      required: true
+    }
+  },
+
   data: () => ({
     files: []
   }),
@@ -77,13 +93,25 @@ export default {
   display: flex;
   flex-direction: column;
   width: 100%;
-  padding: 5.2rem 3.6rem;
-  padding-bottom: 3rem;
-  box-shadow: map-get($properties, inset-shadow-left);
-  border-left: 0.1rem solid map-get($colors, grey-2);
+  padding: 5rem 1rem;
+  overflow-x: hidden;
 
-  @media screen and (min-width: 1024px) {
-    width: 27%;
+  @media screen and (min-width: map-get($breakpoints, med)) {
+    width: 35%;
+    box-shadow: map-get($properties, inset-shadow-left);
+    border-left: 0.1rem solid map-get($colors, grey-2);
+    padding: 5.2rem 1.6rem;
+    padding-bottom: 3rem;
+  }
+
+  @media screen and (min-width: map-get($breakpoints, lg)) {
+    padding: 5.2rem 3.6rem;
+  }
+}
+
+.create__close {
+  @media screen and (min-width: map-get($breakpoints, med)) {
+    display: none;
   }
 }
 

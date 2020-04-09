@@ -63,9 +63,16 @@ export default {
 
 <style lang="scss" scoped>
 .list {
-  padding: 5.2rem 7.5rem;
-  padding-bottom: 3rem;
+  padding: 2rem 1rem;
   flex-grow: 1;
+  display: flex;
+  flex-direction: column;
+  flex-grow: unset;
   width: 100%;
+
+  @media screen and (min-width: map-get($breakpoints, med)) {
+    padding: 5.2rem 3.2rem;
+    padding-left: map-get($sizes, sidebar-desktop-width) + 3.2rem;
+  }
 }
 </style>

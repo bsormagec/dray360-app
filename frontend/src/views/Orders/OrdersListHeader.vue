@@ -84,7 +84,7 @@ export default {
   width: 100%;
 
   button {
-    @media screen and (min-width: 1024px) {
+    @media screen and (min-width: map-get($breakpoints, med)) {
       display: none;
     }
   }

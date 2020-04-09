@@ -16,6 +16,18 @@ $properties: (
 );
 
 $font: (
-	main-family: 'Roboto, sans-serif',
+  main-family: 'Roboto, sans-serif',
+  min-size: 58%,
 	base-size: 62.5%
 );
+
+$sizes: (
+  sidebar-desktop-width: 19.5rem
+);
+
+$breakpoints: (
+  min: 375px,
+  med: 1024px,
+  lg: 1280px,
+  max: 1640px
+)

@@ -3,21 +3,24 @@
     class="orders"
   >
     <Sidebar
-      v-if="shouldShowSidebar"
       class="orders__sidebar"
       :active-mobile-tab="activeMobileTab"
       :change-mobile-tab="changeMobileTab"
       :toggle-mobile-sidebar="toggleMobileSidebar"
+      :is-open="mobileSidebarOpen"
     />
 
     <OrdersList v-if="meta().last_page && shouldShowTab(tabs.list)" />
 
-    <OrdersCreate v-if="shouldShowTab(tabs.create)" />
+    <OrdersCreate
+      v-if="shouldShowTab(tabs.create)"
+      :toggle-mobile-sidebar="toggleMobileSidebar"
+    />
   </div>
 </template>
 
 <script>
-import isMobile from '@/utils/is_mobile'
+import isMobile from '@/mixins/is_mobile'
 import { mapState, mapActions } from '@/utils/vuex_mappings'
 import { reqStatus } from '@/enums/req_status'
 import orders, { types } from '@/store/modules/orders'
@@ -38,6 +41,8 @@ export default {
     OrdersCreate
   },
 
+  mixins: [isMobile],
+
   data: () => ({
     ...mapState(orders.moduleName, {
       list: state => listFormat(state.list),
@@ -51,7 +56,7 @@ export default {
 
   computed: {
     shouldShowSidebar () {
-      if (!isMobile()) return true
+      if (!this.isMobile) return true
       return this.mobileSidebarOpen
     }
   },
@@ -72,7 +77,7 @@ export default {
     },
 
     shouldShowTab (tab) {
-      if (!isMobile()) return true
+      if (!this.isMobile) return true
       return this.activeMobileTab === tab
     },
 
@@ -106,9 +111,5 @@ export default {
 .orders {
   display: flex;
   height: 100%;
-
-  @media screen and (max-width: 1200px) {
-    flex-wrap: wrap;
-  }
 }
 </style>
