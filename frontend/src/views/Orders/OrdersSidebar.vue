@@ -85,8 +85,8 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-$cushing-logo: url("../assets/images/cushing_logo.svg");
-$ordermaster-logo: url("../assets/images/ordermaster_logo.svg");
+$cushing-logo: url("../../assets/images/cushing_logo.svg");
+$ordermaster-logo: url("../../assets/images/ordermaster_logo.svg");
 
 .sidebar.desktop {
   z-index: 1;

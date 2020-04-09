@@ -2,7 +2,7 @@
   <div
     class="orders"
   >
-    <Sidebar
+    <OrdersSidebar
       class="orders__sidebar"
       :active-mobile-tab="activeMobileTab"
       :change-mobile-tab="changeMobileTab"
@@ -25,7 +25,7 @@ import { mapState, mapActions } from '@/utils/vuex_mappings'
 import { reqStatus } from '@/enums/req_status'
 import orders, { types } from '@/store/modules/orders'
 
-import Sidebar from '@/components/Sidebar'
+import OrdersSidebar from '@/views/Orders/OrdersSidebar'
 import OrdersList from '@/views/Orders/OrdersList'
 import OrdersCreate from '@/views/Orders/OrdersCreate'
 import { listFormat } from '@/views/Orders/inner_utils'
@@ -36,7 +36,7 @@ export default {
   name: 'Orders',
 
   components: {
-    Sidebar,
+    OrdersSidebar,
     OrdersList,
     OrdersCreate
   },
