@@ -3,6 +3,41 @@
     class="sidebar"
   >
     <div class="sidebar__logo" />
+
+    <div class="sidebar__body">
+      <v-btn
+        color="primary"
+        outlined
+        @click="() => {}"
+      >
+        <v-icon>
+          mdi-chevron-left
+        </v-icon>
+        Order List
+      </v-btn>
+
+      <div class="body__navigation">
+        nav
+      </div>
+
+      <v-btn
+        color="primary"
+        outlined
+        :style="{ marginBottom: '1rem' }"
+        @click="() => {}"
+      >
+        Edit Order
+      </v-btn>
+
+      <v-btn
+        color="primary"
+        outlined
+        @click="() => {}"
+      >
+        Send to   TMS
+      </v-btn>
+    </div>
+
     <div class="sidebar__footer" />
   </div>
 </template>
@@ -48,5 +83,17 @@ $ordermaster-logo: url("../../assets/images/ordermaster_logo.svg");
   background-image: $ordermaster-logo;
   background-size: contain;
   background-position: center center;
+}
+
+.sidebar__body {
+  margin-top: 6rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.body__navigation {
+  margin-top: 3.1rem;
+  margin-bottom: 3.1rem;
 }
 </style>
