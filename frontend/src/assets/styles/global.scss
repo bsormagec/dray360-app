@@ -118,6 +118,12 @@ button {
   }
 }
 
+.v-stepper {
+  background: unset !important;
+  box-shadow: unset !important;
+  padding-bottom: unset !important;
+}
+
 .v-icon.v-icon::after {
   width: 2.4rem !important;
   height: 2.4rem !important;

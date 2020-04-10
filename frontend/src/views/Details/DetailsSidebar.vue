@@ -16,9 +16,7 @@
         Order List
       </v-btn>
 
-      <div class="body__navigation">
-        nav
-      </div>
+      <DetailsSidebarNavigation />
 
       <v-btn
         color="primary"
@@ -43,8 +41,14 @@
 </template>
 
 <script>
+import DetailsSidebarNavigation from '@/views/Details/DetailsSidebarNavigation'
+
 export default {
-  name: 'DetailsSidebar'
+  name: 'DetailsSidebar',
+
+  components: {
+    DetailsSidebarNavigation
+  }
 }
 </script>
 
@@ -90,10 +94,5 @@ $ordermaster-logo: url("../../assets/images/ordermaster_logo.svg");
   display: flex;
   flex-direction: column;
   align-items: center;
-}
-
-.body__navigation {
-  margin-top: 3.1rem;
-  margin-bottom: 3.1rem;
 }
 </style>
