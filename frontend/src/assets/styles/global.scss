@@ -131,24 +131,39 @@ button {
 
 .navigation__step {
   cursor: pointer;
-  
+  .v-stepper__label {
+    font-size: 1.4rem !important;
+  }
+  &.small {
+    .v-stepper__label {
+      font-size: 1.2rem !important;
+    }
+    span {
+      transform: scale(0.7);
+    }    
+  }
+  span.primary {
+    background: rgba(0, 0, 0, 0.38) !important;
+    border-color: rgba(0, 0, 0, 0.38) !important;
+  }
   &.active {
     span {
       background: map-get($colors, blue) !important;
       border-color: map-get($colors, blue) !important;
     }
-  
     div {
       text-shadow: 0px 0px 0px black !important;
     }
   }
-
   &.hide {
     display: none !important;
   }
 }
-.navigation__separator.hide {
-  display: none !important;
+.navigation__separator {
+  padding: 0.8rem !important;
+  &.hide {
+    display: none !important;
+  }
 }
 
 /* Transition animations */

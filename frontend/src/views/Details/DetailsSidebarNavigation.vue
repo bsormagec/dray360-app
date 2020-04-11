@@ -10,8 +10,15 @@
         :key="step.id"
       >
         <v-stepper-step
-          :class="{navigation__step: true, active: isActive(step.id), hide: shouldHide(step.id)}"
-          :step="step.id"
+          :class="{
+            navigation__step: true,
+            active: isActive(step.id),
+            hide: shouldHide(step.id),
+            small: !isTitle(step.id)
+          }"
+          step=""
+          :complete="isTitle(step.id)"
+          complete-icon="mdi-account"
           @click="setStep(step.id)"
         >
           {{ step.text }}
@@ -80,10 +87,12 @@ export default {
       if (String(this.current).split('.')[0] === String(n)) return true
     },
 
-    shouldHide (n) {
-      const isTitle = String(n).split('.').length === 1
+    isTitle (n) {
+      return String(n).split('.').length === 1
+    },
 
-      if (isTitle) return false
+    shouldHide (n) {
+      if (this.isTitle(n)) return false
       const titlePart = String(n).split('.')[0]
       const titlePartLeading = String(this.current).split('.')[0] === titlePart
       return !titlePartLeading
