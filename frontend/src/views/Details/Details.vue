@@ -11,6 +11,7 @@
 <script>
 import DetailsSidebar from '@/views/Details/DetailsSidebar'
 import DetailsForm from '@/views/Details/DetailsForm'
+import { exampleForm } from '@/views/Details/inner_utils'
 
 export default {
   name: 'Details',
@@ -21,37 +22,7 @@ export default {
   },
 
   data: () => ({
-    exampleForm: [
-      {
-        title: 'shipment',
-        rootFields: [
-          {
-            name: 'shipment designation',
-            value: 'international'
-          },
-          {
-            name: 'shipment direction',
-            value: 'import'
-          },
-          {
-            name: 'shipment handling',
-            value: 'drop & hook'
-          },
-          {
-            name: 'one way',
-            value: 'yes'
-          },
-          {
-            name: 'expedite shipment',
-            value: 'no'
-          },
-          {
-            name: 'hazardous',
-            value: 'yes'
-          }
-        ]
-      }
-    ]
+    exampleForm
   })
 }
 </script>

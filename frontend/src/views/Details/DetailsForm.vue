@@ -1,38 +1,62 @@
 <template>
   <div class="form">
-    <Fragment
-      v-for="(section, i) in form"
-      :key="i"
+    <div
+      v-for="section in form.sections"
+      :key="section.title"
+      class="form__section"
     >
-      <h1 class="form__title">
+      <h1
+        class="section__title"
+        :style="{
+          marginBottom: section.rootFields ? '2rem' : '1.6rem'
+        }"
+      >
         {{ section.title }}
       </h1>
 
       <div
-        v-for="field in section.rootFields"
-        :key="field.name"
-        class="form__field"
+        v-if="section.rootFields"
+        class="section__rootfields"
       >
-        <span class="field__name">{{ field.name }}</span>
-        <span class="field__value">{{ field.value }}</span>
+        <DetailsFormField
+          v-for="field in section.rootFields"
+          :key="field.name"
+          :field="field"
+        />
       </div>
-    </Fragment>
+
+      <div
+        v-for="sub in section.subSections"
+        :key="sub.name"
+        class="section__sub"
+      >
+        <h2 class="sub__title">
+          {{ sub.title }}
+        </h2>
+
+        <DetailsFormField
+          v-for="field in sub.fields"
+          :key="field.name"
+          :field="field"
+        />
+      </div>
+    </div>
   </div>
 </template>
 
 <script>
-import { Fragment } from 'vue-fragment'
+import DetailsFormField from '@/views/Details/DetailsFormField'
 
 export default {
   name: 'DetailsForm',
 
   components: {
-    Fragment
+    DetailsFormField
   },
 
   props: {
     form: {
-      type: Array,
+      type: Object,
       required: true
     }
   }
@@ -43,9 +67,10 @@ export default {
 .form {
   width: 45%;
   padding: 3.6rem 6.5rem;
+  padding-top: 8.4rem;
 }
 
-.form__title {
+.section__title {
   text-transform: uppercase;
   font-size: 1.7rem;
   line-height: 3rem;
@@ -55,7 +80,11 @@ export default {
   color: map-get($colors, grey-7);
 }
 
-.form__field {
+.section__rootfields {
+  margin-bottom: 3.6rem;
+}
+
+.section__field {
   display: flex;
   justify-content: space-between;
   margin-bottom: 1.1rem;
@@ -69,6 +98,19 @@ export default {
 
 .field__value {
   font-size: 1.44rem !important;
+  text-transform: capitalize;
+}
+
+.section__sub {
+  margin-bottom: 3.6rem;
+}
+
+.sub__title {
+  font-size: 1.6rem;
+  line-height: 3.6rem;
+  color: map-get($colors, grey-4);
+  border-bottom: 0.1rem solid map-get($colors, grey-3);
+  margin-bottom: 1.4rem;
   text-transform: capitalize;
 }
 </style>
