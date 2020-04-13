@@ -60,6 +60,7 @@ $ordermaster-logo: url("../../assets/images/ordermaster_logo.svg");
   z-index: 1;
   display: flex;
   position: fixed;
+  left: 0;
   width: map-get($sizes, sidebar-desktop-width);
   height: 100%;
   flex-direction: column;
