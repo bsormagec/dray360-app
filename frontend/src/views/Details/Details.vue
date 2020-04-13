@@ -5,12 +5,15 @@
     <DetailsSidebar />
 
     <DetailsForm :form="exampleForm" />
+
+    <DetailsDocument />
   </div>
 </template>
 
 <script>
 import DetailsSidebar from '@/views/Details/DetailsSidebar'
 import DetailsForm from '@/views/Details/DetailsForm'
+import DetailsDocument from '@/views/Details/DetailsDocument.vue'
 import { exampleForm } from '@/views/Details/inner_utils'
 
 export default {
@@ -18,7 +21,8 @@ export default {
 
   components: {
     DetailsSidebar,
-    DetailsForm
+    DetailsForm,
+    DetailsDocument
   },
 
   data: () => ({
