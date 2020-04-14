@@ -1,23 +1,24 @@
 <template>
-  <FormFieldPresentation v-if="readonly" />
+  <FormFieldPresentation
+    v-if="readonly"
+    :field="field"
+  />
 
   <div v-else>
-    <v-text-field
-      :label="field.name"
-      :placeholder="field.name"
-      outlined
-    />
+    <FormFieldElement :field="field" />
   </div>
 </template>
 
 <script>
 import FormFieldPresentation from '@/components/FormField/FormFieldPresentation'
+import FormFieldElement from '@/components/FormField/FormFieldElement'
 
 export default {
   name: 'FormField',
 
   components: {
-    FormFieldPresentation
+    FormFieldPresentation,
+    FormFieldElement
   },
 
   props: {

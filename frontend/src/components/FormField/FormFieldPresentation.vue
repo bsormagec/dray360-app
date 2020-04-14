@@ -4,13 +4,6 @@
   >
     <span class="field__name">{{ field.name }}</span>
 
-    <span
-      v-if="isText"
-      class="field__text"
-    >
-      {{ field.value }}
-    </span>
-
     <a
       v-if="isLink"
       class="field__link"
