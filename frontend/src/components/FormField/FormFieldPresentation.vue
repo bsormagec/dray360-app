@@ -8,7 +8,7 @@
       v-if="isText"
       class="field__text"
     >
-      {{ field.text }}
+      {{ field.value }}
     </span>
 
     <a
@@ -32,7 +32,7 @@
 
 <script>
 export default {
-  name: 'DetailsFormField',
+  name: 'DetailsFormFieldPresentation',
 
   props: {
     field: {

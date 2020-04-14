@@ -5,27 +5,44 @@ export const exampleForm = {
       rootFields: [
         {
           name: 'shipment designation',
-          value: 'international'
+          el: {
+            type: 'input',
+            placeholder: 'international'
+          }
         },
         {
           name: 'shipment direction',
-          value: 'import'
+          el: {
+            type: 'select',
+            placeholder: 'import',
+            options: ['a', 'b', 'c']
+          }
         },
         {
           name: 'shipment handling',
-          value: 'drop & hook'
+          el: {
+            type: 'select',
+            placeholder: 'drop & hook',
+            options: ['a', 'b', 'c']
+          }
         },
         {
           name: 'one way',
-          value: 'yes'
+          el: {
+            type: 'switch'
+          }
         },
         {
           name: 'expedite shipment',
-          value: 'no'
+          el: {
+            type: 'switch'
+          }
         },
         {
           name: 'hazardous',
-          value: 'yes'
+          el: {
+            type: 'switch'
+          }
         }
       ],
       subSections: [
@@ -34,31 +51,50 @@ export const exampleForm = {
           fields: [
             {
               name: 'type',
-              value: 'container'
+              el: {
+                type: 'input',
+                placeholder: 'container'
+              }
             },
             {
               name: 'unit number',
-              value: 'AAAU6578953'
+              el: {
+                type: 'input',
+                placeholder: 'AAAU656578'
+              }
             },
             {
               name: 'equipment',
-              value: 'GP-General Purpose'
+              el: {
+                type: 'input',
+                placeholder: 'GP-General Purpose'
+              }
             },
             {
               name: 'size',
-              value: '20 ft'
+              el: {
+                type: 'input',
+                placeholder: '20 ft'
+              }
             },
             {
               name: 'yard pre-pull',
-              value: 'yes'
+              el: {
+                type: 'switch'
+              }
             },
             {
               name: 'has chassis',
-              value: 'no'
+              el: {
+                type: 'switch'
+              }
             },
             {
               name: 'owner or SS company',
-              value: 'ACL'
+              el: {
+                type: 'input',
+                placeholder: 'ACL'
+              }
             }
           ]
         },
@@ -67,52 +103,133 @@ export const exampleForm = {
           fields: [
             {
               name: 'reference number',
-              value: '13698454-54'
+              el: {
+                type: 'input'
+              }
             },
             {
               name: 'rate quote number',
-              value: '456466'
+              el: {
+                type: 'input'
+              }
             },
             {
               name: 'port/ramp of origin',
-              value: 'GLOBAL 4 IL'
+              el: {
+                type: 'input'
+              }
             },
             {
               name: 'port/ramp of destination',
-              value: 'CHIFOUSEV IL'
+              el: {
+                type: 'input'
+              }
             },
             {
               name: 'vessel',
-              value: 'caribbean queen'
+              el: {
+                type: 'input'
+              }
             },
             {
               name: 'voyage',
-              value: '5134A'
+              el: {
+                type: 'input'
+              }
             },
             {
               name: 'master BOL / MAWB',
-              value: 'DFETR'
+              el: {
+                type: 'input'
+              }
             },
             {
-              name: 'expedite shipment',
-              value: 'no'
+              name: 'house BOL / MAWB',
+              el: {
+                type: 'input'
+              }
             },
             {
-              name: 'hazardous',
-              value: 'yes'
+              name: '(Est) arrival',
+              el: {
+                type: 'date-time'
+              }
+            },
+            {
+              name: 'last free day',
+              el: {
+                type: 'date-time'
+              }
             }
           ]
         },
         {
           title: 'billing',
           fields: [
+            // {
+            //   name: 'bill to',
+            //   value: {
+            //     type: 'link',
+            //     href: '#',
+            //     icon: 'mdi-account-box',
+            //     text: 'CAI Logistics'
+            //   },
+            //   el: {
+            //     type: 'modal-form '
+            //   }
+            // }
             {
-              name: 'bill to',
-              value: {
-                type: 'link',
-                href: '#',
-                icon: 'mdi-account-box',
-                text: 'CAI Logistics'
+              name: 'company name',
+              el: {
+                type: 'input'
+              }
+            },
+            {
+              name: 'address',
+              el: {
+                type: 'text-area'
+              }
+            },
+            {
+              name: 'city',
+              el: {
+                type: 'input'
+              }
+            },
+            {
+              name: 'state',
+              el: {
+                type: 'input'
+              }
+            },
+            {
+              name: 'zip',
+              el: {
+                type: 'input'
+              }
+            },
+            {
+              name: 'contact name',
+              el: {
+                type: 'input'
+              }
+            },
+            {
+              name: 'phone',
+              el: {
+                type: 'input'
+              }
+            },
+            {
+              name: 'ext',
+              el: {
+                type: 'input'
+              }
+            },
+            {
+              name: 'email',
+              el: {
+                type: 'input'
               }
             }
           ]
@@ -123,27 +240,244 @@ export const exampleForm = {
       title: 'itinerary',
       subSections: [
         {
-          title: '1: Pickup',
+          title: 'hook: rail or port terminal',
           fields: [
             {
+              name: 'company name',
+              el: {
+                type: 'input'
+              }
+            },
+            {
               name: 'address',
-              value: 'Watkins Manufacturing Corp'
+              el: {
+                type: 'text-area'
+              }
+            },
+            {
+              name: 'city',
+              el: {
+                type: 'input'
+              }
+            },
+            {
+              name: 'state',
+              el: {
+                type: 'input'
+              }
+            },
+            {
+              name: 'zip',
+              el: {
+                type: 'input'
+              }
             },
             {
               name: 'contact name',
-              value: '--'
+              el: {
+                type: 'input'
+              }
             },
             {
               name: 'phone',
-              value: '(971) 256-5228'
+              el: {
+                type: 'input'
+              }
+            },
+            {
+              name: 'ext',
+              el: {
+                type: 'input'
+              }
             },
             {
               name: 'email',
-              value: '--'
+              el: {
+                type: 'input'
+              }
             },
             {
               name: 'notes',
-              value: 'Pickup Apt Req. Online'
+              el: {
+                type: 'text-area'
+              }
+            },
+            {
+              name: 'hours'
+            }
+          ]
+        },
+        {
+          title: 'hook: rail or port terminal',
+          fields: [
+            {
+              name: 'company name',
+              el: {
+                type: 'input'
+              }
+            },
+            {
+              name: 'address',
+              el: {
+                type: 'text-area'
+              }
+            },
+            {
+              name: 'city',
+              el: {
+                type: 'input'
+              }
+            },
+            {
+              name: 'state',
+              el: {
+                type: 'input'
+              }
+            },
+            {
+              name: 'zip',
+              el: {
+                type: 'input'
+              }
+            },
+            {
+              name: 'contact name',
+              el: {
+                type: 'input'
+              }
+            },
+            {
+              name: 'phone',
+              el: {
+                type: 'input'
+              }
+            },
+            {
+              name: 'ext',
+              el: {
+                type: 'input'
+              }
+            },
+            {
+              name: 'email',
+              el: {
+                type: 'input'
+              }
+            },
+            {
+              name: 'notes',
+              el: {
+                type: 'text-area'
+              }
+            },
+            {
+              name: 'hours',
+              el: {
+                type: 'input'
+              }
+            },
+            {
+              el: {
+                name: 'delivery instructions',
+                type: 'radio',
+                options: [
+                  'call for appointment',
+                  {
+                    name: 'deliver between',
+                    el: [
+                      { type: 'date-time' },
+                      { placeholder: 'delivery instructions', type: 'text-area' }
+                    ]
+                  }
+                ]
+              }
+            }
+          ]
+        },
+        {
+          title: 'dismount: return empty to depot',
+          fields: [
+            {
+              name: 'company name',
+              el: {
+                type: 'input'
+              }
+            },
+            {
+              name: 'address',
+              el: {
+                type: 'text-area'
+              }
+            },
+            {
+              name: 'city',
+              el: {
+                type: 'input'
+              }
+            },
+            {
+              name: 'state',
+              el: {
+                type: 'input'
+              }
+            },
+            {
+              name: 'zip',
+              el: {
+                type: 'input'
+              }
+            },
+            {
+              name: 'contact name',
+              el: {
+                type: 'input'
+              }
+            },
+            {
+              name: 'phone',
+              el: {
+                type: 'input'
+              }
+            },
+            {
+              name: 'ext',
+              el: {
+                type: 'input'
+              }
+            },
+            {
+              name: 'email',
+              el: {
+                type: 'input'
+              }
+            },
+            {
+              name: 'notes',
+              el: {
+                type: 'text-area'
+              }
+            },
+            {
+              name: 'hours',
+              el: {
+                type: 'input'
+              }
+            },
+            {
+              el: {
+                name: 'pickup instructions',
+                type: 'radio',
+                options: [
+                  'call for appointment',
+                  {
+                    name: 'deliver between',
+                    el: [
+                      { type: 'date-time' },
+                      { placeholder: 'pickup instructions', type: 'text-area' }
+                    ]
+                  }
+                ]
+              }
             }
           ]
         }
@@ -151,31 +485,110 @@ export const exampleForm = {
     },
     {
       title: 'inventory',
-      subSections: [
+      rootFields: [
         {
-          title: 'item 1',
-          fields: [
-            {
-              name: 'quantity',
-              value: '2000 bags'
-            },
-            {
-              name: 'description',
-              value: 'Chicken Feed'
-            },
-            {
-              name: 'weight/unit',
-              value: '40 lbs'
-            },
-            {
-              name: 'total weight',
-              value: '80,000 lbs'
-            },
-            {
-              name: 'hazardous',
-              value: 'no'
+          name: 'quantity',
+          el: {
+            type: 'input'
+          }
+        },
+        {
+          name: 'unit of measure',
+          el: {
+            type: 'select',
+            options: ['a', 'b', 'c']
+          }
+        },
+        {
+          name: 'description',
+          el: {
+            type: 'input'
+          }
+        },
+        {
+          name: 'weight/unit',
+          el: {
+            type: 'input-select',
+            options: ['a', 'b', 'c']
+          }
+        },
+        {
+          name: 'total weight',
+          el: {
+            type: 'input'
+          }
+        },
+        {
+          name: 'hazardous',
+          el: {
+            type: 'switch',
+            switchActiveContent: {
+              title: 'hazardous item information',
+              fields: [
+                {
+                  name: 'contact name',
+                  el: {
+                    type: 'input'
+                  }
+                },
+                {
+                  name: 'phone',
+                  el: {
+                    type: 'input'
+                  }
+                },
+                {
+                  name: 'UN code',
+                  el: {
+                    type: 'input'
+                  }
+                },
+                {
+                  name: 'qualifier',
+                  el: {
+                    type: 'input',
+                    prepend: 'C'
+                  }
+                },
+                {
+                  name: 'flashpoint temp',
+                  el: {
+                    type: 'input'
+                  }
+                },
+                {
+                  name: 'UN name',
+                  el: {
+                    type: 'input'
+                  }
+                },
+                {
+                  name: 'HAZ class',
+                  el: {
+                    type: 'input'
+                  }
+                },
+                {
+                  name: 'IMDG page no',
+                  el: {
+                    type: 'input'
+                  }
+                },
+                {
+                  name: 'packaging group',
+                  el: {
+                    type: 'input'
+                  }
+                },
+                {
+                  name: 'decription',
+                  el: {
+                    type: 'textarea'
+                  }
+                }
+              ]
             }
-          ]
+          }
         }
       ]
     },
@@ -184,7 +597,7 @@ export const exampleForm = {
       rootFields: [
         {
           type: 'text',
-          text: `
+          value: `
           1. Carrier, you are hereby advised that some frieght tendered to you may contain a GPS tracking device.
           2. Carrier agrees to assume full liability for any fines imposed on us or the beneficial owner for the carrier’s failure to maintain all applicable operation permits, certificates and licenses under federal and state laws and regulations
           `

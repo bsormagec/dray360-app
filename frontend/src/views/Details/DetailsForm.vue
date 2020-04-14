@@ -19,7 +19,7 @@
         v-if="section.rootFields"
         class="section__rootfields"
       >
-        <DetailsFormField
+        <FormField
           v-for="field in section.rootFields"
           :key="field.name"
           :field="field"
@@ -38,7 +38,7 @@
           {{ sub.title }}
         </h2>
 
-        <DetailsFormField
+        <FormField
           v-for="field in sub.fields"
           :key="field.name"
           :field="field"
@@ -49,13 +49,13 @@
 </template>
 
 <script>
-import DetailsFormField from '@/views/Details/DetailsFormField'
+import FormField from '@/components/FormField/FormField'
 
 export default {
   name: 'DetailsForm',
 
   components: {
-    DetailsFormField
+    FormField
   },
 
   props: {
