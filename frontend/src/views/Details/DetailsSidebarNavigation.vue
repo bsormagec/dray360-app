@@ -9,20 +9,25 @@
         v-for="(step, i) in steps"
         :key="step.id"
       >
-        <v-stepper-step
-          :class="{
-            navigation__step: true,
-            active: isActive(step.id),
-            hide: shouldHide(step.id),
-            small: !isTitle(step.id)
-          }"
-          step=""
-          :complete="isTitle(step.id)"
-          complete-icon="mdi-account"
-          @click="setStep(step.id)"
+        <a
+          class="navigation__link"
+          :href="'#' + step.text.toLowerCase()"
         >
-          {{ step.text }}
-        </v-stepper-step>
+          <v-stepper-step
+            :class="{
+              navigation__step: true,
+              active: isActive(step.id),
+              hide: shouldHide(step.id),
+              small: !isTitle(step.id)
+            }"
+            step=""
+            :complete="isTitle(step.id)"
+            complete-icon="mdi-account"
+            @click="setStep(step.id)"
+          >
+            {{ step.text }}
+          </v-stepper-step>
+        </a>
 
         <v-stepper-content
           :class="{ navigation__separator: true, hide: shouldHide(step.id) }"
@@ -35,6 +40,7 @@
 
 <script>
 import { Fragment } from 'vue-fragment'
+import { navigationSteps } from '@/views/Details/inner_utils'
 
 export default {
   name: 'DetailsSidebarNavigation',
@@ -45,36 +51,7 @@ export default {
 
   data: () => ({
     current: 1,
-    steps: [
-      {
-        id: 1,
-        text: 'Shipment'
-      },
-      {
-        id: 1.1,
-        text: 'Equipment'
-      },
-      {
-        id: 1.2,
-        text: 'Origin'
-      },
-      {
-        id: 1.3,
-        text: 'Billing'
-      },
-      {
-        id: 2,
-        text: 'Itinerary'
-      },
-      {
-        id: 3,
-        text: 'Inventory'
-      },
-      {
-        id: 4,
-        text: 'Notes'
-      }
-    ]
+    steps: navigationSteps()
   }),
 
   methods: {
@@ -106,5 +83,10 @@ export default {
   display: flex;
   margin-top: 3.1rem;
   margin-bottom: 3.1rem;
+}
+
+.navigation__link {
+  text-decoration: none;
+  text-transform: capitalize;
 }
 </style>

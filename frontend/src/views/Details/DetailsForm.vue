@@ -6,6 +6,7 @@
       class="form__section"
     >
       <h1
+        :id="section.title"
         class="section__title"
         :style="{
           marginBottom: section.rootFields ? '2rem' : '1.6rem'
@@ -30,7 +31,10 @@
         :key="sub.name"
         class="section__sub"
       >
-        <h2 class="sub__title">
+        <h2
+          :id="sub.title"
+          class="sub__title"
+        >
           {{ sub.title }}
         </h2>
 
