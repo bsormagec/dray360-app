@@ -241,6 +241,14 @@ button {
   }
 }
 
+.form-field-element-switch {
+  .v-label {
+    color: map-get($colors , black) !important;
+    font-size: 1.4rem !important;
+    text-transform: capitalize;
+  }
+}
+
 /* Transition animations */
 
 .fade-enter-active, .fade-leave-active {
