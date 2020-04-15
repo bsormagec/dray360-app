@@ -4,6 +4,9 @@
   >
     <span class="field__name">{{ field.name }}</span>
 
+    <!--
+      TODO: No longer a link, it's a modal-form component
+    -->
     <a
       v-if="isLink"
       class="field__link"
@@ -15,6 +18,9 @@
         :style="{ marginLeft: '1.5rem' }"
       >{{ field.value.icon }}</v-icon>
     </a>
+    <!--
+      end
+    -->
 
     <span
       v-else

@@ -303,12 +303,15 @@ export const exampleForm = {
               }
             },
             {
-              name: 'hours'
+              name: 'hours',
+              el: {
+                type: 'input'
+              }
             }
           ]
         },
         {
-          title: 'hook: rail or port terminal',
+          title: 'deliver: container to',
           fields: [
             {
               name: 'company name',
@@ -596,11 +599,10 @@ export const exampleForm = {
       title: 'notes',
       rootFields: [
         {
-          type: 'text',
-          value: `
-          1. Carrier, you are hereby advised that some frieght tendered to you may contain a GPS tracking device.
-          2. Carrier agrees to assume full liability for any fines imposed on us or the beneficial owner for the carrier’s failure to maintain all applicable operation permits, certificates and licenses under federal and state laws and regulations
-          `
+          name: 'notes',
+          el: {
+            type: 'textarea'
+          }
         }
       ]
     }

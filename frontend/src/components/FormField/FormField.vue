@@ -4,9 +4,10 @@
     :field="field"
   />
 
-  <div v-else>
-    <FormFieldElement :field="field" />
-  </div>
+  <FormFieldElement
+    v-else
+    :field="field"
+  />
 </template>
 
 <script>

@@ -1,19 +1,30 @@
 <template>
-  <v-text-field
-    :label="field.name"
-    :placeholder="field.name"
-    outlined
+  <FormFieldElementInput
+    v-if="isInput"
+    :field="field"
   />
 </template>
 
 <script>
+import FormFieldElementInput from '@/components/FormField/FormFieldElementInput'
+
 export default {
   name: 'FormField',
+
+  components: {
+    FormFieldElementInput
+  },
 
   props: {
     field: {
       type: Object,
       required: true
+    }
+  },
+
+  computed: {
+    isInput () {
+      return this.field.el.type === 'input'
     }
   }
 }
