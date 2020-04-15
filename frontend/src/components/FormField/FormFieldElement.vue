@@ -19,6 +19,7 @@
 </template>
 
 <script>
+import { fieldType } from '@/enums/field_type'
 import FormFieldElementInput from '@/components/FormField/FormFieldElementInput'
 import FormFieldElementSelect from '@/components/FormField/FormFieldElementSelect'
 import FormFieldElementSwitch from '@/components/FormField/FormFieldElementSwitch'
@@ -41,13 +42,16 @@ export default {
 
   computed: {
     isInput () {
-      return this.field.el.type === 'input'
+      return this.field.el.type === fieldType.input
     },
     isSelect () {
-      return this.field.el.type === 'select'
+      return this.field.el.type === fieldType.select
     },
     isSwitch () {
-      return this.field.el.type === 'switch'
+      return this.field.el.type === fieldType.switch
+    },
+    isDateTime () {
+      return this.field.el.type === fieldType.dateTime
     }
   }
 }
