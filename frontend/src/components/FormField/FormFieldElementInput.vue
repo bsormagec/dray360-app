@@ -5,7 +5,7 @@
       :placeholder="field.name"
       outlined
       dense
-      @change="test"
+      @change="e => $emit('change', e)"
     />
   </div>
 </template>
@@ -18,12 +18,6 @@ export default {
     field: {
       type: Object,
       required: true
-    }
-  },
-
-  methods: {
-    test (e) {
-      console.log('test', e)
     }
   }
 }

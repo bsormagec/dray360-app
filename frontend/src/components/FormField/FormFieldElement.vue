@@ -2,6 +2,7 @@
   <FormFieldElementInput
     v-if="isInput"
     :field="field"
+    @change="e => $emit('change', e)"
   />
 </template>
 
@@ -9,10 +10,10 @@
 import FormFieldElementInput from '@/components/FormField/FormFieldElementInput'
 
 export default {
-  name: 'FormField',
+  name: 'FormFieldElement',
 
   components: {
-    FormFieldElementInput
+    FormFieldElementInput,
   },
 
   props: {

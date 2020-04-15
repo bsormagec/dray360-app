@@ -7,6 +7,7 @@
   <FormFieldElement
     v-else
     :field="field"
+    @change="onChange"
   />
 </template>
 
@@ -31,6 +32,12 @@ export default {
       type: Boolean,
       required: false,
       default: () => false
+    }
+  },
+
+  methods: {
+    onChange (e) {
+      console.log(this.field.name, e)
     }
   }
 }
