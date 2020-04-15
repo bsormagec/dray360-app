@@ -14,7 +14,6 @@ export const exampleForm = {
           name: 'shipment direction',
           el: {
             type: 'select',
-            placeholder: 'import',
             options: ['a', 'b', 'c']
           }
         },
@@ -22,7 +21,6 @@ export const exampleForm = {
           name: 'shipment handling',
           el: {
             type: 'select',
-            placeholder: 'drop & hook',
             options: ['a', 'b', 'c']
           }
         },

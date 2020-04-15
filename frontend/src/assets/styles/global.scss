@@ -194,16 +194,50 @@ button {
     font-size: 1.4rem !important;
     &::placeholder {
     
-    text-transform: capitalize;
-  }
+      text-transform: capitalize;
+    }
   }
   .v-label--active {
     transform: translateY(-18px) scale(1) !important;
   }
 }
 
+.form-field-element-select {
+  div[role="button"] {
+    border-top-left-radius: 0.2rem !important;
+    border-top-right-radius: 0.2rem !important;
+    border-bottom-left-radius: 0.2rem !important;
+    border-bottom-right-radius: 0.2rem !important;
+  }
+  .v-input--is-focused fieldset {
+    border-color: map-get($colors, blue) !important;
+  }
+  fieldset {
+    legend {
+      font-size: 1.2rem !important;
+    }
+
+    transition: border-color 300ms ease-in-out !important;
+    border: 0.1rem solid #D2D7D7 !important;
+  }
+  i {
+    color:map-get($colors , grey-9) !important;
+  }
+  .v-label {
+    font-size: 1.2rem !important;
+    text-transform: capitalize;
+    padding-right: 0.2rem !important;
+    background: white !important;
+  }
   .v-label--active {
     transform: translateY(-18px) scale(1) !important;
+  }
+  .v-select__selections {
+    padding: unset !important;
+    align-items: baseline;
+  }
+  .v-select__selection--comma {
+    font-size: 1.4rem !important;
   }
 }
 
