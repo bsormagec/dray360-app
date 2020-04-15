@@ -1,0 +1,88 @@
+.orders {
+  .listbody {
+    .v-data-table {
+      border-radius: unset;
+      box-shadow: map-get($properties, table-shadow);
+    
+      * {
+        border: unset !important;
+      }
+    
+      td {
+        border: 0.1rem solid #dadddd;
+        border-right: unset;
+        border-bottom: unset;
+      }
+    
+      .v-data-footer {
+        border: unset !important;
+      }
+    }
+  }
+  .header {
+    .v-select__slot {
+      input {
+        position: absolute !important;
+      }
+    
+      .v-select__selections {
+        max-height: 2.5rem;
+        overflow: hidden;
+        display: flex;
+        flex-direction: column;
+      }
+    }
+  }
+  
+  .buttons {
+    button {
+      min-width: 4rem !important;
+    
+      @media screen and (min-width: map-get($breakpoints, med)) {
+        min-width: 6.4rem !important;
+      }
+    }
+  }
+  
+  .orders-create-upload {
+    .upload__input .v-input {
+      .v-input__control {
+        order: -1 !important;
+    
+        button[aria-label="clear icon"] {
+          margin: unset !important;
+        }
+      }
+    }
+    
+    .upload__area {
+      position: relative;
+      .v-input {
+        position: absolute;
+        padding: unset;
+        width: 100%;
+        height: 100%;
+        margin: 0;
+        opacity: 0;
+      }
+    
+      .v-input__control {
+        display: none;
+      }
+    
+      .v-input__prepend-outer {
+        margin: unset;
+        margin-right: unset !important;
+        width: 100%;
+        height: 100%;
+        .v-input__icon.v-input__icon--prepend {
+          height: 100%;
+          button {
+            width: 100%;
+            height: 100%;
+          }
+        }
+      }
+    }
+  }
+}

@@ -1,14 +1,16 @@
 <template>
-  <FormFieldPresentation
-    v-if="readonly"
-    :field="field"
-  />
+  <div class="form-field">
+    <FormFieldPresentation
+      v-if="readonly"
+      :field="field"
+    />
 
-  <FormFieldElement
-    v-else
-    :field="field"
-    @change="onChange"
-  />
+    <FormFieldElement
+      v-else
+      :field="field"
+      @change="onChange"
+    />
+  </div>
 </template>
 
 <script>
