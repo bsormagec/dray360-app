@@ -6,7 +6,7 @@
       }
   
       transition: border-color 300ms ease-in-out !important;
-      border: 0.1rem solid #D2D7D7 !important;
+      border: 0.1rem solid map-get($colors , grey-10) !important;
     }
     .v-input--is-focused fieldset {
       border-color: map-get($colors, blue) !important;
@@ -79,6 +79,25 @@
       color: map-get($colors , black) !important;
       font-size: 1.4rem !important;
       text-transform: capitalize;
+    }
+  }
+
+  .form-field-element-datetime {
+    input {
+      font-size: 1.4rem;
+    }
+
+    i {
+      color: map-get($colors , grey-9);
+    }
+
+    .v-label {
+      transform: translateY(-18px) scale(1) !important;
+      text-transform: capitalize;
+    }
+
+    .v-input__slot::before {
+      border-color: map-get($colors , grey-10) !important;
     }
   }
 }

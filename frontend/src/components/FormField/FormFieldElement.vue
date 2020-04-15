@@ -16,6 +16,12 @@
     :field="field"
     @change="e => $emit('change', e)"
   />
+
+  <FormFieldElementDateTime
+    v-else-if="isDateTime"
+    :field="field"
+    @change="e => $emit('change', e)"
+  />
 </template>
 
 <script>
@@ -23,6 +29,7 @@ import { fieldType } from '@/enums/field_type'
 import FormFieldElementInput from '@/components/FormField/FormFieldElementInput'
 import FormFieldElementSelect from '@/components/FormField/FormFieldElementSelect'
 import FormFieldElementSwitch from '@/components/FormField/FormFieldElementSwitch'
+import FormFieldElementDateTime from '@/components/FormField/FormFieldElementDateTime'
 
 export default {
   name: 'FormFieldElement',
@@ -30,7 +37,8 @@ export default {
   components: {
     FormFieldElementInput,
     FormFieldElementSelect,
-    FormFieldElementSwitch
+    FormFieldElementSwitch,
+    FormFieldElementDateTime
   },
 
   props: {
