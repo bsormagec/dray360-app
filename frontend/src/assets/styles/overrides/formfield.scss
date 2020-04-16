@@ -5,7 +5,7 @@
         font-size: 1.2rem !important;
       }
   
-      transition: border-color 300ms ease-in-out !important;
+      transition: border-color 200ms ease-in-out !important;
       border: 0.1rem solid map-get($colors , grey-10) !important;
     }
     .v-input--is-focused fieldset {
@@ -50,8 +50,8 @@
         font-size: 1.2rem !important;
       }
   
-      transition: border-color 300ms ease-in-out !important;
-      border: 0.1rem solid #D2D7D7 !important;
+      transition: border-color 200ms ease-in-out !important;
+      border: 0.1rem solid map-get($colors , grey-10) !important;
     }
     i {
       color:map-get($colors , grey-9) !important;
@@ -82,11 +82,7 @@
     }
   }
 
-  .form-field-element-datetime {
-    input {
-      font-size: 1.4rem;
-    }
-
+  .form-field-element-date {
     i {
       color: map-get($colors , grey-9);
     }
@@ -97,10 +93,22 @@
 
     .v-label--active {
       transform: translateY(-18px) scale(1) !important;
+      color: rgba(0, 0, 0, 0.6) !important;
+    }
+
+    .v-input--is-focused {
+      .v-input__slot:after {
+        display: none;
+      }
     }
 
     .v-input__slot::before {
       border-color: map-get($colors , grey-10) !important;
     }
+  }
+
+  input {
+    font-size: 1.4rem;
+    color: map-get($colors , black) !important;
   }
 }
