@@ -10,8 +10,6 @@ use Illuminate\Database\Eloquent\SoftDeletes;
  * @package App\Models
  * @version March 5, 2020, 8:00 pm UTC
  *
- * @property \Illuminate\Database\Eloquent\Collection orderAddressEvents
- * @property \Illuminate\Database\Eloquent\Collection orderLineItems
  * @property string request_id
  * @property string shipment_designation
  * @property string equipment_type
@@ -36,6 +34,10 @@ use Illuminate\Database\Eloquent\SoftDeletes;
  * @property string house_bol_hawb
  * @property string|\Carbon\Carbon estimated_arrival_utc
  * @property string|\Carbon\Carbon last_free_date_utc
+
+ * @property \Illuminate\Database\Eloquent\Collection orderAddressEvents
+ * @property \Illuminate\Database\Eloquent\Collection orderLineItems
+ * @property Illuminate\Database\Eloquent\Collection ocrRequest
  */
 class Order extends Model
 {
@@ -135,4 +137,13 @@ class Order extends Model
     {
         return $this->hasMany(\App\Models\OrderLineItem::class, 't_order_id');
     }
+
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\HasOne
+     **/
+    public function ocrRequest()
+    {
+        return $this->hasOne(\App\Models\OCRRequest::class, 'request_id', 'request_id');
+    }
+
 }

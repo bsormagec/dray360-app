@@ -17,6 +17,6 @@ class OrderController extends Controller
     public function orders(Request $request)
     {
         $orders = Order::paginate(25);
-        return \App\Http\Resources\Orders::collection($orders);
+        return response()->json(['data'=>\App\Http\Resources\Orders::collection($orders)]);
     }
 }

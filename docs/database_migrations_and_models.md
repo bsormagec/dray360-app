@@ -18,6 +18,9 @@ php artisan key:generate
 
 ### Setup a fresh database
 
+Note that this is now obsolete. Use the `php artisan migrate:createmysql omdb omuser secret` instead.
+
+
 ````bash
 
 cat << EOF > ~/tcvars2.sh
@@ -42,6 +45,7 @@ export OM_ROOT=${GIT_FOLDER}/${OM_REPO} # don't change this derivative variable
 EOF
 source ~/tcvars2.sh
 
+# note, see mysql permissions list, here: https://dev.mysql.com/doc/refman/5.7/en/privileges-provided.html
 
 function recreateDatabase() {
     DBNAME=${1}
@@ -57,9 +61,8 @@ function recreateDatabase() {
         pv ${DUMPFILE} | sudo mysql ${DBNAME}
         sudo mysql --execute="show databases;"
         sudo mysql --execute="
-            drop user if exists ${USERNAME};
-            create user '${USERNAME}'@'%' identified with mysql_native_password by '${USERPW}';
-            grant create routine, alter routine, references, select, insert, update, delete, create, drop, alter, execute on ${DBNAME}.* to '${USERNAME}'@'%';
+            create user if not exists '${USERNAME}'@'%' identified with mysql_native_password by '${USERPW}';
+            grant create view, create routine, alter routine, trigger, references, select, insert, update, delete, create, drop, alter, execute on ${DBNAME}.* to '${USERNAME}'@'%';
         "
     else
         echo "Dumpfile '${DUMPFILE}' not found. Edit ~/tcvars2.sh and set the XYZ_DUMP variable"
@@ -72,6 +75,23 @@ source ~/tcvars2.sh
 recreateDatabase ${OM_DBNAME} /tmp/nothing.sql ${OM_DBUSER} "secret" # password set to "secret"
 
 ````
+
+
+### Troubleshooting: reset mysql root password
+
+````bash
+sudo mysql --execute="alter user 'root'@'localhost' identified by 'secret' "
+````
+
+###### Create omdb_test database
+
+````bash
+sudo mysql --user=root --password=secret --execute "
+    drop database if exists omdb_test;
+    create database omdb_test;
+    create user if not exists 'omuser'@'%' identified with mysql_native_password by 'secret';
+    grant create view, create routine, alter routine, trigger, references, select, insert, update, delete, create, drop, alter, execute on omdb_test.* to 'omuser'@'%';
+"
 
 
 
@@ -219,3 +239,7 @@ omdumpfilename="om_localdev-dump-20200326-094049.sql" # for example, set this ap
 sudo mysql --database=${OM_DBNAME} <${omdumpfilename}
 
 ````
+
+
+
+
