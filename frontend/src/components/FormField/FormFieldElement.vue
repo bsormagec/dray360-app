@@ -17,7 +17,7 @@
     @change="e => $emit('change', e)"
   />
 
-  <FormFieldElementDateTime
+  <FormFieldElementBothDateTime
     v-else-if="isDateTime"
     :field="field"
     @change="e => $emit('change', e)"
@@ -29,7 +29,7 @@ import { fieldType } from '@/enums/field_type'
 import FormFieldElementInput from '@/components/FormField/FormFieldElementInput'
 import FormFieldElementSelect from '@/components/FormField/FormFieldElementSelect'
 import FormFieldElementSwitch from '@/components/FormField/FormFieldElementSwitch'
-import FormFieldElementDateTime from '@/components/FormField/FormFieldElementDateTime'
+import FormFieldElementBothDateTime from '@/components/FormField/FormFieldElementBothDateTime'
 
 export default {
   name: 'FormFieldElement',
@@ -38,7 +38,7 @@ export default {
     FormFieldElementInput,
     FormFieldElementSelect,
     FormFieldElementSwitch,
-    FormFieldElementDateTime
+    FormFieldElementBothDateTime
   },
 
   props: {

@@ -1,5 +1,5 @@
 <template>
-  <div class="form-field-element-datetime">
+  <div class="form-field-element-date">
     <v-dialog
       v-model="isOpen"
       :close-on-content-click="false"
@@ -24,17 +24,13 @@
         scrollable
         @input="isOpen = false"
       />
-
-      <!--
-        TODO: Add date time
-      -->
     </v-dialog>
   </div>
 </template>
 
 <script>
 export default {
-  name: 'FormFieldElementDateTime',
+  name: 'FormFieldElementDate',
 
   props: {
     field: {
@@ -44,7 +40,7 @@ export default {
   },
 
   data: () => ({
-    date: new Date().toISOString().substr(0, 10),
+    date: undefined,
     isOpen: false
   })
 }

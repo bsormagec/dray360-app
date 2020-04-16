@@ -91,9 +91,12 @@
       color: map-get($colors , grey-9);
     }
 
-    .v-label {
-      transform: translateY(-18px) scale(1) !important;
+    .v-label {      
       text-transform: capitalize;
+    }
+
+    .v-label--active {
+      transform: translateY(-18px) scale(1) !important;
     }
 
     .v-input__slot::before {
