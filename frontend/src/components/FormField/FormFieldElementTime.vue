@@ -5,7 +5,7 @@
     </v-icon>
 
     <div :class="{time__mask: true, focused: focused}">
-      <span :class="{mask__label: true, focused: focused, filled: Boolean(time)}">label</span>
+      <span :class="{mask__label: true, focused: focused, filled: Boolean(time)}">{{ altLabel || field.name }}</span>
       <input
         v-model="time"
         class="mask__input"
@@ -25,6 +25,11 @@ export default {
     field: {
       type: Object,
       required: true
+    },
+    altLabel: {
+      type: String,
+      required: false,
+      default: ''
     }
   },
 
@@ -54,6 +59,7 @@ export default {
   padding-top: 1.6rem;
 
   .v-icon {
+    color: map-get($colors , grey-9);
     margin-top: 0.4rem;
     margin-bottom: 0.4rem;
     margin-right: 0.9rem;

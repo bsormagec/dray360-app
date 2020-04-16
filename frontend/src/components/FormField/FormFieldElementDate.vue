@@ -23,6 +23,7 @@
         no-title
         scrollable
         @input="isOpen = false"
+        @change="e => $emit('change', e)"
       />
     </v-dialog>
   </div>
