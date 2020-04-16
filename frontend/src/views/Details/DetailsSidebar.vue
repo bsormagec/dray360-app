@@ -2,7 +2,10 @@
   <div
     class="sidebar"
   >
-    <div class="sidebar__logo" />
+    <div
+      v-if="!isMobile"
+      class="sidebar__logo"
+    />
 
     <div class="sidebar__body">
       <v-btn
@@ -36,11 +39,15 @@
       </v-btn>
     </div>
 
-    <div class="sidebar__footer" />
+    <div
+      v-if="!isMobile"
+      class="sidebar__footer"
+    />
   </div>
 </template>
 
 <script>
+import isMobile from '@/mixins/is_mobile'
 import DetailsSidebarNavigation from '@/views/Details/DetailsSidebarNavigation'
 
 export default {
@@ -48,7 +55,9 @@ export default {
 
   components: {
     DetailsSidebarNavigation
-  }
+  },
+
+  mixins: [isMobile]
 }
 </script>
 
@@ -57,12 +66,13 @@ $cushing-logo: url("../../assets/images/cushing_logo.svg");
 $ordermaster-logo: url("../../assets/images/ordermaster_logo.svg");
 
 .sidebar {
+  overflow-y: auto;
   z-index: 1;
   display: flex;
   position: fixed;
   left: 0;
   width: map-get($sizes, sidebar-desktop-width);
-  height: 100%;
+  height: 100vh;
   flex-direction: column;
   align-items: center;
   background-color: map-get($colors, grey);
@@ -72,28 +82,29 @@ $ordermaster-logo: url("../../assets/images/ordermaster_logo.svg");
 }
 
 .sidebar__logo {
-  width: 72%;
-  max-width: 14rem;
+  width: 14rem;
+  min-height: 4.3rem;
   height: 4.3rem;
   background-image: $cushing-logo;
-  background-size: contain;
-  background-position: center center;
-}
-
-.sidebar__footer {
-  width: 57%;
-  max-width: 11.1rem;
-  height: 4.5rem;
-  margin-top: auto;
-  background-image: $ordermaster-logo;
-  background-size: contain;
+  background-size: 14rem 4.3rem;
   background-position: center center;
 }
 
 .sidebar__body {
   margin-top: 6rem;
+  margin-bottom: auto;
   display: flex;
   flex-direction: column;
   align-items: center;
+}
+
+.sidebar__footer {
+  width: 11.1rem;
+  height: 4.5rem;
+  min-height: 4.5rem;
+  margin-top: 6rem;
+  background-image: $ordermaster-logo;
+  background-size: contain;
+  background-position: center center;
 }
 </style>

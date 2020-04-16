@@ -2,8 +2,14 @@
   <div
     :class="{sidebar: true, desktop: !isMobile}"
   >
-    <div class="sidebar__logo" />
-    <div class="sidebar__footer" />
+    <div
+      v-if="!isMobile"
+      class="sidebar__logo"
+    />
+    <div
+      v-if="!isMobile"
+      class="sidebar__footer"
+    />
 
     <transition name="slide-fade">
       <div
@@ -89,6 +95,7 @@ $cushing-logo: url("../../assets/images/cushing_logo.svg");
 $ordermaster-logo: url("../../assets/images/ordermaster_logo.svg");
 
 .sidebar.desktop {
+  overflow-y: auto;
   z-index: 1;
   display: none;
   position: fixed;
@@ -138,8 +145,7 @@ $ordermaster-logo: url("../../assets/images/ordermaster_logo.svg");
 }
 
 .sidebar__logo {
-  width: 72%;
-  max-width: 14rem;
+  width: 14rem;
   height: 4.3rem;
   background-image: $cushing-logo;
   background-size: contain;
@@ -147,8 +153,7 @@ $ordermaster-logo: url("../../assets/images/ordermaster_logo.svg");
 }
 
 .sidebar__footer {
-  width: 57%;
-  max-width: 11.1rem;
+  width: 11.1rem;
   height: 4.5rem;
   margin-top: auto;
   background-image: $ordermaster-logo;

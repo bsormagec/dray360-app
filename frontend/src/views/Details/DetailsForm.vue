@@ -70,6 +70,8 @@ export default {
 <style lang="scss" scoped>
 .form {
   width: 45%;
+  height: 100vh;
+  overflow-y: auto;
   padding: 3.6rem 6.5rem;
   padding-top: 8.4rem;
 }
