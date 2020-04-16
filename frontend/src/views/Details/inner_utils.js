@@ -164,18 +164,18 @@ export const exampleForm = {
         {
           title: 'billing',
           fields: [
-            // {
-            //   name: 'bill to',
-            //   value: {
-            //     type: 'link',
-            //     href: '#',
-            //     icon: 'mdi-account-box',
-            //     text: 'CAI Logistics'
-            //   },
-            //   el: {
-            //     type: 'modal-form '
-            //   }
-            // }
+            {
+              name: 'bill to',
+              // value: {
+              //   type: 'link',
+              //   href: '#',
+              //   icon: 'mdi-account-box',
+              //   text: 'CAI Logistics'
+              // },
+              el: {
+                type: 'modal-form'
+              }
+            },
             {
               name: 'company name',
               el: {

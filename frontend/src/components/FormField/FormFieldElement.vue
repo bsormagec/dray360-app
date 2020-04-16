@@ -22,6 +22,12 @@
     :field="field"
     @change="e => $emit('change', e)"
   />
+
+  <FormFieldElementModalForm
+    v-else-if="isModalForm"
+    :field="field"
+    @change="e => $emit('change', e)"
+  />
 </template>
 
 <script>
@@ -30,6 +36,7 @@ import FormFieldElementInput from '@/components/FormField/FormFieldElementInput'
 import FormFieldElementSelect from '@/components/FormField/FormFieldElementSelect'
 import FormFieldElementSwitch from '@/components/FormField/FormFieldElementSwitch'
 import FormFieldElementBothDateTime from '@/components/FormField/FormFieldElementBothDateTime'
+import FormFieldElementModalForm from '@/components/FormField/FormFieldElementModalForm'
 
 export default {
   name: 'FormFieldElement',
@@ -38,7 +45,8 @@ export default {
     FormFieldElementInput,
     FormFieldElementSelect,
     FormFieldElementSwitch,
-    FormFieldElementBothDateTime
+    FormFieldElementBothDateTime,
+    FormFieldElementModalForm
   },
 
   props: {
@@ -60,6 +68,9 @@ export default {
     },
     isDateTime () {
       return this.field.el.type === fieldType.dateTime
+    },
+    isModalForm () {
+      return this.field.el.type === fieldType.modalForm
     }
   }
 }

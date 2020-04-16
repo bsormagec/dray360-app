@@ -5,5 +5,6 @@ export const fieldType = {
   switch: 'switch',
   dateTime: 'date-time',
   textArea: 'text-area',
-  radio: 'radio'
+  radio: 'radio',
+  modalForm: 'modal-form'
 }
