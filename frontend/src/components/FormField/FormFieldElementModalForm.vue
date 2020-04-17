@@ -42,11 +42,11 @@
           </div>
 
           <div class="card__item">
-            <div class="item__left">
-              <h4 class="left__title">
-                Ladson
-              </h4>
+            <h4 class="item__title">
+              Ladson
+            </h4>
 
+            <div class="item__left">
               <span class="left__contact-name">
                 <span>Managed by: </span>
                 <span>Seth Ling</span>
@@ -56,11 +56,28 @@
                 <v-icon color="primary">mdi-phone</v-icon>
                 (555) 555-555
               </span>
+
+              <span class="left__email">
+                <v-icon color="primary">mdi-email</v-icon>
+                mail@mail.com
+              </span>
             </div>
 
-            <div class="item__center" />
+            <div class="item__center">
+              <span class="center__address">
+                <v-icon color="primary">mdi-map-marker</v-icon>
+                3016 Loxley Lane Ladson, CA, 90210
+              </span>
+            </div>
 
-            <div class="item__right" />
+            <div class="item__right">
+              <v-btn
+                color="primary"
+                outlined
+              >
+                select
+              </v-btn>
+            </div>
           </div>
         </div>
       </v-card>
@@ -119,7 +136,14 @@ export default {
 }
 
 .card__item {
+  display: flex;
+  justify-content: space-between;
+  flex-wrap: wrap;
   padding: 1.5rem 1.5rem 2.1rem 1.9rem;
+
+  span {
+    font-size: 1.44rem !important;
+  }
 }
 
 .item__left {
@@ -127,18 +151,16 @@ export default {
   flex-direction: column;
 }
 
-.left__title {
+.item__title {
+  width: 100%;
   font-size: 1.44rem;
   margin-bottom: 0.5rem;
 }
 
 .left__contact-name {
   margin-bottom: 0.5rem;
-  font-size: 1.44rem !important;
 
   span {
-    font-size: inherit !important;
-
     &:last-child {
       color: map-get($colors , blue);
     }
@@ -148,7 +170,25 @@ export default {
 .left__phone {
   display: flex;
   align-items: center;
-  font-size: 1.44rem !important;
+
+  i {
+    margin-right: 1rem;
+  }
+}
+
+.left__email {
+  i {
+    margin-right: 1rem;
+  }
+}
+
+.item__center {
+  max-width: 20.5rem;
+}
+
+.center__address {
+  display: flex;
+  align-items: flex-start;
 
   i {
     margin-right: 1rem;

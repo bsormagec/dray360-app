@@ -174,7 +174,20 @@ export const exampleForm = {
               // },
               el: {
                 placeholder: 'select address',
-                type: 'modal-form'
+                type: 'modal-form',
+                options: [
+                  {
+                    companyName: '',
+                    address: '',
+                    city: '',
+                    state: '',
+                    zip: '',
+                    contactName: '',
+                    phone: '',
+                    ext: '',
+                    email: ''
+                  }
+                ]
               }
             },
             {
