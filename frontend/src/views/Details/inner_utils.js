@@ -173,6 +173,7 @@ export const exampleForm = {
               //   text: 'CAI Logistics'
               // },
               el: {
+                placeholder: 'select address',
                 type: 'modal-form'
               }
             },
