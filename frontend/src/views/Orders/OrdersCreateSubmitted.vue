@@ -10,13 +10,19 @@
       class="submitted__file"
     >
       <v-icon>mdi-file-outline</v-icon>
+
       <span>{{ file.name }}</span>
-      <v-icon
-        color="red"
+
+      <v-btn
+        icon
         @click="deleteFile(file)"
       >
-        mdi-delete
-      </v-icon>
+        <v-icon
+          color="red"
+        >
+          mdi-delete
+        </v-icon>
+      </v-btn>
     </div>
   </div>
 </template>
