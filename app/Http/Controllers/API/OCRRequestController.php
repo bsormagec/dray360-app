@@ -42,7 +42,7 @@ class OCRRequestController extends Controller
             $extensionLC = strtolower((new \SplFileInfo($origFilename))->getExtension());
             $validExtension = in_array($extensionLC, self::VALID_IMAGE_TYPES);
             if (!$validExtension) {
-                $extensionList = implode(self::VALID_IMAGE_TYPES, ',');
+                $extensionList = implode(',', self::VALID_IMAGE_TYPES);
                 return response()->json([
                     'error' => 'Invalid image file type',
                     'filename' => $origFilename,
