@@ -210,7 +210,8 @@ export const exampleForm = {
             {
               name: 'address',
               el: {
-                type: 'text-area'
+                type: 'text-area',
+                placeholder: 'address'
               }
             },
             {
@@ -311,7 +312,8 @@ export const exampleForm = {
             {
               name: 'address',
               el: {
-                type: 'text-area'
+                type: 'text-area',
+                placeholder: 'address'
               }
             },
             {
@@ -359,7 +361,8 @@ export const exampleForm = {
             {
               name: 'notes',
               el: {
-                type: 'text-area'
+                type: 'text-area',
+                placeholder: 'notes'
               }
             },
             {
@@ -419,7 +422,8 @@ export const exampleForm = {
             {
               name: 'address',
               el: {
-                type: 'text-area'
+                type: 'text-area',
+                placeholder: 'address'
               }
             },
             {
@@ -467,7 +471,8 @@ export const exampleForm = {
             {
               name: 'notes',
               el: {
-                type: 'text-area'
+                type: 'text-area',
+                placeholder: 'notes'
               }
             },
             {
@@ -504,7 +509,9 @@ export const exampleForm = {
                       {
                         name: 'instructions',
                         el: {
-                          placeholder: 'delivery instructions', type: 'text-area'
+                          placeholder: 'delivery instructions',
+                          type: 'text-area',
+                          width: '100%'
                         }
                       }
                     ]
@@ -563,7 +570,8 @@ export const exampleForm = {
             {
               name: 'address',
               el: {
-                type: 'text-area'
+                type: 'text-area',
+                placeholder: 'address'
               }
             },
             {
@@ -611,7 +619,8 @@ export const exampleForm = {
             {
               name: 'notes',
               el: {
-                type: 'text-area'
+                type: 'text-area',
+                placeholder: 'notes'
               }
             },
             {

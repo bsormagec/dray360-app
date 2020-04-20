@@ -34,6 +34,40 @@
       transform: translateY(-18px) scale(1) !important;
     }
   }
+
+  .form-field-element-textarea {
+    fieldset {
+      legend {
+        font-size: 1.2rem !important;
+      }
+  
+      transition: border-color 200ms ease-in-out !important;
+      border: 0.1rem solid map-get($colors , grey-10) !important;
+    }
+    .v-input--is-focused fieldset {
+      border-color: map-get($colors, blue) !important;
+    }
+    .v-input__slot, .v-input__control {
+      border-top-left-radius: 0.2rem !important;
+      border-top-right-radius: 0.2rem !important;
+      border-bottom-left-radius: 0.2rem !important;
+      border-bottom-right-radius: 0.2rem !important;
+    }
+    .v-label {
+      font-size: 1.2rem !important;
+      text-transform: capitalize;
+      padding-right: 0.2rem !important;
+      background: white !important;
+      transform: translateY(-26px) scale(1);
+    }
+    textarea {
+      font-size: 1.4rem !important;
+      &::placeholder {
+      
+        text-transform: capitalize;
+      }
+    }
+  }
   
   .form-field-element-select {
     div[role="button"] {
