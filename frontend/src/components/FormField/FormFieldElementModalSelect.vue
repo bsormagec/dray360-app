@@ -1,12 +1,3 @@
-/*
-  TODO:
-    - styles / markup*
-    - rename because this is not a form but a type of select
-    - add global addresses array as inner_utils in Details
-    - use those addresses in exampleForm
-    - convert field objects to fns (bit refactor to make it shorter and prettier)
-*/
-
 <template>
   <div class="form-field-element-modal-select">
     <v-dialog
@@ -41,32 +32,36 @@
             </v-btn>
           </div>
 
-          <div class="card__item">
+          <div
+            v-for="(option, index) in field.el.options"
+            :key="option.name"
+            class="card__item"
+          >
             <h4 class="item__title">
-              Ladson
+              {{ option.companyName }}
             </h4>
 
             <div class="item__left">
               <span class="left__contact-name">
                 <span>Managed by: </span>
-                <span>Seth Ling</span>
+                <span>{{ option.contactName }}</span>
               </span>
 
               <span class="left__phone">
                 <v-icon color="primary">mdi-phone</v-icon>
-                (555) 555-555
+                ({{ option.ext }}) {{ option.phone }}
               </span>
 
               <span class="left__email">
                 <v-icon color="primary">mdi-email</v-icon>
-                mail@mail.com
+                {{ option.email }}
               </span>
             </div>
 
             <div class="item__center">
               <span class="center__address">
                 <v-icon color="primary">mdi-map-marker</v-icon>
-                3016 Loxley Lane Ladson, CA, 90210
+                {{ option.address }}
               </span>
             </div>
 
@@ -74,6 +69,7 @@
               <v-btn
                 color="primary"
                 outlined
+                @click="select(index)"
               >
                 select
               </v-btn>
@@ -103,12 +99,18 @@ export default {
   methods: {
     toggleModal () {
       this.isOpen = !this.isOpen
+    },
+    select (index) {
+      this.$emit('change', this.field.el.options[index])
+      this.toggleModal()
     }
   }
 }
 </script>
 
 <style lang="scss" scoped>
+$border-bottom: 0.1rem solid map-get($colors , grey-11);
+
 .modal-select__link {
   cursor: pointer;
   font-size: 1.44rem !important;
@@ -128,7 +130,7 @@ export default {
   align-items: center;
   justify-content: space-between;
   padding: 2.1rem 2rem 1.8rem 1.7rem;
-  border-bottom: 0.1rem solid map-get($colors , grey-11);
+  border-bottom: $border-bottom;
 
   h3 {
     font-size: 1.8rem;
@@ -140,6 +142,7 @@ export default {
   justify-content: space-between;
   flex-wrap: wrap;
   padding: 1.5rem 1.5rem 2.1rem 1.9rem;
+  border-bottom: $border-bottom;
 
   span {
     font-size: 1.44rem !important;

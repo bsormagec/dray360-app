@@ -174,18 +174,29 @@ export const exampleForm = {
               // },
               el: {
                 placeholder: 'select address',
-                type: 'modal-form',
+                type: 'modal-select',
                 options: [
                   {
-                    companyName: '',
-                    address: '',
-                    city: '',
-                    state: '',
-                    zip: '',
-                    contactName: '',
-                    phone: '',
-                    ext: '',
-                    email: ''
+                    companyName: 'Ladson',
+                    address: '3016 Loxley Lane Ladson, CA, 90210',
+                    city: 'Loxley Lane',
+                    state: 'CA',
+                    zip: '90210',
+                    contactName: 'Seth Ling',
+                    phone: '555-555',
+                    ext: '555',
+                    email: 'mail@mail.com'
+                  },
+                  {
+                    companyName: 'SonLad',
+                    address: '3016 Loxley Lane Ladson, CA, 90210',
+                    city: 'Loxley Lane',
+                    state: 'CA',
+                    zip: '90210',
+                    contactName: 'Seth Ling',
+                    phone: '555-555',
+                    ext: '555',
+                    email: 'mail@mail.com'
                   }
                 ]
               }

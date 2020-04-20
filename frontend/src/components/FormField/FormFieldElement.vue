@@ -23,8 +23,8 @@
     @change="e => $emit('change', e)"
   />
 
-  <FormFieldElementModalForm
-    v-else-if="isModalForm"
+  <FormFieldElementModalSelect
+    v-else-if="isModalSelect"
     :field="field"
     @change="e => $emit('change', e)"
   />
@@ -36,7 +36,7 @@ import FormFieldElementInput from '@/components/FormField/FormFieldElementInput'
 import FormFieldElementSelect from '@/components/FormField/FormFieldElementSelect'
 import FormFieldElementSwitch from '@/components/FormField/FormFieldElementSwitch'
 import FormFieldElementBothDateTime from '@/components/FormField/FormFieldElementBothDateTime'
-import FormFieldElementModalForm from '@/components/FormField/FormFieldElementModalForm'
+import FormFieldElementModalSelect from '@/components/FormField/FormFieldElementModalSelect'
 
 export default {
   name: 'FormFieldElement',
@@ -46,7 +46,7 @@ export default {
     FormFieldElementSelect,
     FormFieldElementSwitch,
     FormFieldElementBothDateTime,
-    FormFieldElementModalForm
+    FormFieldElementModalSelect
   },
 
   props: {
@@ -69,8 +69,8 @@ export default {
     isDateTime () {
       return this.field.el.type === fieldType.dateTime
     },
-    isModalForm () {
-      return this.field.el.type === fieldType.modalForm
+    isModalSelect () {
+      return this.field.el.type === fieldType.modalSelect
     }
   }
 }
