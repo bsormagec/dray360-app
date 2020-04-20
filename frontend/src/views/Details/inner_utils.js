@@ -266,6 +266,43 @@ export const exampleForm = {
           title: 'hook: rail or port terminal',
           fields: [
             {
+              name: 'hook',
+              // value: {
+              //   type: 'link',
+              //   href: '#',
+              //   icon: 'mdi-account-box',
+              //   text: 'CAI Logistics'
+              // },
+              el: {
+                placeholder: 'select address',
+                type: 'modal-select',
+                options: [
+                  {
+                    companyName: 'Ladson',
+                    address: '3016 Loxley Lane Ladson, CA, 90210',
+                    city: 'Loxley Lane',
+                    state: 'CA',
+                    zip: '90210',
+                    contactName: 'Seth Ling',
+                    phone: '555-555',
+                    ext: '555',
+                    email: 'mail@mail.com'
+                  },
+                  {
+                    companyName: 'SonLad',
+                    address: '3016 Loxley Lane Ladson, CA, 90210',
+                    city: 'Loxley Lane',
+                    state: 'CA',
+                    zip: '90210',
+                    contactName: 'Seth Ling',
+                    phone: '555-555',
+                    ext: '555',
+                    email: 'mail@mail.com'
+                  }
+                ]
+              }
+            },
+            {
               name: 'company name',
               el: {
                 type: 'input'
@@ -337,6 +374,43 @@ export const exampleForm = {
           title: 'deliver: container to',
           fields: [
             {
+              name: 'deliver',
+              // value: {
+              //   type: 'link',
+              //   href: '#',
+              //   icon: 'mdi-account-box',
+              //   text: 'CAI Logistics'
+              // },
+              el: {
+                placeholder: 'select address',
+                type: 'modal-select',
+                options: [
+                  {
+                    companyName: 'Ladson',
+                    address: '3016 Loxley Lane Ladson, CA, 90210',
+                    city: 'Loxley Lane',
+                    state: 'CA',
+                    zip: '90210',
+                    contactName: 'Seth Ling',
+                    phone: '555-555',
+                    ext: '555',
+                    email: 'mail@mail.com'
+                  },
+                  {
+                    companyName: 'SonLad',
+                    address: '3016 Loxley Lane Ladson, CA, 90210',
+                    city: 'Loxley Lane',
+                    state: 'CA',
+                    zip: '90210',
+                    contactName: 'Seth Ling',
+                    phone: '555-555',
+                    ext: '555',
+                    email: 'mail@mail.com'
+                  }
+                ]
+              }
+            },
+            {
               name: 'company name',
               el: {
                 type: 'input'
@@ -407,12 +481,32 @@ export const exampleForm = {
                 name: 'delivery instructions',
                 type: 'radio',
                 options: [
-                  'call for appointment',
+                  {
+                    name: 'call for appointment'
+                  },
                   {
                     name: 'deliver between',
-                    el: [
-                      { type: 'date-time' },
-                      { placeholder: 'delivery instructions', type: 'text-area' }
+                    children: [
+                      {
+                        name: 'start',
+                        el: {
+                          type: 'time',
+                          width: '48%'
+                        }
+                      },
+                      {
+                        name: 'end',
+                        el: {
+                          type: 'time',
+                          width: '48%'
+                        }
+                      },
+                      {
+                        name: 'instructions',
+                        el: {
+                          placeholder: 'delivery instructions', type: 'text-area'
+                        }
+                      }
                     ]
                   }
                 ]
@@ -423,6 +517,43 @@ export const exampleForm = {
         {
           title: 'dismount: return empty to depot',
           fields: [
+            {
+              name: 'dismount',
+              // value: {
+              //   type: 'link',
+              //   href: '#',
+              //   icon: 'mdi-account-box',
+              //   text: 'CAI Logistics'
+              // },
+              el: {
+                placeholder: 'select address',
+                type: 'modal-select',
+                options: [
+                  {
+                    companyName: 'Ladson',
+                    address: '3016 Loxley Lane Ladson, CA, 90210',
+                    city: 'Loxley Lane',
+                    state: 'CA',
+                    zip: '90210',
+                    contactName: 'Seth Ling',
+                    phone: '555-555',
+                    ext: '555',
+                    email: 'mail@mail.com'
+                  },
+                  {
+                    companyName: 'SonLad',
+                    address: '3016 Loxley Lane Ladson, CA, 90210',
+                    city: 'Loxley Lane',
+                    state: 'CA',
+                    zip: '90210',
+                    contactName: 'Seth Ling',
+                    phone: '555-555',
+                    ext: '555',
+                    email: 'mail@mail.com'
+                  }
+                ]
+              }
+            },
             {
               name: 'company name',
               el: {

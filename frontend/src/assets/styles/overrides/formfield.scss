@@ -107,6 +107,13 @@
     }
   }
 
+  .form-field-element-radio {
+    .v-label {
+      font-size: 1.4rem !important;
+      text-transform: capitalize;
+    }
+  }
+
   input {
     font-size: 1.4rem;
     color: map-get($colors , black) !important;
