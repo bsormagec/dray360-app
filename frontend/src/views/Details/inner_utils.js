@@ -638,8 +638,21 @@ export const exampleForm = {
                     name: 'call for appointment'
                   },
                   {
-                    name: 'deliver between',
+                    name: 'pickup on',
                     children: [
+                      {
+                        name: 'date',
+                        el: {
+                          type: 'date'
+                        }
+                      },
+                      {
+                        name: 'between',
+                        el: {
+                          type: 'label',
+                          width: '100%'
+                        }
+                      },
                       {
                         name: 'start',
                         el: {

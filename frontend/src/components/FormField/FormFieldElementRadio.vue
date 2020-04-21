@@ -64,11 +64,13 @@ export default {
       this.emitChange()
     },
     emitChange () {
+      const childrenDataToSend = this.field.el.options[this.radioValue].children ? this.childrenData : {}
+
       this.$emit('change', {
         name: this.field.name,
         value: {
           name: this.field.el.options[this.radioValue].name,
-          ...this.childrenData
+          ...childrenDataToSend
         }
       })
     }

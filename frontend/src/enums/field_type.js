@@ -8,5 +8,6 @@ export const fieldType = {
   dateTime: 'date-time',
   textArea: 'text-area',
   radio: 'radio',
-  modalSelect: 'modal-select'
+  modalSelect: 'modal-select',
+  label: 'label'
 }

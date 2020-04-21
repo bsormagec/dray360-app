@@ -52,6 +52,11 @@
     :field="field"
     @change="e => $emit('change', e)"
   />
+
+  <span
+    v-else-if="isLabel"
+    class="element__label"
+  >{{ field.name }}</span>
 </template>
 
 <script>
@@ -115,7 +120,19 @@ export default {
     },
     isRadio () {
       return this.field.el.type === fieldType.radio
+    },
+    isLabel () {
+      return this.field.el.type === fieldType.label
     }
   }
 }
 </script>
+
+<style lang="scss" scoped>
+.element__label {
+  display: block;
+  font-size: 1.4rem !important;
+  text-transform: capitalize;
+  color: map-get($colors, black-2);
+}
+</style>
