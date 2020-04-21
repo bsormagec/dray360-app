@@ -60,6 +60,14 @@
   />
 
   <span
+    v-else-if="isInfoTitle"
+    class="element__info-title"
+  >
+    {{ field.name }}
+    <v-icon color="primary">mdi-information</v-icon>
+  </span>
+
+  <span
     v-else-if="isLabel"
     class="element__label"
   >{{ field.name }}</span>
@@ -132,6 +140,9 @@ export default {
     isRadio () {
       return this.field.el.type === fieldType.radio
     },
+    isInfoTitle () {
+      return this.field.el.type === fieldType.infoTitle
+    },
     isLabel () {
       return this.field.el.type === fieldType.label
     }
@@ -145,5 +156,23 @@ export default {
   font-size: 1.4rem !important;
   text-transform: capitalize;
   color: map-get($colors, black-2);
+}
+
+.element__info-title {
+  display: flex;
+  align-items: center;
+  font-size: 1.6rem !important;
+  font-weight: bold;
+  line-height: 3.6rem;
+  color: map-get($colors , grey-4);
+  margin-bottom: 3rem;
+  text-transform: capitalize;
+  border-bottom: 0.1rem solid map-get($colors , grey-10);
+
+  i {
+    margin-left: 1rem;
+    width: 1.8rem;
+    height: 1.8rem;
+  }
 }
 </style>

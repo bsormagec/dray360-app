@@ -108,9 +108,9 @@
     }
   }
   
-  .form-field-element-switch {
-    .v-label {
-      color: map-get($colors , black) !important;
+  .form-field-element-switch {    
+    .v-input--switch .v-label {
+      color: map-get($colors , black-2) !important;
       font-size: 1.4rem !important;
       text-transform: capitalize;
     }

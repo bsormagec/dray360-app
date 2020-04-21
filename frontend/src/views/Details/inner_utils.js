@@ -723,72 +723,75 @@ export const exampleForm = {
           name: 'hazardous',
           el: {
             type: 'switch',
-            switchActiveContent: {
-              title: 'hazardous item information',
-              fields: [
-                {
-                  name: 'contact name',
-                  el: {
-                    type: 'input'
-                  }
-                },
-                {
-                  name: 'phone',
-                  el: {
-                    type: 'input'
-                  }
-                },
-                {
-                  name: 'UN code',
-                  el: {
-                    type: 'input'
-                  }
-                },
-                {
-                  name: 'qualifier',
-                  el: {
-                    type: 'input',
-                    prepend: 'C'
-                  }
-                },
-                {
-                  name: 'flashpoint temp',
-                  el: {
-                    type: 'input'
-                  }
-                },
-                {
-                  name: 'UN name',
-                  el: {
-                    type: 'input'
-                  }
-                },
-                {
-                  name: 'HAZ class',
-                  el: {
-                    type: 'input'
-                  }
-                },
-                {
-                  name: 'IMDG page no',
-                  el: {
-                    type: 'input'
-                  }
-                },
-                {
-                  name: 'packaging group',
-                  el: {
-                    type: 'input'
-                  }
-                },
-                {
-                  name: 'decription',
-                  el: {
-                    type: 'textarea'
-                  }
+            children: [
+              {
+                name: 'hazardous item information',
+                el: {
+                  type: 'info-title'
                 }
-              ]
-            }
+              },
+              {
+                name: 'contact name',
+                el: {
+                  type: 'input'
+                }
+              },
+              {
+                name: 'phone',
+                el: {
+                  type: 'input'
+                }
+              },
+              {
+                name: 'UN code',
+                el: {
+                  type: 'input'
+                }
+              },
+              {
+                name: 'qualifier',
+                el: {
+                  type: 'input',
+                  prepend: 'C'
+                }
+              },
+              {
+                name: 'flashpoint temp',
+                el: {
+                  type: 'input'
+                }
+              },
+              {
+                name: 'UN name',
+                el: {
+                  type: 'input'
+                }
+              },
+              {
+                name: 'HAZ class',
+                el: {
+                  type: 'input'
+                }
+              },
+              {
+                name: 'IMDG page no',
+                el: {
+                  type: 'input'
+                }
+              },
+              {
+                name: 'packaging group',
+                el: {
+                  type: 'input'
+                }
+              },
+              {
+                name: 'decription',
+                el: {
+                  type: 'textarea'
+                }
+              }
+            ]
           }
         }
       ]
