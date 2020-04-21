@@ -1,6 +1,9 @@
 <template>
   <div class="form-field-element-radio">
-    <v-radio-group v-model="radioValue">
+    <v-radio-group
+      v-model="radioValue"
+      @change="changeRadio"
+    >
       <div
         v-for="(option, index) in field.el.options"
         :key="option.name"
@@ -23,6 +26,7 @@
           >
             <FormFieldElement
               :field="el"
+              @change="e => changeChildEl({ e, name: el.name })"
             />
           </div>
         </div>
@@ -47,8 +51,28 @@ export default {
   },
 
   data: () => ({
-    radioValue: 0
-  })
+    radioValue: 0,
+    childrenData: {}
+  }),
+
+  methods: {
+    changeRadio (e) {
+      this.emitChange()
+    },
+    changeChildEl ({ e, name }) {
+      this.childrenData[name] = e
+      this.emitChange()
+    },
+    emitChange () {
+      this.$emit('change', {
+        name: this.field.name,
+        value: {
+          name: this.field.el.options[this.radioValue].name,
+          ...this.childrenData
+        }
+      })
+    }
+  }
 }
 </script>
 
@@ -59,6 +83,7 @@ export default {
 
 .option__children {
   display: flex;
+  flex-wrap: wrap;
   justify-content: space-between;
   padding-left: 3.4rem;
 }

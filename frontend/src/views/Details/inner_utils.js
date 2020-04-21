@@ -482,8 +482,8 @@ export const exampleForm = {
               }
             },
             {
+              name: 'delivery instructions',
               el: {
-                name: 'delivery instructions',
                 type: 'radio',
                 options: [
                   {
@@ -630,16 +630,38 @@ export const exampleForm = {
               }
             },
             {
+              name: 'pickup instructions',
               el: {
-                name: 'pickup instructions',
                 type: 'radio',
                 options: [
-                  'call for appointment',
+                  {
+                    name: 'call for appointment'
+                  },
                   {
                     name: 'deliver between',
-                    el: [
-                      { type: 'date-time' },
-                      { placeholder: 'pickup instructions', type: 'text-area' }
+                    children: [
+                      {
+                        name: 'start',
+                        el: {
+                          type: 'time',
+                          width: '48%'
+                        }
+                      },
+                      {
+                        name: 'end',
+                        el: {
+                          type: 'time',
+                          width: '48%'
+                        }
+                      },
+                      {
+                        name: 'instructions',
+                        el: {
+                          placeholder: 'delivery instructions',
+                          type: 'text-area',
+                          width: '100%'
+                        }
+                      }
                     ]
                   }
                 ]
@@ -764,7 +786,8 @@ export const exampleForm = {
         {
           name: 'notes',
           el: {
-            type: 'textarea'
+            type: 'text-area',
+            placeholder: 'notes'
           }
         }
       ]

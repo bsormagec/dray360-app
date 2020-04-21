@@ -24,7 +24,8 @@ export default {
 
 <style lang="scss" scoped>
 .document {
-  height: 100%;
+  height: 100vh;
+  overflow-y: auto;
   display: flex;
   flex-grow: 1;
   justify-content: center;
