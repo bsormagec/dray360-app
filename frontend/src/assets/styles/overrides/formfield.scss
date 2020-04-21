@@ -148,6 +148,37 @@
     }
   }
 
+  .form-field-element-input-select {
+    .form-field-element-input {
+      fieldset {
+        border-right: unset !important;
+      }
+      .v-input__slot, .v-input__control {
+        border-top-right-radius: unset !important;
+        border-bottom-right-radius: unset !important;
+      }
+    }
+
+    .form-field-element-select {
+      i {
+        color: map-get($colors , blue) !important;
+      }
+      fieldset {
+        border-color: map-get($colors , blue) !important;
+      }
+      legend {
+        width: unset !important;
+      }
+      .v-label {
+        display: none;
+      }
+      div[role="button"] {
+        border-top-left-radius: unset !important;
+        border-bottom-left-radius: unset !important;
+      }
+    }
+  }
+
   input {
     font-size: 1.4rem;
     color: map-get($colors , black) !important;

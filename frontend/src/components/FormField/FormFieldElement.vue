@@ -5,6 +5,12 @@
     @change="e => $emit('change', e)"
   />
 
+  <FormFieldElementInputSelect
+    v-else-if="isInputSelect"
+    :field="field"
+    @change="e => $emit('change', e)"
+  />
+
   <FormFieldElementTextArea
     v-else-if="isTextArea"
     :field="field"
@@ -62,6 +68,7 @@
 <script>
 import { fieldType } from '@/enums/field_type'
 import FormFieldElementInput from '@/components/FormField/FormFieldElementInput'
+import FormFieldElementInputSelect from '@/components/FormField/FormFieldElementInputSelect'
 import FormFieldElementTextArea from '@/components/FormField/FormFieldElementTextArea'
 import FormFieldElementSelect from '@/components/FormField/FormFieldElementSelect'
 import FormFieldElementSwitch from '@/components/FormField/FormFieldElementSwitch'
@@ -76,6 +83,7 @@ export default {
 
   components: {
     FormFieldElementInput,
+    FormFieldElementInputSelect,
     FormFieldElementTextArea,
     FormFieldElementSelect,
     FormFieldElementSwitch,
@@ -96,6 +104,9 @@ export default {
   computed: {
     isInput () {
       return this.field.el.type === fieldType.input
+    },
+    isInputSelect () {
+      return this.field.el.type === fieldType.inputSelect
     },
     isTextArea () {
       return this.field.el.type === fieldType.textArea
