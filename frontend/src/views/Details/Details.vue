@@ -13,8 +13,8 @@
 <script>
 import DetailsSidebar from '@/views/Details/DetailsSidebar'
 import DetailsForm from '@/views/Details/DetailsForm'
-import DetailsDocument from '@/views/Details/DetailsDocument.vue'
-import { exampleForm } from '@/views/Details/inner_utils'
+import DetailsDocument from '@/views/Details/DetailsDocument'
+import { exampleForm } from '@/views/Details/inner_utils/example_form'
 
 export default {
   name: 'Details',

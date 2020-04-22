@@ -2,7 +2,7 @@
   <div class="form-field-element-input">
     <v-text-field
       :label="field.name"
-      :placeholder="field.name"
+      :placeholder="field.el.placeholder"
       outlined
       dense
       @change="e => $emit('change', e)"

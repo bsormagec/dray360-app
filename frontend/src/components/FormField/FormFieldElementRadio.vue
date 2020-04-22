@@ -15,11 +15,11 @@
         />
 
         <div
-          v-if="option.children"
+          v-if="option.el && option.el.children"
           class="option__children"
         >
           <div
-            v-for="el in option.children"
+            v-for="el in option.el.children"
             :key="el.name"
             :style="{ width: el.el.width }"
             class="children__child"
@@ -64,7 +64,8 @@ export default {
       this.emitChange()
     },
     emitChange () {
-      const childrenDataToSend = this.field.el.options[this.radioValue].children ? this.childrenData : {}
+      const hasChildren = this.field.el.options[this.radioValue].el && this.field.el.options[this.radioValue].el.children
+      const childrenDataToSend = hasChildren ? this.childrenData : {}
 
       this.$emit('change', {
         name: this.field.name,

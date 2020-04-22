@@ -40,7 +40,7 @@
 
 <script>
 import { Fragment } from 'vue-fragment'
-import { navigationSteps } from '@/views/Details/inner_utils'
+import { navigationSteps } from '@/views/Details/inner_utils/navigation_steps'
 
 export default {
   name: 'DetailsSidebarNavigation',
