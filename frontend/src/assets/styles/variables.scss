@@ -1,12 +1,19 @@
 $colors: (
   white: #FFFFFF,
   black: #303435,
+  black-2: rgba(0, 0, 0, 0.6),
   blue: #397E92,
   grey: #F3F5F6,
   grey-2: #C4C4C4,
   grey-3: #DADDDD,
   grey-4: #737B7D,
-  grey-5: #F6F7F7
+  grey-5: #F6F7F7,
+  grey-6: rgba(174, 188, 192, 0.3),
+  grey-7: #3E5156,
+  grey-8: #CAD1D3,
+  grey-9: #A2A9AA,
+  grey-10: #D2D7D7,
+  grey-11: #E9ECEF
 );
 
 $properties: (
@@ -30,4 +37,4 @@ $breakpoints: (
   med: 1024px,
   lg: 1280px,
   max: 1640px
-)
+);

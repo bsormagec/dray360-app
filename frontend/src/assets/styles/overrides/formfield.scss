@@ -1,0 +1,186 @@
+.form-field {
+  .form-field-element-input {  
+    fieldset {
+      legend {
+        font-size: 1.2rem !important;
+      }
+  
+      transition: border-color 200ms ease-in-out !important;
+      border: 0.1rem solid map-get($colors , grey-10) !important;
+    }
+    .v-input--is-focused fieldset {
+      border-color: map-get($colors, blue) !important;
+    }
+    .v-input__slot, .v-input__control {
+      border-top-left-radius: 0.2rem !important;
+      border-top-right-radius: 0.2rem !important;
+      border-bottom-left-radius: 0.2rem !important;
+      border-bottom-right-radius: 0.2rem !important;
+    }
+    .v-label {
+      font-size: 1.2rem !important;
+      text-transform: capitalize;
+      padding-right: 0.2rem !important;
+      background: white !important;
+    }
+    input {
+      font-size: 1.4rem !important;
+      &::placeholder {
+      
+        text-transform: capitalize;
+      }
+    }
+    .v-label--active {
+      transform: translateY(-18px) scale(1) !important;
+    }
+  }
+
+  .form-field-element-textarea {
+    fieldset {
+      legend {
+        font-size: 1.2rem !important;
+      }
+  
+      transition: border-color 200ms ease-in-out !important;
+      border: 0.1rem solid map-get($colors , grey-10) !important;
+    }
+    .v-input--is-focused fieldset {
+      border-color: map-get($colors, blue) !important;
+    }
+    .v-input__slot, .v-input__control {
+      border-top-left-radius: 0.2rem !important;
+      border-top-right-radius: 0.2rem !important;
+      border-bottom-left-radius: 0.2rem !important;
+      border-bottom-right-radius: 0.2rem !important;
+    }
+    .v-label {
+      font-size: 1.2rem !important;
+      text-transform: capitalize;
+      padding-right: 0.2rem !important;
+      background: white !important;
+      transform: translateY(-26px) scale(1);
+    }
+    textarea {
+      font-size: 1.4rem !important;
+      &::placeholder {
+      
+        text-transform: capitalize;
+      }
+    }
+  }
+  
+  .form-field-element-select {
+    div[role="button"] {
+      border-top-left-radius: 0.2rem !important;
+      border-top-right-radius: 0.2rem !important;
+      border-bottom-left-radius: 0.2rem !important;
+      border-bottom-right-radius: 0.2rem !important;
+    }
+    .v-input--is-focused fieldset {
+      border-color: map-get($colors, blue) !important;
+    }
+    fieldset {
+      legend {
+        font-size: 1.2rem !important;
+      }
+  
+      transition: border-color 200ms ease-in-out !important;
+      border: 0.1rem solid map-get($colors , grey-10) !important;
+    }
+    i {
+      color:map-get($colors , grey-9) !important;
+    }
+    .v-label {
+      font-size: 1.2rem !important;
+      text-transform: capitalize;
+      padding-right: 0.2rem !important;
+      background: white !important;
+    }
+    .v-label--active {
+      transform: translateY(-18px) scale(1) !important;
+    }
+    .v-select__selections {
+      padding: unset !important;
+      align-items: baseline;
+    }
+    .v-select__selection--comma {
+      font-size: 1.4rem !important;
+    }
+  }
+  
+  .form-field-element-switch {    
+    .v-input--switch .v-label {
+      color: map-get($colors , black-2) !important;
+      font-size: 1.4rem !important;
+      text-transform: capitalize;
+    }
+  }
+
+  .form-field-element-date {
+    i {
+      color: map-get($colors , grey-9);
+    }
+
+    .v-label {      
+      text-transform: capitalize;
+    }
+
+    .v-label--active {
+      transform: translateY(-18px) scale(1) !important;
+      color: rgba(0, 0, 0, 0.6) !important;
+    }
+
+    .v-input--is-focused {
+      .v-input__slot:after {
+        display: none;
+      }
+    }
+
+    .v-input__slot::before {
+      border-color: map-get($colors , grey-10) !important;
+    }
+  }
+
+  .form-field-element-radio {
+    .v-label {
+      font-size: 1.4rem !important;
+      text-transform: capitalize;
+    }
+  }
+
+  .form-field-element-input-select {
+    .form-field-element-input {
+      fieldset {
+        border-right: unset !important;
+      }
+      .v-input__slot, .v-input__control {
+        border-top-right-radius: unset !important;
+        border-bottom-right-radius: unset !important;
+      }
+    }
+
+    .form-field-element-select {
+      i {
+        color: map-get($colors , blue) !important;
+      }
+      fieldset {
+        border-color: map-get($colors , blue) !important;
+      }
+      legend {
+        width: unset !important;
+      }
+      .v-label {
+        display: none;
+      }
+      div[role="button"] {
+        border-top-left-radius: unset !important;
+        border-bottom-left-radius: unset !important;
+      }
+    }
+  }
+
+  input {
+    font-size: 1.4rem;
+    color: map-get($colors , black) !important;
+  }
+}

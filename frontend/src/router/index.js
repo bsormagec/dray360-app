@@ -1,6 +1,7 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
 import Orders from '@/views/Orders/Orders'
+import Details from '@/views/Details/Details'
 import Login from '@/views/Login'
 import auth from '@/router/middleware/auth'
 import { runMiddleware } from '@/router/middleware'
@@ -15,6 +16,14 @@ const routes = [
       middleware: [auth]
     },
     component: Orders
+  },
+  {
+    path: '/order/:id',
+    name: 'Details',
+    meta: {
+      middleware: [auth]
+    },
+    component: Details
   },
   {
     path: '/login',

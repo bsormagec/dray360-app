@@ -1,5 +1,5 @@
 <template>
-  <div class="upload">
+  <div class="orders-create-upload">
     <h1 class="upload__title">
       CREATE ORDER BY UPLOAD
     </h1>
@@ -77,7 +77,7 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.upload {
+.orders-create-upload {
   display: flex;
   flex-direction: column;
   padding-top: 2.8rem;
