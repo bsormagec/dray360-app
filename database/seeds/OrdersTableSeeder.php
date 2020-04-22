@@ -15,7 +15,7 @@ class OrdersTableSeeder extends Seeder
     // class constants
 
     // define how many to seed
-    const NUM_ORDERS_TO_CREATE = 100;
+    const NUM_ORDERS_TO_CREATE = 10;
     const PCT_ORDERS_INTAKE_REJECTED = 15;
 
     // lists of sample data values

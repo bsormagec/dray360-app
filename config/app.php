@@ -177,6 +177,11 @@ return [
         App\Providers\NovaServiceProvider::class,
         App\Providers\RouteServiceProvider::class,
 
+        /*
+         * For AWS, see: https://github.com/aws/aws-sdk-php-laravel
+         */
+        Aws\Laravel\AwsServiceProvider::class,
+
     ],
 
     /*
@@ -228,6 +233,11 @@ return [
         'URL' => Illuminate\Support\Facades\URL::class,
         'Validator' => Illuminate\Support\Facades\Validator::class,
         'View' => Illuminate\Support\Facades\View::class,
+
+        /*
+         *For AWS, see: https://github.com/aws/aws-sdk-php-laravel
+         */
+        'AWS' => Aws\Laravel\AwsFacade::class,
 
     ],
 

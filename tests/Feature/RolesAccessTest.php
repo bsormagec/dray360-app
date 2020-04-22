@@ -48,7 +48,7 @@ class RolesAccessTest extends TestCase
      * @return void
      * @test
      */
-    public function adminCanAccessToAdminDashboard()
+    public function adminCanAccessAdminDashboard()
     {
         //Having
         $adminUser = factory(User::class)->create();
@@ -71,7 +71,7 @@ class RolesAccessTest extends TestCase
      * @return void
      * @test
      */
-    public function userCanAccessToHome()
+    public function userCanAccessHome()
     {
         //Having
         $user = factory(User::class)->create();
@@ -94,7 +94,7 @@ class RolesAccessTest extends TestCase
      * @return void
      * @test
      */
-    public function adminCanAccessYoHome()
+    public function adminCanAccessHome()
     {
         //Having
         $adminUser = factory(User::class)->create();
