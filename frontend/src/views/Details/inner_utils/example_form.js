@@ -1,321 +1,256 @@
 export const exampleForm = {
-  sections: [
-    {
-      title: 'shipment',
-      rootFields: [
-        buildField({
-          name: 'shipment designation',
+  sections: {
+    shipment: {
+      rootFields: {
+        'shipment designation': buildField({
           type: 'input',
           placeholder: 'international'
         }),
-        buildField({
-          name: 'shipment direction',
+        'shipment direction': buildField({
           type: 'select',
           options: ['a', 'b', 'c']
         }),
-        buildField({
-          name: 'shipment handling',
+        'shipment handling': buildField({
           type: 'select',
           options: ['a', 'b', 'c']
         }),
-        buildField({
-          name: 'one way',
+        'one way': buildField({
           type: 'switch'
         }),
-        buildField({
-          name: 'expedite shipment',
+        'expedite shipment': buildField({
           type: 'switch'
         }),
-        buildField({
-          name: 'hazardous',
+        hazardous: buildField({
           type: 'switch'
         })
-      ],
-      subSections: [
-        {
-          title: 'equipment',
-          fields: [
-            buildField({
-              name: 'type',
+      },
+      subSections: {
+        equipment: {
+          fields: {
+            type: buildField({
               type: 'input',
               placeholder: 'container'
             }),
-            buildField({
-              name: 'unit number',
+            'unit number': buildField({
               type: 'input',
               placeholder: 'AAAU656578'
             }),
-            buildField({
-              name: 'equipment',
+            equipment: buildField({
               type: 'input',
               placeholder: 'GP-General Purpose'
             }),
-            buildField({
-              name: 'size',
+            size: buildField({
               type: 'input',
               placeholder: '20 ft'
             }),
-            buildField({
-              name: 'yard pre-pull',
+            'yard pre-pull': buildField({
               type: 'switch'
             }),
-            buildField({
-              name: 'has chassis',
+            'has chassis': buildField({
               type: 'switch'
             }),
-            buildField({
-              name: 'owner or SS company',
+            'owner or SS company': buildField({
               type: 'input',
               placeholder: 'ACL'
             })
-          ]
+          }
         },
-        {
-          title: 'origin',
-          fields: [
-            buildField({
-              name: 'reference number',
+        origin: {
+          fields: {
+            'reference number': buildField({
               type: 'input',
               placeholder: 'reference number'
             }),
-            buildField({
-              name: 'rate quote number',
+            'rate quote number': buildField({
               type: 'input',
               placeholder: 'rate quote number'
             }),
-            buildField({
-              name: 'port/ramp of origin',
+            'port/ramp of origin': buildField({
               type: 'input',
               placeholder: 'port/ramp of origin'
             }),
-            buildField({
-              name: 'port/ramp of destination',
+            'port/ramp of destination': buildField({
               type: 'input',
               placeholder: 'port/ramp of destination'
             }),
-            buildField({
-              name: 'vessel',
+            vessel: buildField({
               type: 'input',
               placeholder: 'vessel'
             }),
-            buildField({
-              name: 'voyage',
+            voyage: buildField({
               type: 'input',
               placeholder: 'voyage'
             }),
-            buildField({
-              name: 'master BOL / MAWB',
+            'master BOL / MAWB': buildField({
               type: 'input',
               placeholder: 'master BOL / MAWB'
             }),
-            buildField({
-              name: 'house BOL / MAWB',
+            'house BOL / MAWB': buildField({
               type: 'input',
               placeholder: 'house BOL / MAWB'
             }),
-            buildField({
-              name: '(Est) arrival',
+            '(Est) arrival': buildField({
               type: 'date-time'
             }),
-            buildField({
-              name: 'last free day',
+            'last free day': buildField({
               type: 'date-time'
             })
-          ]
+          }
         },
-        {
-          title: 'billing',
-          fields: [
-            buildField({
-              name: 'bill to',
+        billing: {
+          fields: {
+            'bill to': buildField({
               type: 'modal-select',
               placeholder: 'select address',
               options: addresses()
             }),
-            buildField({
-              name: 'company name',
+            'company name': buildField({
               type: 'input',
               placeholder: 'company name'
             }),
-            buildField({
-              name: 'address',
+            address: buildField({
               type: 'text-area',
               placeholder: 'address'
             }),
-            buildField({
-              name: 'city',
+            city: buildField({
               type: 'input',
               placeholder: 'city'
             }),
-            buildField({
-              name: 'state',
+            state: buildField({
               type: 'input',
               placeholder: 'state'
             }),
-            buildField({
-              name: 'zip',
+            zip: buildField({
               type: 'input',
               placeholder: 'zip'
             }),
-            buildField({
-              name: 'contact name',
+            'contact name': buildField({
               type: 'input',
               placeholder: 'contact name'
             }),
-            buildField({
-              name: 'phone',
+            phone: buildField({
               type: 'input',
               placeholder: 'phone'
             }),
-            buildField({
-              name: 'ext',
+            ext: buildField({
               type: 'input',
               placeholder: 'ext'
             }),
-            buildField({
-              name: 'email',
+            email: buildField({
               type: 'input',
               placeholder: 'email'
             })
-          ]
+          }
         }
-      ]
+      }
     },
-    {
-      title: 'itinerary',
-      subSections: [
-        {
-          title: 'hook: rail or port terminal',
-          fields: [
-            buildField({
-              name: 'hook',
+    itinerary: {
+      subSections: {
+        'hook: rail or port terminal': {
+          fields: {
+            hook: buildField({
               type: 'modal-select',
               placeholder: 'select address',
               options: addresses()
             }),
-            buildField({
-              name: 'company name',
+            'company name': buildField({
               type: 'input',
               placeholder: 'company name'
             }),
-            buildField({
-              name: 'address',
+            address: buildField({
               type: 'text-area',
               placeholder: 'address'
             }),
-            buildField({
-              name: 'city',
+            city: buildField({
               type: 'input',
               placeholder: 'city'
             }),
-            buildField({
-              name: 'state',
+            state: buildField({
               type: 'input',
               placeholder: 'state'
             }),
-            buildField({
-              name: 'zip',
+            zip: buildField({
               type: 'input',
               placeholder: 'zip'
             }),
-            buildField({
-              name: 'contact name',
+            'contact name': buildField({
               type: 'input',
               placeholder: 'contact name'
             }),
-            buildField({
-              name: 'phone',
+            phone: buildField({
               type: 'input',
               placeholder: 'phone'
             }),
-            buildField({
-              name: 'ext',
+            ext: buildField({
               type: 'input',
               placeholder: 'ext'
             }),
-            buildField({
-              name: 'email',
+            email: buildField({
               type: 'input',
               placeholder: 'email'
             }),
-            buildField({
-              name: 'notes',
+            notes: buildField({
               type: 'text-area',
               placeholder: 'notes'
             }),
-            buildField({
-              name: 'hours',
+            hours: buildField({
               type: 'input',
               placeholder: 'hours'
             })
-          ]
+          }
         },
-        {
-          title: 'deliver: container to',
-          fields: [
-            buildField({
-              name: 'deliver',
+        'deliver: container to': {
+          fields: {
+            deliver: buildField({
               type: 'modal-select',
               placeholder: 'select address',
               options: addresses()
             }),
-            buildField({
-              name: 'company name',
+            'company name': buildField({
               type: 'input',
               placeholder: 'company name'
             }),
-            buildField({
-              name: 'address',
+            address: buildField({
               type: 'text-area',
               placeholder: 'address'
             }),
-            buildField({
-              name: 'city',
+            city: buildField({
               type: 'input',
               placeholder: 'city'
             }),
-            buildField({
-              name: 'state',
+            state: buildField({
               type: 'input',
               placeholder: 'state'
             }),
-            buildField({
-              name: 'zip',
+            zip: buildField({
               type: 'input',
               placeholder: 'zip'
             }),
-            buildField({
-              name: 'contact name',
+            'contact name': buildField({
               type: 'input',
               placeholder: 'contact name'
             }),
-            buildField({
-              name: 'phone',
+            phone: buildField({
               type: 'input',
               placeholder: 'phone'
             }),
-            buildField({
-              name: 'ext',
+            ext: buildField({
               type: 'input',
               placeholder: 'ext'
             }),
-            buildField({
-              name: 'email',
+            email: buildField({
               type: 'input',
               placeholder: 'email'
             }),
-            buildField({
-              name: 'notes',
+            notes: buildField({
               type: 'text-area',
               placeholder: 'notes'
             }),
-            buildField({
-              name: 'hours',
+            hours: buildField({
               type: 'input',
               placeholder: 'hours'
             }),
-            buildField({
-              name: 'delivery instructions',
+            'delivery instructions': buildField({
               type: 'radio',
               options: [
                 buildField({ name: 'call for appointment' }),
@@ -334,74 +269,60 @@ export const exampleForm = {
                 })
               ]
             })
-          ]
+          }
         },
-        {
-          title: 'dismount: return empty to depot',
-          fields: [
-            buildField({
-              name: 'dismount',
+        'dismount: return empty to depot': {
+          fields: {
+            dismount: buildField({
               placeholder: 'select address',
               type: 'modal-select',
               options: addresses()
             }),
-            buildField({
-              name: 'company name',
+            'company name': buildField({
               type: 'input',
               placeholder: 'company name'
             }),
-            buildField({
-              name: 'address',
+            address: buildField({
               type: 'text-area',
               placeholder: 'address'
             }),
-            buildField({
-              name: 'city',
+            city: buildField({
               type: 'input',
               placeholder: 'city'
             }),
-            buildField({
-              name: 'state',
+            state: buildField({
               type: 'input',
               placeholder: 'state'
             }),
-            buildField({
-              name: 'zip',
+            zip: buildField({
               type: 'input',
               placeholder: 'zip'
             }),
-            buildField({
-              name: 'contact name',
+            'contact name': buildField({
               type: 'input',
               placeholder: 'contact name'
             }),
-            buildField({
-              name: 'phone',
+            phone: buildField({
               type: 'input',
               placeholder: 'phone'
             }),
-            buildField({
-              name: 'ext',
+            ext: buildField({
               type: 'input',
               placeholder: 'ext'
             }),
-            buildField({
-              name: 'email',
+            email: buildField({
               type: 'input',
               placeholder: 'email'
             }),
-            buildField({
-              name: 'notes',
+            notes: buildField({
               type: 'text-area',
               placeholder: 'notes'
             }),
-            buildField({
-              name: 'hours',
+            hours: buildField({
               type: 'input',
               placeholder: 'hours'
             }),
-            buildField({
-              name: 'pickup instructions',
+            'pickup instructions': buildField({
               type: 'radio',
               options: [
                 buildField({ name: 'call for appointment' }),
@@ -422,40 +343,33 @@ export const exampleForm = {
                 })
               ]
             })
-          ]
+          }
         }
-      ]
+      }
     },
-    {
-      title: 'inventory',
-      rootFields: [
-        buildField({
-          name: 'quantity',
+    inventory: {
+      rootFields: {
+        quantity: buildField({
           type: 'input',
           placeholder: 'quantity'
         }),
-        buildField({
-          name: 'unit of measure',
+        'unit of measure': buildField({
           type: 'select',
           options: ['a', 'b', 'c']
         }),
-        buildField({
-          name: 'description',
+        description: buildField({
           type: 'input',
           placeholder: 'description'
         }),
-        buildField({
-          name: 'weight/unit',
+        'weight/unit': buildField({
           type: 'input-select',
           options: ['a', 'b', 'c']
         }),
-        buildField({
-          name: 'total weight',
+        'total weight': buildField({
           type: 'input',
           placeholder: 'total weight'
         }),
-        buildField({
-          name: 'hazardous',
+        hazardous: buildField({
           type: 'switch',
           children: [
             buildField({
@@ -514,19 +428,17 @@ export const exampleForm = {
             })
           ]
         })
-      ]
+      }
     },
-    {
-      title: 'notes',
-      rootFields: [
-        buildField({
-          name: 'notes',
+    notes: {
+      rootFields: {
+        notes: buildField({
           type: 'text-area',
           placeholder: 'notes'
         })
-      ]
+      }
     }
-  ]
+  }
 }
 
 function buildField ({

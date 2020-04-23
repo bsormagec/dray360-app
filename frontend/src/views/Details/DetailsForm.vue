@@ -1,48 +1,54 @@
+/*
+  TODO: FormFields should update its value inside example form
+        must convert form to Objects to be able to access keys
+        that will keep performance fast
+*/
+
 <template>
   <div class="form">
     <div
-      v-for="section in form.sections"
-      :key="section.title"
+      v-for="(sectionVal, sectionKey) in form.sections"
+      :key="sectionKey"
       class="form__section"
     >
       <h1
-        :id="`${cleanStrForId(section.title)}-${idSuffix}`"
+        :id="`${cleanStrForId(sectionKey)}-${idSuffix}`"
         class="section__title"
         :style="{
-          marginBottom: section.rootFields ? '2rem' : '1.6rem'
+          marginBottom: sectionVal.rootFields ? '2rem' : '1.6rem'
         }"
       >
-        {{ section.title }}
+        {{ sectionKey }}
       </h1>
 
       <div
-        v-if="section.rootFields"
+        v-if="sectionVal.rootFields"
         class="section__rootfields"
       >
         <FormField
-          v-for="field in section.rootFields"
-          :key="field.name"
-          :field="field"
+          v-for="(fieldVal, fieldKey) in sectionVal.rootFields"
+          :key="fieldKey"
+          :field="{...fieldVal, name: fieldKey}"
           :readonly="readonly"
         />
       </div>
 
       <div
-        v-for="sub in section.subSections"
-        :key="sub.name"
+        v-for="(subVal, subKey) in sectionVal.subSections"
+        :key="subKey"
         class="section__sub"
       >
         <h2
-          :id="`${cleanStrForId(sub.title)}-${idSuffix}`"
+          :id="`${cleanStrForId(subKey)}-${idSuffix}`"
           class="sub__title"
         >
-          {{ sub.title }}
+          {{ subKey }}
         </h2>
 
         <FormField
-          v-for="field in sub.fields"
-          :key="field.name"
-          :field="field"
+          v-for="(subFieldVal, subFieldKey) in subVal.fields"
+          :key="subFieldKey"
+          :field="{ ...subFieldVal, name: subFieldKey }"
           :readonly="readonly"
         />
       </div>

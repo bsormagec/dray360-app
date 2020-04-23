@@ -4,19 +4,19 @@ export const navigationSteps = () => {
   const steps = []
   let count = 0
 
-  exampleForm.sections.forEach(section => {
+  Object.keys(exampleForm.sections).forEach(sectionKey => {
     count += 1
     steps.push({
-      text: section.title,
+      text: sectionKey,
       id: count
     })
 
-    if (section.subSections) {
-      section.subSections.forEach(subSection => {
+    if (exampleForm.sections[sectionKey].subSections) {
+      Object.keys(exampleForm.sections[sectionKey].subSections).forEach(subSectionKey => {
         count += 0.1
         count = parseFloat(count.toFixed(1))
         steps.push({
-          text: subSection.title,
+          text: subSectionKey,
           id: count
         })
       })
