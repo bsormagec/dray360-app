@@ -11,7 +11,7 @@
       >
         <a
           class="navigation__link"
-          :href="'#' + step.text.toLowerCase()"
+          :href="`#${cleanStrForId(step.text.toLowerCase())}-${idSuffix}`"
         >
           <v-stepper-step
             :class="{
@@ -41,9 +41,13 @@
 <script>
 import { Fragment } from 'vue-fragment'
 import { navigationSteps } from '@/views/Details/inner_utils/navigation_steps'
+import { providerStateName } from '@/views/Details/inner_types'
+import { cleanStrForId } from '@/views/Details/inner_utils/clean_str_for_id'
 
 export default {
   name: 'DetailsSidebarNavigation',
+
+  inject: [providerStateName],
 
   components: {
     Fragment
@@ -54,7 +58,28 @@ export default {
     steps: navigationSteps()
   }),
 
+  computed: {
+    isEditing () {
+      return this[providerStateName].isEditing()
+    },
+    idSuffix () {
+      return this.isEditing ? 'editing' : 'viewing'
+    }
+  },
+
+  watch: {
+    isEditing: function (val) {
+      const currentHash = document.location.hash ? document.location.hash.split('-')[0] : false
+
+      if (currentHash) {
+        document.location.hash = `${currentHash}-${this.idSuffix}`
+      }
+    }
+  },
+
   methods: {
+    cleanStrForId,
+
     setStep (n) {
       this.current = n
     },

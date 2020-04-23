@@ -6,7 +6,7 @@
       class="form__section"
     >
       <h1
-        :id="section.title"
+        :id="`${cleanStrForId(section.title)}-${idSuffix}`"
         class="section__title"
         :style="{
           marginBottom: section.rootFields ? '2rem' : '1.6rem'
@@ -23,6 +23,7 @@
           v-for="field in section.rootFields"
           :key="field.name"
           :field="field"
+          :readonly="readonly"
         />
       </div>
 
@@ -32,7 +33,7 @@
         class="section__sub"
       >
         <h2
-          :id="sub.title"
+          :id="`${cleanStrForId(sub.title)}-${idSuffix}`"
           class="sub__title"
         >
           {{ sub.title }}
@@ -42,6 +43,7 @@
           v-for="field in sub.fields"
           :key="field.name"
           :field="field"
+          :readonly="readonly"
         />
       </div>
     </div>
@@ -50,26 +52,44 @@
 
 <script>
 import FormField from '@/components/FormField/FormField'
+import { providerStateName } from '@/views/Details/inner_types'
+import { cleanStrForId } from '@/views/Details/inner_utils/clean_str_for_id'
 
 export default {
   name: 'DetailsForm',
+
+  inject: [providerStateName],
 
   components: {
     FormField
   },
 
   props: {
-    form: {
-      type: Object,
+    readonly: {
+      type: Boolean,
+      required: true
+    },
+    idSuffix: {
+      type: String,
       required: true
     }
+  },
+
+  computed: {
+    form () {
+      return this[providerStateName].form()
+    }
+  },
+
+  methods: {
+    cleanStrForId
   }
 }
 </script>
 
 <style lang="scss" scoped>
 .form {
-  width: 45%;
+  width: 100%;
   height: 100vh;
   overflow-y: auto;
   padding: 3.6rem 6.5rem;

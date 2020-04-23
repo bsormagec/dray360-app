@@ -4,7 +4,12 @@
   >
     <DetailsSidebar />
 
-    <DetailsForm :form="exampleForm" />
+    <DetailsFormEditing
+      v-show="isEditing"
+    />
+    <DetailsFormViewing
+      v-show="!isEditing"
+    />
 
     <DetailsDocument />
   </div>
@@ -12,22 +17,44 @@
 
 <script>
 import DetailsSidebar from '@/views/Details/DetailsSidebar'
-import DetailsForm from '@/views/Details/DetailsForm'
+import DetailsFormEditing from '@/views/Details/DetailsFormEditing'
+import DetailsFormViewing from '@/views/Details/DetailsFormViewing'
 import DetailsDocument from '@/views/Details/DetailsDocument'
 import { exampleForm } from '@/views/Details/inner_utils/example_form'
+import { providerStateName, providerMethodsName } from '@/views/Details/inner_types'
 
 export default {
   name: 'Details',
 
   components: {
     DetailsSidebar,
-    DetailsForm,
+    DetailsFormEditing,
+    DetailsFormViewing,
     DetailsDocument
   },
 
   data: () => ({
-    exampleForm
-  })
+    exampleForm,
+    isEditing: true
+  }),
+
+  methods: {
+    toggleIsEditing () {
+      this.isEditing = !this.isEditing
+    }
+  },
+
+  provide () {
+    return {
+      [providerStateName]: {
+        form: () => this.exampleForm,
+        isEditing: () => this.isEditing
+      },
+      [providerMethodsName]: {
+        toggleIsEditing: this.toggleIsEditing
+      }
+    }
+  }
 }
 </script>
 
@@ -39,3 +66,7 @@ export default {
   padding-left: map-get($sizes , sidebar-desktop-width);
 }
 </style>
+
+/*
+  Adjust history.location when changing from viewing/editing and vice versa
+*/
