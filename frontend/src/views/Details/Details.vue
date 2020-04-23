@@ -1,3 +1,9 @@
+/*
+  TODO: Changes in the form are not being reflected, this could be a fault with Provide/Inject,
+  could be fixed adding proxies to Provide/Inject though a simpler and more predictable solution
+  cuold be to use a dedicated Vuex module for this.
+*/
+
 <template>
   <div
     class="details"
@@ -34,24 +40,32 @@ export default {
   },
 
   data: () => ({
-    exampleForm,
+    formToModify: {},
     isEditing: true
   }),
+
+  beforeMount () {
+    this.formToModify = exampleForm
+  },
 
   methods: {
     toggleIsEditing () {
       this.isEditing = !this.isEditing
+    },
+    setFormToModify (updatedForm) {
+      this.formToModify = updatedForm
     }
   },
 
   provide () {
     return {
       [providerStateName]: {
-        form: () => this.exampleForm,
+        form: () => this.formToModify,
         isEditing: () => this.isEditing
       },
       [providerMethodsName]: {
-        toggleIsEditing: this.toggleIsEditing
+        toggleIsEditing: this.toggleIsEditing,
+        setFormToModify: this.setFormToModify
       }
     }
   }

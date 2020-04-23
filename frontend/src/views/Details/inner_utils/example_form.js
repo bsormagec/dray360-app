@@ -464,6 +464,8 @@ function buildField ({
   return field
 
   function cleanUnusedProps () {
+    if (!name) delete field.name
+
     Object.keys(field.el).forEach(key => {
       if (field.el[key] === undefined) {
         delete field.el[key]

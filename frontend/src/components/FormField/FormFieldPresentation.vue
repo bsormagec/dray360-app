@@ -7,7 +7,7 @@
     <!--
       TODO: No longer a link, it's a modal-form component
     -->
-    <a
+    <!-- <a
       v-if="isLink"
       class="field__link"
       :href="field.value.href"
@@ -17,13 +17,12 @@
         color="primary"
         :style="{ marginLeft: '1.5rem' }"
       >{{ field.value.icon }}</v-icon>
-    </a>
+    </a> -->
     <!--
       end
     -->
 
     <span
-      v-else
       class="field__value"
     >{{ field.value }}</span>
   </div>

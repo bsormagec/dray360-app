@@ -1,11 +1,5 @@
-/*
-  TODO: FormFields should update its value inside example form
-        must convert form to Objects to be able to access keys
-        that will keep performance fast
-*/
-
 <template>
-  <div class="form">
+  <div class="form>">
     <div
       v-for="(sectionVal, sectionKey) in form.sections"
       :key="sectionKey"
@@ -30,6 +24,10 @@
           :key="fieldKey"
           :field="{...fieldVal, name: fieldKey}"
           :readonly="readonly"
+          @change="(value) => updateField({
+            value,
+            location: `${sectionKey}/rootFields/${fieldKey}`
+          })"
         />
       </div>
 
@@ -50,6 +48,10 @@
           :key="subFieldKey"
           :field="{ ...subFieldVal, name: subFieldKey }"
           :readonly="readonly"
+          @change="(value) => updateField({
+            value,
+            location: `${sectionKey}/subSections/${subKey}/fields/${subFieldKey}`
+          })"
         />
       </div>
     </div>
@@ -58,13 +60,13 @@
 
 <script>
 import FormField from '@/components/FormField/FormField'
-import { providerStateName } from '@/views/Details/inner_types'
+import { providerStateName, providerMethodsName } from '@/views/Details/inner_types'
 import { cleanStrForId } from '@/views/Details/inner_utils/clean_str_for_id'
 
 export default {
   name: 'DetailsForm',
 
-  inject: [providerStateName],
+  inject: [providerStateName, providerMethodsName],
 
   components: {
     FormField
@@ -88,7 +90,24 @@ export default {
   },
 
   methods: {
-    cleanStrForId
+    cleanStrForId,
+
+    setFormToModify (updatedForm) {
+      this[providerMethodsName].setFormToModify(updatedForm)
+    },
+
+    updateField ({ value, location }) {
+      const formModified = this.form
+      const parts = location.split('/')
+
+      if (location.includes('rootFields')) {
+        formModified.sections[parts[0]][parts[1]][parts[2]].value = value
+      } else if (location.includes('subSections')) {
+        formModified.sections[parts[0]][parts[1]][parts[2]][parts[3]][parts[4]].value = value
+      }
+
+      this.setFormToModify(formModified)
+    }
   }
 }
 </script>
