@@ -65,11 +65,11 @@ export const exampleForm = {
               type: 'input',
               placeholder: 'rate quote number'
             }),
-            'port/ramp of origin': buildField({
+            'port ramp of origin': buildField({
               type: 'input',
               placeholder: 'port/ramp of origin'
             }),
-            'port/ramp of destination': buildField({
+            'port ramp of destination': buildField({
               type: 'input',
               placeholder: 'port/ramp of destination'
             }),
@@ -81,11 +81,11 @@ export const exampleForm = {
               type: 'input',
               placeholder: 'voyage'
             }),
-            'master BOL / MAWB': buildField({
+            'master BOL MAWB': buildField({
               type: 'input',
               placeholder: 'master BOL / MAWB'
             }),
-            'house BOL / MAWB': buildField({
+            'house BOL MAWB': buildField({
               type: 'input',
               placeholder: 'house BOL / MAWB'
             }),
@@ -252,22 +252,20 @@ export const exampleForm = {
             }),
             'delivery instructions': buildField({
               type: 'radio',
-              options: [
-                buildField({ name: 'call for appointment' }),
-                buildField({
-                  name: 'deliver between',
-                  children: [
-                    buildField({ name: 'start', type: 'time', width: '48%' }),
-                    buildField({ name: 'end', type: 'time', width: '48%' }),
-                    buildField({
-                      name: 'instructions',
+              options: {
+                'call for appointment': buildField({}),
+                'deliver between': buildField({
+                  children: {
+                    start: buildField({ type: 'time', width: '48%' }),
+                    end: buildField({ type: 'time', width: '48%' }),
+                    instructions: buildField({
                       type: 'text-area',
                       width: '100%',
                       placeholder: 'delivery instructions'
                     })
-                  ]
+                  }
                 })
-              ]
+              }
             })
           }
         },
@@ -324,24 +322,22 @@ export const exampleForm = {
             }),
             'pickup instructions': buildField({
               type: 'radio',
-              options: [
-                buildField({ name: 'call for appointment' }),
-                buildField({
-                  name: 'pickup on',
-                  children: [
-                    buildField({ name: 'date', type: 'date' }),
-                    buildField({ name: 'between', type: 'label', width: '100%' }),
-                    buildField({ name: 'start', type: 'time', width: '48%' }),
-                    buildField({ name: 'end', type: 'time', width: '48%' }),
-                    buildField({
-                      name: 'instructions',
+              options: {
+                'call for appointment': buildField({}),
+                'pickup on': buildField({
+                  children: {
+                    date: buildField({ type: 'date' }),
+                    between: buildField({ type: 'label', width: '100%' }),
+                    start: buildField({ type: 'time', width: '48%' }),
+                    end: buildField({ type: 'time', width: '48%' }),
+                    instructions: buildField({
                       type: 'text-area',
                       width: '100%',
                       placeholder: 'delivery instructions'
                     })
-                  ]
+                  }
                 })
-              ]
+              }
             })
           }
         }
@@ -361,7 +357,7 @@ export const exampleForm = {
           type: 'input',
           placeholder: 'description'
         }),
-        'weight/unit': buildField({
+        'weight unit': buildField({
           type: 'input-select',
           options: ['a', 'b', 'c']
         }),
@@ -371,62 +367,51 @@ export const exampleForm = {
         }),
         hazardous: buildField({
           type: 'switch',
-          children: [
-            buildField({
-              name: 'hazardous item information',
+          children: {
+            'hazardous item information': buildField({
               type: 'info-title'
             }),
-            buildField({
-              name: 'contact name',
+            'contact name': buildField({
               type: 'input',
               placeholder: 'contact name'
             }),
-            buildField({
-              name: 'phone',
+            phone: buildField({
               type: 'input',
               placeholder: 'phone'
             }),
-            buildField({
-              name: 'UN code',
+            'UN code': buildField({
               type: 'input',
               placeholder: 'UN code'
             }),
-            buildField({
-              name: 'qualifier',
+            qualifier: buildField({
               type: 'input',
               placeholder: 'qualifier'
             }),
-            buildField({
-              name: 'flashpoint temp',
+            'flashpoint temp': buildField({
               type: 'input',
               placeholder: 'flashpoint temp'
             }),
-            buildField({
-              name: 'UN name',
+            'UN name': buildField({
               type: 'input',
               placeholder: 'UN name'
             }),
-            buildField({
-              name: 'HAZ class',
+            'HAZ class': buildField({
               type: 'input',
               placeholder: 'HAZ class'
             }),
-            buildField({
-              name: 'IMDG page no',
+            'IMDG page no': buildField({
               type: 'input',
               placeholder: 'IMDG page no'
             }),
-            buildField({
-              name: 'packaging group',
+            'packaging group': buildField({
               type: 'input',
               placeholder: 'packaging group'
             }),
-            buildField({
-              name: 'description',
+            description: buildField({
               type: 'text-area',
               placeholder: 'description'
             })
-          ]
+          }
         })
       }
     },
@@ -442,7 +427,7 @@ export const exampleForm = {
 }
 
 function buildField ({
-  name,
+  name = '',
   type,
   placeholder,
   options,

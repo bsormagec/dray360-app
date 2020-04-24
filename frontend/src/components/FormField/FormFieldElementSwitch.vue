@@ -12,17 +12,17 @@
     />
 
     <div
-      v-if="field.el.children && isActive"
+      v-show="field.el.children && isActive"
       class="switch__children"
     >
       <div
-        v-for="el in field.el.children"
-        :key="el.name"
+        v-for="(el, key) in field.el.children"
+        :key="key"
         class="children__child"
       >
         <FormFieldElement
-          :field="el"
-          @change="e => changeChildEl({ e, name: el.name })"
+          :field="{ ...el, name: key }"
+          @change="e => changeChildEl({ e, name: key })"
         />
       </div>
     </div>
@@ -49,18 +49,20 @@ export default {
     childrenData: {}
   }),
 
+  computed: {
+    parsedIsActive () {
+      return this.isActive === true ? 'yes' : 'no'
+    }
+  },
+
   methods: {
     changeChildEl ({ e, name }) {
-      this.childrenData[name] = e
+      this.$set(this.childrenData, name, e)
       this.emitChange()
     },
     emitChange () {
-      const value = this.field.el.children ? this.childrenData : this.isActive
-
-      this.$emit('change', {
-        name: this.field.name,
-        value: Object.keys(value) ? { active: this.isActive, ...value } : value
-      })
+      const value = this.field.el.children && this.isActive ? this.childrenData : this.parsedIsActive
+      this.$emit('change', value)
     }
   }
 }

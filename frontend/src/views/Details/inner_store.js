@@ -20,6 +20,5 @@ export const detailsMethods = {
   },
   toggleIsEditing () {
     detailsState.isEditing = !detailsState.isEditing
-    console.log('isEditing', detailsState.isEditing)
   }
 }
