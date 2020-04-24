@@ -24,7 +24,7 @@
           :key="fieldKey"
           :field="{...fieldVal, name: fieldKey}"
           :readonly="readonly"
-          @change="(value) => updateField({
+          @change="(value) => setFormFieldValue({
             value,
             location: `${sectionKey}/rootFields/${fieldKey}`
           })"
@@ -48,7 +48,7 @@
           :key="subFieldKey"
           :field="{ ...subFieldVal, name: subFieldKey }"
           :readonly="readonly"
-          @change="(value) => updateField({
+          @change="(value) => setFormFieldValue({
             value,
             location: `${sectionKey}/subSections/${subKey}/fields/${subFieldKey}`
           })"
@@ -60,13 +60,11 @@
 
 <script>
 import FormField from '@/components/FormField/FormField'
-import { providerStateName, providerMethodsName } from '@/views/Details/inner_types'
+import { detailsState, detailsMethods } from '@/views/Details/inner_store'
 import { cleanStrForId } from '@/views/Details/inner_utils/clean_str_for_id'
 
 export default {
   name: 'DetailsForm',
-
-  inject: [providerStateName, providerMethodsName],
 
   components: {
     FormField
@@ -85,28 +83,15 @@ export default {
 
   computed: {
     form () {
-      return this[providerStateName].form()
+      return detailsState.form
     }
   },
 
   methods: {
     cleanStrForId,
 
-    setFormToModify (updatedForm) {
-      this[providerMethodsName].setFormToModify(updatedForm)
-    },
-
-    updateField ({ value, location }) {
-      const formModified = this.form
-      const parts = location.split('/')
-
-      if (location.includes('rootFields')) {
-        formModified.sections[parts[0]][parts[1]][parts[2]].value = value
-      } else if (location.includes('subSections')) {
-        formModified.sections[parts[0]][parts[1]][parts[2]][parts[3]][parts[4]].value = value
-      }
-
-      this.setFormToModify(formModified)
+    setFormFieldValue ({ value, location }) {
+      detailsMethods.setFormFieldValue({ value, location })
     }
   }
 }

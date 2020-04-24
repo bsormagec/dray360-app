@@ -40,14 +40,12 @@
 
 <script>
 import { Fragment } from 'vue-fragment'
+import { detailsState } from '@/views/Details/inner_store'
 import { navigationSteps } from '@/views/Details/inner_utils/navigation_steps'
-import { providerStateName } from '@/views/Details/inner_types'
 import { cleanStrForId } from '@/views/Details/inner_utils/clean_str_for_id'
 
 export default {
   name: 'DetailsSidebarNavigation',
-
-  inject: [providerStateName],
 
   components: {
     Fragment
@@ -60,7 +58,7 @@ export default {
 
   computed: {
     isEditing () {
-      return this[providerStateName].isEditing()
+      return detailsState.isEditing
     },
     idSuffix () {
       return this.isEditing ? 'editing' : 'viewing'
@@ -69,7 +67,8 @@ export default {
 
   watch: {
     isEditing: function (val) {
-      const currentHash = document.location.hash ? document.location.hash.split('-')[0] : false
+      const currentHash = document.location.hash
+        ? document.location.hash.split('-')[0] : false
 
       if (currentHash) {
         document.location.hash = `${currentHash}-${this.idSuffix}`

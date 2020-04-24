@@ -51,13 +51,11 @@
 
 <script>
 import isMobile from '@/mixins/is_mobile'
+import { detailsState, detailsMethods } from '@/views/Details/inner_store'
 import DetailsSidebarNavigation from '@/views/Details/DetailsSidebarNavigation'
-import { providerStateName, providerMethodsName } from '@/views/Details/inner_types'
 
 export default {
   name: 'DetailsSidebar',
-
-  inject: [providerStateName, providerMethodsName],
 
   components: {
     DetailsSidebarNavigation
@@ -67,13 +65,13 @@ export default {
 
   computed: {
     isEditing () {
-      return this[providerStateName].isEditing()
+      return detailsState.isEditing
     }
   },
 
   methods: {
     toggleIsEditing () {
-      this[providerMethodsName].toggleIsEditing()
+      detailsMethods.toggleIsEditing()
     }
   }
 }
