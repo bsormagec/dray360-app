@@ -1,5 +1,5 @@
 <template>
-  <div class="form>">
+  <div class="form">
     <div
       v-for="(sectionVal, sectionKey) in form.sections"
       :key="sectionKey"
