@@ -2,6 +2,7 @@
   <FormFieldElementInput
     v-if="isInput"
     :field="field"
+    :value="value"
     @change="e => $emit('change', e)"
   />
 
@@ -14,6 +15,7 @@
   <FormFieldElementTextArea
     v-else-if="isTextArea"
     :field="field"
+    :value="value"
     @change="e => $emit('change', e)"
   />
 
@@ -106,6 +108,11 @@ export default {
     field: {
       type: Object,
       required: true
+    },
+    value: {
+      type: String,
+      required: false,
+      default: ''
     }
   },
 

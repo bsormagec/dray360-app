@@ -44,15 +44,6 @@ export default {
   },
 
   computed: {
-    isText () {
-      return this.field.type === 'text'
-    },
-
-    isLink () {
-      if (!this.field.value) return false
-      return this.field.value.type === 'link'
-    },
-
     isSimple () {
       return typeof this.field.value !== 'object'
     },

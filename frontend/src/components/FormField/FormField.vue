@@ -8,6 +8,7 @@
     <FormFieldElement
       v-show="!readonly"
       :field="field"
+      :value="value"
       @change="e => $emit('change', e)"
     />
   </div>
@@ -34,6 +35,12 @@ export default {
       type: Boolean,
       required: false,
       default: () => false
+    },
+    // Only used in input and text-area
+    value: {
+      type: String,
+      required: false,
+      default: ''
     }
   }
 }

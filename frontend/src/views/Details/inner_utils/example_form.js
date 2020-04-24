@@ -103,42 +103,6 @@ export const exampleForm = {
               type: 'modal-select',
               placeholder: 'select address',
               options: addresses()
-            }),
-            'company name': buildField({
-              type: 'input',
-              placeholder: 'company name'
-            }),
-            address: buildField({
-              type: 'text-area',
-              placeholder: 'address'
-            }),
-            city: buildField({
-              type: 'input',
-              placeholder: 'city'
-            }),
-            state: buildField({
-              type: 'input',
-              placeholder: 'state'
-            }),
-            zip: buildField({
-              type: 'input',
-              placeholder: 'zip'
-            }),
-            'contact name': buildField({
-              type: 'input',
-              placeholder: 'contact name'
-            }),
-            phone: buildField({
-              type: 'input',
-              placeholder: 'phone'
-            }),
-            ext: buildField({
-              type: 'input',
-              placeholder: 'ext'
-            }),
-            email: buildField({
-              type: 'input',
-              placeholder: 'email'
             })
           }
         }
@@ -152,50 +116,6 @@ export const exampleForm = {
               type: 'modal-select',
               placeholder: 'select address',
               options: addresses()
-            }),
-            'company name': buildField({
-              type: 'input',
-              placeholder: 'company name'
-            }),
-            address: buildField({
-              type: 'text-area',
-              placeholder: 'address'
-            }),
-            city: buildField({
-              type: 'input',
-              placeholder: 'city'
-            }),
-            state: buildField({
-              type: 'input',
-              placeholder: 'state'
-            }),
-            zip: buildField({
-              type: 'input',
-              placeholder: 'zip'
-            }),
-            'contact name': buildField({
-              type: 'input',
-              placeholder: 'contact name'
-            }),
-            phone: buildField({
-              type: 'input',
-              placeholder: 'phone'
-            }),
-            ext: buildField({
-              type: 'input',
-              placeholder: 'ext'
-            }),
-            email: buildField({
-              type: 'input',
-              placeholder: 'email'
-            }),
-            notes: buildField({
-              type: 'text-area',
-              placeholder: 'notes'
-            }),
-            hours: buildField({
-              type: 'input',
-              placeholder: 'hours'
             })
           }
         },
@@ -205,50 +125,6 @@ export const exampleForm = {
               type: 'modal-select',
               placeholder: 'select address',
               options: addresses()
-            }),
-            'company name': buildField({
-              type: 'input',
-              placeholder: 'company name'
-            }),
-            address: buildField({
-              type: 'text-area',
-              placeholder: 'address'
-            }),
-            city: buildField({
-              type: 'input',
-              placeholder: 'city'
-            }),
-            state: buildField({
-              type: 'input',
-              placeholder: 'state'
-            }),
-            zip: buildField({
-              type: 'input',
-              placeholder: 'zip'
-            }),
-            'contact name': buildField({
-              type: 'input',
-              placeholder: 'contact name'
-            }),
-            phone: buildField({
-              type: 'input',
-              placeholder: 'phone'
-            }),
-            ext: buildField({
-              type: 'input',
-              placeholder: 'ext'
-            }),
-            email: buildField({
-              type: 'input',
-              placeholder: 'email'
-            }),
-            notes: buildField({
-              type: 'text-area',
-              placeholder: 'notes'
-            }),
-            hours: buildField({
-              type: 'input',
-              placeholder: 'hours'
             }),
             'delivery instructions': buildField({
               type: 'radio',
@@ -275,50 +151,6 @@ export const exampleForm = {
               placeholder: 'select address',
               type: 'modal-select',
               options: addresses()
-            }),
-            'company name': buildField({
-              type: 'input',
-              placeholder: 'company name'
-            }),
-            address: buildField({
-              type: 'text-area',
-              placeholder: 'address'
-            }),
-            city: buildField({
-              type: 'input',
-              placeholder: 'city'
-            }),
-            state: buildField({
-              type: 'input',
-              placeholder: 'state'
-            }),
-            zip: buildField({
-              type: 'input',
-              placeholder: 'zip'
-            }),
-            'contact name': buildField({
-              type: 'input',
-              placeholder: 'contact name'
-            }),
-            phone: buildField({
-              type: 'input',
-              placeholder: 'phone'
-            }),
-            ext: buildField({
-              type: 'input',
-              placeholder: 'ext'
-            }),
-            email: buildField({
-              type: 'input',
-              placeholder: 'email'
-            }),
-            notes: buildField({
-              type: 'text-area',
-              placeholder: 'notes'
-            }),
-            hours: buildField({
-              type: 'input',
-              placeholder: 'hours'
             }),
             'pickup instructions': buildField({
               type: 'radio',
@@ -464,28 +296,76 @@ function buildField ({
 }
 
 function addresses () {
-  return [
-    {
-      companyName: 'Ladson',
-      address: '3016 Loxley Lane Ladson, CA, 90210',
-      city: 'Loxley Lane',
-      state: 'CA',
-      zip: '90210',
-      contactName: 'Seth Ling',
-      phone: '555-555',
-      ext: '555',
-      email: 'mail@mail.com'
-    },
-    {
-      companyName: 'SonLad',
-      address: '3016 Loxley Lane Ladson, CA, 90210',
-      city: 'Loxley Lane',
-      state: 'CA',
-      zip: '90210',
-      contactName: 'Seth Ling',
-      phone: '555-555',
-      ext: '555',
-      email: 'mail@mail.com'
+  return {
+    preselected: [
+      {
+        'company name': 'Ladson',
+        address: '3016 Loxley Lane Ladson, CA, 90210',
+        city: 'Loxley Lane',
+        state: 'CA',
+        zip: '90210',
+        'contact name': 'Seth Ling',
+        phone: '555-555',
+        ext: '555',
+        email: 'mail@mail.com'
+      },
+      {
+        'company name': 'SonLad',
+        address: '3016 Loxley Lane Ladson, CA, 90210',
+        city: 'Loxley Lane',
+        state: 'CA',
+        zip: '90210',
+        'contact name': 'Seth Ling',
+        phone: '555-555',
+        ext: '555',
+        email: 'mail@mail.com'
+      }
+    ],
+    fields: {
+      'company name': buildField({
+        type: 'input',
+        placeholder: 'company name'
+      }),
+      address: buildField({
+        type: 'text-area',
+        placeholder: 'address'
+      }),
+      city: buildField({
+        type: 'input',
+        placeholder: 'city'
+      }),
+      state: buildField({
+        type: 'input',
+        placeholder: 'state'
+      }),
+      zip: buildField({
+        type: 'input',
+        placeholder: 'zip'
+      }),
+      'contact name': buildField({
+        type: 'input',
+        placeholder: 'contact name'
+      }),
+      phone: buildField({
+        type: 'input',
+        placeholder: 'phone'
+      }),
+      ext: buildField({
+        type: 'input',
+        placeholder: 'ext'
+      }),
+      email: buildField({
+        type: 'input',
+        placeholder: 'email'
+      }),
+      notes: buildField({
+        type: 'text-area',
+        placeholder: 'notes'
+      }),
+      hours: buildField({
+        type: 'input',
+        placeholder: 'hours'
+      })
     }
-  ]
+  }
 }
