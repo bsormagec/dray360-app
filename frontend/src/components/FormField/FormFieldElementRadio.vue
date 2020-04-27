@@ -55,6 +55,10 @@ export default {
     childrenData: {}
   }),
 
+  mounted () {
+    this.emitChange()
+  },
+
   methods: {
     changeRadio (e) {
       this.emitChange()

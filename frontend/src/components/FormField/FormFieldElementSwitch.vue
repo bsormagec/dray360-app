@@ -55,6 +55,10 @@ export default {
     }
   },
 
+  mounted () {
+    this.emitChange()
+  },
+
   methods: {
     changeChildEl ({ e, name }) {
       this.$set(this.childrenData, name, e)
