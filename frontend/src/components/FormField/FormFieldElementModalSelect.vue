@@ -38,13 +38,13 @@
             class="card__item"
           >
             <h4 class="item__title">
-              {{ option.companyName }}
+              {{ option['company name'] }}
             </h4>
 
             <div class="item__left">
               <span class="left__contact-name">
                 <span>Managed by: </span>
-                <span>{{ option.contactName }}</span>
+                <span>{{ option['contact name'] }}</span>
               </span>
 
               <span class="left__phone">
