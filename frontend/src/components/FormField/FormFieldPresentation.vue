@@ -1,40 +1,40 @@
 <template>
-  <div
-    class="field"
-  >
+  <div class="form-field-presentation">
     <div
-      v-show="isSimple"
-      class="field__group"
+      v-if="!isModalSelect"
+      class="field"
     >
-      <span class="field__name">{{ field.name }}</span>
-
-      <span
-        class="field__value"
-      >{{ field.value ? field.value : '--' }}</span>
+      <FormFieldPresentationSimple
+        v-show="isSimple"
+        :field="field"
+      />
+      <FormFieldPresentationComplex
+        v-show="isComplex"
+        :field="field"
+      />
     </div>
 
-    <div
-      v-show="isComplex"
-    >
-      <span class="field__name">{{ field.name }}</span>
-      <div
-        v-for="(value, key) in field.value"
-        :key="key"
-        class="field__children"
-      >
-        <span class="field__name">{{ key }}</span>
-
-        <span
-          class="field__value"
-        >{{ value }}</span>
-      </div>
-    </div>
+    <FormFieldPresentationModalSelect
+      v-else
+      :field="field"
+    />
   </div>
 </template>
 
 <script>
+import { fieldType } from '@/enums/field_type'
+import FormFieldPresentationSimple from '@/components/FormField/FormFieldPresentationSimple'
+import FormFieldPresentationComplex from '@/components/FormField/FormFieldPresentationComplex'
+import FormFieldPresentationModalSelect from '@/components/FormField/FormFieldPresentationModalSelect'
+
 export default {
   name: 'FormFieldPresentation',
+
+  components: {
+    FormFieldPresentationSimple,
+    FormFieldPresentationComplex,
+    FormFieldPresentationModalSelect
+  },
 
   props: {
     field: {
@@ -50,32 +50,40 @@ export default {
 
     isComplex () {
       return typeof this.field.value === 'object'
+    },
+
+    isModalSelect () {
+      return this.field.el.type === fieldType.modalSelect
     }
   }
 }
 </script>
 
-<style lang="scss" scoped>
-.field__group {
-  display: flex;
-  justify-content: space-between;
-  margin-bottom: 1.1rem;
-}
+<style lang="scss">
+.form-field-presentation {
+  .field__group {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 1.1rem;
+  }
 
-.field__name, .field__children .field__name {
-  font-size: 1.4rem !important;
-  font-weight: bold;
-  text-transform: capitalize;
-}
+  .field__name,
+  .field__children .field__name {
+    font-size: 1.4rem !important;
+    font-weight: bold;
+    text-transform: capitalize;
+  }
 
-.field__value, .field__children .field__value {
-  font-size: 1.44rem !important;
-  text-transform: capitalize;
-}
+  .field__value,
+  .field__children .field__value {
+    font-size: 1.44rem !important;
+    text-transform: capitalize;
+  }
 
-.field__children {
-  display: flex;
-  justify-content: space-between;
-  padding-left: 1rem;
+  .field__children {
+    display: flex;
+    justify-content: space-between;
+    padding-left: 1rem;
+  }
 }
 </style>
