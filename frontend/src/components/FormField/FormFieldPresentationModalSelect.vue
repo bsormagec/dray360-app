@@ -37,6 +37,11 @@
             <span>Email: </span>
             <span class="link">{{ field.value.email }}</span>
           </div>
+
+          <div class="popover__info-item">
+            <span>Manager: </span>
+            <span :style="{ fontWeight: 'normal' }">{{ field.value['contact name'] }}</span>
+          </div>
         </div>
       </span>
 
