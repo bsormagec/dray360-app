@@ -10,5 +10,6 @@ export const fieldType = {
   radio: 'radio',
   modalSelect: 'modal-select',
   label: 'label',
-  infoTitle: 'info-title'
+  infoTitle: 'info-title',
+  addInventoryItem: 'add-inventory-item'
 }

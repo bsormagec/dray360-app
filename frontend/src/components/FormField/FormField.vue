@@ -1,14 +1,15 @@
 <template>
   <div class="form-field">
     <FormFieldPresentation
-      v-if="readonly"
+      v-show="readonly"
       :field="field"
     />
 
     <FormFieldElement
-      v-else
+      v-show="!readonly"
       :field="field"
-      @change="onChange"
+      :value="value"
+      @change="e => $emit('change', e)"
     />
   </div>
 </template>
@@ -34,12 +35,12 @@ export default {
       type: Boolean,
       required: false,
       default: () => false
-    }
-  },
-
-  methods: {
-    onChange (e) {
-      console.log(this.field.name, e)
+    },
+    // Only used in input and text-area
+    value: {
+      type: String,
+      required: false,
+      default: ''
     }
   }
 }

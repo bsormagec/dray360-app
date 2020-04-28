@@ -1,37 +1,40 @@
 <template>
-  <div
-    class="field"
-  >
-    <span class="field__name">{{ field.name }}</span>
-
-    <!--
-      TODO: No longer a link, it's a modal-form component
-    -->
-    <a
-      v-if="isLink"
-      class="field__link"
-      :href="field.value.href"
+  <div class="form-field-presentation">
+    <div
+      v-if="!isModalSelect"
+      class="field"
     >
-      {{ field.value.text }}
-      <v-icon
-        color="primary"
-        :style="{ marginLeft: '1.5rem' }"
-      >{{ field.value.icon }}</v-icon>
-    </a>
-    <!--
-      end
-    -->
+      <FormFieldPresentationSimple
+        v-show="isSimple"
+        :field="field"
+      />
+      <FormFieldPresentationComplex
+        v-show="isComplex"
+        :field="field"
+      />
+    </div>
 
-    <span
+    <FormFieldPresentationModalSelect
       v-else
-      class="field__value"
-    >{{ field.value }}</span>
+      :field="field"
+    />
   </div>
 </template>
 
 <script>
+import { fieldType } from '@/enums/field_type'
+import FormFieldPresentationSimple from '@/components/FormField/FormFieldPresentationSimple'
+import FormFieldPresentationComplex from '@/components/FormField/FormFieldPresentationComplex'
+import FormFieldPresentationModalSelect from '@/components/FormField/FormFieldPresentationModalSelect'
+
 export default {
-  name: 'DetailsFormFieldPresentation',
+  name: 'FormFieldPresentation',
+
+  components: {
+    FormFieldPresentationSimple,
+    FormFieldPresentationComplex,
+    FormFieldPresentationModalSelect
+  },
 
   props: {
     field: {
@@ -41,41 +44,46 @@ export default {
   },
 
   computed: {
-    isText () {
-      return this.field.type === 'text'
+    isSimple () {
+      return typeof this.field.value !== 'object'
     },
 
-    isLink () {
-      if (!this.field.value) return false
-      return this.field.value.type === 'link'
+    isComplex () {
+      return typeof this.field.value === 'object'
+    },
+
+    isModalSelect () {
+      return this.field.el.type === fieldType.modalSelect
     }
   }
 }
 </script>
 
-<style lang="scss" scoped>
-.field {
-  display: flex;
-  justify-content: space-between;
-  margin-bottom: 1.1rem;
-}
+<style lang="scss">
+.form-field-presentation {
+  .field__group {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 1.1rem;
+  }
 
-.field__name {
-  font-size: 1.4rem !important;
-  font-weight: bold;
-  text-transform: capitalize;
-}
+  .field__name,
+  .field__children .field__name {
+    font-size: 1.4rem !important;
+    font-weight: bold;
+    text-transform: capitalize;
+  }
 
-.field__link {
-  text-decoration: none;
-  font-size: 1.44rem;
-  font-weight: bold;
-  display: flex;
-  align-items: center;
-}
+  .field__value,
+  .field__children .field__value {
+    font-size: 1.44rem !important;
+    text-transform: capitalize;
+  }
 
-.field__value {
-  font-size: 1.44rem !important;
-  text-transform: capitalize;
+  .field__children {
+    display: flex;
+    justify-content: space-between;
+    padding-left: 1rem;
+  }
 }
 </style>

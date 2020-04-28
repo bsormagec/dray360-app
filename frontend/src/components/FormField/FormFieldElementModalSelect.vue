@@ -33,18 +33,18 @@
           </div>
 
           <div
-            v-for="(option, index) in field.el.options"
+            v-for="(option, index) in field.el.options.preselected"
             :key="option.name"
             class="card__item"
           >
             <h4 class="item__title">
-              {{ option.companyName }}
+              {{ option['company name'] }}
             </h4>
 
             <div class="item__left">
               <span class="left__contact-name">
                 <span>Managed by: </span>
-                <span>{{ option.contactName }}</span>
+                <span>{{ option['contact name'] }}</span>
               </span>
 
               <span class="left__phone">
@@ -78,12 +78,27 @@
         </div>
       </v-card>
     </v-dialog>
+
+    <div
+      v-for="(el, key) in field.el.options.fields"
+      :key="key"
+    >
+      <FormFieldElement
+        :field="{...el, name: key}"
+        :value="childrenData[key]"
+        @change="e => changeChildEl({ e, name: key })"
+      />
+    </div>
   </div>
 </template>
 
 <script>
 export default {
   name: 'FormFieldElementModalForm',
+
+  components: {
+    FormFieldElement: () => import('@/components/FormField/FormFieldElement')
+  },
 
   props: {
     field: {
@@ -93,7 +108,8 @@ export default {
   },
 
   data: () => ({
-    isOpen: false
+    isOpen: false,
+    childrenData: {}
   }),
 
   methods: {
@@ -101,8 +117,13 @@ export default {
       this.isOpen = !this.isOpen
     },
     select (index) {
-      this.$emit('change', this.field.el.options[index])
+      this.childrenData = this.field.el.options.preselected[index]
+      this.$emit('change', this.childrenData)
       this.toggleModal()
+    },
+    changeChildEl ({ e, name }) {
+      this.$set(this.childrenData, name, e)
+      this.$emit('change', this.childrenData)
     }
   }
 }

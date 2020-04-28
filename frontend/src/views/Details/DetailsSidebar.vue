@@ -11,6 +11,7 @@
       <v-btn
         color="primary"
         outlined
+        width="11.5rem"
         @click="() => {}"
       >
         <v-icon>
@@ -22,17 +23,19 @@
       <DetailsSidebarNavigation />
 
       <v-btn
-        color="primary"
-        outlined
+        :color="isEditing ? 'success' : 'primary'"
+        :outlined="!isEditing"
         :style="{ marginBottom: '1rem' }"
-        @click="() => {}"
+        width="11.5rem"
+        @click="toggleIsEditing"
       >
-        Edit Order
+        {{ isEditing ? 'Save' : 'Edit Order' }}
       </v-btn>
 
       <v-btn
         color="primary"
         outlined
+        width="11.5rem"
         @click="() => {}"
       >
         Send to   TMS
@@ -48,6 +51,7 @@
 
 <script>
 import isMobile from '@/mixins/is_mobile'
+import { detailsState, detailsMethods } from '@/views/Details/inner_store'
 import DetailsSidebarNavigation from '@/views/Details/DetailsSidebarNavigation'
 
 export default {
@@ -57,7 +61,19 @@ export default {
     DetailsSidebarNavigation
   },
 
-  mixins: [isMobile]
+  mixins: [isMobile],
+
+  computed: {
+    isEditing () {
+      return detailsState.isEditing
+    }
+  },
+
+  methods: {
+    toggleIsEditing () {
+      detailsMethods.toggleIsEditing()
+    }
+  }
 }
 </script>
 

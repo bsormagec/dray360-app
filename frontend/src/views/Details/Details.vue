@@ -4,7 +4,12 @@
   >
     <DetailsSidebar />
 
-    <DetailsForm :form="exampleForm" />
+    <DetailsFormEditing
+      v-show="isEditing"
+    />
+    <DetailsFormViewing
+      v-show="!isEditing"
+    />
 
     <DetailsDocument />
   </div>
@@ -12,22 +17,31 @@
 
 <script>
 import DetailsSidebar from '@/views/Details/DetailsSidebar'
-import DetailsForm from '@/views/Details/DetailsForm'
-import DetailsDocument from '@/views/Details/DetailsDocument.vue'
-import { exampleForm } from '@/views/Details/inner_utils'
+import DetailsFormEditing from '@/views/Details/DetailsFormEditing'
+import DetailsFormViewing from '@/views/Details/DetailsFormViewing'
+import DetailsDocument from '@/views/Details/DetailsDocument'
+import { detailsState, detailsMethods } from '@/views/Details/inner_store'
+import { exampleForm as form } from '@/views/Details/inner_utils/example_form'
 
 export default {
   name: 'Details',
 
   components: {
     DetailsSidebar,
-    DetailsForm,
+    DetailsFormEditing,
+    DetailsFormViewing,
     DetailsDocument
   },
 
-  data: () => ({
-    exampleForm
-  })
+  computed: {
+    isEditing () {
+      return detailsState.isEditing
+    }
+  },
+
+  beforeMount () {
+    detailsMethods.setForm(form)
+  }
 }
 </script>
 

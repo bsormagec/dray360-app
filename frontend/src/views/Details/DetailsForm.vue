@@ -1,47 +1,68 @@
 <template>
   <div class="form">
     <div
-      v-for="section in form.sections"
-      :key="section.title"
+      v-for="(sectionVal, sectionKey) in form.sections"
+      :key="sectionKey"
       class="form__section"
     >
       <h1
-        :id="section.title"
+        :id="`${cleanStrForId(sectionKey)}-${idSuffix}`"
         class="section__title"
         :style="{
-          marginBottom: section.rootFields ? '2rem' : '1.6rem'
+          marginBottom: sectionVal.rootFields ? '2rem' : '1.6rem'
         }"
       >
-        {{ section.title }}
+        {{ sectionKey }}
       </h1>
 
       <div
-        v-if="section.rootFields"
+        v-if="sectionVal.rootFields"
         class="section__rootfields"
       >
         <FormField
-          v-for="field in section.rootFields"
-          :key="field.name"
-          :field="field"
+          v-for="(fieldVal, fieldKey) in sectionVal.rootFields"
+          :key="fieldKey"
+          :field="{...fieldVal, name: fieldKey}"
+          :readonly="readonly"
+          @change="(value) => setFormFieldValue({
+            value,
+            location: `${sectionKey}/rootFields/${fieldKey}`
+          })"
         />
       </div>
 
       <div
-        v-for="sub in section.subSections"
-        :key="sub.name"
+        v-for="(subVal, subKey) in sectionVal.subSections"
+        :key="subKey"
         class="section__sub"
       >
         <h2
-          :id="sub.title"
+          :id="`${cleanStrForId(subKey)}-${idSuffix}`"
           class="sub__title"
         >
-          {{ sub.title }}
+          {{ subKey }}
         </h2>
 
         <FormField
-          v-for="field in sub.fields"
-          :key="field.name"
-          :field="field"
+          v-for="(subFieldVal, subFieldKey) in subVal.fields"
+          :key="subFieldKey"
+          :field="{ ...subFieldVal, name: subFieldKey }"
+          :readonly="readonly"
+          @change="(value) => setFormFieldValue({
+            value,
+            location: `${sectionKey}/subSections/${subKey}/fields/${subFieldKey}`
+          })"
+        />
+      </div>
+
+      <div v-if="sectionVal.actionSection">
+        <FormField
+          :field="sectionVal.actionSection"
+          :readonly="readonly"
+          @change="(value) => handleActionSection({
+            value,
+            location: `${sectionKey}/actionSection`
+          })"
         />
       </div>
     </div>
@@ -50,6 +71,8 @@
 
 <script>
 import FormField from '@/components/FormField/FormField'
+import { detailsState, detailsMethods } from '@/views/Details/inner_store'
+import { cleanStrForId } from '@/views/Details/inner_utils/clean_str_for_id'
 
 export default {
   name: 'DetailsForm',
@@ -59,9 +82,40 @@ export default {
   },
 
   props: {
-    form: {
-      type: Object,
+    readonly: {
+      type: Boolean,
       required: true
+    },
+    idSuffix: {
+      type: String,
+      required: true
+    }
+  },
+
+  /*
+    TODO:
+    - Add watcher for inventory section that triggers handleActionSection on change
+  */
+
+  computed: {
+    form () {
+      return detailsState.form
+    }
+  },
+
+  methods: {
+    cleanStrForId,
+
+    setFormFieldValue ({ value, location }) {
+      detailsMethods.setFormFieldValue({ value, location })
+    },
+
+    handleActionSection ({ value, location }) {
+      const { type } = value
+
+      if (type === 'inventory-item-initialize') {
+        this.setFormFieldValue({ value, location })
+      }
     }
   }
 }
@@ -69,7 +123,7 @@ export default {
 
 <style lang="scss" scoped>
 .form {
-  width: 45%;
+  width: 100%;
   height: 100vh;
   overflow-y: auto;
   padding: 3.6rem 6.5rem;

@@ -5,28 +5,28 @@
       @change="changeRadio"
     >
       <div
-        v-for="(option, index) in field.el.options"
-        :key="option.name"
+        v-for="(option, key, index) in field.el.options"
+        :key="key"
         class="radio__option"
       >
         <v-radio
-          :label="option.name"
+          :label="String(key)"
           :value="index"
         />
 
         <div
-          v-if="option.children"
+          v-if="option.el && option.el.children"
           class="option__children"
         >
           <div
-            v-for="el in option.children"
-            :key="el.name"
+            v-for="(el, childKey) in option.el.children"
+            :key="childKey"
             :style="{ width: el.el.width }"
             class="children__child"
           >
             <FormFieldElement
-              :field="el"
-              @change="e => changeChildEl({ e, name: el.name })"
+              :field="{...el, name: childKey}"
+              @change="e => changeChildEl({ e, name: childKey })"
             />
           </div>
         </div>
@@ -55,6 +55,10 @@ export default {
     childrenData: {}
   }),
 
+  mounted () {
+    this.emitChange()
+  },
+
   methods: {
     changeRadio (e) {
       this.emitChange()
@@ -64,15 +68,12 @@ export default {
       this.emitChange()
     },
     emitChange () {
-      const childrenDataToSend = this.field.el.options[this.radioValue].children ? this.childrenData : {}
+      const radioToOptionKey = Object.keys(this.field.el.options)
+      const optionEl = this.field.el.options[radioToOptionKey[this.radioValue]].el
+      const hasChildren = Boolean(optionEl && optionEl.children)
+      const childrenDataToSend = hasChildren ? this.childrenData : radioToOptionKey[this.radioValue]
 
-      this.$emit('change', {
-        name: this.field.name,
-        value: {
-          name: this.field.el.options[this.radioValue].name,
-          ...childrenDataToSend
-        }
-      })
+      this.$emit('change', childrenDataToSend)
     }
   }
 }
