@@ -32,28 +32,26 @@
       </div>
 
       <div
-        v-for="(subVal, subKey) in sectionVal.subSections"
+        v-for="(subVal, subKey, subIndex) in sectionVal.subSections"
         :key="subKey"
         class="section__sub"
       >
-        <h2
+        <div
           :id="`${cleanStrForId(subKey)}-${idSuffix}`"
           class="sub__title"
         >
-          {{ sectionKey === 'inventory' ? '' : subKey }}
+          <h2>{{ sectionKey === 'inventory' ? `Item ${subIndex + 1}` : subKey }}</h2>
 
           <v-btn
             v-if="isEditing && hasInventoryAction({ sectionKey, sectionVal })"
             icon
             @click="deleteFormInventoryItem({ key: subKey })"
           >
-            <v-icon
-              color="red"
-            >
+            <v-icon color="red">
               mdi-delete
             </v-icon>
           </v-btn>
-        </h2>
+        </div>
 
         <FormField
           v-for="(subFieldVal, subFieldKey) in subVal.fields"
@@ -175,12 +173,16 @@ export default {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  font-size: 1.6rem;
-  line-height: 3.6rem;
-  color: map-get($colors, grey-4);
-  border-bottom: 0.1rem solid map-get($colors, grey-3);
-  margin-bottom: 1.4rem;
-  text-transform: capitalize;
+
+  h2 {
+    width: 100%;
+    font-size: 1.6rem;
+    line-height: 3.6rem;
+    color: map-get($colors, grey-4);
+    border-bottom: 0.1rem solid map-get($colors, grey-3);
+    margin-bottom: 1.4rem;
+    text-transform: capitalize;
+  }
 
   button {
     margin-left: auto;

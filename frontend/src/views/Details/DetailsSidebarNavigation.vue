@@ -25,7 +25,7 @@
             complete-icon="mdi-account"
             @click="setStep(step.id)"
           >
-            {{ step.text }}
+            {{ step.isInventoryItem ? step.inventoryItemText : step.text }}
           </v-stepper-step>
         </a>
 
@@ -52,14 +52,18 @@ export default {
   },
 
   data: () => ({
-    current: 1,
-    steps: navigationSteps()
+    current: 1
   }),
 
   computed: {
+    steps () {
+      return navigationSteps()
+    },
+
     isEditing () {
       return detailsState.isEditing
     },
+
     idSuffix () {
       return this.isEditing ? 'editing' : 'viewing'
     }
