@@ -54,6 +54,17 @@
           })"
         />
       </div>
+
+      <div v-if="sectionVal.actionSection">
+        <FormField
+          :field="sectionVal.actionSection"
+          :readonly="readonly"
+          @change="(value) => handleActionSection({
+            value,
+            location: `${sectionKey}/actionSection`
+          })"
+        />
+      </div>
     </div>
   </div>
 </template>
@@ -81,6 +92,11 @@ export default {
     }
   },
 
+  /*
+    TODO:
+    - Add watcher for inventory section that triggers handleActionSection on change
+  */
+
   computed: {
     form () {
       return detailsState.form
@@ -92,6 +108,14 @@ export default {
 
     setFormFieldValue ({ value, location }) {
       detailsMethods.setFormFieldValue({ value, location })
+    },
+
+    handleActionSection ({ value, location }) {
+      const { type } = value
+
+      if (type === 'inventory-item-initialize') {
+        this.setFormFieldValue({ value, location })
+      }
     }
   }
 }
