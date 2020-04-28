@@ -61,12 +61,6 @@
     @change="e => $emit('change', e)"
   />
 
-  <FormFieldElementAddInventoryItem
-    v-else-if="isAddInventoryItem"
-    :field="field"
-    @change="e => $emit('change', e)"
-  />
-
   <span
     v-else-if="isInfoTitle"
     class="element__info-title"
@@ -93,7 +87,6 @@ import FormFieldElementTime from '@/components/FormField/FormFieldElementTime'
 import FormFieldElementBothDateTime from '@/components/FormField/FormFieldElementBothDateTime'
 import FormFieldElementModalSelect from '@/components/FormField/FormFieldElementModalSelect'
 import FormFieldElementRadio from '@/components/FormField/FormFieldElementRadio'
-import FormFieldElementAddInventoryItem from '@/components/FormField/FormFieldElementAddInventoryItem'
 
 export default {
   name: 'FormFieldElement',
@@ -108,8 +101,7 @@ export default {
     FormFieldElementTime,
     FormFieldElementBothDateTime,
     FormFieldElementModalSelect,
-    FormFieldElementRadio,
-    FormFieldElementAddInventoryItem
+    FormFieldElementRadio
   },
 
   props: {
@@ -160,9 +152,6 @@ export default {
     },
     isLabel () {
       return this.field.el.type === fieldType.label
-    },
-    isAddInventoryItem () {
-      return this.field.el.type === fieldType.addInventoryItem
     }
   }
 }

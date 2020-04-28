@@ -55,15 +55,8 @@
         />
       </div>
 
-      <div v-if="sectionVal.actionSection">
-        <FormField
-          :field="sectionVal.actionSection"
-          :readonly="readonly"
-          @change="(value) => handleActionSection({
-            value,
-            location: `${sectionKey}/actionSection`
-          })"
-        />
+      <div v-if="hasInventoryAction({ sectionKey, sectionVal })">
+        <DetailsFormAddInventoryItem />
       </div>
     </div>
   </div>
@@ -71,6 +64,7 @@
 
 <script>
 import FormField from '@/components/FormField/FormField'
+import DetailsFormAddInventoryItem from '@/views/Details/DetailsFormAddInventoryItem'
 import { detailsState, detailsMethods } from '@/views/Details/inner_store'
 import { cleanStrForId } from '@/views/Details/inner_utils/clean_str_for_id'
 
@@ -78,7 +72,8 @@ export default {
   name: 'DetailsForm',
 
   components: {
-    FormField
+    FormField,
+    DetailsFormAddInventoryItem
   },
 
   props: {
@@ -91,11 +86,6 @@ export default {
       required: true
     }
   },
-
-  /*
-    TODO:
-    - Add watcher for inventory section that triggers handleActionSection on change
-  */
 
   computed: {
     form () {
@@ -110,12 +100,8 @@ export default {
       detailsMethods.setFormFieldValue({ value, location })
     },
 
-    handleActionSection ({ value, location }) {
-      const { type } = value
-
-      if (type === 'inventory-item-initialize') {
-        this.setFormFieldValue({ value, location })
-      }
+    hasInventoryAction ({ sectionKey, sectionVal }) {
+      return sectionKey === 'inventory' && sectionVal.actionSection
     }
   }
 }

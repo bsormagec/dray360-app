@@ -1,11 +1,15 @@
 import Vue from 'vue'
 
 export const detailsState = Vue.observable({
-  form: {},
-  isEditing: true
+  isEditing: true,
+  form: {}
 })
 
 export const detailsMethods = {
+  toggleIsEditing () {
+    detailsState.isEditing = !detailsState.isEditing
+  },
+
   setForm (newForm) {
     detailsState.form = newForm
   },
@@ -23,8 +27,12 @@ export const detailsMethods = {
     }
   },
 
-  toggleIsEditing () {
-    detailsState.isEditing = !detailsState.isEditing
+  addFormInventoryItem ({ key, fields }) {
+    const subSections = detailsState.form.sections.inventory.subSections
+
+    Vue.set(detailsState.form.sections.inventory, 'subSections', subSections)
+    Vue.set(detailsState.form.sections.inventory.subSections, key, {})
+    Vue.set(detailsState.form.sections.inventory.subSections[key], 'fields', fields)
   }
 }
 

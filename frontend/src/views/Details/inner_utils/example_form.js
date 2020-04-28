@@ -178,7 +178,7 @@ export const exampleForm = {
     },
     inventory: {
       subSections: {
-        'Item 1': {
+        'item 1': {
           fields: inventoryItemFields()
         }
       },
@@ -355,7 +355,7 @@ function hazardousFields () {
   }
 }
 
-function inventoryItemFields () {
+export function inventoryItemFields () {
   return {
     quantity: buildField({
       type: 'input',
