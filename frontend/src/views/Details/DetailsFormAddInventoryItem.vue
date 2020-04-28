@@ -6,6 +6,7 @@
     </span>
 
     <v-btn
+      v-if="isEditing"
       outlined
       color="primary"
       @click="addInventoryItem"
@@ -24,6 +25,10 @@ export default {
   name: 'DetailsFormAddInventoryItem',
 
   computed: {
+    isEditing () {
+      return detailsState.isEditing
+    },
+
     itemCount () {
       return Object.keys(detailsState.form.sections.inventory.subSections).length
     },
