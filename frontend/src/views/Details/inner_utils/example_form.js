@@ -1,3 +1,5 @@
+import { v4 as uuidv4 } from 'uuid'
+
 export const exampleForm = {
   sections: {
     shipment: {
@@ -178,7 +180,7 @@ export const exampleForm = {
     },
     inventory: {
       subSections: {
-        'item 1': {
+        [uuidv4()]: {
           fields: inventoryItemFields()
         }
       },

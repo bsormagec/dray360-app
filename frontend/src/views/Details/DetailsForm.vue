@@ -40,7 +40,19 @@
           :id="`${cleanStrForId(subKey)}-${idSuffix}`"
           class="sub__title"
         >
-          {{ subKey }}
+          {{ sectionKey === 'inventory' ? '' : subKey }}
+
+          <v-btn
+            v-if="isEditing && hasInventoryAction({ sectionKey, sectionVal })"
+            icon
+            @click="deleteFormInventoryItem({ key: subKey })"
+          >
+            <v-icon
+              color="red"
+            >
+              mdi-delete
+            </v-icon>
+          </v-btn>
         </h2>
 
         <FormField
@@ -88,6 +100,10 @@ export default {
   },
 
   computed: {
+    isEditing () {
+      return detailsState.isEditing
+    },
+
     form () {
       return detailsState.form
     }
@@ -102,6 +118,10 @@ export default {
 
     hasInventoryAction ({ sectionKey, sectionVal }) {
       return sectionKey === 'inventory' && sectionVal.actionSection
+    },
+
+    deleteFormInventoryItem ({ key }) {
+      detailsMethods.deleteFormInventoryItem({ key })
     }
   }
 }
@@ -152,11 +172,18 @@ export default {
 }
 
 .sub__title {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
   font-size: 1.6rem;
   line-height: 3.6rem;
   color: map-get($colors, grey-4);
   border-bottom: 0.1rem solid map-get($colors, grey-3);
   margin-bottom: 1.4rem;
   text-transform: capitalize;
+
+  button {
+    margin-left: auto;
+  }
 }
 </style>

@@ -16,6 +16,7 @@
 </template>
 
 <script>
+import { v4 as uuidv4 } from 'uuid'
 import { detailsState, detailsMethods } from '@/views/Details/inner_store'
 import { inventoryItemFields } from '@/views/Details/inner_utils/example_form'
 
@@ -44,7 +45,7 @@ export default {
   methods: {
     addInventoryItem () {
       detailsMethods.addFormInventoryItem({
-        key: `item ${this.itemCount + 1}`,
+        key: uuidv4(),
         fields: inventoryItemFields()
       })
     }

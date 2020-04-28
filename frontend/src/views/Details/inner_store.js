@@ -28,11 +28,13 @@ export const detailsMethods = {
   },
 
   addFormInventoryItem ({ key, fields }) {
-    const subSections = detailsState.form.sections.inventory.subSections
-
-    Vue.set(detailsState.form.sections.inventory, 'subSections', subSections)
+    Vue.set(detailsState.form.sections.inventory, 'subSections', detailsState.form.sections.inventory.subSections)
     Vue.set(detailsState.form.sections.inventory.subSections, key, {})
     Vue.set(detailsState.form.sections.inventory.subSections[key], 'fields', fields)
+  },
+
+  deleteFormInventoryItem ({ key }) {
+    Vue.delete(detailsState.form.sections.inventory.subSections, key)
   }
 }
 
