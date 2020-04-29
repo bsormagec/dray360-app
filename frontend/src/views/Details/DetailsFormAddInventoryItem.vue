@@ -17,7 +17,7 @@
 </template>
 
 <script>
-import { v4 as uuidv4 } from 'uuid'
+import { uuid } from '@/utils/uuid_valid_id'
 import { detailsState, detailsMethods } from '@/views/Details/inner_store'
 import { inventoryItemFields } from '@/views/Details/inner_utils/example_form'
 
@@ -50,7 +50,7 @@ export default {
   methods: {
     addInventoryItem () {
       detailsMethods.addFormInventoryItem({
-        key: uuidv4(),
+        key: uuid(),
         fields: inventoryItemFields()
       })
     }

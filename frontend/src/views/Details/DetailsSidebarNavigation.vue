@@ -11,7 +11,7 @@
       >
         <a
           class="navigation__link"
-          :href="`#${cleanStrForId(step.text.toLowerCase())}-${idSuffix}`"
+          :href="linkHref(step)"
         >
           <v-stepper-step
             :class="{
@@ -43,6 +43,7 @@ import { Fragment } from 'vue-fragment'
 import { detailsState } from '@/views/Details/inner_store'
 import { navigationSteps } from '@/views/Details/inner_utils/navigation_steps'
 import { cleanStrForId } from '@/views/Details/inner_utils/clean_str_for_id'
+import { isInViewport } from '@/utils/is_in_viewport'
 
 export default {
   name: 'DetailsSidebarNavigation',
@@ -77,11 +78,37 @@ export default {
       if (currentHash) {
         document.location.hash = `${currentHash}-${this.idSuffix}`
       }
+
+      this.trackFormScroll()
     }
+  },
+
+  mounted () {
+    this.trackFormScroll()
   },
 
   methods: {
     cleanStrForId,
+
+    trackFormScroll () {
+      const form = document.querySelector(
+        this.isEditing ? '.form-editing .form' : '.form-viewing .form'
+      )
+
+      const handleScroll = () => {
+        this.steps.forEach(step => {
+          if (isInViewport(document.querySelector(this.linkHref(step)))) {
+            this.setStep(step.id)
+          }
+        })
+      }
+
+      form.addEventListener('scroll', handleScroll)
+    },
+
+    linkHref (step) {
+      return `#${cleanStrForId(step.text.toLowerCase())}-${this.idSuffix}`
+    },
 
     setStep (n) {
       this.current = n
