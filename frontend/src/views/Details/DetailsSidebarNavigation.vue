@@ -96,11 +96,16 @@ export default {
       )
 
       const handleScroll = () => {
-        this.steps.forEach(step => {
-          if (isInViewport(document.querySelector(this.linkHref(step)))) {
-            this.setStep(step.id)
-          }
-        })
+        try {
+          this.steps.forEach(step => {
+            if (isInViewport(document.querySelector(this.linkHref(step)))) {
+              this.setStep(step.id)
+              throw new Error()
+            }
+          })
+        } catch (e) {
+          return e
+        }
       }
 
       form.addEventListener('scroll', handleScroll)
