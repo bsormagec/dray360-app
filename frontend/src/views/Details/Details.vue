@@ -2,7 +2,10 @@
   <div class="details">
     <DetailsSidebar />
 
-    <div class="details__form">
+    <div
+      class="details__form"
+      :style="{ minWidth: `${resizeDiff}%` }"
+    >
       <DetailsFormEditing v-show="isEditing" />
       <DetailsFormViewing v-show="!isEditing" />
 
@@ -16,12 +19,7 @@
       </div>
     </div>
 
-    <DetailsDocument
-      :style="{
-        paddingLeft: `${resizeDiff}%`,
-        willChange: 'padding-left'
-      }"
-    />
+    <DetailsDocument />
   </div>
 </template>
 
@@ -68,8 +66,8 @@ export default {
     startDragging (e) {
       e.preventDefault()
       document.body.style.cursor = 'col-resize'
-      const endPos = this.startPos - e.clientX
-      this.setResizeDiff(endPos >= 0 ? 0.5 : -0.5)
+      const endPos = e.clientX - this.startPos
+      this.setResizeDiff(endPos >= 0 ? 1.5 : -1.5)
     },
 
     setResizeDiff (diff) {

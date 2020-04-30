@@ -1,20 +1,18 @@
 <template>
   <div class="document">
-    <div class="document__pages">
-      <div
-        v-for="(page, pIndex) in pages"
-        :key="pIndex"
-        class="document__page"
-      >
-        <img :src="page.image">
+    <div
+      v-for="(page, pIndex) in pages"
+      :key="pIndex"
+      class="document__page"
+    >
+      <img :src="page.image">
 
-        <div
-          v-for="(highlight, hIndex) in page.highlights"
-          :key="hIndex"
-          :style="getPos(highlight)"
-          class="page__highlight"
-        />
-      </div>
+      <div
+        v-for="(highlight, hIndex) in page.highlights"
+        :key="hIndex"
+        :style="getPos(highlight)"
+        class="page__highlight"
+      />
     </div>
   </div>
 </template>
@@ -90,21 +88,10 @@ export default {
 <style lang="scss" scoped>
 .document {
   height: 100vh;
-  position: relative;
+  flex-grow: 1;
   overflow-y: auto;
-  overflow-x: hidden;
-  background: map-get($colors, grey-8);
-}
-
-.document__pages {
-  position: absolute;
-  left: 50%;
-  transform: translateX(-50%);
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  width: 100%;
   padding: 2.6rem;
+  background: map-get($colors, grey-8);
 }
 
 .document__page {
