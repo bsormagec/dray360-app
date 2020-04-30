@@ -20,6 +20,8 @@
 </template>
 
 <script>
+import exampleDocument from '@/views/Details/inner_utils/example_document'
+
 export default {
   name: 'DetailsDocument',
 
@@ -41,10 +43,15 @@ export default {
         ]
       },
       {
-        image: 'https://firebasestorage.googleapis.com/v0/b/general-f0201.appspot.com/o/2121593_2.jpg?alt=media&token=aa21dcb3-e8cb-48d7-a513-915e68f909f8'
+        image: 'https://firebasestorage.googleapis.com/v0/b/general-f0201.appspot.com/o/2121593_2.jpg?alt=media&token=aa21dcb3-e8cb-48d7-a513-915e68f909f8',
+        highlights: []
       }
     ]
   }),
+
+  beforeMount () {
+    this.parseDocument()
+  },
 
   methods: {
     getPos ({ bottom, left, right, top }) {
@@ -54,6 +61,27 @@ export default {
         width: `${((right - left) / this.dimensions.width) * 100}%`,
         height: `${((bottom - top) / this.dimensions.height) * 100}%`
       }
+    },
+
+    parseDocument () {
+      const { BlocksInfo } = exampleDocument.Documents[0].AdditionalInfo
+      BlocksInfo.forEach(({ Blocks }) => {
+        Blocks.forEach(({ Rects, PageIndex }) => {
+          Rects.forEach(({ Bottom, Left, Right, Top }) => {
+            const invalidRect = Bottom === 3300 && Right === 2550
+            if (!invalidRect) {
+              this.pages[PageIndex - 1].highlights.push(
+                {
+                  bottom: Bottom,
+                  left: Left,
+                  right: Right,
+                  top: Top
+                }
+              )
+            }
+          })
+        })
+      })
     }
   }
 }
@@ -97,6 +125,11 @@ export default {
   cursor: pointer;
   position: absolute;
   background: yellow;
-  opacity: 0.5;
+  transition: transform 200ms ease-in-out;
+  opacity: 0.4;
+
+  &:hover {
+    transform: scale(1.2);
+  }
 }
 </style>
