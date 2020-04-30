@@ -28,28 +28,8 @@ export default {
       width: 2550,
       height: 3300
     },
-    pages: [
-      {
-        image: 'https://firebasestorage.googleapis.com/v0/b/general-f0201.appspot.com/o/2121593_1.jpg?alt=media&token=bf3e2b33-7587-49ae-9f12-ffe11f1d26c6',
-        highlights: [
-          {
-            bottom: 803,
-            left: 1715,
-            right: 1907,
-            top: 775
-          }
-        ]
-      },
-      {
-        image: 'https://firebasestorage.googleapis.com/v0/b/general-f0201.appspot.com/o/2121593_2.jpg?alt=media&token=aa21dcb3-e8cb-48d7-a513-915e68f909f8',
-        highlights: []
-      }
-    ]
+    pages: exampleDocument
   }),
-
-  beforeMount () {
-    this.parseDocument()
-  },
 
   methods: {
     getPos ({ bottom, left, right, top }) {
@@ -59,27 +39,6 @@ export default {
         width: `${((right - left) / this.dimensions.width) * 100}%`,
         height: `${((bottom - top) / this.dimensions.height) * 100}%`
       }
-    },
-
-    parseDocument () {
-      const { BlocksInfo } = exampleDocument.Documents[0].AdditionalInfo
-      BlocksInfo.forEach(({ Blocks }) => {
-        Blocks.forEach(({ Rects, PageIndex }) => {
-          Rects.forEach(({ Bottom, Left, Right, Top }) => {
-            const invalidRect = Bottom === 3300 && Right === 2550
-            if (!invalidRect) {
-              this.pages[PageIndex - 1].highlights.push(
-                {
-                  bottom: Bottom,
-                  left: Left,
-                  right: Right,
-                  top: Top
-                }
-              )
-            }
-          })
-        })
-      })
     }
   }
 }

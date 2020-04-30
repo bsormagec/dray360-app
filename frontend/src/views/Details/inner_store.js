@@ -1,7 +1,7 @@
 import Vue from 'vue'
 
 export const detailsState = Vue.observable({
-  isEditing: true,
+  isEditing: false,
   form: {}
 })
 
