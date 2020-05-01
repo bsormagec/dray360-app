@@ -30,7 +30,7 @@ export default {
 .form-field-editing-by-document {
   position: relative;
   display: flex;
-  width: 35%;
+  width: 60%;
   border: 0.1rem solid map-get($colors, blue);
   border-radius: 0.2rem;
   padding-bottom: 2.5rem;
