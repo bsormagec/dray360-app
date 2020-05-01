@@ -99,6 +99,7 @@ export default {
   border-radius: 0.4rem;
   top: 3.5rem;
   right: 0;
+  z-index: 2;
 }
 
 .popover__triangle {
