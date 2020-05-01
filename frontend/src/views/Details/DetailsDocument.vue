@@ -110,12 +110,13 @@ export default {
 .page__highlight {
   cursor: pointer;
   position: absolute;
-  background: yellow;
-  transition: transform 200ms ease-in-out;
-  opacity: 0.4;
+  background: rgba(yellow, 0.3);
+  border: 0.1rem solid rgba(yellow, 0.3);
+  transition: all 200ms ease-in-out;
 
   &:hover {
-    transform: scale(1.2);
+    border-color: map-get($colors , blue);
+    background: rgba(map-get($colors, blue), 0.3);
   }
 }
 </style>
