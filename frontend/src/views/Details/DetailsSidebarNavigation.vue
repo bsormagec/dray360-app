@@ -9,10 +9,7 @@
         v-for="(step, i) in steps"
         :key="step.id"
       >
-        <a
-          class="navigation__link"
-          :href="linkHref(step)"
-        >
+        <a class="navigation__link">
           <v-stepper-step
             :class="{
               navigation__step: true,
@@ -23,7 +20,7 @@
             step=""
             :complete="isTitle(step.id)"
             complete-icon="mdi-account"
-            @click="setStep(step.id)"
+            @click="jumpTo(step)"
           >
             {{ step.isInventoryItem ? step.inventoryItemText : step.text }}
           </v-stepper-step>
@@ -53,7 +50,8 @@ export default {
   },
 
   data: () => ({
-    current: 1
+    current: 1,
+    isJumping: false
   }),
 
   computed: {
@@ -90,12 +88,47 @@ export default {
   methods: {
     cleanStrForId,
 
+    setStep (n) {
+      this.current = n
+    },
+
+    linkHref (step) {
+      return `#${cleanStrForId(step.text.toLowerCase())}-${this.idSuffix}`
+    },
+
+    isTitle (n) {
+      return String(n).split('.').length === 1
+    },
+
+    isActive (n) {
+      if (this.current === n) return true
+      if (String(this.current).split('.')[0] === String(n)) return true
+    },
+
+    shouldHide (n) {
+      if (this.isTitle(n)) return false
+      const titlePart = String(n).split('.')[0]
+      const titlePartLeading = String(this.current).split('.')[0] === titlePart
+      return !titlePartLeading
+    },
+
+    jumpTo (step) {
+      this.isJumping = true
+      this.setStep(step.id)
+      window.location.hash = this.linkHref(step)
+
+      setTimeout(() => {
+        this.isJumping = false
+      }, 500)
+    },
+
     trackFormScroll () {
       const form = document.querySelector(
         this.isEditing ? '.form-editing .form' : '.form-viewing .form'
       )
 
       const handleScroll = () => {
+        if (this.isJumping) return
         try {
           this.steps.forEach(step => {
             if (isInViewport(document.querySelector(this.linkHref(step)))) {
@@ -109,30 +142,6 @@ export default {
       }
 
       form.addEventListener('scroll', handleScroll)
-    },
-
-    linkHref (step) {
-      return `#${cleanStrForId(step.text.toLowerCase())}-${this.idSuffix}`
-    },
-
-    setStep (n) {
-      this.current = n
-    },
-
-    isActive (n) {
-      if (this.current === n) return true
-      if (String(this.current).split('.')[0] === String(n)) return true
-    },
-
-    isTitle (n) {
-      return String(n).split('.').length === 1
-    },
-
-    shouldHide (n) {
-      if (this.isTitle(n)) return false
-      const titlePart = String(n).split('.')[0]
-      const titlePartLeading = String(this.current).split('.')[0] === titlePart
-      return !titlePartLeading
     }
   }
 }
