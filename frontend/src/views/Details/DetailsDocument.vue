@@ -1,3 +1,15 @@
+/*
+  TODO:
+  - Find the requested by document field and set an "editing_set_by_document = true" property
+  - Work in the viewing mode to display an "EditingBlock" component if field has "editing_set_by_document = true", it should update the fields value on submission (click on checkmark) *
+  - Both viewing and editing mode should have their field names as ids that can be scrolled to
+  - Work in the editing mode to focus a field when requested by document
+
+  ---
+  location: `${sectionKey}/rootFields/${fieldKey}`
+  location: `${sectionKey}/subSections/${subKey}/fields/${subFieldKey}`
+*/
+
 <template>
   <div class="document">
     <div
@@ -12,6 +24,7 @@
         :key="hIndex"
         :style="getPos(highlight)"
         class="page__highlight"
+        @click="requestField(highlight.field)"
       />
     </div>
   </div>
@@ -19,6 +32,7 @@
 
 <script>
 import exampleDocument from '@/views/Details/inner_utils/example_document'
+import { detailsState, detailsMethods } from '@/views/Details/inner_store'
 
 export default {
   name: 'DetailsDocument',
@@ -38,6 +52,36 @@ export default {
         left: `${(left / this.dimensions.width) * 100}%`,
         width: `${((right - left) / this.dimensions.width) * 100}%`,
         height: `${((bottom - top) / this.dimensions.height) * 100}%`
+      }
+    },
+
+    requestField (fieldName) {
+      try {
+        for (const sectionKey in detailsState.form.sections) {
+          for (const rootFieldKey in detailsState.form.sections[sectionKey].rootFields) {
+            if (rootFieldKey === fieldName) {
+              detailsMethods.setFormFieldEditingByDocument({
+                value: true,
+                location: `${sectionKey}/rootFields/${fieldName}`
+              })
+              throw new Error()
+            }
+          }
+
+          for (const subSectionKey in detailsState.form.sections[sectionKey].subSections) {
+            for (const fieldKey in detailsState.form.sections[sectionKey].subSections[subSectionKey].fields) {
+              if (fieldKey === fieldName) {
+                detailsMethods.setFormFieldEditingByDocument({
+                  value: true,
+                  location: `${sectionKey}/subSections/${subSectionKey}/fields/${fieldName}`
+                })
+                throw new Error()
+              }
+            }
+          }
+        }
+      } catch (e) {
+        return e
       }
     }
   }
