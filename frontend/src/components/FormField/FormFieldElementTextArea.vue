@@ -4,7 +4,7 @@
       outlined
       :placeholder="field.el.placeholder"
       :label="field.name"
-      :value="value"
+      :value="field.value"
       @change="e => $emit('change', e)"
     />
   </div>
@@ -18,11 +18,6 @@ export default {
     field: {
       type: Object,
       required: true
-    },
-    value: {
-      type: String,
-      required: false,
-      default: ''
     }
   }
 }

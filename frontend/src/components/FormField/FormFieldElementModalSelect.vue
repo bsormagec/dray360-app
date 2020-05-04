@@ -84,8 +84,7 @@
       :key="key"
     >
       <FormFieldElement
-        :field="{...el, name: key}"
-        :value="childrenData[key]"
+        :field="{...el, name: key, value:childrenData[key] }"
         @change="e => changeChildEl({ e, name: key })"
       />
     </div>
