@@ -30,6 +30,7 @@ import DetailsFormViewing from '@/views/Details/DetailsFormViewing'
 import DetailsDocument from '@/views/Details/DetailsDocument'
 import { detailsState, detailsMethods } from '@/views/Details/inner_store'
 import { exampleForm as form } from '@/views/Details/inner_utils/example_form'
+import document from '@/views/Details/inner_utils/example_document'
 
 export default {
   name: 'Details',
@@ -54,6 +55,7 @@ export default {
 
   beforeMount () {
     detailsMethods.setForm(form)
+    detailsMethods.setDocument(document)
   },
 
   methods: {

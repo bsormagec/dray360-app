@@ -2,6 +2,7 @@
   <div :class="`form-field-editing-by-document ${field.editing_set_by_document}`">
     <textarea
       rows="1"
+      :value="field.value"
       @blur="e => value = e.target.value"
     />
 

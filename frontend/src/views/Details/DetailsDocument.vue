@@ -1,8 +1,10 @@
 /*
   TODO:
   - Hover on yellow block, updates its style to hover state and sets hover state in its related field on the form
-  - Upon accepting changes in form field component it updates its field value *
+  - Upon accepting changes in form field component it updates its field value and document field is no longer selected *
   - Hovering on any field (viewing) triggers hover state in its related document field
+  - Adjust EditingSetByDocument styles (height, though it may be needed to change to input)
+  - Add scrolling
 */
 
 <template>
@@ -36,9 +38,8 @@
 </template>
 
 <script>
-import exampleDocument from '@/views/Details/inner_utils/example_document'
 import { detailsState, detailsMethods } from '@/views/Details/inner_store'
-import { modes } from '@/views/Details/inner_types'
+import { modes, pools } from '@/views/Details/inner_types'
 import { getFieldLocation } from '@/views/Details/inner_utils/get_field_location'
 
 export default {
@@ -49,9 +50,14 @@ export default {
       width: 2550,
       height: 3300
     },
-    pages: exampleDocument,
     lastMode: undefined
   }),
+
+  computed: {
+    pages () {
+      return detailsState.document
+    }
+  },
 
   methods: {
     getPos ({ bottom, left, right, top }) {
@@ -63,13 +69,14 @@ export default {
       }
     },
 
+    /* TODO: These methods must me moved to inner_store */
     startEdit ({ fieldName, pageIndex, highlightIndex }) {
       if (!fieldName) return
 
       this.$set(this.pages[pageIndex].highlights[highlightIndex], 'edit', true)
       detailsMethods.setFormFieldEditingByDocument({
         value: modes.edit,
-        location: getFieldLocation({ form: detailsState.form, fieldName })
+        location: getFieldLocation({ pool: detailsState.form, poolType: pools.form, fieldName })
       })
       this.lastMode = modes.edit
     },
@@ -80,7 +87,7 @@ export default {
 
       detailsMethods.setFormFieldEditingByDocument({
         value: modes.hover,
-        location: getFieldLocation({ form: detailsState.form, fieldName })
+        location: getFieldLocation({ pool: detailsState.form, poolType: pools.form, fieldName })
       })
       this.lastMode = modes.hover
     },
@@ -91,12 +98,13 @@ export default {
       if (this.lastMode === modes.hover) {
         detailsMethods.setFormFieldEditingByDocument({
           value: undefined,
-          location: getFieldLocation({ form: detailsState.form, fieldName })
+          location: getFieldLocation({ pool: detailsState.form, poolType: pools.form, fieldName })
         })
         this.lastMode = undefined
       }
     }
   }
+  /* end */
 }
 </script>
 

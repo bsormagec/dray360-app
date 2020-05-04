@@ -29,7 +29,8 @@
             location: `${sectionKey}/rootFields/${fieldKey}`
           })"
           @close="setFormFieldEditingToClosed({
-            location: `${sectionKey}/rootFields/${fieldKey}`
+            location: `${sectionKey}/rootFields/${fieldKey}`,
+            fieldName: fieldKey
           })"
         />
       </div>
@@ -66,7 +67,8 @@
             location: `${sectionKey}/subSections/${subKey}/fields/${subFieldKey}`
           })"
           @close="setFormFieldEditingToClosed({
-            location: `${sectionKey}/subSections/${subKey}/fields/${subFieldKey}`
+            location: `${sectionKey}/subSections/${subKey}/fields/${subFieldKey}`,
+            fieldName: subFieldKey
           })"
         />
       </div>
@@ -83,6 +85,8 @@ import FormField from '@/components/FormField/FormField'
 import DetailsFormAddInventoryItem from '@/views/Details/DetailsFormAddInventoryItem'
 import { detailsState, detailsMethods } from '@/views/Details/inner_store'
 import { cleanStrForId } from '@/views/Details/inner_utils/clean_str_for_id'
+import { getFieldLocation } from '@/views/Details/inner_utils/get_field_location'
+import { pools } from '@/views/Details/inner_types'
 
 export default {
   name: 'DetailsForm',
@@ -120,8 +124,16 @@ export default {
       detailsMethods.setFormFieldValue({ value, location })
     },
 
-    setFormFieldEditingToClosed ({ location }) {
+    setFormFieldEditingToClosed ({ location, fieldName }) {
       detailsMethods.setFormFieldEditingByDocument({ value: undefined, location })
+      detailsMethods.setDocumentFieldEdit({
+        value: false,
+        location: getFieldLocation({
+          pool: detailsState.document,
+          poolType: pools.document,
+          fieldName
+        })
+      })
     },
 
     hasInventoryAction ({ sectionKey, sectionVal }) {

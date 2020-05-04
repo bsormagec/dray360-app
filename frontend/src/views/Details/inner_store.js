@@ -3,7 +3,8 @@ import { getInventoryCount } from '@/views/Details/inner_utils/get_inventory_cou
 
 export const detailsState = Vue.observable({
   isEditing: false,
-  form: {}
+  form: {},
+  document: []
 })
 
 export const detailsMethods = {
@@ -46,5 +47,14 @@ export const detailsMethods = {
 
   deleteFormInventoryItem ({ key }) {
     Vue.delete(detailsState.form.sections.inventory.subSections, key)
+  },
+
+  setDocument (newDocument) {
+    detailsState.document = newDocument
+  },
+
+  setDocumentFieldEdit ({ value, location }) {
+    const parts = location.split('/')
+    Vue.set(detailsState.document[parts[0]][parts[1]][parts[2]], 'edit', value)
   }
 }
