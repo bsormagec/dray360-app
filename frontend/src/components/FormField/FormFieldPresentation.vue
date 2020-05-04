@@ -7,6 +7,8 @@
       <FormFieldPresentationSimple
         v-show="isSimple"
         :field="field"
+        @change="e => $emit('change', e)"
+        @close="e => $emit('close', e)"
       />
       <FormFieldPresentationComplex
         v-show="isComplex"

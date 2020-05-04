@@ -1,9 +1,8 @@
 /*
   TODO:
-  - Hover on yellow block, updates its style to hover state and sets hover state in its related field on the form *
+  - Hover on yellow block, updates its style to hover state and sets hover state in its related field on the form
+  - Upon accepting changes in form field component it updates its field value *
   - Hovering on any field (viewing) triggers hover state in its related document field
-  - Clicking the edit icon in the hover component (viewing) on the form changes it to edit mode
-  - Upon accepting changes in hover component it updates its field value
 */
 
 <template>

@@ -3,6 +3,8 @@
     <FormFieldPresentation
       v-show="readonly"
       :field="field"
+      @change="e => $emit('change', e)"
+      @close="e => $emit('close', e)"
     />
 
     <FormFieldElement

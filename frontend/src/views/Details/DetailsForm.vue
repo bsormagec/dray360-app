@@ -28,6 +28,9 @@
             value,
             location: `${sectionKey}/rootFields/${fieldKey}`
           })"
+          @close="setFormFieldEditingToClosed({
+            location: `${sectionKey}/rootFields/${fieldKey}`
+          })"
         />
       </div>
 
@@ -60,6 +63,9 @@
           :readonly="readonly"
           @change="(value) => setFormFieldValue({
             value,
+            location: `${sectionKey}/subSections/${subKey}/fields/${subFieldKey}`
+          })"
+          @close="setFormFieldEditingToClosed({
             location: `${sectionKey}/subSections/${subKey}/fields/${subFieldKey}`
           })"
         />
@@ -112,6 +118,10 @@ export default {
 
     setFormFieldValue ({ value, location }) {
       detailsMethods.setFormFieldValue({ value, location })
+    },
+
+    setFormFieldEditingToClosed ({ location }) {
+      detailsMethods.setFormFieldEditingByDocument({ value: undefined, location })
     },
 
     hasInventoryAction ({ sectionKey, sectionVal }) {

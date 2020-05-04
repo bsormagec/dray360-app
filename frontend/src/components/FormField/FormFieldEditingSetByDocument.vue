@@ -1,16 +1,23 @@
 <template>
   <div :class="`form-field-editing-by-document ${field.editing_set_by_document}`">
-    <textarea rows="1" />
+    <textarea
+      rows="1"
+      @blur="e => value = e.target.value"
+    />
 
     <div class="action-btns">
       <div
         v-show="isEditing"
         class="btns__close"
+        @click="close"
       >
         <v-icon>mdi-close</v-icon>
       </div>
 
-      <div class="btns__accept">
+      <div
+        class="btns__accept"
+        @click="acceptChanges"
+      >
         <v-icon>{{ isEditing ? 'mdi-check' : 'mdi-pencil' }}</v-icon>
       </div>
     </div>
@@ -31,12 +38,24 @@ export default {
   },
 
   data: () => ({
-    modes
+    modes,
+    value: undefined
   }),
 
   computed: {
     isEditing () {
       return this.field.editing_set_by_document === this.modes.edit
+    }
+  },
+
+  methods: {
+    close () {
+      this.$emit('close')
+    },
+
+    acceptChanges () {
+      this.$emit('change', this.value)
+      this.close()
     }
   }
 }

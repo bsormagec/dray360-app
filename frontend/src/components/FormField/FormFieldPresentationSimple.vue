@@ -7,6 +7,8 @@
     <FormFieldEditingSetByDocument
       v-show="field.editing_set_by_document"
       :field="field"
+      @change="e => $emit('change', e)"
+      @close="e => $emit('close')"
     />
 
     <span
