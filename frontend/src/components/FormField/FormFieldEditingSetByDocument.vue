@@ -1,19 +1,25 @@
 <template>
-  <div class="form-field-editing-by-document">
+  <div :class="`form-field-editing-by-document ${field.editing_set_by_document}`">
     <textarea rows="1" />
 
     <div class="action-btns">
-      <div class="btns__close">
+      <div
+        v-show="isEditing"
+        class="btns__close"
+      >
         <v-icon>mdi-close</v-icon>
       </div>
+
       <div class="btns__accept">
-        <v-icon>mdi-check</v-icon>
+        <v-icon>{{ isEditing ? 'mdi-check' : 'mdi-pencil' }}</v-icon>
       </div>
     </div>
   </div>
 </template>
 
 <script>
+import { modes } from '@/views/Details/inner_types'
+
 export default {
   name: 'FormFieldEditingSetByDocument',
 
@@ -21,6 +27,16 @@ export default {
     field: {
       type: Object,
       required: true
+    }
+  },
+
+  data: () => ({
+    modes
+  }),
+
+  computed: {
+    isEditing () {
+      return this.field.editing_set_by_document === this.modes.edit
     }
   }
 }
@@ -34,6 +50,10 @@ export default {
   border: 0.1rem solid map-get($colors, blue);
   border-radius: 0.2rem;
   padding-bottom: 2.5rem;
+
+  &.hover {
+    background: rgba(map-get($colors , blue), 0.15);
+  }
 }
 
 textarea {

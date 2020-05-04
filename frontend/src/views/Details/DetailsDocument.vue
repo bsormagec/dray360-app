@@ -19,8 +19,18 @@
         v-for="(highlight, hIndex) in page.highlights"
         :key="hIndex"
         :style="getPos(highlight)"
-        class="page__highlight"
-        @click="requestField(highlight.field)"
+        :class="{page__highlight: true, edit: highlight.edit}"
+        @click="startEdit({
+          fieldName: highlight.field,
+          pageIndex: pIndex,
+          highlightIndex: hIndex
+        })"
+        @mouseover="startHover({
+          fieldName: highlight.field
+        })"
+        @mouseleave="stopHover({
+          fieldName: highlight.field
+        })"
       />
     </div>
   </div>
@@ -29,6 +39,8 @@
 <script>
 import exampleDocument from '@/views/Details/inner_utils/example_document'
 import { detailsState, detailsMethods } from '@/views/Details/inner_store'
+import { modes } from '@/views/Details/inner_types'
+import { getFieldLocation } from '@/views/Details/inner_utils/get_field_location'
 
 export default {
   name: 'DetailsDocument',
@@ -38,7 +50,8 @@ export default {
       width: 2550,
       height: 3300
     },
-    pages: exampleDocument
+    pages: exampleDocument,
+    lastMode: undefined
   }),
 
   methods: {
@@ -51,33 +64,37 @@ export default {
       }
     },
 
-    requestField (fieldName) {
-      try {
-        for (const sectionKey in detailsState.form.sections) {
-          for (const rootFieldKey in detailsState.form.sections[sectionKey].rootFields) {
-            if (rootFieldKey === fieldName) {
-              detailsMethods.setFormFieldEditingByDocument({
-                value: true,
-                location: `${sectionKey}/rootFields/${fieldName}`
-              })
-              throw new Error()
-            }
-          }
+    startEdit ({ fieldName, pageIndex, highlightIndex }) {
+      if (!fieldName) return
 
-          for (const subSectionKey in detailsState.form.sections[sectionKey].subSections) {
-            for (const fieldKey in detailsState.form.sections[sectionKey].subSections[subSectionKey].fields) {
-              if (fieldKey === fieldName) {
-                detailsMethods.setFormFieldEditingByDocument({
-                  value: true,
-                  location: `${sectionKey}/subSections/${subSectionKey}/fields/${fieldName}`
-                })
-                throw new Error()
-              }
-            }
-          }
-        }
-      } catch (e) {
-        return e
+      this.$set(this.pages[pageIndex].highlights[highlightIndex], 'edit', true)
+      detailsMethods.setFormFieldEditingByDocument({
+        value: modes.edit,
+        location: getFieldLocation({ form: detailsState.form, fieldName })
+      })
+      this.lastMode = modes.edit
+    },
+
+    startHover ({ fieldName }) {
+      if (!fieldName) return
+      if (this.lastMode === modes.edit) return
+
+      detailsMethods.setFormFieldEditingByDocument({
+        value: modes.hover,
+        location: getFieldLocation({ form: detailsState.form, fieldName })
+      })
+      this.lastMode = modes.hover
+    },
+
+    stopHover ({ fieldName }) {
+      if (!fieldName) return
+
+      if (this.lastMode === modes.hover) {
+        detailsMethods.setFormFieldEditingByDocument({
+          value: undefined,
+          location: getFieldLocation({ form: detailsState.form, fieldName })
+        })
+        this.lastMode = undefined
       }
     }
   }
@@ -114,7 +131,7 @@ export default {
   border: 0.1rem solid rgba(yellow, 0.3);
   transition: all 200ms ease-in-out;
 
-  &:hover {
+  &:hover, &.edit {
     border-color: map-get($colors , blue);
     background: rgba(map-get($colors, blue), 0.3);
   }

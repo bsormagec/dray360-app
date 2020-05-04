@@ -14,17 +14,13 @@
         "bottom": 487,
         "left": 1530,
         "right": 1804,
-        "top": 450,
-        "field": "contact name",
-        "value": "Jennah Bilthuis"
+        "top": 450
       },
       {
         "bottom": 597,
         "left": 1531,
         "right": 1870,
-        "top": 562,
-        "field": "address",
-        "value": "4225 Naperville Rd"
+        "top": 562
       },
       {
         "bottom": 646,
@@ -42,9 +38,7 @@
         "bottom": 703,
         "left": 477,
         "right": 643,
-        "top": 665,
-        "field": "date",
-        "value": "09/06/19"
+        "top": 665
       },
       {
         "bottom": 706,
