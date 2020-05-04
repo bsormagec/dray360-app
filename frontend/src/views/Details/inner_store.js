@@ -1,4 +1,5 @@
 import Vue from 'vue'
+import { getInventoryCount } from '@/views/Details/inner_utils/get_inventory_count'
 
 export const detailsState = Vue.observable({
   isEditing: false,
@@ -22,7 +23,7 @@ export const detailsMethods = {
     } else if (location.includes('subSections')) {
       Vue.set(detailsState.form.sections[parts[0]][parts[1]][parts[2]][parts[3]][parts[4]], 'value', value)
     } else if (location.includes('actionSection')) {
-      const valueToSet = valueToSetFromInventory()
+      const valueToSet = getInventoryCount(detailsState.form)
       Vue.set(detailsState.form.sections[parts[0]][parts[1]], 'value', valueToSet)
     }
   },
@@ -45,22 +46,5 @@ export const detailsMethods = {
 
   deleteFormInventoryItem ({ key }) {
     Vue.delete(detailsState.form.sections.inventory.subSections, key)
-  }
-}
-
-function valueToSetFromInventory () {
-  const inventorySubSections = detailsState.form.sections.inventory.subSections
-  const inventoryItemsCount = Object.keys(inventorySubSections).length
-  let hazardousCount = 0
-
-  for (const key in inventorySubSections) {
-    if (inventorySubSections[key].fields.hazardous.value === 'yes') {
-      hazardousCount += 1
-    }
-  }
-
-  return {
-    inventoryItemsCount,
-    hazardousCount
   }
 }
