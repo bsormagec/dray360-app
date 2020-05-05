@@ -51,7 +51,7 @@
 
 <script>
 import isMobile from '@/mixins/is_mobile'
-import { detailsState, detailsMethods } from '@/views/Details/inner_store'
+import { formModule } from '@/views/Details/inner_store/index'
 import DetailsSidebarNavigation from '@/views/Details/DetailsSidebarNavigation'
 
 export default {
@@ -65,13 +65,13 @@ export default {
 
   computed: {
     isEditing () {
-      return detailsState.isEditing
+      return formModule.state.isEditing
     }
   },
 
   methods: {
     toggleIsEditing () {
-      detailsMethods.toggleIsEditing()
+      formModule.methods.toggleIsEditing()
     }
   }
 }

@@ -28,7 +28,7 @@ import DetailsSidebar from '@/views/Details/DetailsSidebar'
 import DetailsFormEditing from '@/views/Details/DetailsFormEditing'
 import DetailsFormViewing from '@/views/Details/DetailsFormViewing'
 import DetailsDocument from '@/views/Details/DetailsDocument'
-import { detailsState, detailsMethods } from '@/views/Details/inner_store'
+import { formModule, documentModule } from '@/views/Details/inner_store/index'
 import { exampleForm as form } from '@/views/Details/inner_utils/example_form'
 import document from '@/views/Details/inner_utils/example_document'
 
@@ -49,13 +49,13 @@ export default {
 
   computed: {
     isEditing () {
-      return detailsState.isEditing
+      return formModule.state.isEditing
     }
   },
 
   beforeMount () {
-    detailsMethods.setForm(form)
-    detailsMethods.setDocument(document)
+    formModule.methods.setForm(form)
+    documentModule.methods.setDocument(document)
   },
 
   methods: {

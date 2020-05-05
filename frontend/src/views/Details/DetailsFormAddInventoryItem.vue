@@ -18,7 +18,7 @@
 
 <script>
 import { uuid } from '@/utils/uuid_valid_id'
-import { detailsState, detailsMethods } from '@/views/Details/inner_store'
+import { formModule } from '@/views/Details/inner_store/index'
 import { inventoryItemFields } from '@/views/Details/inner_utils/example_form'
 
 export default {
@@ -26,15 +26,15 @@ export default {
 
   computed: {
     isEditing () {
-      return detailsState.isEditing
+      return formModule.state.isEditing
     },
 
     itemCount () {
-      return Object.keys(detailsState.form.sections.inventory.subSections).length
+      return Object.keys(formModule.state.form.sections.inventory.subSections).length
     },
 
     hazCount () {
-      const subSections = detailsState.form.sections.inventory.subSections
+      const subSections = formModule.state.form.sections.inventory.subSections
       let count = 0
 
       for (const key in subSections) {
@@ -49,7 +49,7 @@ export default {
 
   methods: {
     addInventoryItem () {
-      detailsMethods.addFormInventoryItem({
+      formModule.methods.addFormInventoryItem({
         key: uuid(),
         fields: inventoryItemFields()
       })

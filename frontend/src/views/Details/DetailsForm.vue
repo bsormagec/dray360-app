@@ -83,7 +83,7 @@
 <script>
 import FormField from '@/components/FormField/FormField'
 import DetailsFormAddInventoryItem from '@/views/Details/DetailsFormAddInventoryItem'
-import { detailsState, detailsMethods } from '@/views/Details/inner_store'
+import { formModule, documentModule } from '@/views/Details/inner_store/index'
 import { cleanStrForId } from '@/views/Details/inner_utils/clean_str_for_id'
 import { getFieldLocation } from '@/views/Details/inner_utils/get_field_location'
 import { pools } from '@/views/Details/inner_types'
@@ -109,11 +109,11 @@ export default {
 
   computed: {
     isEditing () {
-      return detailsState.isEditing
+      return formModule.state.isEditing
     },
 
     form () {
-      return detailsState.form
+      return formModule.state.form
     }
   },
 
@@ -121,15 +121,15 @@ export default {
     cleanStrForId,
 
     setFormFieldValue ({ value, location }) {
-      detailsMethods.setFormFieldValue({ value, location })
+      formModule.methods.setFormFieldValue({ value, location })
     },
 
     setFormFieldEditingToClosed ({ location, fieldName }) {
-      detailsMethods.setFormFieldEditingByDocument({ value: undefined, location })
-      detailsMethods.setDocumentFieldEdit({
+      formModule.methods.setFormFieldEditingByDocument({ value: undefined, location })
+      documentModule.methods.setDocumentFieldEdit({
         value: false,
         location: getFieldLocation({
-          pool: detailsState.document,
+          pool: documentModule.state.document,
           poolType: pools.document,
           fieldName
         })
@@ -141,7 +141,7 @@ export default {
     },
 
     deleteFormInventoryItem ({ key }) {
-      detailsMethods.deleteFormInventoryItem({ key })
+      formModule.methods.deleteFormInventoryItem({ key })
     }
   }
 }

@@ -37,7 +37,7 @@
 
 <script>
 import { Fragment } from 'vue-fragment'
-import { detailsState } from '@/views/Details/inner_store'
+import { formModule } from '@/views/Details/inner_store/index'
 import { navigationSteps } from '@/views/Details/inner_utils/navigation_steps'
 import { cleanStrForId } from '@/views/Details/inner_utils/clean_str_for_id'
 import { isInViewport } from '@/utils/is_in_viewport'
@@ -60,7 +60,7 @@ export default {
     },
 
     isEditing () {
-      return detailsState.isEditing
+      return formModule.state.isEditing
     },
 
     idSuffix () {
