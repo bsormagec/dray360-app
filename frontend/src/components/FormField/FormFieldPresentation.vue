@@ -76,6 +76,11 @@ export default {
     text-transform: capitalize;
   }
 
+  .field__value {
+    text-align: right;
+    word-break: break-word;
+  }
+
   .field__value,
   .field__children .field__value {
     font-size: 1.44rem !important;
