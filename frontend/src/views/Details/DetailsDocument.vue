@@ -38,9 +38,7 @@
 </template>
 
 <script>
-import { formModule, documentModule } from '@/views/Details/inner_store/index'
-import { modes, pools } from '@/views/Details/inner_types'
-import { getFieldLocation } from '@/views/Details/inner_utils/get_field_location'
+import { documentModule } from '@/views/Details/inner_store/index'
 
 export default {
   name: 'DetailsDocument',
@@ -49,8 +47,7 @@ export default {
     dimensions: {
       width: 2550,
       height: 3300
-    },
-    lastMode: undefined
+    }
   }),
 
   computed: {
@@ -69,42 +66,10 @@ export default {
       }
     },
 
-    /* TODO: These methods must me moved to inner_store */
-    startEdit ({ fieldName, pageIndex, highlightIndex }) {
-      if (!fieldName) return
-
-      this.$set(this.pages[pageIndex].highlights[highlightIndex], 'edit', true)
-      formModule.methods.setFormFieldEditingByDocument({
-        value: modes.edit,
-        location: getFieldLocation({ pool: formModule.state.form, poolType: pools.form, fieldName })
-      })
-      this.lastMode = modes.edit
-    },
-
-    startHover ({ fieldName }) {
-      if (!fieldName) return
-      if (this.lastMode === modes.edit) return
-
-      formModule.methods.setFormFieldEditingByDocument({
-        value: modes.hover,
-        location: getFieldLocation({ pool: formModule.state.form, poolType: pools.form, fieldName })
-      })
-      this.lastMode = modes.hover
-    },
-
-    stopHover ({ fieldName }) {
-      if (!fieldName) return
-
-      if (this.lastMode === modes.hover) {
-        formModule.methods.setFormFieldEditingByDocument({
-          value: undefined,
-          location: getFieldLocation({ pool: formModule.state.form, poolType: pools.form, fieldName })
-        })
-        this.lastMode = undefined
-      }
-    }
+    startEdit: documentModule.methods.startEdit,
+    startHover: documentModule.methods.startHover,
+    stopHover: documentModule.methods.stopHover
   }
-  /* end */
 }
 </script>
 
