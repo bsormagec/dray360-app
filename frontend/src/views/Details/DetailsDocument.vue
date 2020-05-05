@@ -20,17 +20,25 @@
         v-for="(highlight, hIndex) in page.highlights"
         :key="hIndex"
         :style="getPos(highlight)"
-        :class="{page__highlight: true, edit: highlight.edit}"
+        :class="{
+          page__highlight: true,
+          edit: highlight.edit,
+          hover: highlight.hover
+        }"
         @click="startEdit({
           fieldName: highlight.field,
           pageIndex: pIndex,
           highlightIndex: hIndex
         })"
         @mouseover="startHover({
-          fieldName: highlight.field
+          fieldName: highlight.field,
+          pageIndex: pIndex,
+          highlightIndex: hIndex
         })"
         @mouseleave="stopHover({
-          fieldName: highlight.field
+          fieldName: highlight.field,
+          pageIndex: pIndex,
+          highlightIndex: hIndex
         })"
       />
     </div>
@@ -103,7 +111,7 @@ export default {
   border: 0.1rem solid rgba(yellow, 0.3);
   transition: all 200ms ease-in-out;
 
-  &:hover, &.edit {
+  &.hover, &.edit {
     border-color: map-get($colors , blue);
     background: rgba(map-get($colors, blue), 0.3);
   }

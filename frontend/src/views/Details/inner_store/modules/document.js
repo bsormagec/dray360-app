@@ -20,6 +20,7 @@ const methods = {
 
   startEdit ({ fieldName, pageIndex, highlightIndex }) {
     if (!fieldName) return
+    methods.stopHover({ fieldName, pageIndex, highlightIndex })
 
     Vue.set(state.document[pageIndex].highlights[highlightIndex], 'edit', true)
     formModule.methods.setFormFieldEditingByDocument({
@@ -58,10 +59,11 @@ const methods = {
     state.lastMode = undefined
   },
 
-  startHover ({ fieldName }) {
+  startHover ({ fieldName, pageIndex, highlightIndex }) {
     if (!fieldName) return
     if (state.lastMode === modes.edit) return
 
+    Vue.set(state.document[pageIndex].highlights[highlightIndex], 'hover', true)
     formModule.methods.setFormFieldEditingByDocument({
       value: modes.hover,
       location: getFieldLocation({ pool: formModule.state.form, poolType: pools.form, fieldName })
@@ -70,10 +72,11 @@ const methods = {
     state.lastMode = modes.hover
   },
 
-  stopHover ({ fieldName }) {
+  stopHover ({ fieldName, pageIndex, highlightIndex }) {
     if (!fieldName) return
 
     if (state.lastMode === modes.hover) {
+      Vue.set(state.document[pageIndex].highlights[highlightIndex], 'hover', false)
       formModule.methods.setFormFieldEditingByDocument({
         value: undefined,
         location: getFieldLocation({ pool: formModule.state.form, poolType: pools.form, fieldName })
