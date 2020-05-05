@@ -57,6 +57,10 @@ export default {
   },
 
   methods: {
+    startEdit: documentModule.methods.startEdit,
+    startHover: documentModule.methods.startHover,
+    stopHover: documentModule.methods.stopHover,
+
     getPos ({ bottom, left, right, top }) {
       return {
         top: `${(top / this.dimensions.height) * 100}%`,
@@ -64,11 +68,7 @@ export default {
         width: `${((right - left) / this.dimensions.width) * 100}%`,
         height: `${((bottom - top) / this.dimensions.height) * 100}%`
       }
-    },
-
-    startEdit: documentModule.methods.startEdit,
-    startHover: documentModule.methods.startHover,
-    stopHover: documentModule.methods.stopHover
+    }
   }
 }
 </script>

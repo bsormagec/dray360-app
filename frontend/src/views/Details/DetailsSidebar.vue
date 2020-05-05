@@ -70,9 +70,7 @@ export default {
   },
 
   methods: {
-    toggleIsEditing () {
-      formModule.methods.toggleIsEditing()
-    }
+    toggleIsEditing: formModule.methods.toggleIsEditing
   }
 }
 </script>

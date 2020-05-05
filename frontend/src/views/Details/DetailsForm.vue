@@ -112,17 +112,11 @@ export default {
   methods: {
     cleanStrForId,
     stopEdit: documentModule.methods.stopEdit,
-
-    setFormFieldValue ({ value, location }) {
-      formModule.methods.setFormFieldValue({ value, location })
-    },
+    setFormFieldValue: formModule.methods.setFormFieldValue,
+    deleteFormInventoryItem: formModule.methods.deleteFormInventoryItem,
 
     hasInventoryAction ({ sectionKey, sectionVal }) {
       return sectionKey === 'inventory' && sectionVal.actionSection
-    },
-
-    deleteFormInventoryItem ({ key }) {
-      formModule.methods.deleteFormInventoryItem({ key })
     }
   }
 }
