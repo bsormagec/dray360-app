@@ -67,7 +67,6 @@ export default {
 
     startDragging (e) {
       e.preventDefault()
-      document.body.style.cursor = 'col-resize'
       const endPos = e.clientX - this.startPos
       this.setResizeDiff(endPos >= 0 ? 1.5 : -1.5)
     },
@@ -85,7 +84,6 @@ export default {
 
     stopDragging (e) {
       e.preventDefault()
-      document.body.style.cursor = 'default'
       window.onmousemove = undefined
       window.onmouseup = undefined
     }
