@@ -4,32 +4,21 @@
   >
     <span class="field__name">{{ field.name }}</span>
 
-    <span
-      class="field__value"
-      :style="getStyle()"
-    >{{ field.value ? field.value : '--' }}</span>
-
-    <FormFieldEditingSetByDocument
-      :style="getStyle('field')"
+    <FormFieldPresentationValue
       :field="field"
-      @change="e => $emit('change', e)"
-      @close="e => $emit('close')"
-      @click.native="callbacks.startEdit({ fieldName: field.name })"
-      @mouseover.native="callbacks.startHover({ fieldName: field.name })"
-      @mouseleave.native="callbacks.stopHover({ fieldName: field.name })"
+      :callbacks="callbacks"
     />
   </div>
 </template>
 
 <script>
-import { modes } from '@/views/Details/inner_types'
-import FormFieldEditingSetByDocument from '@/components/FormField/FormFieldEditingSetByDocument'
+import FormFieldPresentationValue from '@/components/FormField/FormFieldPresentationValue'
 
 export default {
   name: 'FormFieldPresentationSimple',
 
   components: {
-    FormFieldEditingSetByDocument
+    FormFieldPresentationValue
   },
 
   props: {
@@ -40,37 +29,6 @@ export default {
     callbacks: {
       type: Object,
       required: true
-    }
-  },
-
-  computed: {
-    isEditing () {
-      return this.field.editing_set_by_document === modes.edit
-    },
-
-    isHovering () {
-      return this.field.editing_set_by_document === modes.hover
-    }
-  },
-
-  methods: {
-    getStyle (elName) {
-      const positionStyle = {
-        position: 'absolute',
-        right: '0'
-      }
-
-      if (elName === 'field') {
-        return {
-          opacity: this.field.editing_set_by_document ? '1' : '0',
-          ...positionStyle
-        }
-      } else {
-        return {
-          opacity: !this.field.editing_set_by_document ? '1' : '0',
-          ...positionStyle
-        }
-      }
     }
   }
 }
