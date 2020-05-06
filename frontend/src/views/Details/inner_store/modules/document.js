@@ -5,7 +5,8 @@ import formModule from '@/views/Details/inner_store/modules/form'
 
 const state = Vue.observable({
   document: [],
-  lastMode: undefined
+  lastMode: undefined,
+  hoverTimeouts: {}
 })
 
 const methods = {
@@ -64,28 +65,32 @@ const methods = {
 
   startHover ({ fieldName, pageIndex, highlightIndex }) {
     if (!fieldName) return
+    if (state.hoverTimeouts[fieldName]) clearTimeout(state.hoverTimeouts[fieldName])
 
-    methods.setDocumentFieldProp({
-      prop: modes.hover,
-      value: true,
-      location: triggerFromDocument({ pageIndex, highlightIndex })
-        ? `${pageIndex}/highlights/${highlightIndex}`
-        : getLocationOnDoc(fieldName),
-      validation: v => Boolean(v[modes.edit]) === false
-    })
+    state.hoverTimeouts[fieldName] = setTimeout(() => {
+      methods.setDocumentFieldProp({
+        prop: modes.hover,
+        value: true,
+        location: triggerFromDocument({ pageIndex, highlightIndex })
+          ? `${pageIndex}/highlights/${highlightIndex}`
+          : getLocationOnDoc(fieldName),
+        validation: v => Boolean(v[modes.edit]) === false
+      })
 
-    formModule.methods.setFormFieldProp({
-      prop: 'editing_set_by_document',
-      value: modes.hover,
-      location: getLocationOnForm(fieldName),
-      validation: v => v.editing_set_by_document !== modes.edit
-    })
+      formModule.methods.setFormFieldProp({
+        prop: 'editing_set_by_document',
+        value: modes.hover,
+        location: getLocationOnForm(fieldName),
+        validation: v => v.editing_set_by_document !== modes.edit
+      })
 
-    state.lastMode = modes.hover
+      state.lastMode = modes.hover
+    }, 200)
   },
 
   stopHover ({ fieldName, pageIndex, highlightIndex }) {
     if (!fieldName) return
+    if (state.hoverTimeouts[fieldName]) clearTimeout(state.hoverTimeouts[fieldName])
 
     methods.setDocumentFieldProp({
       prop: modes.hover,
