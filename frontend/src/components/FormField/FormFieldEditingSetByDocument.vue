@@ -57,7 +57,9 @@ export default {
   },
 
   mounted () {
-    this.value = this.field.value
+    setTimeout(() => {
+      this.value = this.field.value
+    }, 0)
   },
 
   methods: {
