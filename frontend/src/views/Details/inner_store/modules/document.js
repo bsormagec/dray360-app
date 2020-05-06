@@ -13,23 +13,27 @@ const methods = {
     state.document = newDocument
   },
 
-  setDocumentFieldEdit ({ value, location }) {
+  setDocumentFieldProp ({ prop, value, location }) {
     const parts = location.split('/')
-    Vue.set(state.document[parts[0]][parts[1]][parts[2]], 'edit', value)
+    Vue.set(state.document[parts[0]][parts[1]][parts[2]], prop, value)
   },
 
   startEdit ({ fieldName, pageIndex, highlightIndex }) {
     if (!fieldName) return
+
     methods.stopHover({ fieldName, pageIndex, highlightIndex })
 
-    Vue.set(state.document[pageIndex].highlights[highlightIndex], 'edit', true)
+    methods.setDocumentFieldProp({
+      prop: modes.edit,
+      value: true,
+      location: triggerFromDocument({ pageIndex, highlightIndex })
+        ? `${pageIndex}/highlights/${highlightIndex}`
+        : getLocationOnDoc(fieldName)
+    })
+
     formModule.methods.setFormFieldEditingByDocument({
       value: modes.edit,
-      location: getFieldLocation({
-        pool: formModule.state.form,
-        poolType: pools.form,
-        fieldName
-      })
+      location: getLocationOnForm(fieldName)
     })
 
     state.lastMode = modes.edit
@@ -38,22 +42,15 @@ const methods = {
   stopEdit ({ fieldName }) {
     if (!fieldName) return
 
-    methods.setDocumentFieldEdit({
+    methods.setDocumentFieldProp({
+      prop: modes.edit,
       value: false,
-      location: getFieldLocation({
-        pool: state.document,
-        poolType: pools.document,
-        fieldName
-      })
+      location: getLocationOnDoc(fieldName)
     })
 
     formModule.methods.setFormFieldEditingByDocument({
       value: undefined,
-      location: getFieldLocation({
-        pool: formModule.state.form,
-        poolType: pools.form,
-        fieldName
-      })
+      location: getLocationOnForm(fieldName)
     })
 
     state.lastMode = undefined
@@ -63,10 +60,17 @@ const methods = {
     if (!fieldName) return
     if (state.lastMode === modes.edit) return
 
-    Vue.set(state.document[pageIndex].highlights[highlightIndex], 'hover', true)
+    methods.setDocumentFieldProp({
+      prop: modes.hover,
+      value: true,
+      location: triggerFromDocument({ pageIndex, highlightIndex })
+        ? `${pageIndex}/highlights/${highlightIndex}`
+        : getLocationOnDoc(fieldName)
+    })
+
     formModule.methods.setFormFieldEditingByDocument({
       value: modes.hover,
-      location: getFieldLocation({ pool: formModule.state.form, poolType: pools.form, fieldName })
+      location: getLocationOnForm(fieldName)
     })
 
     state.lastMode = modes.hover
@@ -74,20 +78,46 @@ const methods = {
 
   stopHover ({ fieldName, pageIndex, highlightIndex }) {
     if (!fieldName) return
+    if (state.lastMode !== modes.hover) return
 
-    if (state.lastMode === modes.hover) {
-      Vue.set(state.document[pageIndex].highlights[highlightIndex], 'hover', false)
-      formModule.methods.setFormFieldEditingByDocument({
-        value: undefined,
-        location: getFieldLocation({ pool: formModule.state.form, poolType: pools.form, fieldName })
-      })
+    methods.setDocumentFieldProp({
+      prop: modes.hover,
+      value: false,
+      location: triggerFromDocument({ pageIndex, highlightIndex })
+        ? `${pageIndex}/highlights/${highlightIndex}`
+        : getLocationOnDoc(fieldName)
+    })
 
-      state.lastMode = undefined
-    }
+    formModule.methods.setFormFieldEditingByDocument({
+      value: undefined,
+      location: getLocationOnForm(fieldName)
+    })
+
+    state.lastMode = undefined
   }
 }
 
 export default {
   state,
   methods
+}
+
+function triggerFromDocument ({ pageIndex, highlightIndex }) {
+  return pageIndex !== undefined && highlightIndex !== undefined
+}
+
+function getLocationOnDoc (fieldName) {
+  return getFieldLocation({
+    pool: state.document,
+    poolType: pools.document,
+    fieldName
+  })
+}
+
+function getLocationOnForm (fieldName) {
+  return getFieldLocation({
+    pool: formModule.state.form,
+    poolType: pools.form,
+    fieldName
+  })
 }
