@@ -1,9 +1,8 @@
 <template>
   <div :class="`form-field-editing-by-document ${field.editing_set_by_document}`">
     <input
+      v-model="value"
       :class="{ pointer: field.editing_set_by_document === modes.hover }"
-      :value="field.value"
-      @blur="e => value = e.target.value"
     >
 
     <div class="action-btns">
@@ -55,6 +54,10 @@ export default {
     isEditing () {
       return this.field.editing_set_by_document === this.modes.edit
     }
+  },
+
+  mounted () {
+    this.value = this.field.value
   },
 
   methods: {
