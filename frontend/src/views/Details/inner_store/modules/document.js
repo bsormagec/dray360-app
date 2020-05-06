@@ -31,7 +31,8 @@ const methods = {
         : getLocationOnDoc(fieldName)
     })
 
-    formModule.methods.setFormFieldEditingByDocument({
+    formModule.methods.setFormFieldProp({
+      prop: 'editing_set_by_document',
       value: modes.edit,
       location: getLocationOnForm(fieldName)
     })
@@ -48,7 +49,8 @@ const methods = {
       location: getLocationOnDoc(fieldName)
     })
 
-    formModule.methods.setFormFieldEditingByDocument({
+    formModule.methods.setFormFieldProp({
+      prop: 'editing_set_by_document',
       value: undefined,
       location: getLocationOnForm(fieldName)
     })
@@ -68,7 +70,8 @@ const methods = {
         : getLocationOnDoc(fieldName)
     })
 
-    formModule.methods.setFormFieldEditingByDocument({
+    formModule.methods.setFormFieldProp({
+      prop: 'editing_set_by_document',
       value: modes.hover,
       location: getLocationOnForm(fieldName)
     })
@@ -88,7 +91,8 @@ const methods = {
         : getLocationOnDoc(fieldName)
     })
 
-    formModule.methods.setFormFieldEditingByDocument({
+    formModule.methods.setFormFieldProp({
+      prop: 'editing_set_by_document',
       value: undefined,
       location: getLocationOnForm(fieldName)
     })

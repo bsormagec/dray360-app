@@ -24,7 +24,8 @@
           :key="fieldKey"
           :field="{...fieldVal, name: fieldKey}"
           :readonly="readonly"
-          @change="(value) => setFormFieldValue({
+          @change="(value) => setFormFieldProp({
+            prop: 'value',
             value,
             location: `${sectionKey}/rootFields/${fieldKey}`
           })"
@@ -59,7 +60,8 @@
           :key="subFieldKey"
           :field="{ ...subFieldVal, name: subFieldKey }"
           :readonly="readonly"
-          @change="(value) => setFormFieldValue({
+          @change="(value) => setFormFieldProp({
+            prop: 'value',
             value,
             location: `${sectionKey}/subSections/${subKey}/fields/${subFieldKey}`
           })"
@@ -112,7 +114,7 @@ export default {
   methods: {
     cleanStrForId,
     stopEdit: documentModule.methods.stopEdit,
-    setFormFieldValue: formModule.methods.setFormFieldValue,
+    setFormFieldProp: formModule.methods.setFormFieldProp,
     deleteFormInventoryItem: formModule.methods.deleteFormInventoryItem,
 
     hasInventoryAction ({ sectionKey, sectionVal }) {

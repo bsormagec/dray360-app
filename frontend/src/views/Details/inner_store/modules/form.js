@@ -15,26 +15,16 @@ const methods = {
     state.form = newForm
   },
 
-  setFormFieldValue ({ value, location }) {
+  setFormFieldProp ({ prop, value, location }) {
     const parts = location.split('/')
 
     if (location.includes('rootFields')) {
-      Vue.set(state.form.sections[parts[0]][parts[1]][parts[2]], 'value', value)
+      Vue.set(state.form.sections[parts[0]][parts[1]][parts[2]], prop, value)
     } else if (location.includes('subSections')) {
-      Vue.set(state.form.sections[parts[0]][parts[1]][parts[2]][parts[3]][parts[4]], 'value', value)
+      Vue.set(state.form.sections[parts[0]][parts[1]][parts[2]][parts[3]][parts[4]], prop, value)
     } else if (location.includes('actionSection')) {
       const valueToSet = getInventoryCount(state.form)
-      Vue.set(state.form.sections[parts[0]][parts[1]], 'value', valueToSet)
-    }
-  },
-
-  setFormFieldEditingByDocument ({ value, location }) {
-    const parts = location.split('/')
-
-    if (location.includes('rootFields')) {
-      Vue.set(state.form.sections[parts[0]][parts[1]][parts[2]], 'editing_set_by_document', value)
-    } else if (location.includes('subSections')) {
-      Vue.set(state.form.sections[parts[0]][parts[1]][parts[2]][parts[3]][parts[4]], 'editing_set_by_document', value)
+      Vue.set(state.form.sections[parts[0]][parts[1]], prop, valueToSet)
     }
   },
 
