@@ -15,18 +15,23 @@ const methods = {
     state.form = newForm
   },
 
-  setFormFieldProp ({ prop, value, location }) {
+  setFormFieldProp ({ prop, value, location, validation }) {
     if (!location) return
     const parts = location.split('/')
+    let valueToSet = value
+    let locatedObj
 
     if (location.includes('rootFields')) {
-      Vue.set(state.form.sections[parts[0]][parts[1]][parts[2]], prop, value)
+      locatedObj = state.form.sections[parts[0]][parts[1]][parts[2]]
     } else if (location.includes('subSections')) {
-      Vue.set(state.form.sections[parts[0]][parts[1]][parts[2]][parts[3]][parts[4]], prop, value)
+      locatedObj = state.form.sections[parts[0]][parts[1]][parts[2]][parts[3]][parts[4]]
     } else if (location.includes('actionSection')) {
-      const valueToSet = getInventoryCount(state.form)
-      Vue.set(state.form.sections[parts[0]][parts[1]], prop, valueToSet)
+      valueToSet = getInventoryCount(state.form)
+      locatedObj = state.form.sections[parts[0]][parts[1]]
     }
+
+    if (validation && !validation(locatedObj)) return
+    Vue.set(locatedObj, prop, valueToSet)
   },
 
   addFormInventoryItem ({ key, fields }) {

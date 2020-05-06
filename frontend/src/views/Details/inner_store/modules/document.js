@@ -13,10 +13,13 @@ const methods = {
     state.document = newDocument
   },
 
-  setDocumentFieldProp ({ prop, value, location }) {
+  setDocumentFieldProp ({ prop, value, location, validation }) {
     if (!location) return
     const parts = location.split('/')
-    Vue.set(state.document[parts[0]][parts[1]][parts[2]], prop, value)
+    const locatedObj = state.document[parts[0]][parts[1]][parts[2]]
+
+    if (validation && !validation(locatedObj)) return
+    Vue.set(locatedObj, prop, value)
   },
 
   startEdit ({ fieldName, pageIndex, highlightIndex }) {
@@ -61,20 +64,21 @@ const methods = {
 
   startHover ({ fieldName, pageIndex, highlightIndex }) {
     if (!fieldName) return
-    if (state.lastMode === modes.edit) return
 
     methods.setDocumentFieldProp({
       prop: modes.hover,
       value: true,
       location: triggerFromDocument({ pageIndex, highlightIndex })
         ? `${pageIndex}/highlights/${highlightIndex}`
-        : getLocationOnDoc(fieldName)
+        : getLocationOnDoc(fieldName),
+      validation: v => Boolean(v[modes.edit]) === false
     })
 
     formModule.methods.setFormFieldProp({
       prop: 'editing_set_by_document',
       value: modes.hover,
-      location: getLocationOnForm(fieldName)
+      location: getLocationOnForm(fieldName),
+      validation: v => v.editing_set_by_document !== modes.edit
     })
 
     state.lastMode = modes.hover
@@ -82,20 +86,21 @@ const methods = {
 
   stopHover ({ fieldName, pageIndex, highlightIndex }) {
     if (!fieldName) return
-    if (state.lastMode !== modes.hover) return
 
     methods.setDocumentFieldProp({
       prop: modes.hover,
       value: false,
       location: triggerFromDocument({ pageIndex, highlightIndex })
         ? `${pageIndex}/highlights/${highlightIndex}`
-        : getLocationOnDoc(fieldName)
+        : getLocationOnDoc(fieldName),
+      validation: v => Boolean(v[modes.hover]) === true
     })
 
     formModule.methods.setFormFieldProp({
       prop: 'editing_set_by_document',
       value: undefined,
-      location: getLocationOnForm(fieldName)
+      location: getLocationOnForm(fieldName),
+      validation: v => v.editing_set_by_document === modes.hover
     })
 
     state.lastMode = undefined
