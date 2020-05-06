@@ -4,18 +4,20 @@
   >
     <span class="field__name">{{ field.name }}</span>
 
+    <span
+      class="field__value"
+      :style="getStyle()"
+    >{{ field.value ? field.value : '--' }}</span>
+
     <FormFieldEditingSetByDocument
-      v-show="field.editing_set_by_document"
+      :style="getStyle('field')"
       :field="field"
       @change="e => $emit('change', e)"
       @close="e => $emit('close')"
+      @click.native="callbacks.startEdit({ fieldName: field.name })"
+      @mouseover.native="callbacks.startHover({ fieldName: field.name })"
+      @mouseleave.native="callbacks.stopHover({ fieldName: field.name })"
     />
-
-    <span
-      v-show="!field.editing_set_by_document"
-      class="field__value"
-      @mouseover="startHover(field.name)"
-    >{{ field.value ? field.value : '--' }}</span>
   </div>
 </template>
 
@@ -52,12 +54,23 @@ export default {
   },
 
   methods: {
-    startHover (fieldName) {
-      this.callbacks.startHover({ fieldName })
-    },
+    getStyle (elName) {
+      const positionStyle = {
+        position: 'absolute',
+        right: '0'
+      }
 
-    stopHover (fieldName) {
-      this.callbacks.stopHover({ fieldName })
+      if (elName === 'field') {
+        return {
+          opacity: this.field.editing_set_by_document ? '1' : '0',
+          ...positionStyle
+        }
+      } else {
+        return {
+          opacity: !this.field.editing_set_by_document ? '1' : '0',
+          ...positionStyle
+        }
+      }
     }
   }
 }

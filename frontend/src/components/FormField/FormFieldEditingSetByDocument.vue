@@ -1,6 +1,7 @@
 <template>
   <div :class="`form-field-editing-by-document ${field.editing_set_by_document}`">
     <input
+      :class="{ pointer: field.editing_set_by_document === modes.hover }"
       :value="field.value"
       @blur="e => value = e.target.value"
     >
@@ -9,16 +10,24 @@
       <div
         v-show="isEditing"
         class="btns__close"
-        @click="close"
+        @click.stop="close"
       >
         <v-icon>mdi-close</v-icon>
       </div>
 
       <div
+        v-show="isEditing"
         class="btns__accept"
-        @click="acceptChanges"
+        @click.stop="acceptChanges"
       >
-        <v-icon>{{ isEditing ? 'mdi-check' : 'mdi-pencil' }}</v-icon>
+        <v-icon>mdi-check</v-icon>
+      </div>
+
+      <div
+        v-show="!isEditing"
+        class="btns__accept"
+      >
+        <v-icon>mdi-pencil</v-icon>
       </div>
     </div>
   </div>
@@ -63,11 +72,15 @@ export default {
 
 <style lang="scss" scoped>
 .form-field-editing-by-document {
+  cursor: pointer;
   position: relative;
   display: flex;
   width: 60%;
+  height: 3rem;
+  padding: 0.5rem 3rem 0.5rem 0.5rem;
   border: 0.1rem solid map-get($colors, blue);
   border-radius: 0.2rem;
+  transition: opacity 200ms ease-in-out;
 
   &.hover {
     background: rgba(map-get($colors , blue), 0.15);
@@ -81,6 +94,10 @@ input {
   outline: unset;
   overflow: auto;
   font-size: 1.44rem !important;
+
+  &.pointer {
+    cursor: pointer;
+  }
 }
 
 .action-btns {

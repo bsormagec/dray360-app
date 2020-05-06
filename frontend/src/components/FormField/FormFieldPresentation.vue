@@ -69,8 +69,10 @@ export default {
 <style lang="scss">
 .form-field-presentation {
   .field__group {
+    position: relative;
     display: flex;
     justify-content: space-between;
+    align-items: center;
     margin-bottom: 1.1rem;
   }
 
@@ -81,9 +83,17 @@ export default {
     text-transform: capitalize;
   }
 
+  .field__name {
+    width: 40%;
+  }
+
   .field__value {
+    cursor: pointer;
     text-align: right;
     word-break: break-word;
+    width: 60%;
+    height: 3rem;
+    transition: opacity 200ms ease-in-out;
   }
 
   .field__value,
