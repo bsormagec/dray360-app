@@ -3,6 +3,7 @@
     <FormFieldPresentation
       v-show="readonly"
       :field="field"
+      :callbacks="callbacks"
       @change="e => $emit('change', e)"
       @close="e => $emit('close', e)"
     />
@@ -36,6 +37,10 @@ export default {
       type: Boolean,
       required: false,
       default: () => false
+    },
+    callbacks: {
+      type: Object,
+      required: true
     }
   }
 }

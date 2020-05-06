@@ -7,6 +7,7 @@
       <FormFieldPresentationSimple
         v-show="isSimple"
         :field="field"
+        :callbacks="callbacks"
         @change="e => $emit('change', e)"
         @close="e => $emit('close', e)"
       />
@@ -40,6 +41,10 @@ export default {
 
   props: {
     field: {
+      type: Object,
+      required: true
+    },
+    callbacks: {
       type: Object,
       required: true
     }

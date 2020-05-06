@@ -24,6 +24,7 @@
           :key="fieldKey"
           :field="{...fieldVal, name: fieldKey}"
           :readonly="readonly"
+          :callbacks="fieldCallbacks"
           @change="(value) => setFormFieldProp({
             prop: 'value',
             value,
@@ -60,6 +61,7 @@
           :key="subFieldKey"
           :field="{ ...subFieldVal, name: subFieldKey }"
           :readonly="readonly"
+          :callbacks="fieldCallbacks"
           @change="(value) => setFormFieldProp({
             prop: 'value',
             value,
@@ -100,6 +102,14 @@ export default {
       required: true
     }
   },
+
+  data: () => ({
+    fieldCallbacks: {
+      startEdit: documentModule.methods.startEdit,
+      startHover: documentModule.methods.startHover,
+      stopHover: documentModule.methods.stopHover
+    }
+  }),
 
   computed: {
     isEditing () {

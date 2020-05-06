@@ -1,10 +1,9 @@
 <template>
   <div :class="`form-field-editing-by-document ${field.editing_set_by_document}`">
-    <textarea
-      rows="1"
+    <input
       :value="field.value"
       @blur="e => value = e.target.value"
-    />
+    >
 
     <div class="action-btns">
       <div
@@ -69,18 +68,16 @@ export default {
   width: 60%;
   border: 0.1rem solid map-get($colors, blue);
   border-radius: 0.2rem;
-  padding-bottom: 2.5rem;
 
   &.hover {
     background: rgba(map-get($colors , blue), 0.15);
   }
 }
 
-textarea {
+input {
   width: 100%;
   height: 100%;
-  min-height: 3rem;
-  padding: 0.7rem;
+  height: 2.1rem;
   outline: unset;
   overflow: auto;
   font-size: 1.44rem !important;

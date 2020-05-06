@@ -14,6 +14,7 @@ const methods = {
   },
 
   setDocumentFieldProp ({ prop, value, location }) {
+    if (!location) return
     const parts = location.split('/')
     Vue.set(state.document[parts[0]][parts[1]][parts[2]], prop, value)
   },

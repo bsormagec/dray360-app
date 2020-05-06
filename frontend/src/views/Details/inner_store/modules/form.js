@@ -16,6 +16,7 @@ const methods = {
   },
 
   setFormFieldProp ({ prop, value, location }) {
+    if (!location) return
     const parts = location.split('/')
 
     if (location.includes('rootFields')) {
