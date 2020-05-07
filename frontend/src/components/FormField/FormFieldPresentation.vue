@@ -4,13 +4,14 @@
       v-if="!isModalSelect"
       class="field"
     >
-      <FormFieldPresentationSimple
+      <FormFieldHighlight
         v-show="isSimple"
         :field="field"
         :callbacks="callbacks"
         @change="e => $emit('change', e)"
-        @close="e => $emit('close', e)"
+        @close="e => $emit('close')"
       />
+
       <FormFieldPresentationComplex
         v-show="isComplex"
         :field="field"
@@ -26,7 +27,7 @@
 
 <script>
 import { fieldType } from '@/enums/field_type'
-import FormFieldPresentationSimple from '@/components/FormField/FormFieldPresentationSimple'
+import FormFieldHighlight from '@/components/FormField/FormFieldHighlight'
 import FormFieldPresentationComplex from '@/components/FormField/FormFieldPresentationComplex'
 import FormFieldPresentationModalSelect from '@/components/FormField/FormFieldPresentationModalSelect'
 
@@ -34,7 +35,7 @@ export default {
   name: 'FormFieldPresentation',
 
   components: {
-    FormFieldPresentationSimple,
+    FormFieldHighlight,
     FormFieldPresentationComplex,
     FormFieldPresentationModalSelect
   },
@@ -69,8 +70,9 @@ export default {
 <style lang="scss">
 .form-field-presentation {
   .field__group {
-    position: relative;
     display: flex;
+    width: 100%;
+    height: 100%;
     justify-content: space-between;
     align-items: center;
     margin-bottom: 1.1rem;
@@ -92,7 +94,6 @@ export default {
     text-align: right;
     word-break: break-word;
     width: 60%;
-    height: 3rem;
     transition: opacity 200ms ease-in-out;
   }
 
