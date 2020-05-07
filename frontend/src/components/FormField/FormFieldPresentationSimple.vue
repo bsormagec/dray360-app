@@ -7,6 +7,8 @@
     <FormFieldPresentationValue
       :field="field"
       :callbacks="callbacks"
+      @change="e => $emit('change', e)"
+      @close="e => $emit('close')"
     />
   </div>
 </template>
