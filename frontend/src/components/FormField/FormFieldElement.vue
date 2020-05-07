@@ -1,76 +1,78 @@
 <template>
-  <FormFieldElementInput
-    v-if="isInput"
-    :field="field"
-    @change="e => $emit('change', e)"
-  />
+  <div class="form-field-element">
+    <FormFieldElementInput
+      v-if="isInput"
+      :field="field"
+      @change="e => $emit('change', e)"
+    />
 
-  <FormFieldElementInputSelect
-    v-else-if="isInputSelect"
-    :field="field"
-    @change="e => $emit('change', e)"
-  />
+    <FormFieldElementInputSelect
+      v-else-if="isInputSelect"
+      :field="field"
+      @change="e => $emit('change', e)"
+    />
 
-  <FormFieldElementTextArea
-    v-else-if="isTextArea"
-    :field="field"
-    @change="e => $emit('change', e)"
-  />
+    <FormFieldElementTextArea
+      v-else-if="isTextArea"
+      :field="field"
+      @change="e => $emit('change', e)"
+    />
 
-  <FormFieldElementSelect
-    v-else-if="isSelect"
-    :field="field"
-    @change="e => $emit('change', e)"
-  />
+    <FormFieldElementSelect
+      v-else-if="isSelect"
+      :field="field"
+      @change="e => $emit('change', e)"
+    />
 
-  <FormFieldElementSwitch
-    v-else-if="isSwitch"
-    :field="field"
-    @change="e => $emit('change', e)"
-  />
+    <FormFieldElementSwitch
+      v-else-if="isSwitch"
+      :field="field"
+      @change="e => $emit('change', e)"
+    />
 
-  <FormFieldElementDate
-    v-else-if="isDate"
-    :field="field"
-    @change="e => $emit('change', e)"
-  />
+    <FormFieldElementDate
+      v-else-if="isDate"
+      :field="field"
+      @change="e => $emit('change', e)"
+    />
 
-  <FormFieldElementTime
-    v-else-if="isTime"
-    :field="field"
-    @change="e => $emit('change', e)"
-  />
+    <FormFieldElementTime
+      v-else-if="isTime"
+      :field="field"
+      @change="e => $emit('change', e)"
+    />
 
-  <FormFieldElementBothDateTime
-    v-else-if="isDateTime"
-    :field="field"
-    @change="e => $emit('change', e)"
-  />
+    <FormFieldElementBothDateTime
+      v-else-if="isDateTime"
+      :field="field"
+      @change="e => $emit('change', e)"
+    />
 
-  <FormFieldElementModalSelect
-    v-else-if="isModalSelect"
-    :field="field"
-    @change="e => $emit('change', e)"
-  />
+    <FormFieldElementModalSelect
+      v-else-if="isModalSelect"
+      :field="field"
+      @change="e => $emit('change', e)"
+    />
 
-  <FormFieldElementRadio
-    v-else-if="isRadio"
-    :field="field"
-    @change="e => $emit('change', e)"
-  />
+    <FormFieldElementRadio
+      v-else-if="isRadio"
+      :field="field"
+      @change="e => $emit('change', e)"
+    />
 
-  <span
-    v-else-if="isInfoTitle"
-    class="element__info-title"
-  >
-    {{ field.name }}
-    <v-icon color="primary">mdi-information</v-icon>
-  </span>
+    <span
+      v-else-if="isInfoTitle"
+      class="element__info-title"
+    >
+      {{ field.name }}
+      <v-icon color="primary">mdi-information</v-icon>
+    </span>
 
-  <span
-    v-else-if="isLabel"
-    class="element__label"
-  >{{ field.name }}</span>
+    <span
+      v-else-if="isLabel"
+      class="element__label"
+    >{{ field.name }}</span>
+  </div>
 </template>
 
 <script>
@@ -156,6 +158,10 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+.form-field-element {
+  width: 100%;
+}
+
 .element__label {
   display: block;
   font-size: 1.4rem !important;

@@ -86,14 +86,14 @@ export default {
   }
 
   .field__name {
-    width: 40%;
+    width: 60%;
   }
 
   .field__value {
     cursor: pointer;
     text-align: right;
     word-break: break-word;
-    width: 60%;
+    width: 40%;
     transition: opacity 200ms ease-in-out;
   }
 
