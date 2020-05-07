@@ -5,7 +5,7 @@
       :style="getStyle()"
     >{{ field.value ? field.value : '--' }}</span>
 
-    <FormFieldEditingSetByDocument
+    <FormFieldHighlight
       :style="getStyle('field')"
       :field="field"
       @change="e => $emit('change', e)"
@@ -18,13 +18,13 @@
 </template>
 
 <script>
-import FormFieldEditingSetByDocument from '@/components/FormField/FormFieldEditingSetByDocument'
+import FormFieldHighlight from '@/components/FormField/FormFieldHighlight'
 
 export default {
   name: 'FormFieldPresentationValue',
 
   components: {
-    FormFieldEditingSetByDocument
+    FormFieldHighlight
   },
 
   props: {
@@ -42,17 +42,18 @@ export default {
     getStyle (elName) {
       const positionStyle = {
         position: 'absolute',
+        top: '0',
         right: '0'
       }
 
       if (elName === 'field') {
         return {
-          opacity: this.field.editing_set_by_document ? '1' : '0',
+          opacity: this.field.highlight ? '1' : '0',
           ...positionStyle
         }
       } else {
         return {
-          opacity: !this.field.editing_set_by_document ? '1' : '0',
+          opacity: !this.field.highlight ? '1' : '0',
           ...positionStyle
         }
       }

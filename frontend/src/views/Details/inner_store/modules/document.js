@@ -37,7 +37,7 @@ const methods = {
     })
 
     formModule.methods.setFormFieldProp({
-      prop: 'editing_set_by_document',
+      prop: 'highlight',
       value: modes.edit,
       location: getLocationOnForm(fieldName)
     })
@@ -55,7 +55,7 @@ const methods = {
     })
 
     formModule.methods.setFormFieldProp({
-      prop: 'editing_set_by_document',
+      prop: 'highlight',
       value: undefined,
       location: getLocationOnForm(fieldName)
     })
@@ -78,10 +78,10 @@ const methods = {
       })
 
       formModule.methods.setFormFieldProp({
-        prop: 'editing_set_by_document',
+        prop: 'highlight',
         value: modes.hover,
         location: getLocationOnForm(fieldName),
-        validation: v => v.editing_set_by_document !== modes.edit
+        validation: v => v.highlight !== modes.edit
       })
 
       state.lastMode = modes.hover
@@ -102,10 +102,10 @@ const methods = {
     })
 
     formModule.methods.setFormFieldProp({
-      prop: 'editing_set_by_document',
+      prop: 'highlight',
       value: undefined,
       location: getLocationOnForm(fieldName),
-      validation: v => v.editing_set_by_document === modes.hover
+      validation: v => v.highlight === modes.hover
     })
 
     state.lastMode = undefined

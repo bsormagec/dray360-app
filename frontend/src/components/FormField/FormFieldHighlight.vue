@@ -1,8 +1,7 @@
 <template>
-  <div :class="`form-field-editing-by-document ${field.editing_set_by_document}`">
+  <div :class="`form-field-highlight ${field.highlight}`">
     <input
       v-model="value"
-      :class="{ pointer: field.editing_set_by_document === modes.hover }"
     >
 
     <div class="action-btns">
@@ -36,7 +35,7 @@
 import { modes } from '@/views/Details/inner_types'
 
 export default {
-  name: 'FormFieldEditingSetByDocument',
+  name: 'FormFieldHighlight',
 
   props: {
     field: {
@@ -52,7 +51,7 @@ export default {
 
   computed: {
     isEditing () {
-      return this.field.editing_set_by_document === this.modes.edit
+      return this.field.highlight === this.modes.edit
     }
   },
 
@@ -76,7 +75,7 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.form-field-editing-by-document {
+.form-field-highlight {
   cursor: pointer;
   position: relative;
   display: flex;
