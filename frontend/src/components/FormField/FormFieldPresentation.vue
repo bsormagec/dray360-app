@@ -75,7 +75,6 @@ export default {
     height: 100%;
     justify-content: space-between;
     align-items: center;
-    margin-bottom: 1.1rem;
   }
 
   .field__name,

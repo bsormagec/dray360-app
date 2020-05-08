@@ -82,8 +82,10 @@ export default {
   position: relative;
   cursor: pointer;
   display: flex;
+  align-items: center;
   width: 100%;
-  height: 3rem;
+  min-height: 3rem;
+  margin-bottom: 1.1rem;
   border: 0.1rem solid;
   border-color: map-get($colors, white);
   border-radius: 0.2rem;
@@ -100,7 +102,7 @@ export default {
   }
 
   &.edit {
-    height: 10rem;
+    min-height: 10rem;
   }
 }
 
