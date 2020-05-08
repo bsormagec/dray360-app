@@ -32,6 +32,16 @@ const methods = {
 
     if (validation && !validation(locatedObj)) return
     Vue.set(locatedObj, prop, valueToSet)
+
+    if (prop === 'value') methods.updateFormFieldChildren({ field: locatedObj, children: valueToSet })
+  },
+
+  updateFormFieldChildren ({ field, children }) {
+    if (typeof children !== 'object') return
+
+    for (const key in children) {
+      Vue.set(field.el.children[key], 'value', children[key])
+    }
   },
 
   addFormInventoryItem ({ key, fields }) {

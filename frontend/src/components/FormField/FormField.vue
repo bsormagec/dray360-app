@@ -4,6 +4,7 @@
       v-show="readonly"
       :field="field"
       :callbacks="callbacks"
+      :is-editing="isEditing"
       @change="e => $emit('change', e)"
       @close="e => $emit('close', e)"
     />
@@ -11,6 +12,7 @@
     <FormFieldElement
       v-show="!readonly"
       :field="field"
+      :is-editing="isEditing"
       @change="e => $emit('change', e)"
     />
   </div>
@@ -37,6 +39,10 @@ export default {
       type: Boolean,
       required: false,
       default: () => false
+    },
+    isEditing: {
+      type: Boolean,
+      required: true
     },
     callbacks: {
       type: Object,

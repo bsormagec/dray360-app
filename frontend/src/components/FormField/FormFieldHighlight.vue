@@ -1,7 +1,8 @@
 /*
   TODO:
     - highlight complex
-    - fix bug switch not updating *
+    - fix bug switch not updating
+    - fix bug radio not updating *
     - highlight modal-select
     - fix bug hazardous in inventory not highlighting
     - fix bug highlighting fields on new added inventory item
@@ -15,20 +16,21 @@
     @click="callbacks.startEdit({ fieldName: field.name })"
   >
     <FormFieldHighlightView
-      v-show="!isEditing"
+      v-show="!editMode"
       :field="field"
     />
 
     <div :class="`highlight__edit ${field.highlight || ''}`">
       <FormFieldElement
-        v-show="isEditing"
+        v-show="editMode"
         :field="field"
+        :is-editing="isEditing"
         @change="e => (value = e)"
       />
 
       <FormFieldHighlightBtns
         v-show="field.highlight"
-        :is-editing="isEditing"
+        :edit-mode="editMode"
         @close="close"
         @accept="accept"
       />
@@ -56,6 +58,10 @@ export default {
       type: Object,
       required: true
     },
+    isEditing: {
+      type: Boolean,
+      required: true
+    },
     callbacks: {
       type: Object,
       required: true
@@ -68,7 +74,7 @@ export default {
   }),
 
   computed: {
-    isEditing () {
+    editMode () {
       return this.field.highlight === this.modes.edit
     }
   },

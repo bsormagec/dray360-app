@@ -85,6 +85,7 @@
     >
       <FormFieldElement
         :field="{...el, name: key, value:childrenData[key] }"
+        :is-editing="isEditing"
         @change="e => changeChildEl({ e, name: key })"
       />
     </div>
@@ -102,6 +103,10 @@ export default {
   props: {
     field: {
       type: Object,
+      required: true
+    },
+    isEditing: {
+      type: Boolean,
       required: true
     }
   },

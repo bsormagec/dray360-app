@@ -25,6 +25,7 @@
           :field="{...fieldVal, name: fieldKey}"
           :readonly="readonly"
           :callbacks="fieldCallbacks"
+          :is-editing="isEditing"
           @change="(value) => setFormFieldProp({
             prop: 'value',
             value,
@@ -62,6 +63,7 @@
           :field="{ ...subFieldVal, name: subFieldKey }"
           :readonly="readonly"
           :callbacks="fieldCallbacks"
+          :is-editing="isEditing"
           @change="(value) => setFormFieldProp({
             prop: 'value',
             value,

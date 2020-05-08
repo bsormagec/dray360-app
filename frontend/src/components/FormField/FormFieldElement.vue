@@ -27,6 +27,7 @@
     <FormFieldElementSwitch
       v-else-if="isSwitch"
       :field="field"
+      :is-editing="isEditing"
       @change="e => $emit('change', e)"
     />
 
@@ -51,12 +52,14 @@
     <FormFieldElementModalSelect
       v-else-if="isModalSelect"
       :field="field"
+      :is-editing="isEditing"
       @change="e => $emit('change', e)"
     />
 
     <FormFieldElementRadio
       v-else-if="isRadio"
       :field="field"
+      :is-editing="isEditing"
       @change="e => $emit('change', e)"
     />
 
@@ -109,10 +112,9 @@ export default {
       type: Object,
       required: true
     },
-    value: {
-      type: String,
-      required: false,
-      default: ''
+    isEditing: {
+      type: Boolean,
+      required: true
     }
   },
 

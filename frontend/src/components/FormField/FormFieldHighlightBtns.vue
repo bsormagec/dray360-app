@@ -1,7 +1,7 @@
 <template>
   <div class="action-btns">
     <div
-      v-if="isEditing"
+      v-if="editMode"
       class="btns__edit"
     >
       <div
@@ -20,7 +20,7 @@
     </div>
 
     <div
-      v-if="!isEditing"
+      v-if="!editMode"
       class="btns__accept"
     >
       <v-icon>mdi-pencil</v-icon>
@@ -33,7 +33,7 @@ export default {
   name: 'FormFieldHighlightBtns',
 
   props: {
-    isEditing: {
+    editMode: {
       type: Boolean,
       required: true
     }

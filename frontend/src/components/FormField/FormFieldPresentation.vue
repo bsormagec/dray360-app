@@ -2,12 +2,14 @@
   <div class="form-field-presentation">
     <FormFieldPresentationModalSelect
       v-if="isModalSelect"
+      :is-editing="isEditing"
       :field="field"
     />
 
     <FormFieldHighlight
       v-else
       :field="field"
+      :is-editing="isEditing"
       :callbacks="callbacks"
       @change="e => $emit('change', e)"
       @close="e => $emit('close')"
@@ -31,6 +33,10 @@ export default {
   props: {
     field: {
       type: Object,
+      required: true
+    },
+    isEditing: {
+      type: Boolean,
       required: true
     },
     callbacks: {
