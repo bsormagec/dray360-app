@@ -38,9 +38,17 @@ const methods = {
 
   updateFormFieldChildren ({ field, children }) {
     if (typeof children !== 'object') return
+    const objToEdit = (key, opName) => field.el.children ? field.el.children[key] : field.el.options[opName].el.children[key]
+
+    let optionName
+    if (children.optionName) {
+      optionName = children.optionName
+      Vue.set(field, 'optionName', optionName)
+      delete children.optionName
+    }
 
     for (const key in children) {
-      Vue.set(field.el.children[key], 'value', children[key])
+      Vue.set(objToEdit(key, optionName), 'value', children[key])
     }
   },
 
