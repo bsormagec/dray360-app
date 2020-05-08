@@ -1,3 +1,12 @@
+/*
+  TODO:
+    - highlight complex
+    - fix bug switch not updating *
+    - highlight modal-select
+    - fix bug hazardous in inventory not highlighting
+    - fix bug highlighting fields on new added inventory item
+*/
+
 <template>
   <div
     :class="`form-field-highlight ${field.highlight || ''}`"

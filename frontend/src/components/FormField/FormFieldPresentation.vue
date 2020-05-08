@@ -1,26 +1,16 @@
 <template>
   <div class="form-field-presentation">
-    <div
-      v-if="!isModalSelect"
-      class="field"
-    >
-      <FormFieldHighlight
-        v-show="isSimple"
-        :field="field"
-        :callbacks="callbacks"
-        @change="e => $emit('change', e)"
-        @close="e => $emit('close')"
-      />
-
-      <FormFieldPresentationComplex
-        v-show="isComplex"
-        :field="field"
-      />
-    </div>
-
     <FormFieldPresentationModalSelect
+      v-if="isModalSelect"
+      :field="field"
+    />
+
+    <FormFieldHighlight
       v-else
       :field="field"
+      :callbacks="callbacks"
+      @change="e => $emit('change', e)"
+      @close="e => $emit('close')"
     />
   </div>
 </template>
@@ -28,7 +18,6 @@
 <script>
 import { fieldType } from '@/enums/field_type'
 import FormFieldHighlight from '@/components/FormField/FormFieldHighlight'
-import FormFieldPresentationComplex from '@/components/FormField/FormFieldPresentationComplex'
 import FormFieldPresentationModalSelect from '@/components/FormField/FormFieldPresentationModalSelect'
 
 export default {
@@ -36,7 +25,6 @@ export default {
 
   components: {
     FormFieldHighlight,
-    FormFieldPresentationComplex,
     FormFieldPresentationModalSelect
   },
 
@@ -52,14 +40,6 @@ export default {
   },
 
   computed: {
-    isSimple () {
-      return typeof this.field.value !== 'object'
-    },
-
-    isComplex () {
-      return typeof this.field.value === 'object'
-    },
-
     isModalSelect () {
       return this.field.el.type === fieldType.modalSelect
     }

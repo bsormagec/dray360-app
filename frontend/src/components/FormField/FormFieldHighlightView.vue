@@ -1,5 +1,21 @@
 <template>
   <div
+    v-if="typeof field.value === 'object'"
+    class="field__complex"
+  >
+    <span class="field__name">{{ field.name }}</span>
+    <div
+      v-for="(value, key) in field.value"
+      :key="key"
+      class="field__children"
+    >
+      <span class="field__name">{{ key }}</span>
+      <span class="field__value">{{ value }}</span>
+    </div>
+  </div>
+
+  <div
+    v-else
     class="field__group"
   >
     <span class="field__name">{{ field.name }}</span>
@@ -10,8 +26,6 @@
 </template>
 
 <script>
-import { modes } from '@/views/Details/inner_types'
-
 export default {
   name: 'FormFieldHighlightView',
 
@@ -20,16 +34,12 @@ export default {
       type: Object,
       required: true
     }
-  },
-
-  data: () => ({
-    modes
-  }),
-
-  computed: {
-    isEditing () {
-      return this.field.highlight === this.modes.edit
-    }
   }
 }
 </script>
+
+<style lang="scss" scoped>
+.field__complex {
+  width: 100%;
+}
+</style>
