@@ -82,7 +82,7 @@ export default {
     emitChange (optionName) {
       const option = this.field.el.options[optionName]
       const hasChildren = option.el && option.el.children
-      const dataToEmit = hasChildren ? { ...this.childrenData, optionName } : optionName
+      const dataToEmit = hasChildren ? { ...this.childrenData, optionName } : { optionName }
       this.radioValue = this.keyToRadioN(optionName)
       this.$emit('change', dataToEmit)
     },
@@ -93,7 +93,12 @@ export default {
     },
 
     syncValue () {
-      if (typeof this.field.value === 'object') {
+      if (!this.field.optionName) return
+
+      const hasChildren = this.field.el.options[this.field.optionName].el &&
+       typeof this.field.value === 'object'
+
+      if (hasChildren) {
         this.childrenData = this.field.value
 
         for (const key in this.childrenData) {
@@ -103,7 +108,11 @@ export default {
             optionName: this.field.optionName
           })
         }
+
+        return
       }
+
+      this.emitChange(this.field.optionName)
     }
   }
 }

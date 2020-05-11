@@ -2,8 +2,8 @@
   TODO:
     - highlight complex
     - fix bug switch not updating
-    - fix bug radio not updating *
-    - highlight modal-select
+    - fix bug radio not updating
+    - highlight modal-select *
     - fix bug hazardous in inventory not highlighting
     - fix bug highlighting fields on new added inventory item
 */

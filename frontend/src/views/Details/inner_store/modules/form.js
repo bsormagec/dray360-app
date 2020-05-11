@@ -47,9 +47,14 @@ const methods = {
       delete children.optionName
     }
 
-    for (const key in children) {
-      Vue.set(objToEdit(key, optionName), 'value', children[key])
+    if (Object.keys(children).length) {
+      for (const key in children) {
+        Vue.set(objToEdit(key, optionName), 'value', children[key])
+      }
+      return
     }
+
+    Vue.set(field, 'value', optionName)
   },
 
   addFormInventoryItem ({ key, fields }) {
