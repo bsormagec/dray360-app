@@ -40,12 +40,14 @@
     <FormFieldElementTime
       v-else-if="isTime"
       :field="field"
+      :is-editing="isEditing"
       @change="e => $emit('change', e)"
     />
 
     <FormFieldElementBothDateTime
       v-else-if="isDateTime"
       :field="field"
+      :is-editing="isEditing"
       @change="e => $emit('change', e)"
     />
 

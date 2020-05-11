@@ -1,12 +1,3 @@
-/*
-  TODO:
-  - Hover on yellow block, updates its style to hover state and sets hover state in its related field on the form
-  - Upon accepting changes in form field component it updates its field value and document field is no longer selected
-  - Hovering on any field (viewing) triggers hover state in its related document field *
-  - Adjust EditingSetByDocument styles (height, though it may be needed to change to input)
-  - Add scrolling
-*/
-
 <template>
   <div class="document">
     <div

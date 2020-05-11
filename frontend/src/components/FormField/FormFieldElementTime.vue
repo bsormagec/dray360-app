@@ -30,6 +30,10 @@ export default {
       type: String,
       required: false,
       default: ''
+    },
+    isEditing: {
+      type: Boolean,
+      required: true
     }
   },
 
@@ -37,6 +41,12 @@ export default {
     time: '',
     focused: false
   }),
+
+  watch: {
+    isEditing: function () {
+      this.syncValue()
+    }
+  },
 
   methods: {
     toggleFocused () {
@@ -46,6 +56,10 @@ export default {
     change () {
       this.toggleFocused()
       this.$emit('change', this.time)
+    },
+
+    syncValue () {
+      this.time = this.field.value
     }
   }
 }

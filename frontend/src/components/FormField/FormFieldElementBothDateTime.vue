@@ -11,6 +11,7 @@
       <FormFieldElementTime
         :field="field"
         alt-label="time"
+        :is-editing="isEditing"
         @change="e => setTime(e)"
       />
     </div>
@@ -32,6 +33,10 @@ export default {
   props: {
     field: {
       type: Object,
+      required: true
+    },
+    isEditing: {
+      type: Boolean,
       required: true
     }
   },
