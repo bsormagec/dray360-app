@@ -21,7 +21,6 @@ class OCRRequest extends Model
     public $table = 't_job_latest_state';
 
     protected $casts = [
-        'status_metadata' => 'array'
     ];
 
     /**

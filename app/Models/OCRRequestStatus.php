@@ -24,7 +24,7 @@ class OCRRequestStatus extends Model
     public $table = 'v_status_summary';
 
     protected $casts = [
-        'status_metadata' => 'array'
+        'status_metadata' => 'json'
     ];
 
     /**
