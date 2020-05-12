@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Eloquent as Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
+//use Illuminate\Support\Facades\DB;
 
 /**
  * Class Order
@@ -38,10 +39,15 @@ use Illuminate\Database\Eloquent\SoftDeletes;
  * @property \Illuminate\Database\Eloquent\Collection orderAddressEvents
  * @property \Illuminate\Database\Eloquent\Collection orderLineItems
  * @property Illuminate\Database\Eloquent\Collection ocrRequest
+ * @property \App\Models\OCRRequest getOCRRequestAttribute
+ * @property \App\Models\OCRRequestStatus getLatestOCRRequestStatus
+ * @property Illuminate\Database\Eloquent\Collection getOCRRequestStatusList
  */
 class Order extends Model
 {
     use SoftDeletes;
+
+    protected $appends = ['ocr_request', 'latest_ocr_request_status'];
 
     public $table = 't_orders';
 
@@ -139,11 +145,43 @@ class Order extends Model
     }
 
     /**
+     * The OCR request relationship
+     *
      * @return \Illuminate\Database\Eloquent\Relations\HasOne
      **/
     public function ocrRequest()
     {
         return $this->hasOne(\App\Models\OCRRequest::class, 'request_id', 'request_id');
     }
+
+    /**
+     * Get the OCR request attribute
+     *
+     * @return \Models\OCRRequest
+     */
+    public function getOCRRequestAttribute() {
+        return $this->ocrRequest()->get()[0];
+    }
+
+    /**
+     * Returns the OCRRequestStatus list
+     *
+     * @return collection
+     */
+    public function getOCRRequestStatusList() {
+        return $this->getOCRRequestAttribute()->statusList()->get();
+    }
+
+
+    /**
+     * Returns the latest OCRRequestStatus object
+     *
+     * @return OCRRequestStatus
+     */
+    public function getLatestOCRRequestStatusAttribute() {
+        return $this->getOCRRequestAttribute()->latestOCRRequestStatus();
+    }
+
+
 
 }

@@ -92,3 +92,37 @@ class OCRRequestModelPersistenceTest extends TestCase
     }
 
 }
+
+
+
+/* TODO: INCORPORATE THESE "LATEST STATUS" FUNCTIONS INTO THE TEST
+    $o1 = \App\Models\Order::all()->random();
+    $request_id = $o1['request_id'];
+
+    $r1 = $o1->ocrRequest()->get();
+
+    $r1a = $o1->ocrRequest()->get()[0];
+    get_class_methods($r1a);
+
+    $r1b = \App\Models\OCRRequest::where('request_id', $request_id)->get()[0];
+    get_class_methods($r1b);
+
+    $s1a = $r1a->statusList()->get();
+    $s1b = $r1b->statusList()->get();
+
+
+    $lr1a = $s1a->filter(function ($eachStatus) {
+        if ($eachStatus->is_latest_status) {
+            return $eachStatus;
+        }
+    });
+
+    $r1a->latestOCRRequestStatus();
+    $o1->getLatestOCRRequestStatus();
+    $o1->getOCRRequestStatusList();
+    $o1->getOCRRequestAttribute();
+    $o1->getLatestOCRRequestStatus();
+
+    $latestStatus = $o1->getLatestOCRRequestStatus();
+    $latestStatus->status
+*/
