@@ -1,12 +1,12 @@
 <template>
   <div class="form-field-element-input-select">
     <FormFieldElementInput
-      :field="field"
+      :field="{ ...field, value: inputValue }"
       :style="{ flexGrow: '1' }"
       @change="changeInput"
     />
     <FormFieldElementSelect
-      :field="field"
+      :field="{ ...field, value: selectValue }"
       :style="{ width: '7rem' }"
       :is-editing="isEditing"
       :initialized="true"
@@ -43,18 +43,33 @@ export default {
     selectValue: undefined
   }),
 
+  watch: {
+    isEditing: function () {
+      this.syncValue()
+    }
+  },
+
   methods: {
     changeInput (e) {
       this.inputValue = e
       this.emitChange()
     },
+
     changeSelect (e) {
       this.selectValue = e
       this.emitChange()
     },
+
     emitChange () {
       if (!this.inputValue || !this.selectValue) return
-      this.$emit('change', `${this.inputValue} ${this.selectValue}`)
+      this.$emit('change', `${this.inputValue} - ${this.selectValue}`)
+    },
+
+    syncValue () {
+      if (!this.field.value) return
+      const values = this.field.value.split(' - ')
+      this.inputValue = values[0]
+      this.selectValue = values[1]
     }
   }
 }
