@@ -37,7 +37,7 @@ const methods = {
   },
 
   updateFormFieldChildren ({ field, children }) {
-    if (typeof children !== 'object') return
+    if (typeof children !== 'object' || !field.el.children) return
 
     const objToEdit = (key, opName) => field.el.children
       ? field.el.children[key]

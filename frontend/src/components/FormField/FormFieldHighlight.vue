@@ -5,9 +5,16 @@
     - fix bug radio not updating
     - fix bug hazardous in inventory not highlighting
     - fix bug highlighting fields on new added inventory item
-    - add scrolling *
+    - fix bug date not updating
+    - fix bug time not updating (or wrong value being initialized)
+    - fix bug radio (again) *
+    - fix select not updating
+    - fix input-select (when sync select value is also set in input)
+    - add scrolling
     - update highlight for input and textarea styles
+    ------------------------
     - highlight modal-select
+    - update inventory fields --> description
 */
 
 <template>

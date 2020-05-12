@@ -59,6 +59,11 @@ export default {
     },
 
     syncValue () {
+      if (typeof this.field.value === 'object') {
+        this.time = this.field.value.time
+        return
+      }
+
       this.time = this.field.value
     }
   }

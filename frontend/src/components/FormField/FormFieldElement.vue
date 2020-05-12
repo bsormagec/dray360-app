@@ -34,6 +34,7 @@
     <FormFieldElementDate
       v-else-if="isDate"
       :field="field"
+      :is-editing="isEditing"
       @change="e => $emit('change', e)"
     />
 
