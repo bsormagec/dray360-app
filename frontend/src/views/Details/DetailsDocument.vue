@@ -17,17 +17,17 @@
           hover: highlight.hover
         }"
         @click="startEdit({
-          fieldName: highlight.field,
+          field: { name: highlight.field },
           pageIndex: pIndex,
           highlightIndex: hIndex
         })"
         @mouseover="startHover({
-          fieldName: highlight.field,
+          field: { name: highlight.field },
           pageIndex: pIndex,
           highlightIndex: hIndex
         })"
         @mouseleave="stopHover({
-          fieldName: highlight.field,
+          field: { name: highlight.field },
           pageIndex: pIndex,
           highlightIndex: hIndex
         })"

@@ -15,17 +15,17 @@ const methods = {
     state.form = newForm
   },
 
-  setFormFieldProp ({ prop, value, location, validation }) {
-    if (!location) return
-    const parts = location.split('/')
+  setFormFieldProp ({ prop, value, formLocation, validation }) {
+    if (!formLocation) return
+    const parts = formLocation.split('/')
     let valueToSet = value
     let locatedObj
 
-    if (location.includes('rootFields')) {
+    if (formLocation.includes('rootFields')) {
       locatedObj = state.form.sections[parts[0]][parts[1]][parts[2]]
-    } else if (location.includes('subSections')) {
+    } else if (formLocation.includes('subSections')) {
       locatedObj = state.form.sections[parts[0]][parts[1]][parts[2]][parts[3]][parts[4]]
-    } else if (location.includes('actionSection')) {
+    } else if (formLocation.includes('actionSection')) {
       valueToSet = getInventoryCount(state.form)
       locatedObj = state.form.sections[parts[0]][parts[1]]
     }
@@ -38,7 +38,10 @@ const methods = {
 
   updateFormFieldChildren ({ field, children }) {
     if (typeof children !== 'object') return
-    const objToEdit = (key, opName) => field.el.children ? field.el.children[key] : field.el.options[opName].el.children[key]
+
+    const objToEdit = (key, opName) => field.el.children
+      ? field.el.children[key]
+      : field.el.options[opName].el.children[key]
 
     let optionName
     if (children.optionName) {

@@ -3,17 +3,18 @@
     - highlight complex
     - fix bug switch not updating
     - fix bug radio not updating
-    - highlight modal-select *
-    - fix bug hazardous in inventory not highlighting
-    - fix bug highlighting fields on new added inventory item
+    - fix bug hazardous in inventory not highlighting *
+    - fix bug highlighting fields on new added inventory item *
+    - update highlight for input and textarea styles
+    - highlight modal-select
 */
 
 <template>
   <div
     :class="`form-field-highlight ${field.highlight || ''}`"
-    @mouseover="callbacks.startHover({ fieldName: field.name })"
-    @mouseleave="callbacks.stopHover({ fieldName: field.name })"
-    @click="callbacks.startEdit({ fieldName: field.name })"
+    @mouseover="callbacks.startHover({ field })"
+    @mouseleave="callbacks.stopHover({ field })"
+    @click="callbacks.startEdit({ field })"
   >
     <FormFieldHighlightView
       v-show="!editMode"

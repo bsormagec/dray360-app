@@ -23,64 +23,64 @@ const methods = {
     Vue.set(locatedObj, prop, value)
   },
 
-  startEdit ({ fieldName, pageIndex, highlightIndex }) {
-    if (!fieldName) return
+  startEdit ({ field, pageIndex, highlightIndex }) {
+    if (!field.name) return
 
-    methods.stopHover({ fieldName, pageIndex, highlightIndex })
+    methods.stopHover({ field, pageIndex, highlightIndex })
 
     methods.setDocumentFieldProp({
       prop: modes.edit,
       value: true,
       location: triggerFromDocument({ pageIndex, highlightIndex })
         ? `${pageIndex}/highlights/${highlightIndex}`
-        : getLocationOnDoc(fieldName)
+        : getLocationOnDoc(field.name)
     })
 
     formModule.methods.setFormFieldProp({
       prop: 'highlight',
       value: modes.edit,
-      location: getLocationOnForm(fieldName)
+      formLocation: field.formLocation || getLocationOnForm(field.name)
     })
 
     state.lastMode = modes.edit
   },
 
-  stopEdit ({ fieldName }) {
-    if (!fieldName) return
+  stopEdit ({ field }) {
+    if (!field.name) return
 
     methods.setDocumentFieldProp({
       prop: modes.edit,
       value: false,
-      location: getLocationOnDoc(fieldName)
+      location: getLocationOnDoc(field.name)
     })
 
     formModule.methods.setFormFieldProp({
       prop: 'highlight',
       value: undefined,
-      location: getLocationOnForm(fieldName)
+      formLocation: field.formLocation || getLocationOnForm(field.name)
     })
 
     state.lastMode = undefined
   },
 
-  startHover ({ fieldName, pageIndex, highlightIndex }) {
-    if (!fieldName) return
-    if (state.hoverTimeouts[fieldName]) clearTimeout(state.hoverTimeouts[fieldName])
+  startHover ({ field, pageIndex, highlightIndex }) {
+    if (!field.name) return
+    if (state.hoverTimeouts[field.name]) clearTimeout(state.hoverTimeouts[field.name])
 
-    state.hoverTimeouts[fieldName] = setTimeout(() => {
+    state.hoverTimeouts[field.name] = setTimeout(() => {
       methods.setDocumentFieldProp({
         prop: modes.hover,
         value: true,
         location: triggerFromDocument({ pageIndex, highlightIndex })
           ? `${pageIndex}/highlights/${highlightIndex}`
-          : getLocationOnDoc(fieldName),
+          : getLocationOnDoc(field.name),
         validation: v => Boolean(v[modes.edit]) === false
       })
 
       formModule.methods.setFormFieldProp({
         prop: 'highlight',
         value: modes.hover,
-        location: getLocationOnForm(fieldName),
+        formLocation: field.formLocation || getLocationOnForm(field.name),
         validation: v => v.highlight !== modes.edit
       })
 
@@ -88,23 +88,23 @@ const methods = {
     }, 200)
   },
 
-  stopHover ({ fieldName, pageIndex, highlightIndex }) {
-    if (!fieldName) return
-    if (state.hoverTimeouts[fieldName]) clearTimeout(state.hoverTimeouts[fieldName])
+  stopHover ({ field, pageIndex, highlightIndex }) {
+    if (!field.name) return
+    if (state.hoverTimeouts[field.name]) clearTimeout(state.hoverTimeouts[field.name])
 
     methods.setDocumentFieldProp({
       prop: modes.hover,
       value: false,
       location: triggerFromDocument({ pageIndex, highlightIndex })
         ? `${pageIndex}/highlights/${highlightIndex}`
-        : getLocationOnDoc(fieldName),
+        : getLocationOnDoc(field.name),
       validation: v => Boolean(v[modes.hover]) === true
     })
 
     formModule.methods.setFormFieldProp({
       prop: 'highlight',
       value: undefined,
-      location: getLocationOnForm(fieldName),
+      formLocation: field.formLocation || getLocationOnForm(field.name),
       validation: v => v.highlight === modes.hover
     })
 

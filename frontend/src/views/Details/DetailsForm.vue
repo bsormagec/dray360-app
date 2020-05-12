@@ -1,3 +1,7 @@
+/*
+  formLocation should always be inside field
+*/
+
 <template>
   <div class="form">
     <div
@@ -22,16 +26,25 @@
         <FormField
           v-for="(fieldVal, fieldKey) in sectionVal.rootFields"
           :key="fieldKey"
-          :field="{...fieldVal, name: fieldKey}"
           :readonly="readonly"
-          :callbacks="fieldCallbacks"
           :is-editing="isEditing"
+          :callbacks="fieldCallbacks"
+          :field="{
+            ...fieldVal,
+            name: fieldKey,
+            formLocation: `${sectionKey}/rootFields/${fieldKey}`
+          }"
           @change="(value) => setFormFieldProp({
             prop: 'value',
             value,
-            location: `${sectionKey}/rootFields/${fieldKey}`
+            formLocation: `${sectionKey}/rootFields/${fieldKey}`
           })"
-          @close="stopEdit({ fieldName: fieldKey })"
+          @close="stopEdit({
+            field: {
+              name: fieldKey,
+              formLocation: `${sectionKey}/rootFields/${fieldKey}`
+            },
+          })"
         />
       </div>
 
@@ -60,16 +73,25 @@
         <FormField
           v-for="(subFieldVal, subFieldKey) in subVal.fields"
           :key="subFieldKey"
-          :field="{ ...subFieldVal, name: subFieldKey }"
           :readonly="readonly"
-          :callbacks="fieldCallbacks"
           :is-editing="isEditing"
+          :callbacks="fieldCallbacks"
+          :field="{
+            ...subFieldVal,
+            name: subFieldKey,
+            formLocation: `${sectionKey}/subSections/${subKey}/fields/${subFieldKey}`
+          }"
           @change="(value) => setFormFieldProp({
             prop: 'value',
             value,
-            location: `${sectionKey}/subSections/${subKey}/fields/${subFieldKey}`
+            formLocation: `${sectionKey}/subSections/${subKey}/fields/${subFieldKey}`
           })"
-          @close="stopEdit({ fieldName: subFieldKey })"
+          @close="stopEdit({
+            field: {
+              name: subFieldKey,
+              formLocation: `${sectionKey}/subSections/${subKey}/fields/${subFieldKey}`
+            },
+          })"
         />
       </div>
 
