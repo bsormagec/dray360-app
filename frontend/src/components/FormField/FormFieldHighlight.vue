@@ -3,8 +3,9 @@
     - highlight complex
     - fix bug switch not updating
     - fix bug radio not updating
-    - fix bug hazardous in inventory not highlighting *
-    - fix bug highlighting fields on new added inventory item *
+    - fix bug hazardous in inventory not highlighting
+    - fix bug highlighting fields on new added inventory item
+    - add scrolling *
     - update highlight for input and textarea styles
     - highlight modal-select
 */

@@ -1,7 +1,3 @@
-/*
-  formLocation should always be inside field
-*/
-
 <template>
   <div class="form">
     <div
