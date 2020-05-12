@@ -24,6 +24,10 @@ export default {
       type: Boolean,
       required: false,
       default: () => false
+    },
+    isEditing: {
+      type: Boolean,
+      required: true
     }
   },
 
@@ -31,10 +35,23 @@ export default {
     selected: undefined
   }),
 
+  watch: {
+    isEditing: function () {
+      this.syncValue()
+    }
+  },
+
   beforeMount () {
     if (this.initialized) {
       this.selected = this.field.el.options[0]
       this.$emit('change', this.selected)
+    }
+  },
+
+  methods: {
+    syncValue () {
+      if (!this.field.value) return
+      this.selected = this.field.value
     }
   }
 }

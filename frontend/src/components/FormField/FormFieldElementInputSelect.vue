@@ -8,6 +8,7 @@
     <FormFieldElementSelect
       :field="field"
       :style="{ width: '7rem' }"
+      :is-editing="isEditing"
       :initialized="true"
       @change="changeSelect"
     />
@@ -29,6 +30,10 @@ export default {
   props: {
     field: {
       type: Object,
+      required: true
+    },
+    isEditing: {
+      type: Boolean,
       required: true
     }
   },

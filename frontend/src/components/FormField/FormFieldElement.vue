@@ -8,6 +8,7 @@
 
     <FormFieldElementInputSelect
       v-else-if="isInputSelect"
+      :is-editing="isEditing"
       :field="field"
       @change="e => $emit('change', e)"
     />
@@ -21,6 +22,7 @@
     <FormFieldElementSelect
       v-else-if="isSelect"
       :field="field"
+      :is-editing="isEditing"
       @change="e => $emit('change', e)"
     />
 
