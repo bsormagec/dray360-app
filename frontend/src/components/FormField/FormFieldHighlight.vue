@@ -7,8 +7,8 @@
     - fix bug highlighting fields on new added inventory item
     - fix bug date not updating
     - fix bug time not updating (or wrong value being initialized)
-    - fix bug radio (again) *
-    - fix select not updating
+    - fix bug radio (again)
+    - fix select not updating *
     - fix input-select (when sync select value is also set in input)
     - add scrolling
     - update highlight for input and textarea styles
