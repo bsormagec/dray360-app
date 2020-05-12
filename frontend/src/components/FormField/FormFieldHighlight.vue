@@ -1,21 +1,3 @@
-/*
-  TODO:
-    - highlight complex
-    - fix bug switch not updating
-    - fix bug radio not updating
-    - fix bug hazardous in inventory not highlighting
-    - fix bug highlighting fields on new added inventory item
-    - fix bug date not updating
-    - fix bug time not updating (or wrong value being initialized)
-    - fix bug radio (again)
-    - fix select not updating
-    - fix input-select (when sync select value is also set in input)
-    - add scrolling *
-    - highlight modal-select
-    - update highlight for input and textarea styles
-    - update inventory fields --> description
-*/
-
 <template>
   <div
     :class="`form-field-highlight ${field.highlight || ''}`"
