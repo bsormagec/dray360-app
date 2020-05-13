@@ -12,6 +12,16 @@ const state = Vue.observable({
 const methods = {
   setDocument (newDocument) {
     state.document = newDocument
+
+    state.document.forEach(({ highlights }) => {
+      highlights.forEach(({ name, value }) => {
+        formModule.methods.setFormFieldProp({
+          prop: 'value',
+          value,
+          formLocation: getLocationOnForm(name)
+        })
+      })
+    })
   },
 
   setDocumentFieldProp ({ prop, value, location, validation }) {
@@ -122,11 +132,12 @@ function triggerFromDocument ({ pageIndex, highlightIndex }) {
 }
 
 function getLocationOnDoc (fieldName) {
-  return getFieldLocation({
+  const loc = getFieldLocation({
     pool: state.document,
     poolType: pools.document,
     fieldName
   })
+  return loc
 }
 
 function getLocationOnForm (fieldName) {

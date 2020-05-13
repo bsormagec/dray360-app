@@ -5,33 +5,39 @@
       :key="pIndex"
       class="document__page"
     >
-      <img :src="page.image">
+      <img
+        :class="{ loaded: dimensions.width && dimensions.height }"
+        :src="page.image"
+        @load="getDimensions"
+      >
 
-      <div
-        v-for="(highlight, hIndex) in page.highlights"
-        :key="hIndex"
-        :style="getPos(highlight)"
-        :class="{
-          page__highlight: true,
-          edit: highlight.edit,
-          hover: highlight.hover
-        }"
-        @click="startEdit({
-          field: { name: highlight.field },
-          pageIndex: pIndex,
-          highlightIndex: hIndex
-        })"
-        @mouseover="startHover({
-          field: { name: highlight.field },
-          pageIndex: pIndex,
-          highlightIndex: hIndex
-        })"
-        @mouseleave="stopHover({
-          field: { name: highlight.field },
-          pageIndex: pIndex,
-          highlightIndex: hIndex
-        })"
-      />
+      <div v-if="dimensions.width && dimensions.height">
+        <div
+          v-for="(highlight, hIndex) in page.highlights"
+          :key="hIndex"
+          :style="getPos(highlight)"
+          :class="{
+            page__highlight: true,
+            edit: highlight.edit,
+            hover: highlight.hover
+          }"
+          @click="startEdit({
+            field: { name: highlight.name },
+            pageIndex: pIndex,
+            highlightIndex: hIndex
+          })"
+          @mouseover="startHover({
+            field: { name: highlight.name },
+            pageIndex: pIndex,
+            highlightIndex: hIndex
+          })"
+          @mouseleave="stopHover({
+            field: { name: highlight.name },
+            pageIndex: pIndex,
+            highlightIndex: hIndex
+          })"
+        />
+      </div>
     </div>
   </div>
 </template>
@@ -44,8 +50,8 @@ export default {
 
   data: () => ({
     dimensions: {
-      width: 2550,
-      height: 3300
+      width: undefined,
+      height: undefined
     }
   }),
 
@@ -59,6 +65,11 @@ export default {
     startEdit: documentModule.methods.startEdit,
     startHover: documentModule.methods.startHover,
     stopHover: documentModule.methods.stopHover,
+
+    getDimensions (evt) {
+      this.dimensions.width = evt.path[0].naturalWidth
+      this.dimensions.height = evt.path[0].naturalHeight
+    },
 
     getPos ({ bottom, left, right, top }) {
       return {
@@ -86,8 +97,14 @@ export default {
   width: 100%;
 
   img {
+    opacity: 0;
     width: 100%;
     object-fit: contain;
+    transition: opacity 200ms ease-in-out;
+
+    &.loaded {
+      opacity: 1;
+    }
   }
 
   &:not(:last-child) {

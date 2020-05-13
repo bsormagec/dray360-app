@@ -38,7 +38,7 @@ function searchInDocument ({ pool, fieldName }) {
   try {
     pool.forEach((page, pageIndex) => {
       page.highlights.forEach((highlight, hIndex) => {
-        if (highlight.field === fieldName) {
+        if (highlight.name === fieldName) {
           location = `${pageIndex}/highlights/${hIndex}`
           throw new Error()
         }

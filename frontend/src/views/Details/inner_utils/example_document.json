@@ -1,163 +1,225 @@
-[
-  {
-    "image": "https://firebasestorage.googleapis.com/v0/b/general-f0201.appspot.com/o/2121593_1.jpg?alt=media&token=bf3e2b33-7587-49ae-9f12-ffe11f1d26c6",
-    "highlights": [
-      {
-        "bottom": 359,
-        "left": 1955,
-        "right": 2243,
-        "top": 321,
-        "field": "reference number",
-        "value": "303072522"
-      },
-      {
-        "bottom": 487,
-        "left": 1530,
-        "right": 1804,
-        "top": 450
-      },
-      {
-        "bottom": 597,
-        "left": 1531,
-        "right": 1870,
-        "top": 562
-      },
-      {
-        "bottom": 646,
-        "left": 1531,
-        "right": 1678,
-        "top": 614
-      },
-      {
-        "bottom": 644,
-        "left": 1532,
-        "right": 1677,
-        "top": 616
-      },
-      {
-        "bottom": 703,
-        "left": 477,
-        "right": 643,
-        "top": 665
-      },
-      {
-        "bottom": 706,
-        "left": 1532,
-        "right": 1796,
-        "top": 667
-      },
-      {
-        "bottom": 697,
-        "left": 1533,
-        "right": 1607,
-        "top": 669
-      },
-      {
-        "bottom": 698,
-        "left": 1685,
-        "right": 1795,
-        "top": 670
-      },
-      {
-        "bottom": 760,
-        "left": 1532,
-        "right": 1818,
-        "top": 721
-      },
-      {
-        "bottom": 803,
-        "left": 1715,
-        "right": 1907,
-        "top": 775
-      },
-      {
-        "bottom": 1016,
-        "left": 922,
-        "right": 934,
-        "top": 991
-      },
-      {
-        "bottom": 1534,
-        "left": 522,
-        "right": 554,
-        "top": 1515
-      },
-      {
-        "bottom": 1770,
-        "left": 434,
-        "right": 640,
-        "top": 1738
-      },
-      {
-        "bottom": 1819,
-        "left": 582,
-        "right": 968,
-        "top": 1787
-      },
-      {
-        "bottom": 1819,
-        "left": 582,
-        "right": 645,
-        "top": 1789
-      },
-      {
-        "bottom": 1868,
-        "left": 582,
-        "right": 745,
-        "top": 1838
-      },
-      {
-        "bottom": 1868,
-        "left": 828,
-        "right": 933,
-        "top": 1838
-      },
-      {
-        "bottom": 1868,
-        "left": 771,
-        "right": 805,
-        "top": 1839
-      },
-      {
-        "bottom": 1973,
-        "left": 369,
-        "right": 558,
-        "top": 1935
-      },
-      {
-        "bottom": 1974,
-        "left": 582,
-        "right": 912,
-        "top": 1937
-      },
-      {
-        "bottom": 1969,
-        "left": 1674,
-        "right": 1932,
-        "top": 1939
-      },
-      {
-        "bottom": 2015,
-        "left": 581,
-        "right": 816,
-        "top": 1976
-      },
-      {
-        "bottom": 2008,
-        "left": 844,
-        "right": 890,
-        "top": 1978
-      },
-      {
-        "bottom": 2211,
-        "left": 582,
-        "right": 763,
-        "top": 2124
-      }
-    ]
+{
+  "document_definition_name": {
+    "name": "document_definition_name",
+    "value": "Work Order Try 21"
   },
-  {
-    "image": "https://firebasestorage.googleapis.com/v0/b/general-f0201.appspot.com/o/2121593_2.jpg?alt=media&token=aa21dcb3-e8cb-48d7-a513-915e68f909f8",
-    "highlights": []
+  "version": {
+    "name": "version",
+    "value": "1.0"
+  },
+  "page_index_filenames": {
+    "name": "page_index_filenames",
+    "value": {
+      "1": {
+        "name": "page_index_1",
+        "value": "https://firebasestorage.googleapis.com/v0/b/general-f0201.appspot.com/o/example_document.jpg?alt=media&token=73850671-f931-44b6-985c-b4349075567d"
+      }
+    }
+  },
+  "fields": {
+    "origin_ramp": {
+      "name": "origin_ramp",
+      "value": "BNSF LOGISTICS PARK H572\n26664 S BASELINE RD\nFIRMS CODE : H572\nELWOOD IL 60421\nUNITED STATES\nContact: +1 815-424-2100",
+      "recognized_value": "BNSF LOGISTICS PARK H572\u202826664 S BASELINE RD\u2028FIRMS CODE : H572\u2028ELWOOD IL 60421\u2028UNITED STATES\u2028Contact: +1 815-424-2100",
+      "suspicious_symbols": "000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000",
+      "ocr_region": {
+        "page_index": 1,
+        "bottom": 1455,
+        "left": 277,
+        "right": 1230,
+        "top": 1218
+      }
+    },
+    "dest_ramp": {
+      "name": "dest_ramp",
+      "value": "DELIVER TO EMPTY\nBNSF LOGISTICS PARK H572\n26664 S BASELINE RD\nFIRMS CODE : H572\nELWOOD IL 60421\nUNITED STATES\nContact: +1 815-424-2100",
+      "recognized_value": "DELIVER TO EMPTY\u2028BNSF LOGISTICS PARK H572\u202826664 S BASELINE RD\u2028FIRMS CODE : H572\u2028ELWOOD IL 60421\u2028UNITED STATES\u2028Contact: +1 815-424-2100",
+      "suspicious_symbols": "00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000",
+      "ocr_region": {
+        "page_index": 1,
+        "bottom": 1924,
+        "left": 1277,
+        "right": 2231,
+        "top": 1652
+      }
+    },
+    "bill_to_address": {
+      "name": "bill_to_address",
+      "value": "Jet-Speed Logistics (USA) LLC\n900 N Arlington Heights Rd, Suite 150\nItasca, Illinois 60143, USA\nTel: (630)595-5601\nFax: (630)595-6361",
+      "recognized_value": "Jet-Speed Logistics (USA) LLC\u2028900 N Arlington Heights Rd, Suite 150\u2028Itasca, Illinois 60143, USA\u2028Tel: (630)595-5601\u2028Fax: (630)595-6361",
+      "suspicious_symbols": "0000000000000000000000000000000000000000000000000000000110000000000000000000000000000000000011100000000000000000000000000000000000000",
+      "ocr_region": {
+        "page_index": 1,
+        "bottom": 606,
+        "left": 337,
+        "right": 857,
+        "top": 362
+      }
+    },
+    "order_type": {
+      "name": "order_type",
+      "value": "",
+      "recognized_value": null,
+      "suspicious_symbols": null
+    },
+    "booking_no": {
+      "name": "booking_no",
+      "value": "",
+      "recognized_value": null,
+      "suspicious_symbols": null
+    },
+    "bol": {
+      "name": "bol",
+      "value": "",
+      "recognized_value": null,
+      "suspicious_symbols": null
+    },
+    "mbol": {
+      "name": "mbol",
+      "value": "",
+      "recognized_value": null,
+      "suspicious_symbols": null
+    },
+    "hbol": {
+      "name": "hbol",
+      "value": "",
+      "recognized_value": null,
+      "suspicious_symbols": null
+    },
+    "pickup_no": {
+      "name": "pickup_no",
+      "value": "",
+      "recognized_value": null,
+      "suspicious_symbols": null
+    },
+    "unit_number": {
+      "name": "unit_number",
+      "value": "CAIU9436698",
+      "recognized_value": null,
+      "suspicious_symbols": "00110000000",
+      "ocr_region": {
+        "page_index": 1,
+        "bottom": 755,
+        "left": 1863,
+        "right": 2053,
+        "top": 729
+      }
+    },
+    "container_length": {
+      "name": "container_length",
+      "value": "40GP",
+      "recognized_value": null,
+      "suspicious_symbols": "0000",
+      "ocr_region": {
+        "page_index": 1,
+        "bottom": 2727,
+        "left": 597,
+        "right": 674,
+        "top": 2700
+      }
+    },
+    "contents": {
+      "name": "contents",
+      "value": "FEDERALIST PIPER RACK",
+      "recognized_value": null,
+      "suspicious_symbols": "000000000000000000000",
+      "ocr_region": {
+        "page_index": 1,
+        "bottom": 2486,
+        "left": 274,
+        "right": 652,
+        "top": 2458
+      }
+    },
+    "multiline_multiorder_area_with_contents": {
+      "name": "multiline_multiorder_area_with_contents",
+      "value": "",
+      "recognized_value": null,
+      "suspicious_symbols": null
+    },
+    "event1_type": {
+      "name": "event1_type",
+      "value": "",
+      "recognized_value": null,
+      "suspicious_symbols": null
+    },
+    "event1_location": {
+      "name": "event1_location",
+      "value": "",
+      "recognized_value": null,
+      "suspicious_symbols": null
+    },
+    "event2_type": {
+      "name": "event2_type",
+      "value": "",
+      "recognized_value": null,
+      "suspicious_symbols": null
+    },
+    "event2_location": {
+      "name": "event2_location",
+      "value": "",
+      "recognized_value": null,
+      "suspicious_symbols": null
+    },
+    "event3_type": {
+      "name": "event3_type",
+      "value": "",
+      "recognized_value": null,
+      "suspicious_symbols": null
+    },
+    "event3_location": {
+      "name": "event3_location",
+      "value": "",
+      "recognized_value": null,
+      "suspicious_symbols": null
+    },
+    "event4_type": {
+      "name": "event4_type",
+      "value": "",
+      "recognized_value": null,
+      "suspicious_symbols": null
+    },
+    "event4_location": {
+      "name": "event4_location",
+      "value": "",
+      "recognized_value": null,
+      "suspicious_symbols": null
+    },
+    "event5_type": {
+      "name": "event5_type",
+      "value": "",
+      "recognized_value": null,
+      "suspicious_symbols": null
+    },
+    "event5_location": {
+      "name": "event5_location",
+      "value": "",
+      "recognized_value": null,
+      "suspicious_symbols": null
+    },
+    "event6_type": {
+      "name": "event6_type",
+      "value": "",
+      "recognized_value": null,
+      "suspicious_symbols": null
+    },
+    "event6_location": {
+      "name": "event6_location",
+      "value": "",
+      "recognized_value": null,
+      "suspicious_symbols": null
+    }
+  },
+  "variant_id": {
+    "name": "variant_id",
+    "value": "5",
+    "recognized_value": null,
+    "suspicious_symbols": "0"
+  },
+  "variant_name": {
+    "name": "variant_name",
+    "value": "Jetspeed",
+    "recognized_value": null,
+    "suspicious_symbols": "00000000"
   }
-]
+}

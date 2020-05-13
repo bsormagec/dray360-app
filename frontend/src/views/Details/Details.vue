@@ -30,7 +30,7 @@ import DetailsFormViewing from '@/views/Details/DetailsFormViewing'
 import DetailsDocument from '@/views/Details/DetailsDocument'
 import { formModule, documentModule } from '@/views/Details/inner_store/index'
 import { exampleForm as form } from '@/views/Details/inner_utils/example_form'
-import document from '@/views/Details/inner_utils/example_document'
+import { parsedDocument } from '@/views/Details/inner_utils/parse_document'
 
 export default {
   name: 'Details',
@@ -55,7 +55,7 @@ export default {
 
   beforeMount () {
     formModule.methods.setForm(form)
-    documentModule.methods.setDocument(document)
+    documentModule.methods.setDocument(parsedDocument)
   },
 
   methods: {
