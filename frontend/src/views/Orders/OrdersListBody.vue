@@ -6,7 +6,16 @@
       :items-per-page="list().length"
       :hide-default-footer="true"
       mobile-breakpoint="319"
-    />
+    >
+      <template v-slot:item.action="{ item }">
+        <v-btn
+          color="primary"
+          @click="item.action"
+        >
+          View
+        </v-btn>
+      </template>
+    </v-data-table>
   </div>
 </template>
 

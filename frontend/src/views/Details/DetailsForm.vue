@@ -16,7 +16,7 @@
       </h1>
 
       <div
-        v-if="sectionVal.rootFields"
+        v-show="sectionVal.rootFields"
         class="section__rootfields"
       >
         <FormField
@@ -56,7 +56,7 @@
           <h2>{{ sectionKey === 'inventory' ? `Item ${subIndex + 1}` : subKey }}</h2>
 
           <v-btn
-            v-if="isEditing && hasInventoryAction({ sectionKey, sectionVal })"
+            v-show="isEditing && hasInventoryAction({ sectionKey, sectionVal })"
             icon
             @click="deleteFormInventoryItem({ key: subKey })"
           >
@@ -91,7 +91,7 @@
         />
       </div>
 
-      <div v-if="hasInventoryAction({ sectionKey, sectionVal })">
+      <div v-show="hasInventoryAction({ sectionKey, sectionVal })">
         <DetailsFormAddInventoryItem />
       </div>
     </div>
