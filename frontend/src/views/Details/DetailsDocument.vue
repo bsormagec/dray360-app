@@ -70,8 +70,10 @@ export default {
     stopHover: documentModule.methods.stopHover,
 
     getDimensions (evt) {
-      this.dimensions.width = evt.path[0].naturalWidth
-      this.dimensions.height = evt.path[0].naturalHeight
+      const dimensions = (evt.path && evt.path[0]) || evt.target
+
+      this.dimensions.width = dimensions.naturalWidth
+      this.dimensions.height = dimensions.naturalHeight
     },
 
     getPos ({ bottom, left, right, top }) {
