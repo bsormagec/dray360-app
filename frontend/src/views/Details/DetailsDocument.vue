@@ -14,6 +14,7 @@
       <div v-if="dimensions.width && dimensions.height">
         <div
           v-for="(highlight, hIndex) in page.highlights"
+          :id="`${cleanStrForId(highlight.name)}-document`"
           :key="hIndex"
           :style="getPos(highlight)"
           :class="{
@@ -44,6 +45,7 @@
 
 <script>
 import { documentModule } from '@/views/Details/inner_store/index'
+import { cleanStrForId } from '@/views/Details/inner_utils/clean_str_for_id'
 
 export default {
   name: 'DetailsDocument',
@@ -62,6 +64,7 @@ export default {
   },
 
   methods: {
+    cleanStrForId,
     startEdit: documentModule.methods.startEdit,
     startHover: documentModule.methods.startHover,
     stopHover: documentModule.methods.stopHover,
@@ -90,6 +93,7 @@ export default {
   overflow-y: auto;
   padding: 2.6rem;
   background: map-get($colors, grey-8);
+  scroll-behavior: smooth;
 }
 
 .document__page {

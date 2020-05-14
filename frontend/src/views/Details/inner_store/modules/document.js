@@ -1,6 +1,7 @@
 import Vue from 'vue'
 import { modes, pools } from '@/views/Details/inner_types'
 import { getFieldLocation } from '@/views/Details/inner_utils/get_field_location'
+import { cleanStrForId } from '@/views/Details/inner_utils/clean_str_for_id'
 import formModule from '@/views/Details/inner_store/modules/form'
 
 const state = Vue.observable({
@@ -33,6 +34,10 @@ const methods = {
     Vue.set(locatedObj, prop, value)
   },
 
+  scrollTo ({ field, container }) {
+    document.location.hash = `#${cleanStrForId(field.name)}-${container}`
+  },
+
   startEdit ({ field, pageIndex, highlightIndex }) {
     if (!field.name) return
 
@@ -44,6 +49,13 @@ const methods = {
       location: triggerFromDocument({ pageIndex, highlightIndex })
         ? `${pageIndex}/highlights/${highlightIndex}`
         : getLocationOnDoc(field.name)
+    })
+
+    methods.scrollTo({
+      field,
+      container: triggerFromDocument({ pageIndex, highlightIndex })
+        ? formModule.state.isEditing ? 'editing' : 'viewing'
+        : 'document'
     })
 
     formModule.methods.setFormFieldProp({

@@ -1,5 +1,8 @@
 <template>
-  <div class="form-field">
+  <div
+    :id="`${cleanStrForId(field.name)}-${readonly ? 'viewing' : 'editing'}`"
+    class="form-field"
+  >
     <FormFieldPresentation
       v-show="readonly"
       :field="field"
@@ -21,6 +24,7 @@
 <script>
 import FormFieldPresentation from '@/components/FormField/FormFieldPresentation'
 import FormFieldElement from '@/components/FormField/FormFieldElement'
+import { cleanStrForId } from '@/views/Details/inner_utils/clean_str_for_id'
 
 export default {
   name: 'FormField',
@@ -48,6 +52,10 @@ export default {
       type: Object,
       required: true
     }
+  },
+
+  methods: {
+    cleanStrForId
   }
 }
 </script>

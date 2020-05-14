@@ -161,6 +161,7 @@ export default {
   overflow-y: auto;
   padding: 3.6rem 6.5rem;
   padding-top: 8.4rem;
+  scroll-behavior: smooth;
 }
 
 .section__title {
