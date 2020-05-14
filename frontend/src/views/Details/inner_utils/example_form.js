@@ -375,25 +375,29 @@ function hazardousFields () {
 
 export function inventoryItemFields () {
   return {
-    quantity: buildField({
-      type: 'input',
-      placeholder: 'quantity'
-    }),
-    'unit of measure': buildField({
-      type: 'select',
-      options: ['a', 'b', 'c']
-    }),
+    // quantity: buildField({
+    //   type: 'input',
+    //   placeholder: 'quantity'
+    // }),
+    // 'unit of measure': buildField({
+    //   type: 'select',
+    //   options: ['a', 'b', 'c']
+    // }),
+    // description: buildField({
+    //   type: 'input',
+    //   placeholder: 'description'
+    // }),
+    // 'weight unit': buildField({
+    //   type: 'input-select',
+    //   options: ['a', 'b', 'c']
+    // }),
+    // 'total weight': buildField({
+    //   type: 'input',
+    //   placeholder: 'total weight'
+    // }),
     description: buildField({
-      type: 'input',
+      type: 'text-area',
       placeholder: 'description'
-    }),
-    'weight unit': buildField({
-      type: 'input-select',
-      options: ['a', 'b', 'c']
-    }),
-    'total weight': buildField({
-      type: 'input',
-      placeholder: 'total weight'
     }),
     hazardous: buildField({
       type: 'switch',
