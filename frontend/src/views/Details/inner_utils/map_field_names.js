@@ -27,7 +27,7 @@ export default (abbyName) => {
       formFieldName = 'size'
       break
     default:
-      formFieldName = abbyName
+      formFieldName = ''
       break
   }
 
