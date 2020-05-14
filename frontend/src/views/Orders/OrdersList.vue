@@ -41,6 +41,10 @@ export default {
         sortable: false,
         value: 'id'
       },
+      {
+        text: 'Request Status',
+        value: 'latest_ocr_request_status.status'
+      },
       { text: 'Date', value: 'created_at' },
       { text: 'Shipment Direction', value: 'shipment_direction' },
       { text: 'Shipment Designation', value: 'shipment_designation' },

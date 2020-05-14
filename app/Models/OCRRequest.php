@@ -15,13 +15,13 @@ use Illuminate\Database\Eloquent\Model;
  *
  * @property \Illuminate\Database\Eloquent\Collection orders
  * @property \Illuminate\Database\Eloquent\Collection statusList
+ * @property \App\Models\OCRRequestStatus latestOCRRequestStatus
  */
 class OCRRequest extends Model
 {
     public $table = 't_job_latest_state';
 
     protected $casts = [
-        'status_metadata' => 'array'
     ];
 
     /**
@@ -38,6 +38,24 @@ class OCRRequest extends Model
     public function statusList()
     {
         return $this->hasMany(\App\Models\OCRRequestStatus::class, 'request_id', 'request_id');
+    }
+
+
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\HasOne
+     **/
+    public function latestOCRRequestStatus()
+    {
+        $latestStatus = $this->
+            statusList()->
+            get()->
+            filter(function ($eachStatus) {
+                if ($eachStatus->is_latest_status) {
+                    return $eachStatus;
+                }
+            })->
+            first();  # there is only ever one "latest", enforced by the database relationships
+        return $latestStatus;
     }
 
 }
