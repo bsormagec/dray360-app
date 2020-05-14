@@ -47,6 +47,7 @@ export default {
   bottom: 0;
   right: 0;
   display: flex;
+  background: map-get($colors , white);
   border-top: 0.1rem solid map-get($colors, blue);
   border-left: 0.1rem solid map-get($colors, blue);
   border-top-left-radius: 0.2rem;

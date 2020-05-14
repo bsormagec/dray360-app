@@ -9,8 +9,8 @@ export const exampleForm = {
           placeholder: 'international'
         }),
         'shipment direction': buildField({
-          type: 'select',
-          options: ['a', 'b', 'c']
+          type: 'text-area',
+          placeholder: 'shipment address'
         }),
         'shipment handling': buildField({
           type: 'select',
@@ -69,11 +69,11 @@ export const exampleForm = {
               placeholder: 'rate quote number'
             }),
             'port ramp of origin': buildField({
-              type: 'input',
+              type: 'text-area',
               placeholder: 'port/ramp of origin'
             }),
             'port ramp of destination': buildField({
-              type: 'input',
+              type: 'text-area',
               placeholder: 'port/ramp of destination'
             }),
             vessel: buildField({
