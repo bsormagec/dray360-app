@@ -47,7 +47,7 @@ class Order extends Model
 {
     use SoftDeletes;
 
-    protected $appends = ['ocr_request', 'latest_ocr_request_status'];
+    protected $appends = ['ocr_request', 'latest_ocr_request_status', 'order_address_events', 'order_line_items'];
 
     public $table = 't_orders';
 
@@ -142,6 +142,22 @@ class Order extends Model
     public function orderLineItems()
     {
         return $this->hasMany(\App\Models\OrderLineItem::class, 't_order_id');
+    }
+
+     /**
+     *
+     * @return \App\Models\OrderLineItem
+     */
+    function getOrderLineItemsAttribute() {
+        return $this->orderLineItems()->get();
+    }
+
+    /**
+     *
+     * @return \App\Models\OrderAddressEvent
+     */
+    function getOrderAddressEventsAttribute() {
+        return $this->orderAddressEvents()->get();
     }
 
     /**
