@@ -5,7 +5,7 @@
       :placeholder="field.el.placeholder"
       :label="field.name"
       :value="field.value"
-      @change="e => $emit('change', e)"
+      @change="e => change(e)"
     />
   </div>
 </template>
@@ -18,6 +18,18 @@ export default {
     field: {
       type: Object,
       required: true
+    }
+  },
+
+  mounted () {
+    if (this.field.value) {
+      this.change(this.field.value)
+    }
+  },
+
+  methods: {
+    change (e) {
+      this.$emit('change', e)
     }
   }
 }
