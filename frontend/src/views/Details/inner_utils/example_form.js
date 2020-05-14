@@ -102,10 +102,14 @@ export const exampleForm = {
         },
         billing: {
           fields: {
+            // 'bill to': buildField({
+            //   type: 'modal-select',
+            //   placeholder: 'select address',
+            //   options: addresses()
+            // })
             'bill to': buildField({
-              type: 'modal-select',
-              placeholder: 'select address',
-              options: addresses()
+              type: 'text-area',
+              placeholder: 'bill to address'
             })
           }
         }
@@ -115,19 +119,27 @@ export const exampleForm = {
       subSections: {
         'hook: rail or port terminal': {
           fields: {
+            // hook: buildField({
+            //   type: 'modal-select',
+            //   placeholder: 'select address',
+            //   options: addresses()
+            // })
             hook: buildField({
-              type: 'modal-select',
-              placeholder: 'select address',
-              options: addresses()
+              type: 'text-area',
+              placeholder: 'hook address'
             })
           }
         },
         'deliver: container to': {
           fields: {
+            // deliver: buildField({
+            //   type: 'modal-select',
+            //   placeholder: 'select address',
+            //   options: addresses()
+            // }),
             deliver: buildField({
-              type: 'modal-select',
-              placeholder: 'select address',
-              options: addresses()
+              type: 'text-area',
+              placeholder: 'deliver address'
             }),
             'delivery instructions': buildField({
               type: 'radio',
@@ -150,10 +162,14 @@ export const exampleForm = {
         },
         'dismount: return empty to depot': {
           fields: {
+            // dismount: buildField({
+            //   placeholder: 'select address',
+            //   type: 'modal-select',
+            //   options: addresses()
+            // }),
             dismount: buildField({
-              placeholder: 'select address',
-              type: 'modal-select',
-              options: addresses()
+              type: 'text-area',
+              placeholder: 'dismount address'
             }),
             'pickup instructions': buildField({
               type: 'radio',
@@ -234,80 +250,80 @@ function buildField ({
   }
 }
 
-function addresses () {
-  return {
-    preselected: [
-      {
-        'company name': 'Ladson',
-        address: '3016 Loxley Lane Ladson, CA, 90210',
-        city: 'Loxley Lane',
-        state: 'CA',
-        zip: '90210',
-        'contact name': 'Seth Ling',
-        phone: '555-555',
-        ext: '555',
-        email: 'mail@mail.com'
-      },
-      {
-        'company name': 'SonLad',
-        address: '3016 Loxley Lane Ladson, CA, 90210',
-        city: 'Loxley Lane',
-        state: 'CA',
-        zip: '90210',
-        'contact name': 'Seth Ling',
-        phone: '555-555',
-        ext: '555',
-        email: 'mail@mail.com'
-      }
-    ],
-    fields: {
-      'company name': buildField({
-        type: 'input',
-        placeholder: 'company name'
-      }),
-      address: buildField({
-        type: 'text-area',
-        placeholder: 'address'
-      }),
-      city: buildField({
-        type: 'input',
-        placeholder: 'city'
-      }),
-      state: buildField({
-        type: 'input',
-        placeholder: 'state'
-      }),
-      zip: buildField({
-        type: 'input',
-        placeholder: 'zip'
-      }),
-      'contact name': buildField({
-        type: 'input',
-        placeholder: 'contact name'
-      }),
-      phone: buildField({
-        type: 'input',
-        placeholder: 'phone'
-      }),
-      ext: buildField({
-        type: 'input',
-        placeholder: 'ext'
-      }),
-      email: buildField({
-        type: 'input',
-        placeholder: 'email'
-      }),
-      notes: buildField({
-        type: 'text-area',
-        placeholder: 'notes'
-      }),
-      hours: buildField({
-        type: 'input',
-        placeholder: 'hours'
-      })
-    }
-  }
-}
+// function addresses () {
+//   return {
+//     preselected: [
+//       {
+//         'company name': 'Ladson',
+//         address: '3016 Loxley Lane Ladson, CA, 90210',
+//         city: 'Loxley Lane',
+//         state: 'CA',
+//         zip: '90210',
+//         'contact name': 'Seth Ling',
+//         phone: '555-555',
+//         ext: '555',
+//         email: 'mail@mail.com'
+//       },
+//       {
+//         'company name': 'SonLad',
+//         address: '3016 Loxley Lane Ladson, CA, 90210',
+//         city: 'Loxley Lane',
+//         state: 'CA',
+//         zip: '90210',
+//         'contact name': 'Seth Ling',
+//         phone: '555-555',
+//         ext: '555',
+//         email: 'mail@mail.com'
+//       }
+//     ],
+//     fields: {
+//       'company name': buildField({
+//         type: 'input',
+//         placeholder: 'company name'
+//       }),
+//       address: buildField({
+//         type: 'text-area',
+//         placeholder: 'address'
+//       }),
+//       city: buildField({
+//         type: 'input',
+//         placeholder: 'city'
+//       }),
+//       state: buildField({
+//         type: 'input',
+//         placeholder: 'state'
+//       }),
+//       zip: buildField({
+//         type: 'input',
+//         placeholder: 'zip'
+//       }),
+//       'contact name': buildField({
+//         type: 'input',
+//         placeholder: 'contact name'
+//       }),
+//       phone: buildField({
+//         type: 'input',
+//         placeholder: 'phone'
+//       }),
+//       ext: buildField({
+//         type: 'input',
+//         placeholder: 'ext'
+//       }),
+//       email: buildField({
+//         type: 'input',
+//         placeholder: 'email'
+//       }),
+//       notes: buildField({
+//         type: 'text-area',
+//         placeholder: 'notes'
+//       }),
+//       hours: buildField({
+//         type: 'input',
+//         placeholder: 'hours'
+//       })
+//     }
+//   }
+// }
 
 function hazardousFields () {
   return {
