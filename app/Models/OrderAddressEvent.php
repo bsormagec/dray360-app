@@ -53,7 +53,8 @@ class OrderAddressEvent extends Model
         'call_for_appointment',
         'delivery_window_from_localtime',
         'delivery_window_to_localtime',
-        'delivery_instructions'
+        'delivery_instructions',
+        'unparsed_event_type'
     ];
 
     /**
@@ -73,7 +74,8 @@ class OrderAddressEvent extends Model
         'is_dismount_event' => 'boolean',
         'is_drop_event' => 'boolean',
         'call_for_appointment' => 'boolean',
-        'delivery_instructions' => 'string'
+        'delivery_instructions' => 'string',
+        'unparsed_event_type' => 'string'
     ];
 
     /**

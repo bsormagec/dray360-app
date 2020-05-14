@@ -26,6 +26,8 @@ use Illuminate\Database\Eloquent\SoftDeletes;
  * @property string postal_code
  * @property string country
  * @property string hours_of_operation
+ * @property string unparsed_text_block
+ * @property string location_name
  */
 class Address extends Model
 {
@@ -51,7 +53,9 @@ class Address extends Model
         'state',
         'postal_code',
         'country',
-        'hours_of_operation'
+        'hours_of_operation',
+        'unparsed_text_block',
+        'location_name'
     ];
 
     /**
@@ -70,7 +74,9 @@ class Address extends Model
         'state' => 'string',
         'postal_code' => 'string',
         'country' => 'string',
-        'hours_of_operation' => 'string'
+        'hours_of_operation' => 'string',
+        'unparsed_text_block' => 'string',
+        'location_name' => 'string'
     ];
 
     /**
@@ -79,8 +85,6 @@ class Address extends Model
      * @var array
      */
     public static $rules = [
-        'latitude' => 'required',
-        'longitude' => 'required'
     ];
 
     /**

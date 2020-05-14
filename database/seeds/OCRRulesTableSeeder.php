@@ -46,7 +46,7 @@ PYTHONCODE;
         $accountId = $this->seedAccount('Cushing', $addressId);
 
         // create a variant
-        $ocrvariantId = $this->seedVariant(5, 'Jetspeed', 'Prenote from Cushing\'s Feight Buyer: Jetspeed');
+        $ocrvariantId = $this->seedVariant(5, 'Jetspeed-Import', 'Prenote from Cushing\'s Feight Buyer: Jetspeed');
 
         // create two rules
         $ocrrule1Id = $this->seedOCRRule('always_export', 'sample rule always_export', self::RULE1_CODE);
