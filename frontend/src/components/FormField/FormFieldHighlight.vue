@@ -1,6 +1,6 @@
 <template>
   <div
-    :class="`form-field-highlight ${field.highlight || ''}`"
+    :class="`form-field-highlight ${field.highlight || ''} ${field.el.type}`"
     @mouseover="callbacks.startHover({ field })"
     @mouseleave="callbacks.stopHover({ field })"
     @click="callbacks.startEdit({ field })"
@@ -10,7 +10,7 @@
       :field="field"
     />
 
-    <div :class="`highlight__edit ${field.highlight || ''}`">
+    <div :class="`highlight__edit ${field.highlight || ''} ${field.el.type}`">
       <FormFieldElement
         v-show="editMode"
         :field="field"
@@ -108,6 +108,9 @@ export default {
 
   &.edit {
     min-height: 10rem;
+    &.input, &.text-area {
+      min-height: unset;
+    }
   }
 }
 
@@ -117,6 +120,10 @@ export default {
     display: flex;
     align-items: center;
     padding: 1rem 3rem 0rem 1rem;
+
+    &.input, &.text-area {
+      padding: unset;
+    }
   }
 }
 </style>
