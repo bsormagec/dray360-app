@@ -35,6 +35,11 @@ Route::get('orders', 'OrderController@orders')
     ->name('orders')
     ->middleware('auth:sanctum');
 
+// Authenticated route to return one order
+Route::get('orders/{orderId}', 'OrderController@order')
+    ->name('order')
+    ->middleware('auth:sanctum');
+
 
 // Authenticated route to get document upload URI
 Route::post('createocrrequestuploaduri', 'OCRRequestController@createOCRRequestUploadURI')

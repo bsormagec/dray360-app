@@ -35,19 +35,41 @@ use Illuminate\Database\Eloquent\SoftDeletes;
  * @property string house_bol_hawb
  * @property string|\Carbon\Carbon estimated_arrival_utc
  * @property string|\Carbon\Carbon last_free_date_utc
-
+ * @property string booking_number
+ * @property string bol
+ * @property json ocr_data
+ *
  * @property \Illuminate\Database\Eloquent\Collection orderAddressEvents
  * @property \Illuminate\Database\Eloquent\Collection orderLineItems
- * @property Illuminate\Database\Eloquent\Collection ocrRequest
+ * @property \Illuminate\Database\Eloquent\Collection ocrRequest
+ * @property \Illuminate\Database\Eloquent\Collection getOCRRequestStatusList
+ * @property \App\Models\Address billToAddress
+ * @property \App\Models\Address portOfOriginAddress
+ * @property \App\Models\Address portOfDestinationAddress
+
  * @property \App\Models\OCRRequest getOCRRequestAttribute
- * @property \App\Models\OCRRequestStatus getLatestOCRRequestStatus
- * @property Illuminate\Database\Eloquent\Collection getOCRRequestStatusList
+ * @property \App\Models\OCRRequestStatus getLatestOCRRequestStatusAttribute
+ * @property \App\Model\OrderLineItem getOrderLineItemsAttribute
+ * @property \Illuminate\Database\Eloquent\Collection getOrderAddressEventsAttribute
+ * @property \Illuminate\Database\Eloquent\Collection getOCRRequestAttribute
+ * @property \App\Models\Address getBillToAddressAttribute
+ * @property \App\Models\Address getPortOfOriginAddressAttribute
+ * @property \App\Models\Address getPortOfDestinationAddressAttribute
  */
+
+
+
 class Order extends Model
 {
     use SoftDeletes;
 
-    protected $appends = ['ocr_request', 'latest_ocr_request_status', 'order_address_events', 'order_line_items'];
+    protected $appends = [
+        'ocr_request',
+        'latest_ocr_request_status',
+        'order_address_events',
+        'order_line_items',
+        'bill_to_address'
+    ];
 
     public $table = 't_orders';
 
@@ -83,7 +105,8 @@ class Order extends Model
         'master_bol_mawb',
         'house_bol_hawb',
         'estimated_arrival_utc',
-        'last_free_date_utc'
+        'last_free_date_utc',
+        'booking_number'
     ];
 
     /**
@@ -116,7 +139,13 @@ class Order extends Model
         'master_bol_mawb' => 'string',
         'house_bol_hawb' => 'string',
         'estimated_arrival_utc' => 'datetime',
-        'last_free_date_utc' => 'datetime'
+        'last_free_date_utc' => 'datetime',
+        'booking_number' => 'string',
+        'bol' => 'string',
+        'bill_to_address_id' => 'integer',
+        'port_ramp_of_origin_address_id' => 'integer',
+        'port_ramp_of_destination_address_id' => 'integer',
+        'ocr_data' => 'json'
     ];
 
     /**
@@ -144,7 +173,7 @@ class Order extends Model
         return $this->hasMany(\App\Models\OrderLineItem::class, 't_order_id');
     }
 
-     /**
+    /**
      *
      * @return \App\Models\OrderLineItem
      */
@@ -199,5 +228,52 @@ class Order extends Model
     }
 
 
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     **/
+    public function billToAddress()
+    {
+        return $this->belongsTo(\App\Models\Address::class, 't_address_id');
+    }
+
+    /**
+     *
+     * @return \App\Models\Address
+     */
+    function getBillToAddressAttribute() {
+        return $this->billToAddress()->get();
+    }
+
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     **/
+    public function portOfOriginAddress()
+    {
+        return $this->belongsTo(\App\Models\Address::class, 'port_ramp_of_origin_address_id');
+    }
+
+    /**
+     *
+     * @return \App\Models\Address
+     */
+    function getPortOfOriginAddressAttribute() {
+        return $this->portOfOriginAddress()->get();
+    }
+
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     **/
+    public function portOfDestinationAddress()
+    {
+        return $this->belongsTo(\App\Models\Address::class, 'port_ramp_of_destination_address_id');
+    }
+
+    /**
+     *
+     * @return \App\Models\Address
+     */
+    function getPortOfDestinationAddressAttribute() {
+        return $this->portOfDestinationAddress()->get();
+    }
 
 }
