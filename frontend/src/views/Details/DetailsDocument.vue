@@ -101,6 +101,7 @@ export default {
 .document__page {
   position: relative;
   width: 100%;
+  min-width: 9.95rem;
 
   img {
     opacity: 0;

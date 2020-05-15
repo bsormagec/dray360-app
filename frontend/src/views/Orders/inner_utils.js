@@ -1,4 +1,5 @@
-export const listFormat = (list) => list.map(item => ({
+export const listFormat = (list, cb) => list.map(item => ({
   ...item,
-  created_at: new Date(item.created_at).toLocaleDateString()
+  created_at: new Date(item.created_at).toLocaleDateString(),
+  action: cb
 }))

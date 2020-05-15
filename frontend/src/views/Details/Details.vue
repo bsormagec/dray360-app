@@ -28,9 +28,13 @@ import DetailsSidebar from '@/views/Details/DetailsSidebar'
 import DetailsFormEditing from '@/views/Details/DetailsFormEditing'
 import DetailsFormViewing from '@/views/Details/DetailsFormViewing'
 import DetailsDocument from '@/views/Details/DetailsDocument'
+import { reqStatus } from '@/enums/req_status'
+
 import { formModule, documentModule } from '@/views/Details/inner_store/index'
 import { exampleForm as form } from '@/views/Details/inner_utils/example_form'
-import { parsedDocument } from '@/views/Details/inner_utils/parse_document'
+import { parse } from '@/views/Details/inner_utils/parse_document'
+import orders, { types } from '@/store/modules/orders'
+import { mapState, mapActions } from '@/utils/vuex_mappings'
 
 export default {
   name: 'Details',
@@ -43,6 +47,9 @@ export default {
   },
 
   data: () => ({
+    ...mapState(orders.moduleName, {
+      currentOrder: state => state.currentOrder
+    }),
     resizeDiff: 50,
     startPos: 0
   }),
@@ -55,10 +62,25 @@ export default {
 
   beforeMount () {
     formModule.methods.setForm(form)
-    documentModule.methods.setDocument(parsedDocument)
+  },
+
+  async mounted () {
+    await this.requestOrderDetail()
   },
 
   methods: {
+    ...mapActions(orders.moduleName, [types.getOrderDetail]),
+
+    async requestOrderDetail () {
+      const status = await this[types.getOrderDetail](this.$route.params.id)
+
+      if (status === reqStatus.success) {
+        documentModule.methods.setDocument(parse(this.currentOrder()))
+        return
+      }
+      console.log('error')
+    },
+
     handleResize (e) {
       this.startPos = e.clientX
       window.onmousemove = this.startDragging

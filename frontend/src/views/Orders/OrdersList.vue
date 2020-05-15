@@ -48,8 +48,8 @@ export default {
       { text: 'Date', value: 'created_at' },
       { text: 'Shipment Direction', value: 'shipment_direction' },
       { text: 'Shipment Designation', value: 'shipment_designation' },
-      { text: 'Unit Number', value: 'unit_number' },
-      { text: 'Eq. Type', value: 'equipment_type' }
+      { text: 'Eq. Type', value: 'equipment_type' },
+      { text: 'Actions', value: 'action' }
     ]
   }),
 

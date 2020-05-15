@@ -1,81 +1,15 @@
 {
-  "document_definition_name": {
-    "name": "document_definition_name",
-    "value": "Work Order Try 21"
-  },
-  "version": {
-    "name": "version",
-    "value": "1.0"
-  },
-  "page_index_filenames": {
-    "name": "page_index_filenames",
-    "value": {
-      "1": {
-        "name": "page_index_1",
-        "value": "https://firebasestorage.googleapis.com/v0/b/general-f0201.appspot.com/o/updated_document.jpg?alt=media&token=172395e5-3085-49de-8357-456cf0d2c763"
-      }
+  "rules": [
+    {
+      "always_export": "possible_output_fields = {\"shipment_type\":{\"always\":True}}\ndef runrule(input_fields, updated_fields):\n    #return {\"shipment_type\":\"export\"}\n    updated_fields[\"shipment_type\"] = \"export\""
+    },
+    {
+      "bol_to_mbol": "possible_output_fields = {\"mbol\":{\"always\":True}}\ndef runrule(input_fields, updated_fields):\n    #return {\"shipment_type\":\"export\"}\n    updated_fields[\"bol\"] = input_fields[\"mbol\"]"
     }
-  },
+  ],
   "fields": {
-    "origin_ramp": {
-      "name": "origin_ramp",
-      "value": "BNSF LOGISTICS PARK H572\n26664 S BASELINE RD\nFIRMS CODE : H572\nELWOOD IL 60421\nUNITED STATES\nContact: +1 815-424-2100",
-      "recognized_value": "BNSF LOGISTICS PARK H572\u202826664 S BASELINE RD\u2028FIRMS CODE : H572\u2028ELWOOD IL 60421\u2028UNITED STATES\u2028Contact: +1 815-424-2100",
-      "suspicious_symbols": "000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000",
-      "ocr_region": {
-        "page_index": 1,
-        "bottom": 1455,
-        "left": 277,
-        "right": 1230,
-        "top": 1218
-      }
-    },
-    "dest_ramp": {
-      "name": "dest_ramp",
-      "value": "DELIVER TO EMPTY\nBNSF LOGISTICS PARK H572\n26664 S BASELINE RD\nFIRMS CODE : H572\nELWOOD IL 60421\nUNITED STATES\nContact: +1 815-424-2100",
-      "recognized_value": "DELIVER TO EMPTY\u2028BNSF LOGISTICS PARK H572\u202826664 S BASELINE RD\u2028FIRMS CODE : H572\u2028ELWOOD IL 60421\u2028UNITED STATES\u2028Contact: +1 815-424-2100",
-      "suspicious_symbols": "00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000",
-      "ocr_region": {
-        "page_index": 1,
-        "bottom": 1924,
-        "left": 1277,
-        "right": 2231,
-        "top": 1652
-      }
-    },
-    "bill_to_address": {
-      "name": "bill_to_address",
-      "value": "Jet-Speed Logistics (USA) LLC\n900 N Arlington Heights Rd, Suite 150\nItasca, Illinois 60143, USA\nTel: (630)595-5601\nFax: (630)595-6361",
-      "recognized_value": "Jet-Speed Logistics (USA) LLC\u2028900 N Arlington Heights Rd, Suite 150\u2028Itasca, Illinois 60143, USA\u2028Tel: (630)595-5601\u2028Fax: (630)595-6361",
-      "suspicious_symbols": "0000000000000000000000000000000000000000000000000000000110000000000000000000000000000000000011100000000000000000000000000000000000000",
-      "ocr_region": {
-        "page_index": 1,
-        "bottom": 606,
-        "left": 337,
-        "right": 857,
-        "top": 362
-      }
-    },
-    "order_type": {
-      "name": "order_type",
-      "value": "",
-      "recognized_value": null,
-      "suspicious_symbols": null
-    },
-    "booking_no": {
-      "name": "booking_no",
-      "value": "",
-      "recognized_value": null,
-      "suspicious_symbols": null
-    },
     "bol": {
       "name": "bol",
-      "value": "",
-      "recognized_value": null,
-      "suspicious_symbols": null
-    },
-    "mbol": {
-      "name": "mbol",
       "value": "",
       "recognized_value": null,
       "suspicious_symbols": null
@@ -86,53 +20,58 @@
       "recognized_value": null,
       "suspicious_symbols": null
     },
+    "mbol": {
+      "name": "mbol",
+      "value": "",
+      "recognized_value": null,
+      "suspicious_symbols": null
+    },
+    "hazmat": {
+      "name": "hazmat",
+      "value": "",
+      "recognized_value": null,
+      "suspicious_symbols": null
+    },
+    "contents": {
+      "name": "contents",
+      "value": "Aluminum Tool Case",
+      "ocr_region": {
+        "top": 2527,
+        "left": 149,
+        "right": 458,
+        "bottom": 2555,
+        "page_index": 1
+      },
+      "recognized_value": null,
+      "suspicious_symbols": "000000000000000000"
+    },
+    "dest_ramp": {
+      "name": "dest_ramp",
+      "value": "BNSF LOGISTICS PARK H572\n26353 ELWOOD INTERNATIONAL PORT RD\nELWOOD IL 60421\nUNITED STATES",
+      "ocr_region": {
+        "top": 1726,
+        "left": 1254,
+        "right": 1939,
+        "bottom": 1891,
+        "page_index": 1
+      },
+      "recognized_value": "BNSF LOGISTICS PARK H572\u202826353 ELWOOD INTERNATIONAL PORT RD\u2028ELWOOD IL 60421\u2028UNITED STATES",
+      "suspicious_symbols": "00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000"
+    },
     "pickup_no": {
       "name": "pickup_no",
       "value": "",
       "recognized_value": null,
       "suspicious_symbols": null
     },
-    "unit_number": {
-      "name": "unit_number",
-      "value": "CAIU9436698",
+    "booking_no": {
+      "name": "booking_no",
+      "value": "",
       "recognized_value": null,
-      "suspicious_symbols": "00110000000",
-      "ocr_region": {
-        "page_index": 1,
-        "bottom": 755,
-        "left": 1863,
-        "right": 2053,
-        "top": 729
-      }
+      "suspicious_symbols": null
     },
-    "container_length": {
-      "name": "container_length",
-      "value": "40GP",
-      "recognized_value": null,
-      "suspicious_symbols": "0000",
-      "ocr_region": {
-        "page_index": 1,
-        "bottom": 2727,
-        "left": 597,
-        "right": 674,
-        "top": 2700
-      }
-    },
-    "contents": {
-      "name": "contents",
-      "value": "FEDERALIST PIPER RACK",
-      "recognized_value": null,
-      "suspicious_symbols": "000000000000000000000",
-      "ocr_region": {
-        "page_index": 1,
-        "bottom": 2486,
-        "left": 274,
-        "right": 652,
-        "top": 2458
-      }
-    },
-    "multiline_multiorder_area_with_contents": {
-      "name": "multiline_multiorder_area_with_contents",
+    "order_type": {
+      "name": "order_type",
       "value": "",
       "recognized_value": null,
       "suspicious_symbols": null
@@ -143,23 +82,18 @@
       "recognized_value": null,
       "suspicious_symbols": null
     },
-    "event1_location": {
-      "name": "event1_location",
-      "value": "",
-      "recognized_value": null,
-      "suspicious_symbols": null
-    },
     "event2_type": {
       "name": "event2_type",
-      "value": "",
+      "value": "DELIVER TO FULL",
+      "ocr_region": {
+        "top": 1217,
+        "left": 1255,
+        "right": 1548,
+        "bottom": 1245,
+        "page_index": 1
+      },
       "recognized_value": null,
-      "suspicious_symbols": null
-    },
-    "event2_location": {
-      "name": "event2_location",
-      "value": "",
-      "recognized_value": null,
-      "suspicious_symbols": null
+      "suspicious_symbols": "000000000000000"
     },
     "event3_type": {
       "name": "event3_type",
@@ -167,32 +101,21 @@
       "recognized_value": null,
       "suspicious_symbols": null
     },
-    "event3_location": {
-      "name": "event3_location",
-      "value": "",
-      "recognized_value": null,
-      "suspicious_symbols": null
-    },
     "event4_type": {
       "name": "event4_type",
-      "value": "",
+      "value": "DELIVER TO EMPTY",
+      "ocr_region": {
+        "top": 1684,
+        "left": 1255,
+        "right": 1579,
+        "bottom": 1712,
+        "page_index": 1
+      },
       "recognized_value": null,
-      "suspicious_symbols": null
-    },
-    "event4_location": {
-      "name": "event4_location",
-      "value": "",
-      "recognized_value": null,
-      "suspicious_symbols": null
+      "suspicious_symbols": "0000000000000000"
     },
     "event5_type": {
       "name": "event5_type",
-      "value": "",
-      "recognized_value": null,
-      "suspicious_symbols": null
-    },
-    "event5_location": {
-      "name": "event5_location",
       "value": "",
       "recognized_value": null,
       "suspicious_symbols": null
@@ -203,12 +126,135 @@
       "recognized_value": null,
       "suspicious_symbols": null
     },
+    "origin_ramp": {
+      "name": "origin_ramp",
+      "value": "BNSF LOGISTICS PARK H572\n26353 ELWOOD INTERNATIONAL PORT RD\nELWOOD IL 60421\nUNITED STATES\nContact:",
+      "ocr_region": {
+        "top": 1259,
+        "left": 150,
+        "right": 835,
+        "bottom": 1469,
+        "page_index": 1
+      },
+      "recognized_value": "BNSF LOGISTICS PARK H572\u202826353 ELWOOD INTERNATIONAL PORT RD\u2028ELWOOD IL 60421\u2028UNITED STATES\u2028Contact:",
+      "suspicious_symbols": "00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000"
+    },
+    "unit_number": {
+      "name": "unit_number",
+      "value": "OOLU9988769",
+      "ocr_region": {
+        "top": 715,
+        "left": 1899,
+        "right": 2122,
+        "bottom": 743,
+        "page_index": 1
+      },
+      "recognized_value": null,
+      "suspicious_symbols": "00000000000"
+    },
+    "bill_to_address": {
+      "name": "bill_to_address",
+      "value": "Jet-Speed Logistics (USA) LLC\n900 N. Arlington Heights Rd., Suite 150\nItasca. Illinois 60143. U.S.A.\nTel: (630) 595-5601\nFax: (630) 595-6361",
+      "ocr_region": {
+        "top": 317,
+        "left": 216,
+        "right": 791,
+        "bottom": 583,
+        "page_index": 1
+      },
+      "recognized_value": "Jet-Speed Logistics (USA) LLC\u2028900 N. Arlington Heights Rd., Suite 150\u2028Itasca. Illinois 60143. U.S.A.\u2028Tel: (630) 595-5601\u2028Fax: (630) 595-6361",
+      "suspicious_symbols": "00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000"
+    },
+    "event1_location": {
+      "name": "event1_location",
+      "value": "BNSF LOGISTICS PARK H572\n26353 ELWOOD INTERNATIONAL PORT RD\nELWOOD IL 60421\nUNITED STATES\nContact:",
+      "ocr_region": {
+        "top": 1259,
+        "left": 150,
+        "right": 835,
+        "bottom": 1469,
+        "page_index": 1
+      },
+      "recognized_value": "BNSF LOGISTICS PARK H572\u202826353 ELWOOD INTERNATIONAL PORT RD\u2028ELWOOD IL 60421\u2028UNITED STATES\u2028Contact:",
+      "suspicious_symbols": "00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000"
+    },
+    "event2_location": {
+      "name": "event2_location",
+      "value": "POP MANUFACTURING\n9009 SHERIDAN RD\nKENOSHA WI 53143\nUNITED STATES\nContact:",
+      "ocr_region": {
+        "top": 1259,
+        "left": 1254,
+        "right": 1626,
+        "bottom": 1469,
+        "page_index": 1
+      },
+      "recognized_value": "POP MANUFACTURING\u20289009 SHERIDAN RD\u2028KENOSHA WI 53143\u2028UNITED STATES\u2028Contact:",
+      "suspicious_symbols": "00000000000000000000000000000000000000000000000000000000000000000000000000"
+    },
+    "event3_location": {
+      "name": "event3_location",
+      "value": "POP MANUFACTURING\n9009 SHERIDAN RD\nKENOSHA WI 53143\nUNITED STATES\nContact:",
+      "ocr_region": {
+        "top": 1726,
+        "left": 150,
+        "right": 522,
+        "bottom": 1936,
+        "page_index": 1
+      },
+      "recognized_value": "POP MANUFACTURING\u20289009 SHERIDAN RD\u2028KENOSHA WI 53143\u2028UNITED STATES\u2028Contact:",
+      "suspicious_symbols": "00000000000000000000000000000000000000000000000000000000000000000000000000"
+    },
+    "event4_location": {
+      "name": "event4_location",
+      "value": "BNSF LOGISTICS PARK H572\n26353 ELWOOD INTERNATIONAL PORT RD\nELWOOD IL 60421\nUNITED STATES",
+      "ocr_region": {
+        "top": 1726,
+        "left": 1254,
+        "right": 1939,
+        "bottom": 1891,
+        "page_index": 1
+      },
+      "recognized_value": "BNSF LOGISTICS PARK H572\u202826353 ELWOOD INTERNATIONAL PORT RD\u2028ELWOOD IL 60421\u2028UNITED STATES",
+      "suspicious_symbols": "00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000"
+    },
+    "event5_location": {
+      "name": "event5_location",
+      "value": "",
+      "recognized_value": null,
+      "suspicious_symbols": null
+    },
     "event6_location": {
       "name": "event6_location",
       "value": "",
       "recognized_value": null,
       "suspicious_symbols": null
+    },
+    "container_length": {
+      "name": "container_length",
+      "value": "",
+      "recognized_value": null,
+      "suspicious_symbols": null
+    },
+    "reference_number": {
+      "name": "reference_number",
+      "value": "",
+      "recognized_value": null,
+      "suspicious_symbols": null
+    },
+    "multiline_multiorder_area_with_contents": {
+      "name": "multiline_multiorder_area_with_contents",
+      "value": "",
+      "recognized_value": null,
+      "suspicious_symbols": null
     }
+  },
+  "version": {
+    "name": "version",
+    "value": "1.0"
+  },
+  "request_id": {
+    "name": "request_id",
+    "value": "eb4a8304-6602-5956-a772-d433b6933af1"
   },
   "variant_id": {
     "name": "variant_id",
@@ -216,10 +262,37 @@
     "recognized_value": null,
     "suspicious_symbols": "0"
   },
+  "document_id": "00000001",
   "variant_name": {
     "name": "variant_name",
-    "value": "Jetspeed",
+    "value": "Jetspeed-import",
     "recognized_value": null,
-    "suspicious_symbols": "00000000"
+    "suspicious_symbols": "000000000000000"
+  },
+  "ocr_data_filename": {
+    "name": "ocr_data_filename",
+    "value": "s3:\/\/dmedocproc-ocrprocessedjobs-dev\/eb4a8304-6602-5956-a772-d433b6933af1_daedc679e9e9b441d98c0634e83ae24bab8722a385058db6f9e08f545e770f1d_ShipmentCartageAdviceWithReceipt-SSI100072169.00000001.json"
+  },
+  "rules_engine_output": {
+    "bol": {
+      "name": "mbol",
+      "value": "",
+      "recognized_value": null,
+      "suspicious_symbols": null
+    },
+    "shipment_type": "export"
+  },
+  "page_index_filenames": {
+    "name": "page_index_filenames",
+    "value": {
+      "1": {
+        "name": "page_index_1",
+        "value": "s3:\/\/dmedocproc-ocrprocessedjobs-dev\/eb4a8304-6602-5956-a772-d433b6933af1_daedc679e9e9b441d98c0634e83ae24bab8722a385058db6f9e08f545e770f1d_ShipmentCartageAdviceWithReceipt-SSI100072169.00000001.jpg"
+      }
+    }
+  },
+  "document_definition_name": {
+    "name": "document_definition_name",
+    "value": "Work Order Try 21"
   }
 }

@@ -43,16 +43,18 @@ export default {
 
   mixins: [isMobile],
 
-  data: () => ({
-    ...mapState(orders.moduleName, {
-      list: state => listFormat(state.list),
-      links: state => state.links,
-      meta: state => state.meta
-    }),
-    activeMobileTab: tabs.list,
-    mobileSidebarOpen: false,
-    tabs
-  }),
+  data: function () {
+    return {
+      ...mapState(orders.moduleName, {
+        list: state => listFormat(state.list, (id) => this.$router.push(`/order/${id}`)),
+        links: state => state.links,
+        meta: state => state.meta
+      }),
+      activeMobileTab: tabs.list,
+      mobileSidebarOpen: false,
+      tabs
+    }
+  },
 
   computed: {
     shouldShowSidebar () {
