@@ -10,7 +10,7 @@
       <template v-slot:item.action="{ item }">
         <v-btn
           color="primary"
-          @click="item.action"
+          @click="() => item.action(item.id)"
         >
           View
         </v-btn>

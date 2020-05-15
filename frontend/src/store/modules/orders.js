@@ -1,15 +1,18 @@
 import { reqStatus } from '@/enums/req_status'
-import { getOrders } from '@/store/api_calls/orders'
+import { getOrders, getOrderDetail } from '@/store/api_calls/orders'
 
 export const types = {
   setOrders: 'SET_ORDERS',
-  getOrders: 'GET_ORDERS'
+  setCurrentOrder: 'SET_CURRENT_ORDER',
+  getOrders: 'GET_ORDERS',
+  getOrderDetail: 'GET_ORDER_DETAIL'
 }
 
 const initialState = {
   list: [],
   links: {},
-  meta: {}
+  meta: {},
+  currentOrder: {}
 }
 
 const mutations = {
@@ -17,6 +20,9 @@ const mutations = {
     state.list = data
     state.links = links
     state.meta = meta
+  },
+  [types.setCurrentOrder] (state, orderData) {
+    state.currentOrder = orderData
   }
 }
 
@@ -27,6 +33,15 @@ const actions = {
     if (error) return reqStatus.error
 
     commit(types.setOrders, data)
+    return reqStatus.success
+  },
+
+  async [types.getOrderDetail] ({ commit }, order) {
+    const [error, data] = await getOrderDetail(order)
+
+    if (error || !data) return reqStatus.error
+
+    commit(types.setCurrentOrder, data)
     return reqStatus.success
   }
 }

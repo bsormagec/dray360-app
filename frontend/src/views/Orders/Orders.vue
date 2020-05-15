@@ -46,7 +46,7 @@ export default {
   data: function () {
     return {
       ...mapState(orders.moduleName, {
-        list: state => listFormat(state.list, () => this.$router.push('/order/1')),
+        list: state => listFormat(state.list, (id) => this.$router.push(`/order/${id}`)),
         links: state => state.links,
         meta: state => state.meta
       }),

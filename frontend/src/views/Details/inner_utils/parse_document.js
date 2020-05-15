@@ -16,41 +16,41 @@
   ]
 */
 
-import exampleDocument from '@/views/Details/inner_utils/example_document'
+// import exampleDocument from '@/views/Details/inner_utils/example_document'
 import mapFieldNames from '@/views/Details/inner_utils/map_field_names'
 
-const parse = () => {
+export const parse = (d) => {
   const parsed = [
   ]
 
-  for (const imgKey in exampleDocument.page_index_filenames.value) {
+  for (const imgKey in d.page_index_filenames.value) {
     parsed.push({
-      image: exampleDocument.page_index_filenames.value[imgKey].value,
-      highlights: getHighlights(imgKey)
+      image: d.page_index_filenames.value[imgKey].value,
+      highlights: getHighlights(imgKey, d)
     })
   }
 
   return parsed
 }
 
-function getHighlights (id) {
-  return Object.keys(exampleDocument.fields).map(fieldKey => {
-    if (!exampleDocument.fields[fieldKey].ocr_region) return
+function getHighlights (id, d) {
+  const highlights = Object.keys(d.fields).map(fieldKey => {
+    if (!d.fields[fieldKey].ocr_region) return
 
-    const matches = exampleDocument.fields[fieldKey].ocr_region.page_index === parseInt(id)
+    const matches = d.fields[fieldKey].ocr_region.page_index === parseInt(id)
     if (matches) {
-      const { bottom, left, right, top } = exampleDocument.fields[fieldKey].ocr_region
+      const { bottom, left, right, top } = d.fields[fieldKey].ocr_region
 
       return {
         bottom,
         left,
         right,
         top,
-        name: mapFieldNames(exampleDocument.fields[fieldKey].name),
-        value: exampleDocument.fields[fieldKey].value
+        name: mapFieldNames(d.fields[fieldKey].name),
+        value: d.fields[fieldKey].value
       }
     }
   }).filter(v => Boolean(v))
-}
 
-export const parsedDocument = parse()
+  return highlights
+}
