@@ -1,38 +1,32 @@
 <template>
   <div class="form-field-presentation">
-    <div
-      v-if="!isModalSelect"
-      class="field"
-    >
-      <FormFieldPresentationSimple
-        v-show="isSimple"
-        :field="field"
-      />
-      <FormFieldPresentationComplex
-        v-show="isComplex"
-        :field="field"
-      />
-    </div>
-
     <FormFieldPresentationModalSelect
+      v-if="isModalSelect"
+      :is-editing="isEditing"
+      :field="field"
+    />
+
+    <FormFieldHighlight
       v-else
       :field="field"
+      :is-editing="isEditing"
+      :callbacks="callbacks"
+      @change="e => $emit('change', e)"
+      @close="e => $emit('close')"
     />
   </div>
 </template>
 
 <script>
 import { fieldType } from '@/enums/field_type'
-import FormFieldPresentationSimple from '@/components/FormField/FormFieldPresentationSimple'
-import FormFieldPresentationComplex from '@/components/FormField/FormFieldPresentationComplex'
+import FormFieldHighlight from '@/components/FormField/FormFieldHighlight'
 import FormFieldPresentationModalSelect from '@/components/FormField/FormFieldPresentationModalSelect'
 
 export default {
   name: 'FormFieldPresentation',
 
   components: {
-    FormFieldPresentationSimple,
-    FormFieldPresentationComplex,
+    FormFieldHighlight,
     FormFieldPresentationModalSelect
   },
 
@@ -40,18 +34,18 @@ export default {
     field: {
       type: Object,
       required: true
+    },
+    isEditing: {
+      type: Boolean,
+      required: true
+    },
+    callbacks: {
+      type: Object,
+      required: true
     }
   },
 
   computed: {
-    isSimple () {
-      return typeof this.field.value !== 'object'
-    },
-
-    isComplex () {
-      return typeof this.field.value === 'object'
-    },
-
     isModalSelect () {
       return this.field.el.type === fieldType.modalSelect
     }
@@ -63,8 +57,10 @@ export default {
 .form-field-presentation {
   .field__group {
     display: flex;
+    width: 100%;
+    height: 100%;
     justify-content: space-between;
-    margin-bottom: 1.1rem;
+    align-items: center;
   }
 
   .field__name,
@@ -72,6 +68,18 @@ export default {
     font-size: 1.4rem !important;
     font-weight: bold;
     text-transform: capitalize;
+  }
+
+  .field__name {
+    width: 60%;
+  }
+
+  .field__value {
+    cursor: pointer;
+    text-align: right;
+    word-break: break-word;
+    width: 40%;
+    transition: opacity 200ms ease-in-out;
   }
 
   .field__value,

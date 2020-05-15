@@ -2,7 +2,7 @@
   <div class="form-field-element-radio">
     <v-radio-group
       v-model="radioValue"
-      @change="changeRadio"
+      @change="(v) => emitChange(nToRadioKey(v))"
     >
       <div
         v-for="(option, key, index) in field.el.options"
@@ -26,7 +26,8 @@
           >
             <FormFieldElement
               :field="{...el, name: childKey}"
-              @change="e => changeChildEl({ e, name: childKey })"
+              :is-editing="isEditing"
+              @change="v => changeChildEl({ v, name: childKey, optionName: key })"
             />
           </div>
         </div>
@@ -47,6 +48,10 @@ export default {
     field: {
       type: Object,
       required: true
+    },
+    isEditing: {
+      type: Boolean,
+      required: true
     }
   },
 
@@ -55,25 +60,59 @@ export default {
     childrenData: {}
   }),
 
+  watch: {
+    isEditing: function () {
+      this.syncValue()
+    }
+  },
+
   mounted () {
-    this.emitChange()
+    this.emitChange(Object.keys(this.field.el.options)[0])
   },
 
   methods: {
-    changeRadio (e) {
-      this.emitChange()
+    nToRadioKey (n) {
+      return Object.keys(this.field.el.options)[n]
     },
-    changeChildEl ({ e, name }) {
-      this.childrenData[name] = e
-      this.emitChange()
-    },
-    emitChange () {
-      const radioToOptionKey = Object.keys(this.field.el.options)
-      const optionEl = this.field.el.options[radioToOptionKey[this.radioValue]].el
-      const hasChildren = Boolean(optionEl && optionEl.children)
-      const childrenDataToSend = hasChildren ? this.childrenData : radioToOptionKey[this.radioValue]
 
-      this.$emit('change', childrenDataToSend)
+    keyToRadioN (key) {
+      return Object.keys(this.field.el.options).findIndex(k => k === key)
+    },
+
+    emitChange (optionName) {
+      const option = this.field.el.options[optionName]
+      const hasChildren = option.el && option.el.children
+      const dataToEmit = hasChildren ? { ...this.childrenData, optionName } : { optionName }
+      this.radioValue = this.keyToRadioN(optionName)
+      this.$emit('change', dataToEmit)
+    },
+
+    changeChildEl ({ v, name, optionName }) {
+      this.childrenData[name] = v
+      this.emitChange(optionName)
+    },
+
+    syncValue () {
+      if (!this.field.optionName) return
+
+      const hasChildren = this.field.el.options[this.field.optionName].el &&
+       typeof this.field.value === 'object'
+
+      if (hasChildren) {
+        this.childrenData = this.field.value
+
+        for (const key in this.childrenData) {
+          this.changeChildEl({
+            v: this.childrenData[key],
+            name: key,
+            optionName: this.field.optionName
+          })
+        }
+
+        return
+      }
+
+      this.emitChange(this.field.optionName)
     }
   }
 }

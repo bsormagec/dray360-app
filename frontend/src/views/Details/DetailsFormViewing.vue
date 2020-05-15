@@ -21,6 +21,6 @@ export default {
 
 <style lang="scss" scoped>
 .form-viewing {
-  width: 45%;
+  width: 100%;
 }
 </style>

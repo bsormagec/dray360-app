@@ -179,6 +179,31 @@
     }
   }
 
+  .form-field-highlight.edit {
+    .highlight__edit.edit {
+      height: 100%;
+    }
+    .form-field-element-input, .form-field-element-textarea {
+      height: 100%;
+      .v-text-field__details {
+        display: none;
+      }
+      fieldset {
+        border: unset !important;
+      }
+    }
+    .v-input {
+      height: 100%;
+    }
+    .v-input__control {
+      height: 100%;
+    }
+    .v-input__slot {
+      height: 100% !important;
+      margin-bottom: unset !important;
+    }
+  }
+
   input {
     font-size: 1.4rem;
     color: map-get($colors , black) !important;

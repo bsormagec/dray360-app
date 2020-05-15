@@ -1,14 +1,21 @@
 <template>
-  <div class="form-field">
+  <div
+    :id="`${cleanStrForId(field.name)}-${readonly ? 'viewing' : 'editing'}`"
+    class="form-field"
+  >
     <FormFieldPresentation
       v-show="readonly"
       :field="field"
+      :callbacks="callbacks"
+      :is-editing="isEditing"
+      @change="e => $emit('change', e)"
+      @close="e => $emit('close', e)"
     />
 
     <FormFieldElement
       v-show="!readonly"
       :field="field"
-      :value="value"
+      :is-editing="isEditing"
       @change="e => $emit('change', e)"
     />
   </div>
@@ -17,6 +24,7 @@
 <script>
 import FormFieldPresentation from '@/components/FormField/FormFieldPresentation'
 import FormFieldElement from '@/components/FormField/FormFieldElement'
+import { cleanStrForId } from '@/views/Details/inner_utils/clean_str_for_id'
 
 export default {
   name: 'FormField',
@@ -36,12 +44,18 @@ export default {
       required: false,
       default: () => false
     },
-    // Only used in input and text-area
-    value: {
-      type: String,
-      required: false,
-      default: ''
+    isEditing: {
+      type: Boolean,
+      required: true
+    },
+    callbacks: {
+      type: Object,
+      required: true
     }
+  },
+
+  methods: {
+    cleanStrForId
   }
 }
 </script>

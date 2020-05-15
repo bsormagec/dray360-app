@@ -21,6 +21,6 @@ export default {
 
 <style lang="scss" scoped>
 .form-editing {
-  width: 45%;
+  width: 100%;
 }
 </style>

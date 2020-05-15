@@ -1,5 +1,8 @@
 <template>
-  <div>
+  <div
+    v-if="typeof field.value === 'object'"
+    class="field__complex"
+  >
     <span class="field__name">{{ field.name }}</span>
     <div
       v-for="(value, key) in field.value"
@@ -10,11 +13,21 @@
       <span class="field__value">{{ value }}</span>
     </div>
   </div>
+
+  <div
+    v-else
+    class="field__group"
+  >
+    <span class="field__name">{{ field.name }}</span>
+    <span
+      class="field__value"
+    >{{ field.value ? field.value : '--' }}</span>
+  </div>
 </template>
 
 <script>
 export default {
-  name: 'FormFieldPresentationComplex',
+  name: 'FormFieldHighlightView',
 
   props: {
     field: {
@@ -24,3 +37,9 @@ export default {
   }
 }
 </script>
+
+<style lang="scss" scoped>
+.field__complex {
+  width: 100%;
+}
+</style>

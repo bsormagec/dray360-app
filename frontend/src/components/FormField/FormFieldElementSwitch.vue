@@ -22,6 +22,7 @@
       >
         <FormFieldElement
           :field="{ ...el, name: key }"
+          :is-editing="isEditing"
           @change="e => changeChildEl({ e, name: key })"
         />
       </div>
@@ -41,6 +42,10 @@ export default {
     field: {
       type: Object,
       required: true
+    },
+    isEditing: {
+      type: Boolean,
+      required: true
     }
   },
 
@@ -55,6 +60,12 @@ export default {
     }
   },
 
+  watch: {
+    isEditing: function () {
+      this.syncValue()
+    }
+  },
+
   mounted () {
     this.emitChange()
   },
@@ -64,9 +75,24 @@ export default {
       this.$set(this.childrenData, name, e)
       this.emitChange()
     },
+
     emitChange () {
       const value = this.field.el.children && this.isActive ? this.childrenData : this.parsedIsActive
       this.$emit('change', value)
+    },
+
+    syncValue (val) {
+      if (typeof this.field.value === 'object') {
+        this.childrenData = this.field.value
+        this.isActive = true
+        for (const key in this.childrenData) {
+          this.changeChildEl({ e: this.childrenData[key], name: key })
+        }
+        return
+      }
+
+      this.isActive = this.field.value === 'yes'
+      this.emitChange()
     }
   }
 }

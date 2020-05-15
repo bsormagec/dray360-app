@@ -9,10 +9,7 @@
         v-for="(step, i) in steps"
         :key="step.id"
       >
-        <a
-          class="navigation__link"
-          :href="`#${cleanStrForId(step.text.toLowerCase())}-${idSuffix}`"
-        >
+        <a class="navigation__link">
           <v-stepper-step
             :class="{
               navigation__step: true,
@@ -23,9 +20,9 @@
             step=""
             :complete="isTitle(step.id)"
             complete-icon="mdi-account"
-            @click="setStep(step.id)"
+            @click="jumpTo(step)"
           >
-            {{ step.text }}
+            {{ step.isInventoryItem ? step.inventoryItemText : step.text }}
           </v-stepper-step>
         </a>
 
@@ -40,9 +37,10 @@
 
 <script>
 import { Fragment } from 'vue-fragment'
-import { detailsState } from '@/views/Details/inner_store'
+import { formModule } from '@/views/Details/inner_store/index'
 import { navigationSteps } from '@/views/Details/inner_utils/navigation_steps'
 import { cleanStrForId } from '@/views/Details/inner_utils/clean_str_for_id'
+import { isInViewport } from '@/utils/is_in_viewport'
 
 export default {
   name: 'DetailsSidebarNavigation',
@@ -53,13 +51,18 @@ export default {
 
   data: () => ({
     current: 1,
-    steps: navigationSteps()
+    isJumping: false
   }),
 
   computed: {
-    isEditing () {
-      return detailsState.isEditing
+    steps () {
+      return navigationSteps()
     },
+
+    isEditing () {
+      return formModule.state.isEditing
+    },
+
     idSuffix () {
       return this.isEditing ? 'editing' : 'viewing'
     }
@@ -73,7 +76,13 @@ export default {
       if (currentHash) {
         document.location.hash = `${currentHash}-${this.idSuffix}`
       }
+
+      this.trackFormScroll()
     }
+  },
+
+  mounted () {
+    this.trackFormScroll()
   },
 
   methods: {
@@ -83,13 +92,17 @@ export default {
       this.current = n
     },
 
-    isActive (n) {
-      if (this.current === n) return true
-      if (String(this.current).split('.')[0] === String(n)) return true
+    linkHref (step) {
+      return `#${cleanStrForId(step.text.toLowerCase())}-${this.idSuffix}`
     },
 
     isTitle (n) {
       return String(n).split('.').length === 1
+    },
+
+    isActive (n) {
+      if (this.current === n) return true
+      if (String(this.current).split('.')[0] === String(n)) return true
     },
 
     shouldHide (n) {
@@ -97,6 +110,38 @@ export default {
       const titlePart = String(n).split('.')[0]
       const titlePartLeading = String(this.current).split('.')[0] === titlePart
       return !titlePartLeading
+    },
+
+    jumpTo (step) {
+      this.isJumping = true
+      this.setStep(step.id)
+      window.location.hash = this.linkHref(step)
+
+      setTimeout(() => {
+        this.isJumping = false
+      }, 500)
+    },
+
+    trackFormScroll () {
+      const form = document.querySelector(
+        this.isEditing ? '.form-editing .form' : '.form-viewing .form'
+      )
+
+      const handleScroll = () => {
+        if (this.isJumping) return
+        try {
+          this.steps.forEach(step => {
+            if (isInViewport(document.querySelector(this.linkHref(step)))) {
+              this.setStep(step.id)
+              throw new Error()
+            }
+          })
+        } catch (e) {
+          return e
+        }
+      }
+
+      form.addEventListener('scroll', handleScroll)
     }
   }
 }

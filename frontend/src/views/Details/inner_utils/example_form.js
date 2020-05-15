@@ -1,3 +1,5 @@
+import { uuid } from '@/utils/uuid_valid_id'
+
 export const exampleForm = {
   sections: {
     shipment: {
@@ -7,8 +9,8 @@ export const exampleForm = {
           placeholder: 'international'
         }),
         'shipment direction': buildField({
-          type: 'select',
-          options: ['a', 'b', 'c']
+          type: 'text-area',
+          placeholder: 'shipment address'
         }),
         'shipment handling': buildField({
           type: 'select',
@@ -67,11 +69,11 @@ export const exampleForm = {
               placeholder: 'rate quote number'
             }),
             'port ramp of origin': buildField({
-              type: 'input',
+              type: 'text-area',
               placeholder: 'port/ramp of origin'
             }),
             'port ramp of destination': buildField({
-              type: 'input',
+              type: 'text-area',
               placeholder: 'port/ramp of destination'
             }),
             vessel: buildField({
@@ -100,10 +102,14 @@ export const exampleForm = {
         },
         billing: {
           fields: {
+            // 'bill to': buildField({
+            //   type: 'modal-select',
+            //   placeholder: 'select address',
+            //   options: addresses()
+            // })
             'bill to': buildField({
-              type: 'modal-select',
-              placeholder: 'select address',
-              options: addresses()
+              type: 'text-area',
+              placeholder: 'bill to address'
             })
           }
         }
@@ -113,19 +119,27 @@ export const exampleForm = {
       subSections: {
         'hook: rail or port terminal': {
           fields: {
+            // hook: buildField({
+            //   type: 'modal-select',
+            //   placeholder: 'select address',
+            //   options: addresses()
+            // })
             hook: buildField({
-              type: 'modal-select',
-              placeholder: 'select address',
-              options: addresses()
+              type: 'text-area',
+              placeholder: 'hook address'
             })
           }
         },
         'deliver: container to': {
           fields: {
+            // deliver: buildField({
+            //   type: 'modal-select',
+            //   placeholder: 'select address',
+            //   options: addresses()
+            // }),
             deliver: buildField({
-              type: 'modal-select',
-              placeholder: 'select address',
-              options: addresses()
+              type: 'text-area',
+              placeholder: 'deliver address'
             }),
             'delivery instructions': buildField({
               type: 'radio',
@@ -148,10 +162,14 @@ export const exampleForm = {
         },
         'dismount: return empty to depot': {
           fields: {
+            // dismount: buildField({
+            //   placeholder: 'select address',
+            //   type: 'modal-select',
+            //   options: addresses()
+            // }),
             dismount: buildField({
-              placeholder: 'select address',
-              type: 'modal-select',
-              options: addresses()
+              type: 'text-area',
+              placeholder: 'dismount address'
             }),
             'pickup instructions': buildField({
               type: 'radio',
@@ -178,7 +196,7 @@ export const exampleForm = {
     },
     inventory: {
       subSections: {
-        'Item 1': {
+        [uuid()]: {
           fields: inventoryItemFields()
         }
       },
@@ -232,80 +250,80 @@ function buildField ({
   }
 }
 
-function addresses () {
-  return {
-    preselected: [
-      {
-        'company name': 'Ladson',
-        address: '3016 Loxley Lane Ladson, CA, 90210',
-        city: 'Loxley Lane',
-        state: 'CA',
-        zip: '90210',
-        'contact name': 'Seth Ling',
-        phone: '555-555',
-        ext: '555',
-        email: 'mail@mail.com'
-      },
-      {
-        'company name': 'SonLad',
-        address: '3016 Loxley Lane Ladson, CA, 90210',
-        city: 'Loxley Lane',
-        state: 'CA',
-        zip: '90210',
-        'contact name': 'Seth Ling',
-        phone: '555-555',
-        ext: '555',
-        email: 'mail@mail.com'
-      }
-    ],
-    fields: {
-      'company name': buildField({
-        type: 'input',
-        placeholder: 'company name'
-      }),
-      address: buildField({
-        type: 'text-area',
-        placeholder: 'address'
-      }),
-      city: buildField({
-        type: 'input',
-        placeholder: 'city'
-      }),
-      state: buildField({
-        type: 'input',
-        placeholder: 'state'
-      }),
-      zip: buildField({
-        type: 'input',
-        placeholder: 'zip'
-      }),
-      'contact name': buildField({
-        type: 'input',
-        placeholder: 'contact name'
-      }),
-      phone: buildField({
-        type: 'input',
-        placeholder: 'phone'
-      }),
-      ext: buildField({
-        type: 'input',
-        placeholder: 'ext'
-      }),
-      email: buildField({
-        type: 'input',
-        placeholder: 'email'
-      }),
-      notes: buildField({
-        type: 'text-area',
-        placeholder: 'notes'
-      }),
-      hours: buildField({
-        type: 'input',
-        placeholder: 'hours'
-      })
-    }
-  }
-}
+// function addresses () {
+//   return {
+//     preselected: [
+//       {
+//         'company name': 'Ladson',
+//         address: '3016 Loxley Lane Ladson, CA, 90210',
+//         city: 'Loxley Lane',
+//         state: 'CA',
+//         zip: '90210',
+//         'contact name': 'Seth Ling',
+//         phone: '555-555',
+//         ext: '555',
+//         email: 'mail@mail.com'
+//       },
+//       {
+//         'company name': 'SonLad',
+//         address: '3016 Loxley Lane Ladson, CA, 90210',
+//         city: 'Loxley Lane',
+//         state: 'CA',
+//         zip: '90210',
+//         'contact name': 'Seth Ling',
+//         phone: '555-555',
+//         ext: '555',
+//         email: 'mail@mail.com'
+//       }
+//     ],
+//     fields: {
+//       'company name': buildField({
+//         type: 'input',
+//         placeholder: 'company name'
+//       }),
+//       address: buildField({
+//         type: 'text-area',
+//         placeholder: 'address'
+//       }),
+//       city: buildField({
+//         type: 'input',
+//         placeholder: 'city'
+//       }),
+//       state: buildField({
+//         type: 'input',
+//         placeholder: 'state'
+//       }),
+//       zip: buildField({
+//         type: 'input',
+//         placeholder: 'zip'
+//       }),
+//       'contact name': buildField({
+//         type: 'input',
+//         placeholder: 'contact name'
+//       }),
+//       phone: buildField({
+//         type: 'input',
+//         placeholder: 'phone'
+//       }),
+//       ext: buildField({
+//         type: 'input',
+//         placeholder: 'ext'
+//       }),
+//       email: buildField({
+//         type: 'input',
+//         placeholder: 'email'
+//       }),
+//       notes: buildField({
+//         type: 'text-area',
+//         placeholder: 'notes'
+//       }),
+//       hours: buildField({
+//         type: 'input',
+//         placeholder: 'hours'
+//       })
+//     }
+//   }
+// }
 
 function hazardousFields () {
   return {
@@ -355,27 +373,31 @@ function hazardousFields () {
   }
 }
 
-function inventoryItemFields () {
+export function inventoryItemFields () {
   return {
-    quantity: buildField({
-      type: 'input',
-      placeholder: 'quantity'
-    }),
-    'unit of measure': buildField({
-      type: 'select',
-      options: ['a', 'b', 'c']
-    }),
+    // quantity: buildField({
+    //   type: 'input',
+    //   placeholder: 'quantity'
+    // }),
+    // 'unit of measure': buildField({
+    //   type: 'select',
+    //   options: ['a', 'b', 'c']
+    // }),
+    // description: buildField({
+    //   type: 'input',
+    //   placeholder: 'description'
+    // }),
+    // 'weight unit': buildField({
+    //   type: 'input-select',
+    //   options: ['a', 'b', 'c']
+    // }),
+    // 'total weight': buildField({
+    //   type: 'input',
+    //   placeholder: 'total weight'
+    // }),
     description: buildField({
-      type: 'input',
+      type: 'text-area',
       placeholder: 'description'
-    }),
-    'weight unit': buildField({
-      type: 'input-select',
-      options: ['a', 'b', 'c']
-    }),
-    'total weight': buildField({
-      type: 'input',
-      placeholder: 'total weight'
     }),
     hazardous: buildField({
       type: 'switch',

@@ -22,48 +22,77 @@
         <FormField
           v-for="(fieldVal, fieldKey) in sectionVal.rootFields"
           :key="fieldKey"
-          :field="{...fieldVal, name: fieldKey}"
           :readonly="readonly"
-          @change="(value) => setFormFieldValue({
+          :is-editing="isEditing"
+          :callbacks="fieldCallbacks"
+          :field="{
+            ...fieldVal,
+            name: fieldKey,
+            formLocation: `${sectionKey}/rootFields/${fieldKey}`
+          }"
+          @change="(value) => setFormFieldProp({
+            prop: 'value',
             value,
-            location: `${sectionKey}/rootFields/${fieldKey}`
+            formLocation: `${sectionKey}/rootFields/${fieldKey}`
+          })"
+          @close="stopEdit({
+            field: {
+              name: fieldKey,
+              formLocation: `${sectionKey}/rootFields/${fieldKey}`
+            },
           })"
         />
       </div>
 
       <div
-        v-for="(subVal, subKey) in sectionVal.subSections"
+        v-for="(subVal, subKey, subIndex) in sectionVal.subSections"
         :key="subKey"
         class="section__sub"
       >
-        <h2
+        <div
           :id="`${cleanStrForId(subKey)}-${idSuffix}`"
           class="sub__title"
         >
-          {{ subKey }}
-        </h2>
+          <h2>{{ sectionKey === 'inventory' ? `Item ${subIndex + 1}` : subKey }}</h2>
+
+          <v-btn
+            v-if="isEditing && hasInventoryAction({ sectionKey, sectionVal })"
+            icon
+            @click="deleteFormInventoryItem({ key: subKey })"
+          >
+            <v-icon color="red">
+              mdi-delete
+            </v-icon>
+          </v-btn>
+        </div>
 
         <FormField
           v-for="(subFieldVal, subFieldKey) in subVal.fields"
           :key="subFieldKey"
-          :field="{ ...subFieldVal, name: subFieldKey }"
           :readonly="readonly"
-          @change="(value) => setFormFieldValue({
+          :is-editing="isEditing"
+          :callbacks="fieldCallbacks"
+          :field="{
+            ...subFieldVal,
+            name: subFieldKey,
+            formLocation: `${sectionKey}/subSections/${subKey}/fields/${subFieldKey}`
+          }"
+          @change="(value) => setFormFieldProp({
+            prop: 'value',
             value,
-            location: `${sectionKey}/subSections/${subKey}/fields/${subFieldKey}`
+            formLocation: `${sectionKey}/subSections/${subKey}/fields/${subFieldKey}`
+          })"
+          @close="stopEdit({
+            field: {
+              name: subFieldKey,
+              formLocation: `${sectionKey}/subSections/${subKey}/fields/${subFieldKey}`
+            },
           })"
         />
       </div>
 
-      <div v-if="sectionVal.actionSection">
-        <FormField
-          :field="sectionVal.actionSection"
-          :readonly="readonly"
-          @change="(value) => handleActionSection({
-            value,
-            location: `${sectionKey}/actionSection`
-          })"
-        />
+      <div v-if="hasInventoryAction({ sectionKey, sectionVal })">
+        <DetailsFormAddInventoryItem />
       </div>
     </div>
   </div>
@@ -71,14 +100,16 @@
 
 <script>
 import FormField from '@/components/FormField/FormField'
-import { detailsState, detailsMethods } from '@/views/Details/inner_store'
+import DetailsFormAddInventoryItem from '@/views/Details/DetailsFormAddInventoryItem'
+import { formModule, documentModule } from '@/views/Details/inner_store/index'
 import { cleanStrForId } from '@/views/Details/inner_utils/clean_str_for_id'
 
 export default {
   name: 'DetailsForm',
 
   components: {
-    FormField
+    FormField,
+    DetailsFormAddInventoryItem
   },
 
   props: {
@@ -92,30 +123,32 @@ export default {
     }
   },
 
-  /*
-    TODO:
-    - Add watcher for inventory section that triggers handleActionSection on change
-  */
+  data: () => ({
+    fieldCallbacks: {
+      startEdit: documentModule.methods.startEdit,
+      startHover: documentModule.methods.startHover,
+      stopHover: documentModule.methods.stopHover
+    }
+  }),
 
   computed: {
+    isEditing () {
+      return formModule.state.isEditing
+    },
+
     form () {
-      return detailsState.form
+      return formModule.state.form
     }
   },
 
   methods: {
     cleanStrForId,
+    stopEdit: documentModule.methods.stopEdit,
+    setFormFieldProp: formModule.methods.setFormFieldProp,
+    deleteFormInventoryItem: formModule.methods.deleteFormInventoryItem,
 
-    setFormFieldValue ({ value, location }) {
-      detailsMethods.setFormFieldValue({ value, location })
-    },
-
-    handleActionSection ({ value, location }) {
-      const { type } = value
-
-      if (type === 'inventory-item-initialize') {
-        this.setFormFieldValue({ value, location })
-      }
+    hasInventoryAction ({ sectionKey, sectionVal }) {
+      return sectionKey === 'inventory' && sectionVal.actionSection
     }
   }
 }
@@ -128,6 +161,7 @@ export default {
   overflow-y: auto;
   padding: 3.6rem 6.5rem;
   padding-top: 8.4rem;
+  scroll-behavior: smooth;
 }
 
 .section__title {
@@ -166,11 +200,22 @@ export default {
 }
 
 .sub__title {
-  font-size: 1.6rem;
-  line-height: 3.6rem;
-  color: map-get($colors, grey-4);
-  border-bottom: 0.1rem solid map-get($colors, grey-3);
-  margin-bottom: 1.4rem;
-  text-transform: capitalize;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  h2 {
+    width: 100%;
+    font-size: 1.6rem;
+    line-height: 3.6rem;
+    color: map-get($colors, grey-4);
+    border-bottom: 0.1rem solid map-get($colors, grey-3);
+    margin-bottom: 1.4rem;
+    text-transform: capitalize;
+  }
+
+  button {
+    margin-left: auto;
+  }
 }
 </style>

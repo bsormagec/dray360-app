@@ -37,12 +37,33 @@ export default {
     field: {
       type: Object,
       required: true
+    },
+    isEditing: {
+      type: Boolean,
+      required: true
     }
   },
 
   data: () => ({
     date: undefined,
     isOpen: false
-  })
+  }),
+
+  watch: {
+    isEditing: function () {
+      this.syncValue()
+    }
+  },
+
+  methods: {
+    syncValue () {
+      if (typeof this.field.value === 'object') {
+        this.date = this.field.value.date
+        return
+      }
+
+      this.date = this.field.value
+    }
+  }
 }
 </script>

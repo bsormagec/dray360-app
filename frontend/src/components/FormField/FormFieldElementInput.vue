@@ -5,8 +5,8 @@
       :placeholder="field.el.placeholder"
       outlined
       dense
-      :value="value"
-      @change="e => $emit('change', e)"
+      :value="field.value"
+      @change="e => change(e)"
     />
   </div>
 </template>
@@ -19,11 +19,18 @@ export default {
     field: {
       type: Object,
       required: true
-    },
-    value: {
-      type: String,
-      required: false,
-      default: ''
+    }
+  },
+
+  mounted () {
+    if (this.field.value) {
+      this.change(this.field.value)
+    }
+  },
+
+  methods: {
+    change (e) {
+      this.$emit('change', e)
     }
   }
 }
