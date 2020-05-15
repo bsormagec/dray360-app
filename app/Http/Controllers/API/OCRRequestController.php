@@ -20,7 +20,7 @@ class OCRRequestController extends Controller
     const MANUAL_UPLOAD_SUFFIX = '.apiupload';
 
     // expire upload URI after this many minutes
-    const SECONDS_URI_REMAINS_VALID = 15;
+    const MINUTES_URI_REMAINS_VALID = 15;
 
 
     /**
@@ -71,7 +71,7 @@ class OCRRequestController extends Controller
                 'Bucket' => env('AWS_BUCKET'),
                 'Key'    => $uploadingFilename
             ]);
-            $urlExpiryTime = Carbon::now()->addSeconds(self::SECONDS_URI_REMAINS_VALID);
+            $urlExpiryTime = Carbon::now()->addMinutes(self::MINUTES_URI_REMAINS_VALID);
             $presignedRequest = $s3Client->createPresignedRequest($s3Command, $urlExpiryTime);
             $uploadUri = (string) $presignedRequest->getUri()->__toString();
 
