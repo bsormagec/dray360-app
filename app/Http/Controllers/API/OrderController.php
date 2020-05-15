@@ -19,4 +19,10 @@ class OrderController extends Controller
         $orders = Order::paginate(25);
         return \App\Http\Resources\Orders::collection($orders);
     }
+
+    public function order(Request $request, $orderId)
+    {
+        $order = Order::where('id', $orderId)->get()->first();
+        return response()->json($order);
+    }
 }
