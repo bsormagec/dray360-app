@@ -8,7 +8,7 @@ use Illuminate\Support\Facades\Schema;
 note: signature for $table->bigInteger('bill_to_address_id', false, true)
 has as the two booleans, the meaning:
 public function bigInteger($column, $autoIncrement = false, $unsigned = false)
-but is better to use: $table->unsignedBigInteger('bill_to_address_id', false, true)
+but is better to use: $table->unsignedBigInteger('bill_to_address_id', false)
 */
 
 
