@@ -44,8 +44,8 @@ use Illuminate\Database\Eloquent\SoftDeletes;
  * @property \Illuminate\Database\Eloquent\Collection ocrRequest
  * @property \Illuminate\Database\Eloquent\Collection getOCRRequestStatusList
  * @property \App\Models\Address billToAddress
- * @property \App\Models\Address portOfOriginAddress
- * @property \App\Models\Address portOfDestinationAddress
+ * @property \App\Models\Address portRampOfOriginAddress
+ * @property \App\Models\Address portRampOfDestinationAddress
 
  * @property \App\Models\OCRRequest getOCRRequestAttribute
  * @property \App\Models\OCRRequestStatus getLatestOCRRequestStatusAttribute
@@ -53,8 +53,8 @@ use Illuminate\Database\Eloquent\SoftDeletes;
  * @property \Illuminate\Database\Eloquent\Collection getOrderAddressEventsAttribute
  * @property \Illuminate\Database\Eloquent\Collection getOCRRequestAttribute
  * @property \App\Models\Address getBillToAddressAttribute
- * @property \App\Models\Address getPortOfOriginAddressAttribute
- * @property \App\Models\Address getPortOfDestinationAddressAttribute
+ * @property \App\Models\Address getPortRampOfOriginAddressAttribute
+ * @property \App\Models\Address getPortRampOfDestinationAddressAttribute
  */
 
 
@@ -68,7 +68,9 @@ class Order extends Model
         'latest_ocr_request_status',
         'order_address_events',
         'order_line_items',
-        'bill_to_address'
+        'bill_to_address',
+        'port_ramp_of_origin_address',
+        'port_ramp_of_destination_address'
     ];
 
     public $table = 't_orders';
@@ -233,7 +235,7 @@ class Order extends Model
      **/
     public function billToAddress()
     {
-        return $this->belongsTo(\App\Models\Address::class, 't_address_id');
+        return $this->belongsTo(\App\Models\Address::class, 'bill_to_address_id');
     }
 
     /**
@@ -247,7 +249,7 @@ class Order extends Model
     /**
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
      **/
-    public function portOfOriginAddress()
+    public function portRampOfOriginAddress()
     {
         return $this->belongsTo(\App\Models\Address::class, 'port_ramp_of_origin_address_id');
     }
@@ -256,14 +258,14 @@ class Order extends Model
      *
      * @return \App\Models\Address
      */
-    function getPortOfOriginAddressAttribute() {
-        return $this->portOfOriginAddress()->get();
+    function getPortRampOfOriginAddressAttribute() {
+        return $this->portRampOfOriginAddress()->get();
     }
 
     /**
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
      **/
-    public function portOfDestinationAddress()
+    public function portRampOfDestinationAddress()
     {
         return $this->belongsTo(\App\Models\Address::class, 'port_ramp_of_destination_address_id');
     }
@@ -272,8 +274,8 @@ class Order extends Model
      *
      * @return \App\Models\Address
      */
-    function getPortOfDestinationAddressAttribute() {
-        return $this->portOfDestinationAddress()->get();
+    function getPortRampOfDestinationAddressAttribute() {
+        return $this->portRampOfDestinationAddress()->get();
     }
 
 }

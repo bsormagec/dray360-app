@@ -19,38 +19,53 @@
 // import exampleDocument from '@/views/Details/inner_utils/example_document'
 import mapFieldNames from '@/views/Details/inner_utils/map_field_names'
 
-export const parse = (d) => {
+export const parse = (data) => {
+  const ocrData = data.ocr_data
+
   const parsed = [
   ]
 
-  for (const imgKey in d.page_index_filenames.value) {
+  for (const imgKey in ocrData.page_index_filenames.value) {
     parsed.push({
-      image: d.page_index_filenames.value[imgKey].value,
-      highlights: getHighlights(imgKey, d)
+      image: ocrData.page_index_filenames.value[imgKey].presigned_download_uri,
+      highlights: getHighlights(imgKey, data)
     })
   }
 
   return parsed
 }
 
-function getHighlights (id, d) {
-  const highlights = Object.keys(d.fields).map(fieldKey => {
-    if (!d.fields[fieldKey].ocr_region) return
+function getHighlights (id, data) {
+  const ocrData = data.ocr_data
 
-    const matches = d.fields[fieldKey].ocr_region.page_index === parseInt(id)
+  const highlights = Object.keys(ocrData.fields).map(fieldKey => {
+    if (!ocrData.fields[fieldKey].ocr_region) return
+
+    const matches = ocrData.fields[fieldKey].ocr_region.page_index === parseInt(id)
+
     if (matches) {
-      const { bottom, left, right, top } = d.fields[fieldKey].ocr_region
+      const { bottom, left, right, top } = ocrData.fields[fieldKey].ocr_region
 
       return {
         bottom,
         left,
         right,
         top,
-        name: mapFieldNames(d.fields[fieldKey].name),
-        value: d.fields[fieldKey].value
+        name: mapFieldNames(ocrData.fields[fieldKey].name),
+        value: getValue(fieldKey, data)
       }
     }
   }).filter(v => Boolean(v))
 
   return highlights
+}
+
+function getValue (fieldKey, data) {
+  if (!data[fieldKey]) return ''
+
+  if (typeof data[fieldKey] === 'string' || typeof data[fieldKey] === 'number') {
+    return data[fieldKey]
+  }
+
+  return data[fieldKey][0].unparsed_text_block || data[fieldKey][0].unparsed_text_block
 }

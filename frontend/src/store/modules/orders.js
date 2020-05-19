@@ -39,7 +39,7 @@ const actions = {
   async [types.getOrderDetail] ({ commit }, order) {
     const [error, data] = await getOrderDetail(order)
 
-    if (error || !data) return reqStatus.error
+    if (error || !data.ocr_data) return reqStatus.error
 
     commit(types.setCurrentOrder, data)
     return reqStatus.success
