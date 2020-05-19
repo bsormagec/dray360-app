@@ -36,6 +36,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
  * @property string|\Carbon\Carbon estimated_arrival_utc
  * @property string|\Carbon\Carbon last_free_date_utc
  * @property string booking_number
+ * @property string pickup_number
  * @property string bol
  * @property json ocr_data
  *
@@ -108,7 +109,8 @@ class Order extends Model
         'house_bol_hawb',
         'estimated_arrival_utc',
         'last_free_date_utc',
-        'booking_number'
+        'booking_number',
+        'pickup_number'
     ];
 
     /**
@@ -143,6 +145,7 @@ class Order extends Model
         'estimated_arrival_utc' => 'datetime',
         'last_free_date_utc' => 'datetime',
         'booking_number' => 'string',
+        'pickup_number' => 'string',
         'bol' => 'string',
         'bill_to_address_id' => 'integer',
         'port_ramp_of_origin_address_id' => 'integer',

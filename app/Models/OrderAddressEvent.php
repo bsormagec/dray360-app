@@ -25,10 +25,16 @@ use Illuminate\Database\Eloquent\SoftDeletes;
  * @property time delivery_window_from_localtime
  * @property time delivery_window_to_localtime
  * @property string delivery_instructions
+ * @property \App\Models\Address getAddressAttribute
  */
 class OrderAddressEvent extends Model
 {
     use SoftDeletes;
+
+    protected $appends = [
+        'address'
+    ];
+
 
     public $table = 't_order_address_events';
 
@@ -37,7 +43,6 @@ class OrderAddressEvent extends Model
 
 
     protected $dates = ['deleted_at'];
-
 
 
     public $fillable = [
@@ -95,6 +100,14 @@ class OrderAddressEvent extends Model
     public function address()
     {
         return $this->belongsTo(\App\Models\Address::class, 't_address_id');
+    }
+
+    /**
+     *
+     * @return \App\Models\Address
+     */
+    function getAddressAttribute() {
+        return $this->address()->get();
     }
 
     /**
