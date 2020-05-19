@@ -107,7 +107,7 @@ class OrderAddressEvent extends Model
      * @return \App\Models\Address
      */
     function getAddressAttribute() {
-        return $this->address()->get();
+        return $this->address()->first();
     }
 
     /**

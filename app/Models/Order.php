@@ -210,7 +210,7 @@ class Order extends Model
      * @return \Models\OCRRequest
      */
     public function getOCRRequestAttribute() {
-        return $this->ocrRequest()->get()[0];
+        return $this->ocrRequest()->first();
     }
 
     /**
