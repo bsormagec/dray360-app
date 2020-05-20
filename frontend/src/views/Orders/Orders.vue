@@ -10,7 +10,10 @@
       :is-open="mobileSidebarOpen"
     />
 
-    <OrdersList v-if="meta().last_page && shouldShowTab(tabs.list)" />
+    <OrdersList
+      v-if="meta().last_page && shouldShowTab(tabs.list)"
+      :active-page="activePage"
+    />
 
     <OrdersCreate
       v-if="shouldShowTab(tabs.create)"
@@ -52,6 +55,7 @@ export default {
       }),
       activeMobileTab: tabs.list,
       mobileSidebarOpen: false,
+      activePage: 0,
       tabs
     }
   },
@@ -84,10 +88,25 @@ export default {
     },
 
     async fetchOrdersList (n) {
-      const status = await this[types.getOrders](n)
+      this.activePage = parseInt(this.handleLocationUrl(n))
+      const status = await this[types.getOrders](this.activePage)
 
-      if (status === reqStatus.success) return console.log('success')
-      console.log('error')
+      if (status === reqStatus.success) {
+        console.log('success')
+      } else {
+        console.log('error')
+      }
+    },
+
+    handleLocationUrl (n) {
+      const page = n || location.search.split('=')[1] || 1
+      const search = `?page=${page}`
+
+      if (location.search !== search) {
+        this.$router.replace(search)
+      }
+
+      return page
     }
   },
 

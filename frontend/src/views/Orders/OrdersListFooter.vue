@@ -55,8 +55,7 @@ export default {
       type: Number,
       required: true
     },
-
-    setActivePage: {
+    requestPage: {
       type: Function,
       required: true
     }
@@ -81,7 +80,7 @@ export default {
       return this.pagesArray.map((n, i) => ({
         type: 'numberedButton',
         value: n,
-        action: this.setActivePage
+        action: this.requestPage
       }))
     },
 
@@ -115,6 +114,7 @@ export default {
           },
           {
             value: 'Prev',
+            disabled: this.cut >= this.meta().last_page,
             action: this.prevBtn
           }
         ],
@@ -122,6 +122,7 @@ export default {
         right: [
           {
             value: 'Next',
+            disabled: this.cut >= this.meta().last_page,
             action: this.nextBtn
           },
           {
@@ -154,24 +155,24 @@ export default {
       })
 
       this.showingSlice = index
-      await this.setActivePage(page)
+      await this.requestPage(page)
     },
 
     async firstBtn () {
       this.showingSlice = 0
-      await this.setActivePage(1)
+      await this.requestPage(1)
     },
 
     async prevBtn () {
       if (!this.slicedNBtns[this.showingSlice - 1]) return
       this.showingSlice -= 1
-      this.setActivePage(this.slicedNBtns[this.showingSlice][0].value)
+      this.requestPage(this.slicedNBtns[this.showingSlice][0].value)
     },
 
     async nextBtn () {
       if (!this.slicedNBtns[this.showingSlice + 1]) return
       this.showingSlice += 1
-      this.setActivePage(this.slicedNBtns[this.showingSlice][0].value)
+      this.requestPage(this.slicedNBtns[this.showingSlice][0].value)
     },
 
     async lastBtn () {
@@ -179,7 +180,7 @@ export default {
       const lastSlice = this.slicedNBtns[lastSliceIndex]
       const lastButton = lastSlice[this.slicedNBtns[lastSliceIndex].length - 1]
       this.showingSlice = lastSliceIndex
-      await this.setActivePage(lastButton.value)
+      await this.requestPage(lastButton.value)
     }
   }
 }

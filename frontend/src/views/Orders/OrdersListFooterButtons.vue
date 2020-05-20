@@ -12,6 +12,7 @@
     >
       <v-btn
         color="primary"
+        :disabled="btn.disabled"
         :outlined="isOutlined(btn)"
         @click="btn.action(btn.value)"
       >

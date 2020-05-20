@@ -11,7 +11,7 @@
 
     <OrdersListFooter
       :active-page="activePage"
-      :set-active-page="setActivePage"
+      :request-page="requestPage"
     />
   </div>
 </template>
@@ -33,8 +33,14 @@ export default {
     OrdersListFooter
   },
 
+  props: {
+    activePage: {
+      type: Number,
+      required: true
+    }
+  },
+
   data: () => ({
-    activePage: 1,
     headers: [
       {
         text: 'Id',
@@ -58,8 +64,7 @@ export default {
       this.headers = newHeaders
     },
 
-    async setActivePage (n) {
-      this.activePage = n
+    async requestPage (n) {
       await this[providerMethodsName].fetchOrdersList(n)
     }
   }
