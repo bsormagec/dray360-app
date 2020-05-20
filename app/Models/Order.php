@@ -39,6 +39,12 @@ use Illuminate\Database\Eloquent\SoftDeletes;
  * @property string pickup_number
  * @property string bol
  * @property json ocr_data
+ * @property boolean bill_to_address_verified
+ * @property string bill_to_address_raw_text
+ * @property boolean port_ramp_of_origin_address_verified
+ * @property string port_ramp_of_origin_address_raw_text
+ * @property boolean port_ramp_of_destination_address_verified
+ * @property string port_ramp_of_destination_address_raw_text
  *
  * @property \Illuminate\Database\Eloquent\Collection orderAddressEvents
  * @property \Illuminate\Database\Eloquent\Collection orderLineItems
@@ -110,7 +116,13 @@ class Order extends Model
         'estimated_arrival_utc',
         'last_free_date_utc',
         'booking_number',
-        'pickup_number'
+        'pickup_number',
+        'bill_to_address_id',
+        'bill_to_address_verified',
+        'port_of_origin_address_id',
+        'port_of_origin_address_verified',
+        'port_of_destination_address_id',
+        'port_of_destination_address_verified'
     ];
 
     /**
@@ -148,8 +160,14 @@ class Order extends Model
         'pickup_number' => 'string',
         'bol' => 'string',
         'bill_to_address_id' => 'integer',
+        'bill_to_address_verified' => 'boolean',
+        'bill_to_address_raw_text' => 'string',
         'port_ramp_of_origin_address_id' => 'integer',
+        'port_ramp_of_origin_address_verified' => 'boolean',
+        'port_ramp_of_origin_address_raw_text' => 'string',
         'port_ramp_of_destination_address_id' => 'integer',
+        'port_ramp_of_destination_address_verified' => 'boolean',
+        'port_ramp_of_destination_address_raw_text' => 'string',
         'ocr_data' => 'json'
     ];
 

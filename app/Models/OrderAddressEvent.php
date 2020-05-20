@@ -15,6 +15,8 @@ use Illuminate\Database\Eloquent\SoftDeletes;
  * @property string address_schedule_description
  * @property integer t_order_id
  * @property integer t_address_id
+ * @property boolean t_address_verified
+ * @property boolean t_address_raw_text
  * @property integer event_number
  * @property boolean is_hook_event
  * @property boolean is_mount_event
@@ -49,6 +51,7 @@ class OrderAddressEvent extends Model
         'address_schedule_description',
         't_order_id',
         't_address_id',
+        't_address_verified',
         'event_number',
         'is_hook_event',
         'is_mount_event',
@@ -72,6 +75,8 @@ class OrderAddressEvent extends Model
         'address_schedule_description' => 'string',
         't_order_id' => 'integer',
         't_address_id' => 'integer',
+        't_address_verified' => 'boolean',
+        't_address_raw_text' => 'string',
         'event_number' => 'integer',
         'is_hook_event' => 'boolean',
         'is_mount_event' => 'boolean',
