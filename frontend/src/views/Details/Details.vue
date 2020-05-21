@@ -1,25 +1,27 @@
 <template>
   <div class="details">
-    <DetailsSidebar />
-
-    <div
-      class="details__form"
-      :style="{ minWidth: `${resizeDiff}%` }"
-    >
-      <DetailsFormEditing v-show="isEditing" />
-      <DetailsFormViewing v-show="!isEditing" />
+    <ContentLoading :loaded="loaded">
+      <DetailsSidebar />
 
       <div
-        class="form__resize"
-        @mousedown.prevent="handleResize"
+        class="details__form"
+        :style="{ minWidth: `${resizeDiff}%` }"
       >
-        <div />
-        <div />
-        <div />
-      </div>
-    </div>
+        <DetailsFormEditing v-show="isEditing" />
+        <DetailsFormViewing v-show="!isEditing" />
 
-    <DetailsDocument />
+        <div
+          class="form__resize"
+          @mousedown.prevent="handleResize"
+        >
+          <div />
+          <div />
+          <div />
+        </div>
+      </div>
+
+      <DetailsDocument />
+    </ContentLoading>
   </div>
 </template>
 
@@ -30,6 +32,7 @@ import DetailsFormViewing from '@/views/Details/DetailsFormViewing'
 import DetailsDocument from '@/views/Details/DetailsDocument'
 import { reqStatus } from '@/enums/req_status'
 
+import ContentLoading from '@/components/ContentLoading'
 import { formModule, documentModule } from '@/views/Details/inner_store/index'
 import { exampleForm as form } from '@/views/Details/inner_utils/example_form'
 import { parse } from '@/views/Details/inner_utils/parse_document'
@@ -43,7 +46,8 @@ export default {
     DetailsSidebar,
     DetailsFormEditing,
     DetailsFormViewing,
-    DetailsDocument
+    DetailsDocument,
+    ContentLoading
   },
 
   data: () => ({
@@ -51,7 +55,8 @@ export default {
       currentOrder: state => state.currentOrder
     }),
     resizeDiff: 50,
-    startPos: 0
+    startPos: 0,
+    loaded: false
   }),
 
   computed: {
@@ -66,6 +71,7 @@ export default {
 
   async mounted () {
     await this.requestOrderDetail()
+    this.loaded = true
   },
 
   methods: {

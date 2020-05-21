@@ -49,3 +49,9 @@ export default {
   }
 }
 </script>
+
+<style lang="scss" scoped>
+.listbody {
+  width: 100%;
+}
+</style>

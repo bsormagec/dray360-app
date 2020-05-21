@@ -1,7 +1,10 @@
 <template>
   <div class="content-loading">
     <transition name="fade">
-      <div v-if="loaded">
+      <div
+        v-if="loaded"
+        class="loaded"
+      >
         <slot />
       </div>
     </transition>
@@ -32,6 +35,10 @@ export default {
 .content-loading {
   width: 100%;
   height: 100%;
+}
+
+.loaded {
+  display: flex;
 }
 
 .loader,
