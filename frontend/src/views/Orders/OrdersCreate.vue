@@ -97,7 +97,8 @@ export default {
   overflow-x: hidden;
 
   @media screen and (min-width: map-get($breakpoints, med)) {
-    width: 35%;
+    min-width: 25%;
+    max-width: 25%;
     box-shadow: map-get($properties, inset-shadow-left);
     border-left: 0.1rem solid map-get($colors, grey-2);
     padding: 5.2rem 1.6rem;

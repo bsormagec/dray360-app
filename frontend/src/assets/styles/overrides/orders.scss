@@ -4,7 +4,7 @@
       border-radius: unset;
       box-shadow: map-get($properties, table-shadow);
     
-      * {
+      *:not(.status__circle) {
         border: unset !important;
       }
     

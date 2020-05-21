@@ -10,25 +10,26 @@
       Orders
     </h1>
 
-    <div
-      class="header__dropdown"
-      :style="{width: `${cachedHeaders.length * 8}rem`}"
-    >
-      <v-select
-        v-model="selectedItems"
-        label="Columns"
-        :items="headerItems"
-        solo
-        dense
-        multiple
-        persistent-hint
-        @change="handleSelection"
-      />
-    </div>
+    <SearchBar :style="{ marginRight: '1rem' }" />
+
+    <Select
+      label="View by Status"
+      :style="{ marginRight: '1rem' }"
+      :items="statuses "
+      @change="() => {}"
+    />
+
+    <Select
+      label="Columns"
+      :items="headerItems"
+      @change="handleSelection"
+    />
   </div>
 </template>
 
 <script>
+import Select from '@/components/Select'
+import SearchBar from '@/components/SearchBar'
 import { providerMethodsName } from '@/views/Orders/inner_types'
 
 export default {
@@ -36,7 +37,16 @@ export default {
 
   inject: [providerMethodsName],
 
+  components: {
+    Select,
+    SearchBar
+  },
+
   props: {
+    statuses: {
+      type: Array,
+      required: true
+    },
     headers: {
       type: Array,
       required: true
@@ -49,19 +59,17 @@ export default {
 
   data: () => ({
     cachedHeaders: [],
-    headerItems: [],
-    selectedItems: []
+    headerItems: []
   }),
 
   beforeMount () {
     this.cachedHeaders = this.headers
     this.headerItems = this.cachedHeaders.map(({ text }) => text)
-    this.selectedItems = this.headerItems
   },
 
   methods: {
     handleSelection (items) {
-      const newHeaders = this.cachedHeaders.filter(({ text }) => this.selectedItems.find(selected => text === selected))
+      const newHeaders = this.cachedHeaders.filter(({ text }) => items.find(selected => text === selected))
       this.setHeaders(newHeaders)
     },
 
@@ -88,9 +96,5 @@ export default {
       display: none;
     }
   }
-}
-
-.header__dropdown {
-  max-width: 52rem;
 }
 </style>

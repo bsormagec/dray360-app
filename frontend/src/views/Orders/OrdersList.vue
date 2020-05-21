@@ -3,13 +3,19 @@
     class="list"
   >
     <OrdersListHeader
+      :statuses="statuses"
       :headers="headers"
       :set-headers="setHeaders"
     />
 
-    <OrdersListBody :headers="headers" />
+    <ContentLoading
+      :loaded="loaded"
+    >
+      <OrdersListBody :headers="headers" />
+    </ContentLoading>
 
     <OrdersListFooter
+      v-if="loaded"
       :active-page="activePage"
       :request-page="requestPage"
     />
@@ -20,6 +26,7 @@
 import OrdersListHeader from '@/views/Orders/OrdersListHeader'
 import OrdersListBody from '@/views/Orders/OrdersListBody'
 import OrdersListFooter from '@/views/Orders/OrdersListFooter'
+import ContentLoading from '@/components/ContentLoading'
 import { providerMethodsName } from '@/views/Orders/inner_types'
 
 export default {
@@ -30,12 +37,17 @@ export default {
   components: {
     OrdersListHeader,
     OrdersListBody,
-    OrdersListFooter
+    OrdersListFooter,
+    ContentLoading
   },
 
   props: {
     activePage: {
       type: Number,
+      required: true
+    },
+    loaded: {
+      type: Boolean,
       required: true
     }
   },
@@ -48,7 +60,7 @@ export default {
         value: 'id'
       },
       {
-        text: 'Request Status',
+        text: 'Status',
         value: 'latest_ocr_request_status.status'
       },
       { text: 'Date', value: 'created_at' },
@@ -56,6 +68,14 @@ export default {
       { text: 'Shipment Designation', value: 'shipment_designation' },
       { text: 'Eq. Type', value: 'equipment_type' },
       { text: 'Actions', value: 'action' }
+    ],
+    statuses: [
+      'Pending',
+      'Processing',
+      'In review',
+      'Verified',
+      'Sent to TMS',
+      'Error'
     ]
   }),
 
@@ -74,7 +94,6 @@ export default {
 <style lang="scss" scoped>
 .list {
   padding: 2rem 1rem;
-  flex-grow: 1;
   display: flex;
   flex-direction: column;
   flex-grow: unset;

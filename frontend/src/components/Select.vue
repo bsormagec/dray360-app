@@ -1,0 +1,83 @@
+<template>
+  <div class="select">
+    <v-select
+      v-model="selected"
+      :items="items"
+      solo
+      dense
+      multiple
+      persistent-hint
+      @change="e => $emit('change', e)"
+    />
+
+    <v-icon color="primary">
+      mdi-chevron-down
+    </v-icon>
+
+    <span class="select__label">
+      {{ label }}
+    </span>
+  </div>
+</template>
+
+<script>
+export default {
+  name: 'Select',
+
+  props: {
+    label: {
+      type: String,
+      required: true
+    },
+    items: {
+      type: Array,
+      required: true
+    }
+  },
+
+  data: () => ({
+    selected: []
+  }),
+
+  mounted () {
+    this.selected = this.items
+  }
+}
+</script>
+
+<style lang="scss" scoped>
+.select {
+  position: relative;
+  height: 2.4rem;
+  width: 100%;
+  max-width: 16rem;
+
+  .v-input {
+    opacity: 0;
+    z-index: 2;
+  }
+}
+
+i {
+  position: absolute !important;
+  top: 50%;
+  transform: translateY(-50%);
+  right: 0.8rem;
+  font-size: 1.6rem !important;
+}
+
+.select__label {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  left: 0;
+  display: block;
+  width: 100%;
+  height: 100%;
+  color: map-get($colors , blue);
+  border: 0.1rem solid map-get($colors , blue);
+  border-radius: 0.2rem;
+  padding: 0.2rem 2.4rem 0.3rem 0.8rem;
+  font-size: 1.3rem;
+}
+</style>

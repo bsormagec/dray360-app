@@ -10,10 +10,12 @@
       :is-open="mobileSidebarOpen"
     />
 
-    <OrdersList
-      v-if="meta().last_page && shouldShowTab(tabs.list)"
-      :active-page="activePage"
-    />
+    <div :style="{ width: '100%', minWidth: '65%', display: 'flex' }">
+      <OrdersList
+        :active-page="activePage"
+        :loaded="loaded && shouldShowTab(tabs.list)"
+      />
+    </div>
 
     <OrdersCreate
       v-if="shouldShowTab(tabs.create)"
@@ -53,6 +55,7 @@ export default {
         links: state => state.links,
         meta: state => state.meta
       }),
+      loaded: false,
       activeMobileTab: tabs.list,
       mobileSidebarOpen: false,
       activePage: 0,
@@ -69,6 +72,7 @@ export default {
 
   async mounted () {
     await this.fetchOrdersList()
+    this.loaded = true
   },
 
   methods: {

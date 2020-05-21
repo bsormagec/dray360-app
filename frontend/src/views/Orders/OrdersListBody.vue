@@ -7,13 +7,12 @@
       :hide-default-footer="true"
       mobile-breakpoint="319"
     >
+      <template v-slot:item.latest_ocr_request_status.status="{ item }">
+        <OrdersListBodyStatus :item="item" />
+      </template>
+
       <template v-slot:item.action="{ item }">
-        <v-btn
-          color="primary"
-          @click="() => item.action(item.id)"
-        >
-          View
-        </v-btn>
+        <OrdersListBodyAction :item="item" />
       </template>
     </v-data-table>
   </div>
@@ -21,11 +20,18 @@
 
 <script>
 import { providerStateName } from '@/views/Orders/inner_types'
+import OrdersListBodyStatus from '@/views/Orders/OrdersListBodyStatus'
+import OrdersListBodyAction from '@/views/Orders/OrdersListBodyAction'
 
 export default {
   name: 'OrdersListBody',
 
   inject: [providerStateName],
+
+  components: {
+    OrdersListBodyStatus,
+    OrdersListBodyAction
+  },
 
   props: {
     headers: {
