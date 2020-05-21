@@ -61,11 +61,16 @@ function getHighlights (id, data) {
 }
 
 function getValue (fieldKey, data) {
-  if (!data[fieldKey]) return ''
-
-  if (typeof data[fieldKey] === 'string' || typeof data[fieldKey] === 'number') {
-    return data[fieldKey]
+  try {
+    if (!data[fieldKey]) {
+      return ''
+    }
+    if (typeof data[fieldKey] === 'string' || typeof data[fieldKey] === 'number') {
+      return data[fieldKey]
+    }
+    // delete this comment: return data[fieldKey][0].unparsed_text_block || data[fieldKey][0].unparsed_text_block
+    return data[fieldKey + '_raw_text']
+  } catch (err) {
+    console.log(err)
   }
-
-  return data[fieldKey][0].unparsed_text_block || data[fieldKey][0].unparsed_text_block
 }
