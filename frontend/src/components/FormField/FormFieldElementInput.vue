@@ -3,6 +3,7 @@
     <v-text-field
       :label="field.name"
       :placeholder="field.el.placeholder"
+      :type="field.type"
       outlined
       dense
       :value="field.value"

@@ -2,28 +2,19 @@
   <div>
     <div class="wrapper">
       <div class="login-box">
-        <!-- <v-text-field
-          v-model="email"
-          type="text"
-          name="username"
-          placeholder="Email"
-          class="login_textfields"
-        /> -->
+        <img
+          class="logo"
+          src="../assets/images/2x@Cushing-Logo-BW.png"
+          alt=""
+        >
         <FormFieldElementInput
-          v-model="email"
           :field="fields_email"
+          @change="e =>(email = e)"
         />
         <FormFieldElementInput
-          v-model="password"
           :field="fields_password"
+          @change="e =>(password = e)"
         />
-        <!-- <v-text-field
-          v-model="password"
-          type="password"
-          name="password"
-          placeholder="Password"
-          class="login_textfields"
-        /> -->
         <div class="button_checkbox">
           <v-checkbox
             v-model="disabled"
@@ -84,6 +75,8 @@ export default {
 </script>
 <style lang="scss" scoped>
   $background_login: url("../assets/images/login_background.png");
+  $login_logo: url("../assets/images/2x@Cushing-Logo-BW.png");
+
   .wrapper{
     background: $background_login no-repeat center center fixed;
     background-size: cover;
@@ -107,6 +100,10 @@ export default {
       flex-direction: column;
       border-top: 8px solid #397E92;
       padding: 30px;
+      .logo{
+        width: 240px;
+        margin-bottom: 50px;
+      }
       .form-field-element-input{
            width: 100%;
       }
