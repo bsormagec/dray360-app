@@ -1,4 +1,5 @@
 import Vue from 'vue'
+import { objValFromLocation } from '@/utils/obj_val_from_loc'
 import { getInventoryCount } from '@/views/Details/inner_utils/get_inventory_count'
 
 const state = Vue.observable({
@@ -17,17 +18,16 @@ const methods = {
 
   setFormFieldProp ({ prop, value, formLocation, validation }) {
     if (!formLocation) return
-    const parts = formLocation.split('/')
     let valueToSet = value
-    let locatedObj
 
-    if (formLocation.includes('rootFields')) {
-      locatedObj = state.form.sections[parts[0]][parts[1]][parts[2]]
-    } else if (formLocation.includes('subSections')) {
-      locatedObj = state.form.sections[parts[0]][parts[1]][parts[2]][parts[3]][parts[4]]
-    } else if (formLocation.includes('actionSection')) {
+    const locatedObj = objValFromLocation({
+      obj: state.form.sections,
+      location: formLocation,
+      separator: '/'
+    })
+
+    if (formLocation.includes('actionSection')) {
       valueToSet = getInventoryCount(state.form)
-      locatedObj = state.form.sections[parts[0]][parts[1]]
     }
 
     if (validation && !validation(locatedObj)) return

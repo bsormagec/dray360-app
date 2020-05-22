@@ -1,4 +1,4 @@
-import { uuid } from '@/utils/uuid_valid_id'
+// import { uuid } from '@/utils/uuid_valid_id'
 
 export const exampleForm = {
   sections: {
@@ -116,89 +116,90 @@ export const exampleForm = {
       }
     },
     itinerary: {
-      subSections: {
-        'hook: rail or port terminal': {
-          fields: {
-            // hook: buildField({
-            //   type: 'modal-select',
-            //   placeholder: 'select address',
-            //   options: addresses()
-            // })
-            hook: buildField({
-              type: 'text-area',
-              placeholder: 'hook address'
-            })
-          }
-        },
-        'deliver: container to': {
-          fields: {
-            // deliver: buildField({
-            //   type: 'modal-select',
-            //   placeholder: 'select address',
-            //   options: addresses()
-            // }),
-            deliver: buildField({
-              type: 'text-area',
-              placeholder: 'deliver address'
-            }),
-            'delivery instructions': buildField({
-              type: 'radio',
-              options: {
-                'call for appointment': buildField({}),
-                'deliver between': buildField({
-                  children: {
-                    start: buildField({ type: 'time', width: '48%' }),
-                    end: buildField({ type: 'time', width: '48%' }),
-                    instructions: buildField({
-                      type: 'text-area',
-                      width: '100%',
-                      placeholder: 'delivery instructions'
-                    })
-                  }
-                })
-              }
-            })
-          }
-        },
-        'dismount: return empty to depot': {
-          fields: {
-            // dismount: buildField({
-            //   placeholder: 'select address',
-            //   type: 'modal-select',
-            //   options: addresses()
-            // }),
-            dismount: buildField({
-              type: 'text-area',
-              placeholder: 'dismount address'
-            }),
-            'pickup instructions': buildField({
-              type: 'radio',
-              options: {
-                'call for appointment': buildField({}),
-                'pickup on': buildField({
-                  children: {
-                    date: buildField({ type: 'date' }),
-                    between: buildField({ type: 'label', width: '100%' }),
-                    start: buildField({ type: 'time', width: '48%' }),
-                    end: buildField({ type: 'time', width: '48%' }),
-                    instructions: buildField({
-                      type: 'text-area',
-                      width: '100%',
-                      placeholder: 'delivery instructions'
-                    })
-                  }
-                })
-              }
-            })
-          }
-        }
-      }
+      rootFields: {}
+      // subSections: {
+      //   'hook: rail or port terminal': {
+      //     fields: {
+      //       // hook: buildField({
+      //       //   type: 'modal-select',
+      //       //   placeholder: 'select address',
+      //       //   options: addresses()
+      //       // })
+      //       hook: buildField({
+      //         type: 'text-area',
+      //         placeholder: 'hook address'
+      //       })
+      //     }
+      //   },
+      //   'deliver: container to': {
+      //     fields: {
+      //       // deliver: buildField({
+      //       //   type: 'modal-select',
+      //       //   placeholder: 'select address',
+      //       //   options: addresses()
+      //       // }),
+      //       deliver: buildField({
+      //         type: 'text-area',
+      //         placeholder: 'deliver address'
+      //       }),
+      //       'delivery instructions': buildField({
+      //         type: 'radio',
+      //         options: {
+      //           'call for appointment': buildField({}),
+      //           'deliver between': buildField({
+      //             children: {
+      //               start: buildField({ type: 'time', width: '48%' }),
+      //               end: buildField({ type: 'time', width: '48%' }),
+      //               instructions: buildField({
+      //                 type: 'text-area',
+      //                 width: '100%',
+      //                 placeholder: 'delivery instructions'
+      //               })
+      //             }
+      //           })
+      //         }
+      //       })
+      //     }
+      //   },
+      //   'dismount: return empty to depot': {
+      //     fields: {
+      //       // dismount: buildField({
+      //       //   placeholder: 'select address',
+      //       //   type: 'modal-select',
+      //       //   options: addresses()
+      //       // }),
+      //       dismount: buildField({
+      //         type: 'text-area',
+      //         placeholder: 'dismount address'
+      //       }),
+      //       'pickup instructions': buildField({
+      //         type: 'radio',
+      //         options: {
+      //           'call for appointment': buildField({}),
+      //           'pickup on': buildField({
+      //             children: {
+      //               date: buildField({ type: 'date' }),
+      //               between: buildField({ type: 'label', width: '100%' }),
+      //               start: buildField({ type: 'time', width: '48%' }),
+      //               end: buildField({ type: 'time', width: '48%' }),
+      //               instructions: buildField({
+      //                 type: 'text-area',
+      //                 width: '100%',
+      //                 placeholder: 'delivery instructions'
+      //               })
+      //             }
+      //           })
+      //         }
+      //       })
+      //     }
+      //   }
+      // }
     },
     inventory: {
       subSections: {
-        [uuid()]: {
-          fields: inventoryItemFields()
-        }
+        // [uuid()]: {
+        //   fields: inventoryItemFields()
+        // }
       },
       actionSection: buildField({ type: 'add-inventory-item' })
     },
@@ -213,16 +214,20 @@ export const exampleForm = {
   }
 }
 
-function buildField ({
+export function buildField ({
   name = '',
+  presentationName,
   type,
   placeholder,
   options,
   children,
-  width
+  width,
+  value
 }) {
   const field = {
     name,
+    presentationName,
+    value,
     el: {
       type,
       placeholder,

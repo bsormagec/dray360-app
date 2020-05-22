@@ -38,7 +38,7 @@ export default {
       let count = 0
 
       for (const key in subSections) {
-        if (typeof subSections[key].fields.hazardous.value === 'object') {
+        if (subSections[key].fields.hazardous && typeof subSections[key].fields.hazardous.value === 'object') {
           count += 1
         }
       }

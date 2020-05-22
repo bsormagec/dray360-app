@@ -1,4 +1,5 @@
 import Vue from 'vue'
+import { objValFromLocation } from '@/utils/obj_val_from_loc'
 import { modes, pools } from '@/views/Details/inner_types'
 import { getFieldLocation } from '@/views/Details/inner_utils/get_field_location'
 import { cleanStrForId } from '@/views/Details/inner_utils/clean_str_for_id'
@@ -13,7 +14,10 @@ const state = Vue.observable({
 const methods = {
   setDocument (newDocument) {
     state.document = newDocument
+    methods.setFormValues()
+  },
 
+  setFormValues () {
     state.document.forEach(({ highlights }) => {
       highlights.forEach(({ name, value }) => {
         formModule.methods.setFormFieldProp({
@@ -27,8 +31,12 @@ const methods = {
 
   setDocumentFieldProp ({ prop, value, location, validation }) {
     if (!location) return
-    const parts = location.split('/')
-    const locatedObj = state.document[parts[0]][parts[1]][parts[2]]
+
+    const locatedObj = objValFromLocation({
+      obj: state.document,
+      location,
+      separator: '/'
+    })
 
     if (validation && !validation(locatedObj)) return
     Vue.set(locatedObj, prop, value)

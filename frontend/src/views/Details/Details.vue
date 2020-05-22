@@ -1,5 +1,5 @@
 <template>
-  <div class="details">
+  <div :class="`details ${loaded && 'loaded'}`">
     <ContentLoading :loaded="loaded">
       <DetailsSidebar />
 
@@ -31,10 +31,11 @@ import DetailsFormEditing from '@/views/Details/DetailsFormEditing'
 import DetailsFormViewing from '@/views/Details/DetailsFormViewing'
 import DetailsDocument from '@/views/Details/DetailsDocument'
 import { reqStatus } from '@/enums/req_status'
+import { uuid } from '@/utils/uuid_valid_id'
 
 import ContentLoading from '@/components/ContentLoading'
 import { formModule, documentModule } from '@/views/Details/inner_store/index'
-import { exampleForm as form } from '@/views/Details/inner_utils/example_form'
+import { exampleForm as form, buildField } from '@/views/Details/inner_utils/example_form'
 import { parse } from '@/views/Details/inner_utils/parse_document'
 import orders, { types } from '@/store/modules/orders'
 import { mapState, mapActions } from '@/utils/vuex_mappings'
@@ -81,10 +82,69 @@ export default {
       const status = await this[types.getOrderDetail](this.$route.params.id)
 
       if (status === reqStatus.success) {
-        documentModule.methods.setDocument(parse(this.currentOrder()))
+        documentModule.methods.setDocument(
+          parse({
+            data: this.currentOrder(),
+            valSetter: this.docValToFormSetter
+          })
+        )
         return
       }
       console.log('error')
+    },
+
+    docValToFormSetter ({ dray360name, data }) {
+      const nameParts = dray360name.split('.')
+
+      if (dray360name.includes('order_address_events')) {
+        const addrEvents = formModule.state.form.sections.itinerary.rootFields
+        const evtName = data[nameParts[0]][nameParts[1]].unparsed_event_type.toLowerCase()
+        const evtValue = data[nameParts[0]][nameParts[1]].t_address_raw_text
+
+        this.$set(
+          addrEvents,
+          evtName,
+          buildField({
+            type: 'text-area',
+            placeholder: evtName
+          })
+        )
+
+        return { name: evtName, value: evtValue }
+      } else if (dray360name.includes('order_line_items')) {
+        /*
+          TODO: handle multiple line items, currently for line items we're parsing the prop "contents"
+          it'll be easier to have it being multiple props like order_address_events (for highlighting)
+         */
+        const lineItems = formModule.state.form.sections.inventory.subSections
+        const itemName = uuid()
+        let itemDescription
+
+        data[nameParts[0]].forEach(item => {
+          itemDescription = item.description
+
+          this.$set(
+            lineItems,
+            itemName,
+            {
+              fields: {
+                [`${itemName} description`]: buildField({
+                  presentationName: 'description',
+                  type: 'text-area',
+                  placeholder: 'description'
+                })
+              }
+            }
+          )
+        })
+
+        return {
+          name: `${itemName} description`,
+          value: itemDescription
+        }
+      }
+
+      return { value: data[dray360name] }
     },
 
     handleResize (e) {
@@ -124,7 +184,10 @@ export default {
   width: 100%;
   height: 100%;
   display: flex;
-  padding-left: map-get($sizes, sidebar-desktop-width);
+
+  &.loaded {
+    padding-left: map-get($sizes, sidebar-desktop-width);
+  }
 }
 
 .details__form {

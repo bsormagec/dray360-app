@@ -3,7 +3,7 @@
     <v-textarea
       outlined
       :placeholder="field.el.placeholder"
-      :label="field.name"
+      :label="field.presentationName || field.name"
       :value="field.value"
       @change="e => change(e)"
     />

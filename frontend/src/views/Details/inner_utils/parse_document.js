@@ -19,7 +19,7 @@
 // import exampleDocument from '@/views/Details/inner_utils/example_document'
 import mapFieldNames from '@/views/Details/inner_utils/map_field_names'
 
-export const parse = (data) => {
+export const parse = ({ data, valSetter }) => {
   const ocrData = data.ocr_data
 
   const parsed = [
@@ -28,14 +28,14 @@ export const parse = (data) => {
   for (const imgKey in ocrData.page_index_filenames.value) {
     parsed.push({
       image: ocrData.page_index_filenames.value[imgKey].presigned_download_uri,
-      highlights: getHighlights(imgKey, data)
+      highlights: getHighlights(imgKey, data, valSetter)
     })
   }
 
   return parsed
 }
 
-function getHighlights (id, data) {
+function getHighlights (id, data, valSetter) {
   const ocrData = data.ocr_data
 
   const highlights = Object.keys(ocrData.fields).map(fieldKey => {
@@ -51,26 +51,16 @@ function getHighlights (id, data) {
         left,
         right,
         top,
-        name: mapFieldNames(ocrData.fields[fieldKey].name),
-        value: getValue(fieldKey, data)
+        name: mapFieldNames(
+          ocrData.fields[fieldKey].name
+        ),
+        ...valSetter({
+          dray360name: ocrData.fields[fieldKey].d360_name,
+          data
+        })
       }
     }
   }).filter(v => Boolean(v))
 
   return highlights
-}
-
-function getValue (fieldKey, data) {
-  try {
-    if (!data[fieldKey]) {
-      return ''
-    }
-    if (typeof data[fieldKey] === 'string' || typeof data[fieldKey] === 'number') {
-      return data[fieldKey]
-    }
-    // delete this comment: return data[fieldKey][0].unparsed_text_block || data[fieldKey][0].unparsed_text_block
-    return data[fieldKey + '_raw_text']
-  } catch (err) {
-    console.log(err)
-  }
 }

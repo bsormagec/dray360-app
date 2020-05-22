@@ -3,7 +3,7 @@
     v-if="typeof field.value === 'object'"
     class="field__complex"
   >
-    <span class="field__name">{{ field.name }}</span>
+    <span class="field__name">{{ field.presentationName || field.name }}</span>
     <div
       v-for="(value, key) in field.value"
       :key="key"
@@ -18,7 +18,7 @@
     v-else
     class="field__group"
   >
-    <span class="field__name">{{ field.name }}</span>
+    <span class="field__name">{{ field.presentationName || field.name }}</span>
     <span
       class="field__value"
     >{{ field.value ? field.value : '--' }}</span>
