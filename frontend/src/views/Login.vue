@@ -4,7 +4,7 @@
       <div class="login-box">
         <img
           class="logo"
-          src="../assets/images/2x@Cushing-Logo-BW.png"
+          src="../assets/images/cushing_logo.svg"
           alt=""
         >
         <FormFieldElementInput
