@@ -1,15 +1,10 @@
 <template>
   <div>
-    <button
-      type="button"
+    <v-btn
       @click="addSnippet()"
     >
-      <v-btn
-        @click="addSnippet()"
-      >
-        Add Rule
-      </v-btn>
-    </button>
+      Add Rule
+    </v-btn>
     <draggable
       v-model="codeSnippets"
       group="snippets"
@@ -21,6 +16,11 @@
         :key="element.id"
         class="snippet-div"
       >
+        <v-btn
+          @click="removeSnippet(index)"
+        >
+          Remove Rule
+        </v-btn>
         <codemirror
           ref="cmEditor"
           v-model="codeSnippets[index]"
@@ -69,6 +69,10 @@ export default {
     addSnippet () {
       const vc = this
       vc.codeSnippets.push('# Hello Python')
+    },
+    removeSnippet (index) {
+      const vc = this
+      vc.codeSnippets.splice(index, 1)
     }
   }
 }
