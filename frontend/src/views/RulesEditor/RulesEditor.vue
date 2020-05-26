@@ -1,32 +1,44 @@
 <template>
   <div>
+    <button
+      type="button"
+      @click="addSnippet()"
+    >
+      <v-btn
+        @click="addSnippet()"
+      >
+        Add Rule
+      </v-btn>
+    </button>
     <draggable
       v-model="codeSnippets"
-      group="people"
+      group="snippets"
       @start="drag=true"
       @end="drag=false"
     >
       <div
-        v-for="element in codeSnippets"
+        v-for="(element, index) in codeSnippets"
         :key="element.id"
         class="snippet-div"
       >
         <codemirror
           ref="cmEditor"
-          :value="element"
+          v-model="codeSnippets[index]"
           :options="cmOptions"
-          @ready="onCmReady"
-          @focus="onCmFocus"
-          @input="onCmCodeChange"
+          @input="onCmCodeChange(index)"
         />
+        <!-- Rule description -->
+        <div>
+          Sums up two numbers. Prints the result
+        </div>
       </div>
     </draggable>
   </div>
 </template>
 <script>
+/* eslint-disable vue/valid-v-model */
 import draggable from 'vuedraggable'
 import { codemirror } from 'vue-codemirror'
-// import base style
 import 'codemirror/lib/codemirror.css'
 import 'codemirror/theme/base16-light.css'
 export default {
@@ -37,7 +49,7 @@ export default {
   },
   data: () => ({
     code: 'Hello world',
-    codeSnippets: ["# This program adds two numbers \n num1 = 1.5 \n num2 = 6.3 \n # Add two numbers \n sum = num1 + num2 \n \n # Display the sum \n print('The sum of {0} and {1} is {2}'.format(num1, num2, sum)", 'if (year % 4) == 0: \n  if (year % 100) == 0:'],
+    codeSnippets: ["# This program adds two numbers\nnum1 = 1.5\nnum2 = 6.3\n# Add two numbers\nsum = num1 + num2\n\n# Display the sum\nprint('The sum of {0} and {1} is {2}'.format(num1, num2, sum)", 'if (year % 4) == 0:\n\tif (year % 100) == 0:'],
     cmOptions: {
       tabSize: 4,
       mode: 'text/x-python',
@@ -45,7 +57,20 @@ export default {
       lineNumbers: true,
       line: true
     }
-  })
+  }),
+  methods: {
+    onCmCodeChange (index) {
+      const vc = this
+      console.log('code snippet: ')
+      console.log(JSON.stringify(vc.codeSnippets[index]))
+      console.log('after key line isnt how i want')
+      console.log(vc.codeSnippets[index])
+    },
+    addSnippet () {
+      const vc = this
+      vc.codeSnippets.push('# Hello Python')
+    }
+  }
 }
 </script>
 <style scoped>
