@@ -75,7 +75,7 @@ export default {
 </script>
 <style lang="scss" scoped>
   $background_login: url("../assets/images/login_background.png");
-  $login_logo: url("../assets/images/2x@Cushing-Logo-BW.png");
+  $login_logo: url("../assets/images/cushing_logo.svg");
 
   .wrapper{
     background: $background_login no-repeat center center fixed;
@@ -91,18 +91,18 @@ export default {
     flex-direction: column;
     align-items: center;
     .login-box{
-      width: 360px;
+      width: 36rem;
       justify-items: center;
-      background-color: #fff;
+      background-color: map-get($colors, white );
       display: flex;
       align-items: center;
       justify-content: center;
       flex-direction: column;
-      border-top: 8px solid #397E92;
-      padding: 30px;
+      border-top: 0.8rem solid map-get($colors, blue );
+      padding: 3rem;
       .logo{
-        width: 240px;
-        margin-bottom: 50px;
+        width: 24rem;
+        margin-bottom: 5rem;
       }
       .form-field-element-input{
            width: 100%;
@@ -115,10 +115,10 @@ export default {
         font-weight: bold;
         width: 100%;
         .btn-login{
-          padding: 5px 40px;
-          background-color: #397E92;
-          color: white;
-          border-radius: 3px;
+          padding: 0.5rem 4rem;
+          background-color: map-get($colors, blue);
+          color: map-get($colors, white);
+          border-radius: 0.3rem;
         }
       }
     }
@@ -126,11 +126,11 @@ export default {
         display: flex;
         flex-direction: row;
         justify-content: space-between;
-        width: 360px;
-        border-top: 1px solid #E4E8E9;
-        background-color: white;
-        padding-top: 20px;
-        padding: 10px 10px 0px 10px;
+        width: 36rem;
+        border-top: 0.1rem solid map-get($colors , grey12 );
+        background-color: map-get($colors,white);
+        padding-top: 0.2rem;
+        padding: 1rem 1rem 0rem 1rem;
       }
   }
 </style>
