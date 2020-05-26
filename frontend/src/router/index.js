@@ -3,6 +3,7 @@ import VueRouter from 'vue-router'
 import Orders from '@/views/Orders/Orders'
 import Details from '@/views/Details/Details'
 import Login from '@/views/Login'
+import RulesEditor from '@/views/RulesEditor/RulesEditor'
 import auth from '@/router/middleware/auth'
 import { runMiddleware } from '@/router/middleware'
 
@@ -29,6 +30,14 @@ const routes = [
     path: '/login',
     name: 'Login',
     component: Login
+  },
+  {
+    path: '/rules-editor',
+    name: 'RulesEditor',
+    meta: {
+      middleware: [auth]
+    },
+    component: RulesEditor
   }
 ]
 
