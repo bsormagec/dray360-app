@@ -37,20 +37,21 @@ export const parse = ({ data, valSetter }) => {
 
 function getHighlights (id, data, valSetter) {
   const ocrData = data.ocr_data
+  const highlights = {}
 
-  const highlights = Object.keys(ocrData.fields).map(fieldKey => {
+  Object.keys(ocrData.fields).forEach(fieldKey => {
     if (!ocrData.fields[fieldKey].ocr_region) return
-
     const matches = ocrData.fields[fieldKey].ocr_region.page_index === parseInt(id)
 
     if (matches) {
+      const parsedKey = fieldKey.includes('event') ? fieldKey.split('_')[0] : fieldKey
       const { bottom, left, right, top } = ocrData.fields[fieldKey].ocr_region
 
-      return {
-        bottom,
-        left,
-        right,
-        top,
+      const hData = (editions = {}) => ({
+        bottom: editions.bottom || bottom,
+        left: editions.left || left,
+        right: editions.right || right,
+        top: editions.top || top,
         name: mapFieldNames(
           ocrData.fields[fieldKey].name
         ),
@@ -58,9 +59,20 @@ function getHighlights (id, data, valSetter) {
           dray360name: ocrData.fields[fieldKey].d360_name,
           data
         })
+      })
+
+      if (highlights[parsedKey]) {
+        highlights[parsedKey] = hData({
+          bottom: bottom >= highlights[parsedKey].bottom ? bottom : highlights[parsedKey].bottom,
+          left: left <= highlights[parsedKey].left ? left : highlights[parsedKey].left,
+          right: right >= highlights[parsedKey].right ? right : highlights[parsedKey].right,
+          top: top <= highlights[parsedKey].top ? top : highlights[parsedKey].top
+        })
+      } else {
+        highlights[parsedKey] = hData()
       }
     }
-  }).filter(v => Boolean(v))
+  })
 
-  return highlights
+  return Object.values(highlights)
 }
