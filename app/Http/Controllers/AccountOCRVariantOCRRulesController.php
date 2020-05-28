@@ -2,8 +2,8 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\AccountOCRVariantOCRRules;
 use Illuminate\Http\Request;
+use App\Models\AccountOCRVariantOCRRules;
 
 class AccountOCRVariantOCRRulesController extends Controller
 {
@@ -14,7 +14,6 @@ class AccountOCRVariantOCRRulesController extends Controller
      */
     public function index()
     {
-        //
     }
 
     /**
@@ -24,7 +23,6 @@ class AccountOCRVariantOCRRulesController extends Controller
      */
     public function create()
     {
-        //
     }
 
     /**
@@ -35,7 +33,6 @@ class AccountOCRVariantOCRRulesController extends Controller
      */
     public function store(Request $request)
     {
-        //
     }
 
     /**
@@ -46,7 +43,6 @@ class AccountOCRVariantOCRRulesController extends Controller
      */
     public function show(AccountOCRVariantOCRRules $accountOCRVariantOCRRules)
     {
-        //
     }
 
     /**
@@ -57,7 +53,6 @@ class AccountOCRVariantOCRRulesController extends Controller
      */
     public function edit(AccountOCRVariantOCRRules $accountOCRVariantOCRRules)
     {
-        //
     }
 
     /**
@@ -69,7 +64,6 @@ class AccountOCRVariantOCRRulesController extends Controller
      */
     public function update(Request $request, AccountOCRVariantOCRRules $accountOCRVariantOCRRules)
     {
-        //
     }
 
     /**
@@ -80,6 +74,5 @@ class AccountOCRVariantOCRRulesController extends Controller
      */
     public function destroy(AccountOCRVariantOCRRules $accountOCRVariantOCRRules)
     {
-        //
     }
 }

@@ -1,0 +1,9 @@
+{
+	"recommendations": [
+		"junstyle.php-cs-fixer",
+		"dbaeumer.vscode-eslint",
+		"octref.vetur",
+		"mhutchie.git-graph",
+		"eamodio.gitlens"
+	],
+}

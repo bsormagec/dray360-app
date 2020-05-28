@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Eloquent as Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
+
 //use Illuminate\Support\Facades\DB;
 
 /**
@@ -63,9 +64,6 @@ use Illuminate\Database\Eloquent\SoftDeletes;
  * @property \App\Models\Address getPortRampOfOriginAddressAttribute
  * @property \App\Models\Address getPortRampOfDestinationAddressAttribute
  */
-
-
-
 class Order extends Model
 {
     use SoftDeletes;
@@ -200,7 +198,8 @@ class Order extends Model
      *
      * @return \App\Models\OrderLineItem
      */
-    function getOrderLineItemsAttribute() {
+    public function getOrderLineItemsAttribute()
+    {
         return $this->orderLineItems()->get();
     }
 
@@ -208,7 +207,8 @@ class Order extends Model
      *
      * @return \App\Models\OrderAddressEvent
      */
-    function getOrderAddressEventsAttribute() {
+    public function getOrderAddressEventsAttribute()
+    {
         return $this->orderAddressEvents()->get();
     }
 
@@ -227,7 +227,8 @@ class Order extends Model
      *
      * @return \Models\OCRRequest
      */
-    public function getOCRRequestAttribute() {
+    public function getOCRRequestAttribute()
+    {
         return $this->ocrRequest()->first();
     }
 
@@ -236,20 +237,20 @@ class Order extends Model
      *
      * @return collection
      */
-    public function getOCRRequestStatusList() {
+    public function getOCRRequestStatusList()
+    {
         return $this->getOCRRequestAttribute()->statusList()->get();
     }
-
 
     /**
      * Returns the latest OCRRequestStatus object
      *
      * @return OCRRequestStatus
      */
-    public function getLatestOCRRequestStatusAttribute() {
+    public function getLatestOCRRequestStatusAttribute()
+    {
         return $this->getOCRRequestAttribute()->latestOCRRequestStatus();
     }
-
 
     /**
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
@@ -263,7 +264,8 @@ class Order extends Model
      *
      * @return \App\Models\Address
      */
-    function getBillToAddressAttribute() {
+    public function getBillToAddressAttribute()
+    {
         return $this->billToAddress()->get();
     }
 
@@ -279,7 +281,8 @@ class Order extends Model
      *
      * @return \App\Models\Address
      */
-    function getPortRampOfOriginAddressAttribute() {
+    public function getPortRampOfOriginAddressAttribute()
+    {
         return $this->portRampOfOriginAddress()->get();
     }
 
@@ -295,8 +298,8 @@ class Order extends Model
      *
      * @return \App\Models\Address
      */
-    function getPortRampOfDestinationAddressAttribute() {
+    public function getPortRampOfDestinationAddressAttribute()
+    {
         return $this->portRampOfDestinationAddress()->get();
     }
-
 }

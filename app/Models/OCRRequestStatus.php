@@ -32,7 +32,6 @@ class OCRRequestStatus extends Model
     **/
     public function ocrRequest()
     {
-        return $this->belongsTo('App\Models\OCRRequest','request_id','request_id');
+        return $this->belongsTo('App\Models\OCRRequest', 'request_id', 'request_id');
     }
-
 }

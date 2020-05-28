@@ -14,7 +14,6 @@ class OCRVariantController extends Controller
      */
     public function index()
     {
-        //
     }
 
     /**
@@ -24,7 +23,6 @@ class OCRVariantController extends Controller
      */
     public function create()
     {
-        //
     }
 
     /**
@@ -35,7 +33,6 @@ class OCRVariantController extends Controller
      */
     public function store(Request $request)
     {
-        //
     }
 
     /**
@@ -46,7 +43,6 @@ class OCRVariantController extends Controller
      */
     public function show(OCRVariant $oCRVariant)
     {
-        //
     }
 
     /**
@@ -57,7 +53,6 @@ class OCRVariantController extends Controller
      */
     public function edit(OCRVariant $oCRVariant)
     {
-        //
     }
 
     /**
@@ -69,7 +64,6 @@ class OCRVariantController extends Controller
      */
     public function update(Request $request, OCRVariant $oCRVariant)
     {
-        //
     }
 
     /**
@@ -80,6 +74,5 @@ class OCRVariantController extends Controller
      */
     public function destroy(OCRVariant $oCRVariant)
     {
-        //
     }
 }

@@ -6,9 +6,8 @@
 //   alter table t_orders change port_ramp_of_origon port_ramp_of_origin varchar(64);
 
 
-use Illuminate\Database\Seeder;
 use Carbon\Carbon;
-
+use Illuminate\Database\Seeder;
 
 class OrdersTableSeeder extends Seeder
 {
@@ -46,8 +45,6 @@ class OrdersTableSeeder extends Seeder
         }
     }
 
-
-
     /**
      * Create an Order
      *
@@ -55,13 +52,11 @@ class OrdersTableSeeder extends Seeder
      *
      * @return void
      */
-    public function seedOrder() {
+    public function seedOrder()
+    {
         $orderId = $this->seedOrderWithOcrRequestId($this->createOCRJob());
         $this->seedOrderLineItem_nonHazardous($orderId);
     }
-
-
-
 
     /**
      * Create an Order given an OCR request id
@@ -71,24 +66,25 @@ class OrdersTableSeeder extends Seeder
      * @param string $requestId a UUID representing the OCR request id
      * @return void
      */
-    public function seedOrderWithOcrRequestId($requestId) {
-        echo ('Creating Order with OCR request_id='.$requestId.PHP_EOL);
+    public function seedOrderWithOcrRequestId($requestId)
+    {
+        echo('Creating Order with OCR request_id='.$requestId.PHP_EOL);
         $faker = \Faker\Factory::create();
-        $lastFreeDate = Carbon::now()->addDays($faker->numberBetween($min=1, $max=10))->toDateTimeString();
-        $estimated_arrival_utc = Carbon::now()->addDays($faker->numberBetween($min=1, $max=10))->toDateTimeString();
+        $lastFreeDate = Carbon::now()->addDays($faker->numberBetween($min = 1, $max = 10))->toDateTimeString();
+        $estimated_arrival_utc = Carbon::now()->addDays($faker->numberBetween($min = 1, $max = 10))->toDateTimeString();
 
         $orderId = DB::table('t_orders')->insertGetId([
             'request_id' => $requestId,
-            'shipment_designation' =>$this->getRndElem(self::DESTINATION_LIST),
-            'equipment_type' =>$this->getRndElem(self::EQUIPMENT_TYPE_LIST),
-            'shipment_direction' =>$this->getRndElem(self::DIRECTION_LIST),
+            'shipment_designation' => $this->getRndElem(self::DESTINATION_LIST),
+            'equipment_type' => $this->getRndElem(self::EQUIPMENT_TYPE_LIST),
+            'shipment_direction' => $this->getRndElem(self::DIRECTION_LIST),
             'one_way' => $faker->boolean,
             'yard_pre_pull' => $faker->boolean,
             'has_chassis' => $faker->boolean,
-            'unit_number' =>$this->getRndElem(self::UNIT_NUMBER_LIST),
-            'equipment' =>$this->getRndElem(self::EQUIPMENT_LIST),
-            'equipment_size' =>$this->getRndElem(self::EQUIPMENT_SIZE_LIST),
-            'owner_or_ss_company' =>$this->getRndElem(self::OWNER_OR_SS_COMPANY_LIST),
+            'unit_number' => $this->getRndElem(self::UNIT_NUMBER_LIST),
+            'equipment' => $this->getRndElem(self::EQUIPMENT_LIST),
+            'equipment_size' => $this->getRndElem(self::EQUIPMENT_SIZE_LIST),
+            'owner_or_ss_company' => $this->getRndElem(self::OWNER_OR_SS_COMPANY_LIST),
             'hazardous' => null, // this should roll up from the line item?
             'expedite_shipment' => $faker->boolean(),
             'reference_number' => $faker->lexify(),
@@ -109,9 +105,6 @@ class OrdersTableSeeder extends Seeder
         return $orderId;
     }
 
-
-
-
     /**
      * Create an OrderLineItem
      *
@@ -121,12 +114,13 @@ class OrdersTableSeeder extends Seeder
      *
      * @return void
      */
-    public function seedOrderLineItem_nonHazardous($orderId) {
+    public function seedOrderLineItem_nonHazardous($orderId)
+    {
         $faker = \Faker\Factory::create();
         $faker->addProvider(new \Bezhanov\Faker\Provider\Commerce($faker)); // needed for productName
 
-        $quantity = $faker->numberBetween($min=1, $max=1000);
-        $weight = $faker->numberBetween($min=1, $max=100);
+        $quantity = $faker->numberBetween($min = 1, $max = 1000);
+        $weight = $faker->numberBetween($min = 1, $max = 100);
 
         $orderLineItemId = DB::table('t_order_line_items')->insertGetId([
             't_order_id' => $orderId,
@@ -153,18 +147,14 @@ class OrdersTableSeeder extends Seeder
         return $orderLineItemId;
     }
 
-
-
-
-
-    public function createOCRJob() {
+    public function createOCRJob()
+    {
         if (rand(0, 100) < self::PCT_ORDERS_INTAKE_REJECTED) {
             return $this->seedOcrJob_intakeRejected();
         } else {
             return $this->seedOcrJob_ocrPostProcessingComplete();
         }
     }
-
 
     //
     // "flow" replicated from: bab69a29-80f4-51c4-a3f0-cc4d3cc8b6a5
@@ -175,9 +165,9 @@ class OrdersTableSeeder extends Seeder
     // create state #5: ocr-post-processing-complete
     //
 
-
-    public function seedOcrJob_ocrPostProcessingComplete() {
-        echo ('Creating OCR job with status=ocr-post-processing-complete'.PHP_EOL);
+    public function seedOcrJob_ocrPostProcessingComplete()
+    {
+        echo('Creating OCR job with status=ocr-post-processing-complete'.PHP_EOL);
         $faker = \Faker\Factory::create();
 
         // request_id must be shared by all states, and resulting order
@@ -234,15 +224,14 @@ class OrdersTableSeeder extends Seeder
         return $request_id;
     }
 
-
-
     //
     // "flow" replicated from: f9983481-87f6-5b57-b779-62e2247a6db7
     // create state #1: intake-started
     // create state #2: intake-rejected
     //
 
-    public function seedOcrJob_intakeRejected() {
+    public function seedOcrJob_intakeRejected()
+    {
         echo('Creating OCR job status=intake-rejected'.PHP_EOL);
         $faker = \Faker\Factory::create();
 
@@ -273,9 +262,9 @@ class OrdersTableSeeder extends Seeder
         return $request_id;
     }
 
-
-    public function getRndElem($stringArray) {
-        return $stringArray[rand(0,count($stringArray)-1)];
+    public function getRndElem($stringArray)
+    {
+        return $stringArray[rand(0, count($stringArray) - 1)];
     }
 }
 
