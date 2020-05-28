@@ -4,10 +4,13 @@ namespace Tests\Feature;
 
 use App\User;
 use Tests\TestCase;
+use App\Models\Account;
 use App\Models\OCRRule;
 use Tests\Seeds\UserSeed;
+use App\Models\OCRVariant;
 use Laravel\Sanctum\Sanctum;
 use Illuminate\Http\Response;
+use Tests\Seeds\OCRRulesAssignmentSeed;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
 
 class OCRRulesControllerTest extends TestCase
@@ -32,6 +35,39 @@ class OCRRulesControllerTest extends TestCase
         $this->getJson(route('ocr.rules.index'))
             ->assertStatus(200)
             ->assertJsonCount($rules->count() - 1, 'data')
+            ->assertJsonStructure([
+                'data' => [
+                    '*' => ['name', 'code', 'description']
+                ]
+            ]);
+    }
+
+    /** @test */
+    public function it_should_list_all_the_available_rules_filtered_by_account_and_variant()
+    {
+        $this->withoutExceptionHandling();
+        $this->seed(OCRRulesAssignmentSeed::class);
+        $accounts = Account::all(['id']);
+        $ocrVariant = OCRVariant::first(['id']);
+
+        $this->getJson(route('ocr.rules.index', [
+                'account_id' => $accounts->first()->id,
+                'variant_id' => $ocrVariant->id,
+            ]))
+            ->assertStatus(200)
+            ->assertJsonCount(2, 'data')
+            ->assertJsonStructure([
+                'data' => [
+                    '*' => ['name', 'code', 'description']
+                ]
+            ]);
+
+        $this->getJson(route('ocr.rules.index', [
+                'account_id' => $accounts->last()->id,
+                'variant_id' => $ocrVariant->id,
+            ]))
+            ->assertStatus(200)
+            ->assertJsonCount(3, 'data')
             ->assertJsonStructure([
                 'data' => [
                     '*' => ['name', 'code', 'description']

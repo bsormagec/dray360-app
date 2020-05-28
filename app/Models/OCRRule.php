@@ -3,8 +3,12 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
+/**
+ * @method static \Illuminate\Database\Eloquent\Builder filterByAccountVariant(\Illuminate\Http\Request $request)
+ */
 class OCRRule extends Model
 {
     use SoftDeletes;
@@ -42,4 +46,35 @@ class OCRRule extends Model
         'description' => 'required',
         'code' => 'required'
     ];
+
+    /**
+     * Relationship with the assigment of the rules to account in given variants.
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function accountsVariantsAssignment()
+    {
+        return $this->hasMany(AccountOCRVariantOCRRule::class, 't_ocrrule_id');
+    }
+
+    /**
+     * Scope to filter the rules by the given account and variant.
+     *
+     * @param \Illuminate\Database\Eloquent\Builder $query
+     * @param array $filters
+     * @return \Illuminate\Database\Eloquent\Builder
+     */
+    public function scopeFilterByAccountVariant(Builder $query, array $filters)
+    {
+        if (!isset($filters['account_id']) || !isset($filters['variant_id'])) {
+            return $query;
+        }
+
+        return $query->whereHas('accountsVariantsAssignment', function ($query) use ($filters) {
+            $query->where([
+                't_account_id' => $filters['account_id'],
+                't_ocrvariant_id' => $filters['variant_id'],
+            ]);
+        });
+    }
 }

@@ -52,16 +52,24 @@ class AccountOCRVariantOCRRule extends Model
     /**
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
      **/
-    public function ocrrule()
+    public function ocrRule()
     {
-        return $this->belongsTo(\App\Models\OCRRule::class, 't_ocrrule_id');
+        return $this->belongsTo(OCRRule::class, 't_ocrrule_id');
     }
 
     /**
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
      **/
-    public function order()
+    public function ocrVariant()
     {
-        return $this->belongsTo(\App\Models\OCRVariant::class, 't_ocrvariant_id');
+        return $this->belongsTo(OCRVariant::class, 't_ocrvariant_id');
+    }
+
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     **/
+    public function account()
+    {
+        return $this->belongsTo(Account::class, 't_account_id');
     }
 }

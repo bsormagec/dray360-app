@@ -2,7 +2,7 @@
 
 namespace App\Models;
 
-use Eloquent as Model;
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
 /**
@@ -26,10 +26,7 @@ class Account extends Model
     const CREATED_AT = 'created_at';
     const UPDATED_AT = 'updated_at';
 
-
     protected $dates = ['deleted_at'];
-
-
 
     public $fillable = [
         't_address_id',
@@ -69,6 +66,6 @@ class Account extends Model
      **/
     public function users()
     {
-        return $this->hasMany(\App\Models\User::class, 't_account_id');
+        return $this->hasMany(\App\User::class, 't_account_id');
     }
 }

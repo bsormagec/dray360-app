@@ -16,7 +16,13 @@ class OCRRulesController extends Controller
      */
     public function index(Request $request)
     {
-        return new ResourcesOCRRule(OCRRule::all());
+        $assignmentFilters = $request->all(['account_id', 'variant_id']);
+
+        return new ResourcesOCRRule(
+            OCRRule::query()
+                ->filterByAccountVariant($assignmentFilters)
+                ->get()
+        );
     }
 
     /**
