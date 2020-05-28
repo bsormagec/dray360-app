@@ -94,7 +94,7 @@ export default {
     },
 
     linkHref (step) {
-      return `#${cleanStrForId(defaultsTo(() => step.text, '').toLowerCase())}-${this.idSuffix}`
+      return `${cleanStrForId(defaultsTo(() => step.text, '').toLowerCase())}-${this.idSuffix}`
     },
 
     isTitle (n) {
@@ -116,7 +116,7 @@ export default {
     jumpTo (step) {
       this.isJumping = true
       this.setStep(step.id)
-      window.location.hash = this.linkHref(step)
+      document.getElementById(this.linkHref(step)).scrollIntoView()
 
       setTimeout(() => {
         this.isJumping = false

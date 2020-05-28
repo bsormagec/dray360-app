@@ -43,7 +43,7 @@ const methods = {
   },
 
   scrollTo ({ field, container }) {
-    document.location.hash = `#${cleanStrForId(field.name)}-${container}`
+    document.getElementById(`${cleanStrForId(field.name)}-${container}`).scrollIntoView()
   },
 
   startEdit ({ field, pageIndex, highlightIndex }) {
