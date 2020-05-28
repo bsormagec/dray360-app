@@ -1,9 +1,6 @@
 <?php
 
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
-
-
 
 /*
 |--------------------------------------------------------------------------
@@ -44,4 +41,8 @@ Route::get('orders/{orderId}', 'OrderController@order')
 // Authenticated route to get document upload URI
 Route::post('createocrrequestuploaduri', 'OCRRequestController@createOCRRequestUploadURI')
     ->name('createocruploaduri')
+    ->middleware('auth:sanctum');
+
+Route::apiResource('ocr/rules', 'OCRRulesController', ['as' => 'ocr'])
+    ->only(['store', 'index'])
     ->middleware('auth:sanctum');
