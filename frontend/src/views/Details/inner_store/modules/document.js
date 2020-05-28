@@ -51,6 +51,13 @@ const methods = {
 
     methods.stopHover({ field, pageIndex, highlightIndex })
 
+    const fieldLoc = formModule.methods.setFormFieldProp({
+      prop: 'highlight',
+      value: modes.edit,
+      formLocation: field.formLocation || getLocationOnForm(field.name)
+    })
+    if (!fieldLoc) return
+
     methods.setDocumentFieldProp({
       prop: modes.edit,
       value: true,
@@ -64,12 +71,6 @@ const methods = {
       container: triggerFromDocument({ pageIndex, highlightIndex })
         ? formModule.state.isEditing ? 'editing' : 'viewing'
         : 'document'
-    })
-
-    formModule.methods.setFormFieldProp({
-      prop: 'highlight',
-      value: modes.edit,
-      formLocation: field.formLocation || getLocationOnForm(field.name)
     })
 
     state.lastMode = modes.edit
@@ -98,6 +99,14 @@ const methods = {
     if (state.hoverTimeouts[field.name]) clearTimeout(state.hoverTimeouts[field.name])
 
     state.hoverTimeouts[field.name] = setTimeout(() => {
+      const fieldLoc = formModule.methods.setFormFieldProp({
+        prop: 'highlight',
+        value: modes.hover,
+        formLocation: field.formLocation || getLocationOnForm(field.name),
+        validation: v => v.highlight !== modes.edit
+      })
+      if (!fieldLoc) return
+
       methods.setDocumentFieldProp({
         prop: modes.hover,
         value: true,
@@ -105,13 +114,6 @@ const methods = {
           ? `${pageIndex}/highlights/${highlightIndex}`
           : getLocationOnDoc(field.name),
         validation: v => Boolean(v[modes.edit]) === false
-      })
-
-      formModule.methods.setFormFieldProp({
-        prop: 'highlight',
-        value: modes.hover,
-        formLocation: field.formLocation || getLocationOnForm(field.name),
-        validation: v => v.highlight !== modes.edit
       })
 
       state.lastMode = modes.hover
@@ -161,9 +163,10 @@ function getLocationOnDoc (fieldName) {
 }
 
 function getLocationOnForm (fieldName) {
-  return getFieldLocation({
+  const loc = getFieldLocation({
     pool: formModule.state.form,
     poolType: pools.form,
     fieldName
   })
+  return loc
 }

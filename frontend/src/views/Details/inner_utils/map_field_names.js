@@ -1,3 +1,5 @@
+import { uuid } from '@/utils/uuid_valid_id'
+
 export default (abbyName) => {
   let formFieldName
 
@@ -27,7 +29,7 @@ export default (abbyName) => {
       formFieldName = 'size'
       break
     default:
-      formFieldName = ''
+      formFieldName = uuid()
       break
   }
 

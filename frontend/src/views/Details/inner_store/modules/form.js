@@ -34,6 +34,7 @@ const methods = {
     Vue.set(locatedObj, prop, valueToSet)
 
     if (prop === 'value') methods.updateFormFieldChildren({ field: locatedObj, children: valueToSet })
+    return formLocation
   },
 
   updateFormFieldChildren ({ field, children }) {

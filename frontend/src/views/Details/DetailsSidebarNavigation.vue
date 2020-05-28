@@ -41,6 +41,7 @@ import { formModule } from '@/views/Details/inner_store/index'
 import { navigationSteps } from '@/views/Details/inner_utils/navigation_steps'
 import { cleanStrForId } from '@/views/Details/inner_utils/clean_str_for_id'
 import { isInViewport } from '@/utils/is_in_viewport'
+import { defaultsTo } from '@/utils/defaults_to'
 
 export default {
   name: 'DetailsSidebarNavigation',
@@ -93,7 +94,7 @@ export default {
     },
 
     linkHref (step) {
-      return `#${cleanStrForId(step.text.toLowerCase())}-${this.idSuffix}`
+      return `#${cleanStrForId(defaultsTo(() => step.text, '').toLowerCase())}-${this.idSuffix}`
     },
 
     isTitle (n) {

@@ -32,6 +32,7 @@ import DetailsFormViewing from '@/views/Details/DetailsFormViewing'
 import DetailsDocument from '@/views/Details/DetailsDocument'
 import { reqStatus } from '@/enums/req_status'
 import { uuid } from '@/utils/uuid_valid_id'
+import { defaultsTo } from '@/utils/defaults_to'
 
 import ContentLoading from '@/components/ContentLoading'
 import { formModule, documentModule } from '@/views/Details/inner_store/index'
@@ -93,58 +94,66 @@ export default {
       console.log('error')
     },
 
-    docValToFormSetter ({ dray360name, data }) {
+    docValToFormSetter ({ dray360name = '', data }) {
       const nameParts = dray360name.split('.')
 
       if (dray360name.includes('order_address_events')) {
-        const addrEvents = formModule.state.form.sections.itinerary.rootFields
-        const evtName = data[nameParts[0]][nameParts[1]].unparsed_event_type.toLowerCase()
-        const evtValue = data[nameParts[0]][nameParts[1]].t_address_raw_text
-
-        this.$set(
-          addrEvents,
-          evtName,
-          buildField({
-            type: 'text-area',
-            placeholder: evtName
-          })
-        )
-
-        return { name: evtName, value: evtValue }
+        return this.handleOrderAddressEvents(data, nameParts)
       } else if (dray360name.includes('order_line_items')) {
-        /*
-          TODO: handle multiple line items, currently for line items we're parsing the prop "contents"
-          it'll be easier to have it being multiple props like order_address_events (for highlighting)
-         */
-        const lineItems = formModule.state.form.sections.inventory.subSections
-        const itemName = uuid()
-        let itemDescription
-
-        data[nameParts[0]].forEach(item => {
-          itemDescription = item.description
-
-          this.$set(
-            lineItems,
-            itemName,
-            {
-              fields: {
-                [`${itemName} description`]: buildField({
-                  presentationName: 'description',
-                  type: 'text-area',
-                  placeholder: 'description'
-                })
-              }
-            }
-          )
-        })
-
-        return {
-          name: `${itemName} description`,
-          value: itemDescription
-        }
+        return this.handleOrderLineItems(data, nameParts)
       }
 
       return { value: data[dray360name] }
+    },
+
+    handleOrderAddressEvents (data, nameParts) {
+      const addrEvents = formModule.state.form.sections.itinerary.rootFields
+      const evtName = defaultsTo(() => data[nameParts[0]][nameParts[1]].unparsed_event_type, uuid())
+      const evtValue = defaultsTo(() => data[nameParts[0]][nameParts[1]].t_address_raw_text, '--')
+
+      this.$set(
+        addrEvents,
+        evtName,
+        buildField({
+          type: 'text-area',
+          placeholder: evtName
+        })
+      )
+
+      return { name: evtName, value: evtValue }
+    },
+
+    handleOrderLineItems (data, nameParts) {
+      /*
+          TODO: handle multiple line items, currently for line items we're parsing the prop "contents"
+          it'll be easier to have it being multiple props like order_address_events (for highlighting)
+         */
+      const lineItems = formModule.state.form.sections.inventory.subSections
+      const itemName = uuid()
+      let itemDescription
+
+      data[nameParts[0]].forEach(item => {
+        itemDescription = defaultsTo(() => item.description, '--')
+
+        this.$set(
+          lineItems,
+          itemName,
+          {
+            fields: {
+              [`${itemName} description`]: buildField({
+                presentationName: 'description',
+                type: 'text-area',
+                placeholder: 'description'
+              })
+            }
+          }
+        )
+      })
+
+      return {
+        name: `${itemName} description`,
+        value: itemDescription
+      }
     },
 
     handleResize (e) {
