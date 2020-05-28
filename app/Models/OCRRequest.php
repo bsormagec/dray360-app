@@ -40,7 +40,6 @@ class OCRRequest extends Model
         return $this->hasMany(\App\Models\OCRRequestStatus::class, 'request_id', 'request_id');
     }
 
-
     /**
      * @return \Illuminate\Database\Eloquent\Relations\HasOne
      **/
@@ -57,5 +56,4 @@ class OCRRequest extends Model
             first();  # there is only ever one "latest", enforced by the database relationships
         return $latestStatus;
     }
-
 }

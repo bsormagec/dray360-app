@@ -2,8 +2,6 @@
 
 // to use: ./vendor/bin/phpunit --filter OCRRequestModelPersistenceTest
 
-
-
 namespace Tests\Feature;
 
 #use Illuminate\Foundation\Testing\RefreshDatabase;
@@ -11,11 +9,8 @@ namespace Tests\Feature;
 use Tests\TestCase;
 use Illuminate\Support\Facades\Artisan;
 
-
-
 class OCRRequestModelPersistenceTest extends TestCase
 {
-
     /**
      * Set up in-memory database instance for testing
      *
@@ -38,8 +33,6 @@ class OCRRequestModelPersistenceTest extends TestCase
         parent::tearDown();
     }
 
-
-
     /**
      * Order object can be retrieved and has correct relations to
      * OCRRequest object and OCRRequestStatus object list.
@@ -58,7 +51,7 @@ class OCRRequestModelPersistenceTest extends TestCase
         $this->assertNotNull($request_id, 'Expect Order to have a request_id');
 
         // 3. should be able to get the OCRRequest object having that same request id
-        $r1=\App\Models\OCRRequest::where('request_id', $request_id)->get()[0];
+        $r1 = \App\Models\OCRRequest::where('request_id', $request_id)->get()[0];
         $this->assertNotNull($r1, 'Expect OCRRequest to exist having same request_id as Order');
 
         // 4. that particular OCR Request should have the given order in its orders list
@@ -74,7 +67,7 @@ class OCRRequestModelPersistenceTest extends TestCase
         $this->assertTrue($foundOrder, 'Expect OCRRequest to include Order having same request_id');
 
         // 5. should be able to get all the OCRRequestStatus objects having that same id
-        $s1=\App\Models\OCRRequestStatus::where('request_id', $request_id)->get();
+        $s1 = \App\Models\OCRRequestStatus::where('request_id', $request_id)->get();
         $this->assertNotNull($s1, 'Expect OCRRequestStatus entries for that request_id');
 
         // 6. get the OCRRequest off one of the OCRRequestStatus objects,
@@ -90,7 +83,6 @@ class OCRRequestModelPersistenceTest extends TestCase
         }
         $this->assertEquals($is_latest_sum, 1, 'One and only one OCRRequestStatus should be flagged as "is_latest_status"');
     }
-
 }
 
 

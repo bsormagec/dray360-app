@@ -4,9 +4,10 @@
  * Usage: php artisan db:seed --class=TerminalSeeder
  */
 
-use Illuminate\Database\Seeder;
 use Carbon\Carbon;
-use Illuminate\Support\Facades\Storage;  // for CSV file loading
+use Illuminate\Database\Seeder;
+
+// for CSV file loading
 
 
 /**
@@ -18,8 +19,6 @@ class TerminalSeeder extends Seeder
     // define filename from Tom's spreadsheet listing validated terminals
     // note that column A was renamed to
     const TOMS_TERMINAL_LIST_CSV_FILE = 'database/seeds/Copy-of-list-of-terminals-work-in-progress.20200517.csv';
-
-
 
     /**
      * Run the database seeds.
@@ -34,7 +33,6 @@ class TerminalSeeder extends Seeder
         }
     }
 
-
     /**
      * Parse one row of Tom's CSV data
      *
@@ -42,7 +40,8 @@ class TerminalSeeder extends Seeder
      *
      * @return void
      */
-    public function insertRow($terminal) {
+    public function insertRow($terminal)
+    {
 
         // insert the address
         $addressId = DB::table('t_addresses')->insertGetId(
@@ -75,15 +74,8 @@ class TerminalSeeder extends Seeder
 
         // happy message
         $msg = 'inserted Tom\'s csvfile row:'.$terminal['rownum'].' as id:'.$terminalId."\n";
-        print ($msg);
-
+        print($msg);
     }
-
-
-
-
-
-
 
     /**
      * Load the CSV file, return array
@@ -95,17 +87,17 @@ class TerminalSeeder extends Seeder
         print('reading: '.$filename."\n");
 
         $alldata = [];
-        if (($handle = fopen($filename, "r")) !== FALSE) {
+        if (($handle = fopen($filename, "r")) !== false) {
             $headers = null;
             $rownum = -1;
-            while (($data = fgetcsv($handle)) !== FALSE) {
+            while (($data = fgetcsv($handle)) !== false) {
                 $rownum++;
                 if ($rownum == 0) {
                     $headers = $data;
                 } else {
                     $rowData = ['rownum' => $rownum];
                     $fieldcount = count($data);
-                    for ($i=0; $i < $fieldcount; $i++) {
+                    for ($i = 0; $i < $fieldcount; $i++) {
                         $colname = $headers[$i];
                         $coldata = $data[$i];
                         $rowData[$colname] = $coldata;
@@ -117,5 +109,4 @@ class TerminalSeeder extends Seeder
         }
         return $alldata;
     }
-
 }

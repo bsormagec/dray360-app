@@ -17,7 +17,7 @@ class TMSProvider extends Model
     use SoftDeletes;
 
     public $table = 't_tms_providers';
-    
+
     const CREATED_AT = 'created_at';
     const UPDATED_AT = 'updated_at';
 
@@ -46,8 +46,6 @@ class TMSProvider extends Model
      * @var array
      */
     public static $rules = [
-        
-    ];
 
-    
+    ];
 }

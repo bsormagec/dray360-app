@@ -1,7 +1,5 @@
 <?php
 
-
-
 namespace App\Console\Commands;
 
 use DB;
@@ -54,7 +52,7 @@ class DbCreateMySQLCommand extends Command
      */
     public function handle()
     {
-        try{
+        try {
             $dbname = $this->argument('dbname');
             $username = $this->argument('username');
             $password = $this->argument('password');
@@ -64,7 +62,7 @@ class DbCreateMySQLCommand extends Command
             try {
                 $hasDb = DB::connection($connection)->select("select schema_name from information_schema.schemata where schema_name = '$dbname' ");
 
-                if(!empty($hasDb)) {
+                if (!empty($hasDb)) {
                     $this->error("Database $dbname already exists for $connection connection");
                 } else {
                     // finally, make the new database (and user)
@@ -77,15 +75,11 @@ class DbCreateMySQLCommand extends Command
                     // all done
                     $this->info("Database '$dbname' created for '$connection' connection");
                 }
-
             } catch (\Exception $e1) {
                 $this->error($e1->getMessage());
             }
-        }
-        catch (\Exception $e2){
+        } catch (\Exception $e2) {
             $this->error($e2->getMessage());
         }
     }
 }
-
-

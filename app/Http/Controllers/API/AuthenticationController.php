@@ -2,13 +2,12 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
 use Auth;
 use App\User;
+use Illuminate\Http\Request;
 
 class AuthenticationController extends Controller
 {
-
     /**
      * Create new user account
      *
@@ -37,7 +36,6 @@ class AuthenticationController extends Controller
         return response()->json(['message' => 'Successfully created user!'], 201);
     }
 
-
     /**
      * Login user
      *
@@ -58,7 +56,6 @@ class AuthenticationController extends Controller
         }
     }
 
-
     /**
      * Logout user
      *
@@ -69,7 +66,6 @@ class AuthenticationController extends Controller
         Auth::logout();
         return response()->json(['message' => 'Logged Out'], 200);
     }
-
 
     /**
      * Get the currently authenticated User
@@ -87,5 +83,4 @@ class AuthenticationController extends Controller
             return response()->json($user);
         }
     }
-
 }

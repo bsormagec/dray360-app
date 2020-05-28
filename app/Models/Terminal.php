@@ -5,7 +5,6 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
-
 class Terminal extends Model
 {
     use SoftDeletes;
@@ -24,5 +23,4 @@ class Terminal extends Model
     {
         return $this->belongsTo(\App\Models\Address::class, 't_address_id');
     }
-
 }

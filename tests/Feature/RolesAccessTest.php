@@ -4,16 +4,12 @@
 
 namespace Tests\Feature;
 
-use Illuminate\Foundation\Testing\RefreshDatabase;
-use Illuminate\Foundation\Testing\WithFaker;
-use Tests\TestCase;
 use App\User;
+use Tests\TestCase;
 use Illuminate\Support\Facades\Artisan;
-use database\seeds\RolesAndPermissionsSeeder;
 
 class RolesAccessTest extends TestCase
 {
-
     /**
      * Set up in-memory database instance for testing
      *
@@ -37,10 +33,8 @@ class RolesAccessTest extends TestCase
         parent::tearDown();
     }
 
-
     // http://local.ordermaster.com/api/user
     // http://local.ordermaster.com/login
-
 
     /**
      * Admin can access to admin dashboard
@@ -64,7 +58,6 @@ class RolesAccessTest extends TestCase
         $response->assertOk();
     }
 
-
     /**
      * User can access home route
      *
@@ -86,7 +79,6 @@ class RolesAccessTest extends TestCase
         //Then
         $response->assertOk();
     }
-
 
     /**
      * Admin can access home route
@@ -110,15 +102,12 @@ class RolesAccessTest extends TestCase
         $response->assertOk();
     }
 
-
-
     /** @nonfunctional_test */
     public function user_must_login_to_access_to_admin_dashboard()
     {
         $this->get(route('admin.dashboard'))
             ->assertRedirect('login');
     }
-
 
     /** @nonfunctional_test */
     public function users_cannot_access_to_admin_dashboard()
@@ -136,6 +125,4 @@ class RolesAccessTest extends TestCase
         //Then
         $response->assertForbidden();
     }
-
-
 }

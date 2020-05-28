@@ -2,13 +2,10 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
-use Illuminate\Support\Str;
-use Carbon\Carbon;
 use DB;
-
-
-
+use Carbon\Carbon;
+use Illuminate\Support\Str;
+use Illuminate\Http\Request;
 
 class OCRRequestController extends Controller
 {
@@ -21,7 +18,6 @@ class OCRRequestController extends Controller
 
     // expire upload URI after this many minutes
     const MINUTES_URI_REMAINS_VALID = 15;
-
 
     /**
      * Create URI for uploading a document to create an OCRRequest
@@ -69,7 +65,7 @@ class OCRRequestController extends Controller
             ]);
             $s3Command = $s3Client->getCommand('PutObject', [
                 'Bucket' => env('AWS_BUCKET'),
-                'Key'    => $uploadingFilename
+                'Key' => $uploadingFilename
             ]);
             $urlExpiryTime = Carbon::now()->addMinutes(self::MINUTES_URI_REMAINS_VALID);
             $presignedRequest = $s3Client->createPresignedRequest($s3Command, $urlExpiryTime);
@@ -89,7 +85,6 @@ class OCRRequestController extends Controller
 
             // all done
             return response()->json($responseData, 200);
-
         } catch (\Exception $e) {
             return response()->json([
                 'message' => $e->getMessage(),
@@ -99,10 +94,7 @@ class OCRRequestController extends Controller
                 'trace' => $e->getTraceAsString()
             ], 500);
         }
-
     }
-
-
 
     /**
      * Save a row to the t_job_state_changes table, which
@@ -111,15 +103,15 @@ class OCRRequestController extends Controller
      *
      * @param  [Request] $request_id
      */
-    public function persistOCRRequestStatus($responseData) {
-        $data = array(
+    public function persistOCRRequestStatus($responseData)
+    {
+        $data = [
             'request_id' => $responseData['request_id'],
             'status_date' => Carbon::now(),
             'status' => 'upload-requested',
             'status_metadata' => json_encode($responseData)
-        );
+        ];
 
         DB::table('t_job_state_changes')->insert($data);
     }
-
 }

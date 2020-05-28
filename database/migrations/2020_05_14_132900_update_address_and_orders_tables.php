@@ -1,8 +1,8 @@
 <?php
 
-use Illuminate\Database\Migrations\Migration;
-use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Database\Migrations\Migration;
 
 /*
 note: signature for $table->bigInteger('bill_to_address_id', false, true)
@@ -76,6 +76,5 @@ class UpdateAddressAndOrdersTables extends Migration
         Schema::table('t_order_address_events', function (Blueprint $table) {
             $table->dropColumn('unparsed_event_type');
         });
-
     }
 }

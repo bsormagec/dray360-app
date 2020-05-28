@@ -4,8 +4,6 @@
 
 
 use Illuminate\Database\Seeder;
-use Carbon\Carbon;
-
 
 class OCRRulesTableSeeder extends Seeder
 {
@@ -13,7 +11,7 @@ class OCRRulesTableSeeder extends Seeder
 
     // two sample rules, from Aaron Bryden
     // rule 1
-    CONST RULE1_CODE=<<<PYTHONCODE
+    const RULE1_CODE = <<<PYTHONCODE
 possible_output_fields = {"shipment_designation":{"always":True}}
 def runrule(input_fields, updated_fields):
     #return {"shipment_type":"import"}
@@ -21,7 +19,7 @@ def runrule(input_fields, updated_fields):
 PYTHONCODE;
 
     // rule 2
-    CONST RULE2_CODE=<<<PYTHONCODE
+    const RULE2_CODE = <<<PYTHONCODE
 possible_output_fields = {"mbol":{"always":True}}
 def runrule(input_fields, updated_fields):
     #return {"shipment_type":"export"}
@@ -29,13 +27,11 @@ def runrule(input_fields, updated_fields):
 PYTHONCODE;
 
     // rule 3
-CONST RULE3_CODE=<<<PYTHONCODE
+    const RULE3_CODE = <<<PYTHONCODE
 possible_output_fields = {"port_ramp_of_origin_address_raw_text":{"always":True}}
 def runrule(input_fields, updated_fields):
     updated_fields["port_ramp_of_origin_address_raw_text"] = None
 PYTHONCODE;
-
-
 
     /**
      * Run the database seeds.
@@ -64,9 +60,6 @@ PYTHONCODE;
         $this->seedAccountVariantRuleSequence($accountId, $ocrvariantId, $ocrrule3Id, 3); // rule sequence number 3
     }
 
-
-
-
     /**
      * Create an address (an empty address)
      *
@@ -77,8 +70,6 @@ PYTHONCODE;
         $address = App\Models\Address::create();
         return $address->id;
     }
-
-
 
     /**
      * Create an Account
@@ -97,8 +88,6 @@ PYTHONCODE;
         return $account->id;
     }
 
-
-
     /**
      * Create a Variant named Jetspeed (id=5)
      *
@@ -116,8 +105,6 @@ PYTHONCODE;
 
         return $variant->id;
     }
-
-
 
     /**
      * Create an ocrrule
@@ -143,8 +130,6 @@ PYTHONCODE;
         return $rule->id;
     }
 
-
-
     /**
      * Create account/variant/rule association
      *
@@ -163,5 +148,4 @@ PYTHONCODE;
 
         return $account->id;
     }
-
 }
