@@ -67,7 +67,7 @@ export default {
     return {
       meta,
       cut: 3,
-      showingSlice: 0
+      activeButton: 1
     }
   },
 
@@ -77,31 +77,39 @@ export default {
     },
 
     allNBtns () {
-      return this.pagesArray.map((n, i) => ({
+      const action = (n) => {
+        this.activeButton = n
+        this.requestPage(n)
+      }
+
+      return this.pagesArray.map((n) => ({
         type: 'numberedButton',
         value: n,
-        action: this.requestPage
+        action
       }))
     },
 
     slicedNBtns () {
-      // Array of arrays
-      // E.g. [[1,2,3,4],[5,6,7,8],[9,10]]
-      let count = 1
-      let current = []
       const sliced = []
 
-      this.allNBtns.forEach((btn, i) => {
-        count++
-        current.push(btn)
-        if (count > this.cut) {
-          count = 1
-          sliced.push(current)
-          current = []
+      this.allNBtns.forEach((btn) => {
+        if (this.activeButton == 1) { // eslint-disable-line
+          return btn.value >= this.activeButton &&
+          btn.value <= this.cut &&
+          sliced.push(btn)
         }
+
+        if (this.activeButton == this.allNBtns.length) { // eslint-disable-line
+          return btn.value > (this.allNBtns.length - this.cut) &&
+          sliced.push(btn)
+        }
+
+        return (btn.value === this.activeButton - 1 ||
+          btn.value === this.activeButton + 1 ||
+          btn.value === this.activeButton) &&
+          sliced.push(btn)
       })
 
-      if (current.length) sliced.push(current)
       return sliced
     },
 
@@ -110,24 +118,16 @@ export default {
         left: [
           {
             value: 'First',
-            action: this.firstBtn
-          },
-          {
-            value: 'Prev',
-            disabled: this.cut >= this.meta().last_page,
-            action: this.prevBtn
+            action: this.firstBtn,
+            disabled: this.activeButton == 1 // eslint-disable-line
           }
         ],
-        center: [...this.slicedNBtns[this.showingSlice]],
+        center: this.slicedNBtns,
         right: [
           {
-            value: 'Next',
-            disabled: this.cut >= this.meta().last_page,
-            action: this.nextBtn
-          },
-          {
             value: 'Last',
-            action: this.lastBtn
+            action: this.lastBtn,
+            disabled: this.activeButton == this.allNBtns.length // eslint-disable-line
           }
         ]
       }
@@ -145,42 +145,20 @@ export default {
   methods: {
     async jumpToPage (n) {
       const page = Number(n)
-      if (isNaN(page) || page <= 0 || page === this.activePage || page > this.pagesArray.length) return
+      if (isNaN(page) || page <= 0 || page === this.activeButton || page > this.pagesArray.length) return
 
-      let index
-      this.slicedNBtns.forEach((slice, i) => {
-        if (slice.find(btn => btn.value === page)) {
-          index = i
-        }
-      })
-
-      this.showingSlice = index
+      this.activeButton = parseInt(n)
       await this.requestPage(page)
     },
 
     async firstBtn () {
-      this.showingSlice = 0
+      this.activeButton = 1
       await this.requestPage(1)
     },
 
-    async prevBtn () {
-      if (!this.slicedNBtns[this.showingSlice - 1]) return
-      this.showingSlice -= 1
-      this.requestPage(this.slicedNBtns[this.showingSlice][0].value)
-    },
-
-    async nextBtn () {
-      if (!this.slicedNBtns[this.showingSlice + 1]) return
-      this.showingSlice += 1
-      this.requestPage(this.slicedNBtns[this.showingSlice][0].value)
-    },
-
     async lastBtn () {
-      const lastSliceIndex = this.slicedNBtns.length - 1
-      const lastSlice = this.slicedNBtns[lastSliceIndex]
-      const lastButton = lastSlice[this.slicedNBtns[lastSliceIndex].length - 1]
-      this.showingSlice = lastSliceIndex
-      await this.requestPage(lastButton.value)
+      this.activeButton = this.allNBtns.length
+      await this.requestPage(this.activeButton)
     }
   }
 }

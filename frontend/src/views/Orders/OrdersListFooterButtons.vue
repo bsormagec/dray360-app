@@ -16,7 +16,7 @@
         :outlined="isOutlined(btn)"
         @click="btn.action(btn.value)"
       >
-        {{ displayText(btn.value) }}
+        {{ btn.value }}
       </v-btn>
     </div>
   </div>
@@ -43,10 +43,6 @@ export default {
   methods: {
     isOutlined ({ value }) {
       return value !== this.activePage
-    },
-
-    displayText (value) {
-      return typeof value === 'number' ? value : value
     }
   }
 }
