@@ -77,12 +77,4 @@ export default {
 .buttons__single:not(:last-child) {
   margin-right: 1rem;
 }
-
-.First, .Last {
-  display: none;
-
-  @media screen and (min-width: map-get($breakpoints, lg)) {
-    display: block;
-  }
-}
 </style>

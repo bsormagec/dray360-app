@@ -142,6 +142,11 @@ export default {
     }
   },
 
+  beforeMount () {
+    const urlPage = this.$route.query.page
+    if (urlPage) this.jumpToPage(urlPage)
+  },
+
   methods: {
     async jumpToPage (n) {
       const page = Number(n)

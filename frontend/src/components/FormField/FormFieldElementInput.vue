@@ -20,6 +20,16 @@ export default {
     field: {
       type: Object,
       required: true
+    },
+    isEditing: {
+      type: Boolean,
+      required: true
+    }
+  },
+
+  watch: {
+    isEditing: function () {
+      this.syncValue()
     }
   },
 
@@ -32,6 +42,10 @@ export default {
   methods: {
     change (e) {
       this.$emit('change', e)
+    },
+
+    syncValue () {
+      if (this.field.value) this.$emit('change', this.field.value)
     }
   }
 }

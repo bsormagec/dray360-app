@@ -12,7 +12,7 @@
         color="primary"
         outlined
         width="11.5rem"
-        @click="$router.push('/')"
+        @click="$router.go(-1)"
       >
         <v-icon>
           mdi-chevron-left

@@ -2,6 +2,7 @@
   <div class="form-field-element">
     <FormFieldElementInput
       v-if="isInput"
+      :is-editing="isEditing"
       :field="field"
       @change="e => $emit('change', e)"
     />
@@ -15,6 +16,7 @@
 
     <FormFieldElementTextArea
       v-else-if="isTextArea"
+      :is-editing="isEditing"
       :field="field"
       @change="e => $emit('change', e)"
     />
