@@ -12,5 +12,9 @@
   ],
   "eslint.workingDirectories": [
     "./frontend"
-  ]
+  ],
+  "php-cs-fixer.onsave": true,
+  "php-cs-fixer.lastDownload": 1,
+  "php-cs-fixer.config": ".php_cs;.php_cs.dist",
+  "php-cs-fixer.executablePath": "${extensionPath}/php-cs-fixer.phar"
 }
