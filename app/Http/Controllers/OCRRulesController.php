@@ -29,9 +29,9 @@ class OCRRulesController extends Controller
     {
         $data = $request->validate(OCRRule::$rules);
 
-        $rule = OCRRule::create($data);
+        $ocrRule = OCRRule::create($data);
 
-        return response()->json($rule, Response::HTTP_CREATED);
+        return response()->json($ocrRule, Response::HTTP_CREATED);
     }
 
     /**
@@ -40,7 +40,7 @@ class OCRRulesController extends Controller
      * @param  \App\Models\OCRRule  $oCRRule
      * @return \Illuminate\Http\Response
      */
-    public function show(OCRRule $oCRRule)
+    public function show(OCRRule $ocrRule)
     {
     }
 
@@ -51,8 +51,13 @@ class OCRRulesController extends Controller
      * @param  \App\Models\OCRRule  $oCRRule
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, OCRRule $oCRRule)
+    public function update(Request $request, OCRRule $ocrRule)
     {
+        $data = $request->validate(OCRRule::$rules);
+
+        $ocrRule->update($data);
+
+        return response()->json($ocrRule);
     }
 
     /**

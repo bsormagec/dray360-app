@@ -7,6 +7,7 @@ use Tests\TestCase;
 use App\Models\OCRRule;
 use Tests\Seeds\UserSeed;
 use Laravel\Sanctum\Sanctum;
+use Illuminate\Http\Response;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
 
 class OCRRulesControllerTest extends TestCase
@@ -44,7 +45,7 @@ class OCRRulesControllerTest extends TestCase
         $rule = factory(OCRRule::class)->make();
 
         $this->postJson(route('ocr.rules.store'), $rule->toArray())
-            ->assertStatus(201)
+            ->assertStatus(Response::HTTP_CREATED)
             ->assertJsonStructure(['id'])
             ->assertJsonFragment(['code' => $rule->code]);
     }
@@ -58,7 +59,35 @@ class OCRRulesControllerTest extends TestCase
             $rule = factory(OCRRule::class)->make([$fieldToValidate => null]);
 
             $this->postJson(route('ocr.rules.store'), $rule->toArray())
-                ->assertStatus(422)
+                ->assertStatus(Response::HTTP_UNPROCESSABLE_ENTITY)
+                ->assertJsonValidationErrors($fieldToValidate);
+        }
+    }
+
+    /** @test */
+    public function it_should_update_an_existing_rule()
+    {
+        $rule = factory(OCRRule::class)->create()->toArray();
+        $rule['code'] = 'Some new amazing code.';
+
+        $this->putJson(route('ocr.rules.update', $rule['id']), $rule)
+            ->assertStatus(Response::HTTP_OK)
+            ->assertJsonStructure(['id'])
+            ->assertJsonFragment(['code' => $rule['code']]);
+    }
+
+    /** @test */
+    public function it_should_fail_validation_on_update()
+    {
+        $rule = factory(OCRRule::class)->create();
+        $toValidate = ['name','description', 'code'];
+
+        foreach ($toValidate as $fieldToValidate) {
+            $newRule = $rule->toArray();
+            $newRule[$fieldToValidate] = null;
+
+            $this->putJson(route('ocr.rules.update', $newRule['id']), $newRule)
+                ->assertStatus(Response::HTTP_UNPROCESSABLE_ENTITY)
                 ->assertJsonValidationErrors($fieldToValidate);
         }
     }

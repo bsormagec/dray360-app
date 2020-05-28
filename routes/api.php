@@ -44,5 +44,6 @@ Route::post('createocrrequestuploaduri', 'OCRRequestController@createOCRRequestU
     ->middleware('auth:sanctum');
 
 Route::apiResource('ocr/rules', 'OCRRulesController', ['as' => 'ocr'])
-    ->only(['store', 'index'])
+    ->parameters(['rules' => 'ocrRule'])
+    ->only(['store', 'index', 'update'])
     ->middleware('auth:sanctum');
