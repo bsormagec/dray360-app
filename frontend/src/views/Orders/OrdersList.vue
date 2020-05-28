@@ -63,6 +63,7 @@ export default {
         text: 'Status',
         value: 'latest_ocr_request_status.status'
       },
+      { text: 'Bill to', value: 'bill_to_address_raw_text' },
       { text: 'Date', value: 'created_at' },
       { text: 'Shipment Direction', value: 'shipment_direction' },
       { text: 'Shipment Designation', value: 'shipment_designation' },
