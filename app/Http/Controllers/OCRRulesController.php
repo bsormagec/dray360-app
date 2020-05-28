@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\OCRRule;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
+use App\Http\Resources\OCRRule as ResourcesOCRRule;
 
 class OCRRulesController extends Controller
 {
@@ -15,6 +16,7 @@ class OCRRulesController extends Controller
      */
     public function index(Request $request)
     {
+        return new ResourcesOCRRule(OCRRule::all());
     }
 
     /**

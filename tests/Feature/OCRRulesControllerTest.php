@@ -23,6 +23,22 @@ class OCRRulesControllerTest extends TestCase
     }
 
     /** @test */
+    public function it_should_list_all_the_available_rules()
+    {
+        $rules = factory(OCRRule::class, 5)->create();
+        $rules->first()->delete();
+
+        $this->getJson(route('ocr.rules.index'))
+            ->assertStatus(200)
+            ->assertJsonCount($rules->count() - 1, 'data')
+            ->assertJsonStructure([
+                'data' => [
+                    '*' => ['name', 'code', 'description']
+                ]
+            ]);
+    }
+
+    /** @test */
     public function it_should_create_a_rule()
     {
         $rule = factory(OCRRule::class)->make();
