@@ -41,6 +41,7 @@ import { formModule } from '@/views/Details/inner_store/index'
 import { navigationSteps } from '@/views/Details/inner_utils/navigation_steps'
 import { cleanStrForId } from '@/views/Details/inner_utils/clean_str_for_id'
 import { isInViewport } from '@/utils/is_in_viewport'
+import { scrollTo } from '@/utils/scroll_to'
 import { defaultsTo } from '@/utils/defaults_to'
 
 export default {
@@ -116,7 +117,7 @@ export default {
     jumpTo (step) {
       this.isJumping = true
       this.setStep(step.id)
-      document.getElementById(this.linkHref(step)).scrollIntoView()
+      scrollTo(this.linkHref(step))
 
       setTimeout(() => {
         this.isJumping = false

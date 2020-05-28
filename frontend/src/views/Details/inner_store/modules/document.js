@@ -1,5 +1,6 @@
 import Vue from 'vue'
 import { objValFromLocation } from '@/utils/obj_val_from_loc'
+import { scrollTo } from '@/utils/scroll_to'
 import { modes, pools } from '@/views/Details/inner_types'
 import { getFieldLocation } from '@/views/Details/inner_utils/get_field_location'
 import { cleanStrForId } from '@/views/Details/inner_utils/clean_str_for_id'
@@ -43,7 +44,7 @@ const methods = {
   },
 
   scrollTo ({ field, container }) {
-    document.getElementById(`${cleanStrForId(field.name)}-${container}`).scrollIntoView()
+    scrollTo(`${cleanStrForId(field.name)}-${container}`)
   },
 
   startEdit ({ field, pageIndex, highlightIndex }) {
