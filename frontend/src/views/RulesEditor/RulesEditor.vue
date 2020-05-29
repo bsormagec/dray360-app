@@ -149,6 +149,9 @@
                   <v-list-item-content class="draggable-item">
                     <v-list-item-title v-text="rule.name" />
                   </v-list-item-content>
+                  <button @click="removeFromAccountVariant(i)">
+                    X
+                  </button>
                 </v-list-item>
               </draggable>
             </v-list-item-group>
@@ -231,6 +234,14 @@ export default {
           name: name,
           code: code
         })
+      }
+    },
+    removeFromAccountVariant (i) {
+      const vc = this
+      if (vc.account_variant_rules.length > 1) {
+        vc.account_variant_rules.splice(i, 1)
+      } else {
+        alert('There must be at least 1 rule')
       }
     },
     updateSelectedIndex (i) {
