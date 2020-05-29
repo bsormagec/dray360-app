@@ -613,27 +613,13 @@
 					}
 				],
 				"body": {
-					"mode": "formdata",
-					"formdata": [
-						{
-							"key": "name",
-							"value": "",
-							"description": "Rule's name",
-							"type": "text"
-						},
-						{
-							"key": "description",
-							"value": "",
-							"description": "Rule's description",
-							"type": "text"
-						},
-						{
-							"key": "code",
-							"value": "",
-							"description": "Rule's code",
-							"type": "text"
+					"mode": "raw",
+					"raw": "{\n\t\"name\": \"the name\",\n\t\"description\": \"the description\",\n\t\"code\": \"the python code\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
 						}
-					]
+					}
 				},
 				"url": {
 					"raw": "{{server}}/api/ocr/rules",
@@ -686,27 +672,13 @@
 					}
 				],
 				"body": {
-					"mode": "formdata",
-					"formdata": [
-						{
-							"key": "name",
-							"value": "",
-							"description": "Rule's name",
-							"type": "text"
-						},
-						{
-							"key": "description",
-							"value": "",
-							"description": "Rule's description",
-							"type": "text"
-						},
-						{
-							"key": "code",
-							"value": "",
-							"description": "Rule's code",
-							"type": "text"
+					"mode": "raw",
+					"raw": "{\n\t\"name\": \"the new name\",\n\t\"description\": \"the new description\",\n\t\"code\": \"the new python code\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
 						}
-					]
+					}
 				},
 				"url": {
 					"raw": "{{server}}/api/ocr/rules/:ocr_rule_id",

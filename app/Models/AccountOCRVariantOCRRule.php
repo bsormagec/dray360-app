@@ -18,7 +18,9 @@ class AccountOCRVariantOCRRule extends Model
         't_account_id',
         't_ocrvariant_id',
         't_ocrrule_id',
-        'rule_sequence'
+        'rule_sequence',
+        'created_at',
+        'updated_at',
     ];
 
     /**

@@ -69,10 +69,11 @@ class OCRRulesController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param  \App\Models\OCRRule  $oCRRule
+     * @todo Define how the deletetion of rules should work
+     * @param  \App\Models\OCRRule  $ocrRule
      * @return \Illuminate\Http\Response
      */
-    public function destroy(OCRRule $oCRRule)
+    public function destroy(OCRRule $ocrRule)
     {
     }
 }

@@ -41,6 +41,10 @@ class OCRRulesAssignmentControllerTest extends TestCase
             $account->id,
             $ocrVariant->id
         )->get());
+        $this->assertNotNull(AccountOCRVariantOCRRule::assignedTo(
+            $account->id,
+            $ocrVariant->id
+        )->first()->created_at);
     }
 
     /** @test */

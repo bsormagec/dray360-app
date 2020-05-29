@@ -25,6 +25,8 @@ class OCRRulesAssignmentController extends Controller
                 't_ocrvariant_id' => $variantId,
                 't_ocrrule_id' => $rule,
                 'rule_sequence' => $key + 1,
+                'created_at' => now(),
+                'updated_at' => now(),
             ];
         })->toArray();
 

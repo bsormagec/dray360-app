@@ -60,12 +60,4 @@ class Account extends Model
     {
         return $this->belongsTo(\App\Models\Address::class, 't_address_id');
     }
-
-    /**
-     * @return \Illuminate\Database\Eloquent\Relations\HasMany
-     **/
-    public function users()
-    {
-        return $this->hasMany(\App\User::class, 't_account_id');
-    }
 }

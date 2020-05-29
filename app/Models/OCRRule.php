@@ -70,11 +70,15 @@ class OCRRule extends Model
             return $query;
         }
 
-        return $query->whereHas('accountsVariantsAssignment', function ($query) use ($filters) {
-            $query->where([
-                't_account_id' => $filters['account_id'],
-                't_ocrvariant_id' => $filters['variant_id'],
-            ]);
-        });
+        return $query
+            ->select('t_ocrrules.*')
+            ->join('t_account_ocrvariant_ocrrules  as avr', function ($join) use ($filters) {
+                $join->on('avr.t_ocrrule_id', '=', 't_ocrrules.id')
+                    ->where([
+                    't_account_id' => $filters['account_id'],
+                    't_ocrvariant_id' => $filters['variant_id'],
+                ]);
+            })
+            ->orderBy('avr.rule_sequence');
     }
 }

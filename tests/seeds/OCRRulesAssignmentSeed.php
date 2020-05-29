@@ -27,7 +27,7 @@ class OCRRulesAssignmentSeed extends Seeder
             $ocrRuleAssignment->ocrRule()->associate($rule);
             $ocrRuleAssignment->ocrVariant()->associate($ocrVariant);
             $ocrRuleAssignment->account()->associate($accounts->first());
-            $ocrRuleAssignment->rule_sequence = $key + 1;
+            $ocrRuleAssignment->rule_sequence = $rulesAccount1->count() - $key;
             $ocrRuleAssignment->save();
         }
 
@@ -36,7 +36,7 @@ class OCRRulesAssignmentSeed extends Seeder
             $ocrRuleAssignment->ocrRule()->associate($rule);
             $ocrRuleAssignment->ocrVariant()->associate($ocrVariant);
             $ocrRuleAssignment->account()->associate($accounts->last());
-            $ocrRuleAssignment->rule_sequence = $key + 1;
+            $ocrRuleAssignment->rule_sequence = $rulesAccount2->count() - $key;
             $ocrRuleAssignment->save();
         }
     }
