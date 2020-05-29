@@ -26,7 +26,6 @@ Route::get('user', 'AuthenticationController@user')
     ->name('user') // shows up in `php artisan route:list` command output
     ->middleware('auth:sanctum');
 
-
 // Authenticated route to return all orders
 Route::get('orders', 'OrderController@orders')
     ->name('orders')
@@ -43,7 +42,12 @@ Route::post('createocrrequestuploaduri', 'OCRRequestController@createOCRRequestU
     ->name('createocruploaduri')
     ->middleware('auth:sanctum');
 
-Route::apiResource('ocr/rules', 'OCRRulesController', ['as' => 'ocr'])
-    ->parameters(['rules' => 'ocrRule'])
-    ->only(['store', 'index', 'update'])
-    ->middleware('auth:sanctum');
+// Sanctum Authenticated Routes
+Route::group(['middleware' => 'auth:sanctum'], function () {
+    Route::apiResource('ocr/rules', 'OCRRulesController', ['as' => 'ocr'])
+        ->parameters(['rules' => 'ocrRule'])
+        ->only(['store', 'index', 'update']);
+
+    Route::post('ocr/rules-assignment', 'OCRRulesAssignmentController')
+        ->name('ocr.rules-assignment.store');
+});
