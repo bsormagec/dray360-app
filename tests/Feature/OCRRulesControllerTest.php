@@ -2,13 +2,10 @@
 
 namespace Tests\Feature;
 
-use App\User;
 use Tests\TestCase;
 use App\Models\Account;
 use App\Models\OCRRule;
-use Tests\Seeds\UserSeed;
 use App\Models\OCRVariant;
-use Laravel\Sanctum\Sanctum;
 use Illuminate\Http\Response;
 use Tests\Seeds\OCRRulesAssignmentSeed;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
@@ -20,10 +17,7 @@ class OCRRulesControllerTest extends TestCase
     public function setUp(): void
     {
         parent::setUp();
-
-        $this->seed(UserSeed::class);
-        $user = User::first();
-        Sanctum::actingAs($user, ['*']);
+        $this->loginAdmin();
     }
 
     /** @test */
@@ -84,6 +78,8 @@ class OCRRulesControllerTest extends TestCase
             ->assertStatus(Response::HTTP_CREATED)
             ->assertJsonStructure(['id'])
             ->assertJsonFragment(['code' => $rule->code]);
+
+        $this->assertDatabaseCount((new OCRRule())->getTable(), 1);
     }
 
     /** @test */
@@ -98,6 +94,8 @@ class OCRRulesControllerTest extends TestCase
                 ->assertStatus(Response::HTTP_UNPROCESSABLE_ENTITY)
                 ->assertJsonValidationErrors($fieldToValidate);
         }
+
+        $this->assertDatabaseCount((new OCRRule())->getTable(), 0);
     }
 
     /** @test */
@@ -110,6 +108,10 @@ class OCRRulesControllerTest extends TestCase
             ->assertStatus(Response::HTTP_OK)
             ->assertJsonStructure(['id'])
             ->assertJsonFragment(['code' => $rule['code']]);
+
+        $table = (new OCRRule())->getTable();
+
+        $this->assertDatabaseHas($table, ['code' => $rule['code']]);
     }
 
     /** @test */
