@@ -2,8 +2,10 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\OCRRules;
+use App\Models\OCRRule;
 use Illuminate\Http\Request;
+use Illuminate\Http\Response;
+use App\Http\Resources\OCRRule as ResourcesOCRRule;
 
 class OCRRulesController extends Controller
 {
@@ -12,17 +14,15 @@ class OCRRulesController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
-    }
+        $assignmentFilters = $request->all(['account_id', 'variant_id']);
 
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
-    {
+        return new ResourcesOCRRule(
+            OCRRule::query()
+                ->filterByAccountVariant($assignmentFilters)
+                ->get()
+        );
     }
 
     /**
@@ -33,25 +33,20 @@ class OCRRulesController extends Controller
      */
     public function store(Request $request)
     {
+        $data = $request->validate(OCRRule::$rules);
+
+        $ocrRule = OCRRule::create($data);
+
+        return response()->json($ocrRule, Response::HTTP_CREATED);
     }
 
     /**
      * Display the specified resource.
      *
-     * @param  \App\Models\OCRRules  $oCRRules
+     * @param  \App\Models\OCRRule  $oCRRule
      * @return \Illuminate\Http\Response
      */
-    public function show(OCRRules $oCRRules)
-    {
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  \App\Models\OCRRules  $oCRRules
-     * @return \Illuminate\Http\Response
-     */
-    public function edit(OCRRules $oCRRules)
+    public function show(OCRRule $ocrRule)
     {
     }
 
@@ -59,20 +54,26 @@ class OCRRulesController extends Controller
      * Update the specified resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Models\OCRRules  $oCRRules
+     * @param  \App\Models\OCRRule  $oCRRule
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, OCRRules $oCRRules)
+    public function update(Request $request, OCRRule $ocrRule)
     {
+        $data = $request->validate(OCRRule::$rules);
+
+        $ocrRule->update($data);
+
+        return response()->json($ocrRule);
     }
 
     /**
      * Remove the specified resource from storage.
      *
-     * @param  \App\Models\OCRRules  $oCRRules
+     * @todo Define how the deletetion of rules should work
+     * @param  \App\Models\OCRRule  $ocrRule
      * @return \Illuminate\Http\Response
      */
-    public function destroy(OCRRules $oCRRules)
+    public function destroy(OCRRule $ocrRule)
     {
     }
 }

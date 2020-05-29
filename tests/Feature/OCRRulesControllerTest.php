@@ -1,0 +1,150 @@
+<?php
+
+namespace Tests\Feature;
+
+use Tests\TestCase;
+use App\Models\Account;
+use App\Models\OCRRule;
+use App\Models\OCRVariant;
+use Illuminate\Http\Response;
+use Tests\Seeds\OCRRulesAssignmentSeed;
+use App\Models\AccountOCRVariantOCRRule;
+use Illuminate\Foundation\Testing\DatabaseTransactions;
+
+class OCRRulesControllerTest extends TestCase
+{
+    use DatabaseTransactions;
+
+    public function setUp(): void
+    {
+        parent::setUp();
+        $this->loginAdmin();
+    }
+
+    /** @test */
+    public function it_should_list_all_the_available_rules()
+    {
+        $rules = factory(OCRRule::class, 5)->create();
+        $rules->first()->delete();
+
+        $this->getJson(route('ocr.rules.index'))
+            ->assertStatus(200)
+            ->assertJsonCount($rules->count() - 1, 'data')
+            ->assertJsonStructure([
+                'data' => [
+                    '*' => ['name', 'code', 'description']
+                ]
+            ]);
+    }
+
+    /** @test */
+    public function it_should_list_all_the_available_rules_filtered_by_account_and_variant()
+    {
+        $this->withoutExceptionHandling();
+        $this->seed(OCRRulesAssignmentSeed::class);
+        $accounts = Account::all(['id']);
+        $ocrVariant = OCRVariant::first(['id']);
+        $rulesAccount1 = AccountOCRVariantOCRRule::query()
+            ->assignedTo($accounts->first()->id, $ocrVariant->id)
+            ->with('ocrRule')
+            ->orderBy('rule_sequence')
+            ->get()
+            ->pluck('ocrRule');
+        $rulesAccount2 = AccountOCRVariantOCRRule::query()
+            ->assignedTo($accounts->last()->id, $ocrVariant->id)
+            ->with('ocrRule')
+            ->orderBy('rule_sequence')
+            ->get()
+            ->pluck('ocrRule');
+
+        $this->getJson(route('ocr.rules.index', [
+                'account_id' => $accounts->first()->id,
+                'variant_id' => $ocrVariant->id,
+            ]))
+            ->assertStatus(200)
+            ->assertJsonCount(2, 'data')
+            ->assertJsonStructure([
+                'data' => [
+                    '*' => ['name', 'code', 'description']
+                ]
+            ])
+            ->assertJsonPath('data.0.id', $rulesAccount1->get(0)->id)
+            ->assertJsonPath('data.1.id', $rulesAccount1->get(1)->id);
+
+        $this->getJson(route('ocr.rules.index', [
+                'account_id' => $accounts->last()->id,
+                'variant_id' => $ocrVariant->id,
+            ]))
+            ->assertStatus(200)
+            ->assertJsonCount(3, 'data')
+            ->assertJsonStructure([
+                'data' => [
+                    '*' => ['name', 'code', 'description']
+                ]
+            ])
+            ->assertJsonPath('data.0.id', $rulesAccount2->get(0)->id)
+            ->assertJsonPath('data.1.id', $rulesAccount2->get(1)->id)
+            ->assertJsonPath('data.2.id', $rulesAccount2->get(2)->id);
+    }
+
+    /** @test */
+    public function it_should_create_a_rule()
+    {
+        $rule = factory(OCRRule::class)->make();
+
+        $this->postJson(route('ocr.rules.store'), $rule->toArray())
+            ->assertStatus(Response::HTTP_CREATED)
+            ->assertJsonStructure(['id'])
+            ->assertJsonFragment(['code' => $rule->code]);
+
+        $this->assertDatabaseCount((new OCRRule())->getTable(), 1);
+    }
+
+    /** @test */
+    public function it_should_fail_the_validation()
+    {
+        $toValidate = ['name','description', 'code'];
+
+        foreach ($toValidate as $fieldToValidate) {
+            $rule = factory(OCRRule::class)->make([$fieldToValidate => null]);
+
+            $this->postJson(route('ocr.rules.store'), $rule->toArray())
+                ->assertStatus(Response::HTTP_UNPROCESSABLE_ENTITY)
+                ->assertJsonValidationErrors($fieldToValidate);
+        }
+
+        $this->assertDatabaseCount((new OCRRule())->getTable(), 0);
+    }
+
+    /** @test */
+    public function it_should_update_an_existing_rule()
+    {
+        $rule = factory(OCRRule::class)->create()->toArray();
+        $rule['code'] = 'Some new amazing code.';
+
+        $this->putJson(route('ocr.rules.update', $rule['id']), $rule)
+            ->assertStatus(Response::HTTP_OK)
+            ->assertJsonStructure(['id'])
+            ->assertJsonFragment(['code' => $rule['code']]);
+
+        $table = (new OCRRule())->getTable();
+
+        $this->assertDatabaseHas($table, ['code' => $rule['code']]);
+    }
+
+    /** @test */
+    public function it_should_fail_validation_on_update()
+    {
+        $rule = factory(OCRRule::class)->create();
+        $toValidate = ['name','description', 'code'];
+
+        foreach ($toValidate as $fieldToValidate) {
+            $newRule = $rule->toArray();
+            $newRule[$fieldToValidate] = null;
+
+            $this->putJson(route('ocr.rules.update', $newRule['id']), $newRule)
+                ->assertStatus(Response::HTTP_UNPROCESSABLE_ENTITY)
+                ->assertJsonValidationErrors($fieldToValidate);
+        }
+    }
+}

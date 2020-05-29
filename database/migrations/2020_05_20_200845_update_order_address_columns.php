@@ -36,13 +36,6 @@ class UpdateOrderAddressColumns extends Migration
         Schema::table('t_addresses', function (Blueprint $table) {
             $table->dropColumn('unparsed_text_block');
         });
-
-        // drop columns from t_orders table. these columns were renamed
-        // in prior migrations, but I forgot to delete them at that time.
-        Schema::table('t_orders', function (Blueprint $table) {
-            $table->dropColumn('port_of_origin_address_id');
-            $table->dropColumn('port_of_destination_address_id');
-        });
     }
 
     /**

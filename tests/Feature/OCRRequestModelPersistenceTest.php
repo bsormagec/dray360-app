@@ -4,13 +4,14 @@
 
 namespace Tests\Feature;
 
-#use Illuminate\Foundation\Testing\RefreshDatabase;
-#use Illuminate\Foundation\Testing\WithFaker;
 use Tests\TestCase;
-use Illuminate\Support\Facades\Artisan;
+use OrdersTableSeeder;
+use Illuminate\Foundation\Testing\DatabaseTransactions;
 
 class OCRRequestModelPersistenceTest extends TestCase
 {
+    use DatabaseTransactions;
+
     /**
      * Set up in-memory database instance for testing
      *
@@ -19,18 +20,8 @@ class OCRRequestModelPersistenceTest extends TestCase
     public function setUp(): void
     {
         parent::setUp();
-        Artisan::call('migrate:fresh');
-        Artisan::call('db:seed', ['--class' => 'OrdersTableSeeder']);
-    }
-
-    /**
-     * Tear down in-memory unit testing instance
-     *
-     * @return void
-     */
-    public function tearDown(): void
-    {
-        parent::tearDown();
+        $this->markTestIncomplete();
+        $this->seed(OrdersTableSeeder::class);
     }
 
     /**

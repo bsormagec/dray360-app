@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
 class AccountOCRVariantOCRRule extends Model
@@ -13,16 +14,14 @@ class AccountOCRVariantOCRRule extends Model
     const CREATED_AT = 'created_at';
     const UPDATED_AT = 'updated_at';
     protected $dates = ['deleted_at'];
-
-
-
     public $fillable = [
         't_account_id',
         't_ocrvariant_id',
         't_ocrrule_id',
-        'rule_sequence'
+        'rule_sequence',
+        'created_at',
+        'updated_at',
     ];
-
 
     /**
      * The attributes that should be casted to native types.
@@ -52,16 +51,40 @@ class AccountOCRVariantOCRRule extends Model
     /**
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
      **/
-    public function ocrrule()
+    public function ocrRule()
     {
-        return $this->belongsTo(\App\Models\OCRRule::class, 't_ocrrule_id');
+        return $this->belongsTo(OCRRule::class, 't_ocrrule_id');
     }
 
     /**
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
      **/
-    public function order()
+    public function ocrVariant()
     {
-        return $this->belongsTo(\App\Models\OCRVariant::class, 't_ocrvariant_id');
+        return $this->belongsTo(OCRVariant::class, 't_ocrvariant_id');
+    }
+
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     **/
+    public function account()
+    {
+        return $this->belongsTo(Account::class, 't_account_id');
+    }
+
+    /**
+     * Get the assignments assigned to the given account and variant.
+     *
+     * @param \Illuminate\Database\Eloquent\Builder $query
+     * @param integer $accountId
+     * @param integer $variantId
+     * @return \Illuminate\Database\Eloquent\Builder
+     */
+    public function scopeAssignedTo(Builder $query, int $accountId, int $variantId)
+    {
+        return $query->where([
+            't_account_id' => $accountId,
+            't_ocrvariant_id' => $variantId,
+        ]);
     }
 }

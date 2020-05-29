@@ -1,15 +1,16 @@
 <?php
 
-// to use : ./vendor/bin/phpunit --filter RolesAccessTest
-
 namespace Tests\Feature;
 
 use App\User;
 use Tests\TestCase;
-use Illuminate\Support\Facades\Artisan;
+use RolesAndPermissionsSeeder;
+use Illuminate\Foundation\Testing\DatabaseTransactions;
 
 class RolesAccessTest extends TestCase
 {
+    use DatabaseTransactions;
+
     /**
      * Set up in-memory database instance for testing
      *
@@ -18,19 +19,8 @@ class RolesAccessTest extends TestCase
     public function setUp(): void
     {
         parent::setUp();
-        Artisan::call('migrate');
-        Artisan::call('db:seed', ['--class' => 'RolesAndPermissionsSeeder']);
-    }
-
-    /**
-     * Tear down in-memory unit testing instance
-     *
-     * @return void
-     */
-    public function tearDown(): void
-    {
-        Artisan::call('migrate:reset');
-        parent::tearDown();
+        $this->markTestIncomplete();
+        $this->seed(RolesAndPermissionsSeeder::class);
     }
 
     // http://local.ordermaster.com/api/user
