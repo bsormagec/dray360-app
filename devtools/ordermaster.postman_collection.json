@@ -263,7 +263,7 @@
 			"response": []
 		},
 		{
-			"name": "/api/order",
+			"name": "/api/orders/ID",
 			"event": [
 				{
 					"listen": "test",

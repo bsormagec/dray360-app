@@ -6,10 +6,11 @@
 ### Make copy of local repo over to the hosted dev server
 
 ````bash
-/home/pbnelson/repos/tcompanies/ordermaster
+cd /home/pbnelson/repos/tcompanies/ordermaster
 git checkout master
 git pull --all
 rsync -av ../ordermaster ocr-dev02:
+
 ````
 
 
@@ -24,6 +25,7 @@ sudo rm /var/www/deploybot/current
 sudo ln -s /var/www/deploybot/${folder}/public /var/www/deploybot/current
 sudo chown -R deploybot:deploybot /var/www/deploybot
 sudo chmod -R g+w /var/www/deploybot/${folder}/storage
+
 ````
 
 ### Install correct .env files, install depencencies, build vuetify
@@ -39,6 +41,7 @@ cd frontend
 npm install
 npm run build
 exit
+
 ````
 
 ### Restart web server
@@ -46,6 +49,7 @@ exit
 ````bash
 sudo systemctl restart httpd.service php-fpm.service
 sudo systemctl status httpd.service php-fpm.service
+
 ````
 
 
