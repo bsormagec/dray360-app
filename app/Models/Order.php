@@ -274,7 +274,7 @@ class Order extends Model
      **/
     public function portRampOfOriginAddress()
     {
-        return $this->belongsTo(\App\Models\Address::class, 'port_ramp_of_origin_address_id');
+        return $this->belongsTo(\App\Models\Address::class, 'port_ramp_of_origin_address_id')->first();
     }
 
     /**
@@ -283,7 +283,7 @@ class Order extends Model
      */
     public function getPortRampOfOriginAddressAttribute()
     {
-        return $this->portRampOfOriginAddress()->get();
+        return $this->portRampOfOriginAddress();
     }
 
     /**
@@ -291,7 +291,7 @@ class Order extends Model
      **/
     public function portRampOfDestinationAddress()
     {
-        return $this->belongsTo(\App\Models\Address::class, 'port_ramp_of_destination_address_id');
+        return $this->belongsTo(\App\Models\Address::class, 'port_ramp_of_destination_address_id')->first();
     }
 
     /**
@@ -300,6 +300,6 @@ class Order extends Model
      */
     public function getPortRampOfDestinationAddressAttribute()
     {
-        return $this->portRampOfDestinationAddress()->get();
+        return $this->portRampOfDestinationAddress();
     }
 }
