@@ -14,12 +14,26 @@
                 cols="8"
                 sm="8"
               >
-                <v-overflow-btn
-                  class="my-2"
-                  :items="rules_array"
-                  label="Select Rule"
-                  target="#dropdown-example"
-                />
+                <v-menu offset-y>
+                  <template v-slot:activator="{ on }">
+                    <v-btn
+                      color="primary"
+                      dark
+                      v-on="on"
+                    >
+                      Select Account Variant Rule to Edit
+                    </v-btn>
+                  </template>
+                  <v-list>
+                    <v-list-item
+                      v-for="(rule, index) in account_variant_rules"
+                      :key="index"
+                      @click="updateSelectedIndex(index)"
+                    >
+                      <v-list-item-title>{{ rule.name }}</v-list-item-title>
+                    </v-list-item>
+                  </v-list>
+                </v-menu>
               </v-col>
               <v-col
                 cols="4"
@@ -31,12 +45,12 @@
                   Save
                 </v-btn>
                 <v-btn
-                  @click="testRule(index)"
+                  @click="testRule(selected_rule_index)"
                 >
                   Cancel
                 </v-btn>
                 <v-btn
-                  @click="testRule(index)"
+                  @click="testRule(selected_rule_index)"
                 >
                   Test
                 </v-btn>
@@ -82,9 +96,13 @@
                 :key="i"
               >
                 <v-list-item-content>
-                  <v-list-item-title v-text="rule.name" />
+                  <v-list-item-title
+                    v-text="rule.name"
+                  />
                 </v-list-item-content>
-                ->
+                <button @click="addToAccountVariant(rule.name, rule.code, i)">
+                  ->
+                </button>
               </v-list-item>
             </v-list-item-group>
           </v-list>
@@ -100,9 +118,9 @@
           <div class="card-body">
             <codemirror
               ref="cmEditor"
-              v-model="rules_array[0].code"
+              v-model="account_variant_rules[selected_rule_index].code"
               :options="cmOptions"
-              @input="onCmCodeChange(0)"
+              @input="onCmCodeChange(selected_rule_index)"
             />
           </div>
         </div>
@@ -128,7 +146,7 @@
                   v-for="(rule, i) in account_variant_rules"
                   :key="i"
                 >
-                  <v-list-item-content style="padding: 10px;">
+                  <v-list-item-content class="draggable-item">
                     <v-list-item-title v-text="rule.name" />
                   </v-list-item-content>
                 </v-list-item>
@@ -139,59 +157,6 @@
       </div>
     </div>
   </div>
-  <!-- <div>
-    <v-btn
-      @click="addSnippet()"
-    >
-      Add Rule
-    </v-btn>
-    <v-btn
-      @click="testSnippet(index)"
-    >
-      Test
-    </v-btn>
-    <draggable
-      v-model="rules_array"
-      group="snippets"
-      @start="drag=true"
-      @end="drag=false"
-    >
-      <div
-        v-for="(element, index) in rules_array"
-        :key="element.id"
-        class="snippet-div"
-      >
-        <h2>
-          {{ element.name }}
-        </h2>
-        <v-btn
-          @click="editRuleName(index)"
-        >
-          Edit Rule Name
-        </v-btn>
-        <v-btn
-          @click="removeSnippet(index)"
-        >
-          Remove Rule
-        </v-btn>
-        <codemirror
-          ref="cmEditor"
-          v-model="rules_array[index].code"
-          :options="cmOptions"
-          @input="onCmCodeChange(index)"
-        />
-
-  <div>
-    {{ element.description }}
-    <v-btn
-      @click="editRuleDescription(index)"
-    >
-      Edit Rule Description
-    </v-btn>
-  </div>
-  </div>
-  </draggable>
-  </div> -->
 </template>
 <script>
 import draggable from 'vuedraggable'
@@ -212,7 +177,7 @@ export default {
       lineNumbers: true,
       line: true
     },
-    // Mocked rules
+    // Mocked Rule Library
     rules_array: [
       {
         name: 'bol_to_mbol',
@@ -237,53 +202,46 @@ export default {
     // Selected rule
     selected_rule_index: 0
   }),
-  updated () {
-    console.log('selected rule: ' + this.selected_rule)
-  },
   methods: {
     saveRule (index) {
-      alert(this.rules_array[index].name)
+      console.log('selected index: ' + this.selected_rule_index)
+      alert(this.account_variant_rules[index].name)
     },
-    // onCmCodeChange (index) {
-    //   const vc = this
-    //   console.log('code snippet: ')
-    //   console.log(JSON.stringify(vc.rules_array[index]))
-    //   console.log('after key line isnt how i want')
-    //   console.log(vc.rules_array[index])
-    // },
+    onCmCodeChange (index) {
+      // const vc = this
+      console.log('code snippet: ' + index)
+      // console.log(JSON.stringify(vc.account_variant_rules[index]))
+      // console.log('after key line isnt how i want')
+      // console.log(vc.rules_array[index])
+    },
     addRuleToLibrary () {
       const vc = this
       const newName = prompt('Please type the name of the new rule')
+      const newCode = prompt('Please paste the code for the rule')
       vc.rules_array.push({
         name: newName,
-        code: '# This is Python code'
+        code: newCode
       })
+    },
+    addToAccountVariant (name, code, i) {
+      const vc = this
+      if (confirm('Add ' + name + ' to account variant')) {
+        vc.rules_array.splice(i, 1)
+        vc.account_variant_rules.push({
+          name: name,
+          code: code
+        })
+      }
+    },
+    updateSelectedIndex (i) {
+      const vc = this
+      vc.selected_rule_index = i
     }
-    // removeSnippet (index) {
-    //   const vc = this
-    //   vc.rules_array.splice(index, 1)
-    // },
-    // editRuleName (index) {
-    //   const vc = this
-    //   const newName = prompt('Please type the new name for the rule')
-    //   vc.rules_array[index].name = newName
-    // },
-    // editRuleDescription (index) {
-    //   const vc = this
-    //   const newDescription = prompt('Please type the new description for the rule')
-    //   vc.rules_array[index].description = newDescription
-    // }
   }
 }
 </script>
 <style scoped>
-  /* .code-snippet {
-    margin: 0 auto;
+  .draggable-item {
+    padding: 10px;
   }
-  .snippet-div {
-    margin: 30px;
-    padding: 50px;
-    border-style: solid;
-    border-width: 5px;
-  } */
 </style>
