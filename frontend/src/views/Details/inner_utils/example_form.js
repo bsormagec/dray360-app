@@ -68,14 +68,6 @@ export const exampleForm = {
               type: 'input',
               placeholder: 'rate quote number'
             }),
-            'port ramp of origin': buildField({
-              type: 'text-area',
-              placeholder: 'port/ramp of origin'
-            }),
-            'port ramp of destination': buildField({
-              type: 'text-area',
-              placeholder: 'port/ramp of destination'
-            }),
             vessel: buildField({
               type: 'input',
               placeholder: 'vessel'
@@ -97,6 +89,14 @@ export const exampleForm = {
             }),
             'last free day': buildField({
               type: 'date-time'
+            }),
+            'port ramp of origin': buildField({
+              type: 'text-area',
+              placeholder: 'port/ramp of origin'
+            }),
+            'port ramp of destination': buildField({
+              type: 'text-area',
+              placeholder: 'port/ramp of destination'
             })
           }
         },

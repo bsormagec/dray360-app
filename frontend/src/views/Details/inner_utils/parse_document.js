@@ -42,10 +42,10 @@ function getHighlights (id, data, valSetter) {
   const highlights = {}
 
   Object.keys(ocrData.fields).forEach(fieldKey => {
-    if (!defaultsTo(() => ocrData.fields[fieldKey].ocr_region, false)) return
+    if (!defaultsTo(() => ocrData.fields[fieldKey].ocr_region, false) && fieldKey !== 'origin_ramp') return
     const matches = defaultsTo(() => ocrData.fields[fieldKey].ocr_region.page_index, 0) === parseInt(id)
 
-    if (matches) {
+    if (matches || fieldKey === 'origin_ramp') {
       const parsedKey = fieldKey.includes('event') ? fieldKey.split('_')[0] : fieldKey
       const { bottom, left, right, top } = defaultsTo(() => ocrData.fields[fieldKey].ocr_region, {})
 

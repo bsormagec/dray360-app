@@ -28,6 +28,9 @@ export default (abbyName) => {
     case 'container_length':
       formFieldName = 'size'
       break
+    case 'bill_to_address':
+      formFieldName = 'bill to'
+      break
     default:
       formFieldName = uuid()
       break

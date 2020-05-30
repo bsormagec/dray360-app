@@ -101,6 +101,8 @@ export default {
         return this.handleOrderAddressEvents(data, nameParts)
       } else if (dray360name.includes('order_line_items')) {
         return this.handleOrderLineItems(data, nameParts)
+      } else if (dray360name.includes('port_ramp')) {
+        return this.handlePortRamp(data, dray360name)
       }
 
       return { value: data[dray360name] }
@@ -153,6 +155,70 @@ export default {
       return {
         name: `${itemName} description`,
         value: itemDescription
+      }
+    },
+
+    handlePortRamp (data, dray360name) {
+      const buildStrAddress = ({ addrObj, addrRaw, type }) => {
+        /* eslint camelcase: 0 */
+        const { location_name, address_line_1, city, state, postal_code } = defaultsTo(
+          () => addrObj,
+          { location_name: '', address_line_1: '', city: '', state: '', postal_code: '' }
+        )
+        const notEmpty = Boolean(location_name || address_line_1 || city || state || postal_code)
+
+        const valueRaw = `${defaultsTo(() => addrRaw, '').replace('Contact:', '')}`
+        const valueMatched = notEmpty ? `${location_name} ${address_line_1} ${city + city ? ',' : ''} ${state} ${postal_code}` : '--'
+
+        return { value: type === 'raw' ? valueRaw : valueMatched }
+      }
+
+      if (dray360name.includes('destination')) {
+        const origin = formModule.state.form.sections.shipment.subSections.origin.fields
+        const evtName = 'Port ramp of destination matched'
+
+        this.$set(
+          origin,
+          evtName,
+          buildField({
+            type: 'input',
+            placeholder: evtName,
+            value: buildStrAddress({
+              addrObj: data.port_ramp_of_destination_address,
+              addrRaw: data.port_ramp_of_destination_address_raw_text,
+              type: 'matched'
+            }).value
+          })
+        )
+
+        return buildStrAddress({
+          addrObj: data.port_ramp_of_destination_address,
+          addrRaw: data.port_ramp_of_destination_address_raw_text,
+          type: 'raw'
+        })
+      } else if (dray360name.includes('origin')) {
+        const origin = formModule.state.form.sections.shipment.subSections.origin.fields
+        const evtName = 'Port ramp of origin matched'
+
+        this.$set(
+          origin,
+          evtName,
+          buildField({
+            type: 'input',
+            placeholder: evtName,
+            value: buildStrAddress({
+              addrObj: data.port_ramp_of_origin_address,
+              addrRaw: data.port_ramp_of_origin_address_raw_text,
+              type: 'matched'
+            }).value
+          })
+        )
+
+        return buildStrAddress({
+          addrObj: data.port_ramp_of_origin_address,
+          addrRaw: data.port_ramp_of_origin_address_raw_text,
+          type: 'raw'
+        })
       }
     },
 
