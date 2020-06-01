@@ -51,6 +51,7 @@ jobs:
           DB_CONNECTION: testing
           DB_PORT: ${{ job.services.mysql.ports[3306] }}
           DB_USERNAME: root
+          DB_DATABASE: omdb
           AWS_REGION: us-east-2
           AWS_DEFAULT_REGION: us-east-2
 
@@ -62,5 +63,6 @@ jobs:
           DB_HOST: 127.0.0.1
           DB_PORT: ${{ job.services.mysql.ports[3306] }}
           DB_USERNAME: root
+          DB_DATABASE: omdb
           AWS_REGION: us-east-2
           AWS_DEFAULT_REGION: us-east-2
