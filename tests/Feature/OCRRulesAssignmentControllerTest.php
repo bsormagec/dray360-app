@@ -35,7 +35,7 @@ class OCRRulesAssignmentControllerTest extends TestCase
                 'rules' => $ocrRules->pluck('id'),
             ])
             ->assertStatus(Response::HTTP_CREATED)
-            ->assertJsonCount($ocrRules->count());
+            ->assertJsonCount($ocrRules->count(), 'data');
 
         $this->assertCount($ocrRules->count(), AccountOCRVariantOCRRule::assignedTo(
             $account->id,
