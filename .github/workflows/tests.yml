@@ -37,7 +37,12 @@ jobs:
           coverage: none
 
       - name: Install dependencies
-        run: composer install --no-interaction --no-progress
+        run: |
+          composer config "http-basic.nova.laravel.com" "${{ secrets.NOVA_USERNAME }}" "${{ secrets.NOVA_PASSWORD }}"
+          composer install --no-interaction --no-progress
+
+      - name: Migrate database
+        run: php artisan migrate:fresh
 
       - name: Execute tests
         run: vendor/bin/phpunit --verbose
