@@ -1,0 +1,53 @@
+name: tests
+
+on: [push, pull_request]
+  push:
+  pull_request:
+
+jobs:
+  tests:
+    name: Laravel Tests
+
+    runs-on: ubuntu-latest
+    services:
+      mysql:
+        image: mysql:8.0
+        env:
+          MYSQL_ALLOW_EMPTY_PASSWORD: yes
+          MYSQL_DATABASE: omdb_test
+        ports:
+          - 33306:3306
+        options: --health-cmd="mysqladmin ping" --health-interval=10s --health-timeout=5s --health-retries=3
+    strategy:
+      fail-fast: true
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Cache dependencies
+        uses: actions/cache@v1
+        with:
+          path: ~/.composer/cache/files
+          key: dependencies-php-7.4-composer-${{ hashFiles('composer.json') }}
+
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: 7.4
+          extensions: dom, curl, libxml, mbstring, zip, pcntl, pdo, sqlite, pdo_sqlite, gd, bcmath, mysql, imagick
+          coverage: none
+
+      - name: Install dependencies
+        run: composer install --no-interaction --no-progress
+
+      - name: Execute tests
+        run: vendor/bin/phpunit --verbose
+        env:
+          APP_KEY: base64:51OJ4K5Yy7Q8rYjoL9PpJXPN0HkIiKc9trE584Wh4LQ=
+          SANCTUM_STATEFUL_DOMAINS: 127.0.0.8,localhost,127.0.0.1
+          DB_HOST: mysql
+          DB_PORT: ${{ job.services.mysql.ports[3306] }}
+          DB_USERNAME: root
+          AWS_REGION: us-east-2
+          AWS_DEFAULT_REGION: us-east-2
