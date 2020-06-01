@@ -13,6 +13,9 @@ class AppServiceProvider extends ServiceProvider
      */
     public function register()
     {
+        if (!app()->environment(['production', 'testing'])) {
+            $this->app->register(\Lanin\Laravel\ApiDebugger\ServiceProvider::class);
+        }
     }
 
     /**
