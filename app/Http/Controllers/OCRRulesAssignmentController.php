@@ -35,6 +35,6 @@ class OCRRulesAssignmentController extends Controller
             abort(500, 'There was an error trying to save the assignment');
         }
 
-        return response()->json($data, Response::HTTP_CREATED);
+        return response()->json(['data' => $data], Response::HTTP_CREATED);
     }
 }

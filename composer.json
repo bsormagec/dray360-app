@@ -13,6 +13,7 @@
         "fideloper/proxy": "^4.2",
         "fruitcake/laravel-cors": "^1.0",
         "guzzlehttp/guzzle": "^6.3",
+        "lanin/laravel-api-debugger": "^3.5",
         "laravel/framework": "^7.0",
         "laravel/nova": "~3.0",
         "laravel/sanctum": "^2.0",
@@ -38,7 +39,9 @@
     },
     "extra": {
         "laravel": {
-            "dont-discover": []
+            "dont-discover": [
+                "lanin/laravel-api-debugger"
+            ]
         }
     },
     "autoload": {
