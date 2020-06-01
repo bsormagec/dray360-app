@@ -47,7 +47,8 @@ jobs:
           APP_KEY: base64:51OJ4K5Yy7Q8rYjoL9PpJXPN0HkIiKc9trE584Wh4LQ=
           APP_ENV: testing
           SANCTUM_STATEFUL_DOMAINS: 127.0.0.8,localhost,127.0.0.1
-          DB_HOST: mysql
+          DB_HOST: 127.0.0.1
+          DB_CONNECTION: testing
           DB_PORT: ${{ job.services.mysql.ports[3306] }}
           DB_USERNAME: root
           AWS_REGION: us-east-2
@@ -58,7 +59,7 @@ jobs:
         env:
           APP_KEY: base64:51OJ4K5Yy7Q8rYjoL9PpJXPN0HkIiKc9trE584Wh4LQ=
           SANCTUM_STATEFUL_DOMAINS: 127.0.0.8,localhost,127.0.0.1
-          DB_HOST: mysql
+          DB_HOST: 127.0.0.1
           DB_PORT: ${{ job.services.mysql.ports[3306] }}
           DB_USERNAME: root
           AWS_REGION: us-east-2
