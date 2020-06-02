@@ -130,6 +130,8 @@ Inspect fpm's www.conf file and verify it is correct:
 less /etc/php/7.4/fpm/pool.d/www.conf
 ````
 
+#### Note
+The PHP extension `pcntl` is required to run Laravel Horizon, by default in Ubuntu it's installed together with the php installation. But if you are using other system, please search how to install it in your machine.
 
 
 ### Install Composer
@@ -168,8 +170,11 @@ source ~/tcvars.sh
 sudo mysql --execute "
     drop database if exists ${OM_DBNAME};
     create database ${OM_DBNAME};
+    drop database if exists ${OM_DBNAME}_test;
+    create database ${OM_DBNAME}_test;
     create user if not exists '${OM_DBUSER}'@'%' identified with mysql_native_password by 'secret';
     grant create view, create routine, alter routine, trigger, references, select, insert, update, delete, create, drop, alter, execute on ${OM_DBNAME}.* to '${OM_DBUSER}'@'%';
+    grant create view, create routine, alter routine, trigger, references, select, insert, update, delete, create, drop, alter, execute on ${OM_DBNAME}_test.* to '${OM_DBUSER}'@'%';
 "
 sudo mysql --execute "show databases"
 
@@ -187,9 +192,31 @@ pv ${dumpfilename} | sudo mysql ${OM_DBNAME}
 
 ````
 
+### Install Redis
 
+```bash
+sudo apt install redis-server
+```
 
+Next, open up the Redis configuration file with your preferred text editor:
 
+```bash
+sudo nano /etc/redis/redis.conf
+```
+
+Inside the file, find the `supervised` directive which allows you to declare an init system to manage Redis as a service. Since you are running Ubuntu, which uses the systemd init system, change its value from `no` to `systemd`
+
+Then, restart the Redis service to reflect the changes you made to the configuration file:
+
+```bash
+sudo systemctl restart redis.service
+```
+
+Then run:
+```bash
+redis-cli ping
+# It should echo out PONG
+```
 
 ### Clone Github repository, install dependencies and build site
 
@@ -263,6 +290,13 @@ composer install
 # when prompted for Nova username/password, ask Peter Nelson
 
 ````
+
+###### Note
+If for some reason you get the error `laravel/horizon dev-master requires ext-pcntl * -> the requested PHP extension pcntl is missing from your system.`. Try running this instead:
+
+```bash
+composer install --ignore-platform-reqs ext-pcntl ext-posix
+```
 
 
 
