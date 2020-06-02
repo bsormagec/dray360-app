@@ -2,7 +2,7 @@
   <div class="wrapper">
     <div class="container">
       <h1 class="text-center">
-        Ordermater frontend components / Style guide
+        Ordermaster frontend components / Style guide
       </h1>
       <div class="row">
         <div class="col-md-6 left-side">
