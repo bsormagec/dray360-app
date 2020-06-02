@@ -216,17 +216,18 @@ export default {
       const baseURL = `${process.env.VUE_APP_APP_URL}`
       const idsToSave = []
       vc.account_variant_rules.forEach(rule => idsToSave.push(rule.id))
-      // TODO: Should this be a PUT?
+
+      // Cushing/JetSpeed ID is 1-1 in local and 8-8 in prod
       axios.post(baseURL + '/api/ocr/rules-assignment', {
-        account_id: 1,
-        variant_id: 1,
+        account_id: 8,
+        variant_id: 8,
         rules: idsToSave
       })
         .then(function (response) {
           alert('Rule sequence saved')
         })
         .catch(function (error) {
-          console.log(error)
+          alert(error)
         })
     },
     // THIS IS USEFUL FOR DEBUGGING PURPOSES
@@ -283,22 +284,19 @@ export default {
       const vc = this
       axios.get(baseURL + '/api/ocr/rules')
         .then(function (response) {
-          console.log(response.data.data)
           vc.rules_array = response.data.data
         })
         .catch(function (error) {
           alert(error)
         })
 
-      axios.get(baseURL + '/api/ocr/rules?account_id=1&variant_id=1')
+      // Cushing/JetSpeed ID is 1-1 in local and 8-8 in prod
+      axios.get(baseURL + '/api/ocr/rules?account_id=8&variant_id=8')
         .then(function (response) {
-          console.log(response.data)
           vc.account_variant_rules = response.data.data
-          console.log('fetch rules')
-          console.log(response.data.data)
         })
         .catch(function (error) {
-          console.log(error)
+          alert(error)
         })
     }
   }
