@@ -41,7 +41,7 @@ return [
     |
     */
 
-    'use' => 'horizon',
+    'use' => 'default',
 
     /*
     |--------------------------------------------------------------------------
@@ -168,8 +168,8 @@ return [
     'environments' => [
         'production' => [
             'supervisor-1' => [
-                'connection' => 'horizon',
-                'queue' => ['default'],
+                'connection' => 'redis',
+                'queue' => ['default', 'imports'],
                 'balance' => 'simple',
                 'processes' => 10,
                 'tries' => 1,
@@ -178,12 +178,12 @@ return [
 
         'local' => [
             'supervisor-1' => [
-                'connection' => 'horizon',
-                'queue' => ['default'],
-                'balance' => 'simple',
-                'processes' => 3,
+                'connection' => 'redis',
+                'queue' => ['default', 'imports'],
+                'balance' => 'auto',
+                'processes' => 4,
                 'minProcesses' => 1,
-                'maxProcesses' => 2,
+                'maxProcesses' => 3,
                 'tries' => 1,
             ],
         ],

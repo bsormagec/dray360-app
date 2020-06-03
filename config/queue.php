@@ -66,15 +66,6 @@ return [
             'retry_after' => 90,
             'block_for' => null,
         ],
-
-        'horizon' => [
-            'driver' => 'redis',
-            'connection' => 'horizon',
-            'queue' => env('REDIS_QUEUE', 'default'),
-            'retry_after' => 90,
-            'block_for' => null,
-        ],
-
     ],
 
     /*
