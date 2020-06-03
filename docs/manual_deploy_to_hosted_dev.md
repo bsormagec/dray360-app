@@ -34,8 +34,8 @@ sudo chmod -R g+w /var/www/deploybot/${folder}/storage
 sudo su -c "sudo -iu deploybot"
 folder="pbn_$(date '+%Y%m%d')"
 cd /var/www/deploybot/${folder}
-cp /var/www/deploybot/pbn_20200515B/.env* ./
-cp /var/www/deploybot/pbn_20200515B/frontend/.env* ./frontend/
+cp /var/www/deploybot/pbn_20200529/.env* ./
+cp /var/www/deploybot/pbn_20200529/frontend/.env* ./frontend/
 composer install
 cd frontend
 npm install
