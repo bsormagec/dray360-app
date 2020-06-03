@@ -16,65 +16,152 @@
   ]
 */
 
-// import exampleDocument from '@/views/Details/inner_utils/example_document'
+import Vue from 'vue'
+import mapFieldNames from '@/views/Details/inner_utils/map_field_names'
+import { formModule } from '@/views/Details/inner_store/index'
 import { defaultsTo } from '@/utils/defaults_to'
 import { uuid } from '@/utils/uuid_valid_id'
-import mapFieldNames from '@/views/Details/inner_utils/map_field_names'
+import { buildField } from '@/views/Details/inner_utils/example_form'
 
-export const parse = ({ data, valSetter }) => {
-  const ocrData = defaultsTo(() => data.ocr_data, {})
-
-  const parsed = [
+export const parse = ({ data }) => {
+  return [
+    {
+      image: defaultsTo(() => data.ocr_data.page_index_filenames.value[1].presigned_download_uri, '#'),
+      highlights: getHighlights(data)
+    }
   ]
-
-  for (const imgKey in defaultsTo(() => ocrData.page_index_filenames.value, '--')) {
-    parsed.push({
-      image: defaultsTo(() => ocrData.page_index_filenames.value[imgKey].presigned_download_uri, '--'),
-      highlights: getHighlights(imgKey, data, valSetter)
-    })
-  }
-
-  return parsed
 }
 
-function getHighlights (id, data, valSetter) {
-  const ocrData = data.ocr_data
+function getHighlights (data) {
   const highlights = {}
 
-  Object.keys(ocrData.fields).forEach(fieldKey => {
-    if (!defaultsTo(() => ocrData.fields[fieldKey].ocr_region, false) && fieldKey !== 'origin_ramp') return
-    const matches = defaultsTo(() => ocrData.fields[fieldKey].ocr_region.page_index, 0) === parseInt(id)
+  for (const [key, value] of Object.entries(data)) {
+    if (shouldParseKey(key)) {
+      if (key === 'order_address_events') {
+        const evts = defaultsTo(() => data.order_address_events, [])
+        evts.forEach((evt, i) => {
+          const evtName = defaultsTo(() => evt.unparsed_event_type.toLowerCase(), uuid())
+          const evtValue = defaultsTo(() => evt.t_address_raw_text, '--')
 
-    if (matches || fieldKey === 'origin_ramp') {
-      const parsedKey = fieldKey.includes('event') ? fieldKey.split('_')[0] : fieldKey
-      const { bottom, left, right, top } = defaultsTo(() => ocrData.fields[fieldKey].ocr_region, {})
+          const addrEvents = formModule.state.form.sections.itinerary.rootFields
+          Vue.set(
+            addrEvents,
+            evtName,
+            buildField({
+              type: 'text-area',
+              placeholder: evtName
+            })
+          )
 
-      const hData = (editions = {}) => ({
-        bottom: editions.bottom || bottom,
-        left: editions.left || left,
-        right: editions.right || right,
-        top: editions.top || top,
-        name: mapFieldNames(
-          defaultsTo(() => ocrData.fields[fieldKey].name, '--')
-        ),
-        ...valSetter({
-          dray360name: defaultsTo(() => ocrData.fields[fieldKey].d360_name, uuid()),
-          data
+          highlights[evtName] = {
+            ...getOcrData(`order_address_events.${i}`, data),
+            name: evtName,
+            value: evtValue
+          }
         })
-      })
+      } else if (key === 'order_line_items') {
+        const items = defaultsTo(() => data.order_line_items, [])
+        items.forEach((item, i) => {
+          const itemName = `ìtem ${i + 1}`
+          const itemValue = defaultsTo(() => item.description, '--')
 
-      if (highlights[parsedKey]) {
-        highlights[parsedKey] = hData({
-          bottom: bottom >= highlights[parsedKey].bottom ? bottom : highlights[parsedKey].bottom,
-          left: left <= highlights[parsedKey].left ? left : highlights[parsedKey].left,
-          right: right >= highlights[parsedKey].right ? right : highlights[parsedKey].right,
-          top: top <= highlights[parsedKey].top ? top : highlights[parsedKey].top
+          const lineItems = formModule.state.form.sections.inventory.subSections
+          Vue.set(
+            lineItems,
+            itemName,
+            {
+              fields: {
+                [itemName]: buildField({
+                  presentationName: 'description',
+                  type: 'text-area',
+                  placeholder: 'description',
+                  value: itemValue
+                })
+              }
+            }
+          )
+
+          highlights[itemName] = {
+            ...getOcrData('order_line_items', data),
+            name: itemName,
+            value: itemValue
+          }
         })
+      } else if (key === 'bill_to_address') {
+        highlights[key] = {
+          ...getOcrData(key, data),
+          name: mapFieldNames(key),
+          value: defaultsTo(() => data.bill_to_address_raw_text, '--')
+        }
+      } else if (key.includes('port_ramp')) {
+        /* eslint camelcase: 0 */
+        const valueForMatched = defaultsTo(() => data[key], {})
+        const { location_name, address_line_1, city, state, postal_code } = valueForMatched // matched text
+        const matchedText = `${strSpacer(location_name, ' ')}${strSpacer(address_line_1, ' ')}${strSpacer(city, ', ')}${strSpacer(state, ' ')}${strSpacer(postal_code, ' ')}`
+
+        const origin = formModule.state.form.sections.shipment.subSections.origin.fields
+        Vue.set(
+          origin,
+          `${portRampKeyParser(key)} matched`,
+          buildField({
+            type: 'input',
+            placeholder: `${key} matched`,
+            value: matchedText
+          })
+        )
+
+        highlights[key] = {
+          ...getOcrData(key, data),
+          name: mapFieldNames(key),
+          value: defaultsTo(() => data[`${key}_raw_text`], '--')
+        }
       } else {
-        highlights[parsedKey] = hData()
+        highlights[key] = {
+          ...getOcrData(key, data),
+          name: mapFieldNames(key),
+          value: defaultsTo(() => value, '--')
+        }
       }
     }
-  })
+  }
 
   return Object.values(highlights)
+}
+
+function shouldParseKey (key) {
+  const invalidEndings = [
+    '_id',
+    '_raw_text',
+    '_verified',
+    'ocr_data',
+    '_at'
+  ]
+
+  return invalidEndings.reduce((acc, crr) => acc && !key.includes(crr), true)
+}
+
+function getOcrData (key, data) {
+  if (key.includes('order_address_events')) {
+    const found = Object.values(
+      defaultsTo(() => data.ocr_data.fields, {})
+    ).find(field => {
+      return defaultsTo(() => field.d360_name, '').includes(`${key.split('.')[1]}`) && !field.name.includes('_type')
+    })
+
+    return defaultsTo(() => found.ocr_region, {})
+  } else if (key.includes('order_line_items')) {
+    return defaultsTo(() => data.ocr_data.fields.contents.ocr_region, {})
+  } else if (key.includes('bill_to_address')) {
+    return defaultsTo(() => data.ocr_data.fields.bill_to_address.ocr_region, {})
+  } else {
+    return defaultsTo(() => data.ocr_data.fields[key].ocr_region, {})
+  }
+}
+
+function strSpacer (str, spacer) {
+  return str ? str + spacer : ''
+}
+
+function portRampKeyParser (key) {
+  return key.includes('destination') ? 'Port Ramp of Destination' : 'Port Ramp of Origin'
 }
