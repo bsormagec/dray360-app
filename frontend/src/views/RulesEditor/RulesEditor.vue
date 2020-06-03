@@ -48,7 +48,8 @@
                   Cancel
                 </v-btn>
                 <v-btn
-                  @click="testRule(selected_rule_index)"
+                  v-if="account_variant_rules.length > 0"
+                  @click="testSingleRule(selected_rule_index)"
                 >
                   Test
                 </v-btn>
@@ -157,6 +158,7 @@
           </v-list>
         </v-card>
       </div>
+      <p>{{ testing_output }}</p>
     </div>
   </div>
 </template>
@@ -185,7 +187,9 @@ export default {
     // Account / Variant Rules
     account_variant_rules: [],
     // Selected rule
-    selected_rule_index: 0
+    selected_rule_index: 0,
+    // Testing output
+    testing_output: null
   }),
   mounted () {
     const vc = this
@@ -194,7 +198,6 @@ export default {
   methods: {
     editRule (index) {
       const vc = this
-      console.log('ID to be saved: ' + this.account_variant_rules[index].id)
       const baseURL = `${process.env.VUE_APP_APP_URL}`
       const ruleId = vc.account_variant_rules[index].id
       const ruleName = vc.account_variant_rules[index].name
@@ -208,7 +211,7 @@ export default {
           alert('Rule sequence saved')
         })
         .catch(function (error) {
-          console.log(error)
+          alert(error)
         })
     },
     saveRuleSequence () {
@@ -289,9 +292,41 @@ export default {
       // Cushing/JetSpeed ID is 1-1 in local and 8-8 in prod
       axios.get(baseURL + '/api/ocr/rules-assignment?account_id=8&variant_id=8')
         .then(function (response) {
-          console.log('promise succeeded')
-          console.log(response)
           vc.account_variant_rules = response.data.data
+        })
+        .catch(function (error) {
+          alert(error)
+        })
+    },
+    testSingleRule (index) {
+      const vc = this
+      const baseURL = `${process.env.VUE_APP_APP_URL}`
+      let fetchedOcrData = []
+      const orderId = prompt('Please enter order ID')
+      axios.get(baseURL + '/api/orders/' + orderId)
+        .then(function (response) {
+          fetchedOcrData = response.data.ocr_data
+          delete fetchedOcrData.fields_overwritten
+
+          fetchedOcrData.rules = vc.account_variant_rules[index]
+
+          const testedRuleName = fetchedOcrData.rules.name
+          const testedRuleCode = fetchedOcrData.rules.code
+
+          fetchedOcrData.rules = []
+          fetchedOcrData.rules.push({
+            [testedRuleName]: testedRuleCode
+          })
+          fetchedOcrData[testedRuleName] = testedRuleCode
+
+          axios.post('https://i0mgwmnrb1.execute-api.us-east-2.amazonaws.com/default/ocr-rules-engine-dev',
+            fetchedOcrData)
+            .then(function (response) {
+              vc.testing_output = response.data
+            })
+            .catch(function (error) {
+              alert(error)
+            })
         })
         .catch(function (error) {
           alert(error)
