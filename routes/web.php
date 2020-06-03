@@ -1,7 +1,7 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
-
+use App\Http\Controllers\VueController;
 
 /*
 |--------------------------------------------------------------------------
@@ -16,4 +16,4 @@ use Illuminate\Support\Facades\Route;
 
 
 // Default VUECONTROLLER route
-Route::get('/{any}', 'VueController@index')->where('any', '^(?!nova).*$');
+Route::get('/{any}', [VueController::class, 'index'])->where('any', '^(?!nova).*$');

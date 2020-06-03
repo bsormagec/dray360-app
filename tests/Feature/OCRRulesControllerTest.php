@@ -3,12 +3,8 @@
 namespace Tests\Feature;
 
 use Tests\TestCase;
-use App\Models\Account;
 use App\Models\OCRRule;
-use App\Models\OCRVariant;
 use Illuminate\Http\Response;
-use Tests\Seeds\OCRRulesAssignmentSeed;
-use App\Models\AccountOCRVariantOCRRule;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
 
 class OCRRulesControllerTest extends TestCase
@@ -35,56 +31,6 @@ class OCRRulesControllerTest extends TestCase
                     '*' => ['name', 'code', 'description']
                 ]
             ]);
-    }
-
-    /** @test */
-    public function it_should_list_all_the_available_rules_filtered_by_account_and_variant()
-    {
-        $this->withoutExceptionHandling();
-        $this->seed(OCRRulesAssignmentSeed::class);
-        $accounts = Account::all(['id']);
-        $ocrVariant = OCRVariant::first(['id']);
-        $rulesAccount1 = AccountOCRVariantOCRRule::query()
-            ->assignedTo($accounts->first()->id, $ocrVariant->id)
-            ->with('ocrRule')
-            ->orderBy('rule_sequence')
-            ->get()
-            ->pluck('ocrRule');
-        $rulesAccount2 = AccountOCRVariantOCRRule::query()
-            ->assignedTo($accounts->last()->id, $ocrVariant->id)
-            ->with('ocrRule')
-            ->orderBy('rule_sequence')
-            ->get()
-            ->pluck('ocrRule');
-
-        $this->getJson(route('ocr.rules.index', [
-                'account_id' => $accounts->first()->id,
-                'variant_id' => $ocrVariant->id,
-            ]))
-            ->assertStatus(200)
-            ->assertJsonCount(2, 'data')
-            ->assertJsonStructure([
-                'data' => [
-                    '*' => ['name', 'code', 'description']
-                ]
-            ])
-            ->assertJsonPath('data.0.id', $rulesAccount1->get(0)->id)
-            ->assertJsonPath('data.1.id', $rulesAccount1->get(1)->id);
-
-        $this->getJson(route('ocr.rules.index', [
-                'account_id' => $accounts->last()->id,
-                'variant_id' => $ocrVariant->id,
-            ]))
-            ->assertStatus(200)
-            ->assertJsonCount(3, 'data')
-            ->assertJsonStructure([
-                'data' => [
-                    '*' => ['name', 'code', 'description']
-                ]
-            ])
-            ->assertJsonPath('data.0.id', $rulesAccount2->get(0)->id)
-            ->assertJsonPath('data.1.id', $rulesAccount2->get(1)->id)
-            ->assertJsonPath('data.2.id', $rulesAccount2->get(2)->id);
     }
 
     /** @test */

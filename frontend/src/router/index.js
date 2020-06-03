@@ -5,6 +5,7 @@ import Details from '@/views/Details/Details'
 import Login from '@/views/Login'
 import RulesEditor from '@/views/RulesEditor/RulesEditor'
 import auth from '@/router/middleware/auth'
+import StyleGuide from '@/views/StyleGuide'
 import { runMiddleware } from '@/router/middleware'
 
 Vue.use(VueRouter)
@@ -17,6 +18,11 @@ const routes = [
       middleware: [auth]
     },
     component: Orders
+  },
+  {
+    path: '/styleguide',
+    name: 'StyleGuide',
+    component: StyleGuide
   },
   {
     path: '/order/:id',

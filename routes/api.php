@@ -1,6 +1,11 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\Api\OrderController;
+use App\Http\Controllers\Api\OCRRulesController;
+use App\Http\Controllers\Api\OCRRequestController;
+use App\Http\Controllers\Api\AuthenticationController;
+use App\Http\Controllers\Api\OCRRulesAssignmentController;
 
 /*
 |--------------------------------------------------------------------------
@@ -14,34 +19,34 @@ use Illuminate\Support\Facades\Route;
 */
 
 // Non-authenticated routes for signup/login/logout
-Route::post('login', 'AuthenticationController@login')->name('login');
-Route::post('logout', 'AuthenticationController@logout')->name('logout');
-Route::post('signup', 'AuthenticationController@signup')->name('signup');
+Route::post('login', [AuthenticationController::class, 'login'])->name('login');
+Route::post('logout', [AuthenticationController::class, 'logout'])->name('logout');
+Route::post('signup', [AuthenticationController::class, 'signup'])->name('signup');
 
 // Sanctum Authenticated Routes
 Route::group(['middleware' => 'auth:sanctum'], function () {
     // Authenticated route to get current user
-    Route::get('user', 'AuthenticationController@user')
+    Route::get('user', [AuthenticationController::class, 'user'])
         ->name('user'); // shows up in `php artisan route:list` command output
 
     // Authenticated route to return all orders
-    Route::get('orders', 'OrderController@orders')
+    Route::get('orders', [OrderController::class, 'orders'])
         ->name('orders');
 
     // Authenticated route to return one order
-    Route::get('orders/{orderId}', 'OrderController@order')
+    Route::get('orders/{orderId}', [OrderController::class, 'order'])
         ->name('order');
 
     // Authenticated route to get document upload URI
-    Route::post('createocrrequestuploaduri', 'OCRRequestController@createOCRRequestUploadURI')
+    Route::post('createocrrequestuploaduri', [OCRRequestController::class, 'createOCRRequestUploadURI'])
         ->name('createocruploaduri');
 
     // CRUD for OCR Rules
-    Route::apiResource('ocr/rules', 'OCRRulesController', ['as' => 'ocr'])
+    Route::apiResource('ocr/rules', OCRRulesController::class, ['as' => 'ocr'])
         ->parameters(['rules' => 'ocrRule'])
         ->only(['store', 'index', 'update']);
 
     // Assignment of OCR Rules to an account-variant pair
-    Route::post('ocr/rules-assignment', 'OCRRulesAssignmentController')
-        ->name('ocr.rules-assignment.store');
+    Route::apiResource('ocr/rules-assignment', OCRRulesAssignmentController::class, ['as' => 'ocr'])
+        ->only(['store', 'index']);
 });

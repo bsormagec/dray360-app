@@ -7,14 +7,19 @@
           src="../assets/images/cushing_logo.svg"
           alt=""
         >
-        <FormFieldElementInput
-          :field="fields_email"
-          @change="e =>(email = e)"
-        />
-        <FormFieldElementInput
-          :field="fields_password"
-          @change="e =>(password = e)"
-        />
+        <input
+          v-model="email"
+          type="text"
+          name="username"
+          placeholder="Email"
+        >
+        <br>
+        <input
+          v-model="password"
+          type="password"
+          name="password"
+          placeholder="Password"
+        >
         <div class="button_checkbox">
           <v-checkbox
             v-model="disabled"
@@ -42,12 +47,9 @@
 </template>
 <script>
 // import axios from '@/store/api_calls/axios_config'
-import FormFieldElementInput from '@/components/FormField/FormFieldElementInput'
+
 export default {
   name: 'Login',
-  components: {
-    FormFieldElementInput
-  },
   data () {
     return {
       disabled: false,
@@ -104,8 +106,12 @@ export default {
         width: 24rem;
         margin-bottom: 5rem;
       }
-      .form-field-element-input{
-           width: 100%;
+      input{
+        border: 0.1rem solid lightgray;
+        margin: 0.5rem auto;
+        padding: 0.5rem 6.5rem;
+        border-radius: 0.5rem;
+        max-width: 25rem;
       }
       .button_checkbox{
         display: flex;

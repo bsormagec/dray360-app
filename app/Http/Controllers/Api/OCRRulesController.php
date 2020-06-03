@@ -1,10 +1,11 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Api;
 
 use App\Models\OCRRule;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
+use App\Http\Controllers\Controller;
 use App\Http\Resources\OCRRule as ResourcesOCRRule;
 
 class OCRRulesController extends Controller
@@ -14,15 +15,9 @@ class OCRRulesController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index(Request $request)
+    public function index()
     {
-        $assignmentFilters = $request->all(['account_id', 'variant_id']);
-
-        return new ResourcesOCRRule(
-            OCRRule::query()
-                ->filterByAccountVariant($assignmentFilters)
-                ->get()
-        );
+        return new ResourcesOCRRule(OCRRule::query()->get());
     }
 
     /**

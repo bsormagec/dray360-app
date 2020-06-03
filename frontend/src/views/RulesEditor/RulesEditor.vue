@@ -40,7 +40,7 @@
                 sm="4"
               >
                 <v-btn
-                  @click="saveRuleCode(selected_rule_index)"
+                  @click="editRule(selected_rule_index)"
                 >
                   Save
                 </v-btn>
@@ -111,7 +111,10 @@
       </div>
       <div class="col-md-8">
         <div class="card">
-          <div class="card-body">
+          <div
+            v-if="account_variant_rules.length > 0"
+            class="card-body"
+          >
             <codemirror
               v-if="account_variant_rules.length > 0"
               ref="cmEditor"
@@ -189,7 +192,7 @@ export default {
     vc.fetchRules()
   },
   methods: {
-    saveRuleCode (index) {
+    editRule (index) {
       const vc = this
       console.log('ID to be saved: ' + this.account_variant_rules[index].id)
       const baseURL = `${process.env.VUE_APP_APP_URL}`
@@ -197,12 +200,9 @@ export default {
       const ruleName = vc.account_variant_rules[index].name
       axios.put(baseURL + '/api/ocr/rules/' + ruleId, {
         code: vc.account_variant_rules[index].code,
-        created_at: null,
-        deleted_at: null,
         description: 'sample rule ' + ruleName,
         id: ruleId,
-        name: ruleName,
-        updated_at: null
+        name: ruleName
       })
         .then(function (response) {
           alert('Rule sequence saved')
@@ -231,7 +231,6 @@ export default {
         })
     },
     // THIS IS USEFUL FOR DEBUGGING PURPOSES
-
     // onCmCodeChange (index) {
     //   const vc = this
     //   // vc.account_variant_rules[index].code = JSON.stringify(vc.account_variant_rules[index].code)
@@ -246,12 +245,9 @@ export default {
 
       axios.post(baseURL + '/api/ocr/rules', {
         code: newCode,
-        created_at: null,
-        deleted_at: null,
         description: 'sample rule ' + newName,
         id: (vc.rules_array.length + 1),
-        name: newName,
-        updated_at: null
+        name: newName
       })
         .then(function (response) {
           vc.fetchRules()
@@ -291,8 +287,10 @@ export default {
         })
 
       // Cushing/JetSpeed ID is 1-1 in local and 8-8 in prod
-      axios.get(baseURL + '/api/ocr/rules?account_id=8&variant_id=8')
+      axios.get(baseURL + '/api/ocr/rules-assignment?account_id=8&variant_id=8')
         .then(function (response) {
+          console.log('promise succeeded')
+          console.log(response)
           vc.account_variant_rules = response.data.data
         })
         .catch(function (error) {

@@ -16,14 +16,14 @@ class RolesAndPermissionsSeeder extends Seeder
         app()['cache']->forget('spatie.permission.cache');
 
 
-        Role::create(['name' => 'user']);    /** @var \App\User $user */
-        $user = factory(\App\User::class)->create();
+        Role::create(['name' => 'user']);    /** @var \App\Models\User $user */
+        $user = factory(\App\Models\User::class)->create();
 
         $user->assignRole('user');
         Role::create(['name' => 'admin']);
 
-        /** @var \App\User $user */
-        $admin = factory(\App\User::class)->create([
+        /** @var \App\Models\User $user */
+        $admin = factory(\App\Models\User::class)->create([
             'name' => 'John Doe',
             'email' => 'john@example.com',
         ]);
