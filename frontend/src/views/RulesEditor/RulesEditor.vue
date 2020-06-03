@@ -116,6 +116,7 @@
             class="card-body"
           >
             <codemirror
+              v-if="account_variant_rules.length > 0"
               ref="cmEditor"
               v-model="account_variant_rules[selected_rule_index].code"
               :options="cmOptions"
@@ -215,6 +216,7 @@ export default {
       const baseURL = `${process.env.VUE_APP_APP_URL}`
       const idsToSave = []
       vc.account_variant_rules.forEach(rule => idsToSave.push(rule.id))
+
       // Cushing/JetSpeed ID is 1-1 in local and 8-8 in prod
       axios.post(baseURL + '/api/ocr/rules-assignment', {
         account_id: 8,
@@ -240,6 +242,7 @@ export default {
       const vc = this
       const newName = prompt('Please type the name of the new rule')
       const newCode = prompt('Please paste the code for the rule')
+
       axios.post(baseURL + '/api/ocr/rules', {
         code: newCode,
         description: 'sample rule ' + newName,
@@ -282,6 +285,7 @@ export default {
         .catch(function (error) {
           alert(error)
         })
+
       // Cushing/JetSpeed ID is 1-1 in local and 8-8 in prod
       axios.get(baseURL + '/api/ocr/rules-assignment?account_id=8&variant_id=8')
         .then(function (response) {
