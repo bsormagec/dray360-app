@@ -13,8 +13,9 @@ class AppServiceProvider extends ServiceProvider
      */
     public function register()
     {
-        if (!app()->environment(['production'])) {
-            $this->app->register(\Lanin\Laravel\ApiDebugger\ServiceProvider::class);
+        if ($this->app->isLocal()) {
+            $this->app->register(\Laravel\Telescope\TelescopeServiceProvider::class);
+            $this->app->register(TelescopeServiceProvider::class);
         }
     }
 
