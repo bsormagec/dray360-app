@@ -13,10 +13,10 @@ export default (abbyName) => {
     case 'order_type':
       formFieldName = 'shipment direction'
       break
-    case 'mbol':
+    case 'master_bol_mawb':
       formFieldName = 'master BOL MAWB'
       break
-    case 'hbol':
+    case 'house_bol_hawb':
       formFieldName = 'house BOL MAWB'
       break
     case 'reference_number':
