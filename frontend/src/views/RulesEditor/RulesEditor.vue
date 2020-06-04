@@ -44,7 +44,9 @@
                 >
                   Save
                 </v-btn>
-                <v-btn>
+                <v-btn
+                  @click="cancelRuleEdition(selected_rule_index)"
+                >
                   Cancel
                 </v-btn>
                 <v-btn
@@ -66,7 +68,9 @@
             >
               Save
             </v-btn>
-            <v-btn>
+            <v-btn
+              @click="cancelSequenceEdition()"
+            >
               Cancel
             </v-btn>
           </div>
@@ -327,6 +331,28 @@ export default {
             .catch(function (error) {
               alert(error)
             })
+        })
+        .catch(function (error) {
+          alert(error)
+        })
+    },
+    cancelRuleEdition (index) {
+      const vc = this
+      const baseURL = `${process.env.VUE_APP_APP_URL}`
+      axios.get(baseURL + '/api/ocr/rules-assignment?account_id=1&variant_id=1')
+        .then(function (response) {
+          vc.account_variant_rules[index].code = response.data.data[index].code
+        })
+        .catch(function (error) {
+          alert(error)
+        })
+    },
+    cancelSequenceEdition () {
+      const vc = this
+      const baseURL = `${process.env.VUE_APP_APP_URL}`
+      axios.get(baseURL + '/api/ocr/rules-assignment?account_id=1&variant_id=1')
+        .then(function (response) {
+          vc.account_variant_rules = response.data.data
         })
         .catch(function (error) {
           alert(error)
