@@ -5,62 +5,47 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
-//use Illuminate\Support\Facades\DB;
-
 /**
- * Class Order
- * @package App\Models
- * @version March 5, 2020, 8:00 pm UTC
- *
- * @property string request_id
- * @property string shipment_designation
- * @property string equipment_type
- * @property string shipment_direction
- * @property boolean one_way
- * @property boolean yard_pre_pull
- * @property boolean has_chassis
- * @property string unit_number
- * @property string equipment
- * @property string equipment_size
- * @property string owner_or_ss_company
- * @property boolean hazardous
- * @property boolean expedite_shipment
- * @property string reference_number
- * @property string rate_quote_number
- * @property string seal_number_list
- * @property string port_ramp_of_origin
- * @property string port_ramp_of_destination
- * @property string vessel
- * @property string voyage
- * @property string master_bol_mawb
- * @property string house_bol_hawb
- * @property string|\Carbon\Carbon estimated_arrival_utc
- * @property string|\Carbon\Carbon last_free_date_utc
- * @property string booking_number
- * @property string pickup_number
- * @property string bol
- * @property json ocr_data
- * @property boolean bill_to_address_verified
- * @property string bill_to_address_raw_text
- * @property boolean port_ramp_of_origin_address_verified
- * @property string port_ramp_of_origin_address_raw_text
- * @property boolean port_ramp_of_destination_address_verified
- * @property string port_ramp_of_destination_address_raw_text
- *
- * @property \Illuminate\Database\Eloquent\Collection orderAddressEvents
- * @property \Illuminate\Database\Eloquent\Collection orderLineItems
- * @property \Illuminate\Database\Eloquent\Collection ocrRequest
- * @property \Illuminate\Database\Eloquent\Collection getOCRRequestStatusList
- * @property \App\Models\Address billToAddress
- * @property \App\Models\Address portRampOfOriginAddress
- * @property \App\Models\Address portRampOfDestinationAddress
-
- * @property \App\Models\OCRRequest ocrRequest* @property \App\Models\OCRRequestStatus getLatestOCRRequestStatusAttribute
- * @property \App\Model\OrderLineItem getOrderLineItemsAttribute
- * @property \Illuminate\Database\Eloquent\Collection getOrderAddressEventsAttribute
- * @property \Illuminate\Database\Eloquent\Collection ocrRequest* @property \App\Models\Address getBillToAddressAttribute
- * @property \App\Models\Address getPortRampOfOriginAddressAttribute
- * @property \App\Models\Address getPortRampOfDestinationAddressAttribute
+ * @property \Illuminate\Database\Eloquent\Collection $orderAddressEvents
+ * @property \Illuminate\Database\Eloquent\Collection $orderLineItems
+ * @property \App\Models\OCRRequest $ocrRequest
+ * @property \App\Models\Address $billToAddress
+ * @property \App\Models\Address $portRampOfOriginAddress
+ * @property \App\Models\Address $portRampOfDestinationAddress
+ * @property string $request_id
+ * @property string $shipment_designation
+ * @property string $equipment_type
+ * @property string $shipment_direction
+ * @property boolean $one_way
+ * @property boolean $yard_pre_pull
+ * @property boolean $has_chassis
+ * @property string $unit_number
+ * @property string $equipment
+ * @property string $equipment_size
+ * @property string $owner_or_ss_company
+ * @property boolean $hazardous
+ * @property boolean $expedite_shipment
+ * @property string $reference_number
+ * @property string $rate_quote_number
+ * @property string $seal_number_list
+ * @property string $port_ramp_of_origin
+ * @property string $port_ramp_of_destination
+ * @property string $vessel
+ * @property string $voyage
+ * @property string $master_bol_mawb
+ * @property string $house_bol_hawb
+ * @property string|\Carbon\Carbon $estimated_arrival_utc
+ * @property string|\Carbon\Carbon $last_free_date_utc
+ * @property string $booking_number
+ * @property string $pickup_number
+ * @property string $bol
+ * @property array $ocr_data
+ * @property boolean $bill_to_address_verified
+ * @property string $bill_to_address_raw_text
+ * @property boolean $port_ramp_of_origin_address_verified
+ * @property string $port_ramp_of_origin_address_raw_text
+ * @property boolean $port_ramp_of_destination_address_verified
+ * @property string $port_ramp_of_destination_address_raw_text
  */
 class Order extends Model
 {
@@ -163,51 +148,31 @@ class Order extends Model
 
     ];
 
-    /**
-     * @return \Illuminate\Database\Eloquent\Relations\HasMany
-     **/
     public function orderAddressEvents()
     {
         return $this->hasMany(\App\Models\OrderAddressEvent::class, 't_order_id');
     }
 
-    /**
-     * @return \Illuminate\Database\Eloquent\Relations\HasMany
-     **/
     public function orderLineItems()
     {
         return $this->hasMany(\App\Models\OrderLineItem::class, 't_order_id');
     }
 
-    /**
-     * The OCR request relationship
-     *
-     * @return \Illuminate\Database\Eloquent\Relations\HasOne
-     **/
     public function ocrRequest()
     {
         return $this->hasOne(\App\Models\OCRRequest::class, 'request_id', 'request_id');
     }
 
-    /**
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
-     **/
     public function billToAddress()
     {
         return $this->belongsTo(\App\Models\Address::class, 'bill_to_address_id');
     }
 
-    /**
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
-     **/
     public function portRampOfOriginAddress()
     {
         return $this->belongsTo(\App\Models\Address::class, 'port_ramp_of_origin_address_id');
     }
 
-    /**
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
-     **/
     public function portRampOfDestinationAddress()
     {
         return $this->belongsTo(\App\Models\Address::class, 'port_ramp_of_destination_address_id');
