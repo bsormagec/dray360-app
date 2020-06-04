@@ -4,8 +4,8 @@ namespace App\Http\Controllers\Api;
 
 use Carbon\Carbon;
 use App\Models\Order;
-use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use App\Http\Resources\Orders as OrdersResource;
 
 class OrderController extends Controller
 {
@@ -15,10 +15,9 @@ class OrderController extends Controller
     /**
      * Get list of orders
      *
-     * @param  [Request] $request
      * @return [json] list of orders
      */
-    public function orders(Request $request)
+    public function orders()
     {
         $orders = Order::with([
                 'ocrRequest',
@@ -33,14 +32,13 @@ class OrderController extends Controller
             ])
             ->paginate(25);
 
-        return \App\Http\Resources\Orders::collection($orders);
+        return OrdersResource::collection($orders);
     }
 
     /**
      * Get a single order, with all detail. Especially, return a
      * presigned GET request for downloading the JPG from S3
      *
-     * @param  [Request] $request
      * @param  int $orderId
      * @return \App\Models\Order list of orders
      */
