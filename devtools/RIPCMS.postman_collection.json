@@ -108,7 +108,7 @@
 				"method": "GET",
 				"header": [],
 				"url": {
-					"raw": "https://www.ripcms.com/api/ProfitTools/GetCompany/2",
+					"raw": "https://www.ripcms.com/api/ProfitTools/GetCompany/:id",
 					"protocol": "https",
 					"host": [
 						"www",
@@ -119,7 +119,13 @@
 						"api",
 						"ProfitTools",
 						"GetCompany",
-						"2"
+						":id"
+					],
+					"variable": [
+						{
+							"key": "id",
+							"value": "1"
+						}
 					]
 				},
 				"description": "get company"
