@@ -37,23 +37,15 @@ class OCRRequest extends Model
      **/
     public function statusList()
     {
-        return $this->hasMany(\App\Models\OCRRequestStatus::class, 'request_id', 'request_id');
+        return $this->hasMany(OCRRequestStatus::class, 'request_id', 'request_id');
     }
 
     /**
      * @return \Illuminate\Database\Eloquent\Relations\HasOne
      **/
-    public function latestOCRRequestStatus()
+    public function latestOcrRequestStatus()
     {
-        $latestStatus = $this->
-            statusList()->
-            get()->
-            filter(function ($eachStatus) {
-                if ($eachStatus->is_latest_status) {
-                    return $eachStatus;
-                }
-            })->
-            first();  # there is only ever one "latest", enforced by the database relationships
-        return $latestStatus;
+        return $this->hasOne(OCRRequestStatus::class, 'request_id', 'request_id')
+            ->where('is_latest_status', true);
     }
 }

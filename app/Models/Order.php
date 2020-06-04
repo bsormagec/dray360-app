@@ -55,12 +55,10 @@ use Illuminate\Database\Eloquent\SoftDeletes;
  * @property \App\Models\Address portRampOfOriginAddress
  * @property \App\Models\Address portRampOfDestinationAddress
 
- * @property \App\Models\OCRRequest getOCRRequestAttribute
- * @property \App\Models\OCRRequestStatus getLatestOCRRequestStatusAttribute
+ * @property \App\Models\OCRRequest ocrRequest* @property \App\Models\OCRRequestStatus getLatestOCRRequestStatusAttribute
  * @property \App\Model\OrderLineItem getOrderLineItemsAttribute
  * @property \Illuminate\Database\Eloquent\Collection getOrderAddressEventsAttribute
- * @property \Illuminate\Database\Eloquent\Collection getOCRRequestAttribute
- * @property \App\Models\Address getBillToAddressAttribute
+ * @property \Illuminate\Database\Eloquent\Collection ocrRequest* @property \App\Models\Address getBillToAddressAttribute
  * @property \App\Models\Address getPortRampOfOriginAddressAttribute
  * @property \App\Models\Address getPortRampOfDestinationAddressAttribute
  */
@@ -68,25 +66,12 @@ class Order extends Model
 {
     use SoftDeletes;
 
-    protected $appends = [
-        'ocr_request',
-        'latest_ocr_request_status',
-        'order_address_events',
-        'order_line_items',
-        'bill_to_address',
-        'port_ramp_of_origin_address',
-        'port_ramp_of_destination_address'
-    ];
-
     public $table = 't_orders';
 
     const CREATED_AT = 'created_at';
     const UPDATED_AT = 'updated_at';
 
-
     protected $dates = ['deleted_at'];
-
-
 
     public $fillable = [
         'request_id',
@@ -195,24 +180,6 @@ class Order extends Model
     }
 
     /**
-     *
-     * @return \App\Models\OrderLineItem
-     */
-    public function getOrderLineItemsAttribute()
-    {
-        return $this->orderLineItems()->get();
-    }
-
-    /**
-     *
-     * @return \App\Models\OrderAddressEvent
-     */
-    public function getOrderAddressEventsAttribute()
-    {
-        return $this->orderAddressEvents()->get();
-    }
-
-    /**
      * The OCR request relationship
      *
      * @return \Illuminate\Database\Eloquent\Relations\HasOne
@@ -220,36 +187,6 @@ class Order extends Model
     public function ocrRequest()
     {
         return $this->hasOne(\App\Models\OCRRequest::class, 'request_id', 'request_id');
-    }
-
-    /**
-     * Get the OCR request attribute
-     *
-     * @return \Models\OCRRequest
-     */
-    public function getOCRRequestAttribute()
-    {
-        return $this->ocrRequest()->first();
-    }
-
-    /**
-     * Returns the OCRRequestStatus list
-     *
-     * @return collection
-     */
-    public function getOCRRequestStatusList()
-    {
-        return $this->getOCRRequestAttribute()->statusList()->get();
-    }
-
-    /**
-     * Returns the latest OCRRequestStatus object
-     *
-     * @return OCRRequestStatus
-     */
-    public function getLatestOCRRequestStatusAttribute()
-    {
-        return $this->getOCRRequestAttribute()->latestOCRRequestStatus();
     }
 
     /**
@@ -261,29 +198,11 @@ class Order extends Model
     }
 
     /**
-     *
-     * @return \App\Models\Address
-     */
-    public function getBillToAddressAttribute()
-    {
-        return $this->billToAddress()->get();
-    }
-
-    /**
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
      **/
     public function portRampOfOriginAddress()
     {
-        return $this->belongsTo(\App\Models\Address::class, 'port_ramp_of_origin_address_id')->first();
-    }
-
-    /**
-     *
-     * @return \App\Models\Address
-     */
-    public function getPortRampOfOriginAddressAttribute()
-    {
-        return $this->portRampOfOriginAddress();
+        return $this->belongsTo(\App\Models\Address::class, 'port_ramp_of_origin_address_id');
     }
 
     /**
@@ -291,15 +210,6 @@ class Order extends Model
      **/
     public function portRampOfDestinationAddress()
     {
-        return $this->belongsTo(\App\Models\Address::class, 'port_ramp_of_destination_address_id')->first();
-    }
-
-    /**
-     *
-     * @return \App\Models\Address
-     */
-    public function getPortRampOfDestinationAddressAttribute()
-    {
-        return $this->portRampOfDestinationAddress();
+        return $this->belongsTo(\App\Models\Address::class, 'port_ramp_of_destination_address_id');
     }
 }

@@ -33,11 +33,6 @@ class OrderAddressEvent extends Model
 {
     use SoftDeletes;
 
-    protected $appends = [
-        'address'
-    ];
-
-
     public $table = 't_order_address_events';
 
     const CREATED_AT = 'created_at';
@@ -105,15 +100,6 @@ class OrderAddressEvent extends Model
     public function address()
     {
         return $this->belongsTo(\App\Models\Address::class, 't_address_id');
-    }
-
-    /**
-     *
-     * @return \App\Models\Address
-     */
-    public function getAddressAttribute()
-    {
-        return $this->address()->first();
     }
 
     /**

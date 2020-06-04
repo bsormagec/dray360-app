@@ -20,7 +20,19 @@ class OrderController extends Controller
      */
     public function orders(Request $request)
     {
-        $orders = Order::paginate(25);
+        $orders = Order::with([
+                'ocrRequest',
+                'ocrRequest.statusList',
+                'ocrRequest.latestOcrRequestStatus',
+                'orderLineItems',
+                'billToAddress',
+                'portRampOfDestinationAddress',
+                'portRampOfOriginAddress',
+                'orderAddressEvents',
+                'orderAddressEvents.address',
+            ])
+            ->paginate(25);
+
         return \App\Http\Resources\Orders::collection($orders);
     }
 
@@ -32,9 +44,20 @@ class OrderController extends Controller
      * @param  int $orderId
      * @return \App\Models\Order list of orders
      */
-    public function order(Request $request, $orderId)
+    public function order($orderId)
     {
-        $order = Order::where('id', $orderId)->get()->first();
+        $order = Order::with([
+                'ocrRequest',
+                'ocrRequest.statusList',
+                'ocrRequest.latestOcrRequestStatus',
+                'orderLineItems',
+                'billToAddress',
+                'portRampOfDestinationAddress',
+                'portRampOfOriginAddress',
+                'orderAddressEvents',
+                'orderAddressEvents.address',
+            ])
+            ->findOrFail($orderId);
 
         // Create an S3 client
         $s3Client = new \Aws\S3\S3Client([
