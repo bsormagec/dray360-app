@@ -123,6 +123,12 @@
               :options="cmOptions"
             />
           </div>
+          <vue-json-pretty
+            v-if="testing_output"
+            :path="'res'"
+            :data="{testing_output}"
+            @click="handleClick"
+          />
         </div>
       </div>
       <div class="col-md-2">
@@ -158,7 +164,6 @@
           </v-list>
         </v-card>
       </div>
-      <p>{{ testing_output }}</p>
     </div>
   </div>
 </template>
@@ -167,12 +172,14 @@ import draggable from 'vuedraggable'
 import { codemirror } from 'vue-codemirror'
 import 'codemirror/lib/codemirror.css'
 import 'codemirror/theme/base16-light.css'
+import VueJsonPretty from 'vue-json-pretty'
 const axios = require('axios')
 export default {
   name: 'RulesEditor',
   components: {
     draggable,
-    codemirror
+    codemirror,
+    VueJsonPretty
   },
   data: () => ({
     cmOptions: {
