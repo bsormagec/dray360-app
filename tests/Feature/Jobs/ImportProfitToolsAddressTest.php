@@ -54,10 +54,13 @@ class ImportProfitToolsAddressTest extends TestCase
     /** @test */
     public function it_updates_the_already_exiting_address()
     {
-        $address = $this->getBaseAddresses()[1];
-        $address['id'] = 1;
+        $modifiedAddress = $this->getBaseAddresses()[1];
+        $modifiedAddress['id'] = 1;
         Queue::fake();
-        Http::fake(['*' => Http::response($address)]);
+        Http::fakeSequence()
+            ->push($this->getBaseAddresses()[0])
+            ->push($modifiedAddress)
+            ->whenEmpty(Http::response(null, 500));
         $company = Company::getCushing();
         $tmsProvider = TMSProvider::getProfitTools();
 
@@ -66,14 +69,14 @@ class ImportProfitToolsAddressTest extends TestCase
 
         $this->assertDatabaseCount('t_company_address_tms_code', 1);
         $this->assertDatabaseHas('t_addresses', [
-            'address_line_1' => $address['addr1'],
-            'address_line_2' => $address['addr2'],
-            'city' => $address['city'],
-            'state' => $address['state'],
-            'postal_code' => $address['zip'],
-            'country' => $address['country'],
-            'location_name' => $address['name'],
-            'location_phone' => $address['phone'],
+            'address_line_1' => $modifiedAddress['addr1'],
+            'address_line_2' => $modifiedAddress['addr2'],
+            'city' => $modifiedAddress['city'],
+            'state' => $modifiedAddress['state'],
+            'postal_code' => $modifiedAddress['zip'],
+            'country' => $modifiedAddress['country'],
+            'location_name' => $modifiedAddress['name'],
+            'location_phone' => $modifiedAddress['phone'],
         ]);
     }
 
