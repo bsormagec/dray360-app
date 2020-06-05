@@ -248,8 +248,10 @@ export default {
       const baseURL = `${process.env.VUE_APP_APP_URL}`
       const vc = this
       const newName = prompt('Please type the name of the new rule')
-      const newCode = prompt('Please paste the code for the rule')
-
+      let newCode = null
+      if (newName !== null) {
+        newCode = prompt('Please paste the code for the rule')
+      }
       axios.post(baseURL + '/api/ocr/rules', {
         code: newCode,
         description: 'sample rule ' + newName,
@@ -261,7 +263,7 @@ export default {
           alert(newName + ' added successfully to the library!')
         })
         .catch(function (error) {
-          alert(error)
+          console.log(error)
         })
     },
     addToAccountVariant (name, code, i) {
