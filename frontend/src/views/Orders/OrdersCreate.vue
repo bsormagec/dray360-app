@@ -43,7 +43,9 @@
 <script>
 import OrdersCreateUpload from '@/views/Orders/OrdersCreateUpload'
 import OrdersCreateSubmitted from '@/views/Orders/OrdersCreateSubmitted'
-import { mapState, mapActions } from '@/utils/vuex_mappings'
+import orders, { types } from '@/store/modules/orders'
+import { mapActions } from '@/utils/vuex_mappings'
+import { reqStatus } from '@/enums/req_status'
 
 export default {
   name: 'OrdersCreate',
@@ -65,7 +67,7 @@ export default {
   }),
 
   methods: {
-    ...mapActions(orders.moduleName, [types.getOrderDetail]),
+    ...mapActions(orders.moduleName, [types.postUploadPDF]),
 
     deleteFile (file) {
       this.files = this.files.filter(f => f.name !== file.name)
@@ -91,24 +93,20 @@ export default {
       this.files = unique
     },
 
-    uploadFile (fileName) {
-      // const vc = this
-      console.log('uploadFile: ' + fileName)
-    },
-
-    // async requestOrderDetail () {
-    //   const status = await this[types.getOrderDetail](this.$route.params.id)
-
-    //   if (status === reqStatus.success) {
-    //     documentModule.methods.setDocument(
-    //       parse({
-    //         data: this.currentOrder()
-    //       })
-    //     )
-    //     return
-    //   }
-    //   console.log('error')
+    // uploadFile (fileName) {
+    //   // const vc = this
+    //   console.log('uploadFile: ' + fileName)
     // },
+
+    async uploadFile (filename) {
+      const status = await this[types.postUploadPDF](filename)
+
+      if (status === reqStatus.success) {
+        console.log('upload file success')
+      } else {
+        console.log('error')
+      }
+    },
 
     createOrder () {
       const vc = this
@@ -116,9 +114,9 @@ export default {
         alert('Please upload a PDF first')
       } else {
         vc.files.forEach(file => {
-          vc.uploadFile(file.name)
           // Step 1 post to the endpoint
-          vc.uploadFile()
+          console.log('filename to upload: ' + file.name)
+          vc.uploadFile(file.name)
 
           // Step 2 upload to uploadUri
         })

@@ -47,14 +47,15 @@ const actions = {
 
     commit(types.setCurrentOrder, data)
     return reqStatus.success
-  }
+  },
 
   async [types.postUploadPDF] ({ commit }, file) {
     const [error, data] = await postUploadPDF(file)
 
     if (error || !data.ocr_data) return reqStatus.error
 
-    commit(types.)
+    commit(types.setPDF, data)
+    return reqStatus.success
   }
 }
 
