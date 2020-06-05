@@ -43,6 +43,7 @@
 <script>
 import OrdersCreateUpload from '@/views/Orders/OrdersCreateUpload'
 import OrdersCreateSubmitted from '@/views/Orders/OrdersCreateSubmitted'
+import { mapState, mapActions } from '@/utils/vuex_mappings'
 
 export default {
   name: 'OrdersCreate',
@@ -64,6 +65,8 @@ export default {
   }),
 
   methods: {
+    ...mapActions(orders.moduleName, [types.getOrderDetail]),
+
     deleteFile (file) {
       this.files = this.files.filter(f => f.name !== file.name)
     },
@@ -93,6 +96,20 @@ export default {
       console.log('uploadFile: ' + fileName)
     },
 
+    // async requestOrderDetail () {
+    //   const status = await this[types.getOrderDetail](this.$route.params.id)
+
+    //   if (status === reqStatus.success) {
+    //     documentModule.methods.setDocument(
+    //       parse({
+    //         data: this.currentOrder()
+    //       })
+    //     )
+    //     return
+    //   }
+    //   console.log('error')
+    // },
+
     createOrder () {
       const vc = this
       if (vc.files.length === 0) {
@@ -101,6 +118,7 @@ export default {
         vc.files.forEach(file => {
           vc.uploadFile(file.name)
           // Step 1 post to the endpoint
+          vc.uploadFile()
 
           // Step 2 upload to uploadUri
         })

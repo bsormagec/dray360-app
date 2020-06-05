@@ -1,11 +1,12 @@
 import { reqStatus } from '@/enums/req_status'
-import { getOrders, getOrderDetail } from '@/store/api_calls/orders'
+import { getOrders, getOrderDetail, postUploadPDF } from '@/store/api_calls/orders'
 
 export const types = {
   setOrders: 'SET_ORDERS',
   setCurrentOrder: 'SET_CURRENT_ORDER',
   getOrders: 'GET_ORDERS',
-  getOrderDetail: 'GET_ORDER_DETAIL'
+  getOrderDetail: 'GET_ORDER_DETAIL',
+  postUploadPDF: 'POST_UPLOAD_PDF'
 }
 
 const initialState = {
@@ -23,6 +24,9 @@ const mutations = {
   },
   [types.setCurrentOrder] (state, orderData) {
     state.currentOrder = orderData
+  },
+  [types.setPDF] (state, pdfData) {
+    state.pdf = pdfData
   }
 }
 
@@ -43,6 +47,14 @@ const actions = {
 
     commit(types.setCurrentOrder, data)
     return reqStatus.success
+  }
+
+  async [types.postUploadPDF] ({ commit }, file) {
+    const [error, data] = await postUploadPDF(file)
+
+    if (error || !data.ocr_data) return reqStatus.error
+
+    commit(types.)
   }
 }
 
