@@ -20,7 +20,7 @@ export default {
 
   methods: {
     getText (item) {
-      let status = item.latest_ocr_request_status.status.split('-')
+      let status = item.ocr_request.latest_ocr_request_status.status.split('-')
       status = status[status.length - 1]
 
       return status
