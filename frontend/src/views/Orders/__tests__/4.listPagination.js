@@ -1,12 +1,30 @@
 import Orders from '@/views/Orders/Orders'
 import store from '@/store/modules/orders'
 import mount from '@/utils/for_tests/mount_authenticated'
-import waitForResponse from '@/utils/for_tests/wait_for_response.js'
+import waitForResponse from '@/utils/for_tests/wait_for_response'
 
 let storedTest
 
 export default () =>
   describe('listPagination', () => {
+    it('doesnt change the list when clicking "first" button if its disabled', async () => {
+      const wrapper = await mount(Orders, { store })
+      await waitForResponse.wait()
+
+      const FirstBtn = wrapper.find('.First button')
+
+      expect(FirstBtn.attributes('disabled')).toBe('disabled')
+      const prevFirstText = wrapper.findAll('tbody tr').at(0).text()
+
+      FirstBtn.trigger('click')
+      await waitForResponse.wait()
+      await wrapper.vm.$nextTick()
+
+      const afterFirstText = wrapper.findAll('tbody tr').at(0).text()
+      expect(prevFirstText).toMatch(afterFirstText)
+      wrapper.destroy()
+    })
+
     it('changes list when using "jump to page" field', async () => {
       const wrapper = await mount(Orders, { store })
       await waitForResponse.wait()
@@ -23,6 +41,7 @@ export default () =>
       const afterFirstText = afterFirst.text()
 
       expect(prevFirstText).not.toMatch(afterFirstText)
+      wrapper.destroy()
     })
 
     it('changes list when clicking numbered buttons', async () => {
@@ -32,28 +51,10 @@ export default () =>
       const prevFirst = wrapper.findAll('tbody tr').at(0)
       const prevFirstText = prevFirst.text()
 
-      const numberedButtons = wrapper.find('.footer__navigation').findAll('.buttons').at(1)
-      const secondBtn = numberedButtons.findAll('.buttons__single').at(1)
-      secondBtn.find('button').trigger('click')
+      const Btn = wrapper.findAll('.footer__navigation .buttons').at(0).find('.buttons__single button')
+      Btn.trigger('click')
       await waitForResponse.wait()
-
-      const afterFirst = wrapper.findAll('tbody tr').at(0)
-      const afterFirstText = afterFirst.text()
-
-      expect(prevFirstText).not.toMatch(afterFirstText)
-    })
-
-    it('changes list when clicking "next" button', async () => {
-      const wrapper = await mount(Orders, { store })
-      await waitForResponse.wait()
-
-      const prevFirst = wrapper.findAll('tbody tr').at(0)
-      const prevFirstText = prevFirst.text()
-
-      const lastBtns = wrapper.find('.footer__navigation').findAll('.buttons').at(2)
-      const nextBtn = lastBtns.findAll('.buttons__single').at(0)
-      nextBtn.find('button').trigger('click')
-      await waitForResponse.wait()
+      await wrapper.vm.$nextTick()
 
       const afterFirst = wrapper.findAll('tbody tr').at(0)
       const afterFirstText = afterFirst.text()
@@ -69,9 +70,9 @@ export default () =>
         const prevFirst = wrapper.findAll('tbody tr').at(0)
         const prevFirstText = prevFirst.text()
 
-        const lastBtns = wrapper.find('.footer__navigation').findAll('.buttons').at(2)
-        const lastBtn = lastBtns.findAll('.buttons__single').at(1)
-        lastBtn.find('button').trigger('click')
+        const lastButton = wrapper.findAll('.footer__navigation .buttons').at(2).find('.buttons__single button')
+
+        lastButton.trigger('click')
         await waitForResponse.wait()
 
         const afterFirst = wrapper.findAll('tbody tr').at(0)
@@ -82,39 +83,5 @@ export default () =>
       }
 
       await storedTest()
-    })
-
-    it('changes list when clicking "prev" button', async () => {
-      const wrapper = await storedTest()
-
-      const prevFirst = wrapper.findAll('tbody tr').at(0)
-      const prevFirstText = prevFirst.text()
-
-      const firstBtns = wrapper.find('.footer__navigation').findAll('.buttons').at(0)
-      const prevBtn = firstBtns.findAll('.buttons__single').at(1)
-      prevBtn.find('button').trigger('click')
-      await waitForResponse.wait()
-
-      const afterFirst = wrapper.findAll('tbody tr').at(0)
-      const afterFirstText = afterFirst.text()
-
-      expect(prevFirstText).not.toMatch(afterFirstText)
-    })
-
-    it('changes list when clicking "first" button', async () => {
-      const wrapper = await storedTest()
-
-      const prevFirst = wrapper.findAll('tbody tr').at(0)
-      const prevFirstText = prevFirst.text()
-
-      const firstBtns = wrapper.find('.footer__navigation').findAll('.buttons').at(0)
-      const firstBtn = firstBtns.findAll('.buttons__single').at(0)
-      firstBtn.find('button').trigger('click')
-      await waitForResponse.wait()
-
-      const afterFirst = wrapper.findAll('tbody tr').at(0)
-      const afterFirstText = afterFirst.text()
-
-      expect(prevFirstText).not.toMatch(afterFirstText)
     })
   })

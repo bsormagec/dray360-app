@@ -1,4 +1,4 @@
-# frontend
+# Front-end
 
 ## Project setup
 ```
@@ -20,15 +20,8 @@ npm run build
 npm run lint
 ```
 
-### Run tests
-first 
+### Runs tests
 ```
-npm run serve
+npm run dev
 ```
-then in another terminal
-```
-npm run test
-```
-
-### Customize configuration
-See [Configuration Reference](https://cli.vuejs.org/config/).
+> It does and `npm run serve` and `npm run test` simultaneously using [concurrently](https://github.com/kimmobrunfeldt/concurrently)
