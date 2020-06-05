@@ -33,6 +33,7 @@
     <v-btn
       color="primary"
       :style="{ marginLeft: 'auto', marginTop: '1.1rem' }"
+      @click="createOrder()"
     >
       create order
     </v-btn>
@@ -72,6 +73,7 @@ export default {
     },
 
     addFiles (newFiles) {
+      console.log('addFiles')
       const filtered = [...this.files, ...newFiles].filter(f => f.name.includes('.pdf'))
       const unique = []
       const uniqueNames = []
@@ -79,10 +81,30 @@ export default {
       filtered.forEach(fil => {
         if (uniqueNames.includes(fil.name)) return
         uniqueNames.push(fil.name)
+        // this.createOrder(fil.name)
         unique.push(fil)
       })
 
       this.files = unique
+    },
+
+    uploadFile (fileName) {
+      // const vc = this
+      console.log('uploadFile: ' + fileName)
+    },
+
+    createOrder () {
+      const vc = this
+      if (vc.files.length === 0) {
+        alert('Please upload a PDF first')
+      } else {
+        vc.files.forEach(file => {
+          vc.uploadFile(file.name)
+          // Step 1 post to the endpoint
+
+          // Step 2 upload to uploadUri
+        })
+      }
     }
   }
 }
