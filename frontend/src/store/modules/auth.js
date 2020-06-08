@@ -1,4 +1,4 @@
-import { getCsrfCookie, postLogin, getUser } from '@/store/api_calls/auth'
+import { getCsrfCookie, postLogin, getUser, postLogout } from '@/store/api_calls/auth'
 
 const initialState = {
   currentUser: undefined,
@@ -28,7 +28,12 @@ const actions = {
 
     if (!error) commit('currentUser', { user })
     commit('currentUserLoading', false)
+  },
+  async logout ({ commit }) {
+    const [error] = await postLogout()
+    if (!error) commit('auth_success')
   }
+
 }
 
 export default {

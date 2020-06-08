@@ -43,9 +43,19 @@
     </div>
 
     <div
-      v-if="!isMobile"
+
       class="sidebar__footer"
-    />
+    >
+      <v-btn
+        color="primary"
+        outlined
+        width="11.5rem"
+        class="logout__btn"
+        @click="logoutBtn"
+      >
+        Logout
+      </v-btn>
+    </div>
   </div>
 </template>
 
@@ -53,6 +63,7 @@
 import isMobile from '@/mixins/is_mobile'
 import { formModule } from '@/views/Details/inner_store/index'
 import DetailsSidebarNavigation from '@/views/Details/DetailsSidebarNavigation'
+import { mapActions } from '@/utils/vuex_mappings'
 
 export default {
   name: 'DetailsSidebar',
@@ -60,7 +71,6 @@ export default {
   components: {
     DetailsSidebarNavigation
   },
-
   mixins: [isMobile],
 
   computed: {
@@ -68,9 +78,19 @@ export default {
       return formModule.state.isEditing
     }
   },
+  mounted () {
+    console.log('mounted', this.$route.fullPath)
+  },
 
   methods: {
-    toggleIsEditing: formModule.methods.toggleIsEditing
+    toggleIsEditing: formModule.methods.toggleIsEditing,
+    ...mapActions('AUTH', ['logout']),
+    async logoutBtn () {
+      this.logoutError = false
+      await this.logout()
+      this.$router.push('/login')
+    }
+
   }
 }
 </script>
@@ -120,5 +140,10 @@ $ordermaster-logo: url("../../assets/images/ordermaster_logo.svg");
   background-image: $ordermaster-logo;
   background-size: contain;
   background-position: center center;
+  display: flex;
+  flex-direction: column-reverse;
+  .logout__btn{
+    margin: 5rem auto;
+  }
 }
 </style>
