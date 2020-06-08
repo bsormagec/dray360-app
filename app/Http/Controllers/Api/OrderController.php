@@ -4,8 +4,8 @@ namespace App\Http\Controllers\Api;
 
 use Carbon\Carbon;
 use App\Models\Order;
-use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use App\Http\Resources\Orders as OrdersResource;
 
 class OrderController extends Controller
 {
@@ -15,26 +15,47 @@ class OrderController extends Controller
     /**
      * Get list of orders
      *
-     * @param  [Request] $request
      * @return [json] list of orders
      */
-    public function orders(Request $request)
+    public function orders()
     {
-        $orders = Order::paginate(25);
-        return \App\Http\Resources\Orders::collection($orders);
+        $orders = Order::with([
+                'ocrRequest',
+                'ocrRequest.statusList',
+                'ocrRequest.latestOcrRequestStatus',
+                'orderLineItems',
+                'billToAddress',
+                'portRampOfDestinationAddress',
+                'portRampOfOriginAddress',
+                'orderAddressEvents',
+                'orderAddressEvents.address',
+            ])
+            ->paginate(25);
+
+        return OrdersResource::collection($orders);
     }
 
     /**
      * Get a single order, with all detail. Especially, return a
      * presigned GET request for downloading the JPG from S3
      *
-     * @param  [Request] $request
      * @param  int $orderId
      * @return \App\Models\Order list of orders
      */
-    public function order(Request $request, $orderId)
+    public function order($orderId)
     {
-        $order = Order::where('id', $orderId)->get()->first();
+        $order = Order::with([
+                'ocrRequest',
+                'ocrRequest.statusList',
+                'ocrRequest.latestOcrRequestStatus',
+                'orderLineItems',
+                'billToAddress',
+                'portRampOfDestinationAddress',
+                'portRampOfOriginAddress',
+                'orderAddressEvents',
+                'orderAddressEvents.address',
+            ])
+            ->findOrFail($orderId);
 
         // Create an S3 client
         $s3Client = new \Aws\S3\S3Client([

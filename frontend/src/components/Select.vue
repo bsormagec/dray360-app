@@ -1,5 +1,5 @@
 <template>
-  <div class="select">
+  <div :class="`select ${label}`">
     <v-select
       v-model="selected"
       :items="items"

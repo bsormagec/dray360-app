@@ -8,12 +8,5 @@ cd frontend
 then
 
 ``` sh
-npm run serve
+npm run dev
 ```
-
-last in another terminal run
-
-``` sh
-npm run test
-```
-

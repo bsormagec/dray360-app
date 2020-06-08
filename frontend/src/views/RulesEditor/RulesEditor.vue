@@ -40,17 +40,18 @@
                 sm="4"
               >
                 <v-btn
-                  @click="saveRule(selected_rule_index)"
+                  @click="editRule(selected_rule_index)"
                 >
                   Save
                 </v-btn>
                 <v-btn
-                  @click="testRule(selected_rule_index)"
+                  @click="cancelRuleEdition(selected_rule_index)"
                 >
                   Cancel
                 </v-btn>
                 <v-btn
-                  @click="testRule(selected_rule_index)"
+                  v-if="account_variant_rules.length > 0"
+                  @click="testSingleRule(selected_rule_index)"
                 >
                   Test
                 </v-btn>
@@ -63,12 +64,12 @@
         <div class="card">
           <div class="card-header">
             <v-btn
-              @click="saveRule(index)"
+              @click="saveRuleSequence()"
             >
               Save
             </v-btn>
             <v-btn
-              @click="testRule(index)"
+              @click="cancelSequenceEdition()"
             >
               Cancel
             </v-btn>
@@ -115,14 +116,23 @@
       </div>
       <div class="col-md-8">
         <div class="card">
-          <div class="card-body">
+          <div
+            v-if="account_variant_rules.length > 0"
+            class="card-body"
+          >
             <codemirror
+              v-if="account_variant_rules.length > 0"
               ref="cmEditor"
               v-model="account_variant_rules[selected_rule_index].code"
               :options="cmOptions"
-              @input="onCmCodeChange(selected_rule_index)"
             />
           </div>
+          <vue-json-pretty
+            v-if="testing_output"
+            :path="'res'"
+            :data="{testing_output}"
+            @click="handleClick"
+          />
         </div>
       </div>
       <div class="col-md-2">
@@ -166,11 +176,14 @@ import draggable from 'vuedraggable'
 import { codemirror } from 'vue-codemirror'
 import 'codemirror/lib/codemirror.css'
 import 'codemirror/theme/base16-light.css'
+import VueJsonPretty from 'vue-json-pretty'
+const axios = require('axios')
 export default {
   name: 'RulesEditor',
   components: {
     draggable,
-    codemirror
+    codemirror,
+    VueJsonPretty
   },
   data: () => ({
     cmOptions: {
@@ -180,60 +193,90 @@ export default {
       lineNumbers: true,
       line: true
     },
-    // Mocked Rule Library
-    rules_array: [
-      {
-        name: 'bol_to_mbol',
-        code: 'possible_output_fields = {"shipment_type":{"always":True}}\ndef runrule(input_fields, updated_fields):\n\t#return {"shipment_type":"export"}\n\tupdated_fields["shipment_type"] = "export"'
-      },
-      {
-        name: 'rule_2',
-        code: 'possible_output_fields = {"mbol":{"always":True}}\ndef runrule(input_fields, updated_fields):\n\t#return {"shipment_type":"export"}\n\tupdated_fields["bol"] = input_fields["mbol"]'
-      }
-    ],
+    // Rules Library
+    rules_array: [],
     // Account / Variant Rules
-    account_variant_rules: [
-      {
-        name: 'bol_to_mbol',
-        code: 'possible_output_fields = {"shipment_type":{"always":True}}\ndef runrule(input_fields, updated_fields):\n\t#return {"shipment_type":"export"}\n\tupdated_fields["shipment_type"] = "export"'
-      },
-      {
-        name: '2_bol_to_mbol',
-        code: '# Second bol to mbol'
-      }
-    ],
+    account_variant_rules: [],
     // Selected rule
-    selected_rule_index: 0
+    selected_rule_index: 0,
+    // Testing output
+    testing_output: null
   }),
+  mounted () {
+    const vc = this
+    vc.fetchRules()
+  },
   methods: {
-    saveRule (index) {
-      console.log('selected index: ' + this.selected_rule_index)
-      alert(this.account_variant_rules[index].name)
+    editRule (index) {
+      const vc = this
+      const baseURL = `${process.env.VUE_APP_APP_URL}`
+      const ruleId = vc.account_variant_rules[index].id
+      const ruleName = vc.account_variant_rules[index].name
+      axios.put(baseURL + '/api/ocr/rules/' + ruleId, {
+        code: vc.account_variant_rules[index].code,
+        description: 'sample rule ' + ruleName,
+        id: ruleId,
+        name: ruleName
+      })
+        .then(function (response) {
+          alert('Rule sequence saved')
+        })
+        .catch(function (error) {
+          alert(error)
+        })
     },
-    onCmCodeChange (index) {
-      // const vc = this
-      console.log('code snippet: ' + index)
-      // console.log(JSON.stringify(vc.account_variant_rules[index]))
-      // console.log('after key line isnt how i want')
-      // console.log(vc.rules_array[index])
+    saveRuleSequence () {
+      const vc = this
+      const baseURL = `${process.env.VUE_APP_APP_URL}`
+      const idsToSave = []
+      vc.account_variant_rules.forEach(rule => idsToSave.push(rule.id))
+
+      // Cushing/JetSpeed ID is 1-1 in local and 8-8 in prod
+      axios.post(baseURL + '/api/ocr/rules-assignment', {
+        account_id: 8,
+        variant_id: 8,
+        rules: idsToSave
+      })
+        .then(function (response) {
+          alert('Rule sequence saved')
+        })
+        .catch(function (error) {
+          alert(error)
+        })
     },
+    // THIS IS USEFUL FOR DEBUGGING PURPOSES
+    // onCmCodeChange (index) {
+    //   const vc = this
+    //   // vc.account_variant_rules[index].code = JSON.stringify(vc.account_variant_rules[index].code)
+    //   console.log('oncmcodechange')
+    //   console.log(vc.account_variant_rules[index].code)
+    // },
     addRuleToLibrary () {
+      const baseURL = `${process.env.VUE_APP_APP_URL}`
       const vc = this
       const newName = prompt('Please type the name of the new rule')
-      const newCode = prompt('Please paste the code for the rule')
-      vc.rules_array.push({
-        name: newName,
-        code: newCode
+      let newCode = null
+      if (newName !== null) {
+        newCode = prompt('Please paste the code for the rule')
+      }
+      axios.post(baseURL + '/api/ocr/rules', {
+        code: newCode,
+        description: 'sample rule ' + newName,
+        id: (vc.rules_array.length + 1),
+        name: newName
       })
+        .then(function (response) {
+          vc.fetchRules()
+          alert(newName + ' added successfully to the library!')
+        })
+        .catch(function (error) {
+          console.log(error)
+        })
     },
     addToAccountVariant (name, code, i) {
       const vc = this
       if (confirm('Add ' + name + ' to account variant')) {
-        vc.rules_array.splice(i, 1)
-        vc.account_variant_rules.push({
-          name: name,
-          code: code
-        })
+        vc.account_variant_rules.push(vc.rules_array[i])
       }
     },
     removeFromAccountVariant (i) {
@@ -247,6 +290,82 @@ export default {
     updateSelectedIndex (i) {
       const vc = this
       vc.selected_rule_index = i
+    },
+    fetchRules () {
+      const baseURL = `${process.env.VUE_APP_APP_URL}`
+      const vc = this
+      axios.get(baseURL + '/api/ocr/rules')
+        .then(function (response) {
+          vc.rules_array = response.data.data
+        })
+        .catch(function (error) {
+          alert(error)
+        })
+
+      // Cushing/JetSpeed ID is 1-1 in local and 8-8 in prod
+      axios.get(baseURL + '/api/ocr/rules-assignment?account_id=8&variant_id=8')
+        .then(function (response) {
+          vc.account_variant_rules = response.data.data
+        })
+        .catch(function (error) {
+          alert(error)
+        })
+    },
+    testSingleRule (index) {
+      const vc = this
+      const baseURL = `${process.env.VUE_APP_APP_URL}`
+      let fetchedOcrData = []
+      const orderId = prompt('Please enter order ID')
+      axios.get(baseURL + '/api/orders/' + orderId)
+        .then(function (response) {
+          fetchedOcrData = response.data.ocr_data
+          delete fetchedOcrData.fields_overwritten
+
+          fetchedOcrData.rules = vc.account_variant_rules[index]
+
+          const testedRuleName = fetchedOcrData.rules.name
+          const testedRuleCode = fetchedOcrData.rules.code
+
+          fetchedOcrData.rules = []
+          fetchedOcrData.rules.push({
+            [testedRuleName]: testedRuleCode
+          })
+          fetchedOcrData[testedRuleName] = testedRuleCode
+
+          axios.post('https://i0mgwmnrb1.execute-api.us-east-2.amazonaws.com/default/ocr-rules-engine-dev',
+            fetchedOcrData)
+            .then(function (response) {
+              vc.testing_output = response.data
+            })
+            .catch(function (error) {
+              alert(error)
+            })
+        })
+        .catch(function (error) {
+          alert(error)
+        })
+    },
+    cancelRuleEdition (index) {
+      const vc = this
+      const baseURL = `${process.env.VUE_APP_APP_URL}`
+      axios.get(baseURL + '/api/ocr/rules-assignment?account_id=1&variant_id=1')
+        .then(function (response) {
+          vc.account_variant_rules[index].code = response.data.data[index].code
+        })
+        .catch(function (error) {
+          alert(error)
+        })
+    },
+    cancelSequenceEdition () {
+      const vc = this
+      const baseURL = `${process.env.VUE_APP_APP_URL}`
+      axios.get(baseURL + '/api/ocr/rules-assignment?account_id=1&variant_id=1')
+        .then(function (response) {
+          vc.account_variant_rules = response.data.data
+        })
+        .catch(function (error) {
+          alert(error)
+        })
     }
   }
 }

@@ -477,27 +477,36 @@ Save and exit nano editor
 
 #### Troubleshooting: remove old version of PHP, upgrade to 7.4
 
+Remove old PHP versions
+
 ````bash
 dpkg --get-selections | grep -i php
-sudo apt remove --purge *php*
+sudo apt remove --purge 'php*'
 ````
 
 Install newer version of PHP
 
 ````bash
 sudo apt-get update
-sudo apt -y install software-properties-common
+sudo apt-get -y install software-properties-common
 sudo add-apt-repository ppa:ondrej/php
 sudo add-apt-repository ppa:ondrej/apache2
 sudo apt-get update
 
-sudo apt install -y php7.4
-sudo apt install -y php7.4-fpm
-sudo apt install -y php7.4-mbstring php7.4-xml php7.4-bcmath php7.4-gd php7.4-zip
-sudo apt install -y php7.4-imagick php7.4-curl php7.4-xdebug php7.4-mysql
-sudo apt install -y php7.4-sqlite3 php7.4-bcmath
-sudo apt install -y php7.4-mysql
+sudo apt-get install -y php7.4
+sudo apt-get install -y php7.4-fpm
+sudo apt-get install -y php7.4-mbstring php7.4-xml php7.4-bcmath php7.4-gd php7.4-zip
+sudo apt-get install -y php7.4-imagick php7.4-curl php7.4-xdebug php7.4-mysql
+sudo apt-get install -y php7.4-sqlite3 php7.4-bcmath
+sudo apt-get install -y php7.4-mysql
 
+````
+
+Restart apache and php-fpm
+
+````bash
+sudo systemctl restart apache2.service php7.4-fpm.service
+sudo systemctl status apache2.service php7.4-fpm.service
 ````
 
 

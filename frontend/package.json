@@ -5,6 +5,7 @@
   "scripts": {
     "serve": "vue-cli-service serve",
     "build": "rm -rf ../public/{js,css,img} && vue-cli-service build --no-clean",
+    "dev": "concurrently \"npm run serve\" \"npm run test\"",
     "test": "node tests.config.js",
     "lint": "vue-cli-service lint . --ext .js,.vue --fix"
   },
@@ -15,6 +16,7 @@
     "vue": "^2.6.11",
     "vue-codemirror": "^4.0.6",
     "vue-fragment": "^1.5.1",
+    "vue-json-pretty": "^1.6.3",
     "vue-prism-editor": "^0.6.1",
     "vue-router": "^3.1.6",
     "vuedraggable": "^2.23.2",
@@ -31,6 +33,7 @@
     "babel-eslint": "^10.0.3",
     "babel-jest": "^25.2.3",
     "babel-preset-env": "^1.7.0",
+    "concurrently": "^5.2.0",
     "dotenv": "^8.2.0",
     "eslint": "^6.7.2",
     "eslint-config-standard": "^14.1.0",

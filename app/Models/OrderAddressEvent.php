@@ -6,37 +6,27 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
 /**
- * Class OrderAddressEvent
- * @package App\Models
- * @version March 5, 2020, 8:00 pm UTC
- *
- * @property \App\Models\Address address
- * @property \App\Models\Order order
- * @property string address_schedule_description
- * @property integer t_order_id
- * @property integer t_address_id
- * @property boolean t_address_verified
- * @property boolean t_address_raw_text
- * @property integer event_number
- * @property boolean is_hook_event
- * @property boolean is_mount_event
- * @property boolean is_deliver_event
- * @property boolean is_dismount_event
- * @property boolean is_drop_event
- * @property boolean call_for_appointment
- * @property time delivery_window_from_localtime
- * @property time delivery_window_to_localtime
+ * @property \App\Models\Address $address
+ * @property \App\Models\Order $order
+ * @property string $address_schedule_description
+ * @property integer $t_order_id
+ * @property integer $t_address_id
+ * @property boolean $t_address_verified
+ * @property boolean $t_address_raw_text
+ * @property integer $event_number
+ * @property boolean $is_hook_event
+ * @property boolean $is_mount_event
+ * @property boolean $is_deliver_event
+ * @property boolean $is_dismount_event
+ * @property boolean $is_drop_event
+ * @property boolean $call_for_appointment
+ * @property string $delivery_window_from_localtime
+ * @property string $delivery_window_to_localtime
  * @property string delivery_instructions
- * @property \App\Models\Address getAddressAttribute
  */
 class OrderAddressEvent extends Model
 {
     use SoftDeletes;
-
-    protected $appends = [
-        'address'
-    ];
-
 
     public $table = 't_order_address_events';
 
@@ -99,26 +89,11 @@ class OrderAddressEvent extends Model
         'event_number' => 'required'
     ];
 
-    /**
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
-     **/
     public function address()
     {
         return $this->belongsTo(\App\Models\Address::class, 't_address_id');
     }
 
-    /**
-     *
-     * @return \App\Models\Address
-     */
-    public function getAddressAttribute()
-    {
-        return $this->address()->first();
-    }
-
-    /**
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
-     **/
     public function order()
     {
         return $this->belongsTo(\App\Models\Order::class, 't_order_id');

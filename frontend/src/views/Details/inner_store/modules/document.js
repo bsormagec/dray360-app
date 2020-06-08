@@ -20,11 +20,11 @@ const methods = {
 
   setFormValues () {
     state.document.forEach(({ highlights }) => {
-      highlights.forEach(({ name, value }) => {
+      highlights.forEach((h) => {
         formModule.methods.setFormFieldProp({
           prop: 'value',
-          value,
-          formLocation: getLocationOnForm(name)
+          value: h.value,
+          formLocation: getLocationOnForm(h.name)
         })
       })
     })
@@ -142,6 +142,10 @@ const methods = {
     })
 
     state.lastMode = undefined
+  },
+
+  reset () {
+    state.document = []
   }
 }
 
