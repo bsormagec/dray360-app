@@ -35,7 +35,9 @@ class ImportProfitToolsAddress implements ShouldQueue
 
     public function handle()
     {
-        $address = (new RipCms())->getCompany($this->addressCode);
+        $address = (new RipCms())
+            ->getToken()
+            ->getCompany($this->addressCode);
 
         $companyAddressTmsProvider = CompanyAddressTMSCode::query()
             ->forCompanyTmsProvider($this->companyId, $this->tmsProviderId)

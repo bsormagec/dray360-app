@@ -24,15 +24,6 @@ class ImportProfitToolsAddresses extends Command
      */
     protected $description = 'Imports all the addresses from ripcms for Profit Tools and Cushing';
 
-    protected RipCms $ripCmsApi;
-
-    public function __construct(RipCms $ripCmsApi)
-    {
-        parent::__construct();
-
-        $this->ripCmsApi = $ripCmsApi;
-    }
-
     /**
      * Execute the console command.
      *
@@ -40,8 +31,9 @@ class ImportProfitToolsAddresses extends Command
      */
     public function handle()
     {
+        $ripCmsApi = (new RipCms())->getToken();
         $this->info('Getting all the information from RipCms');
-        $companiesAddress = collect($this->ripCmsApi->getCompanies());
+        $companiesAddress = collect($ripCmsApi->getCompanies());
         $company = Company::getCushing();
         $tmsProvider = TMSProvider::getProfitTools();
 

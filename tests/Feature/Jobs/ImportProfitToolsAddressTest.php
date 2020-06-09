@@ -5,8 +5,10 @@ namespace Tests\Feature\Jobs;
 use Tests\TestCase;
 use App\Models\Company;
 use App\Models\TMSProvider;
+use App\Services\Apis\RipCms;
 use ProfitToolsCushingSeeder;
 use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Queue;
 use App\Jobs\ImportProfitToolsAddress;
 use Tests\Seeds\ProfitToolsCushingAddressesSeeder;
@@ -29,13 +31,16 @@ class ImportProfitToolsAddressTest extends TestCase
         $addresses = $this->getBaseAddresses();
         Queue::fake();
         Http::fake([
+            'https://www.ripcms.com/token*' => Http::response(['access_token' => 'test']),
             'https://www.ripcms.com/api/ProfitTools/GetCompany/1' => Http::response($addresses[0]),
             'https://www.ripcms.com/api/ProfitTools/GetCompany/2' => Http::response($addresses[1])
         ]);
         $company = Company::getCushing();
         $tmsProvider = TMSProvider::getProfitTools();
 
+        Cache::forget(RipCms::TOKEN_CACHE_KEY);
         (new ImportProfitToolsAddress(['id' => 1], $company, $tmsProvider))->handle();
+        Cache::forget(RipCms::TOKEN_CACHE_KEY);
         (new ImportProfitToolsAddress(['id' => 2], $company, $tmsProvider))->handle();
 
         $this->assertDatabaseCount('t_company_address_tms_code', 2);
@@ -58,13 +63,17 @@ class ImportProfitToolsAddressTest extends TestCase
         $modifiedAddress['id'] = 1;
         Queue::fake();
         Http::fakeSequence()
+            ->push(['access_token' => 'test'])
             ->push($this->getBaseAddresses()[0])
+            ->push(['access_token' => 'test'])
             ->push($modifiedAddress)
             ->whenEmpty(Http::response(null, 500));
         $company = Company::getCushing();
         $tmsProvider = TMSProvider::getProfitTools();
 
+        Cache::forget(RipCms::TOKEN_CACHE_KEY);
         (new ImportProfitToolsAddress(['id' => 1], $company, $tmsProvider))->handle();
+        Cache::forget(RipCms::TOKEN_CACHE_KEY);
         (new ImportProfitToolsAddress(['id' => 1], $company, $tmsProvider))->handle();
 
         $this->assertDatabaseCount('t_company_address_tms_code', 1);

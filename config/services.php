@@ -31,8 +31,9 @@ return [
     ],
 
     'ripcms' => [
-        'url' => 'https://www.ripcms.com/api/',
-        'token' => env('RIP_CMS_TOKEN'),
+        'url' => 'https://www.ripcms.com/',
+        'username' => env('RIP_CMS_USERNAME'),
+        'password' => env('RIP_CMS_PASSWORD'),
     ],
 
 ];
