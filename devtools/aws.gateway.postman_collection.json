@@ -1,7 +1,7 @@
 {
 	"info": {
 		"_postman_id": "9bf2ffc1-b227-4baf-b6bb-01b6db2dc2b5",
-		"name": "aws gateway",
+		"name": "AWS Gateway",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
 	},
 	"item": [
