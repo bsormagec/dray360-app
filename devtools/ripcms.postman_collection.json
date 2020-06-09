@@ -91,13 +91,17 @@
 					"bearer": [
 						{
 							"key": "token",
-							"value": "1n_aTbrzBroSseZk5exDZGDX1NVJqJTYxFged_rR0yYcLA2MSntoMJYapKwh0X6xguRj4Baz3Pgqcpq5MuyEVY5gCgnFyaua_FMfIV0F8oWytMpJ5LvAotne-BHyQuDP_OgMNAnoPPrHhl9Ll9Qwyn2Wg8ptWA_5IBD1FMGmqckzkgAt9fkOtvwai74dvRy3ECjUXJmtLC69HxrnDEgtmazVbfmO7XVvHUrmGBOxi-RcFLaLdBnjwmesUjbldX51cthlsT_LHOJCOTYP54OkrMVquVc",
+							"value": "{{ripcmsAccessToken}}",
 							"type": "string"
 						}
 					]
 				},
 				"method": "POST",
 				"header": [],
+				"body": {
+					"mode": "urlencoded",
+					"urlencoded": []
+				},
 				"url": {
 					"raw": "https://www.ripcms.com/api/ProfitTools/GetCompanies",
 					"protocol": "https",
@@ -124,7 +128,7 @@
 					"bearer": [
 						{
 							"key": "token",
-							"value": "1n_aTbrzBroSseZk5exDZGDX1NVJqJTYxFged_rR0yYcLA2MSntoMJYapKwh0X6xguRj4Baz3Pgqcpq5MuyEVY5gCgnFyaua_FMfIV0F8oWytMpJ5LvAotne-BHyQuDP_OgMNAnoPPrHhl9Ll9Qwyn2Wg8ptWA_5IBD1FMGmqckzkgAt9fkOtvwai74dvRy3ECjUXJmtLC69HxrnDEgtmazVbfmO7XVvHUrmGBOxi-RcFLaLdBnjwmesUjbldX51cthlsT_LHOJCOTYP54OkrMVquVc",
+							"value": "{{ripcmsAccessToken}}",
 							"type": "string"
 						}
 					]
