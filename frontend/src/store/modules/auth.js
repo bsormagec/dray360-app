@@ -1,15 +1,18 @@
 import { getCsrfCookie, postLogin, getUser, postLogout } from '@/store/api_calls/auth'
 
 const initialState = {
+  loggedIn: false,
   currentUser: undefined,
-  currentUserLoading: false
+  currentUserLoading: false,
+  intendedUrl: undefined
 }
 
 const mutations = {
   auth_success: (state) => (state.loggedIn = true),
   logout: (state) => (state.loggedIn = false),
   currentUser: (state, user) => (state.currentUser = user),
-  currentUserLoading: (state, isPending) => (state.currentUserLoading = !!isPending)
+  currentUserLoading: (state, isPending) => (state.currentUserLoading = !!isPending),
+  intendedUrl: (state, url) => (state.intendedUrl = url)
 }
 
 const actions = {
@@ -31,7 +34,11 @@ const actions = {
   },
   async logout ({ commit }) {
     const [error] = await postLogout()
-    if (!error) commit('auth_success')
+    if (!error) commit('logout')
+  },
+
+  async setIntendedUrl (context, { intendedUrl }) {
+    context.commit('intendedUrl', intendedUrl)
   }
 
 }

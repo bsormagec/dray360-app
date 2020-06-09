@@ -12,7 +12,7 @@
         color="primary"
         outlined
         width="11.5rem"
-        @click="$router.go(-1)"
+        @click="goToOrdersList()"
       >
         <v-icon>
           mdi-chevron-left
@@ -78,19 +78,32 @@ export default {
       return formModule.state.isEditing
     }
   },
+
   mounted () {
     console.log('mounted', this.$route.fullPath)
   },
 
+  destroyed () {
+    localStorage.removeItem('prevListUrl')
+  },
+
   methods: {
     toggleIsEditing: formModule.methods.toggleIsEditing,
+
     ...mapActions('AUTH', ['logout']),
+
     async logoutBtn () {
       this.logoutError = false
       await this.logout()
       this.$router.push('/login')
-    }
+    },
 
+    goToOrdersList () {
+      const prevListUrl = localStorage.getItem('prevListUrl')
+
+      if (prevListUrl) return this.$router.push(prevListUrl)
+      this.$router.push('/')
+    }
   }
 }
 </script>

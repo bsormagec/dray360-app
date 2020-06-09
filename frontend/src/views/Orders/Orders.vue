@@ -51,7 +51,7 @@ export default {
   data: function () {
     return {
       ...mapState(orders.moduleName, {
-        list: state => listFormat(state.list, (id) => this.$router.push(`/order/${id}`)),
+        list: state => listFormat(state.list, (id) => this.goToOrder(id)),
         links: state => state.links,
         meta: state => state.meta
       }),
@@ -77,6 +77,11 @@ export default {
 
   methods: {
     ...mapActions(orders.moduleName, [types.getOrders]),
+
+    goToOrder (id) {
+      localStorage.setItem('prevListUrl', this.$route.fullPath)
+      this.$router.push(`/order/${id}`)
+    },
 
     changeMobileTab (tab) {
       this.activeMobileTab = tab

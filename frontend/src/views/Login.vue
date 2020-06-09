@@ -47,11 +47,17 @@
 </template>
 <script>
 // import axios from '@/store/api_calls/axios_config'
+import { mapState } from '@/utils/vuex_mappings'
+import auth from '@/store/modules/auth'
 
 export default {
   name: 'Login',
+
   data () {
     return {
+      ...mapState(auth.moduleName, {
+        loggedIn: state => state.loggedIn
+      }),
       disabled: false,
       email: '',
       password: '',
@@ -60,13 +66,18 @@ export default {
       fields_password: { name: 'Password', type: 'password', label: 'Password', placeholder: 'Password', el: { value: '' } }
     }
   },
+
+  mounted () {
+    if (this.loggedIn()) this.$router.push('/')
+  },
+
   methods: {
     async login () {
       if (this.email !== '' && this.password !== '') {
         this.loginError = false
         try {
           await this.$store.dispatch('AUTH/login', { email: this.email, password: this.password })
-          this.$router.push('/')
+          if (this.$store.state.AUTH.intendedUrl === undefined) { this.$router.push('/') } else { this.$router.push(encodeURI(this.$store.state.AUTH.intendedUrl)) }
         } catch (exception) {
           this.loginError = true
         }

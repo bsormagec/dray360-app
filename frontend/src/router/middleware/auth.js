@@ -13,7 +13,17 @@ export default async function auth ({ next, store }) {
   }
 
   if (!store.state.AUTH.currentUser) {
-    // TODO: Redirect to intended URL after logging in.
+    // Redirect to intended URL after logging in.
+    const url = window.location.pathname
+    const path = (window.location.search).replace('/', '')
+    const intendedUrl = url + path
+    try {
+      await store.dispatch('AUTH/setIntendedUrl', { intendedUrl })
+    } catch (e) {
+      // Ignore unauthorized request, redirect to login page below.
+      console.log(e)
+    }
+
     return next('/login')
   }
 
