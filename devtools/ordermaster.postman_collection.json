@@ -1,7 +1,7 @@
 {
 	"info": {
-		"_postman_id": "9afe8cd6-99dd-46a6-bb11-62deee0f513c",
-		"name": "ordermaster",
+		"_postman_id": "35bf8e39-8b58-402a-b431-cf97892917c7",
+		"name": "Ordermaster API",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
 	},
 	"item": [
@@ -11,7 +11,7 @@
 				{
 					"listen": "test",
 					"script": {
-						"id": "7b5152f0-b6af-438c-9736-df8f50c4a710",
+						"id": "8b6ac470-49bf-4923-a8c8-b34823d6d3db",
 						"exec": [
 							"var token1=postman.getResponseCookie('XSRF-TOKEN').value;",
 							"var token2=token1.replace('%3D%3D','==');",
@@ -69,7 +69,7 @@
 				{
 					"listen": "test",
 					"script": {
-						"id": "95b2e384-442c-4e86-9ce8-31a00c7639fb",
+						"id": "5b3b205a-86f2-4fb4-bdbc-48a3afc31407",
 						"exec": [
 							"var token1=postman.getResponseCookie('XSRF-TOKEN').value;",
 							"var token2=token1.replace('%3D%3D','==');",
@@ -142,7 +142,7 @@
 				{
 					"listen": "test",
 					"script": {
-						"id": "e72510b4-9053-408a-babc-126d796221f5",
+						"id": "d1df7ed7-fe65-4970-8ba2-314def3dadaf",
 						"exec": [
 							"var token1=postman.getResponseCookie('XSRF-TOKEN').value;",
 							"var token2=token1.replace('%3D%3D','==');",
@@ -215,7 +215,7 @@
 				{
 					"listen": "test",
 					"script": {
-						"id": "3f47bbeb-5d6a-4eca-9faa-e6b82c1f185b",
+						"id": "b5e2a37d-819d-4b25-aaa7-912a5d6b2b7c",
 						"exec": [
 							"var token1=postman.getResponseCookie('XSRF-TOKEN').value;",
 							"var token2=token1.replace('%3D%3D','==');",
@@ -268,7 +268,7 @@
 				{
 					"listen": "test",
 					"script": {
-						"id": "cde65585-3e29-4df2-bdce-6f1c6494abd5",
+						"id": "6ce3d5b8-230f-4430-8530-e70be55c0e68",
 						"exec": [
 							"var token1=postman.getResponseCookie('XSRF-TOKEN').value;",
 							"var token2=token1.replace('%3D%3D','==');",
@@ -322,7 +322,7 @@
 				{
 					"listen": "test",
 					"script": {
-						"id": "799301b2-860c-491f-b679-b037c15ad924",
+						"id": "59e432fc-34c4-474d-a5d3-2aa3611b310d",
 						"exec": [
 							"var token1=postman.getResponseCookie('XSRF-TOKEN').value;",
 							"var token2=token1.replace('%3D%3D','==');",
@@ -390,7 +390,7 @@
 				{
 					"listen": "test",
 					"script": {
-						"id": "f54d3398-b5ef-4951-8608-da17cd4d3373",
+						"id": "8b3ad647-1277-4391-ae75-4994908da23d",
 						"exec": [
 							"var token1=postman.getResponseCookie('XSRF-TOKEN').value;",
 							"var token2=token1.replace('%3D%3D','==');",
@@ -450,7 +450,7 @@
 				{
 					"listen": "test",
 					"script": {
-						"id": "90977bed-9f74-4054-adbd-c44e72b1470a",
+						"id": "5a417efb-0b75-4579-a526-82e3157cf011",
 						"exec": [
 							"var token1=postman.getResponseCookie('XSRF-TOKEN').value;",
 							"var token2=token1.replace('%3D%3D','==');",
@@ -513,7 +513,7 @@
 				{
 					"listen": "test",
 					"script": {
-						"id": "80fbab56-aa27-42ff-83a8-e8fb04d675a3",
+						"id": "70c8aee5-db39-45ac-b6e3-f427108a78d9",
 						"exec": [
 							"var token1=postman.getResponseCookie('XSRF-TOKEN').value;",
 							"var token2=token1.replace('%3D%3D','==');",
@@ -557,6 +557,20 @@
 						"api",
 						"ocr",
 						"rules"
+					],
+					"query": [
+						{
+							"key": "account_id",
+							"value": "",
+							"description": "Account ID",
+							"disabled": true
+						},
+						{
+							"key": "variant_id",
+							"value": "",
+							"description": "OCR Varian ID",
+							"disabled": true
+						}
 					]
 				}
 			},
@@ -568,7 +582,7 @@
 				{
 					"listen": "test",
 					"script": {
-						"id": "592aaa75-5619-4376-bb7d-083792c7542c",
+						"id": "8c6092d1-cb66-469b-b9bb-0f984283d2ea",
 						"exec": [
 							"var token1=postman.getResponseCookie('XSRF-TOKEN').value;",
 							"var token2=token1.replace('%3D%3D','==');",
@@ -599,13 +613,27 @@
 					}
 				],
 				"body": {
-					"mode": "raw",
-					"raw": "{\n\t\"name\": \"the name\",\n\t\"description\": \"the description\",\n\t\"code\": \"the python code\"\n}",
-					"options": {
-						"raw": {
-							"language": "json"
+					"mode": "formdata",
+					"formdata": [
+						{
+							"key": "name",
+							"value": "",
+							"description": "Rule's name",
+							"type": "text"
+						},
+						{
+							"key": "description",
+							"value": "",
+							"description": "Rule's description",
+							"type": "text"
+						},
+						{
+							"key": "code",
+							"value": "",
+							"description": "Rule's code",
+							"type": "text"
 						}
-					}
+					]
 				},
 				"url": {
 					"raw": "{{server}}/api/ocr/rules",
@@ -627,7 +655,7 @@
 				{
 					"listen": "test",
 					"script": {
-						"id": "ab57c5fb-824b-412d-9a21-8bd071900d2c",
+						"id": "96e37ade-e547-4c07-a48b-8bedf307f5f1",
 						"exec": [
 							"var token1=postman.getResponseCookie('XSRF-TOKEN').value;",
 							"var token2=token1.replace('%3D%3D','==');",
@@ -658,13 +686,27 @@
 					}
 				],
 				"body": {
-					"mode": "raw",
-					"raw": "{\n\t\"name\": \"the new name\",\n\t\"description\": \"the new description\",\n\t\"code\": \"the new python code\"\n}",
-					"options": {
-						"raw": {
-							"language": "json"
+					"mode": "formdata",
+					"formdata": [
+						{
+							"key": "name",
+							"value": "",
+							"description": "Rule's name",
+							"type": "text"
+						},
+						{
+							"key": "description",
+							"value": "",
+							"description": "Rule's description",
+							"type": "text"
+						},
+						{
+							"key": "code",
+							"value": "",
+							"description": "Rule's code",
+							"type": "text"
 						}
-					}
+					]
 				},
 				"url": {
 					"raw": "{{server}}/api/ocr/rules/:ocr_rule_id",
@@ -694,74 +736,7 @@
 				{
 					"listen": "test",
 					"script": {
-						"id": "2b5a7908-9275-40b6-a3d3-161dda474d9d",
-						"exec": [
-							"var token1=postman.getResponseCookie('XSRF-TOKEN').value;",
-							"var token2=token1.replace('%3D%3D','==');",
-							"postman.setEnvironmentVariable('X-XSRF-TOKEN', token2);",
-							""
-						],
-						"type": "text/javascript"
-					}
-				}
-			],
-			"request": {
-				"method": "GET",
-				"header": [
-					{
-						"key": "Referer",
-						"type": "text",
-						"value": "{{server}}"
-					},
-					{
-						"key": "Accept",
-						"type": "text",
-						"value": "application/json, text/plain, */*"
-					},
-					{
-						"key": "X-XSRF-TOKEN",
-						"type": "text",
-						"value": "{{X-XSRF-TOKEN}}"
-					},
-					{
-						"key": "Content-Type",
-						"value": "application/json",
-						"type": "text"
-					}
-				],
-				"url": {
-					"raw": "{{server}}/api/ocr/rules-assignment?account_id=&variant_id=",
-					"host": [
-						"{{server}}"
-					],
-					"path": [
-						"api",
-						"ocr",
-						"rules-assignment"
-					],
-					"query": [
-						{
-							"key": "account_id",
-							"value": "",
-							"description": "account to filter the assigned rules"
-						},
-						{
-							"key": "variant_id",
-							"value": "",
-							"description": "variant to filter the assigned rules"
-						}
-					]
-				}
-			},
-			"response": []
-		},
-		{
-			"name": "/api/ocr/rules-assignment",
-			"event": [
-				{
-					"listen": "test",
-					"script": {
-						"id": "0ccb9657-628b-41ae-9b5c-6646feb34365",
+						"id": "47fbb6ea-a974-4cfe-ae58-afc72dd04230",
 						"exec": [
 							"var token1=postman.getResponseCookie('XSRF-TOKEN').value;",
 							"var token2=token1.replace('%3D%3D','==');",

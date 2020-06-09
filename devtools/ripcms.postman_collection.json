@@ -1,0 +1,165 @@
+{
+	"info": {
+		"_postman_id": "a153c354-7440-4bf5-b1aa-d667c8aa2025",
+		"name": "RIPCMS",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Get Token",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"id": "c7e6bc23-f113-40d6-8b1c-a427a7485ed9",
+						"exec": [
+							""
+						],
+						"type": "text/javascript"
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"id": "0867db8a-5d88-4fe2-9d4c-ef560655d677",
+						"exec": [
+							"let jsonData = pm.response.json();",
+							"var token = jsonData.access_token;",
+							"pm.environment.set('ripcmsAccessToken', token);"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "bearer"
+				},
+				"method": "POST",
+				"header": [
+					{
+						"key": "Accept",
+						"type": "text",
+						"value": "application/json"
+					},
+					{
+						"key": "domain",
+						"type": "text",
+						"value": "om.test",
+						"disabled": true
+					}
+				],
+				"body": {
+					"mode": "urlencoded",
+					"urlencoded": [
+						{
+							"key": "grant_type",
+							"value": "password",
+							"type": "text"
+						},
+						{
+							"key": "username",
+							"value": "{{ripcms_username}}",
+							"type": "text"
+						},
+						{
+							"key": "password",
+							"value": "{{ripcms_password}}",
+							"type": "text"
+						}
+					]
+				},
+				"url": {
+					"raw": "https://ripcms.com/token",
+					"protocol": "https",
+					"host": [
+						"ripcms",
+						"com"
+					],
+					"path": [
+						"token"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get Companies",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{ripcmsAccessToken}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "urlencoded",
+					"urlencoded": []
+				},
+				"url": {
+					"raw": "https://www.ripcms.com/api/ProfitTools/GetCompanies",
+					"protocol": "https",
+					"host": [
+						"www",
+						"ripcms",
+						"com"
+					],
+					"path": [
+						"api",
+						"ProfitTools",
+						"GetCompanies"
+					]
+				},
+				"description": "get company"
+			},
+			"response": []
+		},
+		{
+			"name": "Get Company",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{ripcmsAccessToken}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "https://www.ripcms.com/api/ProfitTools/GetCompany/:id",
+					"protocol": "https",
+					"host": [
+						"www",
+						"ripcms",
+						"com"
+					],
+					"path": [
+						"api",
+						"ProfitTools",
+						"GetCompany",
+						":id"
+					],
+					"variable": [
+						{
+							"key": "id",
+							"value": "2"
+						}
+					]
+				},
+				"description": "get company"
+			},
+			"response": []
+		}
+	],
+	"protocolProfileBehavior": {}
+}

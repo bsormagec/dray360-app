@@ -6,10 +6,21 @@
       v-if="!isMobile"
       class="sidebar__logo"
     />
+
     <div
       v-if="!isMobile"
       class="sidebar__footer"
-    />
+    >
+      <v-btn
+        color="primary"
+        outlined
+        width="11.5rem"
+        class="logout__btn"
+        @click="logoutBtn"
+      >
+        Logout
+      </v-btn>
+    </div>
 
     <transition name="slide-fade">
       <div
@@ -33,6 +44,7 @@
           >
             orders list
           </v-btn>
+
           <v-btn
             color="primary"
             :outlined="activeMobileTab !== tabs.create"
@@ -41,7 +53,6 @@
             create order
           </v-btn>
         </div>
-
         <div class="sidebar__footer" />
       </div>
     </transition>
@@ -59,6 +70,7 @@
 <script>
 import isMobile from '@/mixins/is_mobile'
 import { tabs } from '@/views/Orders/inner_enums'
+import { mapActions } from '@/utils/vuex_mappings'
 
 export default {
   name: 'Sidebar',
@@ -86,7 +98,15 @@ export default {
 
   data: () => ({
     tabs
-  })
+  }),
+  methods: {
+    ...mapActions('AUTH', ['logout']),
+    async logoutBtn () {
+      this.logoutError = false
+      await this.logout()
+      this.$router.push('/login')
+    }
+  }
 }
 </script>
 
@@ -159,6 +179,11 @@ $ordermaster-logo: url("../../assets/images/ordermaster_logo.svg");
   background-image: $ordermaster-logo;
   background-size: contain;
   background-position: center center;
+  display: flex;
+  flex-direction: column-reverse;
+  .logout__btn{
+    margin: 7rem auto;
+  }
 }
 
 .sidebar__mobile-options {
