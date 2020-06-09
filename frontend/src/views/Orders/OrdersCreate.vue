@@ -86,39 +86,32 @@ export default {
       filtered.forEach(fil => {
         if (uniqueNames.includes(fil.name)) return
         uniqueNames.push(fil.name)
-        // this.createOrder(fil.name)
         unique.push(fil)
       })
 
       this.files = unique
+
+      console.log('this.files:', this.files)
     },
 
-    // uploadFile (fileName) {
-    //   // const vc = this
-    //   console.log('uploadFile: ' + fileName)
-    // },
-
-    async uploadFile (filename) {
-      const status = await this[types.postUploadPDF](filename)
+    async uploadFile (file) {
+      const status = await this[types.postUploadPDF](file)
 
       if (status === reqStatus.success) {
         console.log('upload file success')
       } else {
-        console.log('error')
+        console.log('error uploading file')
       }
     },
 
     createOrder () {
       const vc = this
+      console.log('vc.files: ', vc.files)
       if (vc.files.length === 0) {
         alert('Please upload a PDF first')
       } else {
         vc.files.forEach(file => {
-          // Step 1 post to the endpoint
-          console.log('filename to upload: ' + file.name)
-          vc.uploadFile(file.name)
-
-          // Step 2 upload to uploadUri
+          vc.uploadFile(file)
         })
       }
     }
