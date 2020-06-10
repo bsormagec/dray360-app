@@ -172,11 +172,14 @@
   </div>
 </template>
 <script>
+import { mapState, mapActions } from '@/utils/vuex_mappings'
+import { reqStatus } from '@/enums/req_status'
 import draggable from 'vuedraggable'
 import { codemirror } from 'vue-codemirror'
 import 'codemirror/lib/codemirror.css'
 import 'codemirror/theme/base16-light.css'
 import VueJsonPretty from 'vue-json-pretty'
+import rulesLibrary, { types } from '@/store/modules/rules_editor'
 const axios = require('axios')
 export default {
   name: 'RulesEditor',
@@ -186,6 +189,11 @@ export default {
     VueJsonPretty
   },
   data: () => ({
+    ...mapState(rulesLibrary.moduleName, {
+      // list: state => listFormat(state.list, (id) => this.$router.push(`/order/${id}`)),
+      rules_array: state => state.rules_library
+    }),
+
     cmOptions: {
       tabSize: 4,
       mode: 'text/x-python',
@@ -194,7 +202,7 @@ export default {
       line: true
     },
     // Rules Library
-    rules_array: [],
+    // rules_array: [],
     // Account / Variant Rules
     account_variant_rules: [],
     // Selected rule
@@ -202,11 +210,24 @@ export default {
     // Testing output
     testing_output: null
   }),
-  mounted () {
+  async mounted () {
     const vc = this
-    vc.fetchRules()
+    // await vc.fetchRules()
+    await vc.fetchRulesLibrary()
   },
   methods: {
+    ...mapActions(rulesLibrary.moduleName, [types.getLibrary]),
+
+    async fetchRulesLibrary () {
+      console.log('fetchrules library')
+      const status = await this[types.getLibrary]()
+
+      if (status === reqStatus.success) {
+        console.log('success')
+      } else {
+        console.log('error')
+      }
+    },
     editRule (index) {
       const vc = this
       const baseURL = `${process.env.VUE_APP_APP_URL}`
