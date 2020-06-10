@@ -51,7 +51,7 @@ class RipCms
     public function getCompanies()
     {
         $response = Http::withToken($this->token)
-            ->post("{$this->apiUrl}ProfitTools/GetCompanies");
+            ->get("{$this->apiUrl}ProfitTools/GetCompanies");
 
         if ($response->failed()) {
             throw new Exception("RipCmsAPI ProfitTools/GetCompanies failed with message".$response->body());
