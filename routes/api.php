@@ -1,7 +1,7 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\Api\OrderController;
+use App\Http\Controllers\Api\OrdersController;
 use App\Http\Controllers\Api\OCRRulesController;
 use App\Http\Controllers\Api\OCRRequestController;
 use App\Http\Controllers\Api\AuthenticationController;
@@ -30,12 +30,8 @@ Route::group(['middleware' => 'auth:sanctum'], function () {
         ->name('user'); // shows up in `php artisan route:list` command output
 
     // Authenticated route to return all orders
-    Route::get('orders', [OrderController::class, 'orders'])
-        ->name('orders');
-
-    // Authenticated route to return one order
-    Route::get('orders/{orderId}', [OrderController::class, 'order'])
-        ->name('order');
+    Route::resource('orders', OrdersController::class)
+        ->only(['index', 'update', 'show']);
 
     // Authenticated route to get document upload URI
     Route::post('createocrrequestuploaduri', [OCRRequestController::class, 'createOCRRequestUploadURI'])

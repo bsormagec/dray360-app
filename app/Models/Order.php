@@ -12,6 +12,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
  * @property \App\Models\Address $billToAddress
  * @property \App\Models\Address $portRampOfOriginAddress
  * @property \App\Models\Address $portRampOfDestinationAddress
+ * @property string $id
  * @property string $request_id
  * @property string $shipment_designation
  * @property string $equipment_type
@@ -28,8 +29,6 @@ use Illuminate\Database\Eloquent\SoftDeletes;
  * @property string $reference_number
  * @property string $rate_quote_number
  * @property string $seal_number_list
- * @property string $port_ramp_of_origin
- * @property string $port_ramp_of_destination
  * @property string $vessel
  * @property string $voyage
  * @property string $master_bol_mawb
@@ -37,15 +36,22 @@ use Illuminate\Database\Eloquent\SoftDeletes;
  * @property string|\Carbon\Carbon $estimated_arrival_utc
  * @property string|\Carbon\Carbon $last_free_date_utc
  * @property string $booking_number
- * @property string $pickup_number
  * @property string $bol
+ * @property string $bill_to_address_id
+ * @property string $port_ramp_of_origin_address_id
+ * @property string $port_ramp_of_destination_address_id
  * @property array $ocr_data
+ * @property string $pickup_number
  * @property boolean $bill_to_address_verified
  * @property string $bill_to_address_raw_text
  * @property boolean $port_ramp_of_origin_address_verified
  * @property string $port_ramp_of_origin_address_raw_text
  * @property boolean $port_ramp_of_destination_address_verified
  * @property string $port_ramp_of_destination_address_raw_text
+ * @property string $variant_id
+ * @property string $variant_name
+ * @property string $t_tms_providers_id
+ * @property string $tms_shipment_id
  */
 class Order extends Model
 {
@@ -75,8 +81,6 @@ class Order extends Model
         'reference_number',
         'rate_quote_number',
         'seal_number_list',
-        'port_ramp_of_origin',
-        'port_ramp_of_destination',
         'vessel',
         'voyage',
         'master_bol_mawb',
@@ -84,13 +88,22 @@ class Order extends Model
         'estimated_arrival_utc',
         'last_free_date_utc',
         'booking_number',
-        'pickup_number',
+        'bol',
         'bill_to_address_id',
+        'port_ramp_of_origin_address_id',
+        'port_ramp_of_destination_address_id',
+        'ocr_data',
+        'pickup_number',
         'bill_to_address_verified',
-        'port_of_origin_address_id',
-        'port_of_origin_address_verified',
-        'port_of_destination_address_id',
-        'port_of_destination_address_verified'
+        'bill_to_address_raw_text',
+        'port_ramp_of_origin_address_verified',
+        'port_ramp_of_origin_address_raw_text',
+        'port_ramp_of_destination_address_verified',
+        'port_ramp_of_destination_address_raw_text',
+        'variant_id',
+        'variant_name',
+        't_tms_providers_id',
+        'tms_shipment_id',
     ];
 
     /**
@@ -141,11 +154,50 @@ class Order extends Model
 
     /**
      * Validation rules
+     * Important: Don't add since we don't want to allow those fields to be edited:
+     * - ocr_data
+     * - request_id
+     * - bill_to_address_raw_text
+     * - port_ramp_of_origin_address_raw_text
+     * - port_ramp_of_destination_address_raw_text
      *
      * @var array
      */
     public static $rules = [
-
+        'shipment_designation' => 'sometimes|nullable',
+        'equipment_type' => 'sometimes|nullable',
+        'shipment_direction' => 'sometimes|nullable',
+        'one_way' => 'sometimes|nullable',
+        'yard_pre_pull' => 'sometimes|nullable',
+        'has_chassis' => 'sometimes|nullable',
+        'unit_number' => 'sometimes|nullable',
+        'equipment' => 'sometimes|nullable',
+        'equipment_size' => 'sometimes|nullable',
+        'owner_or_ss_company' => 'sometimes|nullable',
+        'hazardous' => 'sometimes|nullable',
+        'expedite_shipment' => 'sometimes|nullable',
+        'reference_number' => 'sometimes|nullable',
+        'rate_quote_number' => 'sometimes|nullable',
+        'seal_number_list' => 'sometimes|nullable',
+        'vessel' => 'sometimes|nullable',
+        'voyage' => 'sometimes|nullable',
+        'master_bol_mawb' => 'sometimes|nullable',
+        'house_bol_hawb' => 'sometimes|nullable',
+        'estimated_arrival_utc' => 'sometimes|nullable',
+        'last_free_date_utc' => 'sometimes|nullable',
+        'booking_number' => 'sometimes|nullable',
+        'bol' => 'sometimes|nullable',
+        'bill_to_address_id' => 'sometimes|nullable|exists:t_addresses,id',
+        'port_ramp_of_origin_address_id' => 'sometimes|nullable|exists:t_addresses,id',
+        'port_ramp_of_destination_address_id' => 'sometimes|nullable|exists:t_addresses,id',
+        'pickup_number' => 'sometimes|nullable',
+        'bill_to_address_verified' => 'sometimes|nullable',
+        'port_ramp_of_origin_address_verified' => 'sometimes|nullable',
+        'port_ramp_of_destination_address_verified' => 'sometimes|nullable',
+        'variant_id' => 'sometimes|nullable',
+        'variant_name' => 'sometimes|nullable',
+        't_tms_providers_id' => 'sometimes|nullable|exists:t_tms_providers,id',
+        'tms_shipment_id' => 'sometimes|nullable',
     ];
 
     public function orderAddressEvents()
@@ -176,5 +228,55 @@ class Order extends Model
     public function portRampOfDestinationAddress()
     {
         return $this->belongsTo(\App\Models\Address::class, 'port_ramp_of_destination_address_id');
+    }
+
+    public function updateRelatedModels($relatedModels): void
+    {
+        $existingRelatedModels = [
+            'orderLineItems' => $relatedModels['order_line_items'] ?? false
+                ? $this->orderLineItems()->get()
+                : [],
+            'orderAddressEvents' => $relatedModels['order_address_events'] ?? false
+                ? $this->orderAddressEvents()->get()
+                : [],
+        ];
+
+        collect([
+            'orderLineItems' => $relatedModels['order_line_items'] ?? [],
+            'orderAddressEvents' => $relatedModels['order_address_events'] ?? [],
+        ])->flatMap(function ($relatedModels, $relationName) {
+            return collect($relatedModels)
+                ->map(function ($relatedModel, $key) use ($relationName) {
+                    if ($relationName == 'orderAddressEvents') {
+                        $relatedModel['event_number'] = $key + 1;
+                    }
+
+                    return ['relationship' => $relationName, 'model' => $relatedModel];
+                });
+        })->each(function ($data) use ($existingRelatedModels) {
+            $relationship = $data['relationship'];
+            $modelData = $data['model'];
+
+            if (!$modelData) {
+                return;
+            }
+
+            if ($modelData['id'] == null) {
+                $this->{$relationship}()->create($modelData);
+                return;
+            }
+
+            $relatedModel = $existingRelatedModels[$relationship]->firstWhere('id', $modelData['id']);
+
+            if (!$relatedModel) {
+                return;
+            }
+
+            if ($modelData['deleted_at'] ?? false) {
+                $relatedModel->delete();
+            }
+
+            $relatedModel->update($modelData);
+        });
     }
 }

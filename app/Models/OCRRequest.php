@@ -17,7 +17,11 @@ class OCRRequest extends Model
 {
     public $table = 't_job_latest_state';
 
-    protected $casts = [
+    protected $casts = [];
+
+    public $fillable = [
+        'request_id',
+        't_job_state_changes_id',
     ];
 
     public function orders()

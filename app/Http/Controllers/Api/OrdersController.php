@@ -2,22 +2,23 @@
 
 namespace App\Http\Controllers\Api;
 
-use Carbon\Carbon;
+use Aws\S3\S3Client;
 use App\Models\Order;
+use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Http\Resources\Orders as OrdersResource;
 
-class OrderController extends Controller
+class OrdersController extends Controller
 {
     // expire JPG download URI after this many seconds
     const MINUTES_URI_REMAINS_VALID = 15;
 
     /**
-     * Get list of orders
+     * Display a listing of the resource.
      *
-     * @return [json] list of orders
+     * @return \Illuminate\Http\Response
      */
-    public function orders()
+    public function index()
     {
         $orders = Order::with([
                 'ocrRequest',
@@ -36,13 +37,12 @@ class OrderController extends Controller
     }
 
     /**
-     * Get a single order, with all detail. Especially, return a
-     * presigned GET request for downloading the JPG from S3
+     * Display the specified resource.
      *
-     * @param  int $orderId
-     * @return \App\Models\Order list of orders
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
      */
-    public function order($orderId)
+    public function show($id)
     {
         $order = Order::with([
                 'ocrRequest',
@@ -55,10 +55,10 @@ class OrderController extends Controller
                 'orderAddressEvents',
                 'orderAddressEvents.address',
             ])
-            ->findOrFail($orderId);
+            ->findOrFail($id);
 
         // Create an S3 client
-        $s3Client = new \Aws\S3\S3Client([
+        $s3Client = new S3Client([
             'version' => 'latest',
             'region' => env('AWS_DEFAULT_REGION', 'us-east-2')
         ]);
@@ -76,7 +76,7 @@ class OrderController extends Controller
                     'Bucket' => $bucket,
                     'Key' => $key
                 ]);
-                $urlExpiryTime = Carbon::now()->addMinutes(self::MINUTES_URI_REMAINS_VALID);
+                $urlExpiryTime = now()->addMinutes(self::MINUTES_URI_REMAINS_VALID);
                 $presignedRequest = $s3Client->createPresignedRequest($s3Command, $urlExpiryTime);
                 $downloadUri = (string) $presignedRequest->getUri()->__toString();
 
@@ -92,6 +92,33 @@ class OrderController extends Controller
         }
 
         // all done
+        return response()->json($order);
+    }
+
+    /**
+     * Update the specified resource in storage.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+    public function update(Request $request, Order $order)
+    {
+        $orderData = $request->validate(Order::$rules);
+        $relatedModels = $request->validate([
+            'order_line_items' => ['sometimes', 'array'],
+            'order_line_items.*.t_order_id' => ['required', "in:{$order->id}"],
+            'order_line_items.*.id' => 'present',
+            'order_line_items.*.deleted_at' => 'sometimes',
+            'order_address_events' => ['sometimes', 'array'],
+            'order_address_events.*.id' => 'present',
+            'order_address_events.*.t_order_id' => ['required', "in:{$order->id}"],
+            'order_address_events.*.t_address_id' => ['nullable', 'exists:t_addresses,id'],
+        ]);
+
+        $order->update($orderData);
+        $order->updateRelatedModels($relatedModels);
+
         return response()->json($order);
     }
 }

@@ -23,6 +23,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
  * @property string $delivery_window_from_localtime
  * @property string $delivery_window_to_localtime
  * @property string delivery_instructions
+ * @property string $unparsed_event_type
  */
 class OrderAddressEvent extends Model
 {
@@ -33,32 +34,29 @@ class OrderAddressEvent extends Model
     const CREATED_AT = 'created_at';
     const UPDATED_AT = 'updated_at';
 
-
     protected $dates = ['deleted_at'];
-
 
     public $fillable = [
         'address_schedule_description',
-        't_order_id',
-        't_address_id',
-        't_address_verified',
+        'call_for_appointment',
+        'delivery_instructions',
+        'delivery_window_from_localtime',
+        'delivery_window_to_localtime',
         'event_number',
-        'is_hook_event',
-        'is_mount_event',
         'is_deliver_event',
         'is_dismount_event',
         'is_drop_event',
-        'call_for_appointment',
-        'delivery_window_from_localtime',
-        'delivery_window_to_localtime',
-        'delivery_instructions',
-        'unparsed_event_type'
+        'is_hook_event',
+        'is_mount_event',
+        't_address_id',
+        't_address_raw_text',
+        't_address_verified',
+        't_order_id',
+        'unparsed_event_type',
     ];
 
     /**
      * The attributes that should be casted to native types.
-     *
-     * @var array
      */
     protected $casts = [
         'id' => 'integer',
@@ -80,8 +78,6 @@ class OrderAddressEvent extends Model
 
     /**
      * Validation rules
-     *
-     * @var array
      */
     public static $rules = [
         't_order_id' => 'required',

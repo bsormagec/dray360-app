@@ -6,30 +6,26 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
 /**
- * Class OrderLineItem
- * @package App\Models
- * @version March 5, 2020, 8:00 pm UTC
- *
- * @property \App\Models\Order order
- * @property integer t_order_id
- * @property integer quantity
- * @property string unit_of_measure
- * @property string description
- * @property number weight
- * @property number total_weight
- * @property string weight_uom
- * @property boolean is_hazardous
- * @property string haz_contact_name
- * @property string haz_phone
- * @property string haz_un_code
- * @property string haz_un_name
- * @property string haz_class
- * @property string haz_qualifier
- * @property string haz_description
- * @property integer haz_imdg_page_number
- * @property integer haz_flashpoint_temp
- * @property string haz_flashpoint_temp_uom
- * @property string packaging_group
+ * @property \App\Models\Order $order
+ * @property integer $t_order_id
+ * @property integer $quantity
+ * @property string $unit_of_measure
+ * @property string $description
+ * @property number $weight
+ * @property number $total_weight
+ * @property string $weight_uom
+ * @property boolean $is_hazardous
+ * @property string $haz_contact_name
+ * @property string $haz_phone
+ * @property string $haz_un_code
+ * @property string $haz_un_name
+ * @property string $haz_class
+ * @property string $haz_qualifier
+ * @property string $haz_description
+ * @property integer $haz_imdg_page_number
+ * @property integer $haz_flashpoint_temp
+ * @property string $haz_flashpoint_temp_uom
+ * @property string $packaging_group
  */
 class OrderLineItem extends Model
 {
@@ -40,10 +36,7 @@ class OrderLineItem extends Model
     const CREATED_AT = 'created_at';
     const UPDATED_AT = 'updated_at';
 
-
     protected $dates = ['deleted_at'];
-
-
 
     public $fillable = [
         't_order_id',
@@ -64,7 +57,7 @@ class OrderLineItem extends Model
         'haz_imdg_page_number',
         'haz_flashpoint_temp',
         'haz_flashpoint_temp_uom',
-        'packaging_group'
+        'packaging_group',
     ];
 
     /**
@@ -100,18 +93,8 @@ class OrderLineItem extends Model
      *
      * @var array
      */
-    public static $rules = [
-        't_order_id' => 'required',
-        'quantity' => 'required',
-        'weight' => 'required',
-        'total_weight' => 'required',
-        'haz_imdg_page_number' => 'required',
-        'haz_flashpoint_temp' => 'required'
-    ];
+    public static $rules = ['t_order_id' => 'required|exist:t_orders,id'];
 
-    /**
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
-     **/
     public function order()
     {
         return $this->belongsTo(\App\Models\Order::class, 't_order_id');
