@@ -42,7 +42,7 @@ class RipCms
             throw new Exception("RipCmsAPI ProfitTools/GetToken failed with message".$response->body());
         }
 
-        $this->token = $response['access_token'];
+        $this->token = config('services.ripcms.token') ?? $response['access_token'];//use the token from the env otherwise use the one from the response.
         Cache::put(self::TOKEN_CACHE_KEY, $this->token, now()->addHour());
 
         return $this;
