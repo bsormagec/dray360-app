@@ -30,4 +30,11 @@ return [
         'region' => env('AWS_DEFAULT_REGION', 'us-east-1'),
     ],
 
+    'ripcms' => [
+        'url' => 'https://www.ripcms.com/',
+        'username' => env('RIP_CMS_USERNAME'),
+        'password' => env('RIP_CMS_PASSWORD'),
+        'token' => env('RIP_CMS_TOKEN'),
+    ],
+
 ];

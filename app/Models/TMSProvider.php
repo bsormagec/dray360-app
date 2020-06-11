@@ -6,11 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
 /**
- * Class TMSProvider
- * @package App\Models
- * @version March 5, 2020, 8:00 pm UTC
- *
- * @property string name
+ * @property string $name
  */
 class TMSProvider extends Model
 {
@@ -18,22 +14,16 @@ class TMSProvider extends Model
 
     public $table = 't_tms_providers';
 
-    const CREATED_AT = 'created_at';
-    const UPDATED_AT = 'updated_at';
-
+    const CREATED_AT = 'created_at',
+        UPDATED_AT = 'updated_at',
+        PROFIT_TOOLS = 'Profit Tools';
 
     protected $dates = ['deleted_at'];
 
-
-
-    public $fillable = [
-        'name'
-    ];
+    public $fillable = ['name'];
 
     /**
      * The attributes that should be casted to native types.
-     *
-     * @var array
      */
     protected $casts = [
         'id' => 'integer',
@@ -42,10 +32,15 @@ class TMSProvider extends Model
 
     /**
      * Validation rules
-     *
-     * @var array
      */
     public static $rules = [
-
     ];
+
+    /**
+     * Get TMS provider 'Profit Tools'.
+     */
+    public static function getProfitTools(): self
+    {
+        return static::where('name', static::PROFIT_TOOLS)->first();
+    }
 }

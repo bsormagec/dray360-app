@@ -16,4 +16,4 @@ use App\Http\Controllers\VueController;
 
 
 // Default VUECONTROLLER route
-Route::get('/{any}', [VueController::class, 'index'])->where('any', '^(?!nova).*$');
+Route::get('/{any}', [VueController::class, 'index'])->where('any', '^(?!(nova|horizon)).*$');

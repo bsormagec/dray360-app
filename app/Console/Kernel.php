@@ -24,7 +24,10 @@ class Kernel extends ConsoleKernel
      */
     protected function schedule(Schedule $schedule)
     {
-        // $schedule->command('inspire')->hourly();
+        $schedule->command('import:profit-tools-addresses')->weeklyOn(7);
+        $schedule->command('import:profit-tools-addresses', [
+            '--insert-only' => true
+        ])->everyFifteenMinutes();
     }
 
     /**
