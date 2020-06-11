@@ -9,7 +9,7 @@
         v-for="(step, i) in steps"
         :key="step.id"
       >
-        <a class="navigation__link">
+        <a :class="`navigation__link ${step.text}`">
           <v-stepper-step
             :class="{
               navigation__step: true,
@@ -143,7 +143,11 @@ export default {
         }
       }
 
-      form.addEventListener('scroll', handleScroll)
+      try {
+        form.addEventListener('scroll', handleScroll)
+      } catch (e) {
+        return e
+      }
     }
   }
 }

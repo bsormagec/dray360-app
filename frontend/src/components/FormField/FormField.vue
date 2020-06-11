@@ -1,6 +1,7 @@
 <template>
   <div
     :id="`${cleanStrForId(field.name)}-${readonly ? 'viewing' : 'editing'}`"
+    :test-id="field.name"
     class="form-field"
   >
     <FormFieldPresentation

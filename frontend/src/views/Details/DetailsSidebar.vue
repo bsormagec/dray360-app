@@ -26,6 +26,7 @@
         :color="isEditing ? 'success' : 'primary'"
         :outlined="!isEditing"
         :style="{ marginBottom: '1rem' }"
+        test-id="toggle-btn"
         width="11.5rem"
         @click="toggleIsEditing"
       >
@@ -77,10 +78,6 @@ export default {
     isEditing () {
       return formModule.state.isEditing
     }
-  },
-
-  mounted () {
-    console.log('mounted', this.$route.fullPath)
   },
 
   destroyed () {

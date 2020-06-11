@@ -2,7 +2,7 @@ import Vue from 'vue'
 import VueRouter from 'vue-router'
 import Vuex from 'vuex'
 import Vuetify from 'vuetify'
-import { mount } from '@vue/test-utils'
+import { mount } from 'vue-test-utils-champi'
 import authTestUser from '@/utils/for_tests/auth_test_user'
 
 Vue.config.silent = true

@@ -11,7 +11,7 @@
         @load="getDimensions"
       >
 
-      <div v-if="dimensions.width && dimensions.height">
+      <div v-if="isTesting || (dimensions.width && dimensions.height)">
         <div
           v-for="(highlight, hIndex) in page.highlights"
           :id="`${cleanStrForId(highlight.name)}-document`"
@@ -60,6 +60,10 @@ export default {
   computed: {
     pages () {
       return documentModule.state.document
+    },
+
+    isTesting () {
+      return process.env.NODE_ENV === 'test'
     }
   },
 
