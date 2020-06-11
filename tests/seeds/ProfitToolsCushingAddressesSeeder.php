@@ -43,7 +43,7 @@ class ProfitToolsCushingAddressesSeeder extends Seeder
             'location_phone' => $baseAddress['phone'],
         ]);
 
-        CompanyAddressTMSCode::create([
+        factory(CompanyAddressTMSCode::class)->create([
             't_address_id' => $address->id,
             't_company_id' => $company->id,
             't_tms_provider_id' => $tmsProvider->id,
