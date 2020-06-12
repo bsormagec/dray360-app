@@ -36,7 +36,8 @@ class OCRRequest extends Model
 
     public function latestOcrRequestStatus()
     {
-        return $this->hasOne(OCRRequestStatus::class, 'request_id', 'request_id')
-            ->where('is_latest_status', true);
+        return $this->belongsTo(OCRRequestStatus::class, 't_job_state_changes_id');
+    }
+
     }
 }
