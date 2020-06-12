@@ -153,7 +153,7 @@
                 @end="drag=false"
               >
                 <v-list-item
-                  v-for="(rule, i) in account_variant_rules"
+                  v-for="(rule, i) in account_variant_rules()"
                   :key="i"
                 >
                   <v-list-item-content class="draggable-item">
@@ -174,7 +174,7 @@
 <script>
 import { mapState, mapActions } from '@/utils/vuex_mappings'
 import { reqStatus } from '@/enums/req_status'
-import draggable from 'vuedraggable'
+// import draggable from 'vuedraggable'
 import { codemirror } from 'vue-codemirror'
 import 'codemirror/lib/codemirror.css'
 import 'codemirror/theme/base16-light.css'
@@ -184,14 +184,15 @@ const axios = require('axios')
 export default {
   name: 'RulesEditor',
   components: {
-    draggable,
+    // draggable,
     codemirror,
     VueJsonPretty
   },
   data: () => ({
     ...mapState(rulesLibrary.moduleName, {
       // list: state => listFormat(state.list, (id) => this.$router.push(`/order/${id}`)),
-      rules_library: state => state.rules_library
+      rules_library: state => state.rules_library,
+      account_variant_rules: state => state.account_variant_rules
     }),
 
     cmOptions: {
@@ -202,7 +203,7 @@ export default {
       line: true
     },
     // Account / Variant Rules
-    account_variant_rules: [],
+    // account_variant_rules: [],
     // Selected rule
     selected_rule_index: 0,
     // Testing output
@@ -210,20 +211,27 @@ export default {
   }),
   async mounted () {
     const vc = this
-    // await vc.fetchRules()
-    await vc.fetchRulesLibrary()
+    await vc.fetchRules()
   },
   methods: {
-    ...mapActions(rulesLibrary.moduleName, [types.getLibrary]),
+    ...mapActions(rulesLibrary.moduleName, [types.getLibrary, types.getAccountVariantRules]),
 
     async fetchRulesLibrary () {
-      console.log('fetchrules library')
       const status = await this[types.getLibrary]()
 
       if (status === reqStatus.success) {
         console.log('success')
       } else {
         console.log('error')
+      }
+    },
+    async fetchAccountVariantRules () {
+      const status = await this[types.getAccountVariantRules]()
+
+      if (status === reqStatus.success) {
+        console.log('fetchAccountVariantRules success')
+      } else {
+        console.log('fetchAccountVariantRules error')
       }
     },
     editRule (index) {
@@ -311,24 +319,27 @@ export default {
       vc.selected_rule_index = i
     },
     fetchRules () {
-      const baseURL = `${process.env.VUE_APP_APP_URL}`
       const vc = this
-      axios.get(baseURL + '/api/ocr/rules')
-        .then(function (response) {
-          vc.rules_array = response.data.data
-        })
-        .catch(function (error) {
-          alert(error)
-        })
+      vc.fetchRulesLibrary()
+      vc.fetchAccountVariantRules()
+      // const baseURL = `${process.env.VUE_APP_APP_URL}`
+      // const vc = this
+      // axios.get(baseURL + '/api/ocr/rules')
+      //   .then(function (response) {
+      //     vc.rules_array = response.data.data
+      //   })
+      //   .catch(function (error) {
+      //     alert(error)
+      //   })
 
-      // Cushing/JetSpeed ID is 1-1 in local and 8-8 in prod
-      axios.get(baseURL + '/api/ocr/rules-assignment?account_id=8&variant_id=8')
-        .then(function (response) {
-          vc.account_variant_rules = response.data.data
-        })
-        .catch(function (error) {
-          alert(error)
-        })
+      // // Cushing/JetSpeed ID is 1-1 in local and 8-8 in prod
+      // axios.get(baseURL + '/api/ocr/rules-assignment?account_id=8&variant_id=8')
+      //   .then(function (response) {
+      //     vc.account_variant_rules = response.data.data
+      //   })
+      //   .catch(function (error) {
+      //     alert(error)
+      //   })
     },
     testSingleRule (index) {
       const vc = this
