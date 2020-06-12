@@ -7,6 +7,7 @@ use App\Models\Order;
 use OrdersTableSeeder;
 use App\Models\OrderLineItem;
 use Illuminate\Http\Response;
+use App\Models\OCRRequestStatus;
 use App\Models\OrderAddressEvent;
 use Illuminate\Support\Facades\DB;
 use Bezhanov\Faker\Provider\Commerce;
@@ -25,6 +26,62 @@ class OrdersControllerTest extends TestCase
         $this->loginAdmin();
         $this->seed(OrdersTableSeeder::class);
         $this->faker->addProvider(new Commerce($this->faker));
+    }
+
+    /** @test */
+    public function it_should_list_all_the_ocr_request_with_the_orders_and_return_orders_with_ocr_request_inside()
+    {
+        $this->withoutExceptionHandling();
+        $this->getJson(route('orders.index'))
+            ->assertJsonStructure([
+                'data' => [
+                    '*' => [
+                        'id',
+                        'request_id',
+                        't_job_state_changes_id',
+                        't_order_id',
+                        'created_at',
+                        'updated_at',
+                        'order' => [],
+                        'latest_ocr_request_status' => [],
+                    ],
+                ],
+                'links',
+                'meta',
+            ]);
+    }
+
+    /** @test */
+    public function it_should_allow_filtering_the_orders_and_ocr_request()
+    {
+        $this->withoutExceptionHandling();
+        $this->seed(OrdersTableSeeder::class);
+        $this->seed(OrdersTableSeeder::class);
+        factory(OCRRequestStatus::class, 2)->create(['status' => 'ocr-waiting']);
+        $order = Order::latest()->first();
+
+        $this->getJson(route('orders.index', ['filter[status]' => 'ocr-waiting']))
+            ->assertJsonCount(2, 'data');
+        $this->getJson(route('orders.index', ['filter[request_id]' => $order->request_id]))
+            ->assertJsonCount(1, 'data');
+        $this->getJson(route('orders.index', [
+                'filter[order.bill_to_address_raw_text]' => substr($order->bill_to_address_raw_text, 0, 15)
+            ]))
+            ->assertJsonCount(1, 'data');
+        $this->getJson(route('orders.index', [
+                'filter[order.equipment_type]' => substr($order->equipment_type, 0, 5)
+            ]))
+            ->assertJsonCount(Order::where('equipment_type', $order->equipment_type)->count(), 'data');
+        $this->getJson(route('orders.index', [
+                'filter[order.shipment_designation]' => substr($order->shipment_designation, 0, 5)
+            ]))
+            ->assertJsonCount(Order::where('shipment_designation', $order->shipment_designation)->count(), 'data');
+        $this->getJson(route('orders.index', [
+                'filter[order.shipment_direction]' => substr($order->shipment_direction, 0, 5)
+            ]))
+            ->assertJsonCount(Order::where('shipment_direction', $order->shipment_direction)->count(), 'data');
+        $this->getJson(route('orders.index', ['sort' => '-status']))
+            ->assertJsonCount(5, 'data');
     }
 
     /** @test */
