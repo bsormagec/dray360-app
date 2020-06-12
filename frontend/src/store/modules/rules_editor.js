@@ -22,7 +22,7 @@ const actions = {
 
     if (error) return reqStatus.error
 
-    commit(types.setLibrary, data)
+    commit(types.setLibrary, { libraryData: data.data })
     return reqStatus.success
   }
 }

@@ -93,7 +93,7 @@
               color="primary"
             >
               <v-list-item
-                v-for="(rule, i) in rules_array"
+                v-for="(rule, i) in rules_library()"
                 :key="i"
               >
                 <v-list-item-content>
@@ -191,7 +191,7 @@ export default {
   data: () => ({
     ...mapState(rulesLibrary.moduleName, {
       // list: state => listFormat(state.list, (id) => this.$router.push(`/order/${id}`)),
-      rules_array: state => state.rules_library
+      rules_library: state => state.rules_library
     }),
 
     cmOptions: {
@@ -201,8 +201,6 @@ export default {
       lineNumbers: true,
       line: true
     },
-    // Rules Library
-    // rules_array: [],
     // Account / Variant Rules
     account_variant_rules: [],
     // Selected rule
