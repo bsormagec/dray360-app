@@ -1,8 +1,8 @@
 <template>
   <div
     :class="`form-field-highlight ${field.highlight || ''} ${field.el.type}`"
-    @mouseover="callbacks.startHover({ field })"
-    @mouseleave="callbacks.stopHover({ field })"
+    @mouseover="isMobile ? () => {} : callbacks.startHover({ field })"
+    @mouseleave="isMobile ? () => {} : callbacks.stopHover({ field })"
     @click="callbacks.startEdit({ field })"
   >
     <FormFieldHighlightView
@@ -33,6 +33,7 @@ import { modes } from '@/views/Details/inner_types'
 import FormFieldElement from '@/components/FormField/FormFieldElement'
 import FormFieldHighlightView from '@/components/FormField/FormFieldHighlightView'
 import FormFieldHighlightBtns from '@/components/FormField/FormFieldHighlightBtns'
+import isMobile from '@/mixins/is_mobile'
 
 export default {
   name: 'FormFieldHighlight',
@@ -42,6 +43,8 @@ export default {
     FormFieldHighlightView,
     FormFieldHighlightBtns
   },
+
+  mixins: [isMobile],
 
   props: {
     field: {

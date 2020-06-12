@@ -1,13 +1,13 @@
 <template>
   <div
-    class="sidebar"
+    :class="`sidebar ${isMobile && 'mobile'}`"
   >
     <div
       v-if="!isMobile"
       class="sidebar__logo"
     />
 
-    <div class="sidebar__body">
+    <div :class="`sidebar__body ${isMobile && 'mobile'}`">
       <v-btn
         color="primary"
         outlined
@@ -20,11 +20,11 @@
         Order List
       </v-btn>
 
-      <DetailsSidebarNavigation />
+      <DetailsSidebarNavigation v-if="!isMobile" />
 
       <v-btn
-        :color="isEditing ? 'success' : 'primary'"
-        :outlined="!isEditing"
+        :color="saveBtnStyles"
+        :outlined="!isEditing && !isMobile"
         :style="{ marginBottom: '1rem' }"
         test-id="toggle-btn"
         width="11.5rem"
@@ -34,6 +34,7 @@
       </v-btn>
 
       <v-btn
+        v-if="!isMobile"
         color="primary"
         outlined
         width="11.5rem"
@@ -44,7 +45,7 @@
     </div>
 
     <div
-
+      v-if="!isMobile"
       class="sidebar__footer"
     >
       <v-btn
@@ -72,11 +73,18 @@ export default {
   components: {
     DetailsSidebarNavigation
   },
+
   mixins: [isMobile],
 
   computed: {
     isEditing () {
       return formModule.state.isEditing
+    },
+
+    saveBtnStyles () {
+      if (this.isMobile) return 'secondary'
+      if (this.isEditing) return 'success'
+      return 'primary'
     }
   },
 
@@ -123,6 +131,14 @@ $ordermaster-logo: url("../../assets/images/ordermaster_logo.svg");
   box-shadow: map-get($properties, inset-shadow-right);
   padding-top: 4rem;
   padding-bottom: 3rem;
+
+  &.mobile {
+    height: 7rem;
+    bottom: 0;
+    width: 100%;
+    padding: unset;
+    box-shadow: 0rem -0.4rem 1rem -0.8rem rgba(0,0,0,0.75);
+  }
 }
 
 .sidebar__logo {
@@ -140,6 +156,20 @@ $ordermaster-logo: url("../../assets/images/ordermaster_logo.svg");
   display: flex;
   flex-direction: column;
   align-items: center;
+
+  &.mobile {
+    height: 100%;
+    width: 100%;
+    margin: unset;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0 2rem;
+
+    button {
+      margin: unset!important;
+    }
+  }
 }
 
 .sidebar__footer {
