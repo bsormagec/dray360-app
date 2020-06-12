@@ -14,6 +14,14 @@ use Illuminate\Database\Eloquent\Model;
  */
 class OCRRequestStatus extends Model
 {
+    const STATUS_MAP = [
+        'ocr-waiting' => 'Processing',
+        'intake-started' => 'Processing',
+        'ocr-completed' => 'Verified',
+        'process-ocr-output-file-complete' => 'Verified',
+        'ocr-post-processing-complete' => 'Verified',
+    ];
+
     public $table = 't_job_state_changes';
 
     public $fillable = [
@@ -28,6 +36,8 @@ class OCRRequestStatus extends Model
         'status_date' => 'date',
     ];
 
+    protected $appends = ['display_status'];
+
     public function ocrRequests()
     {
         return $this->belongsTo(OCRRequest::class, 'request_id', 'request_id');
@@ -36,5 +46,10 @@ class OCRRequestStatus extends Model
     public function ocrRequest()
     {
         return $this->hasOne(OCRRequest::class, 't_job_state_changes_id');
+    }
+
+    public function getDisplayStatusAttribute()
+    {
+        return self::STATUS_MAP[$this->status] ?? '-';
     }
 }

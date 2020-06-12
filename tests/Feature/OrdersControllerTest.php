@@ -43,7 +43,9 @@ class OrdersControllerTest extends TestCase
                         'created_at',
                         'updated_at',
                         'order' => [],
-                        'latest_ocr_request_status' => [],
+                        'latest_ocr_request_status' => [
+                            'display_status',
+                        ],
                     ],
                 ],
                 'links',
