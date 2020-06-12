@@ -53,6 +53,16 @@
             create order
           </v-btn>
         </div>
+        <v-btn
+          color="primary"
+          outlined
+          width="11.5rem"
+          class="logout__btn"
+          style="margin-top: 4rem;"
+          @click="logoutBtn"
+        >
+          Logout
+        </v-btn>
         <div class="sidebar__footer" />
       </div>
     </transition>
@@ -175,12 +185,17 @@ $ordermaster-logo: url("../../assets/images/ordermaster_logo.svg");
 .sidebar__footer {
   width: 11.1rem;
   height: 4.5rem;
-  margin-top: auto;
+  margin-top: 4rem;
   background-image: $ordermaster-logo;
   background-size: contain;
   background-position: center center;
   display: flex;
   flex-direction: column-reverse;
+
+   @media screen and (min-width: map-get($breakpoints, med)) {
+    margin-top: auto;
+  }
+
   .logout__btn{
     margin: 7rem auto;
   }

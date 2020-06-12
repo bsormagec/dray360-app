@@ -57,18 +57,20 @@ export default {
       {
         text: 'Id',
         sortable: false,
-        value: 'id'
+        value: 'id',
+        width: '6rem'
       },
       {
         text: 'Status',
-        value: 'ocr_request.latest_ocr_request_status.status'
+        value: 'ocr_request.latest_ocr_request_status.status',
+        width: '12rem'
       },
-      { text: 'Bill to', value: 'bill_to_address_raw_text' },
-      { text: 'Date', value: 'created_at' },
-      { text: 'Shipment Direction', value: 'shipment_direction' },
-      { text: 'Shipment Designation', value: 'shipment_designation' },
-      { text: 'Eq. Type', value: 'equipment_type' },
-      { text: 'Actions', value: 'action' }
+      { text: 'Bill to', value: 'bill_to_address_raw_text', width: '30rem' },
+      { text: 'Date', value: 'created_at', width: '6rem' },
+      { text: 'Shipment Direction', value: 'shipment_direction', width: '8.5rem' },
+      { text: 'Shipment Designation', value: 'shipment_designation', width: '8.5rem' },
+      { text: 'Eq. Type', value: 'equipment_type', width: '8.5rem' },
+      { text: 'Actions', value: 'action', width: '8.5rem' }
     ],
     statuses: [
       'Pending',
