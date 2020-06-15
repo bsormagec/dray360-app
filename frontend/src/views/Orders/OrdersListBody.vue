@@ -3,11 +3,12 @@
     <v-data-table
       :headers="headers"
       :items="list()"
+      item-key="key"
       :items-per-page="list().length"
       :hide-default-footer="true"
       mobile-breakpoint="319"
     >
-      <template v-slot:item.ocr_request.latest_ocr_request_status.status="{ item }">
+      <template v-slot:item.latest_ocr_request_status.display_status="{ item }">
         <OrdersListBodyStatus :item="item" />
       </template>
 

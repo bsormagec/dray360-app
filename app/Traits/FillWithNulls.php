@@ -8,8 +8,8 @@ trait FillWithNulls
     {
         return $this->fill(
             collect($this->fillable)
-                ->filter(fn($column) => in_array($column, $only))
-                ->mapWithKeys(fn($column) => [$column => null])
+                ->filter(fn ($column) => in_array($column, $only))
+                ->mapWithKeys(fn ($column) => [$column => null])
                 ->toArray()
         );
     }

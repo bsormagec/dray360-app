@@ -1,7 +1,8 @@
 <template>
   <v-btn
     color="primary"
-    @click="() => item.action(item.id)"
+    @click="() => item.action(item.order.id)"
+    :disabled="item.order.id === undefined"
   >
     View
   </v-btn>

@@ -20,10 +20,7 @@ export default {
 
   methods: {
     getText (item) {
-      let status = item.ocr_request.latest_ocr_request_status.status.split('-')
-      status = status[status.length - 1]
-
-      return status
+      return item.latest_ocr_request_status.display_status.toLowerCase()
     }
   }
 }
@@ -44,7 +41,7 @@ export default {
   border-radius: 50%;
   background: transparent;
 
-  &.complete {
+  &.verified {
     background: green;
     border-color: green !important;
   }

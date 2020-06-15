@@ -15,11 +15,17 @@ use Illuminate\Database\Eloquent\Model;
 class OCRRequestStatus extends Model
 {
     const STATUS_MAP = [
-        'ocr-waiting' => 'Processing',
-        'intake-started' => 'Processing',
-        'ocr-completed' => 'Verified',
-        'process-ocr-output-file-complete' => 'Verified',
+        'intake-accepted' => 'Processing',
+        'intake-exception' => 'Exception',
+        'intake-rejected' => 'Rejected',
+        'intake-started' => 'Intake',
+        'ocr-completed' => 'Processing',
         'ocr-post-processing-complete' => 'Verified',
+        'ocr-post-processing-error' => 'Rejected',
+        'ocr-waiting' => 'Processing',
+        'process-ocr-output-file-complete' => 'Processing',
+        'process-ocr-output-file-error' => 'Rejected',
+        'upload-requested' => 'Intake',
     ];
 
     public $table = 't_job_state_changes';

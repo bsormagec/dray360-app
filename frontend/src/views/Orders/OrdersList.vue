@@ -1,16 +1,12 @@
 <template>
-  <div
-    class="list"
-  >
+  <div class="list">
     <OrdersListHeader
       :statuses="statuses"
       :headers="headers"
       :set-headers="setHeaders"
     />
 
-    <ContentLoading
-      :loaded="loaded"
-    >
+    <ContentLoading :loaded="loaded">
       <OrdersListBody :headers="headers" />
     </ContentLoading>
 
@@ -57,17 +53,17 @@ export default {
       {
         text: 'Id',
         sortable: false,
-        value: 'id'
+        value: 'order.id'
       },
       {
         text: 'Status',
-        value: 'ocr_request.latest_ocr_request_status.status'
+        value: 'latest_ocr_request_status.display_status'
       },
-      { text: 'Bill to', value: 'bill_to_address_raw_text' },
+      { text: 'Bill to', value: 'order.bill_to_address_raw_text' },
       { text: 'Date', value: 'created_at' },
-      { text: 'Shipment Direction', value: 'shipment_direction' },
-      { text: 'Shipment Designation', value: 'shipment_designation' },
-      { text: 'Eq. Type', value: 'equipment_type' },
+      { text: 'Shipment Direction', value: 'order.shipment_direction' },
+      { text: 'Shipment Designation', value: 'order.shipment_designation' },
+      { text: 'Eq. Type', value: 'order.equipment_type' },
       { text: 'Actions', value: 'action' }
     ],
     statuses: [
@@ -76,7 +72,8 @@ export default {
       'In review',
       'Verified',
       'Sent to TMS',
-      'Error'
+      'Rejected',
+      'Intake'
     ]
   }),
 

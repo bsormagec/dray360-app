@@ -1,6 +1,6 @@
 export const listFormat = (list, cb) => list.map(item => ({
   ...formatIfEmpty(item),
-  created_at: new Date(item.created_at).toLocaleDateString(),
+  created_at: new Date(item.order.created_at || item.created_at).toLocaleDateString(),
   action: cb
 }))
 
