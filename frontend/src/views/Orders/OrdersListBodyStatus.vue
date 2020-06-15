@@ -46,16 +46,26 @@ export default {
     border-color: green !important;
   }
 
-  &.rejected {
+  &.rejected,&.exception {
     background: red;
     border-color: red !important;
+  }
+
+  &.intake {
+    background: grey;
+    border-color: grey !important;
+  }
+
+  &.processing {
+    background: #397E92;
+    border-color: #397E92 !important;
   }
 }
 
 .status__text {
   text-transform: capitalize;
 
-  &.rejected {
+  &.rejected,&.exception {
     color: red;
     font-weight: bold;
   }
