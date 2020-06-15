@@ -29,7 +29,7 @@ class OrdersControllerTest extends TestCase
     }
 
     /** @test */
-    public function it_should_list_all_the_ocr_request_with_the_orders_and_return_orders_with_ocr_request_inside()
+    public function it_should_list_all_the_ocr_request_with_the_orders_and_return_ocr_requests_one_per_order()
     {
         $this->withoutExceptionHandling();
         $this->getJson(route('orders.index'))

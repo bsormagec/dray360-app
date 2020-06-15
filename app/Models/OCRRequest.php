@@ -10,8 +10,8 @@ use Illuminate\Database\Eloquent\Model;
  * @property \App\Models\OCRRequestStatus $latestOcrRequestStatus
  * @property string $request_id
  * @property string $t_job_state_changes_id
- * @property \Carbon\Carbon $created_at
- * @property \Carbon\Carbon $updated_at
+ * @property \Carbon\Carbon $created_at intake_date
+ * @property \Carbon\Carbon $updated_at latest_status_date
  */
 class OCRRequest extends Model
 {
