@@ -61,7 +61,7 @@ export default {
         value: 'latest_ocr_request_status.display_status',
         width: '12rem'
       },
-      { text: 'Bill to', value: 'order.bill_to_address_raw_text', width: '30rem'  },
+      { text: 'Bill to', value: 'order.bill_to_address_raw_text', width: '30rem' },
       { text: 'Date', value: 'created_at', width: '6rem' },
       { text: 'Shipment Direction', value: 'order.shipment_direction', width: '8.5rem' },
       { text: 'Shipment Designation', value: 'order.shipment_designation', width: '8.5rem' },
