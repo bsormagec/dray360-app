@@ -52,6 +52,10 @@ export default {
   width: 100%;
   max-width: 16rem;
 
+  @media screen and (max-width: 1220px) {
+    max-width: 12rem;
+  }
+
   .v-input {
     opacity: 0;
     z-index: 2;

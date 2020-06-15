@@ -10,20 +10,23 @@
       Orders
     </h1>
 
-    <SearchBar :style="{ marginRight: '1rem' }" />
+    <div class="header__right">
+      <SearchBar :style="getStyle.searchBar" />
 
-    <Select
-      label="View by Status"
-      :style="{ marginRight: '1rem' }"
-      :items="statuses "
-      @change="() => {}"
-    />
+      <Select
+        label="View by Status"
+        :style="getStyle.statusSelect"
+        :items="statuses "
+        @change="() => {}"
+      />
 
-    <Select
-      label="Columns"
-      :items="headerItems"
-      @change="handleSelection"
-    />
+      <Select
+        label="Columns"
+        :style="getStyle.columnsSelect"
+        :items="headerItems"
+        @change="handleSelection"
+      />
+    </div>
   </div>
 </template>
 
@@ -59,12 +62,34 @@ export default {
 
   data: () => ({
     cachedHeaders: [],
-    headerItems: []
+    headerItems: [],
+    clientWidth: window.innerWidth
   }),
+
+  computed: {
+    getStyle () {
+      const mobileTrigger = this.clientWidth <= 380
+
+      const desktopStyles = {
+        searchBar: { marginRight: '1rem' },
+        statusSelect: { marginRight: '1rem' },
+        columnsSelect: {}
+      }
+
+      const mobileStyles = {
+        searchBar: { minWidth: '100%', marginBottom: '1rem' },
+        statusSelect: { minWidth: '100%', marginBottom: '1rem' },
+        columnsSelect: { minWidth: '100%', marginBottom: '1rem' }
+      }
+
+      return mobileTrigger ? mobileStyles : desktopStyles
+    }
+  },
 
   beforeMount () {
     this.cachedHeaders = this.headers
     this.headerItems = this.cachedHeaders.map(({ text }) => text)
+    window.addEventListener('resize', () => (this.clientWidth = window.innerWidth))
   },
 
   methods: {
@@ -83,7 +108,30 @@ export default {
 <style lang="scss" scoped>
 .header {
   display: flex;
-  align-items: flex-start;
+  align-items: center;
+
+  @media screen and (max-width: 580px) {
+    height: 7.5rem;
+    position: relative;
+    align-items: flex-start;
+  }
+
+  @media screen and (max-width: 380px) {
+    height: 17.5rem;
+  }
+}
+
+.header__right {
+  display: flex;
+
+  @media screen and (max-width: 580px) {
+    position: absolute;
+    bottom: 0;
+  }
+
+  @media screen and (max-width: 380px) {
+    flex-wrap: wrap;
+  }
 }
 
 .header__title {

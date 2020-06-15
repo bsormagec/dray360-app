@@ -1,31 +1,34 @@
 <template>
-  <div :class="`details ${loaded && 'loaded'}`">
+  <div :class="`details ${loaded && 'loaded'} ${isMobile && 'mobile'}`">
     <ContentLoading :loaded="loaded">
-      <DetailsSidebar />
-
-      <div
-        class="details__form"
-        :style="{ minWidth: `${resizeDiff}%` }"
-      >
-        <DetailsFormEditing v-show="isEditing" />
-        <DetailsFormViewing v-show="!isEditing" />
+      <div :class="`details__content ${isMobile && 'mobile'}`">
+        <DetailsSidebar />
 
         <div
-          class="form__resize"
-          @mousedown.prevent="handleResize"
+          :class="`details__form ${isMobile && 'mobile'}`"
+          :style="{ minWidth: `${resizeDiff}%` }"
         >
-          <div />
-          <div />
-          <div />
-        </div>
-      </div>
+          <DetailsFormEditing v-show="isEditing" />
+          <DetailsFormViewing v-show="!isEditing" />
 
-      <DetailsDocument />
+          <div
+            class="form__resize"
+            @mousedown.prevent="handleResize"
+          >
+            <div />
+            <div />
+            <div />
+          </div>
+        </div>
+
+        <DetailsDocument :class="`${isMobile && 'mobile'}`" />
+      </div>
     </ContentLoading>
   </div>
 </template>
 
 <script>
+import isMobile from '@/mixins/is_mobile'
 import DetailsSidebar from '@/views/Details/DetailsSidebar'
 import DetailsFormEditing from '@/views/Details/DetailsFormEditing'
 import DetailsFormViewing from '@/views/Details/DetailsFormViewing'
@@ -49,6 +52,8 @@ export default {
     DetailsDocument,
     ContentLoading
   },
+
+  mixins: [isMobile],
 
   data: () => ({
     ...mapState(orders.moduleName, {
@@ -137,11 +142,27 @@ export default {
   &.loaded {
     padding-left: map-get($sizes, sidebar-desktop-width);
   }
+
+  &.mobile {
+    padding-left: unset;
+  }
+}
+
+.details__content {
+  display: flex;
+
+  &.mobile {
+    flex-direction: column;
+  }
 }
 
 .details__form {
   position: relative;
   transition: width 300ms ease;
+
+  &.mobile {
+    height: 50vh;
+  }
 }
 
 .form__resize {
