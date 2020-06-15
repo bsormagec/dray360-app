@@ -53,7 +53,7 @@ export default {
       {
         text: 'Id',
         sortable: false,
-        value: 'order.id',
+        value: 'display_id',
         width: '6rem'
       },
       {
