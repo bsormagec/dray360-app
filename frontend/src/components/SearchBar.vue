@@ -19,6 +19,7 @@ export default {
 .search-bar {
   position: relative;
   height: 2.4rem;
+  min-width: 9rem;
 
   input {
     width: 100%;

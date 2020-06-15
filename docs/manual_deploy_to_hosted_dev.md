@@ -9,7 +9,7 @@
 cd /home/pbnelson/repos/tcompanies/ordermaster
 git checkout master
 git pull --all
-rsync -av ../ordermaster ocr-dev02:
+time rsync -av --exclude 'node_modules' --exclude 'vendor' --exclude 'frontend/node_modules' --exclude 'storage/logs'  ../ordermaster  ocr-dev02:/tmp
 
 ````
 
@@ -34,9 +34,12 @@ sudo chmod -R g+w /var/www/deploybot/${folder}/storage
 sudo su -c "sudo -iu deploybot"
 folder="pbn_$(date '+%Y%m%d')"
 cd /var/www/deploybot/${folder}
-cp /var/www/deploybot/pbn_20200529/.env* ./
-cp /var/www/deploybot/pbn_20200529/frontend/.env* ./frontend/
+cp /var/www/deploybot/env_files/.env* ./
+cp /var/www/deploybot/env_files/frontend/.env* ./frontend/
+npm install
 composer install
+php artisan migrate
+# one time only with a new database: php artisn db:seed --class="ProfitToolsCushingSeeder"
 cd frontend
 npm install
 npm run build

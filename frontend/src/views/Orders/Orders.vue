@@ -10,10 +10,13 @@
       :is-open="mobileSidebarOpen"
     />
 
-    <div :style="{ width: '100%', minWidth: '65%', display: 'flex' }">
+    <div
+      v-if="shouldShowTab(tabs.list)"
+      :style="{ width: '100%', minWidth: '65%', display: 'flex' }"
+    >
       <OrdersList
         :active-page="activePage"
-        :loaded="loaded && shouldShowTab(tabs.list)"
+        :loaded="loaded"
       />
     </div>
 

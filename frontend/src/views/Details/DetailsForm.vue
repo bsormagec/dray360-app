@@ -1,5 +1,5 @@
 <template>
-  <div class="form">
+  <div :class="`form ${isMobile && 'mobile'}`">
     <div
       v-for="(sectionVal, sectionKey) in form.sections"
       :key="sectionKey"
@@ -103,6 +103,7 @@ import FormField from '@/components/FormField/FormField'
 import DetailsFormAddInventoryItem from '@/views/Details/DetailsFormAddInventoryItem'
 import { formModule, documentModule } from '@/views/Details/inner_store/index'
 import { cleanStrForId } from '@/views/Details/inner_utils/clean_str_for_id'
+import isMobile from '@/mixins/is_mobile'
 
 export default {
   name: 'DetailsForm',
@@ -111,6 +112,8 @@ export default {
     FormField,
     DetailsFormAddInventoryItem
   },
+
+  mixins: [isMobile],
 
   props: {
     readonly: {
@@ -162,6 +165,11 @@ export default {
   padding: 3.6rem 6.5rem;
   padding-top: 8.4rem;
   scroll-behavior: smooth;
+
+  &.mobile {
+    height: 50vh;
+    padding-bottom: 7rem;
+  }
 }
 
 .section__title {

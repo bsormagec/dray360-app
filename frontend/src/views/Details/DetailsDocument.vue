@@ -27,12 +27,12 @@
             pageIndex: pIndex,
             highlightIndex: hIndex
           })"
-          @mouseover="startHover({
+          @mouseover="isMobile ? () => {} : startHover({
             field: { name: highlight.name },
             pageIndex: pIndex,
             highlightIndex: hIndex
           })"
-          @mouseleave="stopHover({
+          @mouseleave="isMobile ? () => {} : stopHover({
             field: { name: highlight.name },
             pageIndex: pIndex,
             highlightIndex: hIndex
@@ -46,9 +46,12 @@
 <script>
 import { documentModule } from '@/views/Details/inner_store/index'
 import { cleanStrForId } from '@/views/Details/inner_utils/clean_str_for_id'
+import isMobile from '@/mixins/is_mobile'
 
 export default {
   name: 'DetailsDocument',
+
+  mixins: [isMobile],
 
   data: () => ({
     dimensions: {
@@ -100,6 +103,11 @@ export default {
   padding: 2.6rem;
   background: map-get($colors, grey-8);
   scroll-behavior: smooth;
+
+  &.mobile {
+    order: -1;
+    height: 50vh;
+  }
 }
 
 .document__page {
