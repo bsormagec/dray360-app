@@ -20,10 +20,7 @@ export default {
 
   methods: {
     getText (item) {
-      let status = item.ocr_request.latest_ocr_request_status.status.split('-')
-      status = status[status.length - 1]
-
-      return status
+      return item.latest_ocr_request_status.display_status.toLowerCase()
     }
   }
 }
@@ -44,21 +41,31 @@ export default {
   border-radius: 50%;
   background: transparent;
 
-  &.complete {
+  &.verified {
     background: green;
     border-color: green !important;
   }
 
-  &.rejected {
+  &.rejected,&.exception {
     background: red;
     border-color: red !important;
+  }
+
+  &.intake {
+    background: grey;
+    border-color: grey !important;
+  }
+
+  &.processing {
+    background: #397E92;
+    border-color: #397E92 !important;
   }
 }
 
 .status__text {
   text-transform: capitalize;
 
-  &.rejected {
+  &.rejected,&.exception {
     color: red;
     font-weight: bold;
   }

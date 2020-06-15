@@ -6,6 +6,7 @@ use Aws\S3\S3Client;
 use App\Models\Order;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use App\Queries\OcrRequestOrderListQuery;
 use App\Http\Resources\Orders as OrdersResource;
 
 class OrdersController extends Controller
@@ -20,20 +21,9 @@ class OrdersController extends Controller
      */
     public function index()
     {
-        $orders = Order::with([
-                'ocrRequest',
-                'ocrRequest.statusList',
-                'ocrRequest.latestOcrRequestStatus',
-                'orderLineItems',
-                'billToAddress',
-                'portRampOfDestinationAddress',
-                'portRampOfOriginAddress',
-                'orderAddressEvents',
-                'orderAddressEvents.address',
-            ])
-            ->paginate(25);
+        $ocrRequestsOrders = (new OcrRequestOrderListQuery())->paginate(25);
 
-        return OrdersResource::collection($orders);
+        return OrdersResource::collection($ocrRequestsOrders);
     }
 
     /**

@@ -22,4 +22,6 @@ return PhpCsFixer\Config::create()
         'return_type_declaration' => ['space_before' => 'none'],
         'single_trait_insert_per_statement' => true,
         'class_attributes_separation' => ['elements' => ['method']],
+        'not_operator_with_successor_space' => true,
+        'whitespace_after_comma_in_array' => true,
     ]);

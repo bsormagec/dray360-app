@@ -8,7 +8,7 @@ use Illuminate\Console\Command;
 /**
  * Create a new database for
  */
-class DbCreateMySQLCommand extends Command
+class DbCreateMySqlCommand extends Command
 {
     /**
      * The name and signature of the console command.

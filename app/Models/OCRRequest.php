@@ -10,8 +10,8 @@ use Illuminate\Database\Eloquent\Model;
  * @property \App\Models\OCRRequestStatus $latestOcrRequestStatus
  * @property string $request_id
  * @property string $t_job_state_changes_id
- * @property \Carbon\Carbon $created_at
- * @property \Carbon\Carbon $updated_at
+ * @property \Carbon\Carbon $created_at intake_date
+ * @property \Carbon\Carbon $updated_at latest_status_date
  */
 class OCRRequest extends Model
 {
@@ -36,7 +36,21 @@ class OCRRequest extends Model
 
     public function latestOcrRequestStatus()
     {
-        return $this->hasOne(OCRRequestStatus::class, 'request_id', 'request_id')
-            ->where('is_latest_status', true);
+        return $this->belongsTo(OCRRequestStatus::class, 't_job_state_changes_id');
+    }
+
+    public function order()
+    {
+        return $this->belongsTo(Order::class, 't_order_id')
+            ->withDefault(function (Order $order) {
+                $order->fillWithNulls([
+                    'request_id',
+                    'bill_to_address_raw_text',
+                    'created_at',
+                    'equipment_type',
+                    'shipment_designation',
+                    'shipment_direction',
+                ]);
+            });
     }
 }

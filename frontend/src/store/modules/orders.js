@@ -18,7 +18,10 @@ const initialState = {
 
 const mutations = {
   [types.setOrders] (state, { data, links, meta }) {
-    state.list = data
+    state.list = data.map(item => {
+      item.key = `${item.id}-${item.order.id || null}`
+      return item
+    })
     state.links = links
     state.meta = meta
   },
