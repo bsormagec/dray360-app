@@ -152,12 +152,13 @@
                 @end="drag=false"
               > -->
               <draggable
+                v-model="draggable_rules"
                 group="rules"
                 @start="drag=true"
                 @end="drag=false"
               >
                 <v-list-item
-                  v-for="(rule, i) in account_variant_rules()"
+                  v-for="(rule, i) in draggable_rules"
                   :key="i"
                 >
                   <v-list-item-content class="draggable-item">
@@ -207,6 +208,7 @@ export default {
     },
     // Account / Variant Rules
     // account_variant_rules: [],
+    draggable_rules: [],
     // Selected rule
     selected_rule_index: 0,
     // Testing output
@@ -229,7 +231,10 @@ export default {
       }
     },
     async fetchAccountVariantRules () {
+      const vc = this
       const status = await this[types.getAccountVariantRules]()
+
+      vc.draggable_rules = vc.account_variant_rules()
 
       if (status === reqStatus.success) {
         console.log('fetchAccountVariantRules success')
@@ -238,58 +243,38 @@ export default {
       }
     },
     async editRule (index) {
-      // const vc = this
-      // console.log('ruleId' + vc.account_variant_rules()[index].id)
-      // const ruleId = vc.account_variant_rules()[index].id
-      // const ruleName = vc.account_variant_rules()[index].name
-
-      // const ruleData = {
-      //   code: vc.account_variant_rules()[index].code,
-      //   description: 'sample rule ' + ruleName,
-      //   id: ruleId,
-      //   name: ruleName
-      // }
-
-      // console.log('ruleData: ', ruleData)
-
-      // const status = await this[types.setRule](ruleData)
-
-      // if (status === reqStatus.success) {
-      //   console.log('editRules success')
-      // } else {
-      //   console.log('editRules error')
-      // }
-
       const vc = this
-      const baseURL = `${process.env.VUE_APP_APP_URL}`
-      const ruleId = vc.account_variant_rules[index].id
-      const ruleName = vc.account_variant_rules[index].name
-      axios.put(baseURL + '/api/ocr/rules/' + ruleId, {
-        code: vc.account_variant_rules[index].code,
+      console.log('ruleId' + vc.account_variant_rules()[index].id)
+      const ruleId = vc.account_variant_rules()[index].id
+      const ruleName = vc.account_variant_rules()[index].name
+
+      const ruleData = {
+        code: vc.account_variant_rules()[index].code,
         description: 'sample rule ' + ruleName,
         id: ruleId,
         name: ruleName
-      })
-        .then(function (response) {
-          alert('Rule edited successfully')
-        })
-        .catch(function (error) {
-          alert(error)
-        })
+      }
+
+      console.log('ruleData: ', ruleData)
+
+      const status = await this[types.setRule](ruleData)
+
+      if (status === reqStatus.success) {
+        console.log('editRules success')
+      } else {
+        console.log('editRules error')
+      }
     },
     async saveRuleSequence () {
       const vc = this
       const idsToSave = []
-
-      vc.account_variant_rules().forEach(rule => idsToSave.push(rule.id))
+      vc.draggable_rules.forEach(rule => idsToSave.push(rule.id))
 
       const sequenceData = {
         account_id: 8,
         variant_id: 8,
         rules: idsToSave
       }
-
-      console.log('sequenceData to send: ', sequenceData)
 
       const status = await this[types.setSequence](sequenceData)
 
@@ -298,24 +283,6 @@ export default {
       } else {
         console.log('saveSequence error')
       }
-
-      // const vc = this
-      // const baseURL = `${process.env.VUE_APP_APP_URL}`
-      // const idsToSave = []
-      // vc.account_variant_rules.forEach(rule => idsToSave.push(rule.id))
-
-      // // Cushing/JetSpeed ID is 1-1 in local and 8-8 in prod
-      // axios.post(baseURL + '/api/ocr/rules-assignment', {
-      //   account_id: 8,
-      //   variant_id: 8,
-      //   rules: idsToSave
-      // })
-      //   .then(function (response) {
-      //     alert('Rule sequence saved')
-      //   })
-      //   .catch(function (error) {
-      //     alert(error)
-      //   })
     },
     // THIS IS USEFUL FOR DEBUGGING PURPOSES
     // onCmCodeChange (index) {
@@ -325,8 +292,6 @@ export default {
     //   console.log(vc.account_variant_rules[index].code)
     // },
     async addRuleToLibrary () {
-      // const baseURL = `${process.env.VUE_APP_APP_URL}`
-
       const vc = this
 
       const newName = prompt('Please type the name of the new rule')
@@ -351,20 +316,6 @@ export default {
       } else {
         console.log('add rule error')
       }
-
-      // axios.post(baseURL + '/api/ocr/rules', {
-      //   code: newCode,
-      //   description: 'sample rule ' + newName,
-      //   id: (vc.rules_array.length + 1),
-      //   name: newName
-      // })
-      //   .then(function (response) {
-      //     vc.fetchRules()
-      //     alert(newName + ' added successfully to the library!')
-      //   })
-      //   .catch(function (error) {
-      //     console.log(error)
-      //   })
     },
     addToAccountVariant (name, code, i) {
       const vc = this

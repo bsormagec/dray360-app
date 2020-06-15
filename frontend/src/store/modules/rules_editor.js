@@ -51,25 +51,25 @@ const actions = {
     commit(types.setAccountVariantRules, { accountVariantData: data.data })
     return reqStatus.success
   },
-  async [types.setRule] ({ commit }) {
-    const [error, data] = await putEditRule()
+  async [types.setRule] ({ commit }, ruleData) {
+    await putEditRule(ruleData)
 
-    if (error) return reqStatus.error
+    // if (error) return reqStatus.error
 
-    console.log('to commit: ', data)
+    console.log('#types.setRule - ruleData to commit:', ruleData)
 
-    commit(types.setRule, { ruleData: data })
-    return reqStatus.success
-  },
-  async [types.setSequence] ({ commit }) {
-    const [error, data] = await postSaveRuleSequence()
-
-    if (error) return reqStatus.error
-
-    console.log('sequenceData to commit:', data.data)
-
-    commit(types.setSequence, { sequenceData: data.data })
+    commit(types.setRule, { ruleData })
     return reqStatus.succcess
+  },
+  async [types.setSequence] ({ commit }, sequenceData) {
+    await postSaveRuleSequence(sequenceData)
+
+    // if (error) return reqStatus.error
+
+    console.log('sequenceData to commit:', sequenceData)
+
+    commit(types.setSequence, { sequenceData })
+    // return reqStatus.succcess
   },
   async [types.addRule] ({ commit }, ruleData) {
     await postAddRule(ruleData)
@@ -81,12 +81,6 @@ const actions = {
     commit(types.addRule, { ruleData })
     return reqStatus.succcess
   }
-  // async login ({ commit }, authData) {
-  //   await getCsrfCookie()
-  //   const [error] = await postLogin(authData)
-
-  //   if (!error) commit('auth_success')
-  // }
 }
 
 export default {
