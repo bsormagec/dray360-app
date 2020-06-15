@@ -26,7 +26,7 @@
                   </template>
                   <v-list>
                     <v-list-item
-                      v-for="(rule, index) in account_variant_rules"
+                      v-for="(rule, index) in account_variant_rules()"
                       :key="index"
                       @click="updateSelectedIndex(index)"
                     >
@@ -117,13 +117,12 @@
       <div class="col-md-8">
         <div class="card">
           <div
-            v-if="account_variant_rules.length > 0"
+            v-if="account_variant_rules().length > 0"
             class="card-body"
           >
             <codemirror
-              v-if="account_variant_rules.length > 0"
               ref="cmEditor"
-              v-model="account_variant_rules[selected_rule_index].code"
+              v-model="account_variant_rules()[selected_rule_index].code"
               :options="cmOptions"
             />
           </div>
@@ -146,8 +145,13 @@
             <v-list-item-group
               color="primary"
             >
+              <!-- <draggable
+                v-model="account_variant_rules" V-MODEL NOT NECCESARY WITH VUEX ARCHITECTURE
+                group="rules"
+                @start="drag=true"
+                @end="drag=false"
+              > -->
               <draggable
-                v-model="account_variant_rules"
                 group="rules"
                 @start="drag=true"
                 @end="drag=false"
@@ -174,7 +178,7 @@
 <script>
 import { mapState, mapActions } from '@/utils/vuex_mappings'
 import { reqStatus } from '@/enums/req_status'
-// import draggable from 'vuedraggable'
+import draggable from 'vuedraggable'
 import { codemirror } from 'vue-codemirror'
 import 'codemirror/lib/codemirror.css'
 import 'codemirror/theme/base16-light.css'
@@ -184,13 +188,12 @@ const axios = require('axios')
 export default {
   name: 'RulesEditor',
   components: {
-    // draggable,
+    draggable,
     codemirror,
     VueJsonPretty
   },
   data: () => ({
     ...mapState(rulesLibrary.moduleName, {
-      // list: state => listFormat(state.list, (id) => this.$router.push(`/order/${id}`)),
       rules_library: state => state.rules_library,
       account_variant_rules: state => state.account_variant_rules
     }),
@@ -214,7 +217,7 @@ export default {
     await vc.fetchRules()
   },
   methods: {
-    ...mapActions(rulesLibrary.moduleName, [types.getLibrary, types.getAccountVariantRules]),
+    ...mapActions(rulesLibrary.moduleName, [types.getLibrary, types.getAccountVariantRules, types.setSequence, types.setRule, types.addRule]),
 
     async fetchRulesLibrary () {
       const status = await this[types.getLibrary]()
@@ -234,7 +237,29 @@ export default {
         console.log('fetchAccountVariantRules error')
       }
     },
-    editRule (index) {
+    async editRule (index) {
+      // const vc = this
+      // console.log('ruleId' + vc.account_variant_rules()[index].id)
+      // const ruleId = vc.account_variant_rules()[index].id
+      // const ruleName = vc.account_variant_rules()[index].name
+
+      // const ruleData = {
+      //   code: vc.account_variant_rules()[index].code,
+      //   description: 'sample rule ' + ruleName,
+      //   id: ruleId,
+      //   name: ruleName
+      // }
+
+      // console.log('ruleData: ', ruleData)
+
+      // const status = await this[types.setRule](ruleData)
+
+      // if (status === reqStatus.success) {
+      //   console.log('editRules success')
+      // } else {
+      //   console.log('editRules error')
+      // }
+
       const vc = this
       const baseURL = `${process.env.VUE_APP_APP_URL}`
       const ruleId = vc.account_variant_rules[index].id
@@ -246,30 +271,51 @@ export default {
         name: ruleName
       })
         .then(function (response) {
-          alert('Rule sequence saved')
+          alert('Rule edited successfully')
         })
         .catch(function (error) {
           alert(error)
         })
     },
-    saveRuleSequence () {
+    async saveRuleSequence () {
       const vc = this
-      const baseURL = `${process.env.VUE_APP_APP_URL}`
       const idsToSave = []
-      vc.account_variant_rules.forEach(rule => idsToSave.push(rule.id))
 
-      // Cushing/JetSpeed ID is 1-1 in local and 8-8 in prod
-      axios.post(baseURL + '/api/ocr/rules-assignment', {
+      vc.account_variant_rules().forEach(rule => idsToSave.push(rule.id))
+
+      const sequenceData = {
         account_id: 8,
         variant_id: 8,
         rules: idsToSave
-      })
-        .then(function (response) {
-          alert('Rule sequence saved')
-        })
-        .catch(function (error) {
-          alert(error)
-        })
+      }
+
+      console.log('sequenceData to send: ', sequenceData)
+
+      const status = await this[types.setSequence](sequenceData)
+
+      if (status === reqStatus.success) {
+        console.log('saveSequence success')
+      } else {
+        console.log('saveSequence error')
+      }
+
+      // const vc = this
+      // const baseURL = `${process.env.VUE_APP_APP_URL}`
+      // const idsToSave = []
+      // vc.account_variant_rules.forEach(rule => idsToSave.push(rule.id))
+
+      // // Cushing/JetSpeed ID is 1-1 in local and 8-8 in prod
+      // axios.post(baseURL + '/api/ocr/rules-assignment', {
+      //   account_id: 8,
+      //   variant_id: 8,
+      //   rules: idsToSave
+      // })
+      //   .then(function (response) {
+      //     alert('Rule sequence saved')
+      //   })
+      //   .catch(function (error) {
+      //     alert(error)
+      //   })
     },
     // THIS IS USEFUL FOR DEBUGGING PURPOSES
     // onCmCodeChange (index) {
@@ -278,27 +324,47 @@ export default {
     //   console.log('oncmcodechange')
     //   console.log(vc.account_variant_rules[index].code)
     // },
-    addRuleToLibrary () {
-      const baseURL = `${process.env.VUE_APP_APP_URL}`
+    async addRuleToLibrary () {
+      // const baseURL = `${process.env.VUE_APP_APP_URL}`
+
       const vc = this
+
       const newName = prompt('Please type the name of the new rule')
       let newCode = null
       if (newName !== null) {
         newCode = prompt('Please paste the code for the rule')
       }
-      axios.post(baseURL + '/api/ocr/rules', {
-        code: newCode,
+
+      const ruleData = {
+        name: newName,
         description: 'sample rule ' + newName,
-        id: (vc.rules_array.length + 1),
-        name: newName
-      })
-        .then(function (response) {
-          vc.fetchRules()
-          alert(newName + ' added successfully to the library!')
-        })
-        .catch(function (error) {
-          console.log(error)
-        })
+        code: newCode,
+        id: (vc.rules_library().length + 1)
+      }
+
+      console.log('ruleData: ', ruleData)
+
+      const status = await this[types.addRule](ruleData)
+
+      if (status === reqStatus.success) {
+        console.log('add rule success')
+      } else {
+        console.log('add rule error')
+      }
+
+      // axios.post(baseURL + '/api/ocr/rules', {
+      //   code: newCode,
+      //   description: 'sample rule ' + newName,
+      //   id: (vc.rules_array.length + 1),
+      //   name: newName
+      // })
+      //   .then(function (response) {
+      //     vc.fetchRules()
+      //     alert(newName + ' added successfully to the library!')
+      //   })
+      //   .catch(function (error) {
+      //     console.log(error)
+      //   })
     },
     addToAccountVariant (name, code, i) {
       const vc = this
@@ -317,29 +383,12 @@ export default {
     updateSelectedIndex (i) {
       const vc = this
       vc.selected_rule_index = i
+      console.log('selected index: ' + i)
     },
     fetchRules () {
       const vc = this
       vc.fetchRulesLibrary()
       vc.fetchAccountVariantRules()
-      // const baseURL = `${process.env.VUE_APP_APP_URL}`
-      // const vc = this
-      // axios.get(baseURL + '/api/ocr/rules')
-      //   .then(function (response) {
-      //     vc.rules_array = response.data.data
-      //   })
-      //   .catch(function (error) {
-      //     alert(error)
-      //   })
-
-      // // Cushing/JetSpeed ID is 1-1 in local and 8-8 in prod
-      // axios.get(baseURL + '/api/ocr/rules-assignment?account_id=8&variant_id=8')
-      //   .then(function (response) {
-      //     vc.account_variant_rules = response.data.data
-      //   })
-      //   .catch(function (error) {
-      //     alert(error)
-      //   })
     },
     testSingleRule (index) {
       const vc = this
@@ -388,14 +437,7 @@ export default {
     },
     cancelSequenceEdition () {
       const vc = this
-      const baseURL = `${process.env.VUE_APP_APP_URL}`
-      axios.get(baseURL + '/api/ocr/rules-assignment?account_id=1&variant_id=1')
-        .then(function (response) {
-          vc.account_variant_rules = response.data.data
-        })
-        .catch(function (error) {
-          alert(error)
-        })
+      vc.fetchAccountVariantRules()
     }
   }
 }
