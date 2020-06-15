@@ -12,7 +12,7 @@ $factory->define(OCRRequestStatus::class, function (Faker $faker) {
     return [
         'request_id' => $requestId,
         'status_date' => now()->toDateTimeString(),
-        'status' => Arr::random(['intake-started', 'ocr-waiting', 'ocr-completed', 'process-ocr-output-file-complete', 'ocr-post-processing-complete']),
+        'status' => Arr::random(array_keys(OCRRequestStatus::STATUS_MAP)),
         'status_metadata' => json_encode([]),
     ];
 });

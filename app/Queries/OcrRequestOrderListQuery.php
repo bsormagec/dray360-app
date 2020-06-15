@@ -33,7 +33,7 @@ class OcrRequestOrderListQuery extends QueryBuilder
             AllowedFilter::partial('order.shipment_direction', 't_orders.shipment_direction', false),
             AllowedFilter::exact('status', 'latestOcrRequestStatus.status'),
         ])
-        ->defaultSort('t_job_latest_state.created_at')
+        ->defaultSort('-t_job_latest_state.created_at')
         ->allowedSorts([
             AllowedSort::field('request_id', 't_job_latest_state.request_id'),
             AllowedSort::field('order.bill_to_address_raw_text', 't_orders.bill_to_address_raw_text'),
