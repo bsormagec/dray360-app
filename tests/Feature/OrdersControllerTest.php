@@ -37,6 +37,7 @@ class OrdersControllerTest extends TestCase
                 'data' => [
                     '*' => [
                         'id',
+                        'display_id',
                         'request_id',
                         't_job_state_changes_id',
                         't_order_id',

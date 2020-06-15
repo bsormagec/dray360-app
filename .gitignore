@@ -5,7 +5,7 @@
 /public/css/
 /public/img/
 /public/js/
-/public/vendor
+
 resources/views/index.blade.php
 /vendor
 .env

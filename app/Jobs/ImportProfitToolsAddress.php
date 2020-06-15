@@ -85,7 +85,7 @@ class ImportProfitToolsAddress implements ShouldQueue
      */
     public function retryUntil(): \DateTime
     {
-        return now()->addMinutes(2);
+        return now()->addHours(3);
     }
 
     public function tags(): array
