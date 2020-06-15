@@ -169,6 +169,7 @@ export default {
   &.mobile {
     height: 50vh;
     padding-bottom: 7rem;
+    padding: 1.6rem;
   }
 }
 

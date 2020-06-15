@@ -145,6 +145,7 @@ export default {
 
   &.mobile {
     padding-left: unset;
+    overflow-x: hidden;
   }
 }
 

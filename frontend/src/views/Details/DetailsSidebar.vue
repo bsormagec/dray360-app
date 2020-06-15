@@ -135,7 +135,7 @@ $ordermaster-logo: url("../../assets/images/ordermaster_logo.svg");
   &.mobile {
     height: 7rem;
     bottom: 0;
-    width: 100%;
+    width: 100vw;
     padding: unset;
     box-shadow: 0rem -0.4rem 1rem -0.8rem rgba(0,0,0,0.75);
   }

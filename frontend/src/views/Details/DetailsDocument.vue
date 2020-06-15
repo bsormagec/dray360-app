@@ -107,13 +107,18 @@ export default {
   &.mobile {
     order: -1;
     height: 50vh;
+    max-width: 100vw;
+    padding: 1.6rem;
+
+    & .document__page {
+      min-width: 100%;
+    }
   }
 }
 
 .document__page {
   position: relative;
   width: 100%;
-  min-width: 9.95rem;
 
   img {
     opacity: 0;
