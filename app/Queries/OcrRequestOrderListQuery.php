@@ -35,17 +35,18 @@ class OcrRequestOrderListQuery extends QueryBuilder
             AllowedFilter::partial('order.shipment_designation', 't_orders.shipment_designation', false),
             AllowedFilter::partial('order.shipment_direction', 't_orders.shipment_direction', false),
             AllowedFilter::callback('status', function ($query, $value) {
+                $value = is_array($value) ? $value : [$value];
                 $query->leftJoin('t_orders', function ($query) use ($value) {
                     $query->on('t_orders.request_id', '=', 't_job_latest_state.request_id')
                         ->whereExists(function ($query) use ($value) {
                             $query->select('id')
                                 ->from('t_job_state_changes')
                                 ->whereColumn('t_job_latest_state.t_job_state_changes_id', 't_job_state_changes.id')
-                                ->whereIn('status', is_array($value) ? $value : [$value]);
+                                ->whereIn('status', $value);
                         });
                 })
                 ->whereHas('latestOcrRequestStatus', function ($query) use ($value) {
-                    $query->whereIn('status', is_array($value) ? $value : [$value]);
+                    $query->whereIn('status', $value);
                 });
             }),
             AllowedFilter::callback('query', function ($query, $value) {
