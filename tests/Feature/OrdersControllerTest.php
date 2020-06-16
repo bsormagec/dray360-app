@@ -87,6 +87,27 @@ class OrdersControllerTest extends TestCase
     }
 
     /** @test */
+    public function it_filters_by_the_raw_addresses_from_a_single_query_filter()
+    {
+        $this->withoutExceptionHandling();
+        $this->seed(OrdersTableSeeder::class);
+        $this->seed(OrdersTableSeeder::class);
+        factory(OCRRequestStatus::class, 2)->create(['status' => 'ocr-waiting']);
+        $order = Order::latest()->first();
+
+        $this->getJson(route('orders.index', ['filter[query]' => $order->request_id]))
+            ->assertJsonCount(1, 'data');
+        $this->getJson(route('orders.index', [
+                'filter[query]' => substr($order->bill_to_address_raw_text, 0, 15)
+            ]))
+            ->assertJsonCount(1, 'data');
+        $this->getJson(route('orders.index', [
+                'filter[query]' => substr($order->equipment_type, 0, 5)
+            ]))
+            ->assertJsonCount(Order::where('equipment_type', $order->equipment_type)->count(), 'data');
+    }
+
+    /** @test */
     public function it_should_only_update_the_allowed_order_fields()
     {
         $originalOrder = Order::orderByDesc('id')->first();
