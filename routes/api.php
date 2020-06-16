@@ -4,6 +4,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Api\OrdersController;
 use App\Http\Controllers\Api\OCRRulesController;
 use App\Http\Controllers\Api\OCRRequestController;
+use App\Http\Controllers\Api\SearchAddressController;
 use App\Http\Controllers\Api\AuthenticationController;
 use App\Http\Controllers\Api\OCRRulesAssignmentController;
 
@@ -28,6 +29,9 @@ Route::group(['middleware' => 'auth:sanctum'], function () {
     // Authenticated route to get current user
     Route::get('user', [AuthenticationController::class, 'user'])
         ->name('user'); // shows up in `php artisan route:list` command output
+
+    Route::get('search-address', SearchAddressController::class)
+        ->name('search-address.index');
 
     // Authenticated route to return all orders
     Route::resource('orders', OrdersController::class)
