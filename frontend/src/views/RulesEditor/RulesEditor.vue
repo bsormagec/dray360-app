@@ -178,7 +178,6 @@ import 'codemirror/lib/codemirror.css'
 import 'codemirror/theme/base16-light.css'
 import VueJsonPretty from 'vue-json-pretty'
 import rulesLibrary, { types } from '@/store/modules/rules_editor'
-// const axios = require('axios')
 export default {
   name: 'RulesEditor',
   components: {
@@ -202,8 +201,6 @@ export default {
     },
     draggable_rules: [],
     selected_rule_index: 0
-    // Testing output
-    // testing_output: null
   }),
   async mounted () {
     const vc = this
