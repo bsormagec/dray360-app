@@ -219,7 +219,7 @@ export default {
     await vc.fetchRules()
   },
   methods: {
-    ...mapActions(rulesLibrary.moduleName, [types.getLibrary, types.getAccountVariantRules, types.setSequence, types.setRule, types.addRule]),
+    ...mapActions(rulesLibrary.moduleName, [types.getLibrary, types.getAccountVariantRules, types.setSequence, types.setRule, types.addRule, types.setRuleCode]),
 
     async fetchRulesLibrary () {
       const status = await this[types.getLibrary]()
@@ -254,8 +254,6 @@ export default {
         id: ruleId,
         name: ruleName
       }
-
-      console.log('ruleData: ', ruleData)
 
       const status = await this[types.setRule](ruleData)
 
@@ -373,16 +371,9 @@ export default {
           alert(error)
         })
     },
-    cancelRuleEdition (index) {
+    async cancelRuleEdition (index) {
       const vc = this
-      const baseURL = `${process.env.VUE_APP_APP_URL}`
-      axios.get(baseURL + '/api/ocr/rules-assignment?account_id=1&variant_id=1')
-        .then(function (response) {
-          vc.account_variant_rules[index].code = response.data.data[index].code
-        })
-        .catch(function (error) {
-          alert(error)
-        })
+      vc.draggable_rules[index].code = await this[types.setRuleCode](index)
     },
     cancelSequenceEdition () {
       const vc = this

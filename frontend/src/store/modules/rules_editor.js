@@ -1,5 +1,5 @@
 import { reqStatus } from '@/enums/req_status'
-import { getLibrary, getAccountVariantRules, putEditRule, postSaveRuleSequence, postAddRule } from '@/store/api_calls/rules_editor'
+import { getLibrary, getAccountVariantRules, putEditRule, postSaveRuleSequence, postAddRule, getRuleCode } from '@/store/api_calls/rules_editor'
 
 export const types = {
   setLibrary: 'SET_LIBRARY',
@@ -8,7 +8,8 @@ export const types = {
   setAccountVariantRules: 'SET_ACCOUNT_VARIANT_RULES',
   setRule: 'SET_RULE',
   setSequence: 'SET_SEQUENCE',
-  addRule: 'ADD_RULE'
+  addRule: 'ADD_RULE',
+  setRuleCode: 'SET_RULE_CODE'
 }
 
 const initialState = {
@@ -60,6 +61,14 @@ const actions = {
 
     commit(types.setRule, { ruleData })
     return reqStatus.succcess
+  },
+  async [types.setRuleCode] ({ commit }, i) {
+    const ruleCodeData = await getRuleCode(i)
+
+    const data = ruleCodeData[1].data[i].code
+    console.log('data to commit:', data)
+
+    return data
   },
   async [types.setSequence] ({ commit }, sequenceData) {
     await postSaveRuleSequence(sequenceData)
