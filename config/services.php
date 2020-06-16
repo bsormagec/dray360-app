@@ -37,4 +37,9 @@ return [
         'token' => env('RIP_CMS_TOKEN'),
     ],
 
+    'search-address' => [
+        'url' => env('SEARCH_ADDRESS_URL', 'https://i0mgwmnrb1.execute-api.us-east-2.amazonaws.com/default/ocr-address-search-dev'),
+        'api_key' => env('SEARCH_ADDRESS_API_KEY'),
+    ]
+
 ];
