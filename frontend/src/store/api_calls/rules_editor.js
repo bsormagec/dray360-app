@@ -14,6 +14,8 @@ export const getRuleCode = async (index) => axios.get('/api/ocr/rules-assignment
 
 export const getTestingOutput = async (orderId, singleAccountVariantRule) => axios.get('/api/orders/' + orderId)
   .then(function (response) {
+    let testingOutput = null
+
     const fetchedOcrData = response.data.ocr_data
     delete fetchedOcrData.fields_overwritten
 
@@ -29,18 +31,25 @@ export const getTestingOutput = async (orderId, singleAccountVariantRule) => axi
     })
     fetchedOcrData[testedRuleName] = testedRuleCode
 
-    // console.log('fetchedOcrData[testedRuleName]', fetchedOcrData[testedRuleName])
+    const headers = {
+      'Access-Control-Allow-Origin': '*'
+    }
 
-    axios.post('https://i0mgwmnrb1.execute-api.us-east-2.amazonaws.com/default/ocr-rules-engine-dev',
-      fetchedOcrData)
+    testingOutput = axios.post('https://i0mgwmnrb1.execute-api.us-east-2.amazonaws.com/default/ocr-rules-engine-dev',
+      fetchedOcrData,
+      {
+        withCredentials: false,
+        headers: headers
+      })
       .then(function (response) {
-        // vc.testing_output = response.data
-        console.log('return response.data: ', response.data)
-        return [undefined, response.data]
+        console.log('response:', response.data)
+        return response.data
       })
       .catch(function (error) {
         alert(error)
       })
+
+    return testingOutput
   })
   .catch(function (error) {
     alert(error)

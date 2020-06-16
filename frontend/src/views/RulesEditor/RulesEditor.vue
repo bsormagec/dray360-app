@@ -127,9 +127,9 @@
             />
           </div>
           <vue-json-pretty
-            v-if="testing_output"
+            v-if="testing_output()"
             :path="'res'"
-            :data="testing_output"
+            :data="testing_output()"
             @click="handleClick"
           />
         </div>
@@ -145,12 +145,6 @@
             <v-list-item-group
               color="primary"
             >
-              <!-- <draggable
-                v-model="account_variant_rules" V-MODEL NOT NECCESARY WITH VUEX ARCHITECTURE
-                group="rules"
-                @start="drag=true"
-                @end="drag=false"
-              > -->
               <draggable
                 v-model="draggable_rules"
                 group="rules"
@@ -196,7 +190,8 @@ export default {
   data: () => ({
     ...mapState(rulesLibrary.moduleName, {
       rules_library: state => state.rules_library,
-      account_variant_rules: state => state.account_variant_rules
+      account_variant_rules: state => state.account_variant_rules,
+      testing_output: state => state.testing_output
     }),
 
     cmOptions: {
@@ -207,9 +202,9 @@ export default {
       line: true
     },
     draggable_rules: [],
-    selected_rule_index: 0,
+    selected_rule_index: 0
     // Testing output
-    testing_output: null
+    // testing_output: null
   }),
   async mounted () {
     const vc = this
@@ -337,7 +332,7 @@ export default {
     async testSingleRule (index) {
       const vc = this
 
-      const ruleToTest = vc.account_variant_rules()[index]
+      const ruleToTest = vc.draggable_rules[index]
       const orderId = prompt('Please enter order ID')
       const dataObject = { orderId, ruleToTest }
 
@@ -345,43 +340,7 @@ export default {
 
       if (status === reqStatus.success) {
         console.log('testSingleRule success')
-      } else {
-        console.log('testSingleRule error')
       }
-
-      // THIS WORKS
-
-      // const baseURL = `${process.env.VUE_APP_APP_URL}`
-      // let fetchedOcrData = []
-      // const orderId = prompt('Please enter order ID')
-      // axios.get(baseURL + '/api/orders/' + orderId)
-      //   .then(function (response) {
-      //     fetchedOcrData = response.data.ocr_data
-      //     delete fetchedOcrData.fields_overwritten
-
-      //     fetchedOcrData.rules = vc.account_variant_rules()[index]
-
-      //     const testedRuleName = fetchedOcrData.rules.name
-      //     const testedRuleCode = fetchedOcrData.rules.code
-
-      //     fetchedOcrData.rules = []
-      //     fetchedOcrData.rules.push({
-      //       [testedRuleName]: testedRuleCode
-      //     })
-      //     fetchedOcrData[testedRuleName] = testedRuleCode
-
-      //     axios.post('https://i0mgwmnrb1.execute-api.us-east-2.amazonaws.com/default/ocr-rules-engine-dev',
-      //       fetchedOcrData)
-      //       .then(function (response) {
-      //         vc.testing_output = response.data
-      //       })
-      //       .catch(function (error) {
-      //         alert(error)
-      //       })
-      //   })
-      //   .catch(function (error) {
-      //     alert(error)
-      //   })
     },
     async cancelRuleEdition (index) {
       const vc = this

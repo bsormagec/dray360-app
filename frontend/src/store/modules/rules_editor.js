@@ -10,7 +10,8 @@ export const types = {
   setSequence: 'SET_SEQUENCE',
   addRule: 'ADD_RULE',
   setRuleCode: 'SET_RULE_CODE',
-  getTestingOutput: 'GET_TESTING_OUTPUT'
+  getTestingOutput: 'GET_TESTING_OUTPUT',
+  setTestingOutput: 'SET_TESTING_OUTPUT'
 }
 
 const initialState = {
@@ -96,14 +97,11 @@ const actions = {
     return reqStatus.succcess
   },
   async [types.getTestingOutput] ({ commit }, dataObject) {
-    const [error, data] = await getTestingOutput(dataObject.orderId, dataObject.ruleToTest)
+    const data = await getTestingOutput(dataObject.orderId, dataObject.ruleToTest)
 
-    if (error) return reqStatus.error
+    console.log('testing output to be commited: ', data)
 
-    console.log('testing output to be commited: ' + data)
-
-    commit(types.setTestingOutput, data)
-    return reqStatus.success
+    commit(types.setTestingOutput, { testingOutput: data })
   }
 }
 
