@@ -75,7 +75,7 @@ class ImportProfitToolsAddress implements ShouldQueue
         $rateLimited = (new RateLimited())
             ->allow(300)
             ->everySeconds(60)
-            ->releaseAfterBackoff($this->attempts());
+            ->releaseAfterOneMinute();
 
         return [$rateLimited];
     }
