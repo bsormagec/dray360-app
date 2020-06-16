@@ -50,7 +50,7 @@
                   Cancel
                 </v-btn>
                 <v-btn
-                  v-if="account_variant_rules.length > 0"
+                  v-if="account_variant_rules().length > 0"
                   @click="testSingleRule(selected_rule_index)"
                 >
                   Test
@@ -129,7 +129,7 @@
           <vue-json-pretty
             v-if="testing_output"
             :path="'res'"
-            :data="{testing_output}"
+            :data="testing_output"
             @click="handleClick"
           />
         </div>
@@ -185,7 +185,7 @@ import 'codemirror/lib/codemirror.css'
 import 'codemirror/theme/base16-light.css'
 import VueJsonPretty from 'vue-json-pretty'
 import rulesLibrary, { types } from '@/store/modules/rules_editor'
-const axios = require('axios')
+// const axios = require('axios')
 export default {
   name: 'RulesEditor',
   components: {
@@ -206,10 +206,7 @@ export default {
       lineNumbers: true,
       line: true
     },
-    // Account / Variant Rules
-    // account_variant_rules: [],
     draggable_rules: [],
-    // Selected rule
     selected_rule_index: 0,
     // Testing output
     testing_output: null
@@ -219,7 +216,7 @@ export default {
     await vc.fetchRules()
   },
   methods: {
-    ...mapActions(rulesLibrary.moduleName, [types.getLibrary, types.getAccountVariantRules, types.setSequence, types.setRule, types.addRule, types.setRuleCode]),
+    ...mapActions(rulesLibrary.moduleName, [types.getLibrary, types.getAccountVariantRules, types.setSequence, types.setRule, types.addRule, types.setRuleCode, types.getTestingOutput]),
 
     async fetchRulesLibrary () {
       const status = await this[types.getLibrary]()
@@ -337,39 +334,54 @@ export default {
       vc.fetchRulesLibrary()
       vc.fetchAccountVariantRules()
     },
-    testSingleRule (index) {
+    async testSingleRule (index) {
       const vc = this
-      const baseURL = `${process.env.VUE_APP_APP_URL}`
-      let fetchedOcrData = []
+
+      const ruleToTest = vc.account_variant_rules()[index]
       const orderId = prompt('Please enter order ID')
-      axios.get(baseURL + '/api/orders/' + orderId)
-        .then(function (response) {
-          fetchedOcrData = response.data.ocr_data
-          delete fetchedOcrData.fields_overwritten
+      const dataObject = { orderId, ruleToTest }
 
-          fetchedOcrData.rules = vc.account_variant_rules[index]
+      const status = await this[types.getTestingOutput](dataObject)
 
-          const testedRuleName = fetchedOcrData.rules.name
-          const testedRuleCode = fetchedOcrData.rules.code
+      if (status === reqStatus.success) {
+        console.log('testSingleRule success')
+      } else {
+        console.log('testSingleRule error')
+      }
 
-          fetchedOcrData.rules = []
-          fetchedOcrData.rules.push({
-            [testedRuleName]: testedRuleCode
-          })
-          fetchedOcrData[testedRuleName] = testedRuleCode
+      // THIS WORKS
 
-          axios.post('https://i0mgwmnrb1.execute-api.us-east-2.amazonaws.com/default/ocr-rules-engine-dev',
-            fetchedOcrData)
-            .then(function (response) {
-              vc.testing_output = response.data
-            })
-            .catch(function (error) {
-              alert(error)
-            })
-        })
-        .catch(function (error) {
-          alert(error)
-        })
+      // const baseURL = `${process.env.VUE_APP_APP_URL}`
+      // let fetchedOcrData = []
+      // const orderId = prompt('Please enter order ID')
+      // axios.get(baseURL + '/api/orders/' + orderId)
+      //   .then(function (response) {
+      //     fetchedOcrData = response.data.ocr_data
+      //     delete fetchedOcrData.fields_overwritten
+
+      //     fetchedOcrData.rules = vc.account_variant_rules()[index]
+
+      //     const testedRuleName = fetchedOcrData.rules.name
+      //     const testedRuleCode = fetchedOcrData.rules.code
+
+      //     fetchedOcrData.rules = []
+      //     fetchedOcrData.rules.push({
+      //       [testedRuleName]: testedRuleCode
+      //     })
+      //     fetchedOcrData[testedRuleName] = testedRuleCode
+
+      //     axios.post('https://i0mgwmnrb1.execute-api.us-east-2.amazonaws.com/default/ocr-rules-engine-dev',
+      //       fetchedOcrData)
+      //       .then(function (response) {
+      //         vc.testing_output = response.data
+      //       })
+      //       .catch(function (error) {
+      //         alert(error)
+      //       })
+      //   })
+      //   .catch(function (error) {
+      //     alert(error)
+      //   })
     },
     async cancelRuleEdition (index) {
       const vc = this

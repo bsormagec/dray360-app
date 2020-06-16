@@ -1,5 +1,5 @@
 import { reqStatus } from '@/enums/req_status'
-import { getLibrary, getAccountVariantRules, putEditRule, postSaveRuleSequence, postAddRule, getRuleCode } from '@/store/api_calls/rules_editor'
+import { getLibrary, getAccountVariantRules, putEditRule, postSaveRuleSequence, postAddRule, getRuleCode, getTestingOutput } from '@/store/api_calls/rules_editor'
 
 export const types = {
   setLibrary: 'SET_LIBRARY',
@@ -9,12 +9,14 @@ export const types = {
   setRule: 'SET_RULE',
   setSequence: 'SET_SEQUENCE',
   addRule: 'ADD_RULE',
-  setRuleCode: 'SET_RULE_CODE'
+  setRuleCode: 'SET_RULE_CODE',
+  getTestingOutput: 'GET_TESTING_OUTPUT'
 }
 
 const initialState = {
   rules_library: [],
-  account_variant_rules: []
+  account_variant_rules: [],
+  testing_output: null
 }
 
 const mutations = {
@@ -32,6 +34,9 @@ const mutations = {
   },
   [types.addRule] (state, { ruleData }) {
     state.rules_library.push(ruleData)
+  },
+  [types.setTestingOutput] (state, { testingOutput }) {
+    state.testing_output = testingOutput
   }
 }
 
@@ -89,6 +94,16 @@ const actions = {
 
     commit(types.addRule, { ruleData })
     return reqStatus.succcess
+  },
+  async [types.getTestingOutput] ({ commit }, dataObject) {
+    const [error, data] = await getTestingOutput(dataObject.orderId, dataObject.ruleToTest)
+
+    if (error) return reqStatus.error
+
+    console.log('testing output to be commited: ' + data)
+
+    commit(types.setTestingOutput, data)
+    return reqStatus.success
   }
 }
 
