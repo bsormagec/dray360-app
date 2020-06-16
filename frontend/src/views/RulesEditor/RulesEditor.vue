@@ -307,8 +307,6 @@ export default {
         id: (vc.rules_library().length + 1)
       }
 
-      console.log('ruleData: ', ruleData)
-
       const status = await this[types.addRule](ruleData)
 
       if (status === reqStatus.success) {
@@ -320,13 +318,13 @@ export default {
     addToAccountVariant (name, code, i) {
       const vc = this
       if (confirm('Add ' + name + ' to account variant')) {
-        vc.account_variant_rules.push(vc.rules_array[i])
+        vc.draggable_rules.push(vc.rules_library()[i])
       }
     },
     removeFromAccountVariant (i) {
       const vc = this
-      if (vc.account_variant_rules.length > 1) {
-        vc.account_variant_rules.splice(i, 1)
+      if (vc.draggable_rules.length > 1) {
+        vc.draggable_rules.splice(i, 1)
       } else {
         alert('There must be at least 1 rule')
       }
