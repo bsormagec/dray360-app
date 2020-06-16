@@ -130,7 +130,6 @@
             v-if="testing_output()"
             :path="'res'"
             :data="testing_output()"
-            @click="handleClick"
           />
         </div>
       </div>
