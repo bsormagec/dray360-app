@@ -32,6 +32,17 @@ class OcrRequestOrderListQuery extends QueryBuilder
             AllowedFilter::partial('order.shipment_designation', 't_orders.shipment_designation', false),
             AllowedFilter::partial('order.shipment_direction', 't_orders.shipment_direction', false),
             AllowedFilter::exact('status', 'latestOcrRequestStatus.status'),
+            AllowedFilter::callback('query', function ($query, $value) {
+                $query->where(function ($query) use ($value) {
+                    $query->orWhere('t_orders.bill_to_address_raw_text', 'like', "%{$value}%")
+                    ->orWhere('t_job_latest_state.request_id', 'like', "%{$value}%")
+                    ->orWhere('t_orders.port_ramp_of_origin_address_raw_text', 'like', "%{$value}%")
+                    ->orWhere('t_orders.port_ramp_of_destination_address_raw_text', 'like', "%{$value}%")
+                    ->orWhere('t_orders.equipment_type', 'like', "%{$value}%")
+                    ->orWhere('t_orders.shipment_designation', 'like', "%{$value}%")
+                    ->orWhere('t_orders.shipment_direction', 'like', "%{$value}%");
+                });
+            }),
         ])
         ->defaultSort('-t_job_latest_state.created_at')
         ->allowedSorts([
