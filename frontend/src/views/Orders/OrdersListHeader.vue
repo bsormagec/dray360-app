@@ -11,13 +11,17 @@
     </h1>
 
     <div class="header__right">
-      <SearchBar :style="getStyle.searchBar" />
+      <SearchBar
+        :style="getStyle.searchBar"
+        @change="handleSearch"
+      />
 
       <Select
         label="View by Status"
         :style="getStyle.statusSelect"
-        :items="statuses "
-        @change="() => {}"
+        :items="statuses"
+        :default-item="{ index: 5 }"
+        @change="handleStatuses"
       />
 
       <Select
@@ -33,12 +37,12 @@
 <script>
 import Select from '@/components/Select'
 import SearchBar from '@/components/SearchBar'
-import { providerMethodsName } from '@/views/Orders/inner_types'
+import { providerStateName, providerMethodsName } from '@/views/Orders/inner_types'
 
 export default {
   name: 'OrdersListHeader',
 
-  inject: [providerMethodsName],
+  inject: [providerStateName, providerMethodsName],
 
   components: {
     Select,
@@ -72,7 +76,7 @@ export default {
 
       const desktopStyles = {
         searchBar: { marginRight: '1rem' },
-        statusSelect: { marginRight: '1rem' },
+        statusSelect: { marginRight: '1rem', minWidth: '14rem' },
         columnsSelect: {}
       }
 
@@ -93,6 +97,25 @@ export default {
   },
 
   methods: {
+    handleSearch (search) {
+      const filters = {
+        'filter[order.bill_to_address_raw_text]': search
+      }
+
+      this[providerMethodsName].setSearchFilter(filters)
+      this[providerMethodsName].fetchOrdersList({
+        page: this[providerStateName].activePage(),
+        ...filters
+      })
+    },
+
+    handleStatuses (statuses) {
+      this[providerMethodsName].setStatusFilter(statuses)
+      this[providerMethodsName].fetchOrdersList({
+        page: this[providerStateName].activePage()
+      })
+    },
+
     handleSelection (items) {
       const newHeaders = this.cachedHeaders.filter(({ text }) => items.find(selected => text === selected))
       this.setHeaders(newHeaders)

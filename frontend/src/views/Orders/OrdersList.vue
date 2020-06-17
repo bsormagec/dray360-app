@@ -69,15 +69,68 @@ export default {
       { text: 'Actions', value: 'action', width: '8.5rem' }
     ],
     statuses: [
-      'Pending',
-      'Processing',
-      'In review',
-      'Verified',
-      'Sent to TMS',
-      'Rejected',
-      'Intake'
+      {
+        text: 'intake-accepted',
+        value: 'intake-accepted'
+      },
+      {
+        text: 'intake-exception',
+        value: 'intake-exception'
+      },
+      {
+        text: 'intake-rejected',
+        value: 'intake-rejected'
+      },
+      {
+        text: 'intake-started',
+        value: 'intake-started'
+      },
+      {
+        text: 'ocr-completed',
+        value: 'ocr-completed'
+      },
+      {
+        text: 'ocr-post-processing-complete',
+        value: 'ocr-post-processing-complete'
+      },
+      {
+        text: 'ocr-post-processing-error',
+        value: 'ocr-post-processing-error'
+      },
+      {
+        text: 'ocr-waiting',
+        value: 'ocr-waiting'
+      },
+      {
+        text: 'process-ocr-output-file-complete',
+        value: 'process-ocr-output-file-complete'
+      },
+      {
+        text: 'process-ocr-output-file-error',
+        value: 'process-ocr-output-file-error'
+      },
+      {
+        text: 'upload-requested',
+        value: 'upload-requested'
+      }
     ]
   }),
+
+  /*
+  [
+    'intake-accepted' => 'Processing',
+    'intake-exception' => 'Exception',
+    'intake-rejected' => 'Rejected',
+    'intake-started' => 'Intake',
+    'ocr-completed' => 'Processing',
+    'ocr-post-processing-complete' => 'Verified',
+    'ocr-post-processing-error' => 'Rejected',
+    'ocr-waiting' => 'Processing',
+    'process-ocr-output-file-complete' => 'Processing',
+    'process-ocr-output-file-error' => 'Rejected',
+    'upload-requested' => 'Intake'
+  ]
+  */
 
   methods: {
     setHeaders (newHeaders) {
@@ -85,7 +138,7 @@ export default {
     },
 
     async requestPage (n) {
-      await this[providerMethodsName].fetchOrdersList(n)
+      await this[providerMethodsName].fetchOrdersList({ page: n })
     }
   }
 }

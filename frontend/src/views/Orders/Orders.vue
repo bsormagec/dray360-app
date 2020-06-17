@@ -62,7 +62,9 @@ export default {
       activeMobileTab: tabs.list,
       mobileSidebarOpen: false,
       activePage: 0,
-      tabs
+      tabs,
+      statusFilter: '',
+      searchFilter: {}
     }
   },
 
@@ -99,9 +101,14 @@ export default {
       return this.activeMobileTab === tab
     },
 
-    async fetchOrdersList (n) {
-      this.activePage = parseInt(this.handleLocationUrl(n))
-      const status = await this[types.getOrders](this.activePage)
+    async fetchOrdersList (filters = { page: 1 }) {
+      this.activePage = parseInt(this.handleLocationUrl(filters.page))
+      const status = await this[types.getOrders]({
+        ...this.searchFilter,
+        ...filters,
+        page: this.activePage,
+        query: this.statusFilter
+      })
 
       if (status === reqStatus.success) {
         console.log('success')
@@ -119,21 +126,42 @@ export default {
       }
 
       return page
+    },
+
+    setStatusFilter (statuses) {
+      const query = statuses.map(s => `filter[status]=${s}`)
+      this.statusFilter = query.join('&')
+    },
+
+    setSearchFilter (filters) {
+      this.searchFilter = filters
     }
   },
 
   provide () {
-    const { list, links, meta, fetchOrdersList, toggleMobileSidebar } = this
+    const {
+      activePage,
+      list,
+      links,
+      meta,
+      fetchOrdersList,
+      toggleMobileSidebar,
+      setStatusFilter,
+      setSearchFilter
+    } = this
 
     return {
       [providerStateName]: {
+        activePage: () => activePage,
         list,
         links,
         meta
       },
       [providerMethodsName]: {
         fetchOrdersList,
-        toggleMobileSidebar
+        toggleMobileSidebar,
+        setStatusFilter,
+        setSearchFilter
       }
     }
   }

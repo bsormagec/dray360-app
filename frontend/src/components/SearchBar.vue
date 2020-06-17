@@ -1,6 +1,9 @@
 <template>
   <div class="search-bar">
-    <input placeholder="Search">
+    <input
+      placeholder="Search"
+      @input="change"
+    >
     <v-icon
       slot="append"
     >
@@ -11,7 +14,22 @@
 
 <script>
 export default {
-  name: 'SearchBar'
+  name: 'SearchBar',
+
+  data: () => ({
+    timeout: undefined
+  }),
+
+  methods: {
+    change (e) {
+      if (this.timeout) {
+        clearInterval(this.timeout)
+        this.timeout = undefined
+      }
+
+      this.timeout = setTimeout(() => this.$emit('change', e.target.value), 300)
+    }
+  }
 }
 </script>
 

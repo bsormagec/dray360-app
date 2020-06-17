@@ -34,8 +34,12 @@ const mutations = {
 }
 
 const actions = {
-  async [types.getOrders] ({ commit }, page) {
-    const [error, data] = await getOrders(page)
+  async [types.getOrders] ({ commit }, filters) {
+    const query = filters.query
+    const filtersForParams = { ...filters }
+    delete filtersForParams.query
+
+    const [error, data] = await getOrders(filters, query)
 
     if (error) return reqStatus.error
 
