@@ -44,7 +44,26 @@
           <p>
             <ContentLoading :loaded="loaded" />
           </p>
+          <h2>No Match Modal / Address not found</h2><br>
+          <code>Props: *modaltype* = AddressNotFound <br> currentstep = "the position in the stepper component" <br></code>
+          <div>
+            <OrderModal
+              currentstep="1"
+              modaltype="AddressNotFound"
+              :message="message"
+            />
+          </div>
+          <h2>Close Match Modal /  Address Verification Needed</h2><br>
+          <code>Props: *modaltype* = VerificationNeded <br> currentstep = "the position in the stepper component" <br> message: the message that indicates the user about the closest match</code>
+          <div>
+            <OrderModal
+              currentstep="2"
+              modaltype="VerificationNeded"
+              :message="message"
+            />
+          </div>
         </div>
+
         <div class="col-md-6 right-side">
           <h2>
             Form Field / Presentational mode
@@ -92,6 +111,7 @@ import FormField from '@/components/FormField/FormField'
 import SearchBar from '@/components/SearchBar'
 import Select from '@/components/Select'
 import ContentLoading from '@/components/ContentLoading'
+import OrderModal from '@/components/Orders/OrderModal'
 const callbacks = {
   startEdit: (obj) => {
     obj.field.highlight = 'edit'
@@ -114,7 +134,8 @@ export default {
     FormField,
     SearchBar,
     Select,
-    ContentLoading
+    ContentLoading,
+    OrderModal
   },
   props: {
   },
@@ -123,6 +144,7 @@ export default {
       isEditing: true,
       loaded: false,
       items: ['a', 'b', 'c'],
+      message: 'The recognition engine scanned the address below and did not find a matching address in your system. Please select the correct address:',
       fields_2:
         {
           name: 'name',
@@ -221,6 +243,9 @@ export default {
         padding: 2rem;
         margin-bottom: 2rem;
     }
+  }
+  .v-btn{
+    padding: 0 !important;
   }
   .right-side{
     padding: 3rem;
