@@ -2,7 +2,10 @@
 
 namespace App\Models;
 
+use Illuminate\Support\Carbon;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Validation\ValidationException;
 
 /**
  * @property \Illuminate\Database\Eloquent\Collection $orders
@@ -52,5 +55,20 @@ class OCRRequest extends Model
                     'shipment_direction',
                 ]);
             });
+    }
+
+    public function scopeCreatedBetween(Builder $query, ...$dates): Builder
+    {
+        if (count($dates) < 2) {
+            throw ValidationException::withMessages([
+                'created_between' => 'Requires two dates separated by comma. ex 2020-01-01,2020-01-02'
+            ]);
+        }
+        $dates = [
+            (new Carbon($dates[0]))->startOfDay(),
+            (new Carbon($dates[1]))->endOfDay(),
+        ];
+
+        return $query->whereBetween('t_job_latest_state.created_at', $dates);
     }
 }

@@ -5,6 +5,7 @@ namespace Tests\Feature;
 use Tests\TestCase;
 use App\Models\Order;
 use OrdersTableSeeder;
+use App\Models\OCRRequest;
 use App\Models\OrderLineItem;
 use Illuminate\Http\Response;
 use App\Models\OCRRequestStatus;
@@ -62,6 +63,9 @@ class OrdersControllerTest extends TestCase
         $this->seed(OrdersTableSeeder::class);
         factory(OCRRequestStatus::class, 2)->create(['status' => 'ocr-waiting']);
         $order = Order::latest()->first();
+        $ocrRequest = OCRRequest::latest()->first();
+        $ocrRequest->created_at = now()->subDays(5);
+        $ocrRequest->save();
 
         $this->getJson(route('orders.index', ['filter[status]' => 'ocr-waiting']))
             ->assertJsonCount(2, 'data');
@@ -83,6 +87,9 @@ class OrdersControllerTest extends TestCase
                 'filter[order.shipment_direction]' => substr($order->shipment_direction, 0, 5)
             ]))
             ->assertJsonCount(Order::where('shipment_direction', $order->shipment_direction)->count(), 'data');
+        $dateRange = now()->subDays(6)->toDateString() . ','. now()->subDays(3)->toDateString();
+        $this->getJson(route('orders.index', ['filter[created_between]' => $dateRange]))
+            ->assertJsonCount(1, 'data');
         $this->getJson(route('orders.index', ['sort' => '-status']))
             ->assertJsonCount(5, 'data');
     }
