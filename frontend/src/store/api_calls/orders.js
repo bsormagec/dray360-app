@@ -1,11 +1,11 @@
 import axios from '@/store/api_calls/config/axios'
 import toParams from '@/utils/to_params'
 
-export const getOrders = async (filters, query) => axios.get(`/api/orders?${toParams(filters)}&${query}`).then(data => [undefined, data.data]).catch(e => [e])
+export const getOrders = async (filters, query) => axios.ext.get(`/api/orders?${toParams(filters)}&${query}`).then(data => [undefined, data.data]).catch(e => [e])
 
-export const getOrderDetail = async (order) => axios.get(`/api/orders/${order}`).then(data => [undefined, data.data]).catch(e => [e])
+export const getOrderDetail = async (order) => axios.ext.get(`/api/orders/${order}`).then(data => [undefined, data.data]).catch(e => [e])
 
-export const postUploadPDF = async (file) => axios.post('/api/createocrrequestuploaduri', { filename: file.name, withCredentials: false })
+export const postUploadPDF = async (file) => axios.ext.post('/api/createocrrequestuploaduri', { filename: file.name, withCredentials: false })
   .then(response => {
     const config = {
       withCredentials: false,
@@ -15,8 +15,7 @@ export const postUploadPDF = async (file) => axios.post('/api/createocrrequestup
       }
     }
 
-    axios.put(response.data.upload_uri, file, config)
-      .then(response => [undefined, response.data])
+    return axios.ext.put(response.data.upload_uri, file, config).then(response => [undefined, response.data])
       .catch(e => [e])
   })
   .catch(e => [e])
