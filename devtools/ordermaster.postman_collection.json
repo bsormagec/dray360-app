@@ -1034,6 +1034,69 @@
 				}
 			},
 			"response": []
+		},
+		{
+			"name": "/api/send-to-tms",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "ea35315e-1da1-4a5c-9b33-1ed0dce2ea2c",
+						"exec": [
+							"var token1=postman.getResponseCookie('XSRF-TOKEN').value;",
+							"var token2=token1.replace('%3D%3D','==');",
+							"postman.setEnvironmentVariable('X-XSRF-TOKEN', token2);",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/x-www-form-urlencoded"
+					},
+					{
+						"key": "Referer",
+						"type": "text",
+						"value": "{{server}}"
+					},
+					{
+						"key": "Accept",
+						"type": "text",
+						"value": "application/json, text/plain, */*"
+					},
+					{
+						"key": "X-XSRF-TOKEN",
+						"type": "text",
+						"value": "{{X-XSRF-TOKEN}}"
+					}
+				],
+				"url": {
+					"raw": "{{server}}/api/send-to-tms?status=sending-to-wint&order_id=125",
+					"host": [
+						"{{server}}"
+					],
+					"path": [
+						"api",
+						"send-to-tms"
+					],
+					"query": [
+						{
+							"key": "status",
+							"value": "sending-to-wint"
+						},
+						{
+							"key": "order_id",
+							"value": "125"
+						}
+					]
+				}
+			},
+			"response": []
 		}
 	],
 	"protocolProfileBehavior": {}
