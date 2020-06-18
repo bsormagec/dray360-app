@@ -49,6 +49,8 @@
           <p>
             <DateRangeCalendar />
           </p>
+          <h2>Address Book Modal</h2><br>
+          <AddressBookModal />
         </div>
 
         <div class="col-md-6 right-side">
@@ -99,6 +101,7 @@ import SearchBar from '@/components/SearchBar'
 import Select from '@/components/Select'
 import ContentLoading from '@/components/ContentLoading'
 import DateRangeCalendar from '@/components/Orders/DateRangeCalendar'
+import AddressBookModal from '@/components/Orders/AddressBookModal'
 const callbacks = {
   startEdit: (obj) => {
     obj.field.highlight = 'edit'
@@ -122,7 +125,8 @@ export default {
     SearchBar,
     Select,
     ContentLoading,
-    DateRangeCalendar
+    DateRangeCalendar,
+    AddressBookModal
   },
   props: {
   },
