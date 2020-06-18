@@ -34,6 +34,7 @@ class OcrRequestOrderListQuery extends QueryBuilder
             AllowedFilter::partial('order.equipment_type', 't_orders.equipment_type', false),
             AllowedFilter::partial('order.shipment_designation', 't_orders.shipment_designation', false),
             AllowedFilter::partial('order.shipment_direction', 't_orders.shipment_direction', false),
+            AllowedFilter::scope('created_between'),
             AllowedFilter::callback('status', function ($query, $value) {
                 $value = is_array($value) ? $value : [$value];
                 $query->leftJoin('t_orders', function ($query) use ($value) {

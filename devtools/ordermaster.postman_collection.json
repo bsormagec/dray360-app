@@ -250,7 +250,7 @@
 					}
 				],
 				"url": {
-					"raw": "{{server}}/api/orders",
+					"raw": "{{server}}/api/orders?filter[created_between]=2020-04-30,2020-05-01&sort=-created_at&page=1",
 					"host": [
 						"{{server}}"
 					],
@@ -261,23 +261,98 @@
 					"query": [
 						{
 							"key": "filter[request_id]",
-							"value": "f0",
-							"description": "Available: request_id, order.bill_to_address_raw_text, order.port_ramp_of_origin_address_raw_text, order.port_ramp_of_destination_address_raw_text, order.equipment_type, order.shipment_designation, order.shipment_direction, status, query",
+							"value": "",
+							"description": "The ocr request id",
+							"disabled": true
+						},
+						{
+							"key": "filter[order.bill_to_address_raw_text]",
+							"value": "",
+							"disabled": true
+						},
+						{
+							"key": "filter[order.port_ramp_of_origin_address_raw_text]",
+							"value": "",
+							"disabled": true
+						},
+						{
+							"key": "filter[order.port_ramp_of_destination_address_raw_text]",
+							"value": "",
+							"disabled": true
+						},
+						{
+							"key": "filter[order.equipment_type]",
+							"value": "",
+							"disabled": true
+						},
+						{
+							"key": "filter[order.shipment_designation]",
+							"value": "",
+							"disabled": true
+						},
+						{
+							"key": "filter[order.shipment_direction]",
+							"value": "",
+							"disabled": true
+						},
+						{
+							"key": "filter[created_between]",
+							"value": "2020-04-30,2020-05-01",
+							"description": "date range, separated by commas"
+						},
+						{
+							"key": "filter[status]",
+							"value": "intake-started,ocr-completed,ocr-waiting,",
+							"description": "Multiple values comma separated. Available: intake-accepted, intake-exception, intake-rejected, intake-started, ocr-completed, ocr-post-processing-complete, ocr-post-processing-error, ocr-waiting, process-ocr-output-file-complete, process-ocr-output-file-error, upload-requested",
+							"disabled": true
+						},
+						{
+							"key": "filter[query]",
+							"value": "whateever",
+							"description": "Filter by all the fields above except the dates",
 							"disabled": true
 						},
 						{
 							"key": "sort",
-							"value": "-order.created_at",
-							"description": "Available: request_id, order.bill_to_address_raw_text, order.created_at, order.equipment_type, order.shipment_designation, order.shipment_direction, status",
+							"value": "request_id",
+							"disabled": true
+						},
+						{
+							"key": "sort",
+							"value": "-created_at"
+						},
+						{
+							"key": "sort",
+							"value": "status",
+							"disabled": true
+						},
+						{
+							"key": "sort",
+							"value": "order.bill_to_address_raw_text",
+							"disabled": true
+						},
+						{
+							"key": "sort",
+							"value": "order.equipment_type",
+							"disabled": true
+						},
+						{
+							"key": "sort",
+							"value": "order.shipment_designation",
+							"disabled": true
+						},
+						{
+							"key": "sort",
+							"value": "order.shipment_direction",
 							"disabled": true
 						},
 						{
 							"key": "page",
-							"value": "1",
-							"disabled": true
+							"value": "1"
 						}
 					]
-				}
+				},
+				"description": "You can enable multiple values of the `filter[]` but only one `sort` is allowed"
 			},
 			"response": []
 		},
