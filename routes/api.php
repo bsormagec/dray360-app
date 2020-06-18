@@ -3,6 +3,7 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Api\OrdersController;
 use App\Http\Controllers\Api\OCRRulesController;
+use App\Http\Controllers\Api\SendToTmsController;
 use App\Http\Controllers\Api\OCRRequestController;
 use App\Http\Controllers\Api\SearchAddressController;
 use App\Http\Controllers\Api\AuthenticationController;
@@ -32,6 +33,9 @@ Route::group(['middleware' => 'auth:sanctum'], function () {
 
     Route::get('search-address', SearchAddressController::class)
         ->name('search-address.index');
+
+    Route::post('send-to-tms', SendToTmsController::class)
+        ->name('send-to-tms.store');
 
     // Authenticated route to return all orders
     Route::resource('orders', OrdersController::class)

@@ -40,6 +40,10 @@ return [
     'search-address' => [
         'url' => env('SEARCH_ADDRESS_URL', 'https://i0mgwmnrb1.execute-api.us-east-2.amazonaws.com/default/ocr-address-search-dev'),
         'api_key' => env('SEARCH_ADDRESS_API_KEY'),
-    ]
+    ],
+
+    'sns-topics' => [
+        'send-to-tms' => env('SNS_SEND_TO_TMS_TOPIC', 'arn:aws:sns:us-east-2:228274877766:ocr-status-update-gateway-dev'),
+    ],
 
 ];
