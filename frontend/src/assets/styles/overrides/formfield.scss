@@ -183,15 +183,29 @@
     .highlight__edit.edit {
       height: 100%;
     }
-    .form-field-element-input, .form-field-element-textarea {
-      height: 100%;
-      .v-text-field__details {
-        display: none;
+      .form-field-element-input, .form-field-element-textarea {
+        height: 100%;
+        .v-text-field__details {
+          display: none;
+        }
+        fieldset {
+          border: unset !important;
+        }
       }
-      fieldset {
-        border: unset !important;
+
+    .children__child {
+      .form-field-element-input, .form-field-element-textarea {
+        height: 100%;
+        .v-text-field__details {
+          display: block;
+        }
+        fieldset {
+          border: 0.1rem solid !important;
+          border-color: map-get($colors , grey-10) !important;
+        }
       }
     }
+
     .v-input {
       height: 100%;
     }
