@@ -8,8 +8,11 @@ use Tests\TestCase;
 use Aws\MockHandler;
 use App\Models\Order;
 use OrdersTableSeeder;
+use App\Models\Company;
+use App\Models\TMSProvider;
 use Illuminate\Support\Str;
 use Illuminate\Http\Response;
+use ProfitToolsCushingSeeder;
 use Aws\Exception\AwsException;
 use App\Actions\PublishSnsMessageToSendToTms;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
@@ -19,6 +22,8 @@ class SendToTmsControllerTest extends TestCase
     use DatabaseTransactions;
 
     protected Order $order;
+    protected Company $company;
+    protected TMSProvider $tmsProvider;
 
     public function setUp(): void
     {
@@ -26,7 +31,10 @@ class SendToTmsControllerTest extends TestCase
 
         $this->loginAdmin();
         $this->seed(OrdersTableSeeder::class);
+        $this->seed(ProfitToolsCushingSeeder::class);
         $this->order = Order::first();
+        $this->company = Company::getCushing();
+        $this->tmsProvider = TMSProvider::getProfitTools();
     }
 
     /** @test */
@@ -45,9 +53,11 @@ class SendToTmsControllerTest extends TestCase
         $mockAction->shouldReceive('getSnsClient')->andReturn($snsClient);
         $this->app->instance(PublishSnsMessageToSendToTms::class, $mockAction);
 
-        $this->postJson(route('sent-to-tms.store'), [
+        $this->postJson(route('send-to-tms.store'), [
                 'status' => 'sending-to-wint',
                 'order_id' => $this->order->id,
+                'company_id' => $this->company->id,
+                'tms_provider_id' => $this->tmsProvider->id,
             ])
             ->assertJsonFragment(['data' => $messageId])
             ->assertStatus(Response::HTTP_OK);
@@ -73,9 +83,11 @@ class SendToTmsControllerTest extends TestCase
         $mockAction->shouldReceive('getSnsClient')->andReturn($snsClient);
         $this->app->instance(PublishSnsMessageToSendToTms::class, $mockAction);
 
-        $this->postJson(route('sent-to-tms.store'), [
+        $this->postJson(route('send-to-tms.store'), [
                 'status' => 'sending-to-wint',
                 'order_id' => $this->order->id,
+                'company_id' => $this->company->id,
+                'tms_provider_id' => $this->tmsProvider->id,
             ])
             ->assertJsonFragment(['data' => 'failed-some aws exception'])
             ->assertStatus(Response::HTTP_INTERNAL_SERVER_ERROR);

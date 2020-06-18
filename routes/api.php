@@ -35,7 +35,7 @@ Route::group(['middleware' => 'auth:sanctum'], function () {
         ->name('search-address.index');
 
     Route::post('send-to-tms', SendToTmsController::class)
-        ->name('sent-to-tms.store');
+        ->name('send-to-tms.store');
 
     // Authenticated route to return all orders
     Route::resource('orders', OrdersController::class)

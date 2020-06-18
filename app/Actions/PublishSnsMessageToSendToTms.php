@@ -14,6 +14,8 @@ class PublishSnsMessageToSendToTms
                 ->publish([
                     'Message' => json_encode([
                         'request_id' => $data['request_id'],
+                        'company_id' => $data['company_id'],
+                        'tms_provider_id' => $data['tms_provider_id'],
                         'datetime_utciso' => now()->toISOString(),
                         'status' => $data['status'],
                         'status_metadata' => ['order_id' => $data['order_id']]

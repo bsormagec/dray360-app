@@ -18,8 +18,10 @@ class SendToTmsController extends Controller
         $data = $request->validate([
             'status' => ['required', Rule::in(self::VALID_STATUSES)],
             'order_id' => 'required|exists:t_orders,id',
+            'company_id' => 'required|exists:t_companies,id',
+            'tms_provider_id' => 'required|exists:t_tms_providers,id',
         ]);
-        $order = Order::findOrFail($data['order_id'], ['request_id']);
+        $order = Order::find($data['order_id'], ['request_id']);
         $data['request_id'] = $order->request_id;
 
         $response = app(PublishSnsMessageToSendToTms::class)($data);
