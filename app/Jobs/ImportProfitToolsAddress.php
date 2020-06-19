@@ -35,7 +35,8 @@ class ImportProfitToolsAddress implements ShouldQueue
 
     public function handle()
     {
-        $address = (new RipCms())
+        $company = Company::find($this->companyId);
+        $address = (new RipCms($company))
             ->getToken()
             ->getCompany($this->addressCode);
 
@@ -90,6 +91,6 @@ class ImportProfitToolsAddress implements ShouldQueue
 
     public function tags(): array
     {
-        return ['import:profit-tools-addresses'];
+        return ['import:profit-tools-addresses', "import-address-{$this->companyId}"];
     }
 }
