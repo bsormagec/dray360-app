@@ -18,7 +18,8 @@ class Company extends Model
 
     const CREATED_AT = 'created_at',
         UPDATED_AT = 'updated_at',
-        CUSHING = 'Cushing';
+        CUSHING = 'Cushing',
+        TCOMPANIES_DEV = 'TCompaniesDev';
 
     public $table = 't_companies';
 
@@ -66,5 +67,13 @@ class Company extends Model
     public static function getCushing(): self
     {
         return static::where('name', static::CUSHING)->first();
+    }
+
+    /**
+     * Get company 'TCompanies Dev'
+     */
+    public static function getTCompaniesDev(): self
+    {
+        return static::where('name', static::TCOMPANIES_DEV)->first();
     }
 }

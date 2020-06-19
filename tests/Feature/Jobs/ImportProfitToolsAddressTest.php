@@ -30,17 +30,16 @@ class ImportProfitToolsAddressTest extends TestCase
     {
         $addresses = $this->getBaseAddresses();
         Queue::fake();
-        Http::fake([
-            'https://www.ripcms.com/token*' => Http::response(['access_token' => 'test']),
-            'https://www.ripcms.com/api/ProfitTools/GetCompany/1' => Http::response($addresses[0]),
-            'https://www.ripcms.com/api/ProfitTools/GetCompany/2' => Http::response($addresses[1])
-        ]);
+        Http::fakeSequence()
+            ->push(['access_token' => 'test'])
+            ->push($addresses[0])  //api/ProfitTools/GetCompany/1
+            ->push($addresses[1]); //api/ProfitTools/GetCompany/2
         $company = Company::getCushing();
         $tmsProvider = TMSProvider::getProfitTools();
 
-        Cache::forget(RipCms::TOKEN_CACHE_KEY);
+        Cache::forget(RipCms::getTokenCacheKeyFor($company));
         (new ImportProfitToolsAddress(['id' => 1], $company, $tmsProvider))->handle();
-        Cache::forget(RipCms::TOKEN_CACHE_KEY);
+        // Here the cache should be used
         (new ImportProfitToolsAddress(['id' => 2], $company, $tmsProvider))->handle();
 
         $this->assertDatabaseCount('t_company_address_tms_code', 2);
@@ -71,9 +70,9 @@ class ImportProfitToolsAddressTest extends TestCase
         $company = Company::getCushing();
         $tmsProvider = TMSProvider::getProfitTools();
 
-        Cache::forget(RipCms::TOKEN_CACHE_KEY);
+        Cache::forget(RipCms::getTokenCacheKeyFor($company));
         (new ImportProfitToolsAddress(['id' => 1], $company, $tmsProvider))->handle();
-        Cache::forget(RipCms::TOKEN_CACHE_KEY);
+        Cache::forget(RipCms::getTokenCacheKeyFor($company)); // I want to get the token from ripcms again
         (new ImportProfitToolsAddress(['id' => 1], $company, $tmsProvider))->handle();
 
         $this->assertDatabaseCount('t_company_address_tms_code', 1);

@@ -3,6 +3,7 @@
 namespace Tests\Feature\Commands;
 
 use Tests\TestCase;
+use App\Models\Company;
 use App\Services\Apis\RipCms;
 use ProfitToolsCushingSeeder;
 use Illuminate\Support\Facades\Http;
@@ -27,23 +28,27 @@ class ImportProfitToolsAddressesTest extends TestCase
     public function it_should_queue_a_job_for_each_address_from_the_endpoint()
     {
         Queue::fake();
-        Cache::forget(RipCms::TOKEN_CACHE_KEY);
-        Http::fake([
-            'https://www.ripcms.com/token*' => Http::response(['access_token' => 'test']),
-            'https://www.ripcms.com/api/*' => Http::response([
+        $this->clearTokenCache();
+        Http::fakeSequence()
+            ->push(['access_token' => 'test'])
+            ->push([
                 [ "id" => 1, "name" => "UPG3   Z 6"],
                 ["id" => 2, "name" => "WSI WAREHOUSE"],
-            ]),
-        ]);
+            ])
+            ->push(['access_token' => 'test2'])
+            ->push([
+                [ "id" => 23, "name" => "UPG3   Z 6"],
+                ["id" => 24, "name" => "WSI WAREHOUSE"],
+            ]);
 
         $this->artisan('import:profit-tools-addresses')->assertExitCode(0);
 
-        Queue::assertPushed(ImportProfitToolsAddress::class, 2);
+        Queue::assertPushed(ImportProfitToolsAddress::class, 4);
         Queue::assertPushedOn(
             'imports',
             ImportProfitToolsAddress::class,
             function (ImportProfitToolsAddress $job) {
-                return in_array($job->addressCode, [1, 2]);
+                return in_array($job->addressCode, [1, 2, 23, 24]);
             }
         );
     }
@@ -53,7 +58,8 @@ class ImportProfitToolsAddressesTest extends TestCase
     {
         $this->seed(ProfitToolsCushingAddressesSeeder::class);
         Queue::fake();
-        Cache::forget(RipCms::TOKEN_CACHE_KEY);
+        $cushing = Company::getCushing();
+        Cache::forget(RipCms::getTokenCacheKeyFor($cushing));
         Http::fake([
             'https://www.ripcms.com/token*' => Http::response(['access_token' => 'test']),
             'https://www.ripcms.com/api/*' => Http::response([
@@ -62,7 +68,10 @@ class ImportProfitToolsAddressesTest extends TestCase
             ]),
         ]);
 
-        $this->artisan('import:profit-tools-addresses', ['--insert-only' => true])->assertExitCode(0);
+        $this->artisan('import:profit-tools-addresses', [
+            '--insert-only' => true,
+            '--company-name' => Company::getCushing()->name,
+        ])->assertExitCode(0);
 
         Queue::assertPushed(ImportProfitToolsAddress::class, 1);
         Queue::assertPushedOn(
@@ -77,7 +86,8 @@ class ImportProfitToolsAddressesTest extends TestCase
     {
         $this->seed(ProfitToolsCushingAddressesSeeder::class);
         Queue::fake();
-        Cache::forget(RipCms::TOKEN_CACHE_KEY);
+        $cushing = Company::getCushing();
+        Cache::forget(RipCms::getTokenCacheKeyFor($cushing));
         Http::fake([
             'https://www.ripcms.com/token*' => Http::response(['access_token' => 'test']),
             'https://www.ripcms.com/api/*' => Http::response([
@@ -87,12 +97,24 @@ class ImportProfitToolsAddressesTest extends TestCase
         $companyAddress = CompanyAddressTMSCode::with('address:id')->first();
         $anotherCompany = factory(CompanyAddressTMSCode::class)->create();
 
-        $this->artisan('import:profit-tools-addresses')->assertExitCode(0);
+        $this->artisan('import:profit-tools-addresses', [
+            '--company-name' => Company::getCushing()->name,
+        ])->assertExitCode(0);
 
         $this->assertSoftDeleted($companyAddress);
         $this->assertSoftDeleted($companyAddress->address);
         $anotherCompany->fresh(['address']);
         $this->assertNull($anotherCompany->deleted_at);
         $this->assertNull($anotherCompany->address->deleted_at);
+    }
+
+    protected function clearTokenCache()
+    {
+        collect([
+            Company::getCushing(),
+            Company::getTCompaniesDev(),
+        ])->each(function ($company) {
+            Cache::forget(RipCms::getTokenCacheKeyFor($company));
+        });
     }
 }

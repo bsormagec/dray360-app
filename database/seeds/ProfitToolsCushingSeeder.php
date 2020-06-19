@@ -14,13 +14,18 @@ class ProfitToolsCushingSeeder extends Seeder
      */
     public function run()
     {
-        $provider = TMSProvider::firstOrCreate(['name' => 'Profit Tools']);
-        $company = Company::firstOrCreate(
-            ['name' => 'Cushing'],
+        $provider = TMSProvider::firstOrCreate(['name' => TMSProvider::PROFIT_TOOLS]);
+        $cushing = Company::firstOrCreate(
+            ['name' => Company::CUSHING],
+            ['t_address_id' => Address::create()->id]
+        );
+        $tcompaniesDev = Company::firstOrCreate(
+            ['name' => Company::TCOMPANIES_DEV],
             ['t_address_id' => Address::create()->id]
         );
 
         $this->command->info("TMSProvider Id: {$provider->id}");
-        $this->command->info("Company Id: {$company->id}");
+        $this->command->info("Cushing Id: {$cushing->id}");
+        $this->command->info("TCompaniesDev Id: {$tcompaniesDev->id}");
     }
 }

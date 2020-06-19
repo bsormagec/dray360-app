@@ -5,6 +5,7 @@ namespace App\Jobs;
 use App\Models\Address;
 use App\Models\Company;
 use App\Models\TMSProvider;
+use Illuminate\Support\Str;
 use App\Services\Apis\RipCms;
 use App\Models\CompanyAddressTMSCode;
 use Illuminate\Queue\InteractsWithQueue;
@@ -23,6 +24,7 @@ class ImportProfitToolsAddress implements ShouldQueue
     public $maxExceptions = 3;
 
     public int $companyId;
+    public string $companyName;
     public int $tmsProviderId;
     public $addressCode;
 
@@ -30,12 +32,14 @@ class ImportProfitToolsAddress implements ShouldQueue
     {
         $this->addressCode = $companyAddress['id'];
         $this->companyId = $company->id;
+        $this->companyName = $company->name;
         $this->tmsProviderId = $tmsProvider->id;
     }
 
     public function handle()
     {
-        $address = (new RipCms())
+        $company = Company::find($this->companyId);
+        $address = (new RipCms($company))
             ->getToken()
             ->getCompany($this->addressCode);
 
@@ -90,6 +94,9 @@ class ImportProfitToolsAddress implements ShouldQueue
 
     public function tags(): array
     {
-        return ['import:profit-tools-addresses'];
+        return [
+            'import:profit-tools-addresses',
+            'import-address-'.Str::snake($this->companyName),
+        ];
     }
 }

@@ -18,7 +18,7 @@ class ImportProfitToolsAddresses extends Command
      *
      * @var string
      */
-    protected $signature = 'import:profit-tools-addresses {--insert-only}';
+    protected $signature = 'import:profit-tools-addresses {--insert-only} {--company-name=}';
 
     /**
      * The console command description.
@@ -27,6 +27,8 @@ class ImportProfitToolsAddresses extends Command
      */
     protected $description = 'Imports all the addresses from ripcms for Profit Tools and Cushing';
 
+    protected TMSProvider $tmsProvider;
+
     /**
      * Execute the console command.
      *
@@ -34,41 +36,59 @@ class ImportProfitToolsAddresses extends Command
      */
     public function handle()
     {
-        $ripCmsApi = (new RipCms())->getToken();
-        $this->info('Getting all the information from RipCms');
+        $this->tmsProvider = TMSProvider::getProfitTools();
+
+        $this->getCompaniesToImport()
+            ->each(fn ($company) => $this->importAdressesFor($company));
+    }
+
+    protected function getCompaniesToImport(): Collection
+    {
+        return collect([
+            Company::getCushing(),
+            Company::getTCompaniesDev(),
+        ])->when($this->option('company-name'), function ($collection) {
+            return $collection->reject(fn ($company) => $company->name != $this->option('company-name'));
+        });
+    }
+
+    protected function importAdressesFor(Company $company)
+    {
+        $ripCmsApi = (new RipCms($company))->getToken();
+        $this->info("Getting all the information from RipCms for {$company->name}");
         $companiesAddress = collect($ripCmsApi->getCompanies());
-        $company = Company::getCushing();
-        $tmsProvider = TMSProvider::getProfitTools();
 
-        $this->deleteAddressesRemovedInTheResponse($companiesAddress, $company, $tmsProvider);
+        $this->deleteAddressesRemovedInTheResponse($companiesAddress, $company);
 
-        $this->info('Queueing the individual imports');
+        $this->info("Queueing the individual imports for {$company->name}");
         $companiesAddress
-            ->when($this->option('insert-only'), function (Collection $companies) {
-                $existingCodes = CompanyAddressTMSCode::pluck('company_address_tms_code');
+            ->when($this->option('insert-only'), function (Collection $companies) use ($company) {
+                $existingCodes = CompanyAddressTMSCode::query()
+                    ->forCompanyTmsProvider($company->id, $this->tmsProvider->id)
+                    ->pluck('company_address_tms_code');
                 return $companies->whereNotIn('id', $existingCodes->toArray());
             })
-            ->each(function ($address) use ($company, $tmsProvider) {
-                ImportProfitToolsAddress::dispatch($address, $company, $tmsProvider);
+            ->each(function ($address) use ($company) {
+                ImportProfitToolsAddress::dispatch($address, $company, $this->tmsProvider);
             });
     }
 
-    protected function deleteAddressesRemovedInTheResponse(Collection $companiesAddress, $company, $tmsProvider)
+    protected function deleteAddressesRemovedInTheResponse(Collection $companiesAddress, Company $company): void
     {
-        Address::whereIn('id', function ($query) use ($companiesAddress, $company, $tmsProvider) {
+        Address::whereIn('id', function ($query) use ($companiesAddress, $company) {
             $query->select('t_address_id')
                 ->from('t_company_address_tms_code')
                 ->whereNotIn('company_address_tms_code', $companiesAddress->pluck('id'))
                 ->where([
                     't_company_id' => $company->id,
-                    't_tms_provider_id' => $tmsProvider->id,
+                    't_tms_provider_id' => $this->tmsProvider->id,
                 ]);
         })->delete();
         CompanyAddressTMSCode::query()
             ->whereNotIn('company_address_tms_code', $companiesAddress->pluck('id'))
             ->where([
                 't_company_id' => $company->id,
-                't_tms_provider_id' => $tmsProvider->id,
+                't_tms_provider_id' => $this->tmsProvider->id,
             ])
             ->delete();
     }
