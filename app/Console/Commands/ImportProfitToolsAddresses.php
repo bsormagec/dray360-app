@@ -18,7 +18,7 @@ class ImportProfitToolsAddresses extends Command
      *
      * @var string
      */
-    protected $signature = 'import:profit-tools-addresses {--insert-only} {--company-id=}';
+    protected $signature = 'import:profit-tools-addresses {--insert-only} {--company-name=}';
 
     /**
      * The console command description.
@@ -47,8 +47,8 @@ class ImportProfitToolsAddresses extends Command
         return collect([
             Company::getCushing(),
             Company::getTCompaniesDev(),
-        ])->when($this->option('company-id'), function ($collection) {
-            return $collection->reject(fn ($company) => $company->id != $this->option('company-id'));
+        ])->when($this->option('company-name'), function ($collection) {
+            return $collection->reject(fn ($company) => $company->name != $this->option('company-name'));
         });
     }
 

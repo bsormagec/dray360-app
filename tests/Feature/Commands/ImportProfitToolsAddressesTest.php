@@ -70,7 +70,7 @@ class ImportProfitToolsAddressesTest extends TestCase
 
         $this->artisan('import:profit-tools-addresses', [
             '--insert-only' => true,
-            '--company-id' => Company::getCushing()->id,
+            '--company-name' => Company::getCushing()->name,
         ])->assertExitCode(0);
 
         Queue::assertPushed(ImportProfitToolsAddress::class, 1);
@@ -98,7 +98,7 @@ class ImportProfitToolsAddressesTest extends TestCase
         $anotherCompany = factory(CompanyAddressTMSCode::class)->create();
 
         $this->artisan('import:profit-tools-addresses', [
-            '--company-id' => Company::getCushing()->id,
+            '--company-name' => Company::getCushing()->name,
         ])->assertExitCode(0);
 
         $this->assertSoftDeleted($companyAddress);
