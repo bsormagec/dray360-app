@@ -51,6 +51,24 @@
           </p>
           <h2>Address Book Modal</h2><br>
           <AddressBookModal />
+          <h2>No Match Modal / Address not found</h2><br>
+          <code>Props: *modaltype* = AddressNotFound <br> currentstep = "the position in the stepper component" <br></code>
+          <div>
+            <OrderModal
+              currentstep="1"
+              modaltype="AddressNotFound"
+              :message="message"
+            />
+          </div>
+          <h2>Close Match Modal /  Address Verification Needed</h2><br>
+          <code>Props: *modaltype* = VerificationNeded <br> currentstep = "the position in the stepper component" <br> message: the message that indicates the user about the closest match</code>
+          <div>
+            <OrderModal
+              currentstep="2"
+              modaltype="VerificationNeded"
+              :message="message"
+            />
+          </div>
         </div>
 
         <div class="col-md-6 right-side">
@@ -102,6 +120,7 @@ import Select from '@/components/Select'
 import ContentLoading from '@/components/ContentLoading'
 import DateRangeCalendar from '@/components/Orders/DateRangeCalendar'
 import AddressBookModal from '@/components/Orders/AddressBookModal'
+import OrderModal from '@/components/Orders/OrderModal'
 const callbacks = {
   startEdit: (obj) => {
     obj.field.highlight = 'edit'
@@ -126,7 +145,8 @@ export default {
     Select,
     ContentLoading,
     DateRangeCalendar,
-    AddressBookModal
+    AddressBookModal,
+    OrderModal
   },
   props: {
   },
@@ -236,6 +256,12 @@ export default {
         margin-bottom: 2rem;
     }
 
+  }
+  .v-btn{
+    padding: 0 !important;
+  }
+  .v-btn{
+    padding: 0 !important;
   }
   .v-btn{
     padding: 0 !important;
