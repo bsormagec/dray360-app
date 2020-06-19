@@ -1,5 +1,8 @@
 <?php
 
+use App\Models\Company;
+use Illuminate\Support\Str;
+
 return [
 
     /*
@@ -32,9 +35,16 @@ return [
 
     'ripcms' => [
         'url' => 'https://www.ripcms.com/',
-        'username' => env('RIP_CMS_USERNAME'),
-        'password' => env('RIP_CMS_PASSWORD'),
-        'token' => env('RIP_CMS_TOKEN'),
+        Str::snake(Company::CUSHING) => [
+            'username' => env('RIP_CMS_CUSHING_USERNAME'),
+            'password' => env('RIP_CMS_CUSHING_PASSWORD'),
+            'token' => env('RIP_CMS_CUSHING_TOKEN'),
+        ],
+        Str::snake(Company::TCOMPANIES_DEV) => [
+            'username' => env('RIP_CMS_TCOMPANIES_DEV_USERNAME'),
+            'password' => env('RIP_CMS_TCOMPANIES_DEV_PASSWORD'),
+            'token' => env('RIP_CMS_TCOMPANIES_DEV_TOKEN'),
+        ],
     ],
 
     'search-address' => [

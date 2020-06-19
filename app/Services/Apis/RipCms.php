@@ -3,34 +3,37 @@
 namespace App\Services\Apis;
 
 use Exception;
+use App\Models\Company;
+use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Cache;
 
 class RipCms
 {
-    const TOKEN_CACHE_KEY = 'rip-cms-cache-key';
     protected $url;
     protected $apiUrl;
     protected $username;
     protected $password;
     protected $token;
+    protected Company $company;
 
-    public function __construct()
+    public function __construct(Company $company)
     {
         $this->url = config('services.ripcms.url');
-        $this->username = config('services.ripcms.username');
-        $this->password = config('services.ripcms.password');
+        $this->company = $company;
         $this->apiUrl = "{$this->url}api/";
-        $this->token = Cache::get(self::TOKEN_CACHE_KEY);
+        $this->token = Cache::get(self::getTokenCacheKeyFor($this->company));
+        $this->setupCredentials();
     }
 
     public function getToken(): self
     {
-        if (Cache::has(self::TOKEN_CACHE_KEY)) {
-            $this->token = Cache::get(self::TOKEN_CACHE_KEY);
+        if (Cache::has(self::getTokenCacheKeyFor($this->company))) {
+            $this->token = Cache::get(self::getTokenCacheKeyFor($this->company));
             return $this;
         }
 
+        $configToken = config('services.ripcms.'.Str::snake($this->company->name).'.token');
         $response = Http::asForm()
             ->post("{$this->url}token", [
                 'grant_type' => 'password',
@@ -38,12 +41,12 @@ class RipCms
                 'password' => $this->password,
             ]);
 
-        if ($response->failed()) {
+        if (! $configToken && $response->failed()) {
             throw new Exception("RipCmsAPI ProfitTools/GetToken failed with message".$response->body());
         }
 
-        $this->token = config('services.ripcms.token') ?? $response['access_token'];//use the token from the env otherwise use the one from the response.
-        Cache::put(self::TOKEN_CACHE_KEY, $this->token, now()->addHour());
+        $this->token = $configToken ?? $response['access_token'];//use the token from the env otherwise use the one from the response.
+        Cache::put(self::getTokenCacheKeyFor($this->company), $this->token, now()->addHour());
 
         return $this;
     }
@@ -70,5 +73,18 @@ class RipCms
         }
 
         return $response->json();
+    }
+
+    protected function setupCredentials(): void
+    {
+        $credentials = config('services.ripcms.'.Str::snake($this->company->name));
+
+        $this->username = $credentials['username'];
+        $this->password = $credentials['password'];
+    }
+
+    public static function getTokenCacheKeyFor(Company $company): string
+    {
+        return "rips-cms-token-for-".Str::kebab($company->name);
     }
 }
