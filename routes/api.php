@@ -4,10 +4,12 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Api\OrdersController;
 use App\Http\Controllers\Api\OCRRulesController;
 use App\Http\Controllers\Api\SendToTmsController;
+use App\Http\Controllers\Api\Auth\LoginController;
 use App\Http\Controllers\Api\OCRRequestController;
 use App\Http\Controllers\Api\SearchAddressController;
-use App\Http\Controllers\Api\AuthenticationController;
+use App\Http\Controllers\Api\Auth\ResetPasswordController;
 use App\Http\Controllers\Api\OCRRulesAssignmentController;
+use App\Http\Controllers\Api\Auth\ForgotPasswordController;
 
 /*
 |--------------------------------------------------------------------------
@@ -21,14 +23,20 @@ use App\Http\Controllers\Api\OCRRulesAssignmentController;
 */
 
 // Non-authenticated routes for signup/login/logout
-Route::post('login', [AuthenticationController::class, 'login'])->name('login');
-Route::post('logout', [AuthenticationController::class, 'logout'])->name('logout');
-Route::post('signup', [AuthenticationController::class, 'signup'])->name('signup');
+Route::post('login', [LoginController::class, 'login'])->name('login');
+Route::post('signup', [LoginController::class, 'signup'])->name('signup');
+
+Route::post('password/email', [ForgotPasswordController::class, 'sendResetLinkEmail'])
+    ->name('password.email');
+Route::post('password/reset', [ResetPasswordController::class, 'reset'])
+    ->name('password.update');
 
 // Sanctum Authenticated Routes
 Route::group(['middleware' => 'auth:sanctum'], function () {
+    Route::post('logout', [LoginController::class, 'logout'])->name('logout');
+
     // Authenticated route to get current user
-    Route::get('user', [AuthenticationController::class, 'user'])
+    Route::get('user', [LoginController::class, 'user'])
         ->name('user'); // shows up in `php artisan route:list` command output
 
     Route::get('search-address', SearchAddressController::class)

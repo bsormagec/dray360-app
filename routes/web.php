@@ -17,3 +17,5 @@ use App\Http\Controllers\VueController;
 
 // Default VUECONTROLLER route
 Route::get('/{any}', [VueController::class, 'index'])->where('any', '^(?!(nova|horizon)).*$');
+
+Route::get('password/reset/{token}', [VueController::class, 'index'])->name('password.reset');
