@@ -6,6 +6,7 @@ import Login from '@/views/Login'
 import RulesEditor from '@/views/RulesEditor/RulesEditor'
 import auth from '@/router/middleware/auth'
 import StyleGuide from '@/views/StyleGuide'
+import Dashboard from '@/views/Users/Dashboard'
 import { runMiddleware } from '@/router/middleware'
 
 Vue.use(VueRouter)
@@ -18,6 +19,11 @@ const routes = [
       middleware: [auth]
     },
     component: Orders
+  },
+  {
+    path: '/user/dashboard',
+    name: 'Dashboard',
+    component: Dashboard
   },
   {
     path: '/styleguide',
