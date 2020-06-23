@@ -1,7 +1,6 @@
 <?php
 
 use Illuminate\Database\Seeder;
-use Spatie\Permission\Models\Role;
 
 class RolesAndPermissionsSeeder extends Seeder
 {
@@ -13,23 +12,12 @@ class RolesAndPermissionsSeeder extends Seeder
     public function run()
     {
         // Reset cached roles and permissions
-        app()['cache']->forget('spatie.permission.cache');
+        $this->call(LaratrustSeeder::class);
 
-
-        Role::create(['name' => 'user']);    /** @var \App\Models\User $user */
         $user = factory(\App\Models\User::class)->create();
+        $user->attachRole('customer-user');
 
-        $user->assignRole('user');
-        Role::create(['name' => 'admin']);
-
-        /** @var \App\Models\User $user */
-        $admin = factory(\App\Models\User::class)->create([
-            'name' => 'John Doe',
-            'email' => 'john@example.com',
-        ]);
-
-        // note default password is 'password'
-
-        $admin->assignRole('admin');
+        $admin = factory(\App\Models\User::class)->create();
+        $admin->attachRole('superadmin');
     }
 }

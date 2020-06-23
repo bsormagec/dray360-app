@@ -14,8 +14,10 @@ class LaratrustSeeder extends Seeder
      */
     public function run()
     {
-        $this->command->info('Truncating User, Role and Permission tables');
-        $this->truncateLaratrustTables();
+        if (config('laratrust_seeder.truncate_tables')) {
+            $this->command->info('Truncating User, Role and Permission tables');
+            $this->truncateLaratrustTables();
+        }
 
         $config = config('laratrust_seeder.roles_structure');
         $mapPermission = collect(config('laratrust_seeder.permissions_map'));
@@ -23,7 +25,7 @@ class LaratrustSeeder extends Seeder
         foreach ($config as $key => $modules) {
 
             // Create a new role
-            $role = \App\Role::firstOrCreate([
+            $role = App\Models\Role::firstOrCreate([
                 'name' => $key,
                 'display_name' => ucwords(str_replace('_', ' ', $key)),
                 'description' => ucwords(str_replace('_', ' ', $key))
@@ -37,7 +39,7 @@ class LaratrustSeeder extends Seeder
                 foreach (explode(',', $value) as $p => $perm) {
                     $permissionValue = $mapPermission->get($perm);
 
-                    $permissions[] = \App\Permission::firstOrCreate([
+                    $permissions[] = App\Models\Permission::firstOrCreate([
                         'name' => $module . '-' .$permissionValue ,
                         'display_name' => ucfirst($permissionValue) . ' ' . ucfirst($module),
                         'description' => ucfirst($permissionValue) . ' ' . ucfirst($module),
@@ -75,8 +77,8 @@ class LaratrustSeeder extends Seeder
         DB::table('permission_user')->truncate();
         DB::table('role_user')->truncate();
         if (Config::get('laratrust_seeder.truncate_tables')) {
-            \App\Role::truncate();
-            \App\Permission::truncate();
+            App\Models\Role::truncate();
+            App\Models\Permission::truncate();
         }
         if (Config::get('laratrust_seeder.truncate_tables') && Config::get('laratrust_seeder.create_users')) {
             \App\Models\User::truncate();

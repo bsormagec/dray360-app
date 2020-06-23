@@ -18,10 +18,11 @@ abstract class TestCase extends BaseTestCase
      */
     protected function loginAdmin()
     {
+        config()->set('laratrust_seeder.truncate_tables', false);
         $this->seed(RolesAndPermissionsSeeder::class);
 
         $user = User::whereHas('roles', function ($query) {
-            $query->where('name', 'admin');
+            $query->where('name', 'superadmin');
         })->first();
         Sanctum::actingAs($user, ['*']);
     }

@@ -46,7 +46,7 @@ return [
         | NOTE: Currently the database check does not use cache.
         |
         */
-        'enabled' => false,
+        'enabled' => true,
 
         /*
         |--------------------------------------------------------------------------
@@ -88,14 +88,14 @@ return [
     */
     'models' => [
 
-        'role' => App\Role::class,
+        'role' => App\Models\Role::class,
 
-        'permission' => App\Permission::class,
+        'permission' => App\Models\Permission::class,
 
         /**
          * Will be used only if the teams functionality is enabled.
          */
-        'team' => 'App\Team',
+        'team' => 'App\Models\Team',
     ],
 
     /*

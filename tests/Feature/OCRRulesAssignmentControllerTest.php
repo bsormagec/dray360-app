@@ -54,7 +54,7 @@ class OCRRulesAssignmentControllerTest extends TestCase
         $ocrVariant = OCRVariant::first(['id']);
         $account = Account::first(['id']);
         $ocrRules = OCRRule::all(['id']);
-        $toValidate = ['variant_id','account_id', 'rules'];
+        $toValidate = ['variant_id', 'account_id', 'rules'];
 
         foreach ($toValidate as $fieldToValidate) {
             $data = [
