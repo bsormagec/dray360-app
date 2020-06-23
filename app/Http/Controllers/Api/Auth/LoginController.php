@@ -1,13 +1,13 @@
 <?php
 
-namespace App\Http\Controllers\Api;
+namespace App\Http\Controllers\Api\Auth;
 
-use Auth;
 use App\Models\User;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Auth;
 
-class AuthenticationController extends Controller
+class LoginController extends Controller
 {
     /**
      * Create new user account
@@ -64,7 +64,7 @@ class AuthenticationController extends Controller
      */
     public function logout()
     {
-        Auth::logout();
+        Auth::guard('web')->logout();
         return response()->json(['message' => 'Logged Out'], 200);
     }
 
@@ -77,7 +77,7 @@ class AuthenticationController extends Controller
     public function user(Request $request)
     {
         $authUser = $request->user();
-        if (!is_object($authUser)) {
+        if (! is_object($authUser)) {
             return response()->json(['message' => 'Not authorized'], 401);
         } else {
             $user = User::with('roles.permissions')->where('id', '=', $authUser->id)->firstOrFail();

@@ -210,6 +210,163 @@
 			"response": []
 		},
 		{
+			"name": "/api/password/email",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "5deb1393-4ded-4207-a43b-25b0d8189728",
+						"exec": [
+							"var token1=postman.getResponseCookie('XSRF-TOKEN').value;",
+							"var token2=token1.replace('%3D%3D','==');",
+							"postman.setEnvironmentVariable('X-XSRF-TOKEN', token2);",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"protocolProfileBehavior": {
+				"disabledSystemHeaders": {
+					"accept": true
+				}
+			},
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/x-www-form-urlencoded"
+					},
+					{
+						"key": "Referer",
+						"type": "text",
+						"value": "{{server}}"
+					},
+					{
+						"key": "Accept",
+						"type": "text",
+						"value": "application/json, text/plain, */*"
+					},
+					{
+						"key": "X-XSRF-TOKEN",
+						"type": "text",
+						"value": "{{X-XSRF-TOKEN}}"
+					}
+				],
+				"body": {
+					"mode": "urlencoded",
+					"urlencoded": [
+						{
+							"key": "email",
+							"value": "peter+test13@peternelson.com",
+							"type": "text"
+						}
+					]
+				},
+				"url": {
+					"raw": "{{server}}/api/password/email",
+					"host": [
+						"{{server}}"
+					],
+					"path": [
+						"api",
+						"password",
+						"email"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "/api/password/rest",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "b70c8225-2520-4159-bfe2-c8f11103b376",
+						"exec": [
+							"var token1=postman.getResponseCookie('XSRF-TOKEN').value;",
+							"var token2=token1.replace('%3D%3D','==');",
+							"postman.setEnvironmentVariable('X-XSRF-TOKEN', token2);",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"protocolProfileBehavior": {
+				"disabledSystemHeaders": {
+					"accept": true
+				}
+			},
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/x-www-form-urlencoded"
+					},
+					{
+						"key": "Referer",
+						"type": "text",
+						"value": "{{server}}"
+					},
+					{
+						"key": "Accept",
+						"type": "text",
+						"value": "application/json, text/plain, */*"
+					},
+					{
+						"key": "X-XSRF-TOKEN",
+						"type": "text",
+						"value": "{{X-XSRF-TOKEN}}"
+					}
+				],
+				"body": {
+					"mode": "urlencoded",
+					"urlencoded": [
+						{
+							"key": "token",
+							"value": "89a920acb33a626a73acdfc88943649559ff6440011b46c8bfd5cc34ec151668",
+							"description": "From the url",
+							"type": "text"
+						},
+						{
+							"key": "email",
+							"value": "peter+test13@peternelson.com",
+							"description": "From one query parameter",
+							"type": "text"
+						},
+						{
+							"key": "password",
+							"value": "12345678",
+							"description": "min:8",
+							"type": "text"
+						},
+						{
+							"key": "password_confirmation",
+							"value": "12345678",
+							"description": "Rrequired",
+							"type": "text"
+						}
+					]
+				},
+				"url": {
+					"raw": "{{server}}/api/password/reset",
+					"host": [
+						"{{server}}"
+					],
+					"path": [
+						"api",
+						"password",
+						"reset"
+					]
+				}
+			},
+			"response": []
+		},
+		{
 			"name": "/api/orders",
 			"event": [
 				{
