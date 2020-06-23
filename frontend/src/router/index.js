@@ -7,6 +7,8 @@ import RulesEditor from '@/views/RulesEditor/RulesEditor'
 import auth from '@/router/middleware/auth'
 import StyleGuide from '@/views/StyleGuide'
 import Dashboard from '@/views/Users/Dashboard'
+import AddUser from '@/views/Users/AddUser'
+import EditUser from '@/views/Users/EditUser'
 import { runMiddleware } from '@/router/middleware'
 
 Vue.use(VueRouter)
@@ -25,6 +27,18 @@ const routes = [
     name: 'Dashboard',
     component: Dashboard
   },
+  // TODO: Parametrize user ID
+  {
+    path: '/user/dashboard/add-user',
+    name: 'AddUser',
+    component: AddUser
+  },
+  {
+    path: '/user/dashboard/edit-user/:id',
+    name: 'EditUser',
+    component: EditUser
+  },
+  // TODO: Decide if these 2 routes should be a single one or not
   {
     path: '/styleguide',
     name: 'StyleGuide',
