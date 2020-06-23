@@ -269,7 +269,7 @@ return [
         | will be accessible from.
         |
         */
-        'path' => 'laratrust',
+        'path' => 'authorization',
 
         /*
         |--------------------------------------------------------------------------
@@ -289,7 +289,7 @@ return [
         | These middleware will get attached onto each Laratrust panel route.
         |
         */
-        'middleware' => ['web'],
+        'middleware' => ['web', 'auth', 'role:superadmin'],
 
         /*
         |--------------------------------------------------------------------------
@@ -318,7 +318,7 @@ return [
             'not_editable' => [],
 
             // The user won't be able to delete the role.
-            'not_deletable' => [],
+            'not_deletable' => ['superadmin', 'customer-admin', 'customer-user'],
         ],
     ]
 ];
