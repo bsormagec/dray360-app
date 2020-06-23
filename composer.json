@@ -22,6 +22,7 @@
         "mbezhanov/faker-provider-collection": "^1.2",
         "nesbot/carbon": "^2.31",
         "predis/predis": "^1.1",
+        "santigarcor/laratrust": "^6.1",
         "sentry/sentry-laravel": "1.8.0",
         "spatie/laravel-query-builder": "^2.8",
         "spatie/laravel-rate-limited-job-middleware": "^1.4"
