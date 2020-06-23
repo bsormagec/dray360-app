@@ -2,9 +2,9 @@
 
 namespace Tests;
 
+use UsersSeeder;
 use App\Models\User;
 use Laravel\Sanctum\Sanctum;
-use RolesAndPermissionsSeeder;
 use Illuminate\Foundation\Testing\TestCase as BaseTestCase;
 
 abstract class TestCase extends BaseTestCase
@@ -19,7 +19,7 @@ abstract class TestCase extends BaseTestCase
     protected function loginAdmin()
     {
         config()->set('laratrust_seeder.truncate_tables', false);
-        $this->seed(RolesAndPermissionsSeeder::class);
+        $this->seed(UsersSeeder::class);
 
         $user = User::whereHas('roles', function ($query) {
             $query->where('name', 'superadmin');

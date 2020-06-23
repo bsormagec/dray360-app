@@ -11,12 +11,6 @@ class LoginController extends Controller
 {
     /**
      * Create new user account
-     *
-     * @param  [Request] $request
-     * @param  [string] $request->email
-     * @param  [string] $request->password
-     * @param  [string] $request->name
-     * @return [string] success message
      */
     public function signup(Request $request)
     {
@@ -39,11 +33,6 @@ class LoginController extends Controller
 
     /**
      * Login user
-     *
-     * @param  [Request] $request
-     * @param  [string] $request->email
-     * @param  [string] $request->password
-     * @return [response] success or failure message+code
      */
     public function login(Request $request)
     {
@@ -59,8 +48,6 @@ class LoginController extends Controller
 
     /**
      * Logout user
-     *
-     * @return [response] success or failure message+code
      */
     public function logout()
     {
@@ -70,17 +57,15 @@ class LoginController extends Controller
 
     /**
      * Get the currently authenticated User
-     *
-     * @param  [Request] $request
-     * @return [json] user object
      */
     public function user(Request $request)
     {
-        $authUser = $request->user();
-        if (! is_object($authUser)) {
+        $user = $request->user();
+        if (! is_object($user)) {
             return response()->json(['message' => 'Not authorized'], 401);
         } else {
-            $user = User::with('roles.permissions')->where('id', '=', $authUser->id)->firstOrFail();
+            $user->setRelation('permissions', $user->allPermissions());
+            $user->is_superadmin = $user->hasRole('superadmin');
             return response()->json($user);
         }
     }
