@@ -21,9 +21,7 @@ abstract class TestCase extends BaseTestCase
         config()->set('laratrust_seeder.truncate_tables', false);
         $this->seed(UsersSeeder::class);
 
-        $user = User::whereHas('roles', function ($query) {
-            $query->where('name', 'superadmin');
-        })->first();
+        $user = User::whereRoleIs('superadmin')->first();
         Sanctum::actingAs($user, ['*']);
     }
 }

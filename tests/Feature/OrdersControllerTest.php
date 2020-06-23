@@ -3,9 +3,11 @@
 namespace Tests\Feature;
 
 use Tests\TestCase;
+use App\Models\User;
 use App\Models\Order;
 use OrdersTableSeeder;
 use App\Models\OCRRequest;
+use Laravel\Sanctum\Sanctum;
 use App\Models\OrderLineItem;
 use Illuminate\Http\Response;
 use App\Models\OCRRequestStatus;
@@ -116,6 +118,20 @@ class OrdersControllerTest extends TestCase
     }
 
     /** @test */
+    public function it_fails_if_not_autorized_to_filter_by_status()
+    {
+        $user = User::whereRoleIs('customer-user')->first();
+        Sanctum::actingAs($user);
+
+        $this->seed(OrdersTableSeeder::class);
+        $this->seed(OrdersTableSeeder::class);
+        factory(OCRRequestStatus::class, 2)->create(['status' => 'ocr-waiting']);
+
+        $this->getJson(route('orders.index', ['filter[status]' => 'ocr-waiting']))
+            ->assertStatus(Response::HTTP_FORBIDDEN);
+    }
+
+    /** @test */
     public function it_should_only_update_the_allowed_order_fields()
     {
         $originalOrder = Order::orderByDesc('id')->first();
@@ -147,6 +163,19 @@ class OrdersControllerTest extends TestCase
             json_encode($originalOrder->ocr_data),
             json_encode($data['ocr_data'])
         );
+    }
+
+    /** @test */
+    public function it_fails_if_not_autorized_to_update_order()
+    {
+        $user = User::whereRoleIs('customer-user')->first();
+        Sanctum::actingAs($user);
+
+        $originalOrder = Order::orderByDesc('id')->first();
+        $data = $this->fillOrderUpdate($originalOrder);
+
+        $this->putJson(route('orders.update', $originalOrder->id), $data)
+            ->assertStatus(Response::HTTP_FORBIDDEN);
     }
 
     /** @test */
