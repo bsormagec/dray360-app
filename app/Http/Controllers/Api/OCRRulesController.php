@@ -17,6 +17,8 @@ class OCRRulesController extends Controller
      */
     public function index()
     {
+        $this->authorize('viewAny', OCRRule::class);
+
         return new ResourcesOCRRule(OCRRule::query()->get());
     }
 
@@ -28,6 +30,7 @@ class OCRRulesController extends Controller
      */
     public function store(Request $request)
     {
+        $this->authorize('create', OCRRule::class);
         $data = $request->validate(OCRRule::$rules);
 
         $ocrRule = OCRRule::create($data);
@@ -54,6 +57,7 @@ class OCRRulesController extends Controller
      */
     public function update(Request $request, OCRRule $ocrRule)
     {
+        $this->authorize('update', $ocrRule);
         $data = $request->validate(OCRRule::$rules);
 
         $ocrRule->update($data);

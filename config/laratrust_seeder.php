@@ -13,7 +13,7 @@ return [
 
     'roles_structure' => [
         'superadmin' => [
-            'rules-editor' => 'e',
+            'rules-editor' => 'c,v,e,a',
             'orders' => 'e,v,c',
             'tms' => 's',
             'users' => 'v,c,e,r',
@@ -34,6 +34,7 @@ return [
 
     'permissions_map' => [
         'c' => 'create',
+        'a' => 'assign',
         'v' => 'view',
         's' => 'submit',
         'u' => 'update',

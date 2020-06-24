@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Api;
 
+use App\Models\OCRRule;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use App\Http\Controllers\Controller;
@@ -12,6 +13,7 @@ class OCRRulesAssignmentController extends Controller
 {
     public function index(Request $request)
     {
+        $this->authorize('viewAny', OCRRule::class);
         $filters = $request->validate([
             'account_id' => 'required',
             'variant_id' => 'required',
@@ -28,6 +30,7 @@ class OCRRulesAssignmentController extends Controller
 
     public function store(Request $request)
     {
+        $this->authorize('assign', OCRRule::class);
         $data = $request->validate([
             'account_id' => 'required',
             'variant_id' => 'required',
@@ -49,7 +52,7 @@ class OCRRulesAssignmentController extends Controller
         })->toArray();
 
         AccountOCRVariantOCRRule::assignedTo($accountId, $variantId)->delete();
-        if (!AccountOCRVariantOCRRule::insert($data)) {
+        if (! AccountOCRVariantOCRRule::insert($data)) {
             abort(500, 'There was an error trying to save the assignment');
         }
 
