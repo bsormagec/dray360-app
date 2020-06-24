@@ -16,10 +16,7 @@ export default {
   components: {
     SidebarNavigation,
     AddUserForm
-  },
-  data: () => ({
-    a: 4
-  })
+  }
 }
 </script>
 <style lang="sass" scoped>

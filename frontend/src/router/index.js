@@ -9,6 +9,7 @@ import StyleGuide from '@/views/StyleGuide'
 import Dashboard from '@/views/Users/Dashboard'
 import AddUser from '@/views/Users/AddUser'
 import EditUser from '@/views/Users/EditUser'
+import EditProfile from '@/views/Users/EditProfile'
 import { runMiddleware } from '@/router/middleware'
 
 Vue.use(VueRouter)
@@ -37,6 +38,11 @@ const routes = [
     path: '/user/dashboard/edit-user/:id',
     name: 'EditUser',
     component: EditUser
+  },
+  {
+    path: '/user/dashboard/edit-profile/:id',
+    name: 'EditUser',
+    component: EditProfile
   },
   // TODO: Decide if these 2 routes should be a single one or not
   {

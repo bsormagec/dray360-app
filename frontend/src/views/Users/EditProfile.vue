@@ -4,18 +4,18 @@
       <SidebarNavigation />
     </div>
     <div class="col-10">
-      <EditUserForm />
+      <EditProfileForm />
     </div>
   </div>
 </template>
 
 <script>
 import SidebarNavigation from '@/components/General/SidebarNavigation'
-import EditUserForm from '@/components/Users/EditUserForm'
+import EditProfileForm from '@/components/Users/EditProfileForm'
 export default {
   components: {
     SidebarNavigation,
-    EditUserForm
+    EditProfileForm
   }
 }
 </script>

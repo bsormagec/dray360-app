@@ -5,7 +5,7 @@
         flat
         color="white"
       >
-        <v-toolbar-title><h1>Add User</h1></v-toolbar-title>
+        <v-toolbar-title><h1>Edit User</h1></v-toolbar-title>
 
         <v-spacer />
       </v-toolbar>
@@ -29,21 +29,34 @@
       <v-col
         cols="4"
         sm="4"
-      />
+      >
+        <v-btn
+          class="delete-button button"
+          outlined
+        >
+          Delete
+        </v-btn>
+        <v-btn
+          class="secondary-button button"
+          outlined
+        >
+          Deactivate
+        </v-btn>
+      </v-col>
       <v-col
         cols="2"
         sm="2"
       >
-        <!-- <v-btn
+        <v-btn
           class="cancel-button button"
           outlined
         >
           Cancel
-        </v-btn> -->
+        </v-btn>
         <v-btn
           class="save-button button"
         >
-          Add User
+          Save
         </v-btn>
       </v-col>
     </v-row>
@@ -92,13 +105,6 @@ export default {
           el: {
             type: 'input'
           }
-        },
-        {
-          name: 'Role',
-          readonly: false,
-          el: {
-            type: 'select'
-          }
         }
       ]
     }
@@ -111,7 +117,7 @@ h1 {
   color: rgba(map-get($colors , black-2), 1) !important;
 }
   .button {
-    margin-left: 60px;
+    margin-right: 10px;
     letter-spacing: 0.75px;
   }
   .delete-button {
