@@ -32,37 +32,32 @@ class OrdersTableSeeder extends Seeder
     const OWNER_OR_SS_COMPANY_LIST = ['ACL', 'Antillean Lines', 'APL/CMA-CGM', 'Atlantic RO-Ro', 'Australia National Line', 'Bahri / National Shipping Company of Saudi Arabia', 'Bermuda International Shipping Ltd', 'BMC Line Shipping LLC', 'CCNI', 'Cheng Lie Navigation Co.,Ltd', 'Dole Ocean Cargo Express', 'Dongjin Shipping', 'Emirates Shipping Line', 'Evergreen Line', 'Frontier Liner Services'];
 
     /**
-     * Run the database seeds.
-     *
-     * @return void
-     */
-    public function run()
-    {
-        // load needed faker providers
-
-        // create orders
-        $numCreated = 0;
-        while ($numCreated < self::NUM_ORDERS_TO_CREATE) {
-            $this->seedOrder();
-            $numCreated++;
-        }
-    }
-
-    /**
-     * Create an Order
-     *
      * Make an order having a related OCR request, and order line items, etc.
      *
      * @return void
      */
-    public function seedOrder()
+    public function run()
     {
         $ocrRequestId = $this->createOCRJob();
         $order = factory(Order::class)->create(['request_id' => $ocrRequestId]);
         $this->createNonHazardousOrderLineItem($order);
     }
 
-    public function createNonHazardousOrderLineItem($order)
+    public function seedOrderWithPostProcessingComplete()
+    {
+        $ocrRequestId = $this->seedOcrJob_ocrPostProcessingComplete();
+        $order = factory(Order::class)->create(['request_id' => $ocrRequestId]);
+        $this->createNonHazardousOrderLineItem($order);
+    }
+
+    public function seedOrderWithIntakeRejected()
+    {
+        $ocrRequestId = $this->seedOcrJob_intakeRejected();
+        $order = factory(Order::class)->create(['request_id' => $ocrRequestId]);
+        $this->createNonHazardousOrderLineItem($order);
+    }
+
+    protected function createNonHazardousOrderLineItem($order)
     {
         return factory(OrderLineItem::class)->create([
             't_order_id' => $order->id,
@@ -70,7 +65,7 @@ class OrdersTableSeeder extends Seeder
         ])->id;
     }
 
-    public function createOCRJob()
+    protected function createOCRJob()
     {
         if (rand(0, 100) < self::PCT_ORDERS_INTAKE_REJECTED) {
             return $this->seedOcrJob_intakeRejected();
@@ -88,7 +83,7 @@ class OrdersTableSeeder extends Seeder
     // create state #5: ocr-post-processing-complete
     //
 
-    public function seedOcrJob_ocrPostProcessingComplete()
+    protected function seedOcrJob_ocrPostProcessingComplete()
     {
         // echo('Creating OCR job with status=ocr-post-processing-complete'.PHP_EOL);
         $faker = \Faker\Factory::create();
@@ -109,6 +104,13 @@ class OrdersTableSeeder extends Seeder
             'status_date' => $time5MinutesAgo,
             'status' => OCRRequestStatus::INTAKE_STARTED,
             'status_metadata' => '{"event_info": {"event_time": "2019-12-06T20:28:59.595Z", "object_key": "intakeemail/4tckssjbuh0c2dt8rlund3efvcd4g6pmjeagee81", "bucket_name": "dmedocproc-emailintake-dev", "aws_request_id": "'.$request_id.'", "log_group_name": "/aws/lambda/intake-filter-dev", "log_stream_name": "2019/12/06/[$LATEST]55e4fa95494f4364a68a85e537e8e3fa", "event_time_epoch_ms": 1575664139000}, "request_id": "'.$request_id.'", "source_summary": {"source_type": "email", "source_email_subject": "Fwd: test 202", "source_email_to_address": "dev@docprocessing.draymaster.com", "source_email_from_address": "Peter Nelson <peter@peternelson.com>", "source_email_body_prefixes": ["b\'---------- Forwarded message ---------\\r\\nFrom: Peter Nelson <peter@peternelson.com>\\r\\nDate: Fri, Dec 6, 2019 at 1:43 PM\\r\\nSubject: test 202\\r\\nTo: Peter B. Nelson <peter@peternelson.com>\\r\\n\'", "b\'<div dir=\"ltr\"><div class=\"gmail_default\" style=\"font-size:small\"><br></div><br><div class=\"gmail_quote\"><div dir=\"ltr\" class=\"gmail_attr\">---------- Forwarded message ---------<br>From: <b class=\"gmail_sendername\" dir=\"auto\">Peter Nelson</b> <span dir=\"auto\">&lt;<a href=\"mailto:peter@peternelson.com\">peter@peternelson.com</a>&gt;</span><br>Date: Fri, Dec 6, 2019 at 1:43 PM<br>Subject: test 202<br>To: Peter B. Nelson &lt;<a href=\"mailto:peter@peternelson.com\">peter@peternelson.com</a>&gt;<br><"], "source_email_string_length": 164489, "source_email_attachment_filenames": ["MATSON-examplar.pdf"]}, "read_log_commandline": "aws --profile=draymaster logs get-log-events --log-group-name=\'/aws/lambda/intake-filter-dev\' --log-stream-name=\'2019/12/06/[$LATEST]55e4fa95494f4364a68a85e537e8e3fa\' --start-time=\'1575664139000\'"}',
+        ]);
+
+        DB::table('t_job_state_changes')->insert([
+            'request_id' => $request_id,
+            'status_date' => $time5MinutesAgo,
+            'status' => OCRRequestStatus::INTAKE_ACCEPTED,
+            'status_metadata' => '{"document_type": "pdf", "document_filename": "1fa83bf8-3c64-5db5-a12e-6c96dc61269d_9f34ffd1b9ba31db17de0b21d6f4028f7f4191ac170ae9ee53dd86f3f7cb3529_ShipmentCartageAdviceWithReceipt-SSI100072107.PDF", "original_filename": "ShipmentCartageAdviceWithReceipt-SSI100072107.PDF", "document_archive_location": "s3://dmedocproc-emailintake-dev/intakearchive/1fa83bf8-3c64-5db5-a12e-6c96dc61269d_9f34ffd1b9ba31db17de0b21d6f4028f7f4191ac170ae9ee53dd86f3f7cb3529_ShipmentCartageAdviceWithReceipt-SSI100072107.PDF"}',
         ]);
 
         // create state #2: ocr-waiting
@@ -153,7 +155,7 @@ class OrdersTableSeeder extends Seeder
     // create state #2: intake-rejected
     //
 
-    public function seedOcrJob_intakeRejected()
+    protected function seedOcrJob_intakeRejected()
     {
         // echo('Creating OCR job status=intake-rejected'.PHP_EOL);
         $faker = \Faker\Factory::create();
@@ -183,11 +185,6 @@ class OrdersTableSeeder extends Seeder
 
         // all done, return request_id needed to create an order
         return $request_id;
-    }
-
-    public function getRndElem($stringArray)
-    {
-        return $stringArray[rand(0, count($stringArray) - 1)];
     }
 }
 
