@@ -5,7 +5,7 @@
         flat
         color="white"
       >
-        <v-toolbar-title><h1>Edit Profile</h1></v-toolbar-title>
+        <v-toolbar-title><h1>Change Password</h1></v-toolbar-title>
 
         <v-spacer />
       </v-toolbar>
@@ -16,27 +16,17 @@
         :key="item.key"
         style="width: 44%"
       >
-        <FormField
+        <FormFieldElementInput
           :field="item"
-          :is-editing="true"
-          :readonly="item.readonly"
-          :callbacks="{}"
+          @change="e =>(password = e)"
         />
       </div>
     </template>
-
     <v-row>
       <v-col
         cols="4"
         sm="4"
-      >
-        <v-btn
-          class="cancel-button button"
-          outlined
-        >
-          Change Password
-        </v-btn>
-      </v-col>
+      />
       <v-col
         cols="2"
         sm="2"
@@ -57,47 +47,36 @@
   </div>
 </template>
 <script>
-import FormField from '@/components/FormField/FormField'
+import FormFieldElementInput from '@/components/FormField/FormFieldElementInput'
 export default {
   components: {
-    FormField
+    FormFieldElementInput
   },
   data () {
     return {
       fields: [
         {
-          name: 'First Name',
-          readonly: false,
+          name: 'Current Password',
+          type: 'password',
+          placeholder: 'password',
           el: {
-            type: 'input'
+            value: ''
           }
         },
         {
-          name: 'Last Name',
-          readonly: false,
+          name: 'New Password',
+          type: 'password',
+          placeholder: 'password',
           el: {
-            type: 'input'
+            value: ''
           }
         },
         {
-          name: 'Email',
-          readonly: false,
+          name: 'Confirm New Password',
+          type: 'password',
+          placeholder: 'password',
           el: {
-            type: 'input'
-          }
-        },
-        {
-          name: 'Position',
-          readonly: false,
-          el: {
-            type: 'input'
-          }
-        },
-        {
-          name: 'Org',
-          readonly: false,
-          el: {
-            type: 'input'
+            value: ''
           }
         }
       ]

@@ -10,6 +10,7 @@ import Dashboard from '@/views/Users/Dashboard'
 import AddUser from '@/views/Users/AddUser'
 import EditUser from '@/views/Users/EditUser'
 import EditProfile from '@/views/Users/EditProfile'
+import ChangePassword from '@/views/Users/ChangePassword'
 import { runMiddleware } from '@/router/middleware'
 
 Vue.use(VueRouter)
@@ -28,7 +29,6 @@ const routes = [
     name: 'Dashboard',
     component: Dashboard
   },
-  // TODO: Parametrize user ID
   {
     path: '/user/dashboard/add-user',
     name: 'AddUser',
@@ -41,10 +41,14 @@ const routes = [
   },
   {
     path: '/user/dashboard/edit-profile/:id',
-    name: 'EditUser',
+    name: 'EditProfile',
     component: EditProfile
   },
-  // TODO: Decide if these 2 routes should be a single one or not
+  {
+    path: '/user/dashboard/change-password/:id',
+    name: 'ChangePassword',
+    component: ChangePassword
+  },
   {
     path: '/styleguide',
     name: 'StyleGuide',

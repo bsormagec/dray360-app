@@ -129,6 +129,9 @@ export default {
     isInput () {
       return this.field.el.type === fieldType.input
     },
+    isPassword () {
+      return this.field.el.type === fieldType.password
+    },
     isInputSelect () {
       return this.field.el.type === fieldType.inputSelect
     },
