@@ -63,13 +63,13 @@ class OrdersControllerTest extends TestCase
         $this->withoutExceptionHandling();
         $this->seed(OrdersTableSeeder::class);
         $this->seed(OrdersTableSeeder::class);
-        factory(OCRRequestStatus::class, 2)->create(['status' => 'ocr-waiting']);
+        factory(OCRRequestStatus::class, 2)->create(['status' => OCRRequestStatus::OCR_WAITING]);
         $order = Order::latest()->first();
         $ocrRequest = OCRRequest::latest()->first();
         $ocrRequest->created_at = now()->subDays(5);
         $ocrRequest->save();
 
-        $this->getJson(route('orders.index', ['filter[status]' => 'ocr-waiting']))
+        $this->getJson(route('orders.index', ['filter[status]' => OCRRequestStatus::OCR_WAITING]))
             ->assertJsonCount(2, 'data');
         $this->getJson(route('orders.index', ['filter[request_id]' => $order->request_id]))
             ->assertJsonCount(1, 'data');
@@ -102,7 +102,7 @@ class OrdersControllerTest extends TestCase
         $this->withoutExceptionHandling();
         $this->seed(OrdersTableSeeder::class);
         $this->seed(OrdersTableSeeder::class);
-        factory(OCRRequestStatus::class, 2)->create(['status' => 'ocr-waiting']);
+        factory(OCRRequestStatus::class, 2)->create(['status' => OCRRequestStatus::OCR_WAITING]);
         $order = Order::latest()->first();
 
         $this->getJson(route('orders.index', ['filter[query]' => $order->request_id]))
@@ -125,9 +125,9 @@ class OrdersControllerTest extends TestCase
 
         $this->seed(OrdersTableSeeder::class);
         $this->seed(OrdersTableSeeder::class);
-        factory(OCRRequestStatus::class, 2)->create(['status' => 'ocr-waiting']);
+        factory(OCRRequestStatus::class, 2)->create(['status' => OCRRequestStatus::OCR_WAITING]);
 
-        $this->getJson(route('orders.index', ['filter[status]' => 'ocr-waiting']))
+        $this->getJson(route('orders.index', ['filter[status]' => OCRRequestStatus::OCR_WAITING]))
             ->assertStatus(Response::HTTP_FORBIDDEN);
     }
 

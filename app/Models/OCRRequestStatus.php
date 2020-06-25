@@ -14,18 +14,30 @@ use Illuminate\Database\Eloquent\Model;
  */
 class OCRRequestStatus extends Model
 {
+    const INTAKE_ACCEPTED = 'intake-accepted',
+    INTAKE_EXCEPTION = 'intake-exception',
+    INTAKE_REJECTED = 'intake-rejected',
+    INTAKE_STARTED = 'intake-started',
+    OCR_COMPLETED = 'ocr-completed',
+    OCR_POST_PROCESSING_COMPLETE = 'ocr-post-processing-complete',
+    OCR_POST_PROCESSING_ERROR = 'ocr-post-processing-error',
+    OCR_WAITING = 'ocr-waiting',
+    PROCESS_OCR_OUTPUT_FILE_COMPLETE = 'process-ocr-output-file-complete',
+    PROCESS_OCR_OUTPUT_FILE_ERROR = 'process-ocr-output-file-error',
+    UPLOAD_REQUESTED = 'upload-requested';
+
     const STATUS_MAP = [
-        'intake-accepted' => 'Processing',
-        'intake-exception' => 'Exception',
-        'intake-rejected' => 'Rejected',
-        'intake-started' => 'Intake',
-        'ocr-completed' => 'Processing',
-        'ocr-post-processing-complete' => 'Verified',
-        'ocr-post-processing-error' => 'Rejected',
-        'ocr-waiting' => 'Processing',
-        'process-ocr-output-file-complete' => 'Processing',
-        'process-ocr-output-file-error' => 'Rejected',
-        'upload-requested' => 'Intake',
+        self::INTAKE_ACCEPTED => 'Processing',
+        self::INTAKE_EXCEPTION => 'Exception',
+        self::INTAKE_REJECTED => 'Rejected',
+        self::INTAKE_STARTED => 'Intake',
+        self::OCR_COMPLETED => 'Processing',
+        self::OCR_POST_PROCESSING_COMPLETE => 'Verified',
+        self::OCR_POST_PROCESSING_ERROR => 'Rejected',
+        self::OCR_WAITING => 'Processing',
+        self::PROCESS_OCR_OUTPUT_FILE_COMPLETE => 'Processing',
+        self::PROCESS_OCR_OUTPUT_FILE_ERROR => 'Rejected',
+        self::UPLOAD_REQUESTED => 'Intake',
     ];
 
     public $table = 't_job_state_changes';

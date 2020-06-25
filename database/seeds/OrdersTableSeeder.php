@@ -9,6 +9,7 @@ use Carbon\Carbon;
 use App\Models\Order;
 use App\Models\OrderLineItem;
 use Illuminate\Database\Seeder;
+use App\Models\OCRRequestStatus;
 use Illuminate\Support\Facades\DB;
 
 class OrdersTableSeeder extends Seeder
@@ -20,15 +21,15 @@ class OrdersTableSeeder extends Seeder
     const PCT_ORDERS_INTAKE_REJECTED = 15;
 
     // lists of sample data values
-    const UOM_PACKAGE_LIST = ['BAG','BOX','LOT','CAS', 'CRT','TU','ROL','PAD','PAL','FT']; // https://www.doa.la.gov/osp/Vendorcenter/publications/unitofmeasurecodes.pdf
-    const UOM_WEIGHT_LIST = ['TON','LBS','KGS'];
-    const DIRECTION_LIST = ['Export','Import','Domestic'];
+    const UOM_PACKAGE_LIST = ['BAG', 'BOX', 'LOT', 'CAS', 'CRT', 'TU', 'ROL', 'PAD', 'PAL', 'FT']; // https://www.doa.la.gov/osp/Vendorcenter/publications/unitofmeasurecodes.pdf
+    const UOM_WEIGHT_LIST = ['TON', 'LBS', 'KGS'];
+    const DIRECTION_LIST = ['Export', 'Import', 'Domestic'];
     const EQUIPMENT_LIST = ['GP-General Purpose', 'HQ-High Cube', 'CC-Car Carrier', 'DD-Double Door'];
     const DESTINATION_LIST = ['International', 'Domestic'];
     const EQUIPMENT_TYPE_LIST = ['Container', 'Trailer'];
-    const UNIT_NUMBER_LIST = ['ACMU8009943','HJCU8281988','CSQU3054383','TOLU4734787','LSCU1077379','MSKU2666542','NYKU3086856','BICU1234565'];
+    const UNIT_NUMBER_LIST = ['ACMU8009943', 'HJCU8281988', 'CSQU3054383', 'TOLU4734787', 'LSCU1077379', 'MSKU2666542', 'NYKU3086856', 'BICU1234565'];
     const EQUIPMENT_SIZE_LIST = ['20 ft', '40 ft', '45 ft', '48ft'];
-    const OWNER_OR_SS_COMPANY_LIST = ['ACL','Antillean Lines','APL/CMA-CGM','Atlantic RO-Ro','Australia National Line','Bahri / National Shipping Company of Saudi Arabia','Bermuda International Shipping Ltd','BMC Line Shipping LLC','CCNI','Cheng Lie Navigation Co.,Ltd','Dole Ocean Cargo Express','Dongjin Shipping','Emirates Shipping Line','Evergreen Line','Frontier Liner Services'];
+    const OWNER_OR_SS_COMPANY_LIST = ['ACL', 'Antillean Lines', 'APL/CMA-CGM', 'Atlantic RO-Ro', 'Australia National Line', 'Bahri / National Shipping Company of Saudi Arabia', 'Bermuda International Shipping Ltd', 'BMC Line Shipping LLC', 'CCNI', 'Cheng Lie Navigation Co.,Ltd', 'Dole Ocean Cargo Express', 'Dongjin Shipping', 'Emirates Shipping Line', 'Evergreen Line', 'Frontier Liner Services'];
 
     /**
      * Run the database seeds.
@@ -106,7 +107,7 @@ class OrdersTableSeeder extends Seeder
         DB::table('t_job_state_changes')->insert([
             'request_id' => $request_id,
             'status_date' => $time5MinutesAgo,
-            'status' => 'intake-started',
+            'status' => OCRRequestStatus::INTAKE_STARTED,
             'status_metadata' => '{"event_info": {"event_time": "2019-12-06T20:28:59.595Z", "object_key": "intakeemail/4tckssjbuh0c2dt8rlund3efvcd4g6pmjeagee81", "bucket_name": "dmedocproc-emailintake-dev", "aws_request_id": "'.$request_id.'", "log_group_name": "/aws/lambda/intake-filter-dev", "log_stream_name": "2019/12/06/[$LATEST]55e4fa95494f4364a68a85e537e8e3fa", "event_time_epoch_ms": 1575664139000}, "request_id": "'.$request_id.'", "source_summary": {"source_type": "email", "source_email_subject": "Fwd: test 202", "source_email_to_address": "dev@docprocessing.draymaster.com", "source_email_from_address": "Peter Nelson <peter@peternelson.com>", "source_email_body_prefixes": ["b\'---------- Forwarded message ---------\\r\\nFrom: Peter Nelson <peter@peternelson.com>\\r\\nDate: Fri, Dec 6, 2019 at 1:43 PM\\r\\nSubject: test 202\\r\\nTo: Peter B. Nelson <peter@peternelson.com>\\r\\n\'", "b\'<div dir=\"ltr\"><div class=\"gmail_default\" style=\"font-size:small\"><br></div><br><div class=\"gmail_quote\"><div dir=\"ltr\" class=\"gmail_attr\">---------- Forwarded message ---------<br>From: <b class=\"gmail_sendername\" dir=\"auto\">Peter Nelson</b> <span dir=\"auto\">&lt;<a href=\"mailto:peter@peternelson.com\">peter@peternelson.com</a>&gt;</span><br>Date: Fri, Dec 6, 2019 at 1:43 PM<br>Subject: test 202<br>To: Peter B. Nelson &lt;<a href=\"mailto:peter@peternelson.com\">peter@peternelson.com</a>&gt;<br><"], "source_email_string_length": 164489, "source_email_attachment_filenames": ["MATSON-examplar.pdf"]}, "read_log_commandline": "aws --profile=draymaster logs get-log-events --log-group-name=\'/aws/lambda/intake-filter-dev\' --log-stream-name=\'2019/12/06/[$LATEST]55e4fa95494f4364a68a85e537e8e3fa\' --start-time=\'1575664139000\'"}',
         ]);
 
@@ -114,7 +115,7 @@ class OrdersTableSeeder extends Seeder
         DB::table('t_job_state_changes')->insert([
             'request_id' => $request_id,
             'status_date' => $time4MinutesAgo,
-            'status' => 'ocr-waiting',
+            'status' => OCRRequestStatus::OCR_WAITING,
             'status_metadata' => '{"wait_reason": "WorkflowException", "exception_message": "No files found matching '.$request_id.'*.csv"}',
         ]);
 
@@ -122,7 +123,7 @@ class OrdersTableSeeder extends Seeder
         DB::table('t_job_state_changes')->insert([
             'request_id' => $request_id,
             'status_date' => $time3MinutesAgo,
-            'status' => 'ocr-completed',
+            'status' => OCRRequestStatus::OCR_COMPLETED,
             'status_metadata' => '{"file_list": ["'.$request_id.'_MATSON-examplar_00000001.csv"], "s3_bucket": "dmedocproc-processedjobs-dev", "s3_region": "us-east-2"}',
         ]);
 
@@ -130,7 +131,7 @@ class OrdersTableSeeder extends Seeder
         DB::table('t_job_state_changes')->insert([
             'request_id' => $request_id,
             'status_date' => $time2MinutesAgo,
-            'status' => 'process-ocr-output-file-complete',
+            'status' => OCRRequestStatus::PROCESS_OCR_OUTPUT_FILE_COMPLETE,
             'status_metadata' => '{"filename": "'.$request_id.'_MATSON-examplar_00000001.csv", "row_count": 1}',
         ]);
 
@@ -138,7 +139,7 @@ class OrdersTableSeeder extends Seeder
         DB::table('t_job_state_changes')->insert([
             'request_id' => $request_id,
             'status_date' => $time1MinutesAgo,
-            'status' => 'ocr-post-processing-complete',
+            'status' => OCRRequestStatus::OCR_POST_PROCESSING_COMPLETE,
             'status_metadata' => '{"num_files_to_process": 1, "num_files_processed_successfully": 1, "num_files_processed_unsuccessfully": 0}',
         ]);
 
@@ -168,7 +169,7 @@ class OrdersTableSeeder extends Seeder
         DB::table('t_job_state_changes')->insert([
             'request_id' => $request_id,
             'status_date' => $time5MinutesAgo,
-            'status' => 'intake-started',
+            'status' => OCRRequestStatus::INTAKE_STARTED,
             'status_metadata' => '{"event_info": {"event_time": "2019-12-06T00:31:12.873Z", "object_key": "intakeemail/3ii4d5gekodc5mnmdaqim08ft445k3aodf3laqo1", "bucket_name": "dmedocproc-emailintake-dev", "aws_request_id": "'.$request_id.'", "log_group_name": "/aws/lambda/intake-filter-dev", "log_stream_name": "2019/12/06/[$LATEST]5fdbcbb1b8e24ee0afa6cc506b24b387", "event_time_epoch_ms": 1575592272000}, "request_id": "'.$request_id.'", "source_summary": {"source_type": "email", "source_email_subject": "test193", "source_email_to_address": "dev@docprocessing.draymaster.com", "source_email_from_address": "Peter Nelson <peter@peternelson.com>", "source_email_body_prefixes": ["b\'\\r\\n\'\", \"b\'<div dir=\"ltr\"><div class=\"gmail_default\" style=\"font-size:small\"><br></div></div>\\r\\n\'"], "source_email_string_length": 233429, "source_email_attachment_filenames": ["cai-logistics-pg1.pdf", "cai-logistics-pg2.pdf", "cai-logistics-pg3.pdf"]}}',
         ]);
 
@@ -176,7 +177,7 @@ class OrdersTableSeeder extends Seeder
         DB::table('t_job_state_changes')->insert([
             'request_id' => $request_id,
             'status_date' => $time4MinutesAgo,
-            'status' => 'intake-rejected',
+            'status' => OCRRequestStatus::INTAKE_REJECTED,
             'status_metadata' => '{"rejection_reason": "WorkflowException", "exception_message": "Ambiguous attachments in this email. Attachments found: [\'cai-logistics-pg1.pdf\', \'cai-logistics-pg2.pdf\', \'cai-logistics-pg3.pdf\']"}',
         ]);
 
