@@ -117,8 +117,8 @@ h1 {
   color: rgba(map-get($colors , black-2), 1) !important;
 }
   .button {
-    margin-right: 10px;
-    letter-spacing: 0.75px;
+    margin-right: 1rem;
+    letter-spacing: 0.075rem;
   }
   .delete-button {
     color: rgba(map-get($colors , red), 1) !important;
