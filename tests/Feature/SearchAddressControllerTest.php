@@ -37,7 +37,7 @@ class SearchAddressControllerTest extends TestCase
             'tms_provider_id' => 'test',
         ];
 
-        $this->getJson(route('search-address.index', $data))
+        $this->getJson(route('search-address', $data))
             ->assertJsonStructure(['event_info', 'address_list'])
             ->assertStatus(200);
 

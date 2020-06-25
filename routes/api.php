@@ -40,10 +40,10 @@ Route::group(['middleware' => 'auth:sanctum'], function () {
         ->name('user'); // shows up in `php artisan route:list` command output
 
     Route::get('search-address', SearchAddressController::class)
-        ->name('search-address.index');
+        ->name('search-address');
 
     Route::post('send-to-tms', SendToTmsController::class)
-        ->name('send-to-tms.store');
+        ->name('send-to-tms');
 
     // Authenticated route to return all orders
     Route::resource('orders', OrdersController::class)
