@@ -6,6 +6,11 @@ import Login from '@/views/Login'
 import RulesEditor from '@/views/RulesEditor/RulesEditor'
 import auth from '@/router/middleware/auth'
 import StyleGuide from '@/views/StyleGuide'
+import Dashboard from '@/views/Users/Dashboard'
+import AddUser from '@/views/Users/AddUser'
+import EditUser from '@/views/Users/EditUser'
+import EditProfile from '@/views/Users/EditProfile'
+import ChangePassword from '@/views/Users/ChangePassword'
 import { runMiddleware } from '@/router/middleware'
 
 Vue.use(VueRouter)
@@ -18,6 +23,31 @@ const routes = [
       middleware: [auth]
     },
     component: Orders
+  },
+  {
+    path: '/user/dashboard',
+    name: 'Dashboard',
+    component: Dashboard
+  },
+  {
+    path: '/user/dashboard/add-user',
+    name: 'AddUser',
+    component: AddUser
+  },
+  {
+    path: '/user/dashboard/edit-user/:id',
+    name: 'EditUser',
+    component: EditUser
+  },
+  {
+    path: '/user/dashboard/edit-profile/:id',
+    name: 'EditProfile',
+    component: EditProfile
+  },
+  {
+    path: '/user/dashboard/change-password/:id',
+    name: 'ChangePassword',
+    component: ChangePassword
   },
   {
     path: '/styleguide',
