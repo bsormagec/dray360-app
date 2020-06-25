@@ -13,6 +13,11 @@ class SendToTmsController extends Controller
 {
     const VALID_STATUSES = ['sending-to-wint'];
 
+    public function __construct()
+    {
+        $this->middleware('permission:tms-submit');
+    }
+
     public function __invoke(Request $request)
     {
         $data = $request->validate([

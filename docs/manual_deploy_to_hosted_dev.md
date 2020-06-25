@@ -9,7 +9,7 @@
 cd /home/pbnelson/repos/tcompanies/ordermaster
 git checkout master
 git pull --all
-time rsync -av --exclude 'node_modules' --exclude 'vendor' --exclude 'frontend/node_modules' --exclude 'storage/logs'  ../ordermaster  ocr-dev02:/tmp
+time rsync -av --exclude 'node_modules' --exclude 'vendor' --exclude 'frontend/node_modules' --exclude 'storage/logs'  ../ordermaster  ocr-dev02:/
 
 ````
 
@@ -39,7 +39,9 @@ cp /var/www/deploybot/env_files/frontend/.env* ./frontend/
 npm install
 composer install
 php artisan migrate
-# one time only with a new database: php artisn db:seed --class="ProfitToolsCushingSeeder"
+php artisan db:seed --class="ProfitToolsCushingSeeder"  # will not add duplicates
+# one time only: php artisan db:seed --class="LaratrustSeeder"  # will not add duplicates
+# one time only: php artisan horizon:publish
 cd frontend
 npm install
 npm run build
@@ -61,3 +63,4 @@ sudo systemctl status httpd.service php-fpm.service
 ````bash
 exit
 ````
+

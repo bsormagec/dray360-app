@@ -3,9 +3,11 @@
 namespace Tests\Feature;
 
 use Tests\TestCase;
+use App\Models\User;
 use App\Models\Account;
 use App\Models\OCRRule;
 use App\Models\OCRVariant;
+use Laravel\Sanctum\Sanctum;
 use Illuminate\Http\Response;
 use Tests\Seeds\OCRRulesAssignmentSeed;
 use App\Models\AccountOCRVariantOCRRule;
@@ -54,7 +56,7 @@ class OCRRulesAssignmentControllerTest extends TestCase
         $ocrVariant = OCRVariant::first(['id']);
         $account = Account::first(['id']);
         $ocrRules = OCRRule::all(['id']);
-        $toValidate = ['variant_id','account_id', 'rules'];
+        $toValidate = ['variant_id', 'account_id', 'rules'];
 
         foreach ($toValidate as $fieldToValidate) {
             $data = [
@@ -68,6 +70,25 @@ class OCRRulesAssignmentControllerTest extends TestCase
                 ->assertStatus(Response::HTTP_UNPROCESSABLE_ENTITY)
                 ->assertJsonValidationErrors($fieldToValidate);
         }
+    }
+
+    /** @test */
+    public function it_should_not_allow_updating_the_assignment_if_not_authorized()
+    {
+        $user = User::whereRoleIs('customer-user')->first();
+        Sanctum::actingAs($user);
+
+        $this->seed(OCRRulesAssignmentSeed::class);
+        $ocrVariant = OCRVariant::first(['id']);
+        $account = Account::first(['id']);
+        $ocrRules = OCRRule::all(['id']);
+
+        $this->postJson(route('ocr.rules-assignment.store'), [
+                'variant_id' => $ocrVariant->id,
+                'account_id' => $account->id,
+                'rules' => $ocrRules->pluck('id'),
+            ])
+            ->assertStatus(Response::HTTP_FORBIDDEN);
     }
 
     /** @test */
@@ -163,5 +184,28 @@ class OCRRulesAssignmentControllerTest extends TestCase
             ])
             ->assertJsonPath('data.0.id', $rulesAccount2->get(1)->id)
             ->assertJsonPath('data.1.id', $rulesAccount2->get(2)->id);
+    }
+
+    /** @test */
+    public function it_should_not_list_the_assignments_if_not_authorized()
+    {
+        $user = User::whereRoleIs('customer-user')->first();
+        Sanctum::actingAs($user);
+
+        $this->seed(OCRRulesAssignmentSeed::class);
+        $accounts = Account::all(['id']);
+        $ocrVariant = OCRVariant::first(['id']);
+
+        $this->getJson(route('ocr.rules-assignment.index', [
+                'account_id' => $accounts->first()->id,
+                'variant_id' => $ocrVariant->id,
+            ]))
+            ->assertStatus(Response::HTTP_FORBIDDEN);
+
+        $this->getJson(route('ocr.rules-assignment.index', [
+                'account_id' => $accounts->last()->id,
+                'variant_id' => $ocrVariant->id,
+            ]))
+            ->assertStatus(Response::HTTP_FORBIDDEN);
     }
 }

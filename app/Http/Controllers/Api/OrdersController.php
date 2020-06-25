@@ -16,11 +16,11 @@ class OrdersController extends Controller
 
     /**
      * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
      */
     public function index()
     {
+        $this->authorize('viewAny', Order::class);
+
         $ocrRequestsOrders = (new OcrRequestOrderListQuery())->paginate(25);
 
         return OrdersResource::collection($ocrRequestsOrders);
@@ -28,13 +28,12 @@ class OrdersController extends Controller
 
     /**
      * Display the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
      */
-    public function show($id)
+    public function show(Order $order)
     {
-        $order = Order::with([
+        $this->authorize('view', $order);
+
+        $order = $order->load([
                 'ocrRequest',
                 'ocrRequest.statusList',
                 'ocrRequest.latestOcrRequestStatus',
@@ -44,8 +43,7 @@ class OrdersController extends Controller
                 'portRampOfOriginAddress',
                 'orderAddressEvents',
                 'orderAddressEvents.address',
-            ])
-            ->findOrFail($id);
+            ]);
 
         // Create an S3 client
         $s3Client = new S3Client([
@@ -87,13 +85,10 @@ class OrdersController extends Controller
 
     /**
      * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
      */
     public function update(Request $request, Order $order)
     {
+        $this->authorize('update', $order);
         $orderData = $request->validate(Order::$rules);
         $relatedModels = $request->validate([
             'order_line_items' => ['sometimes', 'array'],

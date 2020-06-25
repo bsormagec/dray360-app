@@ -3,7 +3,9 @@
 namespace Tests\Feature;
 
 use Tests\TestCase;
+use App\Models\User;
 use App\Models\OCRRule;
+use Laravel\Sanctum\Sanctum;
 use Illuminate\Http\Response;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
 
@@ -34,6 +36,16 @@ class OCRRulesControllerTest extends TestCase
     }
 
     /** @test */
+    public function it_should_fail_if_not_authorized_to_edit_rules()
+    {
+        factory(OCRRule::class, 5)->create();
+        $user = User::whereRoleIs('customer-user')->first();
+        Sanctum::actingAs($user);
+
+        $this->getJson(route('ocr.rules.index'))->assertStatus(Response::HTTP_FORBIDDEN);
+    }
+
+    /** @test */
     public function it_should_create_a_rule()
     {
         $rule = factory(OCRRule::class)->make();
@@ -49,7 +61,7 @@ class OCRRulesControllerTest extends TestCase
     /** @test */
     public function it_should_fail_the_validation()
     {
-        $toValidate = ['name','description', 'code'];
+        $toValidate = ['name', 'description', 'code'];
 
         foreach ($toValidate as $fieldToValidate) {
             $rule = factory(OCRRule::class)->make([$fieldToValidate => null]);
@@ -60,6 +72,18 @@ class OCRRulesControllerTest extends TestCase
         }
 
         $this->assertDatabaseCount((new OCRRule())->getTable(), 0);
+    }
+
+    /** @test */
+    public function it_should_fail_if_not_authorized_to_create_new_rules()
+    {
+        $user = User::whereRoleIs('customer-user')->first();
+        Sanctum::actingAs($user);
+
+        $rule = factory(OCRRule::class)->make();
+
+        $this->postJson(route('ocr.rules.store'), $rule->toArray())
+            ->assertStatus(Response::HTTP_FORBIDDEN);
     }
 
     /** @test */
@@ -82,7 +106,7 @@ class OCRRulesControllerTest extends TestCase
     public function it_should_fail_validation_on_update()
     {
         $rule = factory(OCRRule::class)->create();
-        $toValidate = ['name','description', 'code'];
+        $toValidate = ['name', 'description', 'code'];
 
         foreach ($toValidate as $fieldToValidate) {
             $newRule = $rule->toArray();
@@ -92,5 +116,18 @@ class OCRRulesControllerTest extends TestCase
                 ->assertStatus(Response::HTTP_UNPROCESSABLE_ENTITY)
                 ->assertJsonValidationErrors($fieldToValidate);
         }
+    }
+
+    /** @test */
+    public function it_should_fail_if_not_authorized_to_update_a_rule()
+    {
+        $user = User::whereRoleIs('customer-user')->first();
+        Sanctum::actingAs($user);
+
+        $rule = factory(OCRRule::class)->create()->toArray();
+        $rule['code'] = 'Some new amazing code.';
+
+        $this->putJson(route('ocr.rules.update', $rule['id']), $rule)
+            ->assertStatus(Response::HTTP_FORBIDDEN);
     }
 }
