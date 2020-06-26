@@ -30,7 +30,7 @@ PYTHONCODE,
 possible_output_fields = {"mbol":{"always":True}}
 def runrule(input_fields, updated_fields):
     #return {"shipment_type":"export"}
-    updated_fields["bol"] = input_fields["mbol"]
+    updated_fields["bill_of_lading"] = input_fields["mbol"]
 PYTHONCODE,
 <<<PYTHONCODE
 possible_output_fields = {"port_ramp_of_origin_address_raw_text":{"always":True}}

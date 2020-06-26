@@ -29,7 +29,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
  * @property boolean $expedite_shipment
  * @property string $reference_number
  * @property string $rate_quote_number
- * @property string $seal_number_list
+ * @property string $seal_number
  * @property string $vessel
  * @property string $voyage
  * @property string $master_bol_mawb
@@ -37,7 +37,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
  * @property string|\Carbon\Carbon $estimated_arrival_utc
  * @property string|\Carbon\Carbon $last_free_date_utc
  * @property string $booking_number
- * @property string $bol
+ * @property string $bill_of_lading
  * @property string $bill_to_address_id
  * @property string $port_ramp_of_origin_address_id
  * @property string $port_ramp_of_destination_address_id
@@ -53,6 +53,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
  * @property string $variant_name
  * @property string $t_tms_providers_id
  * @property string $tms_shipment_id
+ * @property string $carrier
  */
 class Order extends Model
 {
@@ -82,7 +83,7 @@ class Order extends Model
         'expedite_shipment',
         'reference_number',
         'rate_quote_number',
-        'seal_number_list',
+        'seal_number',
         'vessel',
         'voyage',
         'master_bol_mawb',
@@ -90,7 +91,7 @@ class Order extends Model
         'estimated_arrival_utc',
         'last_free_date_utc',
         'booking_number',
-        'bol',
+        'bill_of_lading',
         'bill_to_address_id',
         'port_ramp_of_origin_address_id',
         'port_ramp_of_destination_address_id',
@@ -106,6 +107,7 @@ class Order extends Model
         'variant_name',
         't_tms_providers_id',
         'tms_shipment_id',
+        'carrier',
     ];
 
     /**
@@ -130,7 +132,7 @@ class Order extends Model
         'expedite_shipment' => 'boolean',
         'reference_number' => 'string',
         'rate_quote_number' => 'string',
-        'seal_number_list' => 'string',
+        'seal_number' => 'string',
         'port_ramp_of_origin' => 'string',
         'port_ramp_of_destination' => 'string',
         'vessel' => 'string',
@@ -141,7 +143,7 @@ class Order extends Model
         'last_free_date_utc' => 'datetime',
         'booking_number' => 'string',
         'pickup_number' => 'string',
-        'bol' => 'string',
+        'bill_of_lading' => 'string',
         'bill_to_address_id' => 'integer',
         'bill_to_address_verified' => 'boolean',
         'bill_to_address_raw_text' => 'string',
@@ -180,7 +182,7 @@ class Order extends Model
         'expedite_shipment' => 'sometimes|nullable',
         'reference_number' => 'sometimes|nullable',
         'rate_quote_number' => 'sometimes|nullable',
-        'seal_number_list' => 'sometimes|nullable',
+        'seal_number' => 'sometimes|nullable',
         'vessel' => 'sometimes|nullable',
         'voyage' => 'sometimes|nullable',
         'master_bol_mawb' => 'sometimes|nullable',
@@ -188,7 +190,7 @@ class Order extends Model
         'estimated_arrival_utc' => 'sometimes|nullable',
         'last_free_date_utc' => 'sometimes|nullable',
         'booking_number' => 'sometimes|nullable',
-        'bol' => 'sometimes|nullable',
+        'bill_of_lading' => 'sometimes|nullable',
         'bill_to_address_id' => 'sometimes|nullable|exists:t_addresses,id',
         'port_ramp_of_origin_address_id' => 'sometimes|nullable|exists:t_addresses,id',
         'port_ramp_of_destination_address_id' => 'sometimes|nullable|exists:t_addresses,id',
@@ -200,6 +202,7 @@ class Order extends Model
         'variant_name' => 'sometimes|nullable',
         't_tms_providers_id' => 'sometimes|nullable|exists:t_tms_providers,id',
         'tms_shipment_id' => 'sometimes|nullable',
+        'carrier' => 'sometimes|nullable',
     ];
 
     public function orderAddressEvents()
@@ -259,7 +262,7 @@ class Order extends Model
             $relationship = $data['relationship'];
             $modelData = $data['model'];
 
-            if (!$modelData) {
+            if (! $modelData) {
                 return;
             }
 
@@ -270,7 +273,7 @@ class Order extends Model
 
             $relatedModel = $existingRelatedModels[$relationship]->firstWhere('id', $modelData['id']);
 
-            if (!$relatedModel) {
+            if (! $relatedModel) {
                 return;
             }
 
