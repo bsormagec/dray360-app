@@ -19,6 +19,10 @@ class RenameAndAddColumnsFromFieldMapping extends Migration
 
             $table->string('carrier', 64)->nullable();
         });
+
+        Schema::table('t_order_line_items', function (Blueprint $table) {
+            $table->renameColumn('description', 'contents');
+        });
     }
 
     /**
@@ -33,6 +37,10 @@ class RenameAndAddColumnsFromFieldMapping extends Migration
             $table->renameColumn('bill_of_lading', 'bol');
 
             $table->dropColumn('carrier');
+        });
+
+        Schema::table('t_order_line_items', function (Blueprint $table) {
+            $table->renameColumn('contents', 'description');
         });
     }
 }

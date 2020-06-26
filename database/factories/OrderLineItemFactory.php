@@ -17,11 +17,11 @@ $factory->define(OrderLineItem::class, function (Faker $faker) {
     return [
         't_order_id' => factory(Order::class),
         'quantity' => $quantity,
-        'unit_of_measure' => Arr::random(['BAG','BOX','LOT','CAS', 'CRT','TU','ROL','PAD','PAL','FT']),  // https://www.doa.la.gov/osp/Vendorcenter/publications/unitofmeasurecodes.pdf
-        'description' => $faker->productName,
+        'unit_of_measure' => Arr::random(['BAG', 'BOX', 'LOT', 'CAS', 'CRT', 'TU', 'ROL', 'PAD', 'PAL', 'FT']),  // https://www.doa.la.gov/osp/Vendorcenter/publications/unitofmeasurecodes.pdf
+        'contents' => $faker->productName,
         'weight' => $weight,
         'total_weight' => $quantity * $weight,
-        'weight_uom' => Arr::random(['TON','LBS','KGS']),
+        'weight_uom' => Arr::random(['TON', 'LBS', 'KGS']),
         'is_hazardous' => $faker->boolean,
         'haz_contact_name' => null,
         'haz_phone' => null,

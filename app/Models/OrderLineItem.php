@@ -10,7 +10,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
  * @property integer $t_order_id
  * @property integer $quantity
  * @property string $unit_of_measure
- * @property string $description
+ * @property string $contents
  * @property number $weight
  * @property number $total_weight
  * @property string $weight_uom
@@ -42,7 +42,7 @@ class OrderLineItem extends Model
         't_order_id',
         'quantity',
         'unit_of_measure',
-        'description',
+        'contents',
         'weight',
         'total_weight',
         'weight_uom',
@@ -70,7 +70,7 @@ class OrderLineItem extends Model
         't_order_id' => 'integer',
         'quantity' => 'integer',
         'unit_of_measure' => 'string',
-        'description' => 'string',
+        'contents' => 'string',
         'weight' => 'float',
         'total_weight' => 'float',
         'weight_uom' => 'string',
