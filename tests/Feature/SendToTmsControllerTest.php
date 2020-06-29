@@ -55,7 +55,7 @@ class SendToTmsControllerTest extends TestCase
         $mockAction->shouldReceive('getSnsClient')->andReturn($snsClient);
         $this->app->instance(PublishSnsMessageToSendToTms::class, $mockAction);
 
-        $this->postJson(route('send-to-tms.store'), [
+        $this->postJson(route('send-to-tms'), [
                 'status' => 'sending-to-wint',
                 'order_id' => $this->order->id,
                 'company_id' => $this->company->id,
@@ -85,7 +85,7 @@ class SendToTmsControllerTest extends TestCase
         $mockAction->shouldReceive('getSnsClient')->andReturn($snsClient);
         $this->app->instance(PublishSnsMessageToSendToTms::class, $mockAction);
 
-        $this->postJson(route('send-to-tms.store'), [
+        $this->postJson(route('send-to-tms'), [
                 'status' => 'sending-to-wint',
                 'order_id' => $this->order->id,
                 'company_id' => $this->company->id,
@@ -116,7 +116,7 @@ class SendToTmsControllerTest extends TestCase
         $mockAction->shouldNotReceive('getSnsClient');
         $this->app->instance(PublishSnsMessageToSendToTms::class, $mockAction);
 
-        $this->postJson(route('send-to-tms.store'), [
+        $this->postJson(route('send-to-tms'), [
                 'status' => 'sending-to-wint',
                 'order_id' => $this->order->id,
                 'company_id' => $this->company->id,

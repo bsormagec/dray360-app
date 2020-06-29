@@ -14,6 +14,7 @@ use App\Models\OCRRequestStatus;
 use App\Models\OrderAddressEvent;
 use Illuminate\Support\Facades\DB;
 use Bezhanov\Faker\Provider\Commerce;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Foundation\Testing\WithFaker;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
 
@@ -63,13 +64,13 @@ class OrdersControllerTest extends TestCase
         $this->withoutExceptionHandling();
         $this->seed(OrdersTableSeeder::class);
         $this->seed(OrdersTableSeeder::class);
-        factory(OCRRequestStatus::class, 2)->create(['status' => 'ocr-waiting']);
+        factory(OCRRequestStatus::class, 2)->create(['status' => OCRRequestStatus::OCR_WAITING]);
         $order = Order::latest()->first();
         $ocrRequest = OCRRequest::latest()->first();
         $ocrRequest->created_at = now()->subDays(5);
         $ocrRequest->save();
 
-        $this->getJson(route('orders.index', ['filter[status]' => 'ocr-waiting']))
+        $this->getJson(route('orders.index', ['filter[status]' => OCRRequestStatus::OCR_WAITING]))
             ->assertJsonCount(2, 'data');
         $this->getJson(route('orders.index', ['filter[request_id]' => $order->request_id]))
             ->assertJsonCount(1, 'data');
@@ -102,7 +103,7 @@ class OrdersControllerTest extends TestCase
         $this->withoutExceptionHandling();
         $this->seed(OrdersTableSeeder::class);
         $this->seed(OrdersTableSeeder::class);
-        factory(OCRRequestStatus::class, 2)->create(['status' => 'ocr-waiting']);
+        factory(OCRRequestStatus::class, 2)->create(['status' => OCRRequestStatus::OCR_WAITING]);
         $order = Order::latest()->first();
 
         $this->getJson(route('orders.index', ['filter[query]' => $order->request_id]))
@@ -125,9 +126,9 @@ class OrdersControllerTest extends TestCase
 
         $this->seed(OrdersTableSeeder::class);
         $this->seed(OrdersTableSeeder::class);
-        factory(OCRRequestStatus::class, 2)->create(['status' => 'ocr-waiting']);
+        factory(OCRRequestStatus::class, 2)->create(['status' => OCRRequestStatus::OCR_WAITING]);
 
-        $this->getJson(route('orders.index', ['filter[status]' => 'ocr-waiting']))
+        $this->getJson(route('orders.index', ['filter[status]' => OCRRequestStatus::OCR_WAITING]))
             ->assertStatus(Response::HTTP_FORBIDDEN);
     }
 
@@ -159,6 +160,7 @@ class OrdersControllerTest extends TestCase
                 })
                 ->toArray()
         );
+        $originalOrder->refresh();
         $this->assertJsonStringNotEqualsJsonString(
             json_encode($originalOrder->ocr_data),
             json_encode($data['ocr_data'])
@@ -236,6 +238,42 @@ class OrdersControllerTest extends TestCase
         $this->assertEquals(1, $order->orderLineItems()->onlyTrashed()->count());
         $this->assertEquals(0, $order->orderAddressEvents()->count());
         $this->assertEquals(1, $order->orderAddressEvents()->onlyTrashed()->count());
+    }
+
+    /** @test */
+    public function it_should_return_the_order_with_presigned_url()
+    {
+        Storage::fake();
+        $order = Order::orderByDesc('id')->first();
+        $order->ocr_data = [
+            "page_index_filenames" => [
+                "name" => "page_index_filenames",
+                "value" => [
+                    "1" => [
+                        "name" => "page_index_1",
+                        "value" => "s3://dmedocproc-ocrprocessedjobs-dev/e061c2fb-7ec3-596b-acdc-95b461f27e2b_daedc679e9e9b441d98c0634e83ae24bab8722a385058db6f9e08f545e770f1d_ShipmentCartageAdviceWithReceipt-SSI100072169.00000001.jpg"
+                    ]
+                ]
+            ]
+        ];
+        $order->save();
+
+        Storage::shouldReceive('createS3Driver')->andReturn(Storage::getFacadeRoot());
+        Storage::shouldReceive('temporaryUrl')->andReturn('http://thesignedurl.com');
+
+        $this->getJson(route('orders.show', $order->id))
+            ->assertJsonStructure([
+                'id',
+                'request_id',
+                'ocr_data',
+                'ocr_request',
+                'order_line_items',
+                'bill_to_address',
+                'port_ramp_of_destination_address',
+                'port_ramp_of_origin_address',
+                'order_address_events',
+            ])
+            ->assertJsonFragment(['presigned_download_uri' => 'http://thesignedurl.com']);
     }
 
     protected function fillOrderUpdate($original)

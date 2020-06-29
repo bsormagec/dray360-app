@@ -10,6 +10,7 @@ use App\Http\Controllers\Api\SearchAddressController;
 use App\Http\Controllers\Api\Auth\ResetPasswordController;
 use App\Http\Controllers\Api\OCRRulesAssignmentController;
 use App\Http\Controllers\Api\Auth\ForgotPasswordController;
+use App\Http\Controllers\Api\DownloadOriginalOrderPdfController;
 
 /*
 |--------------------------------------------------------------------------
@@ -40,10 +41,13 @@ Route::group(['middleware' => 'auth:sanctum'], function () {
         ->name('user'); // shows up in `php artisan route:list` command output
 
     Route::get('search-address', SearchAddressController::class)
-        ->name('search-address.index');
+        ->name('search-address');
 
     Route::post('send-to-tms', SendToTmsController::class)
-        ->name('send-to-tms.store');
+        ->name('send-to-tms');
+
+    Route::get('orders/{order}/download-pdf', DownloadOriginalOrderPdfController::class)
+        ->name('orders.download-pdf');
 
     // Authenticated route to return all orders
     Route::resource('orders', OrdersController::class)
