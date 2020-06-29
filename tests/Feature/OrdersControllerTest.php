@@ -72,6 +72,10 @@ class OrdersControllerTest extends TestCase
 
         $this->getJson(route('orders.index', ['filter[status]' => OCRRequestStatus::OCR_WAITING]))
             ->assertJsonCount(2, 'data');
+        $this->getJson(route('orders.index', [
+                'filter[display_status]' => OCRRequestStatus::STATUS_MAP[OCRRequestStatus::OCR_WAITING]
+            ]))
+            ->assertJsonCount(2, 'data');
         $this->getJson(route('orders.index', ['filter[request_id]' => $order->request_id]))
             ->assertJsonCount(1, 'data');
         $this->getJson(route('orders.index', [
