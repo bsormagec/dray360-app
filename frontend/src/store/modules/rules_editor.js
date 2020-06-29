@@ -52,7 +52,7 @@ const actions = {
     return reqStatus.success
   },
   async [types.getAccountVariantRules] ({ commit }, pairIds) {
-    const [error, data] = await getAccountVariantRules()
+    const [error, data] = await getAccountVariantRules(pairIds.account_id, pairIds.variant_id)
 
     if (error) return reqStatus.error
 

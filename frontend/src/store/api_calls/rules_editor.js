@@ -2,8 +2,7 @@ import axios from '@/store/api_calls/config/axios'
 
 export const getLibrary = async () => axios.ext.get('/api/ocr/rules').then(data => [undefined, data.data]).catch(e => [e])
 
-// export const getAccountVariantRules = async (accountId, variantId) => axios.get('/api/ocr/rules-assignment?account_id=' + accountId + '&variant_id=' + variantId).then(data => [undefined, data.data]).catch(e => [e])
-export const getAccountVariantRules = async () => axios.ext.get('/api/ocr/rules-assignment?account_id=8&variant_id=8').then(data => [undefined, data.data]).catch(e => [e])
+export const getAccountVariantRules = async (accountId, variantId) => axios.ext.get('/api/ocr/rules-assignment?account_id=' + accountId + '&variant_id=' + variantId).then(data => [undefined, data.data]).catch(e => [e])
 
 export const putEditRule = async (ruleData) => axios.ext.put('/api/ocr/rules/' + ruleData.id, ruleData).then(data => [undefined, data.data]).catch(e => [e])
 
