@@ -22,11 +22,11 @@ axios.defaults.baseURL = `${process.env.VUE_APP_APP_URL}`
 const axiosConfigs = {
   ori: axios,
   ext: {
-    get: async (args) => testExtHandler(async () => axios.get(args)),
-    post: async (args) => testExtHandler(async () => axios.post(args)),
-    put: async (args) => testExtHandler(async () => axios.put(args)),
-    delete: async (args) => testExtHandler(async () => axios.delete(args)),
-    patch: async (args) => testExtHandler(async () => axios.patch(args))
+    get: async (...args) => testExtHandler(async () => axios.get(...args)),
+    post: async (...args) => testExtHandler(async () => axios.post(...args)),
+    put: async (...args) => testExtHandler(async () => axios.put(...args)),
+    delete: async (...args) => testExtHandler(async () => axios.delete(...args)),
+    patch: async (...args) => testExtHandler(async () => axios.patch(...args))
   }
 }
 
