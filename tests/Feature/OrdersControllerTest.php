@@ -190,7 +190,7 @@ class OrdersControllerTest extends TestCase
         $order = Order::orderByDesc('id')->first();
         $orderLineItems = $order->orderLineItems->toArray();
         $orderLineItems[] = $this->makeFakeDataFor(OrderLineItem::class, $order);
-        $orderLineItems[0]['description'] = $this->faker->productName;
+        $orderLineItems[0]['contents'] = $this->faker->productName;
 
         $orderAddressEvents = [factory(OrderAddressEvent::class)->create(['t_order_id' => $order->id])->toArray()];
         $orderAddressEvents[] = $this->makeFakeDataFor(OrderAddressEvent::class, $order);
