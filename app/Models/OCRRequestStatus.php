@@ -24,7 +24,10 @@ class OCRRequestStatus extends Model
     OCR_WAITING = 'ocr-waiting',
     PROCESS_OCR_OUTPUT_FILE_COMPLETE = 'process-ocr-output-file-complete',
     PROCESS_OCR_OUTPUT_FILE_ERROR = 'process-ocr-output-file-error',
-    UPLOAD_REQUESTED = 'upload-requested';
+    UPLOAD_REQUESTED = 'upload-requested',
+    SENDING_TO_WINT = 'sending-to-wint',
+    FAILURE_SENDING_TO_WINT = 'failure-sending-to-wint',
+    SUCCESS_SENDING_TO_WINT = 'success-sending-to-wint';
 
     const STATUS_MAP = [
         self::INTAKE_ACCEPTED => 'Processing',
@@ -38,6 +41,9 @@ class OCRRequestStatus extends Model
         self::PROCESS_OCR_OUTPUT_FILE_COMPLETE => 'Processing',
         self::PROCESS_OCR_OUTPUT_FILE_ERROR => 'Rejected',
         self::UPLOAD_REQUESTED => 'Intake',
+        self::SENDING_TO_WINT => 'Verified',
+        self::FAILURE_SENDING_TO_WINT => 'Rejected',
+        self::SUCCESS_SENDING_TO_WINT => 'Sending to TMS',
     ];
 
     public $table = 't_job_state_changes';

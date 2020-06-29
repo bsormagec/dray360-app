@@ -9,8 +9,10 @@ use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Storage;
 use Symfony\Component\HttpFoundation\HeaderUtils;
 
-class DownloadOrderOriginalPdfController extends Controller
+class DownloadOriginalOrderPdfController extends Controller
 {
+    const MINUTES_URI_REMAINS_VALID = 15;
+
     public function __invoke(Order $order)
     {
         $status = OCRRequestStatus::where([
@@ -27,14 +29,14 @@ class DownloadOrderOriginalPdfController extends Controller
 
     protected function getTemporaryDownloadUrl(OCRRequestStatus $status): string
     {
-        $fileName = Str::after(
-            $status->status_metadata['document_archive_location'],
-            config('filesystems.disks.s3.bucket') .'/'
-        );
+        $s3Config = config('filesystems.disks.s3-base') + [
+            'bucket' => s3_bucket_from_url($status->status_metadata['document_archive_location']),
+        ];
+        $storage = Storage::createS3Driver($s3Config);
 
-        return  Storage::temporaryUrl(
-            $fileName,
-            now()->addMinutes(1),
+        return  $storage->temporaryUrl(
+            s3_file_name_from_url($status->status_metadata['document_archive_location']),
+            now()->addMinutes(self::MINUTES_URI_REMAINS_VALID),
             [
                 'ResponseContentType' => 'application/octet-stream',
                 'ResponseContentDisposition' => HeaderUtils::makeDisposition(
