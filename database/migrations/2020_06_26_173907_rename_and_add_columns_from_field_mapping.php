@@ -18,21 +18,21 @@ class RenameAndAddColumnsFromFieldMapping extends Migration
             $table->renameColumn('bol', 'bill_of_lading');
 
             $table->string('carrier', 64)->nullable();
-            $table->string('bill_charge', 64)->nullable();
-            $table->string('bill_comment', 64)->nullable();
-            $table->string('line_haul', 64)->nullable();
-            $table->string('rate_box', 64)->nullable();
-            $table->string('fuel_surcharge', 64)->nullable();
-            $table->string('total_accessorial_charges', 64)->nullable();
-            $table->string('equipment_provider', 64)->nullable();
-            $table->string('actual_destination', 64)->nullable();
-            $table->string('actual_origin', 64)->nullable();
-            $table->string('customer_number', 64)->nullable();
-            $table->string('expedite', 64)->nullable();
-            $table->string('load_number', 64)->nullable();
-            $table->string('purchase_order_number', 64)->nullable();
-            $table->string('release_number', 64)->nullable();
-            $table->string('ship_comment', 64)->nullable();
+            $table->decimal('bill_charge', 12, 2)->nullable();
+            $table->text('bill_comment')->nullable();
+            $table->decimal('line_haul', 12, 2)->nullable();
+            $table->text('rate_box')->nullable();
+            $table->decimal('fuel_surcharge', 12, 2)->nullable();
+            $table->decimal('total_accessorial_charges', 12, 2)->nullable();
+            $table->string('equipment_provider', 256)->nullable();
+            $table->string('actual_destination', 256)->nullable();
+            $table->string('actual_origin', 256)->nullable();
+            $table->string('customer_number', 256)->nullable();
+            $table->boolean('expedite')->nullable();
+            $table->string('load_number', 256)->nullable();
+            $table->string('purchase_order_number', 256)->nullable();
+            $table->string('release_number', 256)->nullable();
+            $table->text('ship_comment')->nullable();
         });
 
         Schema::table('t_order_line_items', function (Blueprint $table) {
