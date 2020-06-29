@@ -16,7 +16,7 @@
   "php-cs-fixer.onsave": true,
   "php-cs-fixer.lastDownload": 1,
   "php-cs-fixer.config": ".php_cs;.php_cs.dist",
-  "php-cs-fixer.executablePath": "${extensionPath}/php-cs-fixer.phar",
+  "php-cs-fixer.executablePath": "${workspaceFolder}/vendor/bin/php-cs-fixer",
   "[php]": {
     "editor.formatOnSave": true,
     "files.insertFinalNewline": true,

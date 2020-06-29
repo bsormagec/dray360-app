@@ -7,6 +7,7 @@ use Spatie\QueryBuilder\AllowedSort;
 use Spatie\QueryBuilder\QueryBuilder;
 use Spatie\QueryBuilder\AllowedFilter;
 use App\Queries\Sorts\OcrRequestStatusSort;
+use App\Queries\Filters\OcrRequestStatusFilter;
 
 class OcrRequestOrderListQuery extends QueryBuilder
 {
@@ -22,7 +23,7 @@ class OcrRequestOrderListQuery extends QueryBuilder
 
         parent::__construct($query);
 
-        if (! $this->request->has('filter.status')) {
+        if (! $this->request->hasAny(['filter.status', 'filter.display_status'])) {
             $this->leftJoin('t_orders', 't_orders.request_id', '=', 't_job_latest_state.request_id');
         }
 
@@ -35,21 +36,8 @@ class OcrRequestOrderListQuery extends QueryBuilder
             AllowedFilter::partial('order.shipment_designation', 't_orders.shipment_designation', false),
             AllowedFilter::partial('order.shipment_direction', 't_orders.shipment_direction', false),
             AllowedFilter::scope('created_between'),
-            AllowedFilter::callback('status', function ($query, $value) {
-                $value = is_array($value) ? $value : [$value];
-                $query->leftJoin('t_orders', function ($query) use ($value) {
-                    $query->on('t_orders.request_id', '=', 't_job_latest_state.request_id')
-                        ->whereExists(function ($query) use ($value) {
-                            $query->select('id')
-                                ->from('t_job_state_changes')
-                                ->whereColumn('t_job_latest_state.t_job_state_changes_id', 't_job_state_changes.id')
-                                ->whereIn('status', $value);
-                        });
-                })
-                ->whereHas('latestOcrRequestStatus', function ($query) use ($value) {
-                    $query->whereIn('status', $value);
-                });
-            }),
+            AllowedFilter::custom('status', new OcrRequestStatusFilter()),
+            AllowedFilter::custom('display_status', new OcrRequestStatusFilter()),
             AllowedFilter::callback('query', function ($query, $value) {
                 $query->where(function ($query) use ($value) {
                     $query->orWhere('t_orders.bill_to_address_raw_text', 'like', "%{$value}%")

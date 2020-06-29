@@ -76,4 +76,12 @@ class OCRRequestStatus extends Model
     {
         return self::STATUS_MAP[$this->status] ?? '-';
     }
+
+    public static function getStatusFromDisplayStatus($displayStatus): array
+    {
+        return collect(self::STATUS_MAP)
+            ->reject(fn ($item, $key) => $item !== $displayStatus)
+            ->keys()
+            ->toArray();
+    }
 }
