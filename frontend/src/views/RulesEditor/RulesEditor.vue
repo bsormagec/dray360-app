@@ -200,10 +200,14 @@ export default {
       line: true
     },
     draggable_rules: [],
-    selected_rule_index: 0
+    selected_rule_index: 0,
+    account_id: 8,
+    variant_id: 8
   }),
   async mounted () {
     const vc = this
+    vc.account_id = vc.$route.params.account_id
+    vc.variant_id = vc.$route.params.variant_id
     await vc.fetchRules()
   },
   methods: {
@@ -220,7 +224,13 @@ export default {
     },
     async fetchAccountVariantRules () {
       const vc = this
-      const status = await this[types.getAccountVariantRules]()
+
+      const pairIds = {
+        account_id: vc.account_id,
+        variant_id: vc.variant_id
+      }
+
+      const status = await this[types.getAccountVariantRules](pairIds)
 
       vc.draggable_rules = vc.account_variant_rules()
 
@@ -257,8 +267,8 @@ export default {
       vc.draggable_rules.forEach(rule => idsToSave.push(rule.id))
 
       const sequenceData = {
-        account_id: 8,
-        variant_id: 8,
+        account_id: vc.account_id,
+        variant_id: vc.variant_id,
         rules: idsToSave
       }
 
