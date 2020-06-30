@@ -286,6 +286,7 @@ class Order extends Model
 
             if ($modelData['deleted_at'] ?? false) {
                 $relatedModel->delete();
+                return;
             }
 
             $relatedModel->update($modelData);
