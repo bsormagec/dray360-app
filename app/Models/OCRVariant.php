@@ -14,8 +14,6 @@ class OCRVariant extends Model
     const UPDATED_AT = 'updated_at';
     protected $dates = ['deleted_at'];
 
-
-
     public $fillable = [
         'abbyy_variant_name',
         'abbyy_variant_id',
@@ -27,12 +25,7 @@ class OCRVariant extends Model
      *
      * @var array
      */
-    protected $casts = [
-        'id' => 'integer',
-        'abbyy_variant_id' => 'string',
-        'abbyy_variant_name' => 'string',
-        'description' => 'string'
-    ];
+    protected $casts = [];
 
     /**
      * Validation rules

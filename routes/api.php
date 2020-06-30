@@ -6,6 +6,7 @@ use App\Http\Controllers\Api\OCRRulesController;
 use App\Http\Controllers\Api\SendToTmsController;
 use App\Http\Controllers\Api\Auth\LoginController;
 use App\Http\Controllers\Api\OCRRequestController;
+use App\Http\Controllers\Api\OCRVariantsController;
 use App\Http\Controllers\Api\SearchAddressController;
 use App\Http\Controllers\Api\Auth\ResetPasswordController;
 use App\Http\Controllers\Api\OCRRulesAssignmentController;
@@ -61,6 +62,10 @@ Route::group(['middleware' => 'auth:sanctum'], function () {
     Route::apiResource('ocr/rules', OCRRulesController::class, ['as' => 'ocr'])
         ->parameters(['rules' => 'ocrRule'])
         ->only(['store', 'index', 'update']);
+
+    Route::apiResource('ocr/variants', OCRVariantsController::class, ['as' => 'ocr'])
+        ->parameters(['variants' => 'ocrVariant'])
+        ->only(['index', 'store', 'update', 'destroy']);
 
     // Assignment of OCR Rules to an account-variant pair
     Route::apiResource('ocr/rules-assignment', OCRRulesAssignmentController::class, ['as' => 'ocr'])
