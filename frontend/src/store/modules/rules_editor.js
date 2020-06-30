@@ -25,6 +25,7 @@ const mutations = {
     state.rules_library = libraryData
   },
   [types.setAccountVariantRules] (state, { accountVariantData }) {
+    console.log('seAccountVariantRules')
     state.account_variant_rules = accountVariantData
   },
   [types.setRule] (state, { ruleData, i }) {
@@ -50,10 +51,12 @@ const actions = {
     commit(types.setLibrary, { libraryData: data.data })
     return reqStatus.success
   },
-  async [types.getAccountVariantRules] ({ commit }) {
-    const [error, data] = await getAccountVariantRules()
+  async [types.getAccountVariantRules] ({ commit }, pairIds) {
+    const [error, data] = await getAccountVariantRules(pairIds.account_id, pairIds.variant_id)
 
     if (error) return reqStatus.error
+
+    console.log('executed')
 
     commit(types.setAccountVariantRules, { accountVariantData: data.data })
     return reqStatus.success
@@ -80,8 +83,6 @@ const actions = {
     await postSaveRuleSequence(sequenceData)
 
     // if (error) return reqStatus.error
-
-    console.log('sequenceData to commit:', sequenceData)
 
     commit(types.setSequence, { sequenceData })
     // return reqStatus.succcess

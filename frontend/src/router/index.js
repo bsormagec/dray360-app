@@ -68,7 +68,7 @@ const routes = [
     component: Login
   },
   {
-    path: '/rules-editor',
+    path: '/rules-editor/account/:account_id/variant/:variant_id',
     name: 'RulesEditor',
     meta: {
       middleware: [auth]
