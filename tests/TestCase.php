@@ -18,10 +18,27 @@ abstract class TestCase extends BaseTestCase
      */
     protected function loginAdmin()
     {
-        config()->set('laratrust_seeder.truncate_tables', false);
-        $this->seed(UsersSeeder::class);
+        $this->seedTestUsers();
 
         $user = User::whereRoleIs('superadmin')->first();
         Sanctum::actingAs($user, ['*']);
+    }
+
+    protected function seedTestUsers()
+    {
+        if (User::count() > 0) {
+            return;
+        }
+
+        config()->set('laratrust_seeder.truncate_tables', false);
+        $this->seed(UsersSeeder::class);
+    }
+
+    protected function loginNoAdmin()
+    {
+        $this->seedTestUsers();
+
+        $user = User::whereRoleIs('customer-user')->first();
+        Sanctum::actingAs($user);
     }
 }

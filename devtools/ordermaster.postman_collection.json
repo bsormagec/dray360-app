@@ -1390,6 +1390,253 @@
 				}
 			},
 			"response": []
+		},
+		{
+			"name": "/api/ocr/variants",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "c7733db9-5567-47de-a1e3-d38e8f0320b1",
+						"exec": [
+							"var token1=postman.getResponseCookie('XSRF-TOKEN').value;",
+							"var token2=token1.replace('%3D%3D','==');",
+							"postman.setEnvironmentVariable('X-XSRF-TOKEN', token2);",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Content-Type",
+						"type": "text",
+						"value": "application/x-www-form-urlencoded"
+					},
+					{
+						"key": "Referer",
+						"type": "text",
+						"value": "{{server}}"
+					},
+					{
+						"key": "Accept",
+						"type": "text",
+						"value": "application/json, text/plain, */*"
+					},
+					{
+						"key": "X-XSRF-TOKEN",
+						"type": "text",
+						"value": "{{X-XSRF-TOKEN}}"
+					}
+				],
+				"url": {
+					"raw": "{{server}}/api/ocr/variants",
+					"host": [
+						"{{server}}"
+					],
+					"path": [
+						"api",
+						"ocr",
+						"variants"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "/api/ocr/variants",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "dedb0155-8690-4414-a17f-362ac56e2b1d",
+						"exec": [
+							"var token1=postman.getResponseCookie('XSRF-TOKEN').value;",
+							"var token2=token1.replace('%3D%3D','==');",
+							"postman.setEnvironmentVariable('X-XSRF-TOKEN', token2);",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Referer",
+						"type": "text",
+						"value": "{{server}}"
+					},
+					{
+						"key": "Accept",
+						"type": "text",
+						"value": "application/json, text/plain, */*"
+					},
+					{
+						"key": "X-XSRF-TOKEN",
+						"type": "text",
+						"value": "{{X-XSRF-TOKEN}}"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"abbyy_variant_name\": \"\",\n    \"abbyy_variant_id\": \"\",\n    \"description\": \"\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{server}}/api/ocr/variants",
+					"host": [
+						"{{server}}"
+					],
+					"path": [
+						"api",
+						"ocr",
+						"variants"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "/api/ocr/variants/:ocr_variant_id",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "bdc3988e-d64e-4776-a2c2-254f60e33dca",
+						"exec": [
+							"var token1=postman.getResponseCookie('XSRF-TOKEN').value;",
+							"var token2=token1.replace('%3D%3D','==');",
+							"postman.setEnvironmentVariable('X-XSRF-TOKEN', token2);",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "PUT",
+				"header": [
+					{
+						"key": "Referer",
+						"value": "{{server}}",
+						"type": "text"
+					},
+					{
+						"key": "Accept",
+						"value": "application/json, text/plain, */*",
+						"type": "text"
+					},
+					{
+						"key": "X-XSRF-TOKEN",
+						"value": "{{X-XSRF-TOKEN}}",
+						"type": "text"
+					},
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"abbyy_variant_id\":\"\",\n    \"abbyy_variant_name\":\"\",\n    \"description\": \"\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{server}}/api/ocr/variants/:ocr_variant_id",
+					"host": [
+						"{{server}}"
+					],
+					"path": [
+						"api",
+						"ocr",
+						"variants",
+						":ocr_variant_id"
+					],
+					"variable": [
+						{
+							"key": "ocr_variant_id",
+							"value": ""
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "/api/ocr/variants/:ocr_variant_id Copy",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "c3075574-9f23-4635-a63e-20aef2e47e4c",
+						"exec": [
+							"var token1=postman.getResponseCookie('XSRF-TOKEN').value;",
+							"var token2=token1.replace('%3D%3D','==');",
+							"postman.setEnvironmentVariable('X-XSRF-TOKEN', token2);",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "DELETE",
+				"header": [
+					{
+						"key": "Referer",
+						"value": "{{server}}",
+						"type": "text"
+					},
+					{
+						"key": "Accept",
+						"value": "application/json, text/plain, */*",
+						"type": "text"
+					},
+					{
+						"key": "X-XSRF-TOKEN",
+						"value": "{{X-XSRF-TOKEN}}",
+						"type": "text"
+					},
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "{{server}}/api/ocr/variants/:ocr_variant_id",
+					"host": [
+						"{{server}}"
+					],
+					"path": [
+						"api",
+						"ocr",
+						"variants",
+						":ocr_variant_id"
+					],
+					"variable": [
+						{
+							"key": "ocr_variant_id",
+							"value": ""
+						}
+					]
+				}
+			},
+			"response": []
 		}
 	],
 	"protocolProfileBehavior": {}
