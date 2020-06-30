@@ -4,7 +4,7 @@
       <div class="login-box">
         <img
           class="logo"
-          src="../assets/images/cushing_logo.svg"
+          src="../assets/images/dry360_logo.svg"
           alt=""
         >
         <input
@@ -36,11 +36,14 @@
         </div>
       </div>
       <div class="account">
-        <p><span class=""><a href="">Forgot your password?</a></span></p>
+        <p><span><a href="">Forgot your password?</a></span></p>
         <p><span><a href="">Don't have an account?</a></span></p>
       </div>
       <br><div v-if="loginError">
         There was a problem. Please check your email and password.
+      </div>
+      <div class="copyright">
+        <p>©2020 Dray360 — an Affiliate of TCompanies Inc. Privacy Policy • Terms of Use</p>
       </div>
     </div>
   </div>
@@ -88,7 +91,6 @@ export default {
 </script>
 <style lang="scss" scoped>
   $background_login: url("../assets/images/login_background.png");
-  $login_logo: url("../assets/images/cushing_logo.svg");
 
   .wrapper{
     background: $background_login no-repeat center center fixed;
@@ -148,6 +150,14 @@ export default {
         background-color: map-get($colors,white);
         padding-top: 0.2rem;
         padding: 1rem 1rem 0rem 1rem;
+      }
+      .copyright{
+        position: absolute;
+        bottom: 2rem;
+        p{
+          color: map-get($colors, grey-9 );
+          line-height: 1.6rem;
+        }
       }
   }
 </style>
