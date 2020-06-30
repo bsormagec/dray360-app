@@ -20,7 +20,8 @@ return [
             'roles' => 'u',
             'system-status' => 'f',
             'time-in-status' => 'v',
-            'ocr-variants' => 'c,v,e,r'
+            'ocr-variants' => 'c,v,e,r',
+            'companies' => 'c,v,e,r',
         ],
         'customer-admin' => [
             'orders' => 'e,v,c',
