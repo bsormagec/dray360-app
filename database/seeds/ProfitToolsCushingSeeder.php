@@ -23,6 +23,10 @@ class ProfitToolsCushingSeeder extends Seeder
             ['name' => Company::TCOMPANIES_DEV],
             ['t_address_id' => Address::create()->id]
         );
+        $tcompaniesDev = Company::firstOrCreate(
+            ['name' => Company::POLARIS],
+            ['t_address_id' => Address::create()->id]
+        );
 
         $this->command->info("TMSProvider Id: {$provider->id}");
         $this->command->info("Cushing Id: {$cushing->id}");

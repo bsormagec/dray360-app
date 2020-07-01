@@ -23,9 +23,10 @@ class SearchAddressControllerTest extends TestCase
         Config::set('services.search-address.url', 'http://thesearchaddressurl.com');
         $data = [
             'is_terminal_address' => true,
-            'is_tms_provider_address' => true,
-            'is_canonical_address' => true,
-            'location_nam' => 'test',
+            'is_billable_address' => true,
+            // 'is_tms_provider_address' => true,
+            // 'is_canonical_address' => true,
+            'location_name' => 'test',
             'rawtext' => 'test',
             'postal_code' => 'test',
             'city' => 'test',
@@ -33,8 +34,8 @@ class SearchAddressControllerTest extends TestCase
             'county' => 'test',
             'state' => 'test',
             'country' => 'test',
-            'company_id' => 'test',
-            'tms_provider_id' => 'test',
+            'company_id' => '1',
+            'tms_provider_id' => '1',
         ];
 
         $this->getJson(route('search-address', $data))

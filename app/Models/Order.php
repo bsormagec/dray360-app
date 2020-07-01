@@ -105,7 +105,6 @@ class Order extends Model
         'port_ramp_of_destination_address_raw_text',
         'variant_id',
         'variant_name',
-        't_tms_providers_id',
         'tms_shipment_id',
         'carrier',
         'bill_charge',
@@ -123,6 +122,8 @@ class Order extends Model
         'purchase_order_number',
         'release_number',
         'ship_comment',
+        't_company_id',
+        't_tms_provider_id',
     ];
 
     /**

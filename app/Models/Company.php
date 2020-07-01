@@ -19,7 +19,8 @@ class Company extends Model
     const CREATED_AT = 'created_at',
         UPDATED_AT = 'updated_at',
         CUSHING = 'Cushing',
-        TCOMPANIES_DEV = 'TCompaniesDev';
+        TCOMPANIES_DEV = 'TCompaniesDev',
+        POLARIS = 'Polaris';
 
     public $table = 't_companies';
 
@@ -27,7 +28,10 @@ class Company extends Model
 
     public $fillable = [
         't_address_id',
-        'name'
+        'name',
+        'email_intake_address',
+        'email_intake_address_alt',
+        'default_tms_provider_id',
     ];
 
     /**

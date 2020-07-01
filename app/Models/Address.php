@@ -51,6 +51,8 @@ class Address extends Model
         'hours_of_operation',
         'location_name',
         'location_phone',
+        'is_terminal',
+        'is_billable',
     ];
 
     /**
