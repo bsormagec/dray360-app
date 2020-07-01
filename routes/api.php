@@ -3,6 +3,7 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Api\OrdersController;
 use App\Http\Controllers\Api\OCRRulesController;
+use App\Http\Controllers\Api\CompaniesController;
 use App\Http\Controllers\Api\SendToTmsController;
 use App\Http\Controllers\Api\Auth\LoginController;
 use App\Http\Controllers\Api\OCRRequestController;
@@ -53,6 +54,9 @@ Route::group(['middleware' => 'auth:sanctum'], function () {
     // Authenticated route to return all orders
     Route::resource('orders', OrdersController::class)
         ->only(['index', 'update', 'show']);
+
+    Route::resource('companies', CompaniesController::class)
+        ->only(['index']);
 
     // Authenticated route to get document upload URI
     Route::post('createocrrequestuploaduri', [OCRRequestController::class, 'createOCRRequestUploadURI'])
