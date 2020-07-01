@@ -23,7 +23,6 @@ class SendToTmsControllerTest extends TestCase
 {
     use DatabaseTransactions;
 
-    protected Order $order;
     protected Company $company;
     protected TMSProvider $tmsProvider;
 
@@ -32,9 +31,7 @@ class SendToTmsControllerTest extends TestCase
         parent::setUp();
 
         $this->loginAdmin();
-        $this->seed(OrdersTableSeeder::class);
         $this->seed(ProfitToolsCushingSeeder::class);
-        $this->order = Order::first();
         $this->company = Company::getCushing();
         $this->tmsProvider = TMSProvider::getProfitTools();
     }
@@ -42,6 +39,8 @@ class SendToTmsControllerTest extends TestCase
     /** @test */
     public function it_publishs_a_message_to_sns_update_gateway()
     {
+        (new OrdersTableSeeder())->seedOrderWithValidatedAddresses();
+        $order = Order::first();
         $messageId = Str::random(5);
 
         $mockHandler = tap(new MockHandler())
@@ -57,7 +56,7 @@ class SendToTmsControllerTest extends TestCase
 
         $this->postJson(route('send-to-tms'), [
                 'status' => 'sending-to-wint',
-                'order_id' => $this->order->id,
+                'order_id' => $order->id,
                 'company_id' => $this->company->id,
                 'tms_provider_id' => $this->tmsProvider->id,
             ])
@@ -68,6 +67,8 @@ class SendToTmsControllerTest extends TestCase
     /** @test */
     public function it_manages_exceptions_thrown_by_the_sns_client()
     {
+        (new OrdersTableSeeder())->seedOrderWithValidatedAddresses();
+        $order = Order::first();
         $this->withoutExceptionHandling();
         $mockHandler = tap(new MockHandler())
             ->append(function ($cmd) {
@@ -87,7 +88,7 @@ class SendToTmsControllerTest extends TestCase
 
         $this->postJson(route('send-to-tms'), [
                 'status' => 'sending-to-wint',
-                'order_id' => $this->order->id,
+                'order_id' => $order->id,
                 'company_id' => $this->company->id,
                 'tms_provider_id' => $this->tmsProvider->id,
             ])
@@ -98,6 +99,8 @@ class SendToTmsControllerTest extends TestCase
     /** @test */
     public function it_should_fail_if_not_authorized_to_send_to_tms()
     {
+        $this->seed(OrdersTableSeeder::class);
+        $order = Order::first();
         $user = User::whereRoleIs('customer-user')->first();
         Sanctum::actingAs($user);
 
@@ -118,10 +121,46 @@ class SendToTmsControllerTest extends TestCase
 
         $this->postJson(route('send-to-tms'), [
                 'status' => 'sending-to-wint',
-                'order_id' => $this->order->id,
+                'order_id' => $order->id,
                 'company_id' => $this->company->id,
                 'tms_provider_id' => $this->tmsProvider->id,
             ])
             ->assertStatus(Response::HTTP_FORBIDDEN);
+    }
+
+    /** @test */
+    public function it_should_fail_if_the_order_doesnt_have_all_the_addresses_validated()
+    {
+        (new OrdersTableSeeder())->seedOrderWithoutValidatedAddresses();
+        $order = Order::first();
+
+        $mockHandler = tap(new MockHandler())
+            ->append(function ($cmd) {
+                return new AwsException('', $cmd, [
+                    'code' => 'failed',
+                    'message' => 'some aws exception',
+                ]);
+            });
+        $snsClient = $this->app['aws']->createClient('sns');
+        $snsClient->getHandlerList()->setHandler($mockHandler);
+
+        $mockAction = Mockery::mock(PublishSnsMessageToSendToTms::class)
+            ->shouldAllowMockingProtectedMethods();
+        $mockAction->shouldNotReceive('getSnsClient');
+        $this->app->instance(PublishSnsMessageToSendToTms::class, $mockAction);
+
+        $this->postJson(route('send-to-tms'), [
+                'status' => 'sending-to-wint',
+                'order_id' => $order->id,
+                'company_id' => $this->company->id,
+                'tms_provider_id' => $this->tmsProvider->id,
+            ])
+            ->assertStatus(Response::HTTP_UNPROCESSABLE_ENTITY)
+            ->assertJsonValidationErrors([
+                'port_ramp_of_destination_address_verified',
+                'port_ramp_of_origin_address_verified',
+                'bill_to_address_verified',
+                'order_address_events.*.t_address_verified',
+            ]);
     }
 }
