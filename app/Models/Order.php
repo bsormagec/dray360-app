@@ -304,11 +304,9 @@ class Order extends Model
 
     protected function areOrderAddressEventsVerified()
     {
-        $verfiedOrderAddressEvents = $this->orderAddressEvents
-            ->where('t_address_verified', true)
-            ->count();
-
-        return $verfiedOrderAddressEvents == $this->orderAddressEvents->count();
+        return $this->orderAddressEvents
+            ->where('t_address_verified', false)
+            ->count() == 0;
     }
 
     public function notValidatedAddresses(): array

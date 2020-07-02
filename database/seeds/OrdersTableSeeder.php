@@ -53,12 +53,12 @@ class OrdersTableSeeder extends Seeder
 
     public function seedOrderWithoutValidatedAddresses()
     {
-        $this->seedOrderWithAddresValidation(false);
+        $this->seedOrderWithAddressValidation(false);
     }
 
     public function seedOrderWithValidatedAddresses()
     {
-        $this->seedOrderWithAddresValidation(true);
+        $this->seedOrderWithAddressValidation(true);
     }
 
     public function seedOrderWithIntakeRejected()
@@ -68,7 +68,7 @@ class OrdersTableSeeder extends Seeder
         $this->createNonHazardousOrderLineItem($order);
     }
 
-    protected function seedOrderWithAddresValidation(bool $validated)
+    protected function seedOrderWithAddressValidation(bool $validated)
     {
         $ocrRequestId = $this->seedOcrJob_ocrPostProcessingComplete();
         $order = factory(Order::class)->create([
