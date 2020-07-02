@@ -1,6 +1,6 @@
 {
 	"info": {
-		"_postman_id": "bb7a25ca-96ae-4a99-a883-941cd00a7630",
+		"_postman_id": "2f602c77-a339-4a30-8ab7-ee453d87dc6e",
 		"name": "Ordermaster API",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
 	},
@@ -11,7 +11,7 @@
 				{
 					"listen": "test",
 					"script": {
-						"id": "98dd1bb3-0db5-4dc2-9107-6c3ed5796158",
+						"id": "8f74b24a-0562-4a45-b1a7-9ca050ccf7dd",
 						"exec": [
 							"var token1=postman.getResponseCookie('XSRF-TOKEN').value;",
 							"var token2=token1.replace('%3D%3D','==');",
@@ -69,7 +69,7 @@
 				{
 					"listen": "test",
 					"script": {
-						"id": "5d5aeea7-aab1-4f89-988d-d4d925b372e7",
+						"id": "c0ea46f0-0c94-4106-969a-98d94a8f3e5c",
 						"exec": [
 							"var token1=postman.getResponseCookie('XSRF-TOKEN').value;",
 							"var token2=token1.replace('%3D%3D','==');",
@@ -142,7 +142,7 @@
 				{
 					"listen": "test",
 					"script": {
-						"id": "758179d7-6c3f-4d13-8a7d-643c2dc6ae68",
+						"id": "faed8870-26a2-4e86-83bd-78ae0efd8786",
 						"exec": [
 							"var token1=postman.getResponseCookie('XSRF-TOKEN').value;",
 							"var token2=token1.replace('%3D%3D','==');",
@@ -215,7 +215,7 @@
 				{
 					"listen": "test",
 					"script": {
-						"id": "5deb1393-4ded-4207-a43b-25b0d8189728",
+						"id": "3de452cc-ff80-486f-9bd8-6afec49c05b7",
 						"exec": [
 							"var token1=postman.getResponseCookie('XSRF-TOKEN').value;",
 							"var token2=token1.replace('%3D%3D','==');",
@@ -284,7 +284,7 @@
 				{
 					"listen": "test",
 					"script": {
-						"id": "b70c8225-2520-4159-bfe2-c8f11103b376",
+						"id": "c8f0a087-f159-4a64-9692-17fed5586874",
 						"exec": [
 							"var token1=postman.getResponseCookie('XSRF-TOKEN').value;",
 							"var token2=token1.replace('%3D%3D','==');",
@@ -372,7 +372,7 @@
 				{
 					"listen": "test",
 					"script": {
-						"id": "3e8de96d-9547-4bb7-9647-ae19308b749c",
+						"id": "b45ac4d9-fdb4-49a2-aee0-80101cff704f",
 						"exec": [
 							"var token1=postman.getResponseCookie('XSRF-TOKEN').value;",
 							"var token2=token1.replace('%3D%3D','==');",
@@ -519,7 +519,7 @@
 				{
 					"listen": "test",
 					"script": {
-						"id": "5bb54c8f-a1b8-42e5-973b-835bc27ceb73",
+						"id": "696bb4a0-2713-4c0c-9c31-a6141523026a",
 						"exec": [
 							"var token1=postman.getResponseCookie('XSRF-TOKEN').value;",
 							"var token2=token1.replace('%3D%3D','==');",
@@ -579,7 +579,7 @@
 				{
 					"listen": "test",
 					"script": {
-						"id": "ddcbd96a-c683-44aa-a57e-ac77adc98504",
+						"id": "c35fe200-5fa1-4348-93d5-6bdbea18971a",
 						"exec": [
 							"var token1=postman.getResponseCookie('XSRF-TOKEN').value;",
 							"var token2=token1.replace('%3D%3D','==');",
@@ -645,7 +645,7 @@
 				{
 					"listen": "test",
 					"script": {
-						"id": "86d5b031-df4a-4587-a439-4787620ac8eb",
+						"id": "681fd33f-d3d9-44d4-ba3d-29898f6947cb",
 						"exec": [
 							"var token1=postman.getResponseCookie('XSRF-TOKEN').value;",
 							"var token2=token1.replace('%3D%3D','==');",
@@ -706,7 +706,7 @@
 				{
 					"listen": "test",
 					"script": {
-						"id": "587be797-bbc0-4bf7-bb89-d78aacc161de",
+						"id": "06f920cb-11f4-4aaf-aa3e-668b28134240",
 						"exec": [
 							"var token1=postman.getResponseCookie('XSRF-TOKEN').value;",
 							"var token2=token1.replace('%3D%3D','==');",
@@ -774,7 +774,7 @@
 				{
 					"listen": "test",
 					"script": {
-						"id": "99a6d567-1daf-4709-b697-c975235ed1fd",
+						"id": "aa10ee94-f3f3-4381-ae28-469e08720b93",
 						"exec": [
 							"var token1=postman.getResponseCookie('XSRF-TOKEN').value;",
 							"var token2=token1.replace('%3D%3D','==');",
@@ -834,7 +834,7 @@
 				{
 					"listen": "test",
 					"script": {
-						"id": "a72b0d7f-0186-4f61-9674-597b339b55e5",
+						"id": "00c5b913-185e-4f9a-a2d2-0183d2a8c61d",
 						"exec": [
 							"var token1=postman.getResponseCookie('XSRF-TOKEN').value;",
 							"var token2=token1.replace('%3D%3D','==');",
@@ -897,7 +897,7 @@
 				{
 					"listen": "test",
 					"script": {
-						"id": "8b2187a4-00ab-4ab6-a19b-490018ff8f2d",
+						"id": "959432fb-b159-461c-9e25-9a0088fc813c",
 						"exec": [
 							"var token1=postman.getResponseCookie('XSRF-TOKEN').value;",
 							"var token2=token1.replace('%3D%3D','==');",
@@ -952,7 +952,7 @@
 				{
 					"listen": "test",
 					"script": {
-						"id": "5fbbcab3-862e-4733-8bc0-7ef8a042bf3f",
+						"id": "cdf4c11e-b753-46ed-adf4-5d7a4612a3ec",
 						"exec": [
 							"var token1=postman.getResponseCookie('XSRF-TOKEN').value;",
 							"var token2=token1.replace('%3D%3D','==');",
@@ -1011,7 +1011,7 @@
 				{
 					"listen": "test",
 					"script": {
-						"id": "9bf1387d-2758-4ff6-be33-92996b6ef576",
+						"id": "0d2c6de5-7f13-46de-8434-feaded0234ab",
 						"exec": [
 							"var token1=postman.getResponseCookie('XSRF-TOKEN').value;",
 							"var token2=token1.replace('%3D%3D','==');",
@@ -1083,7 +1083,7 @@
 				{
 					"listen": "test",
 					"script": {
-						"id": "b1a6108f-2672-45c5-a57b-b4b20ca19ac6",
+						"id": "868a93ff-9a23-455d-85dd-701abff7876a",
 						"exec": [
 							"var token1=postman.getResponseCookie('XSRF-TOKEN').value;",
 							"var token2=token1.replace('%3D%3D','==');",
@@ -1150,7 +1150,7 @@
 				{
 					"listen": "test",
 					"script": {
-						"id": "a84f4bd3-0ddc-429b-bc12-a8ff10f81d3b",
+						"id": "4a8feb9a-a025-491d-8410-8af76d9361e3",
 						"exec": [
 							"var token1=postman.getResponseCookie('XSRF-TOKEN').value;",
 							"var token2=token1.replace('%3D%3D','==');",
@@ -1214,7 +1214,7 @@
 				{
 					"listen": "test",
 					"script": {
-						"id": "3c36343d-886c-459a-8b95-be5a35e1bf4a",
+						"id": "699c7ecf-6b1c-4d35-afa5-d1694273f08c",
 						"exec": [
 							"var token1=postman.getResponseCookie('XSRF-TOKEN').value;",
 							"var token2=token1.replace('%3D%3D','==');",
@@ -1249,7 +1249,7 @@
 					}
 				],
 				"url": {
-					"raw": "{{server}}/api/search-address",
+					"raw": "{{server}}/api/search-address?rawtext=CHICAGO/HARVEY I09215840 WEST AVEHARVEY, IL, UNITED STATES&company_id=1&tms_provider_id=1",
 					"host": [
 						"{{server}}"
 					],
@@ -1264,24 +1264,18 @@
 							"disabled": true
 						},
 						{
-							"key": "is_tms_provider_address",
+							"key": "is_billable_address",
 							"value": "true",
 							"disabled": true
 						},
 						{
-							"key": "is_canonical_address",
-							"value": "true",
-							"disabled": true
-						},
-						{
-							"key": "location_nam",
+							"key": "location_name",
 							"value": "",
 							"disabled": true
 						},
 						{
 							"key": "rawtext",
-							"value": "CHIICAGO/HARVEY I09215840 WEST AVEHARVEY, IL, UNITED STATES",
-							"disabled": true
+							"value": "CHICAGO/HARVEY I09215840 WEST AVEHARVEY, IL, UNITED STATES"
 						},
 						{
 							"key": "postal_code",
@@ -1315,13 +1309,11 @@
 						},
 						{
 							"key": "company_id",
-							"value": "",
-							"disabled": true
+							"value": "1"
 						},
 						{
 							"key": "tms_provider_id",
-							"value": "",
-							"disabled": true
+							"value": "1"
 						}
 					]
 				}
@@ -1334,7 +1326,7 @@
 				{
 					"listen": "test",
 					"script": {
-						"id": "ea35315e-1da1-4a5c-9b33-1ed0dce2ea2c",
+						"id": "bcca55e6-3ec1-4096-9065-256a75b0a443",
 						"exec": [
 							"var token1=postman.getResponseCookie('XSRF-TOKEN').value;",
 							"var token2=token1.replace('%3D%3D','==');",
@@ -1397,7 +1389,7 @@
 				{
 					"listen": "test",
 					"script": {
-						"id": "c7733db9-5567-47de-a1e3-d38e8f0320b1",
+						"id": "e905bd9e-9fda-4b43-aa30-a9acca314109",
 						"exec": [
 							"var token1=postman.getResponseCookie('XSRF-TOKEN').value;",
 							"var token2=token1.replace('%3D%3D','==');",
@@ -1452,7 +1444,7 @@
 				{
 					"listen": "test",
 					"script": {
-						"id": "dedb0155-8690-4414-a17f-362ac56e2b1d",
+						"id": "23a05666-f4ce-470a-8ea2-04c86f420a1e",
 						"exec": [
 							"var token1=postman.getResponseCookie('XSRF-TOKEN').value;",
 							"var token2=token1.replace('%3D%3D','==');",
@@ -1511,7 +1503,7 @@
 				{
 					"listen": "test",
 					"script": {
-						"id": "bdc3988e-d64e-4776-a2c2-254f60e33dca",
+						"id": "8ff71b52-0685-4fee-b672-c119d9bce17b",
 						"exec": [
 							"var token1=postman.getResponseCookie('XSRF-TOKEN').value;",
 							"var token2=token1.replace('%3D%3D','==');",
@@ -1582,7 +1574,7 @@
 				{
 					"listen": "test",
 					"script": {
-						"id": "c3075574-9f23-4635-a63e-20aef2e47e4c",
+						"id": "03b84a6b-f2b2-48de-a601-c72b2c8370a7",
 						"exec": [
 							"var token1=postman.getResponseCookie('XSRF-TOKEN').value;",
 							"var token2=token1.replace('%3D%3D','==');",
