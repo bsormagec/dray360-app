@@ -10,6 +10,7 @@ use App\Models\Order;
 use App\Models\OrderLineItem;
 use Illuminate\Database\Seeder;
 use App\Models\OCRRequestStatus;
+use App\Models\OrderAddressEvent;
 use Illuminate\Support\Facades\DB;
 
 class OrdersTableSeeder extends Seeder
@@ -50,10 +51,36 @@ class OrdersTableSeeder extends Seeder
         $this->createNonHazardousOrderLineItem($order);
     }
 
+    public function seedOrderWithoutValidatedAddresses()
+    {
+        $this->seedOrderWithAddressValidation(false);
+    }
+
+    public function seedOrderWithValidatedAddresses()
+    {
+        $this->seedOrderWithAddressValidation(true);
+    }
+
     public function seedOrderWithIntakeRejected()
     {
         $ocrRequestId = $this->seedOcrJob_intakeRejected();
         $order = factory(Order::class)->create(['request_id' => $ocrRequestId]);
+        $this->createNonHazardousOrderLineItem($order);
+    }
+
+    protected function seedOrderWithAddressValidation(bool $validated)
+    {
+        $ocrRequestId = $this->seedOcrJob_ocrPostProcessingComplete();
+        $order = factory(Order::class)->create([
+            'request_id' => $ocrRequestId,
+            'port_ramp_of_destination_address_verified' => $validated,
+            'port_ramp_of_origin_address_verified' => $validated,
+            'bill_to_address_verified' => $validated,
+        ]);
+        factory(OrderAddressEvent::class, 2)->create([
+            't_address_verified' => $validated,
+            't_order_id' => $order->id,
+        ]);
         $this->createNonHazardousOrderLineItem($order);
     }
 

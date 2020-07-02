@@ -8,6 +8,7 @@ use Illuminate\Http\Response;
 use Illuminate\Validation\Rule;
 use App\Http\Controllers\Controller;
 use App\Actions\PublishSnsMessageToSendToTms;
+use Illuminate\Validation\ValidationException;
 
 class SendToTmsController extends Controller
 {
@@ -26,9 +27,11 @@ class SendToTmsController extends Controller
             'company_id' => 'required|exists:t_companies,id',
             'tms_provider_id' => 'required|exists:t_tms_providers,id',
         ]);
-        $order = Order::find($data['order_id'], ['request_id']);
-        $data['request_id'] = $order->request_id;
+        $order = $this->getOrder($data['order_id']);
 
+        $this->checkIfOrderIsValidated($order);
+
+        $data['request_id'] = $order->request_id;
         $response = app(PublishSnsMessageToSendToTms::class)($data);
 
         if ($response['status'] === 'error') {
@@ -36,5 +39,28 @@ class SendToTmsController extends Controller
         }
 
         return response()->json(['data' => $response['message']]);
+    }
+
+    protected function checkIfOrderIsValidated(Order $order)
+    {
+        throw_if(! $order->isValidated(), ValidationException::withMessages(
+            collect($order->notValidatedAddresses())->mapWithKeys(function ($attribute) {
+                return [$attribute => 'The address is not validated'];
+            })->toArray()
+        ));
+    }
+
+    protected function getOrder($orderId): Order
+    {
+        return Order::query()
+            ->select([
+                'id',
+                'port_ramp_of_destination_address_verified',
+                'port_ramp_of_origin_address_verified',
+                'bill_to_address_verified',
+                'request_id',
+            ])
+            ->with('orderAddressEvents:id,t_order_id,t_address_verified')
+            ->find($orderId);
     }
 }
