@@ -44,12 +44,12 @@ class OCRRule extends Model
     ];
 
     /**
-     * Relationship with the assigment of the rules to account in given variants.
+     * Relationship with the assigment of the rules to company in given variants.
      *
      * @return \Illuminate\Database\Eloquent\Relations\HasMany
      */
-    public function accountsVariantsAssignment()
+    public function companiesVariantsAssignment()
     {
-        return $this->hasMany(AccountOCRVariantOCRRule::class, 't_ocrrule_id');
+        return $this->hasMany(CompanyOCRVariantOCRRule::class, 't_ocrrule_id');
     }
 }

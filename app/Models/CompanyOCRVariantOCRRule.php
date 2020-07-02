@@ -6,16 +6,16 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
-class AccountOCRVariantOCRRule extends Model
+class CompanyOCRVariantOCRRule extends Model
 {
     use SoftDeletes;
 
-    public $table = 't_account_ocrvariant_ocrrules';
+    public $table = 't_company_ocrvariant_ocrrules';
     const CREATED_AT = 'created_at';
     const UPDATED_AT = 'updated_at';
     protected $dates = ['deleted_at'];
     public $fillable = [
-        't_account_id',
+        't_company_id',
         't_ocrvariant_id',
         't_ocrrule_id',
         'rule_sequence',
@@ -28,13 +28,7 @@ class AccountOCRVariantOCRRule extends Model
      *
      * @var array
      */
-    protected $casts = [
-        'id' => 'integer',
-        't_account_id' => 'integer',
-        't_ocrvariant_id' => 'integer',
-        't_ocrrule_id' => 'integer',
-        'rule_sequence' => 'integer'
-    ];
+    protected $casts = [];
 
     /**
      * Validation rules
@@ -42,7 +36,7 @@ class AccountOCRVariantOCRRule extends Model
      * @var array
      */
     public static $rules = [
-        't_account_id' => 'required',
+        't_company_id' => 'required',
         't_ocrvariant_id' => 'required',
         't_ocrrule_id' => 'required',
         'sequence_number' => 'required'
@@ -67,23 +61,15 @@ class AccountOCRVariantOCRRule extends Model
     /**
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
      **/
-    public function account()
+    public function company()
     {
-        return $this->belongsTo(Account::class, 't_account_id');
+        return $this->belongsTo(Company::class, 't_company_id');
     }
 
-    /**
-     * Get the assignments assigned to the given account and variant.
-     *
-     * @param \Illuminate\Database\Eloquent\Builder $query
-     * @param integer $accountId
-     * @param integer $variantId
-     * @return \Illuminate\Database\Eloquent\Builder
-     */
-    public function scopeAssignedTo(Builder $query, int $accountId, int $variantId)
+    public function scopeAssignedTo(Builder $query, int $companyId, int $variantId): Builder
     {
         return $query->where([
-            't_account_id' => $accountId,
+            't_company_id' => $companyId,
             't_ocrvariant_id' => $variantId,
         ]);
     }
