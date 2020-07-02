@@ -49,8 +49,19 @@
           <p>
             <DateRangeCalendar />
           </p>
+          <!--
+          **************************
+          ADDRESS BOOK MODAL SECTION HERE
+          **************************
+          -->
           <h2>Address Book Modal</h2><br>
-          <AddressBookModal />
+          <code>Receive as props: rawtext (String), companyId (Number) and tmsProviderId (Number)</code>
+          <AddressBookModal
+            rawtext="test"
+            :company-id="1"
+            :tms-provider-id="1"
+            @change="change"
+          />
           <h2>No Match Modal / Address not found</h2><br>
           <code>Props: *modaltype* = AddressNotFound <br> currentstep = "the position in the stepper component" <br></code>
           <div>
@@ -242,6 +253,9 @@ export default {
   },
 
   methods: {
+    change (e) {
+      console.log(e)
+    }
   }
 }
 </script>

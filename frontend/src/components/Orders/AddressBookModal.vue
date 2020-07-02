@@ -28,7 +28,7 @@
           :headers="headers"
           :items="addressObject"
           :search="search"
-          item-key:id
+          item-key:item.id
           :hide-default-header="true"
           :hide-default-footer="true"
           scrollable
@@ -39,12 +39,12 @@
           >
             <tr>
               <td class="fullAddress">
-                <span class="city mb-3"><strong>{{ props.item.address.city }}</strong></span><br>
+                <span class="city mb-3"><strong>{{ props.item.city }}</strong></span><br>
                 <span class="managed">Managed by: <a
                   href=""
                   color="primary"
                 >
-                  {{ props.item.address.managedname }}</a></span><br>
+                  {{ props.item.address_line_1 }}</a></span><br>
                 <span class="phone">
                   <v-icon
                     color="primary"
@@ -53,7 +53,7 @@
                   >
                     mdi-phone-outline
                   </v-icon>
-                  {{ props.item.address.phone }}
+                  {{ props.item.location_phone }}
                 </span><br>
                 <span class="email">
                   <v-icon
@@ -61,23 +61,30 @@
                     class="mr-3"
                     small
                   >mdi-email-outline</v-icon>
-                  <a href="">{{ props.item.address.email }}</a></span>
+                  <a href="">{{ props.item.address_line_1 }}</a>
+                </span>
               </td>
               <td class="col__icon">
-                <v-icon
-                  color="primary"
-                >
+                <v-icon color="primary">
                   mdi-map-marker-outline
                 </v-icon>
               </td>
               <td>
-                {{ props.item.fulladdress }}
+                {{ `
+                ${props.item.location_name}
+                ${props.item.address_line_1}
+                ${props.item.address_line_2}
+                ${props.item.city},
+                ${props.item.state}
+                ${props.item.postal_code}
+                ${props.item.t_address_id}` }}
               </td>
               <td>
                 <v-btn
                   outlined
                   color="primary"
                   class="float-right"
+                  @click="change(props.item.t_address_id)"
                 >
                   Select
                 </v-btn>
@@ -89,9 +96,7 @@
 
       <template v-slot:activator="{ on }">
         <p>
-          <a
-            v-on="on"
-          >
+          <a v-on="on">
             Addres Book Modal
           </a>
         </p>
@@ -99,98 +104,99 @@
     </v-dialog>
   </div>
 </template>
+
 <script>
+import { mapState, mapActions } from '@/utils/vuex_mappings'
+import { reqStatus } from '@/enums/req_status'
+import address, { types } from '@/store/modules/address'
+
 export default {
+  props: {
+    rawtext: {
+      type: String,
+      required: true
+    },
+    companyId: {
+      type: Number,
+      required: true
+    },
+    tmsProviderId: {
+      type: Number,
+      required: true
+    }
+
+  },
+
   data () {
     return {
+      ...mapState(address.moduleName, {
+        list: state => state.list
+      }),
       dialog: false,
       search: '',
+      addressObject: [],
       headers: [
         { text: 'addressObject', value: 'city' },
         { text: 'addressObject', value: 'managedname' },
         { text: 'fulladdress', value: 'fulladdress' },
         { text: 'Actions', value: 'actions' }
-      ],
-      addressObject: [
-        {
-          address: { city: 'Ladson', managedname: ' Seth Ling', phone: '(843) 697-8659', email: 'sling@abd-trucking.com' },
-          fulladdress: '3016 Loxley Lane Ladson, CA, 90210'
-
-        },
-        {
-          address: { city: 'Atlanta', managedname: ' Mauricio', phone: '(843) 697-8659', email: 'sling@abd-trucking.com' },
-          fulladdress: '4220 Martin Luther King Drive Atlanta, GA 30336'
-
-        },
-        {
-          address: { city: 'Baltimore', managedname: ' Seth Ling', phone: '(843) 697-8659', email: 'sling@abd-trucking.com' },
-          fulladdress: '8208 Fischer Road Baltimore, MD 21222'
-        },
-        {
-          address: { city: 'Ladson', managedname: ' Seth Ling', phone: '(843) 697-8659', email: 'sling@abd-trucking.com' },
-          fulladdress: '8208 Fischer Road Baltimore, MD 21222'
-        },
-        {
-          address: { city: 'Ladson', managedname: ' Seth Ling', phone: '(843) 697-8659', email: 'sling@abd-trucking.com' },
-          fulladdress: '8208 Fischer Road Baltimore, MD 21222'
-
-        },
-        {
-          address: { city: 'Ladson', managedname: ' Seth Ling', phone: '(843) 697-8659', email: 'sling@abd-trucking.com' },
-          fulladdress: '8208 Fischer Road Baltimore, MD 21222'
-
-        },
-        {
-          address: { city: 'Ladson', managedname: ' Seth Ling', phone: '(843) 697-8659', email: 'sling@abd-trucking.com' },
-          fulladdress: '8208 Fischer Road Baltimore, MD 21222'
-
-        },
-        {
-          address: { city: 'Ladson', managedname: ' Seth Ling', phone: '(843) 697-8659', email: 'sling@abd-trucking.com' },
-          fulladdress: '8208 Fischer Road Baltimore, MD 21222'
-
-        },
-        {
-          address: { city: 'Ladson', managedname: ' Seth Ling', phone: '(843) 697-8659', email: 'sling@abd-trucking.com' },
-          fulladdress: '8208 Fischer Road Baltimore, MD 21222'
-
-        },
-        {
-          address: { city: 'Ladson', managedname: ' Seth Ling', phone: '(843) 697-8659', email: 'sling@abd-trucking.com' },
-          fulladdress: '8208 Fischer Road Baltimore, MD 21222'
-
-        }
       ]
+    }
+  },
+
+  async mounted () {
+    await this.fetchAddressList({
+      company_id: this.companyId,
+      tms_provider_id: this.tmsProviderId,
+      rawtext: this.rawtext
+    })
+    this.loaded = true
+    this.addressObject = this.list()
+  },
+
+  methods: {
+    ...mapActions(address.moduleName, [types.getSearchAddress]),
+
+    async fetchAddressList (filters) {
+      const status = await this[types.getSearchAddress](filters)
+
+      if (status === reqStatus.success) {
+        console.log('success')
+      } else {
+        console.log('error')
+      }
+    },
+    change (e) {
+      this.$emit('change', e)
     }
   }
 }
 </script>
+
 <style lang="scss" scoped>
-.address__search fieldset{
-    height: 5.5rem;
+.address__search fieldset {
+  height: 5.5rem;
 }
-.v-card__title{
-    display: flex;
-    align-items: baseline;
-    border-bottom: 0.1rem solid map-get($colors, grey-11 );
-    height: 8rem;
+.v-card__title {
+  display: flex;
+  align-items: baseline;
+  border-bottom: 0.1rem solid map-get($colors, grey-11);
+  height: 8rem;
 }
 .v-data-table td {
-    height: 10rem;
-    width: 18rem;
+  height: 10rem;
+  width: 18rem;
 }
-.fullAddress{
-    width: 25rem;
-    margin: 3rem auto;
-    span:last-child{
-        width: 20rem !important;
-        display: inline-block;
-
-    }
+.fullAddress {
+  width: 25rem;
+  margin: 3rem auto;
+  span:last-child {
+    width: 20rem !important;
+    display: inline-block;
+  }
 }
-.col__icon{
-    width: 2rem !important;
-    padding: 0rem !important;
+.col__icon {
+  width: 2rem !important;
+  padding: 0rem !important;
 }
-
 </style>
