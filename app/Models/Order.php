@@ -124,6 +124,7 @@ class Order extends Model
         'ship_comment',
         't_company_id',
         't_tms_provider_id',
+        'division_code',
     ];
 
     /**
@@ -211,6 +212,7 @@ class Order extends Model
         'purchase_order_number' => 'sometimes|nullable',
         'release_number' => 'sometimes|nullable',
         'ship_comment' => 'sometimes|nullable',
+        'division_code' => 'sometimes|nullable',
     ];
 
     public function orderAddressEvents()

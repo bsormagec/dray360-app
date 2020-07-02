@@ -64,5 +64,6 @@ $factory->define(Order::class, function (Faker $faker) {
         'purchase_order_number' => null,
         'release_number' => null,
         'ship_comment' => null,
+        'division_code' => '2202',
     ];
 });
