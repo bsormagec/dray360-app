@@ -1,0 +1,727 @@
+{
+  "id": 119,
+  "request_id": "2106d482-459d-5788-a631-83cd5a98b30a",
+  "shipment_designation": "International 2",
+  "equipment_type": "--",
+  "shipment_direction": "Import",
+  "one_way": null,
+  "yard_pre_pull": null,
+  "has_chassis": null,
+  "unit_number": "OOCU7217616",
+  "equipment": "--",
+  "equipment_size": "40HC",
+  "owner_or_ss_company": "--",
+  "hazardous": null,
+  "expedite_shipment": null,
+  "reference_number": "SSI100072144",
+  "rate_quote_number": "--",
+  "seal_number_list": null,
+  "vessel": "--",
+  "voyage": "--",
+  "master_bol_mawb": "--",
+  "house_bol_hawb": "SZSE2000255",
+  "estimated_arrival_utc": null,
+  "last_free_date_utc": null,
+  "created_at": "2020-06-01T10:23:21.000000Z",
+  "updated_at": "2020-06-22T22:46:47.000000Z",
+  "deleted_at": null,
+  "booking_number": null,
+  "bol": null,
+  "bill_to_address_id": null,
+  "port_ramp_of_origin_address_id": null,
+  "port_ramp_of_destination_address_id": 345,
+  "ocr_data": {
+    "rules": [
+      {
+        "always_import_international": "possible_output_fields = {\"shipment_designation\":{\"always\":True}}\ndef runrule(input_fields, updated_fields):\n    #return {\"shipment_type\":\"import\"}\n    updated_fields[\"shipment_designation\"] = \"International\"\n    updated_fields[\"order_type\"] = \"Import\""
+      },
+      {
+        "bol_to_mbol": "possible_output_fields = {\"mbol\":{\"always\":True}}\ndef runrule(input_fields, updated_fields):\n    #return {\"shipment_type\":\"export\"}\n    updated_fields[\"bol\"] = input_fields[\"mbol\"]"
+      },
+      {
+        "origin_always_null": "possible_output_fields = {\"origin_ramp\":{\"always\":True}}\ndef runrule(input_fields, updated_fields):\n    updated_fields[\"origin_ramp\"] = None"
+      }
+    ],
+    "fields": {
+      "bol": {
+        "name": "mbol",
+        "value": "",
+        "d360_name": "bol",
+        "recognized_value": null,
+        "suspicious_symbols": null
+      },
+      "hbol": {
+        "name": "hbol",
+        "value": "SZSE2000255",
+        "d360_name": "house_bol_hawb",
+        "ocr_region": {
+          "top": 2482,
+          "left": 1807,
+          "right": 2023,
+          "bottom": 2510,
+          "page_index": 1
+        },
+        "recognized_value": null,
+        "suspicious_symbols": "00000000000"
+      },
+      "mbol": {
+        "name": "mbol",
+        "value": "",
+        "d360_name": "master_bol_mawb",
+        "recognized_value": null,
+        "suspicious_symbols": null
+      },
+      "hazmat": {
+        "name": "hazmat",
+        "value": "",
+        "d360_name": "hazardous",
+        "recognized_value": null,
+        "suspicious_symbols": null
+      },
+      "vessel": {
+        "name": "vessel",
+        "value": "",
+        "recognized_value": null,
+        "suspicious_symbols": null
+      },
+      "voyage": {
+        "name": "voyage",
+        "value": "EVER",
+        "ocr_region": {
+          "top": 2188,
+          "left": 336,
+          "right": 424,
+          "bottom": 2216,
+          "page_index": 1
+        },
+        "recognized_value": null,
+        "suspicious_symbols": "0000"
+      },
+      "contents": {
+        "name": "contents",
+        "value": "DEEP EDDY NESTING CUBE, FARM RACK",
+        "d360_name": "order_line_items.*.description",
+        "ocr_region": {
+          "top": 2482,
+          "left": 152,
+          "right": 819,
+          "bottom": 2515,
+          "page_index": 1
+        },
+        "recognized_value": null,
+        "suspicious_symbols": "000000000000000000000000000000000"
+      },
+      "dest_ramp": {
+        "name": "dest_ramp",
+        "value": "BNSF LOGISTICS PARK H572\n26353 ELWOOD INTERNATIONAL PORT RD\nELWOOD IL 60421\nUNITED STATES\nContact:",
+        "d360_name": "port_ramp_of_destination_address_raw_text",
+        "ocr_region": {
+          "top": 1726,
+          "left": 1254,
+          "right": 1939,
+          "bottom": 1936,
+          "page_index": 1
+        },
+        "recognized_value": "BNSF LOGISTICS PARK H572 26353 ELWOOD INTERNATIONAL PORT RD ELWOOD IL 60421 UNITED STATES Contact:",
+        "suspicious_symbols": "00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000"
+      },
+      "pickup_no": {
+        "name": "pickup_no",
+        "value": "",
+        "d360_name": "pickup_number",
+        "recognized_value": null,
+        "suspicious_symbols": null
+      },
+      "booking_no": {
+        "name": "booking_no",
+        "value": "",
+        "d360_name": "booking_number",
+        "recognized_value": null,
+        "suspicious_symbols": null
+      },
+      "order_type": {
+        "name": "order_type",
+        "value": "Import",
+        "d360_name": "shipment_direction"
+      },
+      "event1_type": {
+        "name": "event1_type",
+        "value": "PICKUP FULL",
+        "d360_name": "order_address_events.0.unparsed_event_type",
+        "ocr_region": {
+          "top": 1217,
+          "left": 151,
+          "right": 370,
+          "bottom": 1245,
+          "page_index": 1
+        },
+        "recognized_value": null,
+        "suspicious_symbols": "00000000000"
+      },
+      "event2_type": {
+        "name": "event2_type",
+        "value": "DELIVER TO FULL",
+        "d360_name": "order_address_events.1.unparsed_event_type",
+        "ocr_region": {
+          "top": 1217,
+          "left": 1255,
+          "right": 1548,
+          "bottom": 1245,
+          "page_index": 1
+        },
+        "recognized_value": null,
+        "suspicious_symbols": "000000000000000"
+      },
+      "event3_type": {
+        "name": "event3_type",
+        "value": "PICKUP EMPTY",
+        "d360_name": "order_address_events.2.unparsed_event_type",
+        "ocr_region": {
+          "top": 1684,
+          "left": 151,
+          "right": 401,
+          "bottom": 1712,
+          "page_index": 1
+        },
+        "recognized_value": null,
+        "suspicious_symbols": "000000000000"
+      },
+      "event4_type": {
+        "name": "event4_type",
+        "value": "DELIVER TO EMPTY",
+        "d360_name": "order_address_events.3.unparsed_event_type",
+        "ocr_region": {
+          "top": 1684,
+          "left": 1255,
+          "right": 1579,
+          "bottom": 1712,
+          "page_index": 1
+        },
+        "recognized_value": null,
+        "suspicious_symbols": "0000000000000000"
+      },
+      "event5_type": {
+        "name": "event5_type",
+        "value": "",
+        "d360_name": "order_address_events.4.unparsed_event_type",
+        "recognized_value": null,
+        "suspicious_symbols": null
+      },
+      "event6_type": {
+        "name": "event6_type",
+        "value": "",
+        "d360_name": "order_address_events.5.unparsed_event_type",
+        "recognized_value": null,
+        "suspicious_symbols": null
+      },
+      "origin_ramp": {
+        "name": "origin_ramp",
+        "value": null,
+        "d360_name": "port_ramp_of_origin_address_raw_text"
+      },
+      "seal_number": {
+        "name": "seal_number",
+        "value": "OLGBH4610",
+        "ocr_region": {
+          "top": 2790,
+          "left": 535,
+          "right": 725,
+          "bottom": 2818,
+          "page_index": 1
+        },
+        "recognized_value": null,
+        "suspicious_symbols": "000000000"
+      },
+      "unit_number": {
+        "name": "unit_number",
+        "value": "OOCU7217616",
+        "d360_name": "unit_number",
+        "ocr_region": {
+          "top": 715,
+          "left": 1899,
+          "right": 2128,
+          "bottom": 743,
+          "page_index": 1
+        },
+        "recognized_value": null,
+        "suspicious_symbols": "00000000000"
+      },
+      "bill_to_address": {
+        "name": "bill_to_address",
+        "value": "Jet-Speed Logistics (USA) LLC\n900 N. Arlington Heights Rd., Suite 150\nItasca. Illinois 60143. U.S.A.\nTel: (630) 595-5601\nFax: (630) 595-6361",
+        "d360_name": "bill_to_address_raw_text",
+        "ocr_region": {
+          "top": 317,
+          "left": 216,
+          "right": 791,
+          "bottom": 583,
+          "page_index": 1
+        },
+        "recognized_value": "Jet-Speed Logistics (USA) LLC 900 N. Arlington Heights Rd., Suite 150 Itasca. Illinois 60143. U.S.A. Tel: (630) 595-5601 Fax: (630) 595-6361",
+        "suspicious_symbols": "00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000"
+      },
+      "event1_location": {
+        "name": "event1_location",
+        "value": "BNSF LOGISTICS PARK H572\n26353 ELWOOD INTERNATIONAL PORT RD\nELWOOD IL 60421\nUNITED STATES\nContact:",
+        "d360_name": "order_address_events.0.t_address_raw_text",
+        "ocr_region": {
+          "top": 1259,
+          "left": 150,
+          "right": 835,
+          "bottom": 1469,
+          "page_index": 1
+        },
+        "recognized_value": "BNSF LOGISTICS PARK H572 26353 ELWOOD INTERNATIONAL PORT RD ELWOOD IL 60421 UNITED STATES Contact:",
+        "suspicious_symbols": "00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000"
+      },
+      "event2_location": {
+        "name": "event2_location",
+        "value": "3030 S SYLVANIA AVE STE L\nSTURTEVANT WI 53177\nUNITED STATES\nContact:",
+        "d360_name": "order_address_events.1.t_address_raw_text",
+        "ocr_region": {
+          "top": 1304,
+          "left": 1254,
+          "right": 1710,
+          "bottom": 1469,
+          "page_index": 1
+        },
+        "recognized_value": "3030 S SYLVANIA AVE STE L STURTEVANT WI 53177 UNITED STATES Contact:",
+        "suspicious_symbols": "00000000000000000000000000000000000000000000000000000000000000000000"
+      },
+      "event3_location": {
+        "name": "event3_location",
+        "value": "3030 S SYLVANIA AVE STE L\nSTURTEVANT WI 53177\nUNITED STATES\nContact:",
+        "d360_name": "order_address_events.2.t_address_raw_text",
+        "ocr_region": {
+          "top": 1772,
+          "left": 150,
+          "right": 606,
+          "bottom": 1936,
+          "page_index": 1
+        },
+        "recognized_value": "3030 S SYLVANIA AVE STE L STURTEVANT WI 53177 UNITED STATES Contact:",
+        "suspicious_symbols": "00000000000000000000000000000000000000000000000000000000000000000000"
+      },
+      "event4_location": {
+        "name": "event4_location",
+        "value": "BNSF LOGISTICS PARK H572\n26353 ELWOOD INTERNATIONAL PORT RD\nELWOOD IL 60421\nUNITED STATES\nContact:",
+        "d360_name": "order_address_events.3.t_address_raw_text",
+        "ocr_region": {
+          "top": 1726,
+          "left": 1254,
+          "right": 1939,
+          "bottom": 1936,
+          "page_index": 1
+        },
+        "recognized_value": "BNSF LOGISTICS PARK H572 26353 ELWOOD INTERNATIONAL PORT RD ELWOOD IL 60421 UNITED STATES Contact:",
+        "suspicious_symbols": "00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000"
+      },
+      "event5_location": {
+        "name": "event5_location",
+        "value": "",
+        "d360_name": "order_address_events.4.t_address_raw_text",
+        "recognized_value": null,
+        "suspicious_symbols": null
+      },
+      "event6_location": {
+        "name": "event6_location",
+        "value": "",
+        "d360_name": "order_address_events.5.t_address_raw_text",
+        "recognized_value": null,
+        "suspicious_symbols": null
+      },
+      "container_length": {
+        "name": "container_length",
+        "value": "40HC",
+        "d360_name": "equipment_size",
+        "ocr_region": {
+          "top": 2745,
+          "left": 509,
+          "right": 593,
+          "bottom": 2773,
+          "page_index": 1
+        },
+        "recognized_value": null,
+        "suspicious_symbols": "0000"
+      },
+      "reference_number": {
+        "name": "reference_number",
+        "value": "SSI100072144",
+        "d360_name": "reference_number",
+        "ocr_region": {
+          "top": 769,
+          "left": 1899,
+          "right": 2119,
+          "bottom": 797,
+          "page_index": 1
+        },
+        "recognized_value": null,
+        "suspicious_symbols": "000000000000"
+      },
+      "shipment_designation": {
+        "name": "shipment_designation",
+        "value": "International",
+        "d360_name": "shipment_designation"
+      },
+      "multiline_multiorder_area_with_contents": {
+        "name": "multiline_multiorder_area_with_contents",
+        "value": "",
+        "d360_name": "order_line_items.*.description",
+        "recognized_value": null,
+        "suspicious_symbols": null
+      }
+    },
+    "version": {
+      "name": "version",
+      "value": "1.0"
+    },
+    "request_id": {
+      "name": "request_id",
+      "value": "2106d482-459d-5788-a631-83cd5a98b30a"
+    },
+    "variant_id": {
+      "name": "variant_id",
+      "value": "5",
+      "recognized_value": null,
+      "suspicious_symbols": "0"
+    },
+    "document_id": "00000003",
+    "variant_name": {
+      "name": "variant_name",
+      "value": "Jetspeed-import",
+      "recognized_value": null,
+      "suspicious_symbols": "000000000000000"
+    },
+    "ocr_data_filename": {
+      "name": "ocr_data_filename",
+      "value": "s3://dmedocproc-ocrprocessedjobs-dev/2106d482-459d-5788-a631-83cd5a98b30a_64271727b76bb6fede20526b2f55c0ef6ea9e06c9e5b93fe4e80bf589d1063f0_ShipmentCartageAdviceWithReceipt-SSI100072144.00000003.json"
+    },
+    "fields_overwritten": [
+      {
+        "name": "order_type",
+        "value": "",
+        "recognized_value": null,
+        "suspicious_symbols": null
+      },
+      {
+        "name": "bol",
+        "value": "",
+        "recognized_value": null,
+        "suspicious_symbols": null
+      },
+      {
+        "name": "origin_ramp",
+        "value": "CNYTN = Yantian Pt, China",
+        "ocr_region": {
+          "top": 2288,
+          "left": 151,
+          "right": 561,
+          "bottom": 2321,
+          "page_index": 1
+        },
+        "recognized_value": null,
+        "suspicious_symbols": "0000000000000000000000000"
+      }
+    ],
+    "page_index_filenames": {
+      "name": "page_index_filenames",
+      "value": {
+        "1": {
+          "name": "page_index_1",
+          "value": "s3://dmedocproc-ocrprocessedjobs-dev/2106d482-459d-5788-a631-83cd5a98b30a_64271727b76bb6fede20526b2f55c0ef6ea9e06c9e5b93fe4e80bf589d1063f0_ShipmentCartageAdviceWithReceipt-SSI100072144.00000003.jpg",
+          "presigned_download_uri": "https://dmedocproc-ocrprocessedjobs-dev.s3.us-east-2.amazonaws.com/2106d482-459d-5788-a631-83cd5a98b30a_64271727b76bb6fede20526b2f55c0ef6ea9e06c9e5b93fe4e80bf589d1063f0_ShipmentCartageAdviceWithReceipt-SSI100072144.00000003.jpg?X-Amz-Content-Sha256=UNSIGNED-PAYLOAD&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=AKIATKJR6GVDNK25DN5P%2F20200622%2Fus-east-2%2Fs3%2Faws4_request&X-Amz-Date=20200622T225737Z&X-Amz-SignedHeaders=host&X-Amz-Expires=900&X-Amz-Signature=e7704a9b8fce42f118cd3407ab90b9826eec8e0d09869613792eb025ef83b625",
+          "presigned_download_uri_expires": "2020-06-22T23:12:37.311643Z"
+        }
+      }
+    },
+    "document_definition_name": {
+      "name": "document_definition_name",
+      "value": "Work Order Try 21"
+    }
+  },
+  "pickup_number": null,
+  "bill_to_address_verified": false,
+  "bill_to_address_raw_text": "Jet-Speed Logistics (USA) LLC\n900 N. Arlington Heights Rd., Suite 150\nItasca. Illinois 60143. U.S.A.\nTel: (630) 595-5601\nFax: (630) 595-6361",
+  "port_ramp_of_origin_address_verified": false,
+  "port_ramp_of_origin_address_raw_text": null,
+  "port_ramp_of_destination_address_verified": false,
+  "port_ramp_of_destination_address_raw_text": "BNSF LOGISTICS PARK H572\n26353 ELWOOD INTERNATIONAL PORT RD\nELWOOD IL 60421\nUNITED STATES\nContact:",
+  "variant_id": null,
+  "variant_name": null,
+  "t_tms_providers_id": null,
+  "tms_shipment_id": null,
+  "ocr_request": {
+    "id": 50078,
+    "request_id": "2106d482-459d-5788-a631-83cd5a98b30a",
+    "t_job_state_changes_id": 524385,
+    "created_at": "2020-06-01T10:20:39.000000Z",
+    "updated_at": "2020-06-01T10:23:23.000000Z",
+    "status_list": [
+      {
+        "id": 524356,
+        "request_id": "2106d482-459d-5788-a631-83cd5a98b30a",
+        "status_date": "2020-06-01T00:00:00.000000Z",
+        "status": "intake-started",
+        "status_metadata": {
+          "sha256sum": "64271727b76bb6fede20526b2f55c0ef6ea9e06c9e5b93fe4e80bf589d1063f0",
+          "event_info": {
+            "event_time": "2020-06-01T15:20:37.673Z",
+            "object_key": "intakeemail/q6c3utdl7aatu0oj79i1bvu377c9cqeqlr150rg1",
+            "recipient0": "dev@docprocessing.draymaster.com",
+            "bucket_name": "dmedocproc-emailintake-dev",
+            "event_source": "aws:sqs",
+            "aws_request_id": "2106d482-459d-5788-a631-83cd5a98b30a",
+            "log_group_name": "/aws/lambda/intake-filter-dev",
+            "log_stream_name": "2020/06/01/[$LATEST]9cc0e42521464e50bedbc6a1393e7afd",
+            "event_time_epoch_ms": 1591024837000
+          },
+          "ocr_filename": "/tmp/2106d482-459d-5788-a631-83cd5a98b30a_64271727b76bb6fede20526b2f55c0ef6ea9e06c9e5b93fe4e80bf589d1063f0_ShipmentCartageAdviceWithReceipt-SSI100072144.PDF",
+          "ocr_request_id": "2106d482-459d-5788-a631-83cd5a98b30a",
+          "source_summary": {
+            "source_type": "email",
+            "source_email_subject": "ShipmentCartageAdviceWithReceipt-SSI100072144.PDF",
+            "source_email_recipient0": "dev@docprocessing.draymaster.com",
+            "source_email_to_address": "dev@docprocessing.draymaster.com",
+            "source_email_from_address": "Peter Nelson <peter@peternelson.com>",
+            "source_email_body_prefixes": [
+              "b'\\r\\n'",
+              "b'<div dir=\"ltr\"><div class=\"gmail_default\" style=\"font-size:small\"><br></div></div>\\r\\n'"
+            ],
+            "source_email_string_length": 62788,
+            "source_email_attachment_filenames": [
+              "ShipmentCartageAdviceWithReceipt-SSI100072144.PDF"
+            ]
+          },
+          "read_log_commandline": "aws --profile=draymaster logs get-log-events --log-group-name='/aws/lambda/intake-filter-dev' --log-stream-name='2020/06/01/[$LATEST]9cc0e42521464e50bedbc6a1393e7afd' --start-time='1591024837000'"
+        },
+        "created_at": "2020-06-01T10:20:39.000000Z",
+        "updated_at": null,
+        "display_status": "Intake"
+      },
+      {
+        "id": 524357,
+        "request_id": "2106d482-459d-5788-a631-83cd5a98b30a",
+        "status_date": "2020-06-01T00:00:00.000000Z",
+        "status": "intake-accepted",
+        "status_metadata": {
+          "document_type": "pdf",
+          "document_filename": "/tmp/2106d482-459d-5788-a631-83cd5a98b30a_64271727b76bb6fede20526b2f55c0ef6ea9e06c9e5b93fe4e80bf589d1063f0_ShipmentCartageAdviceWithReceipt-SSI100072144.PDF"
+        },
+        "created_at": "2020-06-01T10:20:39.000000Z",
+        "updated_at": null,
+        "display_status": "Processing"
+      },
+      {
+        "id": 524359,
+        "request_id": "2106d482-459d-5788-a631-83cd5a98b30a",
+        "status_date": "2020-06-01T00:00:00.000000Z",
+        "status": "ocr-waiting",
+        "status_metadata": {
+          "wait_reason": "WorkflowException",
+          "exception_message": "No files found matching 2106d482-459d-5788-a631-83cd5a98b30a*"
+        },
+        "created_at": "2020-06-01T10:20:42.000000Z",
+        "updated_at": null,
+        "display_status": "Processing"
+      },
+      {
+        "id": 524383,
+        "request_id": "2106d482-459d-5788-a631-83cd5a98b30a",
+        "status_date": "2020-06-01T00:00:00.000000Z",
+        "status": "ocr-completed",
+        "status_metadata": {
+          "file_list": [
+            "2106d482-459d-5788-a631-83cd5a98b30a_64271727b76bb6fede20526b2f55c0ef6ea9e06c9e5b93fe4e80bf589d1063f0_ShipmentCartageAdviceWithReceipt-SSI100072144.00000001.jpg",
+            "2106d482-459d-5788-a631-83cd5a98b30a_64271727b76bb6fede20526b2f55c0ef6ea9e06c9e5b93fe4e80bf589d1063f0_ShipmentCartageAdviceWithReceipt-SSI100072144.00000001.json",
+            "2106d482-459d-5788-a631-83cd5a98b30a_64271727b76bb6fede20526b2f55c0ef6ea9e06c9e5b93fe4e80bf589d1063f0_ShipmentCartageAdviceWithReceipt-SSI100072144.00000003.jpg",
+            "2106d482-459d-5788-a631-83cd5a98b30a_64271727b76bb6fede20526b2f55c0ef6ea9e06c9e5b93fe4e80bf589d1063f0_ShipmentCartageAdviceWithReceipt-SSI100072144.00000003.json",
+            "2106d482-459d-5788-a631-83cd5a98b30a_64271727b76bb6fede20526b2f55c0ef6ea9e06c9e5b93fe4e80bf589d1063f0_ShipmentCartageAdviceWithReceipt-SSI100072144.00000005.jpg",
+            "2106d482-459d-5788-a631-83cd5a98b30a_64271727b76bb6fede20526b2f55c0ef6ea9e06c9e5b93fe4e80bf589d1063f0_ShipmentCartageAdviceWithReceipt-SSI100072144.00000005.json"
+          ],
+          "s3_bucket": "dmedocproc-ocrprocessedjobs-dev",
+          "s3_region": "us-east-2"
+        },
+        "created_at": "2020-06-01T10:23:15.000000Z",
+        "updated_at": null,
+        "display_status": "Processing"
+      },
+      {
+        "id": 524385,
+        "request_id": "2106d482-459d-5788-a631-83cd5a98b30a",
+        "status_date": "2020-06-01T00:00:00.000000Z",
+        "status": "ocr-post-processing-complete",
+        "status_metadata": {
+          "file_list": [
+            "s3://dmedocproc-ocrprocessedjobs-dev/2106d482-459d-5788-a631-83cd5a98b30a_64271727b76bb6fede20526b2f55c0ef6ea9e06c9e5b93fe4e80bf589d1063f0_ShipmentCartageAdviceWithReceipt-SSI100072144.00000005.json",
+            "s3://dmedocproc-ocrprocessedjobs-dev/2106d482-459d-5788-a631-83cd5a98b30a_64271727b76bb6fede20526b2f55c0ef6ea9e06c9e5b93fe4e80bf589d1063f0_ShipmentCartageAdviceWithReceipt-SSI100072144.00000005.jpg"
+          ],
+          "num_files_to_process": 6,
+          "num_files_processed_successfully": 6,
+          "num_files_processed_unsuccessfully": 0
+        },
+        "created_at": "2020-06-01T10:23:23.000000Z",
+        "updated_at": null,
+        "display_status": "Verified"
+      }
+    ],
+    "latest_ocr_request_status": {
+      "id": 524385,
+      "request_id": "2106d482-459d-5788-a631-83cd5a98b30a",
+      "status_date": "2020-06-01T00:00:00.000000Z",
+      "status": "ocr-post-processing-complete",
+      "status_metadata": {
+        "file_list": [
+          "s3://dmedocproc-ocrprocessedjobs-dev/2106d482-459d-5788-a631-83cd5a98b30a_64271727b76bb6fede20526b2f55c0ef6ea9e06c9e5b93fe4e80bf589d1063f0_ShipmentCartageAdviceWithReceipt-SSI100072144.00000005.json",
+          "s3://dmedocproc-ocrprocessedjobs-dev/2106d482-459d-5788-a631-83cd5a98b30a_64271727b76bb6fede20526b2f55c0ef6ea9e06c9e5b93fe4e80bf589d1063f0_ShipmentCartageAdviceWithReceipt-SSI100072144.00000005.jpg"
+        ],
+        "num_files_to_process": 6,
+        "num_files_processed_successfully": 6,
+        "num_files_processed_unsuccessfully": 0
+      },
+      "created_at": "2020-06-01T10:23:23.000000Z",
+      "updated_at": null,
+      "display_status": "Verified"
+    }
+  },
+  "order_line_items": [
+    {
+      "id": 95,
+      "t_order_id": 119,
+      "quantity": null,
+      "unit_of_measure": null,
+      "description": "DEEP EDDY NESTING CUBE, FARM RACK",
+      "weight": null,
+      "total_weight": null,
+      "weight_uom": null,
+      "is_hazardous": null,
+      "haz_contact_name": null,
+      "haz_phone": null,
+      "haz_un_code": null,
+      "haz_un_name": null,
+      "haz_class": null,
+      "haz_qualifier": null,
+      "haz_description": null,
+      "haz_imdg_page_number": null,
+      "haz_flashpoint_temp": null,
+      "haz_flashpoint_temp_uom": null,
+      "packaging_group": null,
+      "created_at": "2020-06-01T10:23:21.000000Z",
+      "updated_at": "2020-06-01T10:23:21.000000Z",
+      "deleted_at": null
+    }
+  ],
+  "bill_to_address": null,
+  "port_ramp_of_destination_address": {
+    "id": 345,
+    "latitude": null,
+    "longitude": null,
+    "address_line_1": "26664 Elwood International Port Road",
+    "address_line_2": null,
+    "city": "Elwood",
+    "county": null,
+    "state": "IL",
+    "postal_code": "60421",
+    "country": "USA",
+    "hours_of_operation": null,
+    "created_at": "2020-05-18T17:23:37.000000Z",
+    "updated_at": "2020-05-18T17:23:37.000000Z",
+    "deleted_at": null,
+    "location_name": "BNSF - Chicago (Logistics Park)",
+    "location_phone": null
+  },
+  "port_ramp_of_origin_address": null,
+  "order_address_events": [
+    {
+      "id": 280,
+      "address_schedule_description": null,
+      "t_order_id": 119,
+      "t_address_id": null,
+      "event_number": 1,
+      "is_hook_event": null,
+      "is_mount_event": null,
+      "is_deliver_event": null,
+      "is_dismount_event": null,
+      "is_drop_event": null,
+      "call_for_appointment": null,
+      "delivery_window_from_localtime": null,
+      "delivery_window_to_localtime": null,
+      "delivery_instructions": null,
+      "created_at": "2020-06-01T10:23:21.000000Z",
+      "updated_at": "2020-06-01T10:23:21.000000Z",
+      "deleted_at": null,
+      "unparsed_event_type": "PICKUP FULL",
+      "t_address_verified": false,
+      "t_address_raw_text": "BNSF LOGISTICS PARK H572\n26353 ELWOOD INTERNATIONAL PORT RD\nELWOOD IL 60421\nUNITED STATES\nContact:",
+      "address": null
+    },
+    {
+      "id": 281,
+      "address_schedule_description": null,
+      "t_order_id": 119,
+      "t_address_id": null,
+      "event_number": 2,
+      "is_hook_event": null,
+      "is_mount_event": null,
+      "is_deliver_event": null,
+      "is_dismount_event": null,
+      "is_drop_event": null,
+      "call_for_appointment": null,
+      "delivery_window_from_localtime": null,
+      "delivery_window_to_localtime": null,
+      "delivery_instructions": null,
+      "created_at": "2020-06-01T10:23:21.000000Z",
+      "updated_at": "2020-06-01T10:23:21.000000Z",
+      "deleted_at": null,
+      "unparsed_event_type": "DELIVER TO FULL",
+      "t_address_verified": false,
+      "t_address_raw_text": "3030 S SYLVANIA AVE STE L\nSTURTEVANT WI 53177\nUNITED STATES\nContact:",
+      "address": null
+    },
+    {
+      "id": 282,
+      "address_schedule_description": null,
+      "t_order_id": 119,
+      "t_address_id": null,
+      "event_number": 3,
+      "is_hook_event": null,
+      "is_mount_event": null,
+      "is_deliver_event": null,
+      "is_dismount_event": null,
+      "is_drop_event": null,
+      "call_for_appointment": null,
+      "delivery_window_from_localtime": null,
+      "delivery_window_to_localtime": null,
+      "delivery_instructions": null,
+      "created_at": "2020-06-01T10:23:21.000000Z",
+      "updated_at": "2020-06-01T10:23:21.000000Z",
+      "deleted_at": null,
+      "unparsed_event_type": "PICKUP EMPTY",
+      "t_address_verified": false,
+      "t_address_raw_text": "3030 S SYLVANIA AVE STE L\nSTURTEVANT WI 53177\nUNITED STATES\nContact:",
+      "address": null
+    },
+    {
+      "id": 283,
+      "address_schedule_description": null,
+      "t_order_id": 119,
+      "t_address_id": null,
+      "event_number": 4,
+      "is_hook_event": null,
+      "is_mount_event": null,
+      "is_deliver_event": null,
+      "is_dismount_event": null,
+      "is_drop_event": null,
+      "call_for_appointment": null,
+      "delivery_window_from_localtime": null,
+      "delivery_window_to_localtime": null,
+      "delivery_instructions": null,
+      "created_at": "2020-06-01T10:23:21.000000Z",
+      "updated_at": "2020-06-01T10:23:21.000000Z",
+      "deleted_at": null,
+      "unparsed_event_type": "DELIVER TO EMPTY",
+      "t_address_verified": false,
+      "t_address_raw_text": "BNSF LOGISTICS PARK H572\n26353 ELWOOD INTERNATIONAL PORT RD\nELWOOD IL 60421\nUNITED STATES\nContact:",
+      "address": null
+    }
+  ]
+}

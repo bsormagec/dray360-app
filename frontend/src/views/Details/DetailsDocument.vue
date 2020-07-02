@@ -1,5 +1,5 @@
 <template>
-  <div class="document">
+  <div :class="`document ${dimensions.width && dimensions.height ? 'loaded' : ''}`">
     <div
       v-for="(page, pIndex) in pages"
       :key="pIndex"
@@ -103,11 +103,17 @@ export default {
   padding: 2.6rem;
   background: map-get($colors, grey-8);
   scroll-behavior: smooth;
+  width: 100%;
+
+  &.loaded {
+    width: unset;
+  }
 
   &.mobile {
     order: -1;
     height: 50vh;
     max-width: 100vw;
+    width: 100%;
     padding: 1.6rem;
 
     & .document__page {

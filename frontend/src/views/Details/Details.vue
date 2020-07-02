@@ -9,7 +9,9 @@
           :style="{ minWidth: `${resizeDiff}%` }"
         >
           <DetailsFormEditing v-show="isEditing" />
-          <DetailsFormViewing v-show="!isEditing" />
+          <DetailsFormViewing
+            v-show="!isEditing"
+          />
 
           <div
             class="form__resize"
@@ -61,7 +63,8 @@ export default {
     }),
     resizeDiff: 50,
     startPos: 0,
-    loaded: false
+    loaded: false,
+    types
   }),
 
   computed: {
@@ -151,6 +154,7 @@ export default {
 
 .details__content {
   display: flex;
+  width: 100%;
 
   &.mobile {
     flex-direction: column;

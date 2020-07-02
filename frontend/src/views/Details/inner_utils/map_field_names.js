@@ -1,73 +1,49 @@
 import { uuid } from '@/utils/uuid_valid_id'
 
-export default (abbyName) => {
-  let formFieldName
-
-  switch (abbyName) {
-    case 'port_ramp_of_origin_address':
-      formFieldName = 'port ramp of origin'
-      break
-    case 'port_ramp_of_destination_address':
-      formFieldName = 'port ramp of destination'
-      break
-    case 'order_type':
-      formFieldName = 'shipment direction'
-      break
-    case 'master_bol_mawb':
-      formFieldName = 'master BOL MAWB'
-      break
-    case 'house_bol_hawb':
-      formFieldName = 'house BOL MAWB'
-      break
-    case 'reference_number':
-      formFieldName = 'reference number'
-      break
-    case 'unit_number':
-      formFieldName = 'unit number'
-      break
-    case 'equipment_size':
-      formFieldName = 'size'
-      break
-    case 'bill_to_address':
-      formFieldName = 'bill to'
-      break
-    case 'equipment':
-      formFieldName = 'type'
-      break
-    case 'equipment_type':
-      formFieldName = 'equipment'
-      break
-    case 'hazardous':
-      formFieldName = 'hazardous'
-      break
-    case 'one_way':
-      formFieldName = 'one way'
-      break
-    case 'owner_or_ss_company':
-      formFieldName = 'owner or SS company'
-      break
-    case 'rate_quote_number':
-      formFieldName = 'rate quote number'
-      break
-    case 'shipment_designation':
-      formFieldName = 'shipment designation'
-      break
-    case 'shipment_direction':
-      formFieldName = 'shipment direction'
-      break
-    case 'vessel':
-      formFieldName = 'vessel'
-      break
-    case 'voyage':
-      formFieldName = 'voyage'
-      break
-    case 'yard_pre_pull':
-      formFieldName = 'yard pre-pull'
-      break
-    default:
-      formFieldName = uuid()
-      break
+const mapFieldNamesCreator = () => {
+  const mappings = {
+    port_ramp_of_origin_address: 'port ramp of origin',
+    port_ramp_of_destination_address: 'port ramp of destination',
+    order_type: 'shipment direction',
+    master_bol_mawb: 'master BOL MAWB',
+    house_bol_hawb: 'house BOL MAWB',
+    reference_number: 'reference number',
+    unit_number: 'unit number',
+    equipment_size: 'size',
+    bill_to_address: 'bill to',
+    equipment: 'type',
+    equipment_type: 'equipment',
+    hazardous: 'hazardous',
+    one_way: 'one way',
+    owner_or_ss_company: 'owner or SS company',
+    rate_quote_number: 'rate quote number',
+    shipment_designation: 'shipment designation',
+    shipment_direction: 'shipment direction',
+    vessel: 'vessel',
+    voyage: 'voyage',
+    yard_pre_pull: 'yard pre-pull'
   }
 
-  return formFieldName
+  const mappingsBackwards = {}
+
+  Object.keys(mappings).forEach(key => {
+    mappingsBackwards[mappings[key]] = key
+  })
+
+  function getName ({ abbyName, autoIdForAbby = true, formFieldName }) {
+    if (abbyName) {
+      return mappings[abbyName] ? mappings[abbyName] : (autoIdForAbby ? uuid() : undefined)
+    }
+
+    if (formFieldName) {
+      return mappingsBackwards[formFieldName]
+    }
+  }
+
+  return {
+    getName
+  }
 }
+
+const mapFieldNames = mapFieldNamesCreator()
+export default mapFieldNames

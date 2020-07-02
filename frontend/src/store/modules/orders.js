@@ -1,11 +1,12 @@
 import { reqStatus } from '@/enums/req_status'
-import { getOrders, getOrderDetail, postUploadPDF } from '@/store/api_calls/orders'
+import { getOrders, getOrderDetail, updateOrderDetail, postUploadPDF } from '@/store/api_calls/orders'
 
 export const types = {
   setOrders: 'SET_ORDERS',
   setCurrentOrder: 'SET_CURRENT_ORDER',
   getOrders: 'GET_ORDERS',
   getOrderDetail: 'GET_ORDER_DETAIL',
+  updateOrderDetail: 'UPDATE_ORDER_DETAIL',
   postUploadPDF: 'POST_UPLOAD_PDF'
 }
 
@@ -50,16 +51,23 @@ const actions = {
   async [types.getOrderDetail] ({ commit }, order) {
     const [error, data] = await getOrderDetail(order)
 
-    if (error || !data.ocr_data) return reqStatus.error
+    if (error) return reqStatus.error
 
     commit(types.setCurrentOrder, data)
+    return reqStatus.success
+  },
+
+  async [types.updateOrderDetail] ({ commit }, { id, changes }) {
+    const [error] = await updateOrderDetail({ id, changes })
+
+    if (error) return reqStatus.error
     return reqStatus.success
   },
 
   async [types.postUploadPDF] ({ commit }, file) {
     const [error, data] = await postUploadPDF(file)
 
-    if (error || !data.ocr_data) return reqStatus.error
+    if (error) return reqStatus.error
 
     commit(types.setPDF, data)
     return reqStatus.success

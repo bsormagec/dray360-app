@@ -222,9 +222,11 @@ export function buildField ({
   options,
   children,
   width,
-  value
+  value,
+  id = 'not being used'
 }) {
   const field = {
+    id,
     name,
     presentationName,
     value,
@@ -403,10 +405,10 @@ export function inventoryItemFields () {
     description: buildField({
       type: 'text-area',
       placeholder: 'description'
-    }),
-    hazardous: buildField({
-      type: 'switch',
-      children: hazardousFields()
     })
+    // hazardous: buildField({
+    //   type: 'switch',
+    //   children: hazardousFields()
+    // })
   }
 }

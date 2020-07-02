@@ -1,0 +1,388 @@
+{
+  "sections": {
+    "shipment": {
+      "rootFields": {
+        "shipment designation": {
+          "presentationName": "__vue_devtool_undefined__",
+          "value": "International 2",
+          "el": {
+            "type": "input",
+            "placeholder": "international"
+          }
+        },
+        "shipment direction": {
+          "presentationName": "__vue_devtool_undefined__",
+          "value": "Import",
+          "el": {
+            "type": "text-area",
+            "placeholder": "shipment address"
+          }
+        },
+        "shipment handling": {
+          "presentationName": "__vue_devtool_undefined__",
+          "value": "__vue_devtool_undefined__",
+          "el": {
+            "type": "select",
+            "options": [
+              "a",
+              "b",
+              "c"
+            ]
+          }
+        },
+        "one way": {
+          "presentationName": "__vue_devtool_undefined__",
+          "value": "--",
+          "el": {
+            "type": "switch"
+          }
+        },
+        "expedite shipment": {
+          "presentationName": "__vue_devtool_undefined__",
+          "value": "__vue_devtool_undefined__",
+          "el": {
+            "type": "switch"
+          }
+        },
+        "hazardous": {
+          "presentationName": "__vue_devtool_undefined__",
+          "value": "--",
+          "el": {
+            "type": "switch",
+            "children": {
+              "hazardous item information": {
+                "presentationName": "__vue_devtool_undefined__",
+                "value": "__vue_devtool_undefined__",
+                "el": {
+                  "type": "info-title"
+                }
+              },
+              "contact name": {
+                "presentationName": "__vue_devtool_undefined__",
+                "value": "__vue_devtool_undefined__",
+                "el": {
+                  "type": "input",
+                  "placeholder": "contact name"
+                }
+              },
+              "phone": {
+                "presentationName": "__vue_devtool_undefined__",
+                "value": "__vue_devtool_undefined__",
+                "el": {
+                  "type": "input",
+                  "placeholder": "phone"
+                }
+              },
+              "UN code": {
+                "presentationName": "__vue_devtool_undefined__",
+                "value": "__vue_devtool_undefined__",
+                "el": {
+                  "type": "input",
+                  "placeholder": "UN code"
+                }
+              },
+              "qualifier": {
+                "presentationName": "__vue_devtool_undefined__",
+                "value": "__vue_devtool_undefined__",
+                "el": {
+                  "type": "input",
+                  "placeholder": "qualifier"
+                }
+              },
+              "flashpoint temp": {
+                "presentationName": "__vue_devtool_undefined__",
+                "value": "__vue_devtool_undefined__",
+                "el": {
+                  "type": "input",
+                  "placeholder": "flashpoint temp"
+                }
+              },
+              "UN name": {
+                "presentationName": "__vue_devtool_undefined__",
+                "value": "__vue_devtool_undefined__",
+                "el": {
+                  "type": "input",
+                  "placeholder": "UN name"
+                }
+              },
+              "HAZ class": {
+                "presentationName": "__vue_devtool_undefined__",
+                "value": "__vue_devtool_undefined__",
+                "el": {
+                  "type": "input",
+                  "placeholder": "HAZ class"
+                }
+              },
+              "IMDG page no": {
+                "presentationName": "__vue_devtool_undefined__",
+                "value": "__vue_devtool_undefined__",
+                "el": {
+                  "type": "input",
+                  "placeholder": "IMDG page no"
+                }
+              },
+              "packaging group": {
+                "presentationName": "__vue_devtool_undefined__",
+                "value": "__vue_devtool_undefined__",
+                "el": {
+                  "type": "input",
+                  "placeholder": "packaging group"
+                }
+              },
+              "description": {
+                "presentationName": "__vue_devtool_undefined__",
+                "value": "__vue_devtool_undefined__",
+                "el": {
+                  "type": "text-area",
+                  "placeholder": "description"
+                }
+              }
+            }
+          }
+        }
+      },
+      "subSections": {
+        "equipment": {
+          "fields": {
+            "type": {
+              "presentationName": "__vue_devtool_undefined__",
+              "value": "--",
+              "el": {
+                "type": "input",
+                "placeholder": "container"
+              }
+            },
+            "unit number": {
+              "presentationName": "__vue_devtool_undefined__",
+              "value": "OOCU7217616",
+              "el": {
+                "type": "input",
+                "placeholder": "AAAU656578"
+              }
+            },
+            "equipment": {
+              "presentationName": "__vue_devtool_undefined__",
+              "value": "--",
+              "el": {
+                "type": "input",
+                "placeholder": "GP-General Purpose"
+              }
+            },
+            "size": {
+              "presentationName": "__vue_devtool_undefined__",
+              "value": "40HC",
+              "el": {
+                "type": "input",
+                "placeholder": "20 ft"
+              }
+            },
+            "yard pre-pull": {
+              "presentationName": "__vue_devtool_undefined__",
+              "value": "--",
+              "el": {
+                "type": "switch"
+              }
+            },
+            "has chassis": {
+              "presentationName": "__vue_devtool_undefined__",
+              "value": "__vue_devtool_undefined__",
+              "el": {
+                "type": "switch"
+              }
+            },
+            "owner or SS company": {
+              "presentationName": "__vue_devtool_undefined__",
+              "value": "--",
+              "el": {
+                "type": "input",
+                "placeholder": "ACL"
+              }
+            }
+          }
+        },
+        "origin": {
+          "fields": {
+            "reference number": {
+              "presentationName": "__vue_devtool_undefined__",
+              "value": "SSI100072144",
+              "el": {
+                "type": "input",
+                "placeholder": "reference number"
+              }
+            },
+            "rate quote number": {
+              "presentationName": "__vue_devtool_undefined__",
+              "value": "--",
+              "el": {
+                "type": "input",
+                "placeholder": "rate quote number"
+              }
+            },
+            "vessel": {
+              "presentationName": "__vue_devtool_undefined__",
+              "value": "--",
+              "el": {
+                "type": "input",
+                "placeholder": "vessel"
+              }
+            },
+            "voyage": {
+              "presentationName": "__vue_devtool_undefined__",
+              "value": "--",
+              "el": {
+                "type": "input",
+                "placeholder": "voyage"
+              }
+            },
+            "master BOL MAWB": {
+              "presentationName": "__vue_devtool_undefined__",
+              "value": "--",
+              "el": {
+                "type": "input",
+                "placeholder": "master BOL / MAWB"
+              }
+            },
+            "house BOL MAWB": {
+              "presentationName": "__vue_devtool_undefined__",
+              "value": "SZSE2000255",
+              "el": {
+                "type": "input",
+                "placeholder": "house BOL / MAWB"
+              }
+            },
+            "(Est) arrival": {
+              "presentationName": "__vue_devtool_undefined__",
+              "value": "__vue_devtool_undefined__",
+              "el": {
+                "type": "date-time"
+              }
+            },
+            "last free day": {
+              "presentationName": "__vue_devtool_undefined__",
+              "value": "__vue_devtool_undefined__",
+              "el": {
+                "type": "date-time"
+              }
+            },
+            "port ramp of origin": {
+              "presentationName": "__vue_devtool_undefined__",
+              "value": "--",
+              "el": {
+                "type": "text-area",
+                "placeholder": "port/ramp of origin"
+              }
+            },
+            "port ramp of destination": {
+              "presentationName": "__vue_devtool_undefined__",
+              "value": "BNSF LOGISTICS PARK H572\n26353 ELWOOD INTERNATIONAL PORT RD\nELWOOD IL 60421\nUNITED STATES\nContact:",
+              "el": {
+                "type": "text-area",
+                "placeholder": "port/ramp of destination"
+              }
+            },
+            "Port Ramp of Destination matched": {
+              "presentationName": "__vue_devtool_undefined__",
+              "value": "BNSF - Chicago (Logistics Park) 26664 Elwood International Port Road Elwood, IL 60421 ",
+              "el": {
+                "type": "input",
+                "placeholder": "port_ramp_of_destination_address matched"
+              }
+            },
+            "Port Ramp of Origin matched": {
+              "presentationName": "__vue_devtool_undefined__",
+              "value": "",
+              "el": {
+                "type": "input",
+                "placeholder": "port_ramp_of_origin_address matched"
+              }
+            }
+          }
+        },
+        "billing": {
+          "fields": {
+            "bill to": {
+              "presentationName": "__vue_devtool_undefined__",
+              "value": "Jet-Speed Logistics (USA) LLC\n900 N. Arlington Heights Rd., Suite 150\nItasca. Illinois 60143. U.S.A.\nTel: (630) 595-5601\nFax: (630) 595-6361",
+              "el": {
+                "type": "text-area",
+                "placeholder": "bill to address"
+              },
+              "highlight": "__vue_devtool_undefined__"
+            }
+          }
+        }
+      }
+    },
+    "itinerary": {
+      "rootFields": {
+        "pickup full": {
+          "presentationName": "__vue_devtool_undefined__",
+          "value": "BNSF LOGISTICS PARK H572\n26353 ELWOOD INTERNATIONAL PORT RD\nELWOOD IL 60421\nUNITED STATES\nContact:",
+          "el": {
+            "type": "text-area",
+            "placeholder": "pickup full"
+          }
+        },
+        "deliver to full": {
+          "presentationName": "__vue_devtool_undefined__",
+          "value": "3030 S SYLVANIA AVE STE L\nSTURTEVANT WI 53177\nUNITED STATES\nContact:",
+          "el": {
+            "type": "text-area",
+            "placeholder": "deliver to full"
+          }
+        },
+        "pickup empty": {
+          "presentationName": "__vue_devtool_undefined__",
+          "value": "3030 S SYLVANIA AVE STE L\nSTURTEVANT WI 53177\nUNITED STATES\nContact:",
+          "el": {
+            "type": "text-area",
+            "placeholder": "pickup empty"
+          }
+        },
+        "deliver to empty": {
+          "presentationName": "__vue_devtool_undefined__",
+          "value": "BNSF LOGISTICS PARK H572\n26353 ELWOOD INTERNATIONAL PORT RD\nELWOOD IL 60421\nUNITED STATES\nContact:",
+          "el": {
+            "type": "text-area",
+            "placeholder": "deliver to empty"
+          }
+        }
+      }
+    },
+    "inventory": {
+      "subSections": {
+        "ìtem 1": {
+          "fields": {
+            "ìtem 1": {
+              "presentationName": "description",
+              "value": "DEEP EDDY NESTING CUBE, FARM RACK",
+              "el": {
+                "type": "text-area",
+                "placeholder": "description"
+              }
+            }
+          }
+        }
+      },
+      "actionSection": {
+        "presentationName": "__vue_devtool_undefined__",
+        "value": "__vue_devtool_undefined__",
+        "el": {
+          "type": "add-inventory-item"
+        }
+      }
+    },
+    "notes": {
+      "rootFields": {
+        "notes": {
+          "presentationName": "__vue_devtool_undefined__",
+          "value": "__vue_devtool_undefined__",
+          "el": {
+            "type": "text-area",
+            "placeholder": "notes"
+          }
+        }
+      }
+    }
+  }
+}

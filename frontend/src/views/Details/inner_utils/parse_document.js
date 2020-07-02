@@ -63,7 +63,7 @@ function getHighlights (data) {
         const items = defaultsTo(() => data.order_line_items, [])
         items.forEach((item, i) => {
           const itemName = `ìtem ${i + 1}`
-          const itemValue = defaultsTo(() => item.description, '--')
+          const itemValue = defaultsTo(() => item.contents, '--')
 
           const lineItems = formModule.state.form.sections.inventory.subSections
           Vue.set(
@@ -75,7 +75,8 @@ function getHighlights (data) {
                   presentationName: 'description',
                   type: 'text-area',
                   placeholder: 'description',
-                  value: itemValue
+                  value: itemValue,
+                  id: item.id
                 })
               }
             }
@@ -90,7 +91,7 @@ function getHighlights (data) {
       } else if (key === 'bill_to_address') {
         highlights[key] = {
           ...getOcrData(key, data),
-          name: mapFieldNames(key),
+          name: mapFieldNames.getName({ abbyName: key }),
           value: defaultsTo(() => data.bill_to_address_raw_text, '--')
         }
       } else if (key.includes('port_ramp')) {
@@ -99,6 +100,7 @@ function getHighlights (data) {
         const { location_name, address_line_1, city, state, postal_code } = valueForMatched // matched text
         const matchedText = `${strSpacer(location_name, ' ')}${strSpacer(address_line_1, ' ')}${strSpacer(city, ', ')}${strSpacer(state, ' ')}${strSpacer(postal_code, ' ')}`
 
+        /* Matched address */
         const origin = formModule.state.form.sections.shipment.subSections.origin.fields
         Vue.set(
           origin,
@@ -109,16 +111,17 @@ function getHighlights (data) {
             value: matchedText
           })
         )
+        /* -- */
 
         highlights[key] = {
           ...getOcrData(key, data),
-          name: mapFieldNames(key),
+          name: mapFieldNames.getName({ abbyName: key }),
           value: defaultsTo(() => data[`${key}_raw_text`], '--')
         }
       } else {
         highlights[key] = {
           ...getOcrData(key, data),
-          name: mapFieldNames(key),
+          name: mapFieldNames.getName({ abbyName: key }),
           value: defaultsTo(() => value, '--')
         }
       }
@@ -128,12 +131,14 @@ function getHighlights (data) {
   return Object.values(highlights)
 }
 
-function shouldParseKey (key) {
+export function shouldParseKey (key) {
   const invalidEndings = [
+    'id',
     '_id',
     '_raw_text',
     '_verified',
     'ocr_data',
+    'ocr_request',
     '_at'
   ]
 

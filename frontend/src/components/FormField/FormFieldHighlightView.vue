@@ -21,7 +21,7 @@
     <span class="field__name">{{ field.presentationName || field.name }}</span>
     <span
       class="field__value"
-    >{{ field.value ? field.value : '--' }}</span>
+    >{{ valueByType }}</span>
   </div>
 </template>
 
@@ -33,6 +33,16 @@ export default {
     field: {
       type: Object,
       required: true
+    }
+  },
+
+  computed: {
+    valueByType () {
+      if (this.field.el.type === 'switch') {
+        return this.field.value === true ? 'yes' : 'no'
+      }
+
+      return this.field.value ? this.field.value : '--'
     }
   }
 }

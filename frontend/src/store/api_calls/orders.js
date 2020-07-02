@@ -5,6 +5,8 @@ export const getOrders = async (filters, query) => axios.ext.get(`/api/orders?${
 
 export const getOrderDetail = async (order) => axios.ext.get(`/api/orders/${order}`).then(data => [undefined, data.data]).catch(e => [e])
 
+export const updateOrderDetail = async ({ id, changes }) => axios.ext.put(`/api/orders/${id}`, changes).then(data => [undefined, data.data]).catch(e => [e])
+
 export const postUploadPDF = async (file) => axios.ext.post('/api/createocrrequestuploaduri', { filename: file.name, withCredentials: false })
   .then(response => {
     const config = {

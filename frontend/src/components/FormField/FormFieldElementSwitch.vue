@@ -54,12 +54,6 @@ export default {
     childrenData: {}
   }),
 
-  computed: {
-    parsedIsActive () {
-      return this.isActive === true ? 'yes' : 'no'
-    }
-  },
-
   watch: {
     isEditing: function () {
       this.syncValue()
@@ -67,17 +61,28 @@ export default {
   },
 
   mounted () {
+    this.initialize()
     this.emitChange()
   },
 
   methods: {
+    initialize () {
+      if (this.field.value === '--') {
+        this.isActive = false
+      } else if (typeof this.field.value === 'string') {
+        this.isActive = this.field.value === 'yes'
+      } else if (typeof this.field.value === 'boolean') {
+        this.isActive = this.field.value
+      }
+    },
+
     changeChildEl ({ e, name }) {
       this.$set(this.childrenData, name, e)
       this.emitChange()
     },
 
     emitChange () {
-      const value = this.field.el.children && this.isActive ? this.childrenData : this.parsedIsActive
+      const value = this.field.el.children && this.isActive ? this.childrenData : this.isActive
       this.$emit('change', value)
     },
 
@@ -91,7 +96,7 @@ export default {
         return
       }
 
-      this.isActive = this.field.value === 'yes'
+      this.isActive = this.field.value
       this.emitChange()
     }
   }
