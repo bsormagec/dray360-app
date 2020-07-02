@@ -20,7 +20,7 @@ import Vue from 'vue'
 import mapFieldNames from '@/views/Details/inner_utils/map_field_names'
 import { formModule } from '@/views/Details/inner_store/index'
 import { defaultsTo } from '@/utils/defaults_to'
-import { uuid } from '@/utils/uuid_valid_id'
+// import { uuid } from '@/utils/uuid_valid_id'
 import { buildField } from '@/views/Details/inner_utils/example_form'
 
 export const parse = ({ data }) => {
@@ -40,8 +40,9 @@ function getHighlights (data) {
       if (key === 'order_address_events') {
         const evts = defaultsTo(() => data.order_address_events, [])
         evts.forEach((evt, i) => {
-          const evtName = defaultsTo(() => evt.unparsed_event_type.toLowerCase(), uuid())
-          const evtValue = defaultsTo(() => evt.t_address_raw_text, '--')
+          const evtName = `${evt.event_number} : ${evt.unparsed_event_type || 'Unknown'}`.toLowerCase()
+          // const evtName = defaultsTo(() => (evt.event_number + ':' + evt.unparsed_event_type).toLowerCase(), 'EventType Unknown:' + evt.event_number)
+          const evtValue = defaultsTo(() => `${evt.address?.location_name} \n ${evt.address?.address_line_1} \n ${evt.address?.address_line_2} \n ${evt.address?.city}, ${evt.address?.state} ${evt.address?.postal_code}`, '--')
 
           const addrEvents = formModule.state.form.sections.itinerary.rootFields
           Vue.set(
@@ -92,7 +93,7 @@ function getHighlights (data) {
         highlights[key] = {
           ...getOcrData(key, data),
           name: mapFieldNames.getName({ abbyName: key }),
-          value: defaultsTo(() => data.bill_to_address_raw_text, '--')
+          value: defaultsTo(() => `${data.bill_to_address?.location_name} \n ${data.bill_to_address?.address_line_1} \n ${data.bill_to_address?.address_line_2} \n ${data.bill_to_address?.city}, ${data.bill_to_address?.state} ${data.bill_to_address?.postal_code} `, '--')
         }
       } else if (key.includes('port_ramp')) {
         /* eslint camelcase: 0 */
