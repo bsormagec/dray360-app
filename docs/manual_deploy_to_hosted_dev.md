@@ -15,8 +15,7 @@ ssh ocr-dev02 'rm -fr ordermaster; mkdir -p ordermaster/public/ ordermaster/fron
 
 ````bash
 cd /home/pbnelson/repos/tcompanies/ordermaster
-git checkout master
-git pull --all
+git checkout master && git pull --all && git reset --hard origin/master
 rsync -av --exclude '.git/' --exclude 'node_modules/' --exclude 'vendor/' --exclude 'frontend/node_modules/' --exclude 'storage/logs/' --exclude 'tmp/' --exclude 'public/'  ../ordermaster  ocr-dev02:
 rsync -av --exclude="css" --exclude="img" --exclude="js" ../ordermaster/public/ ocr-dev02:ordermaster/public/
 rsync -av ../ordermaster/frontend/public/ ocr-dev02:ordermaster/frontend/public/
