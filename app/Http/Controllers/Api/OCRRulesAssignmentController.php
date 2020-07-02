@@ -6,7 +6,7 @@ use App\Models\OCRRule;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use App\Http\Controllers\Controller;
-use App\Models\AccountOCRVariantOCRRule;
+use App\Models\CompanyOCRVariantOCRRule;
 use App\Http\Resources\OCRRule as ResourcesOCRRule;
 
 class OCRRulesAssignmentController extends Controller
@@ -15,12 +15,12 @@ class OCRRulesAssignmentController extends Controller
     {
         $this->authorize('viewAny', OCRRule::class);
         $filters = $request->validate([
-            'account_id' => 'required',
+            'company_id' => 'required',
             'variant_id' => 'required',
         ]);
 
         return new ResourcesOCRRule(
-            AccountOCRVariantOCRRule::assignedTo($filters['account_id'], $filters['variant_id'])
+            CompanyOCRVariantOCRRule::assignedTo($filters['company_id'], $filters['variant_id'])
                 ->with('ocrRule')
                 ->orderBy('rule_sequence')
                 ->get()
@@ -32,17 +32,17 @@ class OCRRulesAssignmentController extends Controller
     {
         $this->authorize('assign', OCRRule::class);
         $data = $request->validate([
-            'account_id' => 'required',
+            'company_id' => 'required',
             'variant_id' => 'required',
             'rules' => 'required|array',
             'rules.*' => 'integer|exists:t_ocrrules,id',
         ]);
-        $accountId = $data['account_id'];
+        $companyId = $data['company_id'];
         $variantId = $data['variant_id'];
 
-        $data = collect($data['rules'])->map(function ($rule, $key) use ($accountId, $variantId) {
+        $data = collect($data['rules'])->map(function ($rule, $key) use ($companyId, $variantId) {
             return [
-                't_account_id' => $accountId,
+                't_company_id' => $companyId,
                 't_ocrvariant_id' => $variantId,
                 't_ocrrule_id' => $rule,
                 'rule_sequence' => $key + 1,
@@ -51,8 +51,9 @@ class OCRRulesAssignmentController extends Controller
             ];
         })->toArray();
 
-        AccountOCRVariantOCRRule::assignedTo($accountId, $variantId)->delete();
-        if (! AccountOCRVariantOCRRule::insert($data)) {
+        CompanyOCRVariantOCRRule::assignedTo($companyId, $variantId)->delete();
+
+        if (! CompanyOCRVariantOCRRule::insert($data)) {
             abort(500, 'There was an error trying to save the assignment');
         }
 

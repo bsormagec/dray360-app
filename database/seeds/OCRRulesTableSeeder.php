@@ -2,8 +2,11 @@
 
 // usage: php artisan db:seed --class=OCRRulesTableSeeder
 
-
+use App\Models\Company;
+use App\Models\OCRRule;
+use App\Models\OCRVariant;
 use Illuminate\Database\Seeder;
+use App\Models\CompanyOCRVariantOCRRule;
 
 class OCRRulesTableSeeder extends Seeder
 {
@@ -40,11 +43,7 @@ PYTHONCODE;
      */
     public function run()
     {
-        // create an address
-        $addressId = $this->seedAddress();
-
-        // create account
-        $accountId = $this->seedAccount('Cushing', $addressId);
+        $companyId = factory(Company::class)->create(['name' => 'Cushing'])->id;
 
         // create a variant
         $ocrvariantId = $this->seedVariant(5, 'Jetspeed-Import', 'Prenote from Cushing\'s Feight Buyer: Jetspeed');
@@ -54,38 +53,9 @@ PYTHONCODE;
         $ocrrule2Id = $this->seedOCRRule('bol_to_mbol', 'sample rule bol_to_mbol', self::RULE2_CODE);
         $ocrrule3Id = $this->seedOCRRule('origin_always_null', 'Origin always null', self::RULE3_CODE);
 
-        // create two accountvariantrule entries (use sequence)
-        $this->seedAccountVariantRuleSequence($accountId, $ocrvariantId, $ocrrule1Id, 1); // rule sequence number 1
-        $this->seedAccountVariantRuleSequence($accountId, $ocrvariantId, $ocrrule2Id, 2); // rule sequence number 2
-        $this->seedAccountVariantRuleSequence($accountId, $ocrvariantId, $ocrrule3Id, 3); // rule sequence number 3
-    }
-
-    /**
-     * Create an address (an empty address)
-     *
-     * @return int
-     */
-    public function seedAddress()
-    {
-        $address = App\Models\Address::create();
-        return $address->id;
-    }
-
-    /**
-     * Create an Account
-     *
-     * @return int
-     */
-    public function seedAccount($name, $addressId)
-    {
-        $account = App\Models\Account::create(
-            [
-                'name' => $name,
-                't_address_id' => $addressId
-            ]
-        );
-
-        return $account->id;
+        $this->seedCompanyVariantRuleSequence($companyId, $ocrvariantId, $ocrrule1Id, 1); // rule sequence number 1
+        $this->seedCompanyVariantRuleSequence($companyId, $ocrvariantId, $ocrrule2Id, 2); // rule sequence number 2
+        $this->seedCompanyVariantRuleSequence($companyId, $ocrvariantId, $ocrrule3Id, 3); // rule sequence number 3
     }
 
     /**
@@ -93,59 +63,37 @@ PYTHONCODE;
      *
      * @return int
      */
-    public function seedVariant($abbyyVariantId, $abbyyVariantName, $description)
+    public function seedVariant($abbyyVariantId, $abbyyVariantName, $description): int
     {
-        $variant = App\Models\OCRVariant::create(
-            [
-                'abbyy_variant_id' => $abbyyVariantId,
-                'abbyy_variant_name' => $abbyyVariantName,
-                'description' => $description
-            ]
-        );
-
-        return $variant->id;
+        return OCRVariant::create([
+            'abbyy_variant_id' => $abbyyVariantId,
+            'abbyy_variant_name' => $abbyyVariantName,
+            'description' => $description
+        ])->id;
     }
 
     /**
      * Create an ocrrule
-     *
-     * @return int
      */
-    public function seedOCRRule($name, $description, $code)
+    public function seedOCRRule($name, $description, $code): int
     {
-        // $ocrrule1Id = DB::table('t_ocrrules')->insertGetId([
-        //     'name' => $name,
-        //     'description' => $description,
-        //     'code' => $code
-        // ]);
-
-        $rule = App\Models\OCRRule::create(
-            [
-                'name' => $name,
-                'description' => $description,
-                'code' => $code
-            ]
-        );
-
-        return $rule->id;
+        return OCRRule::create([
+            'name' => $name,
+            'description' => $description,
+            'code' => $code
+        ])->id;
     }
 
     /**
-     * Create account/variant/rule association
-     *
-     * @return int
+     * Create company/variant/rule association
      */
-    public function seedAccountVariantRuleSequence($accountId, $ocrvariantId, $ocrruleId, $ruleSequence)
+    public function seedCompanyVariantRuleSequence($companyId, $ocrvariantId, $ocrruleId, $ruleSequence): int
     {
-        $account = App\Models\AccountOCRVariantOCRRule::create(
-            [
-                't_account_id' => $accountId,
-                't_ocrvariant_id' => $ocrvariantId,
-                't_ocrrule_id' => $ocrruleId,
-                'rule_sequence' => $ruleSequence
-            ]
-        );
-
-        return $account->id;
+        return CompanyOCRVariantOCRRule::create([
+            't_company_id' => $companyId,
+            't_ocrvariant_id' => $ocrvariantId,
+            't_ocrrule_id' => $ocrruleId,
+            'rule_sequence' => $ruleSequence
+        ])->id;
     }
 }

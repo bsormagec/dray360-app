@@ -1119,7 +1119,7 @@
 					}
 				],
 				"url": {
-					"raw": "{{server}}/api/ocr/rules-assignment?account_id=1&variant_id=1",
+					"raw": "{{server}}/api/ocr/rules-assignment?company_id=1&variant_id=1",
 					"host": [
 						"{{server}}"
 					],
@@ -1130,7 +1130,7 @@
 					],
 					"query": [
 						{
-							"key": "account_id",
+							"key": "company_id",
 							"value": "1",
 							"description": "account to filter the assigned rules"
 						},
@@ -1187,7 +1187,7 @@
 				],
 				"body": {
 					"mode": "raw",
-					"raw": "{\n    \"account_id\": 1,\n    \"variant_id\": 1,\n    \"rules\": [\n        1,\n        2,\n        3,\n        4\n    ]\n}",
+					"raw": "{\n    \"company_id\": 1,\n    \"variant_id\": 1,\n    \"rules\": [\n        1,\n        2,\n        3,\n        4\n    ]\n}",
 					"options": {
 						"raw": {
 							"language": "json"

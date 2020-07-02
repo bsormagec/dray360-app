@@ -71,7 +71,7 @@ Route::group(['middleware' => 'auth:sanctum'], function () {
         ->parameters(['variants' => 'ocrVariant'])
         ->only(['index', 'store', 'update', 'destroy']);
 
-    // Assignment of OCR Rules to an account-variant pair
+    // Assignment of OCR Rules to an company-variant pair
     Route::apiResource('ocr/rules-assignment', OCRRulesAssignmentController::class, ['as' => 'ocr'])
         ->only(['store', 'index']);
 });

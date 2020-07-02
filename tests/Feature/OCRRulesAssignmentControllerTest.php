@@ -4,13 +4,13 @@ namespace Tests\Feature;
 
 use Tests\TestCase;
 use App\Models\User;
-use App\Models\Account;
+use App\Models\Company;
 use App\Models\OCRRule;
 use App\Models\OCRVariant;
 use Laravel\Sanctum\Sanctum;
 use Illuminate\Http\Response;
 use Tests\Seeds\OCRRulesAssignmentSeed;
-use App\Models\AccountOCRVariantOCRRule;
+use App\Models\CompanyOCRVariantOCRRule;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
 
 class OCRRulesAssignmentControllerTest extends TestCase
@@ -24,27 +24,27 @@ class OCRRulesAssignmentControllerTest extends TestCase
     }
 
     /** @test */
-    public function it_should_update_the_assignment_of_rules_for_a_give_account_and_variant()
+    public function it_should_update_the_assignment_of_rules_for_a_give_company_and_variant()
     {
         $this->seed(OCRRulesAssignmentSeed::class);
         $ocrVariant = OCRVariant::first(['id']);
-        $account = Account::first(['id']);
+        $company = Company::first(['id']);
         $ocrRules = OCRRule::all(['id']);
 
         $this->postJson(route('ocr.rules-assignment.store'), [
                 'variant_id' => $ocrVariant->id,
-                'account_id' => $account->id,
+                'company_id' => $company->id,
                 'rules' => $ocrRules->pluck('id'),
             ])
             ->assertStatus(Response::HTTP_CREATED)
             ->assertJsonCount($ocrRules->count(), 'data');
 
-        $this->assertCount($ocrRules->count(), AccountOCRVariantOCRRule::assignedTo(
-            $account->id,
+        $this->assertCount($ocrRules->count(), CompanyOCRVariantOCRRule::assignedTo(
+            $company->id,
             $ocrVariant->id
         )->get());
-        $this->assertNotNull(AccountOCRVariantOCRRule::assignedTo(
-            $account->id,
+        $this->assertNotNull(CompanyOCRVariantOCRRule::assignedTo(
+            $company->id,
             $ocrVariant->id
         )->first()->created_at);
     }
@@ -54,14 +54,14 @@ class OCRRulesAssignmentControllerTest extends TestCase
     {
         $this->seed(OCRRulesAssignmentSeed::class);
         $ocrVariant = OCRVariant::first(['id']);
-        $account = Account::first(['id']);
+        $company = Company::first(['id']);
         $ocrRules = OCRRule::all(['id']);
-        $toValidate = ['variant_id', 'account_id', 'rules'];
+        $toValidate = ['variant_id', 'company_id', 'rules'];
 
         foreach ($toValidate as $fieldToValidate) {
             $data = [
                 'variant_id' => $ocrVariant->id,
-                'account_id' => $account->id,
+                'company_id' => $company->id,
                 'rules' => $ocrRules->pluck('id'),
             ];
             $data[$fieldToValidate] = null;
@@ -80,39 +80,39 @@ class OCRRulesAssignmentControllerTest extends TestCase
 
         $this->seed(OCRRulesAssignmentSeed::class);
         $ocrVariant = OCRVariant::first(['id']);
-        $account = Account::first(['id']);
+        $company = Company::first(['id']);
         $ocrRules = OCRRule::all(['id']);
 
         $this->postJson(route('ocr.rules-assignment.store'), [
                 'variant_id' => $ocrVariant->id,
-                'account_id' => $account->id,
+                'company_id' => $company->id,
                 'rules' => $ocrRules->pluck('id'),
             ])
             ->assertStatus(Response::HTTP_FORBIDDEN);
     }
 
     /** @test */
-    public function it_should_list_all_the_available_rules_filtered_by_account_and_variant()
+    public function it_should_list_all_the_available_rules_filtered_by_company_and_variant()
     {
         $this->withoutExceptionHandling();
         $this->seed(OCRRulesAssignmentSeed::class);
-        $accounts = Account::all(['id']);
+        $companys = Company::all(['id']);
         $ocrVariant = OCRVariant::first(['id']);
-        $rulesAccount1 = AccountOCRVariantOCRRule::query()
-            ->assignedTo($accounts->first()->id, $ocrVariant->id)
+        $rulesCompany1 = CompanyOCRVariantOCRRule::query()
+            ->assignedTo($companys->first()->id, $ocrVariant->id)
             ->with('ocrRule')
             ->orderBy('rule_sequence')
             ->get()
             ->pluck('ocrRule');
-        $rulesAccount2 = AccountOCRVariantOCRRule::query()
-            ->assignedTo($accounts->last()->id, $ocrVariant->id)
+        $rulesCompany2 = CompanyOCRVariantOCRRule::query()
+            ->assignedTo($companys->last()->id, $ocrVariant->id)
             ->with('ocrRule')
             ->orderBy('rule_sequence')
             ->get()
             ->pluck('ocrRule');
 
         $this->getJson(route('ocr.rules-assignment.index', [
-                'account_id' => $accounts->first()->id,
+                'company_id' => $companys->first()->id,
                 'variant_id' => $ocrVariant->id,
             ]))
             ->assertStatus(200)
@@ -122,11 +122,11 @@ class OCRRulesAssignmentControllerTest extends TestCase
                     '*' => ['name', 'code', 'description']
                 ]
             ])
-            ->assertJsonPath('data.0.id', $rulesAccount1->get(0)->id)
-            ->assertJsonPath('data.1.id', $rulesAccount1->get(1)->id);
+            ->assertJsonPath('data.0.id', $rulesCompany1->get(0)->id)
+            ->assertJsonPath('data.1.id', $rulesCompany1->get(1)->id);
 
         $this->getJson(route('ocr.rules-assignment.index', [
-                'account_id' => $accounts->last()->id,
+                'company_id' => $companys->last()->id,
                 'variant_id' => $ocrVariant->id,
             ]))
             ->assertStatus(200)
@@ -136,9 +136,9 @@ class OCRRulesAssignmentControllerTest extends TestCase
                     '*' => ['name', 'code', 'description']
                 ]
             ])
-            ->assertJsonPath('data.0.id', $rulesAccount2->get(0)->id)
-            ->assertJsonPath('data.1.id', $rulesAccount2->get(1)->id)
-            ->assertJsonPath('data.2.id', $rulesAccount2->get(2)->id);
+            ->assertJsonPath('data.0.id', $rulesCompany2->get(0)->id)
+            ->assertJsonPath('data.1.id', $rulesCompany2->get(1)->id)
+            ->assertJsonPath('data.2.id', $rulesCompany2->get(2)->id);
     }
 
     /** @test */
@@ -146,17 +146,17 @@ class OCRRulesAssignmentControllerTest extends TestCase
     {
         $this->withoutExceptionHandling();
         $this->seed(OCRRulesAssignmentSeed::class);
-        $accounts = Account::all(['id']);
+        $companys = Company::all(['id']);
         $ocrVariant = OCRVariant::first(['id']);
-        $rulesAccount1 = AccountOCRVariantOCRRule::query()
-            ->assignedTo($accounts->first()->id, $ocrVariant->id)
+        $rulesCompany1 = CompanyOCRVariantOCRRule::query()
+            ->assignedTo($companys->first()->id, $ocrVariant->id)
             ->with('ocrRule')
             ->orderBy('rule_sequence')
             ->get()
             ->tap(fn ($rules) => $rules->first()->delete())
             ->pluck('ocrRule');
-        $rulesAccount2 = AccountOCRVariantOCRRule::query()
-            ->assignedTo($accounts->last()->id, $ocrVariant->id)
+        $rulesCompany2 = CompanyOCRVariantOCRRule::query()
+            ->assignedTo($companys->last()->id, $ocrVariant->id)
             ->with('ocrRule')
             ->orderBy('rule_sequence')
             ->get()
@@ -164,15 +164,15 @@ class OCRRulesAssignmentControllerTest extends TestCase
             ->pluck('ocrRule');
 
         $this->getJson(route('ocr.rules-assignment.index', [
-                'account_id' => $accounts->first()->id,
+                'company_id' => $companys->first()->id,
                 'variant_id' => $ocrVariant->id,
             ]))
             ->assertStatus(200)
             ->assertJsonCount(1, 'data')
-            ->assertJsonPath('data.0.id', $rulesAccount1->get(1)->id);
+            ->assertJsonPath('data.0.id', $rulesCompany1->get(1)->id);
 
         $this->getJson(route('ocr.rules-assignment.index', [
-                'account_id' => $accounts->last()->id,
+                'company_id' => $companys->last()->id,
                 'variant_id' => $ocrVariant->id,
             ]))
             ->assertStatus(200)
@@ -182,8 +182,8 @@ class OCRRulesAssignmentControllerTest extends TestCase
                     '*' => ['name', 'code', 'description']
                 ]
             ])
-            ->assertJsonPath('data.0.id', $rulesAccount2->get(1)->id)
-            ->assertJsonPath('data.1.id', $rulesAccount2->get(2)->id);
+            ->assertJsonPath('data.0.id', $rulesCompany2->get(1)->id)
+            ->assertJsonPath('data.1.id', $rulesCompany2->get(2)->id);
     }
 
     /** @test */
@@ -193,17 +193,17 @@ class OCRRulesAssignmentControllerTest extends TestCase
         Sanctum::actingAs($user);
 
         $this->seed(OCRRulesAssignmentSeed::class);
-        $accounts = Account::all(['id']);
+        $companys = Company::all(['id']);
         $ocrVariant = OCRVariant::first(['id']);
 
         $this->getJson(route('ocr.rules-assignment.index', [
-                'account_id' => $accounts->first()->id,
+                'company_id' => $companys->first()->id,
                 'variant_id' => $ocrVariant->id,
             ]))
             ->assertStatus(Response::HTTP_FORBIDDEN);
 
         $this->getJson(route('ocr.rules-assignment.index', [
-                'account_id' => $accounts->last()->id,
+                'company_id' => $companys->last()->id,
                 'variant_id' => $ocrVariant->id,
             ]))
             ->assertStatus(Response::HTTP_FORBIDDEN);
