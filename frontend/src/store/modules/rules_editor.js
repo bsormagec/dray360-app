@@ -1,11 +1,11 @@
 import { reqStatus } from '@/enums/req_status'
-import { getLibrary, getAccountVariantRules, putEditRule, postSaveRuleSequence, postAddRule, getRuleCode, getTestingOutput } from '@/store/api_calls/rules_editor'
+import { getLibrary, getCompanyVariantRules, putEditRule, postSaveRuleSequence, postAddRule, getRuleCode, getTestingOutput } from '@/store/api_calls/rules_editor'
 
 export const types = {
   setLibrary: 'SET_LIBRARY',
   getLibrary: 'GET_LIBRARY',
-  getAccountVariantRules: 'GET_ACCOUNT_VARIANT_RULES',
-  setAccountVariantRules: 'SET_ACCOUNT_VARIANT_RULES',
+  getCompanyVariantRules: 'GET_COMPANY_VARIANT_RULES',
+  setCompanyVariantRules: 'SET_COMPANY_VARIANT_RULES',
   setRule: 'SET_RULE',
   setSequence: 'SET_SEQUENCE',
   addRule: 'ADD_RULE',
@@ -16,7 +16,7 @@ export const types = {
 
 const initialState = {
   rules_library: [],
-  account_variant_rules: [],
+  company_variant_rules: [],
   testing_output: null
 }
 
@@ -24,15 +24,15 @@ const mutations = {
   [types.setLibrary] (state, { libraryData }) {
     state.rules_library = libraryData
   },
-  [types.setAccountVariantRules] (state, { accountVariantData }) {
-    console.log('seAccountVariantRules')
-    state.account_variant_rules = accountVariantData
+  [types.setCompanyVariantRules] (state, { companyVariantData }) {
+    console.log('seCompanyVariantRules')
+    state.company_variant_rules = companyVariantData
   },
   [types.setRule] (state, { ruleData, i }) {
-    state.account_variant_rules[i] = ruleData
+    state.company_variant_rules[i] = ruleData
   },
   [types.setSequence] (state, { sequenceData }) {
-    state.account_variant_rules = sequenceData
+    state.company_variant_rules = sequenceData
   },
   [types.addRule] (state, { ruleData }) {
     state.rules_library.push(ruleData)
@@ -51,14 +51,14 @@ const actions = {
     commit(types.setLibrary, { libraryData: data.data })
     return reqStatus.success
   },
-  async [types.getAccountVariantRules] ({ commit }, pairIds) {
-    const [error, data] = await getAccountVariantRules(pairIds.account_id, pairIds.variant_id)
+  async [types.getCompanyVariantRules] ({ commit }, pairIds) {
+    const [error, data] = await getCompanyVariantRules(pairIds.company_id, pairIds.variant_id)
 
     if (error) return reqStatus.error
 
     console.log('executed')
 
-    commit(types.setAccountVariantRules, { accountVariantData: data.data })
+    commit(types.setCompanyVariantRules, { companyVariantData: data.data })
     return reqStatus.success
   },
   async [types.setRule] ({ commit }, ruleData) {

@@ -2,7 +2,7 @@ import axios from '@/store/api_calls/config/axios'
 
 export const getLibrary = async () => axios.ext.get('/api/ocr/rules').then(data => [undefined, data.data]).catch(e => [e])
 
-export const getAccountVariantRules = async (accountId, variantId) => axios.ext.get('/api/ocr/rules-assignment?account_id=' + accountId + '&variant_id=' + variantId).then(data => [undefined, data.data]).catch(e => [e])
+export const getCompanyVariantRules = async (companyId, variantId) => axios.ext.get('/api/ocr/rules-assignment?company_id=' + companyId + '&variant_id=' + variantId).then(data => [undefined, data.data]).catch(e => [e])
 
 export const putEditRule = async (ruleData) => axios.ext.put('/api/ocr/rules/' + ruleData.id, ruleData).then(data => [undefined, data.data]).catch(e => [e])
 
@@ -10,17 +10,17 @@ export const postSaveRuleSequence = async (sequenceData) => axios.ext.post('/api
 
 export const postAddRule = async (ruleData) => axios.ext.post('/api/ocr/rules', ruleData).then(data => [undefined, data.data]).catch(e => [e])
 
-export const getRuleCode = async (index, accountId, variantId) => axios.ext.get('/api/ocr/rules-assignment?account_id=' + accountId + '&variant_id=' + variantId, index).then(data => [undefined, data.data]).catch(e => [e])
+export const getRuleCode = async (index, companyId, variantId) => axios.ext.get('/api/ocr/rules-assignment?company_id=' + companyId + '&variant_id=' + variantId, index).then(data => [undefined, data.data]).catch(e => [e])
 
-export const getTestingOutput = async (orderId, singleAccountVariantRule) => axios.ext.get('/api/orders/' + orderId)
+export const getTestingOutput = async (orderId, singleCompanyVariantRule) => axios.ext.get('/api/orders/' + orderId)
   .then(function (response) {
     let testingOutput = null
 
     const fetchedOcrData = response.data.ocr_data
     delete fetchedOcrData.fields_overwritten
 
-    // fetchedOcrData.rules = vc.account_variant_rules[index] -=> singleAccountVariantRule
-    fetchedOcrData.rules = singleAccountVariantRule
+    // fetchedOcrData.rules = vc.company_variant_rules[index] -=> singleCompanyVariantRule
+    fetchedOcrData.rules = singleCompanyVariantRule
 
     const testedRuleName = fetchedOcrData.rules.name
     const testedRuleCode = fetchedOcrData.rules.code

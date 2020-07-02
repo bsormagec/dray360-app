@@ -21,12 +21,12 @@
                       dark
                       v-on="on"
                     >
-                      Select Account Variant Rule to Edit
+                      Select Company Variant Rule to Edit
                     </v-btn>
                   </template>
                   <v-list>
                     <v-list-item
-                      v-for="(rule, index) in account_variant_rules()"
+                      v-for="(rule, index) in company_variant_rules()"
                       :key="index"
                       @click="updateSelectedIndex(index)"
                     >
@@ -50,7 +50,7 @@
                   Cancel
                 </v-btn>
                 <v-btn
-                  v-if="account_variant_rules().length > 0"
+                  v-if="company_variant_rules().length > 0"
                   @click="testSingleRule(selected_rule_index)"
                 >
                   Test
@@ -101,7 +101,7 @@
                     v-text="rule.name"
                   />
                 </v-list-item-content>
-                <button @click="addToAccountVariant(rule.name, rule.code, i)">
+                <button @click="addToCompanyVariant(rule.name, rule.code, i)">
                   ->
                 </button>
               </v-list-item>
@@ -117,12 +117,12 @@
       <div class="col-md-8">
         <div class="card">
           <div
-            v-if="account_variant_rules().length > 0"
+            v-if="company_variant_rules().length > 0"
             class="card-body"
           >
             <codemirror
               ref="cmEditor"
-              v-model="account_variant_rules()[selected_rule_index].code"
+              v-model="company_variant_rules()[selected_rule_index].code"
               :options="cmOptions"
             />
           </div>
@@ -157,7 +157,7 @@
                   <v-list-item-content class="draggable-item">
                     <v-list-item-title v-text="rule.name" />
                   </v-list-item-content>
-                  <button @click="removeFromAccountVariant(i)">
+                  <button @click="removeFromCompanyVariant(i)">
                     X
                   </button>
                 </v-list-item>
@@ -188,7 +188,7 @@ export default {
   data: () => ({
     ...mapState(rulesLibrary.moduleName, {
       rules_library: state => state.rules_library,
-      account_variant_rules: state => state.account_variant_rules,
+      company_variant_rules: state => state.company_variant_rules,
       testing_output: state => state.testing_output
     }),
 
@@ -201,17 +201,17 @@ export default {
     },
     draggable_rules: [],
     selected_rule_index: 0,
-    account_id: 8,
+    company_id: 8,
     variant_id: 8
   }),
   async mounted () {
     const vc = this
-    vc.account_id = vc.$route.params.account_id
+    vc.company_id = vc.$route.params.company_id
     vc.variant_id = vc.$route.params.variant_id
     await vc.fetchRules()
   },
   methods: {
-    ...mapActions(rulesLibrary.moduleName, [types.getLibrary, types.getAccountVariantRules, types.setSequence, types.setRule, types.addRule, types.setRuleCode, types.getTestingOutput]),
+    ...mapActions(rulesLibrary.moduleName, [types.getLibrary, types.getCompanyVariantRules, types.setSequence, types.setRule, types.addRule, types.setRuleCode, types.getTestingOutput]),
 
     async fetchRulesLibrary () {
       const status = await this[types.getLibrary]()
@@ -222,32 +222,32 @@ export default {
         console.log('error')
       }
     },
-    async fetchAccountVariantRules () {
+    async fetchCompanyVariantRules () {
       const vc = this
 
       const pairIds = {
-        account_id: vc.account_id,
+        company_id: vc.company_id,
         variant_id: vc.variant_id
       }
 
-      const status = await this[types.getAccountVariantRules](pairIds)
+      const status = await this[types.getCompanyVariantRules](pairIds)
 
-      vc.draggable_rules = vc.account_variant_rules()
+      vc.draggable_rules = vc.company_variant_rules()
 
       if (status === reqStatus.success) {
-        console.log('fetchAccountVariantRules success')
+        console.log('fetchCompanyVariantRules success')
       } else {
-        console.log('fetchAccountVariantRules error')
+        console.log('fetchCompanyVariantRules error')
       }
     },
     async editRule (index) {
       const vc = this
-      console.log('ruleId' + vc.account_variant_rules()[index].id)
-      const ruleId = vc.account_variant_rules()[index].id
-      const ruleName = vc.account_variant_rules()[index].name
+      console.log('ruleId' + vc.company_variant_rules()[index].id)
+      const ruleId = vc.company_variant_rules()[index].id
+      const ruleName = vc.company_variant_rules()[index].name
 
       const ruleData = {
-        code: vc.account_variant_rules()[index].code,
+        code: vc.company_variant_rules()[index].code,
         description: 'sample rule ' + ruleName,
         id: ruleId,
         name: ruleName
@@ -267,7 +267,7 @@ export default {
       vc.draggable_rules.forEach(rule => idsToSave.push(rule.id))
 
       const sequenceData = {
-        account_id: vc.account_id,
+        company_id: vc.company_id,
         variant_id: vc.variant_id,
         rules: idsToSave
       }
@@ -283,9 +283,9 @@ export default {
     // THIS IS USEFUL FOR DEBUGGING PURPOSES
     // onCmCodeChange (index) {
     //   const vc = this
-    //   // vc.account_variant_rules[index].code = JSON.stringify(vc.account_variant_rules[index].code)
+    //   // vc.company_variant_rules[index].code = JSON.stringify(vc.company_variant_rules[index].code)
     //   console.log('oncmcodechange')
-    //   console.log(vc.account_variant_rules[index].code)
+    //   console.log(vc.company_variant_rules[index].code)
     // },
     async addRuleToLibrary () {
       const vc = this
@@ -311,13 +311,13 @@ export default {
         console.log('add rule error')
       }
     },
-    addToAccountVariant (name, code, i) {
+    addToCompanyVariant (name, code, i) {
       const vc = this
-      if (confirm('Add ' + name + ' to account variant')) {
+      if (confirm('Add ' + name + ' to company variant')) {
         vc.draggable_rules.push(vc.rules_library()[i])
       }
     },
-    removeFromAccountVariant (i) {
+    removeFromCompanyVariant (i) {
       const vc = this
       if (vc.draggable_rules.length > 1) {
         vc.draggable_rules.splice(i, 1)
@@ -333,7 +333,7 @@ export default {
     fetchRules () {
       const vc = this
       vc.fetchRulesLibrary()
-      vc.fetchAccountVariantRules()
+      vc.fetchCompanyVariantRules()
     },
     async testSingleRule (index) {
       const vc = this
@@ -354,7 +354,7 @@ export default {
     },
     cancelSequenceEdition () {
       const vc = this
-      vc.fetchAccountVariantRules()
+      vc.fetchCompanyVariantRules()
     }
   }
 }
