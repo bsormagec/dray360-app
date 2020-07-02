@@ -51,7 +51,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
  * @property string $port_ramp_of_destination_address_raw_text
  * @property string $variant_id
  * @property string $variant_name
- * @property string $t_tms_providers_id
+ * @property string $t_tms_provider_id
  * @property string $tms_shipment_id
  * @property string $carrier
  */
@@ -193,7 +193,7 @@ class Order extends Model
         'port_ramp_of_destination_address_verified' => 'sometimes|nullable',
         'variant_id' => 'sometimes|nullable',
         'variant_name' => 'sometimes|nullable',
-        't_tms_providers_id' => 'sometimes|nullable|exists:t_tms_providers,id',
+        't_tms_provider_id' => 'sometimes|nullable|exists:t_tms_providers,id',
         'tms_shipment_id' => 'sometimes|nullable',
         'carrier' => 'sometimes|nullable',
         'bill_charge' => 'sometimes|nullable',

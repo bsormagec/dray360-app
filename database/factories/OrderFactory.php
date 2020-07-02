@@ -46,7 +46,7 @@ $factory->define(Order::class, function (Faker $faker) {
         'port_ramp_of_destination_address_raw_text' => $faker->address,
         'variant_id' => null,
         'variant_name' => null,
-        't_tms_providers_id' => null,
+        't_tms_provider_id' => null,
         'tms_shipment_id' => null,
         'carrier' => $faker->company,
         'bill_charge' => $faker->randomFloat(2),
