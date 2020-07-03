@@ -18,6 +18,12 @@
             class="address__search"
           />
           <v-btn
+            class="primary mx-2"
+            @click="searchApi"
+          >
+            Search
+          </v-btn>
+          <v-btn
             icon
             @click="dialog = false"
           >
@@ -27,7 +33,6 @@
         <v-data-table
           :headers="headers"
           :items="addressObject"
-          :search="search"
           item-key:item.id
           :hide-default-header="true"
           :hide-default-footer="true"
@@ -133,6 +138,7 @@ export default {
         list: state => state.list
       }),
       dialog: false,
+      loaded: false,
       search: '',
       addressObject: [],
       headers: [
@@ -156,6 +162,17 @@ export default {
 
   methods: {
     ...mapActions(address.moduleName, [types.getSearchAddress]),
+
+    async searchApi () {
+      this.addressObject.splice(0)
+      await this.fetchAddressList({
+        company_id: this.companyId,
+        tms_provider_id: this.tmsProviderId,
+        rawtext: this.search
+      })
+      this.loaded = true
+      this.addressObject = this.list()
+    },
 
     async fetchAddressList (filters) {
       const status = await this[types.getSearchAddress](filters)
