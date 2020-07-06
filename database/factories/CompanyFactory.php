@@ -10,5 +10,8 @@ $factory->define(Company::class, function (Faker $faker) {
     return [
         'name' => $faker->company,
         't_address_id' => factory(Address::class),
+        'email_intake_address' => $faker->email,
+        'email_intake_address_alt' => $faker->email,
+        'default_tms_provider_id' => null,
     ];
 });

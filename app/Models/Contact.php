@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Models\Traits\BelongsToCompany;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
@@ -32,6 +33,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 class Contact extends Model
 {
     use SoftDeletes;
+    use BelongsToCompany;
 
     public $table = 't_contacts';
 
@@ -101,14 +103,6 @@ class Contact extends Model
     public function address()
     {
         return $this->belongsTo(\App\Models\Address::class, 't_address_id');
-    }
-
-    /**
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
-     **/
-    public function company()
-    {
-        return $this->belongsTo(\App\Models\Company::class, 't_company_id');
     }
 
     /**

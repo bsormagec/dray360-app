@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Contracts\CurrentCompany;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
@@ -12,12 +13,13 @@ use Illuminate\Database\Eloquent\SoftDeletes;
  * @property integer $t_address_id
  * @property string $name
  */
-class Company extends Model
+class Company extends Model implements CurrentCompany
 {
     use SoftDeletes;
 
     const CREATED_AT = 'created_at',
         UPDATED_AT = 'updated_at',
+        FOREIGN_KEY = 't_company_id',
         CUSHING = 'Cushing',
         TCOMPANIES_DEV = 'TCompaniesDev',
         POLARIS = 'Polaris';

@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Models\Traits\BelongsToCompany;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletes;
@@ -18,6 +19,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 class CompanyAddressTMSCode extends Model
 {
     use SoftDeletes;
+    use BelongsToCompany;
 
     const CREATED_AT = 'created_at',
         UPDATED_AT = 'updated_at';
@@ -56,11 +58,6 @@ class CompanyAddressTMSCode extends Model
     public function address()
     {
         return $this->belongsTo(Address::class, 't_address_id');
-    }
-
-    public function company()
-    {
-        return $this->belongsTo(Company::class, 't_company_id');
     }
 
     public function tmsProvider()

@@ -2,7 +2,8 @@
 
 namespace App\Models;
 
-use App\Traits\FillWithNulls;
+use App\Models\Traits\FillWithNulls;
+use App\Models\Traits\BelongsToCompany;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
@@ -59,6 +60,7 @@ class Order extends Model
 {
     use SoftDeletes;
     use FillWithNulls;
+    use BelongsToCompany;
 
     public $table = 't_orders';
 
