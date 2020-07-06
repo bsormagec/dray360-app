@@ -19,5 +19,3 @@ npm-debug.log
 yarn-error.log
 /.vscode
 /tmp
-nohup.out
-v8-compile-cache-0/*

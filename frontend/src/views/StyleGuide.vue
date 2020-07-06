@@ -44,6 +44,28 @@
           <p>
             <ContentLoading :loaded="loaded" />
           </p>
+
+          <h2>Error Handling / Modal - Error </h2><br>
+          <code>Receives two props: label and type </code>
+          <ErrorHandling
+            label="error"
+            type="{modal}"
+            :message="errorMesage"
+          />
+          <h2>Error Handling / Alert - Error </h2><br>
+          <code>Receives two props: label and type </code>
+          <ErrorHandling
+            label="alert"
+            type="{modal}"
+            :message="alertMesage"
+          />
+          <h2>Error Handling / Snackbar </h2><br>
+          <code>Receives two props: label and type </code>
+          <ErrorHandling
+            label="snackbar"
+            type="{modal}"
+            :message="snackbarmessage"
+
           <h2>Date Range Calendar</h2><br>
 
           <p>
@@ -129,9 +151,13 @@ import FormField from '@/components/FormField/FormField'
 import SearchBar from '@/components/SearchBar'
 import Select from '@/components/Select'
 import ContentLoading from '@/components/ContentLoading'
+
+import ErrorHandling from '@/components/General/ErrorHandling'
+
 import DateRangeCalendar from '@/components/Orders/DateRangeCalendar'
 import AddressBookModal from '@/components/Orders/AddressBookModal'
 import OrderModal from '@/components/Orders/OrderModal'
+
 const callbacks = {
   startEdit: (obj) => {
     obj.field.highlight = 'edit'
@@ -155,9 +181,13 @@ export default {
     SearchBar,
     Select,
     ContentLoading,
+
+    ErrorHandling
+
     DateRangeCalendar,
     AddressBookModal,
     OrderModal
+
   },
   props: {
   },
@@ -166,6 +196,11 @@ export default {
       isEditing: true,
       loaded: false,
       items: ['a', 'b', 'c'],
+
+      errorMesage: 'A dialog is a type of modal window that appears in front of app content to provide critical information or ask for a decision. Dialogs disable all app functionality when they appear, and remain on screen until confirmed, dismissed, or a required action has been taken.:',
+      alertMesage: 'The alert component is used to convey important information to the user through the use contextual types icons and color.',
+      snackbarmessage: 'snackbar message',
+
       message: 'The recognition engine scanned the address below and did not find a matching address in your system. Please select the correct address:',
       fields_2:
         {
