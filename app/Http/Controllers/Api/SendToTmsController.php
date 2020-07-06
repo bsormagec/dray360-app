@@ -24,14 +24,14 @@ class SendToTmsController extends Controller
         $data = $request->validate([
             'status' => ['required', Rule::in(self::VALID_STATUSES)],
             'order_id' => 'required|exists:t_orders,id',
-            'company_id' => 'required|exists:t_companies,id',
-            'tms_provider_id' => 'required|exists:t_tms_providers,id',
         ]);
         $order = $this->getOrder($data['order_id']);
 
         $this->checkIfOrderIsValidated($order);
 
         $data['request_id'] = $order->request_id;
+        $data['company_id'] = $order->t_company_id;
+        $data['tms_provider_id'] = $order->t_tms_provider_id;
         $response = app(PublishSnsMessageToSendToTms::class)($data);
 
         if ($response['status'] === 'error') {
@@ -59,6 +59,8 @@ class SendToTmsController extends Controller
                 'port_ramp_of_origin_address_verified',
                 'bill_to_address_verified',
                 'request_id',
+                't_company_id',
+                't_tms_provider_id',
             ])
             ->with('orderAddressEvents:id,t_order_id,t_address_verified')
             ->find($orderId);
