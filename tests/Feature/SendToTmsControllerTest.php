@@ -9,8 +9,6 @@ use App\Models\User;
 use Aws\MockHandler;
 use App\Models\Order;
 use OrdersTableSeeder;
-use App\Models\Company;
-use App\Models\TMSProvider;
 use Illuminate\Support\Str;
 use Laravel\Sanctum\Sanctum;
 use Illuminate\Http\Response;
@@ -23,17 +21,12 @@ class SendToTmsControllerTest extends TestCase
 {
     use DatabaseTransactions;
 
-    protected Company $company;
-    protected TMSProvider $tmsProvider;
-
     public function setUp(): void
     {
         parent::setUp();
 
         $this->loginAdmin();
         $this->seed(ProfitToolsCushingSeeder::class);
-        $this->company = Company::getCushing();
-        $this->tmsProvider = TMSProvider::getProfitTools();
     }
 
     /** @test */
@@ -57,8 +50,6 @@ class SendToTmsControllerTest extends TestCase
         $this->postJson(route('send-to-tms'), [
                 'status' => 'sending-to-wint',
                 'order_id' => $order->id,
-                'company_id' => $this->company->id,
-                'tms_provider_id' => $this->tmsProvider->id,
             ])
             ->assertJsonFragment(['data' => $messageId])
             ->assertStatus(Response::HTTP_OK);
@@ -89,8 +80,6 @@ class SendToTmsControllerTest extends TestCase
         $this->postJson(route('send-to-tms'), [
                 'status' => 'sending-to-wint',
                 'order_id' => $order->id,
-                'company_id' => $this->company->id,
-                'tms_provider_id' => $this->tmsProvider->id,
             ])
             ->assertJsonFragment(['data' => 'failed-some aws exception'])
             ->assertStatus(Response::HTTP_INTERNAL_SERVER_ERROR);
@@ -122,8 +111,6 @@ class SendToTmsControllerTest extends TestCase
         $this->postJson(route('send-to-tms'), [
                 'status' => 'sending-to-wint',
                 'order_id' => $order->id,
-                'company_id' => $this->company->id,
-                'tms_provider_id' => $this->tmsProvider->id,
             ])
             ->assertStatus(Response::HTTP_FORBIDDEN);
     }
@@ -152,8 +139,6 @@ class SendToTmsControllerTest extends TestCase
         $this->postJson(route('send-to-tms'), [
                 'status' => 'sending-to-wint',
                 'order_id' => $order->id,
-                'company_id' => $this->company->id,
-                'tms_provider_id' => $this->tmsProvider->id,
             ])
             ->assertStatus(Response::HTTP_UNPROCESSABLE_ENTITY)
             ->assertJsonValidationErrors([
