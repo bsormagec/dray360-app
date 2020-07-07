@@ -89,15 +89,15 @@ export const exampleForm = {
             }),
             'last free day': buildField({
               type: 'date-time'
-            }),
-            'port ramp of origin': buildField({
-              type: 'text-area',
-              placeholder: 'port/ramp of origin'
-            }),
-            'port ramp of destination': buildField({
-              type: 'text-area',
-              placeholder: 'port/ramp of destination'
             })
+            // 'port ramp of origin': buildField({
+            //   type: 'modal-address',
+            //   placeholder: 'port/ramp of origin'
+            // }),
+            // 'port ramp of destination': buildField({
+            //   type: 'modal-address',
+            //   placeholder: 'port/ramp of destination'
+            // })
           }
         },
         billing: {
@@ -108,8 +108,7 @@ export const exampleForm = {
             //   options: addresses()
             // })
             'bill to': buildField({
-              type: 'text-area',
-              placeholder: 'bill to address'
+              type: 'modal-address'
             })
           }
         }
@@ -223,7 +222,7 @@ export function buildField ({
   children,
   width,
   value,
-  id = 'not being used'
+  id
 }) {
   const field = {
     id,

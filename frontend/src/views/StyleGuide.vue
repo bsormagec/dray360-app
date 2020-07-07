@@ -7,7 +7,8 @@
       <div class="row">
         <div class="col-md-6 left-side">
           <h2>Form Field / Edit mode</h2><br>
-          <code><p>This component receives an object with the following syntaxis:</p>
+          <code>
+            <p>This component receives an object with the following syntaxis:</p>
             object:{<br>
             name: 'name',<br>
             readonly: true,<br>
@@ -15,7 +16,8 @@
             el: {<br>
             type: 'input'<br>
             }<br><br>
-            <p>You can use different types according your needs<br> examples below:</p></code>
+            <p>You can use different types according your needs<br> examples below:</p>
+          </code>
           <div
             v-for="item in fields"
             :key="item.key"
@@ -30,7 +32,9 @@
           </div>
           <h2>SearchBar / Edit mode</h2><br>
           <code>Just need to import the component and use it</code>
-          <p><SearchBar /></p>
+          <p>
+            <SearchBar />
+          </p>
           <h2>Select / Edit mode</h2><br>
           <code>The required props are : Label (String) and items (Array)</code>
           <p>
@@ -65,7 +69,7 @@
             label="snackbar"
             type="{modal}"
             :message="snackbarmessage"
-
+          />
           <h2>Date Range Calendar</h2><br>
 
           <p>
@@ -78,12 +82,12 @@
           -->
           <h2>Address Book Modal</h2><br>
           <code>Receive as props: rawtext (String), companyId (Number) and tmsProviderId (Number)</code>
-          <AddressBookModal
+          <!-- <AddressBookModal
             rawtext="test"
             :company-id="1"
             :tms-provider-id="1"
             @change="change"
-          />
+          /> -->
           <h2>No Match Modal / Address not found</h2><br>
           <code>Props: *modaltype* = AddressNotFound <br> currentstep = "the position in the stepper component" <br></code>
           <div>
@@ -93,7 +97,7 @@
               :message="message"
             />
           </div>
-          <h2>Close Match Modal /  Address Verification Needed</h2><br>
+          <h2>Close Match Modal / Address Verification Needed</h2><br>
           <code>Props: *modaltype* = VerificationNeded <br> currentstep = "the position in the stepper component" <br> message: the message that indicates the user about the closest match</code>
           <div>
             <OrderModal
@@ -190,7 +194,7 @@ import ContentLoading from '@/components/ContentLoading'
 import ErrorHandling from '@/components/General/ErrorHandling'
 
 import DateRangeCalendar from '@/components/Orders/DateRangeCalendar'
-import AddressBookModal from '@/components/Orders/AddressBookModal'
+// import AddressBookModal from '@/components/Orders/AddressBookModal'
 import OrderModal from '@/components/Orders/OrderModal'
 import GeneralTable from '@/components/General/GeneralTable'
 const callbacks = {
@@ -216,14 +220,11 @@ export default {
     SearchBar,
     Select,
     ContentLoading,
-
-    ErrorHandling
-
+    ErrorHandling,
     DateRangeCalendar,
-    AddressBookModal,
+    // AddressBookModal,
     OrderModal,
-    GeneralTable,
-    OrderModal
+    GeneralTable
   },
   props: {
   },
@@ -254,15 +255,15 @@ export default {
         }
       },
       fields_2:
-        {
-          name: 'name',
-          readonly: true,
-          highlight: undefined,
-          callbacks,
-          el: {
-            type: 'input'
-          }
-        },
+      {
+        name: 'name',
+        readonly: true,
+        highlight: undefined,
+        callbacks,
+        el: {
+          type: 'input'
+        }
+      },
       fields: [
         {
           name: 'name',
@@ -346,22 +347,21 @@ export default {
 }
 </script>
 <style lang="scss" scoped>
-.wrapper{
-
-  .left-side{
+.wrapper {
+  .left-side {
     padding: 3rem;
     border-right: 0.1rem solid map-get($colors, grey);
   }
-  .v-btn{
+  .v-btn {
     padding: 0 !important;
   }
-  .v-btn{
+  .v-btn {
     padding: 0 !important;
   }
-  .v-btn{
+  .v-btn {
     padding: 0 !important;
   }
-  .right-side{
+  .right-side {
     padding: 3rem;
     width: 30rem;
     display: flex;
@@ -369,9 +369,9 @@ export default {
     height: 100%;
     flex-direction: column;
   }
-  code{
-            padding: 2rem;
-            margin-bottom: 2rem;
-        }
+  code {
+    padding: 2rem;
+    margin-bottom: 2rem;
+  }
 }
 </style>

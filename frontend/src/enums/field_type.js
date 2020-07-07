@@ -9,6 +9,7 @@ export const fieldType = {
   textArea: 'text-area',
   radio: 'radio',
   modalSelect: 'modal-select',
+  modalAddress: 'modal-address',
   label: 'label',
   infoTitle: 'info-title',
   addInventoryItem: 'add-inventory-item'

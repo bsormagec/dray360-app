@@ -70,6 +70,13 @@
       @change="e => $emit('change', e)"
     />
 
+    <FormFieldElementModalAddress
+      v-else-if="isModalAddress"
+      :field="field"
+      :is-editing="isEditing"
+      @change="e => $emit('change', e)"
+    />
+
     <span
       v-else-if="isInfoTitle"
       class="element__info-title"
@@ -97,6 +104,7 @@ import FormFieldElementTime from '@/components/FormField/FormFieldElementTime'
 import FormFieldElementBothDateTime from '@/components/FormField/FormFieldElementBothDateTime'
 import FormFieldElementModalSelect from '@/components/FormField/FormFieldElementModalSelect'
 import FormFieldElementRadio from '@/components/FormField/FormFieldElementRadio'
+import FormFieldElementModalAddress from '@/components/FormField/FormFieldElementModalAddress'
 
 export default {
   name: 'FormFieldElement',
@@ -111,7 +119,8 @@ export default {
     FormFieldElementTime,
     FormFieldElementBothDateTime,
     FormFieldElementModalSelect,
-    FormFieldElementRadio
+    FormFieldElementRadio,
+    FormFieldElementModalAddress
   },
 
   props: {
@@ -164,6 +173,9 @@ export default {
     },
     isLabel () {
       return this.field.el.type === fieldType.label
+    },
+    isModalAddress () {
+      return this.field.el.type === fieldType.modalAddress
     }
   }
 }
@@ -187,10 +199,10 @@ export default {
   font-size: 1.6rem !important;
   font-weight: bold;
   line-height: 3.6rem;
-  color: map-get($colors , grey-4);
+  color: map-get($colors, grey-4);
   margin-bottom: 3rem;
   text-transform: capitalize;
-  border-bottom: 0.1rem solid map-get($colors , grey-10);
+  border-bottom: 0.1rem solid map-get($colors, grey-10);
 
   i {
     margin-left: 1rem;

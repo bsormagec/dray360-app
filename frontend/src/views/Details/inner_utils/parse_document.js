@@ -49,8 +49,7 @@ function getHighlights (data) {
             addrEvents,
             evtName,
             buildField({
-              type: 'text-area',
-              placeholder: evtName
+              type: 'modal-address'
             })
           )
 
@@ -105,10 +104,9 @@ function getHighlights (data) {
         const origin = formModule.state.form.sections.shipment.subSections.origin.fields
         Vue.set(
           origin,
-          `${portRampKeyParser(key)} matched`,
+          `${portRampKeyParser(key)}`,
           buildField({
-            type: 'input',
-            placeholder: `${key} matched`,
+            type: 'modal-address',
             value: matchedText
           })
         )

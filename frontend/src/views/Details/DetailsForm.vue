@@ -205,12 +205,26 @@ export default {
 
       const changes = {}
 
-      if (key.includes('bill to') || key.includes('port ramp')) {
-        changes[`${mapFieldNames.getName({ formFieldName: key })}_raw_text`] = v
+      if (key.includes('bill to')) {
+        changes.bill_to_address_id = v
+        changes.bill_to_address_verified = true
       } else if (formLocation.includes('inventory')) {
         changes.order_line_items = getLineItems(this.currentOrder())
       } else if (formLocation.includes('itinerary')) {
         changes.order_address_events = getAddressEvents(this.currentOrder())
+        let matchedIndex = -1
+        changes.order_address_events.forEach((address, index) => {
+          if (key.includes(address.event_number)) {
+            matchedIndex = index
+          }
+        })
+        changes.order_address_events[matchedIndex].t_address_id = v
+      } else if (formLocation.includes('Port Ramp of Origin')) {
+        changes.port_ramp_of_origin_address_id = v
+        changes.port_ramp_of_origin_address_verified = true
+      } else if (formLocation.includes('Port Ramp of Destination')) {
+        changes.port_ramp_of_destination_address_id = v
+        changes.port_ramp_of_destination_address_verified = true
       } else {
         changes[mapFieldNames.getName({ formFieldName: key })] = v
       }

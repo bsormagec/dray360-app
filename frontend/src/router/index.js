@@ -71,7 +71,6 @@ const routes = [
     component: Login
   },
   {
-    path: '/rules-editor',
     path: '/rules-editor/company/:company_id/variant/:variant_id',
     name: 'RulesEditor',
     meta: {

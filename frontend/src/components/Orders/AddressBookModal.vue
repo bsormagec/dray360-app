@@ -89,7 +89,7 @@
                   outlined
                   color="primary"
                   class="float-right"
-                  @click="change(props.item.t_address_id)"
+                  @click="() => change(props.item.t_address_id)"
                 >
                   Select
                 </v-btn>
@@ -117,19 +117,17 @@ import address, { types } from '@/store/modules/address'
 
 export default {
   props: {
-    rawtext: {
-      type: String,
-      required: true
-    },
-    companyId: {
-      type: Number,
-      required: true
-    },
-    tmsProviderId: {
-      type: Number,
-      required: true
+    filters: {
+      type: Object,
+      required: false,
+      default: () => ({
+        company_id: null,
+        tms_provider_id: null,
+        rawtext: '',
+        is_terminal_address: false,
+        is_billable_address: false
+      })
     }
-
   },
 
   data () {
@@ -151,11 +149,9 @@ export default {
   },
 
   async mounted () {
-    await this.fetchAddressList({
-      company_id: this.companyId,
-      tms_provider_id: this.tmsProviderId,
-      rawtext: this.rawtext
-    })
+    this.search = this.filters.rawtext
+    await this.fetchAddressList(this.filters)
+
     this.loaded = true
     this.addressObject = this.list()
   },
@@ -165,16 +161,18 @@ export default {
 
     async searchApi () {
       this.addressObject.splice(0)
+
       await this.fetchAddressList({
-        company_id: this.companyId,
-        tms_provider_id: this.tmsProviderId,
+        ...this.filters,
         rawtext: this.search
       })
+
       this.loaded = true
       this.addressObject = this.list()
     },
 
     async fetchAddressList (filters) {
+      filters.rawtext = this.search
       const status = await this[types.getSearchAddress](filters)
 
       if (status === reqStatus.success) {
@@ -183,8 +181,10 @@ export default {
         console.log('error')
       }
     },
+
     change (e) {
       this.$emit('change', e)
+      this.dialog = false
     }
   }
 }
