@@ -49,7 +49,8 @@ function getHighlights (data) {
             addrEvents,
             evtName,
             buildField({
-              type: 'modal-address'
+              type: 'modal-address',
+              id: evt.id
             })
           )
 
