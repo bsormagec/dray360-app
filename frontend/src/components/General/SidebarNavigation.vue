@@ -22,12 +22,17 @@
             <v-list-item
               v-for="(item, i) in items"
               :key="i"
+              :to="item.path"
             >
               <v-list-item-icon>
                 <v-icon v-text="item.icon" />
               </v-list-item-icon>
               <v-list-item-content>
-                <v-list-item-title v-text="item.text" />
+                <v-list-item-title
+                  :key="i"
+
+                  v-text="item.text"
+                />
               </v-list-item-content>
             </v-list-item>
           </v-list-item-group>
@@ -50,7 +55,8 @@ export default {
 
       items: [
         {
-          text: 'Dashboard'
+          text: 'Dashboard',
+          path: '/user/Dashboard'
         },
         {
           text: 'Manage Users'
@@ -78,8 +84,6 @@ export default {
 
 $sidebarbackground: url("../../assets/images/sidebarbackground .png");
     .sidebar__nav{
-        //width: 19rem;
-        //height: 100vh;
         background: linear-gradient(90deg, rgba(0, 60, 113, 0.1) 0%, rgba(0, 60, 113, 0.05) 31.77%, rgba(0, 60, 113, 0) 100%);
         box-shadow: inset -1px 0px 0px rgba(0, 60, 113, 0.03);
         display: flex;
@@ -97,9 +101,7 @@ $sidebarbackground: url("../../assets/images/sidebarbackground .png");
 
         }
         .logo__dry_bottom{
-            position: absolute;
-            left: 50%;
-            transform: translate(-50%, -50%);
+            @include center;
             bottom: 3rem;
 
         }

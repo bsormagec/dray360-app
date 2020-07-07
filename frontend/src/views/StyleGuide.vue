@@ -88,7 +88,7 @@
           <code>Props: *modaltype* = AddressNotFound <br> currentstep = "the position in the stepper component" <br></code>
           <div>
             <OrderModal
-              currentstep="1"
+              :currentstep="1"
               modaltype="AddressNotFound"
               :message="message"
             />
@@ -97,13 +97,12 @@
           <code>Props: *modaltype* = VerificationNeded <br> currentstep = "the position in the stepper component" <br> message: the message that indicates the user about the closest match</code>
           <div>
             <OrderModal
-              currentstep="2"
+              :currentstep="2"
               modaltype="VerificationNeded"
               :message="message"
             />
           </div>
         </div>
-
         <div class="col-md-6 right-side">
           <h2>
             Form Field / Presentational mode
@@ -141,6 +140,42 @@
               @close="fields_2.callbacks.stopEdit({field:fields_2})"
             />
           </div>
+          <div>
+            <h2>
+              Table Component
+            </h2>
+            <br>
+            <div class="">
+              <br>
+              <code>
+                <p>This component has 3 parts: headers, body and footer. The props received <br>are the following: <br>
+                </p>
+                tableTitle = String. Table's name on header <br>
+                customheaders = String. Table's headers<br>
+                customItems = Array with table items<br>
+                hasSearch = Boolean. shows/hide the search input<br>
+                hasColumnFilters = Boolean. shows/hide the column filter<br>
+                hasBulkActions = Boolean. shows/hide the bulk actions <br>
+                hasBulkActions = Array. Bulk Options <br>
+                <br>hasActionButton = Object = {showButton: Boolean, action: 'String'}<br>shows/hide the button on header <br>
+                <br>hasAddButton = Object = {showButton: Boolean, action: 'String'}<br>shows/hide the button on each row
+
+              </code>
+              <GeneralTable
+                table-title="Title"
+                :customheaders="headers"
+                :custom-items="data"
+                :has-search="true"
+                :has-column-filters="true"
+                :has-bulk-actions="true"
+                :has-action-button="{showButton: true, action: '/'}"
+                :has-add-button="{showButton: true, action: '/'}"
+                :bulk-actions="['Reset Selected Users Passwords', 'Deactivate Selected Users', 'Delete Selected Users']"
+              />
+              <br>
+              <p> <br> <code> The table footer depends on metada that comnes from API. thats why isn't showing here</code></p>
+            </div>
+          </div>
         </div>
       </div>
     </div>
@@ -157,7 +192,7 @@ import ErrorHandling from '@/components/General/ErrorHandling'
 import DateRangeCalendar from '@/components/Orders/DateRangeCalendar'
 import AddressBookModal from '@/components/Orders/AddressBookModal'
 import OrderModal from '@/components/Orders/OrderModal'
-
+import GeneralTable from '@/components/General/GeneralTable'
 const callbacks = {
   startEdit: (obj) => {
     obj.field.highlight = 'edit'
@@ -186,8 +221,9 @@ export default {
 
     DateRangeCalendar,
     AddressBookModal,
+    OrderModal,
+    GeneralTable,
     OrderModal
-
   },
   props: {
   },
@@ -196,12 +232,27 @@ export default {
       isEditing: true,
       loaded: false,
       items: ['a', 'b', 'c'],
-
+      headers: [{ text: 'First', value: 'first' },
+        { text: 'Last', value: 'last' },
+        { text: 'Email', value: 'email' },
+        { text: 'Actions', value: 'actions', sortable: false }],
+      data: [{
+        id: 0,
+        first: 'Bill',
+        last: 'Brasky',
+        email: 'bbrasky@email.com'
+      }],
       errorMesage: 'A dialog is a type of modal window that appears in front of app content to provide critical information or ask for a decision. Dialogs disable all app functionality when they appear, and remain on screen until confirmed, dismissed, or a required action has been taken.:',
       alertMesage: 'The alert component is used to convey important information to the user through the use contextual types icons and color.',
       snackbarmessage: 'snackbar message',
-
       message: 'The recognition engine scanned the address below and did not find a matching address in your system. Please select the correct address:',
+      components: {
+        name: 'Components',
+        el: {
+          type: 'radio',
+          options: ['a', 'b', 'c']
+        }
+      },
       fields_2:
         {
           name: 'name',
@@ -300,11 +351,6 @@ export default {
   .left-side{
     padding: 3rem;
     border-right: 0.1rem solid map-get($colors, grey);
-    code{
-        padding: 2rem;
-        margin-bottom: 2rem;
-    }
-
   }
   .v-btn{
     padding: 0 !important;
@@ -322,13 +368,10 @@ export default {
     align-items: flex-start;
     height: 100%;
     flex-direction: column;
-    .forminput_2{
-
-        code{
+  }
+  code{
             padding: 2rem;
             margin-bottom: 2rem;
         }
-    }
-  }
 }
 </style>

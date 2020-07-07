@@ -2,6 +2,7 @@
   <div class="form-field-element-input-select">
     <FormFieldElementInput
       :field="{ ...field, value: inputValue }"
+      :is-editing="isEditing"
       :style="{ flexGrow: '1' }"
       @change="changeInput"
     />

@@ -161,10 +161,6 @@ export default {
     message: {
       type: String,
       required: true
-    },
-    rules: {
-      type: Array,
-      required: true
     }
   },
   data () {
