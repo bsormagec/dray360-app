@@ -5,7 +5,6 @@ export default async function auth ({ next, store }) {
   try {
     await store.dispatch('AUTH/getCurrentUser')
     if (store.state.AUTH.currentUser.user.is_superadmin) {
-      console.log('is superadmin true')
       return next()
     }
   } catch (e) {
@@ -18,6 +17,7 @@ export default async function auth ({ next, store }) {
 
   if (!store.state.AUTH.currentUser.user.is_superadmin) {
     console.log('not superadmin')
+    console.log('user data: ', store.state.AUTH.currentUser)
     // Redirect to intended URL after logging in.
     const url = window.location.pathname
     const path = (window.location.search).replace('/', '')

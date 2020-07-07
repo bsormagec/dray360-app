@@ -6,6 +6,7 @@ import Login from '@/views/Login'
 import RulesEditor from '@/views/RulesEditor/RulesEditor'
 import auth from '@/router/middleware/auth'
 import superadmin from '@/router/middleware/superadmin'
+import permissions from '@/router/middleware/permissions'
 import StyleGuide from '@/views/StyleGuide'
 import Dashboard from '@/views/Users/Dashboard'
 import AddUser from '@/views/Users/AddUser'
@@ -21,7 +22,7 @@ const routes = [
     path: '/',
     name: 'Orders',
     meta: {
-      middleware: [auth]
+      middleware: [auth, permissions('orders-view')]
     },
     component: Orders
   },
