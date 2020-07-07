@@ -2,11 +2,12 @@
 
 namespace App\Http\Controllers\Api;
 
-use DB;
 use Carbon\Carbon;
 use Illuminate\Support\Str;
 use Illuminate\Http\Request;
+use App\Models\OCRRequestStatus;
 use App\Http\Controllers\Controller;
+use Illuminate\Validation\ValidationException;
 
 class OCRRequestController extends Controller
 {
@@ -20,71 +21,37 @@ class OCRRequestController extends Controller
     // expire upload URI after this many minutes
     const MINUTES_URI_REMAINS_VALID = 15;
 
-    /**
-     * Create URI for uploading a document to create an OCRRequest
-     *
-     * @param  [Request] $request
-     * @param  [string] $request->filename
-     *
-     * @return [json] Request Id (UUID)
-     */
     public function createOCRRequestUploadURI(Request $request)
     {
+        // validate that filename parameter was provided
+        $request->validate(['filename' => 'required|string']);
+        $originalFilename = $request->filename;
+        $extension = strtolower((new \SplFileInfo($originalFilename))->getExtension());
+
+        if (! in_array($extension, self::VALID_IMAGE_TYPES)) {
+            $extensionList = implode(',', self::VALID_IMAGE_TYPES);
+            throw ValidationException::withMessages([
+                'filename' => "Invalid file extension '{$extension}'. Must be one of: '{$extensionList}'",
+            ]);
+        }
+
         try {
-
-            // validate that filename parameter was provided
-            $request->validate([
-                'filename' => 'required|string'
-            ]);
-            $origFilename = $request->filename;
-
-            // check file extension, return error if not of a valid type
-            $extensionLC = strtolower((new \SplFileInfo($origFilename))->getExtension());
-            $validExtension = in_array($extensionLC, self::VALID_IMAGE_TYPES);
-            if (!$validExtension) {
-                $extensionList = implode(',', self::VALID_IMAGE_TYPES);
-                return response()->json([
-                    'error' => 'Invalid image file type',
-                    'filename' => $origFilename,
-                    'message' => "Invalid file extension '{$extensionLC}'. Must be one of: '{$extensionList}'"
-                ], 400);
-            }
-
-            // create a new UUID for this file upload, to be the permanent request_id
-            $request_id = Str::uuid()->toString();
-
-            // compute the new filename for upload
-            $fixedFilename = preg_replace("/[^.\-\w]+/", "", $origFilename); // only dot, dash, a-Z, 0-9
-            $prefix = self::MANUAL_UPLOAD_PREFIX;
-            $suffix = self::MANUAL_UPLOAD_SUFFIX;
-            $uploadingFilename = "{$prefix}{$request_id}.{$fixedFilename}{$suffix}";
-
-            // Create an S3 client and get a presigned URL for uploading the image
-            $s3Client = new \Aws\S3\S3Client([
-                'version' => 'latest',
-                'region' => env('AWS_DEFAULT_REGION', 'us-east-2')
-            ]);
-            $s3Command = $s3Client->getCommand('PutObject', [
-                'Bucket' => env('AWS_BUCKET'),
-                'Key' => $uploadingFilename
-            ]);
-            $urlExpiryTime = Carbon::now()->addMinutes(self::MINUTES_URI_REMAINS_VALID);
-            $presignedRequest = $s3Client->createPresignedRequest($s3Command, $urlExpiryTime);
-            $uploadUri = (string) $presignedRequest->getUri()->__toString();
-
-            // response data, persisted and returned
+            $requestId = Str::uuid()->toString();
+            $expiryTime = Carbon::now()->addMinutes(self::MINUTES_URI_REMAINS_VALID);
+            $uploadingFilename = $this->getUploadingFilename($requestId, $originalFilename);
+            $uploadRequestUri = $this->getUploadRequestUri($uploadingFilename, $expiryTime);
             $responseData = [
-                'request_id' => $request_id,
-                'original_filename' => $origFilename,
+                'request_id' => $requestId,
+                'original_filename' => $originalFilename,
                 'uploading_filename' => $uploadingFilename,
-                'url_expiry_time' => $urlExpiryTime,
-                'upload_uri' => $uploadUri
+                'url_expiry_time' => $expiryTime,
+                'upload_uri' => $uploadRequestUri,
+                'company_id' => currentCompany()->id ?? null,
+                'user_id' => auth()->user()->id,
             ];
 
-            // save a new row to the t_job_state_changes table
-            $this->persistOCRRequestStatus($responseData);
+            OCRRequestStatus::createUploadRequest($responseData);
 
-            // all done
             return response()->json($responseData, 200);
         } catch (\Exception $e) {
             return response()->json([
@@ -97,22 +64,29 @@ class OCRRequestController extends Controller
         }
     }
 
-    /**
-     * Save a row to the t_job_state_changes table, which
-     * is the source for the v_status_summary view, which is
-     * the source for the OCRRequestStatus objects.
-     *
-     * @param  [Request] $request_id
-     */
-    public function persistOCRRequestStatus($responseData)
+    protected function getUploadingFilename(string $requestId, string $originalFilename): string
     {
-        $data = [
-            'request_id' => $responseData['request_id'],
-            'status_date' => Carbon::now(),
-            'status' => 'upload-requested',
-            'status_metadata' => json_encode($responseData)
-        ];
+        $fixedFilename = preg_replace("/[^.\-\w]+/", "", $originalFilename); // only dot, dash, a-Z, 0-9
 
-        DB::table('t_job_state_changes')->insert($data);
+        return self::MANUAL_UPLOAD_PREFIX
+            . "{$requestId}.{$fixedFilename}"
+            . self::MANUAL_UPLOAD_SUFFIX;
+    }
+
+    protected function getUploadRequestUri($filename, $expiryTime): string
+    {
+        // Create an S3 client and get a presigned URL for uploading the image
+        $s3Client = new \Aws\S3\S3Client([
+            'version' => 'latest',
+            'region' => config('aws.region', 'us-east-2'),
+        ]);
+        $s3Command = $s3Client->getCommand('PutObject', [
+            'Bucket' => config('filesystems.disks.s3.bucket'),
+            'Key' => $filename
+        ]);
+
+        return (string) $s3Client->createPresignedRequest($s3Command, $expiryTime)
+            ->getUri()
+            ->__toString();
     }
 }

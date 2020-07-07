@@ -43,15 +43,7 @@ class IdentifyCurrentCompany
             return $this;
         }
 
-        if ($this->app->bound(CurrentCompany::class) && ! is_superadmin()) {
-            return $this;
-        }
-
-        $company = Company::find($request->get(self::REQUEST_PARAMETER));
-
-        if ($company) {
-            currentCompany($company);
-        }
+        $this->setCurrentCompanyFromId($request->get(self::REQUEST_PARAMETER));
 
         return $this;
     }
@@ -62,16 +54,23 @@ class IdentifyCurrentCompany
             return $this;
         }
 
-        if ($this->app->bound(CurrentCompany::class) && ! is_superadmin()) {
-            return $this;
-        }
-
-        $company = Company::find($request->header(self::HEADER));
-
-        if ($company) {
-            currentCompany($company);
-        }
+        $this->setCurrentCompanyFromId($request->header(self::HEADER));
 
         return $this;
+    }
+
+    protected function setCurrentCompanyFromId($companyId): void
+    {
+        if ($this->app->bound(CurrentCompany::class) && ! is_superadmin()) {
+            return;
+        }
+
+        $company = Company::find($companyId);
+
+        if (! $company) {
+            return;
+        }
+
+        currentCompany($company);
     }
 }

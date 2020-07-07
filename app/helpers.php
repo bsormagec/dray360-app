@@ -25,7 +25,7 @@ function s3_bucket_from_url(string $url): string
     return $pieces->get(2);
 }
 
-function currentCompany(CurrentCompany $company = null): Company
+function currentCompany(?CurrentCompany $company = null): ?Company
 {
     if ($company) {
         app()->instance(CurrentCompany::class, $company);
@@ -39,7 +39,7 @@ function currentCompany(CurrentCompany $company = null): Company
     return app(CurrentCompany::class);
 }
 
-function is_superadmin($guard = null)
+function is_superadmin(?string $guard = null)
 {
     return ! auth($guard)->guest() && auth($guard)->user()->hasRole('superadmin');
 }
