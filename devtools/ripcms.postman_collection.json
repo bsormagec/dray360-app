@@ -1,6 +1,6 @@
 {
 	"info": {
-		"_postman_id": "a153c354-7440-4bf5-b1aa-d667c8aa2025",
+		"_postman_id": "bebcedb9-fadc-4305-b5f3-0096ede51372",
 		"name": "RIPCMS",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
 	},
@@ -11,7 +11,7 @@
 				{
 					"listen": "prerequest",
 					"script": {
-						"id": "c7e6bc23-f113-40d6-8b1c-a427a7485ed9",
+						"id": "f7f3f5ff-10a9-4bba-8435-307a74c41e0b",
 						"exec": [
 							""
 						],
@@ -21,7 +21,7 @@
 				{
 					"listen": "test",
 					"script": {
-						"id": "0867db8a-5d88-4fe2-9d4c-ef560655d677",
+						"id": "089f2f35-b7b7-4862-a5bd-dafcee9c832f",
 						"exec": [
 							"let jsonData = pm.response.json();",
 							"var token = jsonData.access_token;",
@@ -85,6 +85,9 @@
 		},
 		{
 			"name": "Get Companies",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
 			"request": {
 				"auth": {
 					"type": "bearer",
@@ -96,8 +99,15 @@
 						}
 					]
 				},
-				"method": "POST",
-				"header": [],
+				"method": "GET",
+				"header": [
+					{
+						"key": "cushingtoken",
+						"value": "",
+						"type": "text",
+						"disabled": true
+					}
+				],
 				"body": {
 					"mode": "urlencoded",
 					"urlencoded": []
@@ -114,6 +124,48 @@
 						"api",
 						"ProfitTools",
 						"GetCompanies"
+					]
+				},
+				"description": "get company"
+			},
+			"response": []
+		},
+		{
+			"name": "Create Shipment",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{ripcmsAccessToken}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"AgentRef\": null,\n    \"ArrivalDate\": \"2020-06-18T00:00:00\",\n    \"ArrivalTime\": \"13:00:00\",\n    \"ArrivedBy\": \"TTAPP\",\n    \"ArrivedUser\": \"PTADMIN\",\n    \"AvailableOn\": null,\n    \"AvailableUntil\": null,\n    \"Booking\": null,\n    \"BookingNumberBy\": null,\n    \"BookingNumberUser\": null,\n    \"Custom1\": null,\n    \"Custom2\": null,\n    \"Custom3\": null,\n    \"Custom4\": null,\n    \"Custom5\": null,\n    \"Custom6\": null,\n    \"Custom7\": null,\n    \"Custom8\": null,\n    \"Custom9\": null,\n    \"Custom10\": null,\n    \"CutoffBy\": null,\n    \"CutoffDate\": null,\n    \"CutoffTime\": null,\n    \"CutoffUser\": null,\n    \"DelbyBy\": \"MANNY\",\n    \"DelbyDate\": \"2020-06-10T00:00:00\",\n    \"DelbyTime\": null,\n    \"DelbyUser\": \"PTADMIN\",\n    \"DestinationPort\": \"EWR\",\n    \"DispatchedBy\": null,\n    \"ds_ac_totamt\": 0.00,\n    \"ds_bill_charge\": 75.00,\n    \"ds_bill_comment\": null,\n    \"ds_bill_date\": null,\n    \"ds_bill_format\": \"I\",\n    \"ds_billto_id\": 386,\n    \"ds_brok_trip\": null,\n    \"ds_disc_amt\": 0.00,\n    \"ds_disc_pct\": 0.00000,\n    \"ds_dorb\": \"T\",\n    \"ds_eqonbill\": \"T\",\n    \"ds_equip_req\": null,\n    \"ds_expedite\": \"T\",\n    \"ds_findest_id\": 404,\n    \"ds_hazmat\": \"F\",\n \n    \"ds_intsig\": 1,\n    \"ds_lh_totamt\": 75.00,\n    \"ds_mod_log\": null,\n    \"ds_origin_id\": 32,\n    \"ds_parentid\": null,\n    \"ds_pay_ac_totamt\": 0.00,\n    \"ds_pay_format\": \"I\",\n    \"ds_pay_lh_totamt\": 0.00,\n    \"ds_pay_totamt\": 0.00,\n    \"ds_pay1_id\": null,\n    \"ds_pay1_totamt\": 0.00,\n    \"ds_pay2_id\": null,\n    \"ds_pay2_totamt\": 0.00,\n    \"ds_pay3_id\": null,\n    \"ds_pay3_totamt\": 0.00,\n    \"ds_ppcol\": \"Z\",\n    \"ds_pronum\": \"3867-TMP\",\n    \"ds_ref1_text\": \"MSCU617778-4\",\n    \"ds_ref1_type\": 20,\n    \"ds_ref1_label\": \"CONTAINER #\",\n    \"ds_ref2_text\": \"586454115881441\",\n    \"ds_ref2_type\": 15,\n    \"ds_ref2_label\": \"MASTER BL #\",\n    \"ds_ref3_text\": \"12-1956465411\",\n    \"ds_ref3_type\": 3,\n    \"ds_ref3_label\": \"P.O. #\",\n    \"ds_salescom_amt\": 0.00,\n    \"ds_salescom_id\": null,\n    \"ds_salescom_lhorgt\": null,\n    \"ds_salescom_pct\": 0.00000,\n    \"ds_ship_comment\": null,\n    \"ds_ship_date\": null,\n    \"ds_ship_type\": 2202,\n    \"ds_status\": \"K\",\n    \"ds_total_miles\": 0,\n    \"ds_total_weight\": 0,\n    \"edireference\": null,\n    \"emptyatcustomerby\": \"MSC\",\n    \"emptyatcustomerdate\": \"2020-06-10T00:00:00\",\n    \"emptyatcustomertime\": \"03:00:00\",\n    \"emptyatcustomeruser\": \"SCHEDULED TASK\",\n    \"etaby\": \"TTAPP\",\n    \"etadate\": null,\n    \"etatime\": \"12:00:00\",\n    \"etauser\": \"SCHEDULED TASK\",\n    \"EventContacts\": null,\n    \"ForwarderRef\": null,\n    \"groundedby\": null,\n    \"groundeddate\": null,\n    \"groundedtime\": null,\n    \"groundeduser\": null,\n    \"HouseBL\": null,\n    \"LastFreeDate\": null,\n    \"LastFreeTime\": null,\n    \"lfdby\": null,\n    \"LFDContacts\": \"157\",\n    \"lfduser\": null,\n    \"Line\": \"MSC\",\n    \"loadedatcustomerby\": null,\n    \"loadedatcustomerdate\": null,\n    \"loadedatcustomertime\": null,\n    \"loadedatcustomeruser\": null,\n    \"MasterBL\": \"586454115881441\",\n    \"movecode\": \"I\",\n    \"MoveType\": null,\n    \"notificationtemplate\": null,\n    \"OriginPort\": \"LE HARVE\",\n    \"PaymentTerms\": \"NET 30\",\n    \"pickupbyby\": null,\n    \"pickupbydate\": null,\n    \"pickupbytime\": null,\n    \"pickupbyuser\": null,\n    \"pickupnumber\": \"6514\",\n    \"pickupnumberby\": \"MANNY\",\n    \"pickupnumberuser\": \"SCHEDULED TASK\",\n    \"prenoteby\": null,\n    \"prenotedate\": \"2019-02-21T00:00:00\",\n    \"prenotetime\": \"12:35:29\",\n    \"prenoteuser\": \"PTADMIN\",\n    \"railbilledby\": null,\n    \"railbilleddate\": null,\n    \"railbilleduser\": null,\n    \"railbillnumber\": null,\n    \"railbillnumberuser\": null,\n    \"releaseby\": \"TTAPP\",\n    \"releasedate\": \"2020-06-10T00:00:00\",\n    \"releasetime\": \"15:00:00\",\n    \"releaseuser\": \"PTADMIN\",\n    \"Seal\": null,\n    \"ShipmentContacts\": \"157\",\n    \"Vessel\": \"FALMOUTH\",\n    \"Voyage\": \"W945\",\n    \"Items\": [\n        {\n            \"AccountingType\": \"3\"\n            \n        },\n        {\n            \"AccountingType\": \"3\",\n            \"AmountType\": 1,\n            \"di_blnum\": null,\n            \"di_country\": null,\n            \"di_del_event\": null,\n            \"di_description\": \"FUEL SURCHARGE ( 15.0% OF $75.00 )\",\n            \"di_harmonized_code\": null,\n            \"di_hazmat\": \"F\",\n            \"di_item_id\": 10003,\n            \"di_item_type\": \"L\",\n            \"di_miles\": 0,\n            \"di_our_itemamt\": 0.00,\n            \"di_our_rate\": 0.0000,\n            \"di_our_ratetype\": \"Z\",\n            \"di_pay_itemamt\": 0.00,\n            \"di_pay_rate\": 0.0000,\n            \"di_pay_ratetype\": \"Z\",\n            \"di_paynum\": \"1\",\n            \"di_pu_event\": null,\n            \"di_qty\": 1.000,\n            \"di_shipment_id\": 3867,\n            \"di_totalvalue\": 0.00,\n            \"di_totitemweight\": 0.0000,\n            \"di_unitofmeasure\": null,\n            \"di_weightperunit\": 0.0000,\n            \"EventFlag\": null,\n            \"LastRatedBy\": null,\n            \"Note\": null,\n            \"RateCodename\": \"\",\n            \"Taglist\": null,\n            \"PickupEvent\": null,\n            \"DeliverEvent\": null\n        }\n    ],\n    \"Events\": [\n        {\n          \n            \"de_event_type\": \"H\",\n            \"de_site\": 32,\n            \n            \"Driver\": {\n                \"em_email\": null,\n                \"em_fn\": null,\n                \"em_id\": null,\n                \"em_ln\": null,\n                \"di_hazmat_certification\": null\n            }\n            \n        },\n        {\n            \"BobtailDestinationEvent\": null,\n            \"BobtailOriginEvent\": null,\n            \"de_accesssplit\": null,\n            \"de_acteq\": null,\n            \"de_acteq_seq\": 0.000000000000,\n            \"de_actpos\": 0,\n            \"de_apptdate\": null,\n            \"de_apptnum\": null,\n            \"de_appttime\": \"23:59:00\",\n            \"de_arrdate\": null,\n            \"de_arrtime\": null,\n            \"de_conf\": \"F\",\n            \"de_container1\": null,\n            \"de_container1_seq\": 0.000000000000,\n            \"de_container2\": null,\n            \"de_container2_seq\": 0.000000000000,\n            \"de_container3\": null,\n            \"de_container3_seq\": 0.000000000000,\n            \"de_container4\": null,\n            \"de_container4_seq\": 0.000000000000,\n            \"de_depdate\": null,\n            \"de_deptime\": null,\n            \"de_driver\": null,\n            \"de_driver_seq\": 0.000000000000,\n            \"de_duration\": \"00:30:00\",\n            \"de_eta\": null,\n            \"de_event_type\": \"R\",\n            \"de_gallons\": null,\n            \"de_id\": 14922,\n            \"de_intsig\": 2,\n            \"de_locked\": null,\n            \"de_multi_list\": null,\n            \"de_note\": null,\n            \"de_odom\": null,\n            \"de_price\": null,\n            \"de_ship_seq\": 2,\n            \"de_shipment_id\": 3867,\n            \"de_site\": 40400,\n            \"de_status\": null,\n            \"de_tractor\": null,\n            \"de_trailer\": null,\n            \"de_trailer1\": null,\n            \"de_trailer2\": null,\n            \"de_trailer3\": null,\n            \"de_whoconf\": null,\n            \"earliestDate\": null,\n            \"earliestTime\": null,\n            \"EventContacts\": \"157\",\n            \"eventreference\": null,\n            \"HideOnBill\": null,\n            \"importReference\": null,\n            \"latestDate\": null,\n            \"latestTime\": null,\n            \"Routable\": null,\n            \"Container1\": null,\n            \"Container2\": null,\n            \"Container3\": null,\n            \"Driver\": {\n                \"em_email\": null,\n                \"em_fn\": null,\n                \"em_id\": null,\n                \"em_ln\": null,\n                \"di_hazmat_certification\": null\n            }\n           \n        },\n        {\n            \"BobtailDestinationEvent\": null,\n            \"BobtailOriginEvent\": null,\n            \"de_accesssplit\": null,\n            \"de_acteq\": null,\n            \"de_acteq_seq\": 0.000000000000,\n            \"de_actpos\": 0,\n            \"de_apptdate\": null,\n            \"de_apptnum\": null,\n            \"de_appttime\": null,\n            \"de_arrdate\": null,\n            \"de_arrtime\": null,\n            \"de_conf\": \"F\",\n            \"de_container1\": null,\n            \"de_container1_seq\": 0.000000000000,\n            \"de_container2\": null,\n            \"de_container2_seq\": 0.000000000000,\n            \"de_container3\": null,\n            \"de_container3_seq\": 0.000000000000,\n            \"de_container4\": null,\n            \"de_container4_seq\": 0.000000000000,\n            \"de_depdate\": null,\n            \"de_deptime\": null,\n            \"de_driver\": null,\n            \"de_driver_seq\": 0.000000000000,\n            \"de_duration\": \"00:30:00\",\n            \"de_eta\": null,\n            \"de_event_type\": \"H\",\n            \"de_gallons\": null,\n            \"de_id\": 14923,\n            \"de_intsig\": 2,\n            \"de_locked\": null,\n            \"de_multi_list\": null,\n            \"de_note\": null,\n            \"de_odom\": null,\n            \"de_price\": null,\n            \"de_ship_seq\": 3,\n            \"de_shipment_id\": 3867,\n            \"de_site\": 404,\n            \"de_status\": null,\n            \"de_tractor\": null,\n            \"de_trailer\": null,\n            \"de_trailer1\": null,\n            \"de_trailer2\": null,\n            \"de_trailer3\": null,\n            \"de_whoconf\": null,\n            \"earliestDate\": null,\n            \"earliestTime\": null,\n            \"EventContacts\": \"157\",\n            \"eventreference\": null,\n            \"HideOnBill\": null,\n            \"importReference\": null,\n            \"latestDate\": null,\n            \"latestTime\": null,\n            \"Routable\": null,\n            \"Container1\": null,\n            \"Container2\": null,\n            \"Container3\": null,\n            \"Driver\": {\n                \"em_email\": null,\n                \"em_fn\": null,\n                \"em_id\": null,\n                \"em_ln\": null,\n                \"di_hazmat_certification\": null\n            },\n            \"Site\": {\n                \"co_addr1\": \"888 DOREMUS AVENUE\",\n                \"co_addr2\": null,\n                \"co_city\": \"NEWARK\",\n                \"co_code_name\": \"SNJ\",\n                \"co_name\": \"SALSON LOGISTICS\",\n                \"co_country\": null,\n                \"co_id\": 404,\n                \"co_state\": \"NJ\",\n                \"co_status\": \"K\",\n                \"fuelsurcharge\": 20.0000,\n                \"terminationlocation\": null,\n                \"Custom1\": \"RATE PROFILE ID\",\n                \"Custom2\": null,\n                \"Custom3\": null,\n                \"Custom4\": null,\n                \"Custom5\": null,\n                \"Custom6\": null,\n                \"Custom7\": null,\n                \"Custom8\": null,\n                \"Custom9\": null,\n                \"Custom10\": null\n            }\n        },\n        {\n            \"BobtailDestinationEvent\": null,\n            \"BobtailOriginEvent\": null,\n            \"de_accesssplit\": null,\n            \"de_acteq\": null,\n            \"de_acteq_seq\": 0.000000000000,\n            \"de_actpos\": 0,\n            \"de_apptdate\": null,\n            \"de_apptnum\": null,\n            \"de_appttime\": null,\n            \"de_arrdate\": null,\n            \"de_arrtime\": null,\n            \"de_conf\": \"F\",\n            \"de_container1\": null,\n            \"de_container1_seq\": 0.000000000000,\n            \"de_container2\": null,\n            \"de_container2_seq\": 0.000000000000,\n            \"de_container3\": null,\n            \"de_container3_seq\": 0.000000000000,\n            \"de_container4\": null,\n            \"de_container4_seq\": 0.000000000000,\n            \"de_depdate\": null,\n            \"de_deptime\": null,\n            \"de_driver\": null,\n            \"de_driver_seq\": 0.000000000000,\n            \"de_duration\": \"00:30:00\",\n            \"de_eta\": null,\n            \"de_event_type\": \"R\",\n            \"de_gallons\": null,\n            \"de_id\": 14924,\n            \"de_intsig\": 2,\n            \"de_locked\": null,\n            \"de_multi_list\": null,\n            \"de_note\": null,\n            \"de_odom\": null,\n            \"de_price\": null,\n            \"de_ship_seq\": 4,\n            \"de_shipment_id\": 3867,\n            \"de_site\": 93,\n            \"de_status\": null,\n            \"de_tractor\": null,\n            \"de_trailer\": null,\n            \"de_trailer1\": null,\n            \"de_trailer2\": null,\n            \"de_trailer3\": null,\n            \"de_whoconf\": null,\n            \"earliestDate\": null,\n            \"earliestTime\": null,\n            \"EventContacts\": \"157\",\n            \"eventreference\": null,\n            \"HideOnBill\": null,\n            \"importReference\": null,\n            \"latestDate\": null,\n            \"latestTime\": null,\n            \"Routable\": null,\n            \"Container1\": null,\n            \"Container2\": null,\n            \"Container3\": null,\n            \"Driver\": {\n                \"em_email\": null,\n                \"em_fn\": null,\n                \"em_id\": null,\n                \"em_ln\": null,\n                \"di_hazmat_certification\": null\n            },\n            \"Site\": {\n                \"co_addr1\": \"1000-1099 PIER A WAY\",\n                \"co_addr2\": null,\n                \"co_city\": \"LONG BEACH\",\n                \"co_code_name\": \"CAP1\",\n                \"co_name\": \"PIER A\",\n                \"co_country\": null,\n                \"co_id\": 93,\n                \"co_state\": \"CA\",\n                \"co_status\": \"K\",\n                \"fuelsurcharge\": null,\n                \"terminationlocation\": \"T\",\n                \"Custom1\": null,\n                \"Custom2\": null,\n                \"Custom3\": null,\n                \"Custom4\": null,\n                \"Custom5\": null,\n                \"Custom6\": null,\n                \"Custom7\": null,\n                \"Custom8\": null,\n                \"Custom9\": null,\n                \"Custom10\": null\n            }\n        }\n    ],\n    \"Equipment\": [], \n    \"Origin\": null,\n    \"FinalDestination\": null,\n    \"BillTo\": null,\n    \"Forwarder\": null,\n    \"Agent\": null,\n    \"ShipmentType\": null\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "https://www.ripcms.com/api/ProfitTools/CreateShipment",
+					"protocol": "https",
+					"host": [
+						"www",
+						"ripcms",
+						"com"
+					],
+					"path": [
+						"api",
+						"ProfitTools",
+						"CreateShipment"
 					]
 				},
 				"description": "get company"
@@ -152,7 +204,87 @@
 					"variable": [
 						{
 							"key": "id",
+							"value": "23"
+						}
+					]
+				},
+				"description": "get company"
+			},
+			"response": []
+		},
+		{
+			"name": "Get Shipment",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{ripcmsAccessToken}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "https://www.ripcms.com/api/ProfitTools/GetCompany/:id",
+					"protocol": "https",
+					"host": [
+						"www",
+						"ripcms",
+						"com"
+					],
+					"path": [
+						"api",
+						"ProfitTools",
+						"GetCompany",
+						":id"
+					],
+					"variable": [
+						{
+							"key": "id",
 							"value": "2"
+						}
+					]
+				},
+				"description": "get company"
+			},
+			"response": []
+		},
+		{
+			"name": "Get PT Request",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{ripcmsAccessToken}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "https://www.ripcms.com/api/ProfitTools/GetPTRequest/:id",
+					"protocol": "https",
+					"host": [
+						"www",
+						"ripcms",
+						"com"
+					],
+					"path": [
+						"api",
+						"ProfitTools",
+						"GetPTRequest",
+						":id"
+					],
+					"variable": [
+						{
+							"key": "id",
+							"value": "1876"
 						}
 					]
 				},
