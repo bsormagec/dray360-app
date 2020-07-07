@@ -17,7 +17,7 @@ Vue.use(VueRouter)
 
 const routes = [
   {
-    path: '/',
+    path: '/dashboard/',
     name: 'Orders',
     meta: {
       middleware: [auth]
@@ -68,6 +68,7 @@ const routes = [
   {
     path: '/login',
     name: 'Login',
+    alias: '/',
     component: Login
   },
   {
