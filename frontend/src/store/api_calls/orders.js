@@ -21,3 +21,5 @@ export const postUploadPDF = async (file) => axios.ext.post('/api/createocrreque
       .catch(e => [e])
   })
   .catch(e => [e])
+
+export const postSendToTms = async (tmsData) => axios.ext.post('/api/send-to-tms', tmsData).then(data => [undefined, data]).catch(e => [e])

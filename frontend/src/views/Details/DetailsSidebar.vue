@@ -38,10 +38,20 @@
         color="primary"
         outlined
         width="11.5rem"
-        @click="() => {}"
+        :disabled="disabled"
+        @click="postSendToTms"
       >
         Send to   TMS
       </v-btn>
+      <div>
+        <ErrorHandling
+          v-if="dialog"
+          :dialog="dialog"
+          :label="modaltype"
+          type="modal"
+          :message="message"
+        />
+      </div>
     </div>
 
     <div
@@ -66,15 +76,26 @@ import isMobile from '@/mixins/is_mobile'
 import { formModule } from '@/views/Details/inner_store/index'
 import DetailsSidebarNavigation from '@/views/Details/DetailsSidebarNavigation'
 import { mapActions } from '@/utils/vuex_mappings'
+import orders, { types } from '@/store/modules/orders'
+import { reqStatus } from '@/enums/req_status'
+import ErrorHandling from '@/components/General/ErrorHandling'
 
 export default {
   name: 'DetailsSidebar',
-
   components: {
-    DetailsSidebarNavigation
+    DetailsSidebarNavigation,
+    ErrorHandling
   },
 
   mixins: [isMobile],
+  data () {
+    return {
+      message: '',
+      dialog: false,
+      modaltype: '',
+      disabled: false
+    }
+  },
 
   computed: {
     isEditing () {
@@ -94,13 +115,30 @@ export default {
 
   methods: {
     toggleIsEditing: formModule.methods.toggleIsEditing,
-
+    ...mapActions(orders.moduleName, [types.postSendToTms]),
     ...mapActions('AUTH', ['logout']),
 
     async logoutBtn () {
       this.logoutError = false
       await this.logout()
       this.$router.push('/login')
+    },
+
+    async postSendToTms () {
+      const status = await this[types.postSendToTms]({ order_id: this.$route.params.id, status: 'sending-to-wint' })
+      this.dialog = false
+      if (status === reqStatus.success) {
+        console.log('success')
+        this.message = 'Processing'
+        this.modaltype = 'snackbar'
+        this.dialog = true
+      } else {
+        console.log('error')
+        this.dialog = true
+        this.modaltype = 'error'
+        this.message = 'Some of your addresses are not validated'
+      }
+      this.disabled = true
     },
 
     goToOrdersList () {

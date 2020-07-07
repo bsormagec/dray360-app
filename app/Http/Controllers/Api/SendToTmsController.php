@@ -22,8 +22,8 @@ class SendToTmsController extends Controller
     public function __invoke(Request $request)
     {
         $data = $request->validate([
-            'status' => ['required', Rule::in(self::VALID_STATUSES)],
-            'order_id' => 'required|exists:t_orders,id',
+            'status' => ['required', 'string', Rule::in(self::VALID_STATUSES)],
+            'order_id' => 'required|integer|exists:t_orders,id',
         ]);
         $order = $this->getOrder($data['order_id']);
 
