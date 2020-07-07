@@ -27,7 +27,8 @@ class SendToTmsController extends Controller
         ]);
         $order = $this->getOrder($data['order_id']);
 
-        $this->checkIfOrderIsValidated($order);
+        // Do not validate that addresses are all verified=true, for now (July 7th, 2020, PBN)
+        // $this->checkIfOrderIsValidated($order);
 
         $data['request_id'] = $order->request_id;
         $data['company_id'] = $order->t_company_id;
