@@ -25,6 +25,18 @@ export const getCompanyName = async (id) => axios.ext.get('/api/companies')
     return companyName
   }).catch(function (error) { console.log(error) })
 
+export const getVariantName = async (id) => axios.ext.get('/api/ocr/variants')
+  .then(data => {
+    let variantName = ''
+    data.data.data.forEach(variant => {
+      // eslint-disable-next-line eqeqeq
+      if (variant.id == id) {
+        variantName = variant.abbyy_variant_name
+      }
+    })
+    return variantName
+  }).catch(function (error) { console.log(error) })
+
 export const getTestingOutput = async (orderId, singleCompanyVariantRule) => axios.ext.get('/api/orders/' + orderId)
   .then(function (response) {
     let testingOutput = null

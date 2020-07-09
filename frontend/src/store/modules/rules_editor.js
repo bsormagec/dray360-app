@@ -1,5 +1,5 @@
 import { reqStatus } from '@/enums/req_status'
-import { getLibrary, getCompanyVariantRules, putEditRule, postSaveRuleSequence, postAddRule, getRuleCode, getTestingOutput, getCompanyName } from '@/store/api_calls/rules_editor'
+import { getLibrary, getCompanyVariantRules, putEditRule, postSaveRuleSequence, postAddRule, getRuleCode, getTestingOutput, getCompanyName, getVariantName } from '@/store/api_calls/rules_editor'
 
 export const types = {
   setLibrary: 'SET_LIBRARY',
@@ -13,14 +13,17 @@ export const types = {
   getTestingOutput: 'GET_TESTING_OUTPUT',
   setTestingOutput: 'SET_TESTING_OUTPUT',
   getCompanyName: 'GET_COMPANY_NAME',
-  setCompanyName: 'SET_COMPANY_NAME'
+  setCompanyName: 'SET_COMPANY_NAME',
+  getVariantName: 'GET_VARIANT_NAME',
+  setVariantName: 'SET_VARIANT_NAME'
 }
 
 const initialState = {
   rules_library: [],
   company_variant_rules: [],
   testing_output: null,
-  company_name: ''
+  company_name: '',
+  variant_name: ''
 }
 
 const mutations = {
@@ -45,6 +48,9 @@ const mutations = {
   },
   [types.setCompanyName] (state, { companyName }) {
     state.company_name = companyName
+  },
+  [types.setVariantName] (state, { variantName }) {
+    state.variant_name = variantName
   }
 }
 
@@ -115,6 +121,12 @@ const actions = {
     const data = await getCompanyName(id)
 
     commit(types.setCompanyName, { companyName: data })
+  },
+
+  async [types.getVariantName] ({ commit }, id) {
+    const data = await getVariantName(id)
+
+    commit(types.setVariantName, { variantName: data })
   }
 }
 

@@ -140,7 +140,7 @@
           tile
         >
           <v-list>
-            <v-subheader>{{ company_name() }}/Jetspeed Rules</v-subheader>
+            <v-subheader>{{ company_name() }} / {{ variant_name() }}</v-subheader>
             <v-list-item-group
               color="primary"
             >
@@ -190,7 +190,8 @@ export default {
       rules_library: state => state.rules_library,
       company_variant_rules: state => state.company_variant_rules,
       testing_output: state => state.testing_output,
-      company_name: state => state.company_name
+      company_name: state => state.company_name,
+      variant_name: state => state.variant_name
     }),
 
     cmOptions: {
@@ -210,18 +211,10 @@ export default {
     vc.company_id = vc.$route.params.company_id
     vc.variant_id = vc.$route.params.variant_id
 
-    const status = await this[types.getCompanyName](vc.company_id)
-
-    if (status === reqStatus.success) {
-      console.log('getCompanyName success')
-    } else {
-      console.log('getCompanyName error')
-    }
-
     await vc.fetchRules()
   },
   methods: {
-    ...mapActions(rulesLibrary.moduleName, [types.getLibrary, types.getCompanyVariantRules, types.setSequence, types.setRule, types.addRule, types.setRuleCode, types.getTestingOutput, types.getCompanyName]),
+    ...mapActions(rulesLibrary.moduleName, [types.getLibrary, types.getCompanyVariantRules, types.setSequence, types.setRule, types.addRule, types.setRuleCode, types.getTestingOutput, types.getCompanyName, types.getVariantName]),
 
     async fetchRulesLibrary () {
       const status = await this[types.getLibrary]()
@@ -232,6 +225,31 @@ export default {
         console.log('error')
       }
     },
+
+    async fetchCompanyName () {
+      const vc = this
+
+      const status = await this[types.getCompanyName](vc.company_id)
+
+      if (status === reqStatus.success) {
+        console.log('getCompanyName success')
+      } else {
+        console.log('getCompanyName error')
+      }
+    },
+
+    async fetchVariantName () {
+      const vc = this
+
+      const status = await this[types.getVariantName](vc.variant_id)
+
+      if (status === reqStatus.success) {
+        console.log('getCompanyName success')
+      } else {
+        console.log('getCompanyName error')
+      }
+    },
+
     async fetchCompanyVariantRules () {
       const vc = this
 
@@ -344,6 +362,8 @@ export default {
       const vc = this
       vc.fetchRulesLibrary()
       vc.fetchCompanyVariantRules()
+      vc.fetchCompanyName()
+      vc.fetchVariantName()
     },
     async testSingleRule (index) {
       const vc = this
