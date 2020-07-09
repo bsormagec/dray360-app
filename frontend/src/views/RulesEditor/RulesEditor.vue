@@ -210,9 +210,6 @@ export default {
     vc.company_id = vc.$route.params.company_id
     vc.variant_id = vc.$route.params.variant_id
 
-    console.log('vc.company_id: ' + vc.company_id)
-
-    // TODO: Fix error when passing parameter
     const status = await this[types.getCompanyName](vc.company_id)
 
     if (status === reqStatus.success) {
@@ -220,7 +217,6 @@ export default {
     } else {
       console.log('getCompanyName error')
     }
-    //
 
     await vc.fetchRules()
   },

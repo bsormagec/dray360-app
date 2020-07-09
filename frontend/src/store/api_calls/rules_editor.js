@@ -16,10 +16,12 @@ export const getCompanyName = async (id) => axios.ext.get('/api/companies')
   .then(data => {
     let companyName = ''
     data.data.data.forEach(company => {
-      if (company.id === id) {
+      // eslint-disable-next-line eqeqeq
+      if (company.id == id) {
         companyName = company.name
       }
     })
+    console.log('company name to return: ' + companyName)
     return companyName
   }).catch(function (error) { console.log(error) })
 
