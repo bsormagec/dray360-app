@@ -180,7 +180,8 @@
             </v-list>
           </v-menu>
           <v-list>
-            <v-subheader>{{ company_name }} / {{ variant_name }}</v-subheader>
+            <v-subheader>{{ company_name }}</v-subheader>
+            <v-subheader>{{ variant_name }}</v-subheader>
             <v-list-item-group
               color="primary"
             >
