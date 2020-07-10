@@ -22,8 +22,8 @@
         <FormField
           v-for="(fieldVal, fieldKey) in sectionVal.rootFields"
           :key="fieldKey"
-          :readonly="readonly"
-          :is-editing="isEditing"
+          :readonly="fieldVal.readonly !== undefined ? fieldVal.readonly : readonly"
+          :is-editing="fieldVal.isEditing !== undefined ? fieldVal.isEditing : isEditing"
           :callbacks="fieldCallbacks"
           :field="{
             ...fieldVal,
@@ -71,8 +71,8 @@
         <FormField
           v-for="(subFieldVal, subFieldKey) in subVal.fields"
           :key="subFieldKey"
-          :readonly="readonly"
-          :is-editing="isEditing"
+          :readonly="subFieldVal.readonly !== undefined ? subFieldVal.readonly : readonly"
+          :is-editing="subFieldVal.isEditing !== undefined ? subFieldVal.isEditing : isEditing"
           :callbacks="fieldCallbacks"
           :field="{
             ...subFieldVal,

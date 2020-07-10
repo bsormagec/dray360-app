@@ -2,6 +2,7 @@
   <div class="form-field-element-modal-address">
     <AddressBookModal
       :filters="filters"
+      :field="field"
       @change.capture="(e) => change(e)"
     />
   </div>

@@ -21,11 +21,21 @@ const methods = {
   setFormValues () {
     state.document.forEach(({ highlights }) => {
       highlights.forEach((h) => {
-        formModule.methods.setFormFieldProp({
-          prop: 'value',
-          value: h.value,
-          formLocation: getLocationOnForm(h.name)
-        })
+        if (h.value) {
+          formModule.methods.setFormFieldProp({
+            prop: 'value',
+            value: h.value,
+            formLocation: getLocationOnForm(h.name)
+          })
+        }
+
+        if (h.matchedAddress) {
+          formModule.methods.setFormFieldProp({
+            prop: 'matchedAddress',
+            value: h.matchedAddress,
+            formLocation: getLocationOnForm(h.name)
+          })
+        }
       })
     })
   },

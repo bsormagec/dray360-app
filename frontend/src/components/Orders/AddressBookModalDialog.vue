@@ -1,0 +1,215 @@
+<template>
+  <v-dialog
+    :value="isOpen"
+    max-width="70rem"
+    scrollable
+  >
+    <v-card>
+      <v-card-title>
+        <h1>Addresses</h1>
+        <v-spacer />
+        <v-text-field
+          v-model="search"
+          append-icon="mdi-magnify"
+          label="Search"
+          outlined
+          dense
+          class="address__search"
+        />
+        <v-btn
+          class="primary mx-2"
+          @click="searchApi"
+        >
+          Search
+        </v-btn>
+        <v-btn
+          icon
+          @click="() => change(undefined)"
+        >
+          <v-icon>mdi-close</v-icon>
+        </v-btn>
+      </v-card-title>
+      <v-data-table
+        :headers="headers"
+        :items="addressObject"
+        item-key:item.id
+        :hide-default-header="true"
+        :hide-default-footer="true"
+        scrollable
+      >
+        <template
+          slot="item"
+          slot-scope="props"
+        >
+          <tr>
+            <td class="fullAddress">
+              <span class="city mb-3"><strong>{{ props.item.city }}</strong></span><br>
+              <span class="managed">Managed by: <a
+                href=""
+                color="primary"
+              >
+                {{ props.item.address_line_1 }}</a></span><br>
+              <span class="phone">
+                <v-icon
+                  color="primary"
+                  class="mr-3"
+                  small
+                >
+                  mdi-phone-outline
+                </v-icon>
+                {{ props.item.location_phone }}
+              </span><br>
+              <span class="email">
+                <v-icon
+                  color="primary"
+                  class="mr-3"
+                  small
+                >mdi-email-outline</v-icon>
+                <a href="">{{ props.item.address_line_1 }}</a>
+              </span>
+            </td>
+            <td class="col__icon">
+              <v-icon color="primary">
+                mdi-map-marker-outline
+              </v-icon>
+            </td>
+            <td>
+              {{ getMatchedAddress(props.item) }}
+            </td>
+            <td>
+              <v-btn
+                outlined
+                color="primary"
+                class="float-right"
+                @click="() => change({ id: props.item.t_address_id, matchedAddress: getMatchedAddress(props.item) })"
+              >
+                Select
+              </v-btn>
+            </td>
+          </tr>
+        </template>
+      </v-data-table>
+    </v-card>
+  </v-dialog>
+</template>
+
+<script>
+import { mapState, mapActions } from '@/utils/vuex_mappings'
+import { reqStatus } from '@/enums/req_status'
+import address, { types } from '@/store/modules/address'
+
+export default {
+  props: {
+    isOpen: {
+      type: Boolean,
+      required: true
+    },
+    filters: {
+      type: Object,
+      required: false,
+      default: () => ({
+        company_id: null,
+        tms_provider_id: null,
+        rawtext: '',
+        is_terminal_address: false,
+        is_billable_address: false
+      })
+    }
+  },
+
+  data () {
+    return {
+      ...mapState(address.moduleName, {
+        list: state => state.list
+      }),
+      loaded: false,
+      search: '',
+      addressObject: [],
+      headers: [
+        { text: 'addressObject', value: 'city' },
+        { text: 'addressObject', value: 'managedname' },
+        { text: 'fulladdress', value: 'fulladdress' },
+        { text: 'Actions', value: 'actions' }
+      ]
+    }
+  },
+
+  async mounted () {
+    this.search = this.filters.rawtext
+    await this.fetchAddressList(this.filters)
+
+    this.loaded = true
+    this.addressObject = this.list()
+  },
+
+  methods: {
+    ...mapActions(address.moduleName, [types.getSearchAddress]),
+
+    getMatchedAddress (item) {
+      return `
+                ${item.location_name}
+                ${item.address_line_1}
+                ${item.address_line_2}
+                ${item.city},
+                ${item.state}
+                ${item.postal_code}
+                ${item.t_address_id}`
+    },
+
+    async searchApi () {
+      this.addressObject.splice(0)
+
+      await this.fetchAddressList({
+        ...this.filters,
+        rawtext: this.search
+      })
+
+      this.loaded = true
+      this.addressObject = this.list()
+    },
+
+    async fetchAddressList (filters) {
+      filters.rawtext = this.search
+      const status = await this[types.getSearchAddress](filters)
+
+      if (status === reqStatus.success) {
+        console.log('success')
+      } else {
+        console.log('error')
+      }
+    },
+
+    change (e) {
+      this.$emit('change', e)
+    }
+  }
+}
+</script>
+
+<style lang="scss" scoped>
+.address__search fieldset {
+  height: 5.5rem;
+}
+.v-card__title {
+  display: flex;
+  align-items: baseline;
+  border-bottom: 0.1rem solid map-get($colors, grey-11);
+  height: 8rem;
+}
+.v-data-table td {
+  height: 10rem;
+  width: 18rem;
+}
+.fullAddress {
+  width: 25rem;
+  margin: 3rem auto;
+  span:last-child {
+    width: 20rem !important;
+    display: inline-block;
+  }
+}
+.col__icon {
+  width: 2rem !important;
+  padding: 0rem !important;
+}
+</style>

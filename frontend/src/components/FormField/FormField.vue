@@ -1,6 +1,6 @@
 <template>
   <div
-    :id="`${cleanStrForId(field.name)}-${readonly ? 'viewing' : 'editing'}`"
+    :id="`${cleanStrForId(field.name)}-${(field.readonly) ? 'viewing' : 'editing'}`"
     :test-id="field.name"
     class="form-field"
   >
