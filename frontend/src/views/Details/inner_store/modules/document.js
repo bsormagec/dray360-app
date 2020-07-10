@@ -36,6 +36,14 @@ const methods = {
             formLocation: getLocationOnForm(h.name)
           })
         }
+
+        if (h.verified) {
+          formModule.methods.setFormFieldProp({
+            prop: 'verified',
+            value: h.verified,
+            formLocation: getLocationOnForm(h.name)
+          })
+        }
       })
     })
   },

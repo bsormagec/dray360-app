@@ -227,7 +227,8 @@ export function buildField ({
   isEditing,
   readonly,
   id,
-  matchedAddress
+  matchedAddress,
+  verified
 }) {
   const field = {
     id,
@@ -237,6 +238,7 @@ export function buildField ({
     readonly,
     value,
     matchedAddress,
+    verified,
     el: {
       type,
       placeholder,

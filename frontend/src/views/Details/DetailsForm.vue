@@ -206,7 +206,9 @@ export default {
       const changes = {}
 
       if (key.includes('bill to')) {
-        changes.bill_to_address_id = v
+        if (typeof v === 'number') {
+          changes.bill_to_address_id = v
+        }
         changes.bill_to_address_verified = true
       } else if (formLocation.includes('inventory')) {
         changes.order_line_items = getLineItems(this.currentOrder())
@@ -218,12 +220,18 @@ export default {
             matchedIndex = index
           }
         })
-        changes.order_address_events[matchedIndex].t_address_id = v
+        if (typeof v === 'number') {
+          changes.order_address_events[matchedIndex].t_address_id = v
+        }
       } else if (formLocation.includes('Port Ramp of Origin')) {
-        changes.port_ramp_of_origin_address_id = v
+        if (typeof v === 'number') {
+          changes.port_ramp_of_origin_address_id = v
+        }
         changes.port_ramp_of_origin_address_verified = true
       } else if (formLocation.includes('Port Ramp of Destination')) {
-        changes.port_ramp_of_destination_address_id = v
+        if (typeof v === 'number') {
+          changes.port_ramp_of_destination_address_id = v
+        }
         changes.port_ramp_of_destination_address_verified = true
       } else {
         changes[mapFieldNames.getName({ formFieldName: key })] = v

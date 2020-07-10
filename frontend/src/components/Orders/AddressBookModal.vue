@@ -4,7 +4,7 @@
 
     <div class="address-book-modal__body">
       <div
-        v-if="!isVerified"
+        v-if="!isVerified && !field.verified"
         class="address-book-modal__body__status"
       >
         <span>Address Verification Needed</span>
@@ -19,14 +19,14 @@
       </div>
 
       <div class="address-book-modal__body__block">
-        <span class="block__left">{{ isVerified ? 'Verified Address' : 'Closest Match' }}</span>
+        <span class="block__left">{{ !isVerified && !field.verified ? 'Closest Match' : 'Verified Address' }}</span>
         <span class="block__right">{{ matchedToDisplay }}</span>
       </div>
     </div>
 
     <div class="address-book-modal__footer">
       <v-btn
-        v-if="!isVerified"
+        v-if="!isVerified && !field.verified"
         color="primary"
         outlined
         style="margin-right: 2rem;"
@@ -98,6 +98,7 @@ export default {
   methods: {
     verifyMatch () {
       this.isVerified = true
+      this.change({ id: this.field.value, matchedAddress: this.field.matchedAddress })
     },
 
     toggleIsOpen () {
@@ -106,6 +107,7 @@ export default {
 
     change ({ id, matchedAddress } = {}) {
       if (typeof id !== 'undefined') {
+        this.isVerified = true
         this.recogEmitted = this.field.value
         this.matchedToDisplay = matchedAddress
         this.$emit('change', id)

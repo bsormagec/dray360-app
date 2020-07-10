@@ -53,7 +53,8 @@ function getHighlights (data) {
               isEditing: true,
               readonly: false,
               id: evt.id,
-              matchedAddress: evtValue
+              matchedAddress: evtValue,
+              verified: evt.t_address_verified
             })
           )
 
@@ -97,7 +98,8 @@ function getHighlights (data) {
           ...getOcrData(key, data),
           name: mapFieldNames.getName({ abbyName: key }),
           value: data.bill_to_address_raw_text,
-          matchedAddress: defaultsTo(() => `${data.bill_to_address?.location_name} \n ${data.bill_to_address?.address_line_1} \n ${data.bill_to_address?.address_line_2} \n ${data.bill_to_address?.city}, ${data.bill_to_address?.state} ${data.bill_to_address?.postal_code} `, '--')
+          matchedAddress: defaultsTo(() => `${data.bill_to_address?.location_name} \n ${data.bill_to_address?.address_line_1} \n ${data.bill_to_address?.address_line_2} \n ${data.bill_to_address?.city}, ${data.bill_to_address?.state} ${data.bill_to_address?.postal_code} `, '--'),
+          verified: data.bill_to_address_verified
         }
       } else if (key.includes('port_ramp')) {
         /* eslint camelcase: 0 */
@@ -115,7 +117,8 @@ function getHighlights (data) {
             isEditing: true,
             readonly: false,
             matchedAddress: matchedText,
-            value: defaultsTo(() => data[`${key}_raw_text`], '--')
+            value: defaultsTo(() => data[`${key}_raw_text`], '--'),
+            verified: data[`${key}_verified`]
           })
         )
         /* -- */
