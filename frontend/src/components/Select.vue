@@ -37,6 +37,11 @@ export default {
       type: Object,
       required: false,
       default: () => ({})
+    },
+    defaultItems: {
+      type: Array,
+      required: false,
+      default: () => ([])
     }
   },
 
@@ -45,6 +50,12 @@ export default {
   }),
 
   mounted () {
+    if (this.defaultItems.length > 0) {
+      this.selected = this.defaultItems
+      this.change(this.selected)
+      return
+    }
+
     if (typeof this.defaultItem.index === 'number') {
       this.selected = [this.items[this.defaultItem.index].value]
       this.change(this.selected)

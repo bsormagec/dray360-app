@@ -35,6 +35,7 @@
         item-key:item.id
         :hide-default-header="true"
         :hide-default-footer="true"
+        :loading="loading"
         scrollable
       >
         <template
@@ -122,6 +123,7 @@ export default {
       ...mapState(address.moduleName, {
         list: state => state.list
       }),
+      loading: false,
       loaded: false,
       search: '',
       addressObject: [],
@@ -134,12 +136,23 @@ export default {
     }
   },
 
+  watch: {
+    async isOpen (newVal) {
+      if (!newVal || this.loaded) {
+        return
+      }
+
+      this.loading = true
+      await this.fetchAddressList(this.filters)
+
+      this.loading = false
+      this.loaded = true
+      this.addressObject = this.list()
+    }
+  },
+
   async mounted () {
     this.search = this.filters.rawtext
-    await this.fetchAddressList(this.filters)
-
-    this.loaded = true
-    this.addressObject = this.list()
   },
 
   methods: {
@@ -159,11 +172,14 @@ export default {
     async searchApi () {
       this.addressObject.splice(0)
 
+      this.loaded = false
+      this.loading = true
       await this.fetchAddressList({
         ...this.filters,
         rawtext: this.search
       })
 
+      this.loading = false
       this.loaded = true
       this.addressObject = this.list()
     },

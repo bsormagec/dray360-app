@@ -18,11 +18,7 @@ class OrdersPolicy
      */
     public function viewAny(User $user)
     {
-        if (request()->has('filter.status')) {
-            return $user->isAbleTo('system-status-filter');
-        }
-
-        return true;
+        return $user->isAbleTo('orders-view');
     }
 
     /**

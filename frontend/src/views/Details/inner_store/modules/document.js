@@ -164,6 +164,7 @@ const methods = {
 
   reset () {
     state.document = []
+    formModule.methods.reset()
   }
 }
 

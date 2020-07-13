@@ -129,8 +129,11 @@ export default {
     },
 
     setStatusFilter (statuses) {
-      const query = statuses.map(s => `filter[status]=${s}`)
-      this.statusFilter = query.join('&')
+      if (statuses.length === 0) {
+        this.statusFilter = ''
+      } else {
+        this.statusFilter = `filter[status]=${statuses.join(',')}`
+      }
     },
 
     setSearchFilter (filters) {

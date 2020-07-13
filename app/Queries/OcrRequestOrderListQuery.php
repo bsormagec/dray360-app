@@ -52,7 +52,7 @@ class OcrRequestOrderListQuery extends QueryBuilder
                 });
             }),
         ])
-        ->defaultSort('-t_job_latest_state.created_at')
+        ->defaultSort('-t_job_latest_state.created_at', '-t_orders.id')
         ->allowedSorts([
             AllowedSort::field('request_id', 't_job_latest_state.request_id'),
             AllowedSort::field('created_at', 't_job_latest_state.created_at'),
