@@ -86,13 +86,11 @@ export default {
     recogEmitted: ''
   }),
 
-  async mounted () {
+  mounted () {
     this.matchedToDisplay = this.field.matchedAddress
     this.search = this.filters.rawtext
-    await this.fetchAddressList(this.filters)
 
     this.loaded = true
-    this.addressObject = this.list()
   },
 
   methods: {

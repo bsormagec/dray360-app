@@ -47,7 +47,7 @@ const actions = {
     const filtersForParams = { ...filters }
     delete filtersForParams.query
 
-    const [error, data] = await getOrders(filters, query)
+    const [error, data] = await getOrders(filtersForParams, query)
 
     if (error) return reqStatus.error
 

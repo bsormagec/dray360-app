@@ -69,50 +69,20 @@ export default {
       { text: 'Actions', value: 'action', width: '8.5rem' }
     ],
     statuses: [
-      {
-        text: 'intake-accepted',
-        value: 'intake-accepted'
-      },
-      {
-        text: 'intake-exception',
-        value: 'intake-exception'
-      },
-      {
-        text: 'intake-rejected',
-        value: 'intake-rejected'
-      },
-      {
-        text: 'intake-started',
-        value: 'intake-started'
-      },
-      {
-        text: 'ocr-completed',
-        value: 'ocr-completed'
-      },
-      {
-        text: 'ocr-post-processing-complete',
-        value: 'ocr-post-processing-complete'
-      },
-      {
-        text: 'ocr-post-processing-error',
-        value: 'ocr-post-processing-error'
-      },
-      {
-        text: 'ocr-waiting',
-        value: 'ocr-waiting'
-      },
-      {
-        text: 'process-ocr-output-file-complete',
-        value: 'process-ocr-output-file-complete'
-      },
-      {
-        text: 'process-ocr-output-file-error',
-        value: 'process-ocr-output-file-error'
-      },
-      {
-        text: 'upload-requested',
-        value: 'upload-requested'
-      }
+      { text: 'intake-accepted', value: 'intake-accepted' },
+      { text: 'intake-exception', value: 'intake-exception' },
+      { text: 'intake-rejected', value: 'intake-rejected' },
+      { text: 'intake-started', value: 'intake-started' },
+      { text: 'ocr-completed', value: 'ocr-completed' },
+      { text: 'ocr-post-processing-complete', value: 'ocr-post-processing-complete' },
+      { text: 'ocr-post-processing-error', value: 'ocr-post-processing-error' },
+      { text: 'ocr-waiting', value: 'ocr-waiting' },
+      { text: 'process-ocr-output-file-complete', value: 'process-ocr-output-file-complete' },
+      { text: 'process-ocr-output-file-error', value: 'process-ocr-output-file-error' },
+      { text: 'upload-requested', value: 'upload-requested' },
+      { text: 'sending-to-wint', value: 'sending-to-wint' },
+      { text: 'failure-sending-to-wint', value: 'failure-sending-to-wint' },
+      { text: 'success-sending-to-wint', value: 'success-sending-to-wint' }
     ]
   }),
 
