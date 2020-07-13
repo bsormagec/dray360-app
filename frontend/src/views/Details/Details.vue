@@ -112,19 +112,14 @@ export default {
 
     startDragging (e) {
       e.preventDefault()
-      const endPos = e.clientX - this.startPos
-      this.setResizeDiff(endPos >= 0 ? 1.5 : -1.5)
-    },
+      const newDiff = this.resizeDiff * e.clientX / this.startPos
 
-    setResizeDiff (diff) {
-      if (this.resizeDiff + diff >= 70) {
-        return
-      }
-      if (this.resizeDiff + diff <= 35) {
+      if (newDiff >= 70 || newDiff <= 35) {
         return
       }
 
-      this.resizeDiff += diff
+      this.resizeDiff = newDiff
+      this.startPos = e.clientX
     },
 
     stopDragging (e) {
