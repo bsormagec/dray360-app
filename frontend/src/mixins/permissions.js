@@ -9,12 +9,36 @@ export default {
   }),
 
   methods: {
-    hasPermission (permission) {
+    hasAllPermissions (...requestedPermissions) {
+      let acceptedPerms = 0
+      this.currentUser().user.permissions.forEach(perm => {
+        console.log('user permission: ', perm)
+        requestedPermissions.forEach(reqPerm => {
+          console.log('requested permission: ', reqPerm)
+          if (perm.name === reqPerm) {
+            console.log('match')
+            acceptedPerms++
+          }
+        })
+      })
+      console.log('requestedpermissions.length: ', requestedPermissions.length)
+      if (acceptedPerms === requestedPermissions.length) {
+        console.log('size match')
+        return true
+      } else {
+        return false
+      }
+    },
+
+    hasOnePermission (...requestedPermissions) {
       let result = false
       this.currentUser().user.permissions.forEach(perm => {
-        if (perm.name === permission) {
-          result = true
-        }
+        requestedPermissions.forEach(reqPerm => {
+          if (perm.name === reqPerm) {
+            console.log('match')
+            result = true
+          }
+        })
       })
       return result
     }

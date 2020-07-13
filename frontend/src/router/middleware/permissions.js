@@ -1,12 +1,3 @@
-// export default function permission (...permissions) {
-//   return async function permission ({ next, store }) {
-//     if (!store.state.currentUser?.canAny(permissions)) {
-//       return next(new Error('You do not have permission to view this page.'))
-//     }
-//     next()
-//   }
-// }
-
 export default function permission (requestedPermission) {
   let canAccess = false
   return async function permission ({ next, store }) {
