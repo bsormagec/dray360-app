@@ -216,6 +216,7 @@ export default {
         changes.order_address_events = getAddressEvents(this.currentOrder())
         let matchedIndex = -1
         changes.order_address_events.forEach((address, index) => {
+          delete address.t_address_raw_text
           if (key.includes(address.event_number)) {
             matchedIndex = index
           }
