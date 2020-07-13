@@ -34,7 +34,7 @@
       </v-btn>
 
       <v-btn
-        v-if="!isMobile && hasOnePermission('tms-submit')"
+        v-if="!isMobile && hasAllPermissions('tms-submit')"
         color="primary"
         outlined
         width="11.5rem"

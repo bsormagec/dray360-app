@@ -10,6 +10,7 @@ export default {
 
   methods: {
     hasAllPermissions (...requestedPermissions) {
+      console.log('mixins has all permissions')
       let acceptedPerms = 0
       this.currentUser().user.permissions.forEach(perm => {
         console.log('user permission: ', perm)
