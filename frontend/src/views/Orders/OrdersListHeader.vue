@@ -20,7 +20,7 @@
         label="View by Status"
         :style="getStyle.statusSelect"
         :items="statuses"
-        :default-item="{ index: 5 }"
+        :default-items="defaultSelected"
         @change="handleStatuses"
       />
 
@@ -67,7 +67,22 @@ export default {
   data: () => ({
     cachedHeaders: [],
     headerItems: [],
-    clientWidth: window.innerWidth
+    clientWidth: window.innerWidth,
+    defaultSelected: [
+      'intake-accepted',
+      'intake-exception',
+      'intake-started',
+      'ocr-completed',
+      'ocr-post-processing-complete',
+      'ocr-post-processing-error',
+      'ocr-waiting',
+      'process-ocr-output-file-complete',
+      'process-ocr-output-file-error',
+      'upload-requested',
+      'sending-to-wint',
+      'failure-sending-to-wint',
+      'success-sending-to-wint'
+    ]
   }),
 
   computed: {
@@ -99,7 +114,7 @@ export default {
   methods: {
     handleSearch (search) {
       const filters = {
-        'filter[order.bill_to_address_raw_text]': search
+        'filter[query]': search
       }
 
       this[providerMethodsName].setSearchFilter(filters)

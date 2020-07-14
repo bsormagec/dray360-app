@@ -279,7 +279,7 @@ return [
         | The route where the go back link should point
         |
         */
-        'go_back_route' => '/',
+        'go_back_route' => '/dashboard',
 
         /*
         |--------------------------------------------------------------------------

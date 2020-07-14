@@ -101,7 +101,7 @@ export default {
       return this.activeMobileTab === tab
     },
 
-    async fetchOrdersList (filters = { page: 1 }) {
+    async fetchOrdersList (filters = { page: new URLSearchParams(window.location.search).get('page') }) {
       this.activePage = parseInt(this.handleLocationUrl(filters.page))
       const status = await this[types.getOrders]({
         ...this.searchFilter,
@@ -129,8 +129,11 @@ export default {
     },
 
     setStatusFilter (statuses) {
-      const query = statuses.map(s => `filter[status]=${s}`)
-      this.statusFilter = query.join('&')
+      if (statuses.length === 0) {
+        this.statusFilter = ''
+      } else {
+        this.statusFilter = `filter[status]=${statuses.join(',')}`
+      }
     },
 
     setSearchFilter (filters) {

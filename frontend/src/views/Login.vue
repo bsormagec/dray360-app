@@ -71,7 +71,7 @@ export default {
   },
 
   mounted () {
-    if (this.loggedIn()) this.$router.push('/')
+    if (this.loggedIn()) this.$router.push('/dashboard/')
   },
 
   methods: {
@@ -80,7 +80,7 @@ export default {
         this.loginError = false
         try {
           await this.$store.dispatch('AUTH/login', { email: this.email, password: this.password })
-          if (this.$store.state.AUTH.intendedUrl === undefined) { this.$router.push('/') } else { this.$router.push(encodeURI(this.$store.state.AUTH.intendedUrl)) }
+          if (this.$store.state.AUTH.intendedUrl === undefined) { this.$router.push('/dashboard/') } else { this.$router.push(this.$store.state.AUTH.intendedUrl) }
         } catch (exception) {
           this.loginError = true
         }

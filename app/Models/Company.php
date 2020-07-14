@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Contracts\CurrentCompany;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
@@ -12,12 +13,13 @@ use Illuminate\Database\Eloquent\SoftDeletes;
  * @property integer $t_address_id
  * @property string $name
  */
-class Company extends Model
+class Company extends Model implements CurrentCompany
 {
     use SoftDeletes;
 
     const CREATED_AT = 'created_at',
         UPDATED_AT = 'updated_at',
+        FOREIGN_KEY = 't_company_id',
         CUSHING = 'Cushing',
         TCOMPANIES_DEV = 'TCompaniesDev',
         POLARIS = 'Polaris';
@@ -32,6 +34,7 @@ class Company extends Model
         'email_intake_address',
         'email_intake_address_alt',
         'default_tms_provider_id',
+        'refs_comments_mapping',
     ];
 
     /**
@@ -40,14 +43,16 @@ class Company extends Model
     protected $casts = [
         'id' => 'integer',
         't_address_id' => 'integer',
-        'name' => 'string'
+        'name' => 'string', 
+        'refs_comments_mapping' => 'json'
     ];
 
     /**
      * Validation rules
      */
     public static $rules = [
-        't_address_id' => 'required'
+        't_address_id' => 'required', 
+        'refs_comments_mapping' => 'required'
     ];
 
     public function address()

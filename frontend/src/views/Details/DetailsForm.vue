@@ -22,8 +22,8 @@
         <FormField
           v-for="(fieldVal, fieldKey) in sectionVal.rootFields"
           :key="fieldKey"
-          :readonly="readonly"
-          :is-editing="isEditing"
+          :readonly="fieldVal.readonly !== undefined ? fieldVal.readonly : readonly"
+          :is-editing="fieldVal.isEditing !== undefined ? fieldVal.isEditing : isEditing"
           :callbacks="fieldCallbacks"
           :field="{
             ...fieldVal,
@@ -71,8 +71,8 @@
         <FormField
           v-for="(subFieldVal, subFieldKey) in subVal.fields"
           :key="subFieldKey"
-          :readonly="readonly"
-          :is-editing="isEditing"
+          :readonly="subFieldVal.readonly !== undefined ? subFieldVal.readonly : readonly"
+          :is-editing="subFieldVal.isEditing !== undefined ? subFieldVal.isEditing : isEditing"
           :callbacks="fieldCallbacks"
           :field="{
             ...subFieldVal,
@@ -206,7 +206,9 @@ export default {
       const changes = {}
 
       if (key.includes('bill to')) {
-        changes.bill_to_address_id = v
+        if (typeof v === 'number') {
+          changes.bill_to_address_id = v
+        }
         changes.bill_to_address_verified = true
       } else if (formLocation.includes('inventory')) {
         changes.order_line_items = getLineItems(this.currentOrder())
@@ -214,16 +216,23 @@ export default {
         changes.order_address_events = getAddressEvents(this.currentOrder())
         let matchedIndex = -1
         changes.order_address_events.forEach((address, index) => {
+          delete address.t_address_raw_text
           if (key.includes(address.event_number)) {
             matchedIndex = index
           }
         })
-        changes.order_address_events[matchedIndex].t_address_id = v
+        if (typeof v === 'number') {
+          changes.order_address_events[matchedIndex].t_address_id = v
+        }
       } else if (formLocation.includes('Port Ramp of Origin')) {
-        changes.port_ramp_of_origin_address_id = v
+        if (typeof v === 'number') {
+          changes.port_ramp_of_origin_address_id = v
+        }
         changes.port_ramp_of_origin_address_verified = true
       } else if (formLocation.includes('Port Ramp of Destination')) {
-        changes.port_ramp_of_destination_address_id = v
+        if (typeof v === 'number') {
+          changes.port_ramp_of_destination_address_id = v
+        }
         changes.port_ramp_of_destination_address_verified = true
       } else {
         changes[mapFieldNames.getName({ formFieldName: key })] = v

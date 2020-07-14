@@ -22,12 +22,13 @@ class SendToTmsController extends Controller
     public function __invoke(Request $request)
     {
         $data = $request->validate([
-            'status' => ['required', Rule::in(self::VALID_STATUSES)],
-            'order_id' => 'required|exists:t_orders,id',
+            'status' => ['required', 'string', Rule::in(self::VALID_STATUSES)],
+            'order_id' => 'required|integer|exists:t_orders,id',
         ]);
         $order = $this->getOrder($data['order_id']);
 
-        $this->checkIfOrderIsValidated($order);
+        // Do not validate that addresses are all verified=true, for now (July 7th, 2020, PBN)
+        // $this->checkIfOrderIsValidated($order);
 
         $data['request_id'] = $order->request_id;
         $data['company_id'] = $order->t_company_id;

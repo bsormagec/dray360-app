@@ -2,6 +2,7 @@
   <div class="form-field-element-modal-address">
     <AddressBookModal
       :filters="filters"
+      :field="field"
       @change.capture="(e) => change(e)"
     />
   </div>
@@ -93,7 +94,7 @@ export default {
           company_id,
           tms_provider_id,
           rawtext: this.field.value,
-          is_terminal_address: false,
+          is_terminal_address: true,
           is_billable_address: false
         }
       }

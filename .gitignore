@@ -19,3 +19,5 @@ npm-debug.log
 yarn-error.log
 /.vscode
 /tmp
+nohup.out
+phpinfo.php

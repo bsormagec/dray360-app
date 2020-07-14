@@ -544,3 +544,15 @@ sudo apt-get update
 sudo apt-get install apt-transport-https
 sudo apt-get install code
 ````
+
+
+
+
+#### Troubleshooting: Enable xdebug to work with vscode
+
+````bash
+grep remote_autostart /etc/php/7.4/mods-available/xdebug.ini || echo "xdebug.remote_autostart=true
+xdebug.remote_enable = 1" | sudo tee -a /etc/php/7.4/mods-available/xdebug.ini
+
+````
+

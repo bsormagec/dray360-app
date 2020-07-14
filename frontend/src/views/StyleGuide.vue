@@ -68,44 +68,43 @@
           <ErrorHandling
             label="snackbar"
             type="{modal}"
-            :message="snackbarmessage"
-          />
-          <h2>Date Range Calendar</h2><br>
-
-          <p>
-            <DateRangeCalendar />
-          </p>
+            :message="snackbarmessage">
+            <h2> Date Range Calendar</h2><br>
+            <p>
+              <DateRangeCalendar />
+            </p>
           <!--
           **************************
           ADDRESS BOOK MODAL SECTION HERE
           **************************
           -->
-          <h2>Address Book Modal</h2><br>
-          <code>Receive as props: rawtext (String), companyId (Number) and tmsProviderId (Number)</code>
-          <!-- <AddressBookModal
-            rawtext="test"
-            :company-id="1"
-            :tms-provider-id="1"
-            @change="change"
-          /> -->
-          <h2>No Match Modal / Address not found</h2><br>
-          <code>Props: *modaltype* = AddressNotFound <br> currentstep = "the position in the stepper component" <br></code>
-          <div>
-            <OrderModal
-              :currentstep="1"
-              modaltype="AddressNotFound"
-              :message="message"
-            />
-          </div>
-          <h2>Close Match Modal / Address Verification Needed</h2><br>
-          <code>Props: *modaltype* = VerificationNeded <br> currentstep = "the position in the stepper component" <br> message: the message that indicates the user about the closest match</code>
-          <div>
-            <OrderModal
-              :currentstep="2"
-              modaltype="VerificationNeded"
-              :message="message"
-            />
-          </div>
+            <h2>Address Book Modal</h2><br>
+            <code>Receive as props: rawtext (String), companyId (Number) and tmsProviderId (Number)</code>
+            <!-- <AddressBookModal -->
+              <!-- rawtext="test" -->
+              <!-- :company-id="1" -->
+              <!-- :tms-provider-id="1" -->
+              <!-- @change="change" -->
+            <!-- /> -->
+            <h2>No Match Modal / Address not found</h2><br>
+            <code>Props: *modaltype* = AddressNotFound <br> currentstep = "the position in the stepper component" <br></code>
+            <div>
+              <OrderModal
+                currentstep="1"
+                modaltype="AddressNotFound"
+                :message="message"
+              />
+            </div>
+            <h2>Close Match Modal /  Address Verification Needed</h2><br>
+            <code>Props: *modaltype* = VerificationNeded <br> currentstep = "the position in the stepper component" <br> message: the message that indicates the user about the closest match</code>
+            <div>
+              <OrderModal
+                currentstep="2"
+                modaltype="VerificationNeded"
+                :message="message"
+              />
+            </div>
+          </errorhandling>
         </div>
         <div class="col-md-6 right-side">
           <h2>
@@ -190,9 +189,7 @@ import FormField from '@/components/FormField/FormField'
 import SearchBar from '@/components/SearchBar'
 import Select from '@/components/Select'
 import ContentLoading from '@/components/ContentLoading'
-
 import ErrorHandling from '@/components/General/ErrorHandling'
-
 import DateRangeCalendar from '@/components/Orders/DateRangeCalendar'
 // import AddressBookModal from '@/components/Orders/AddressBookModal'
 import OrderModal from '@/components/Orders/OrderModal'

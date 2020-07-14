@@ -42,21 +42,26 @@ function getHighlights (data) {
         evts.forEach((evt, i) => {
           const evtName = `${evt.event_number} : ${evt.unparsed_event_type || 'Unknown'}`.toLowerCase()
           // const evtName = defaultsTo(() => (evt.event_number + ':' + evt.unparsed_event_type).toLowerCase(), 'EventType Unknown:' + evt.event_number)
-          const evtValue = defaultsTo(() => `${evt.address?.location_name} \n ${evt.address?.address_line_1} \n ${evt.address?.address_line_2} \n ${evt.address?.city}, ${evt.address?.state} ${evt.address?.postal_code}`, '--')
+          const evtValue = getMatchedAddress(evt)
 
           const addrEvents = formModule.state.form.sections.itinerary.rootFields
           Vue.set(
             addrEvents,
             evtName,
             buildField({
-              type: 'modal-address'
+              type: 'modal-address',
+              isEditing: true,
+              readonly: false,
+              id: evt.id,
+              matchedAddress: evtValue,
+              verified: evt.t_address_verified
             })
           )
 
           highlights[evtName] = {
             ...getOcrData(`order_address_events.${i}`, data),
             name: evtName,
-            value: evtValue
+            value: evt.t_address_raw_text
           }
         })
       } else if (key === 'order_line_items') {
@@ -92,7 +97,9 @@ function getHighlights (data) {
         highlights[key] = {
           ...getOcrData(key, data),
           name: mapFieldNames.getName({ abbyName: key }),
-          value: defaultsTo(() => `${data.bill_to_address?.location_name} \n ${data.bill_to_address?.address_line_1} \n ${data.bill_to_address?.address_line_2} \n ${data.bill_to_address?.city}, ${data.bill_to_address?.state} ${data.bill_to_address?.postal_code} `, '--')
+          value: data.bill_to_address_raw_text,
+          matchedAddress: defaultsTo(() => `${data.bill_to_address?.location_name} \n ${data.bill_to_address?.address_line_1} \n ${data.bill_to_address?.address_line_2} \n ${data.bill_to_address?.city}, ${data.bill_to_address?.state} ${data.bill_to_address?.postal_code} `, '--'),
+          verified: data.bill_to_address_verified
         }
       } else if (key.includes('port_ramp')) {
         /* eslint camelcase: 0 */
@@ -107,15 +114,18 @@ function getHighlights (data) {
           `${portRampKeyParser(key)}`,
           buildField({
             type: 'modal-address',
-            value: matchedText
+            isEditing: true,
+            readonly: false,
+            matchedAddress: matchedText,
+            value: defaultsTo(() => data[`${key}_raw_text`], '--'),
+            verified: data[`${key}_verified`]
           })
         )
         /* -- */
 
         highlights[key] = {
           ...getOcrData(key, data),
-          name: mapFieldNames.getName({ abbyName: key }),
-          value: defaultsTo(() => data[`${key}_raw_text`], '--')
+          name: mapFieldNames.getName({ abbyName: key })
         }
       } else {
         highlights[key] = {
@@ -168,4 +178,8 @@ function strSpacer (str, spacer) {
 
 function portRampKeyParser (key) {
   return key.includes('destination') ? 'Port Ramp of Destination' : 'Port Ramp of Origin'
+}
+
+function getMatchedAddress (evt) {
+  return defaultsTo(() => `${evt.address?.location_name} \n ${evt.address?.address_line_1} \n ${evt.address?.address_line_2} \n ${evt.address?.city}, ${evt.address?.state} ${evt.address?.postal_code}`, '--')
 }

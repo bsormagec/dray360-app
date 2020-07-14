@@ -2,6 +2,7 @@
 
 namespace App\Queries;
 
+use App\Models\Company;
 use App\Models\OCRRequest;
 use Spatie\QueryBuilder\AllowedSort;
 use Spatie\QueryBuilder\QueryBuilder;
@@ -16,6 +17,7 @@ class OcrRequestOrderListQuery extends QueryBuilder
         $query = OCRRequest::query()
             ->select('t_job_latest_state.*')
             ->addSelect('t_orders.id as t_order_id')
+            // ->where('t_orders.'.Company::FOREIGN_KEY, currentCompany()->id) For example to return just the orders of the current company.
             ->with([
                 'order:id,request_id,bill_to_address_raw_text,created_at,equipment_type,shipment_designation,shipment_direction',
                 'latestOcrRequestStatus:id,status,status_date',
@@ -50,7 +52,7 @@ class OcrRequestOrderListQuery extends QueryBuilder
                 });
             }),
         ])
-        ->defaultSort('-t_job_latest_state.created_at')
+        ->defaultSort('-t_job_latest_state.created_at', '-t_orders.id')
         ->allowedSorts([
             AllowedSort::field('request_id', 't_job_latest_state.request_id'),
             AllowedSort::field('created_at', 't_job_latest_state.created_at'),

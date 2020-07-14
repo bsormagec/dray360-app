@@ -1,122 +1,71 @@
 <template>
-  <div>
-    <v-dialog
-      v-model="dialog"
-      max-width="70rem"
-      scrollable
-    >
-      <v-card>
-        <v-card-title>
-          <h1>Addresses</h1>
-          <v-spacer />
-          <v-text-field
-            v-model="search"
-            append-icon="mdi-magnify"
-            label="Search"
-            outlined
-            dense
-            class="address__search"
-          />
-          <v-btn
-            class="primary mx-2"
-            @click="searchApi"
-          >
-            Search
-          </v-btn>
-          <v-btn
-            icon
-            @click="dialog = false"
-          >
-            <v-icon>mdi-close</v-icon>
-          </v-btn>
-        </v-card-title>
-        <v-data-table
-          :headers="headers"
-          :items="addressObject"
-          item-key:item.id
-          :hide-default-header="true"
-          :hide-default-footer="true"
-          scrollable
-        >
-          <template
-            slot="item"
-            slot-scope="props"
-          >
-            <tr>
-              <td class="fullAddress">
-                <span class="city mb-3"><strong>{{ props.item.city }}</strong></span><br>
-                <span class="managed">Managed by: <a
-                  href=""
-                  color="primary"
-                >
-                  {{ props.item.address_line_1 }}</a></span><br>
-                <span class="phone">
-                  <v-icon
-                    color="primary"
-                    class="mr-3"
-                    small
-                  >
-                    mdi-phone-outline
-                  </v-icon>
-                  {{ props.item.location_phone }}
-                </span><br>
-                <span class="email">
-                  <v-icon
-                    color="primary"
-                    class="mr-3"
-                    small
-                  >mdi-email-outline</v-icon>
-                  <a href="">{{ props.item.address_line_1 }}</a>
-                </span>
-              </td>
-              <td class="col__icon">
-                <v-icon color="primary">
-                  mdi-map-marker-outline
-                </v-icon>
-              </td>
-              <td>
-                {{ `
-                ${props.item.location_name}
-                ${props.item.address_line_1}
-                ${props.item.address_line_2}
-                ${props.item.city},
-                ${props.item.state}
-                ${props.item.postal_code}
-                ${props.item.t_address_id}` }}
-              </td>
-              <td>
-                <v-btn
-                  outlined
-                  color="primary"
-                  class="float-right"
-                  @click="() => change(props.item.t_address_id)"
-                >
-                  Select
-                </v-btn>
-              </td>
-            </tr>
-          </template>
-        </v-data-table>
-      </v-card>
+  <div class="address-book-modal">
+    <span class="address-book-modal__title"><strong>{{ field.name }}</strong></span>
 
-      <template v-slot:activator="{ on }">
-        <p>
-          <a v-on="on">
-            Addres Book Modal
-          </a>
-        </p>
-      </template>
-    </v-dialog>
+    <div class="address-book-modal__body">
+      <div
+        v-if="!isVerified && !field.verified"
+        class="address-book-modal__body__status"
+      >
+        <span>Address Verification Needed</span>
+        <v-icon color="#cc904c">
+          mdi-alert
+        </v-icon>
+      </div>
+
+      <div class="address-book-modal__body__block">
+        <span class="block__left">Address as Recognized</span>
+        <span class="block__right">{{ recogEmitted || field.value }}</span>
+      </div>
+
+      <div class="address-book-modal__body__block">
+        <span class="block__left">{{ !isVerified && !field.verified ? 'Closest Match' : 'Verified Address' }}</span>
+        <span class="block__right">{{ matchedToDisplay }}</span>
+      </div>
+    </div>
+
+    <div class="address-book-modal__footer">
+      <v-btn
+        v-if="!isVerified && !field.verified"
+        color="primary"
+        outlined
+        style="margin-right: 2rem;"
+        @click="verifyMatch"
+      >
+        Verify Closest Match
+      </v-btn>
+
+      <v-btn
+        color="primary"
+        outlined
+        @click="toggleIsOpen"
+      >
+        Select Different
+      </v-btn>
+    </div>
+
+    <AddressBookModalDialog
+      :is-open="isOpen"
+      :filters="filters"
+      @change="change"
+    />
   </div>
 </template>
 
 <script>
-import { mapState, mapActions } from '@/utils/vuex_mappings'
-import { reqStatus } from '@/enums/req_status'
-import address, { types } from '@/store/modules/address'
+import AddressBookModalDialog from '@/components/Orders/AddressBookModalDialog'
 
 export default {
+
+  components: {
+    AddressBookModalDialog
+  },
+
   props: {
+    field: {
+      type: Object,
+      required: true
+    },
     filters: {
       type: Object,
       required: false,
@@ -130,90 +79,99 @@ export default {
     }
   },
 
-  data () {
-    return {
-      ...mapState(address.moduleName, {
-        list: state => state.list
-      }),
-      dialog: false,
-      loaded: false,
-      search: '',
-      addressObject: [],
-      headers: [
-        { text: 'addressObject', value: 'city' },
-        { text: 'addressObject', value: 'managedname' },
-        { text: 'fulladdress', value: 'fulladdress' },
-        { text: 'Actions', value: 'actions' }
-      ]
-    }
-  },
+  data: () => ({
+    isVerified: false,
+    isOpen: false,
+    matchedToDisplay: '',
+    recogEmitted: ''
+  }),
 
-  async mounted () {
+  mounted () {
+    this.matchedToDisplay = this.field.matchedAddress
     this.search = this.filters.rawtext
-    await this.fetchAddressList(this.filters)
 
     this.loaded = true
-    this.addressObject = this.list()
   },
 
   methods: {
-    ...mapActions(address.moduleName, [types.getSearchAddress]),
-
-    async searchApi () {
-      this.addressObject.splice(0)
-
-      await this.fetchAddressList({
-        ...this.filters,
-        rawtext: this.search
-      })
-
-      this.loaded = true
-      this.addressObject = this.list()
+    verifyMatch () {
+      this.isVerified = true
+      this.change({ id: this.field.value, matchedAddress: this.field.matchedAddress })
     },
 
-    async fetchAddressList (filters) {
-      filters.rawtext = this.search
-      const status = await this[types.getSearchAddress](filters)
+    toggleIsOpen () {
+      this.isOpen = !this.isOpen
+    },
 
-      if (status === reqStatus.success) {
-        console.log('success')
-      } else {
-        console.log('error')
+    change ({ id, matchedAddress } = {}) {
+      if (typeof id !== 'undefined') {
+        this.isVerified = true
+        this.recogEmitted = this.field.value
+        this.matchedToDisplay = matchedAddress
+        this.$emit('change', id)
       }
-    },
 
-    change (e) {
-      this.$emit('change', e)
-      this.dialog = false
+      this.isOpen = false
     }
   }
 }
 </script>
 
 <style lang="scss" scoped>
-.address__search fieldset {
-  height: 5.5rem;
-}
-.v-card__title {
-  display: flex;
-  align-items: baseline;
-  border-bottom: 0.1rem solid map-get($colors, grey-11);
-  height: 8rem;
-}
-.v-data-table td {
-  height: 10rem;
-  width: 18rem;
-}
-.fullAddress {
-  width: 25rem;
-  margin: 3rem auto;
-  span:last-child {
-    width: 20rem !important;
-    display: inline-block;
+.address-book-modal {
+  .address-book-modal__title {
+    display: block;
+    font-size: 1.4rem !important;
+    padding-bottom: 1.1rem;
+    border-bottom: 0.1rem solid map-get($colors, grey-9);
+    margin-bottom: 2rem;
+    text-transform: capitalize;
   }
-}
-.col__icon {
-  width: 2rem !important;
-  padding: 0rem !important;
+
+  .address-book-modal__body {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .address-book-modal__body__status {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+
+    span {
+      flex-grow: 1;
+      text-align: right;
+      padding-right: 1.6rem;
+      color: #cc904c;
+      font-weight: bold;
+      font-size: 1.44rem !important;
+    }
+  }
+
+  .address-book-modal__body__block {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 2rem;
+
+    span {
+      width: 50%;
+      font-size: 1.44rem !important;
+
+      &:first-child {
+        font-weight: bold;
+      }
+
+      &:last-child {
+        text-align: right;
+      }
+    }
+  }
+
+  .address-book-modal__footer {
+    display: flex;
+    justify-content: flex-end;
+    margin-bottom: 2rem;
+  }
 }
 </style>

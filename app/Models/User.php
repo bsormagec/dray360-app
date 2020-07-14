@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use Laravel\Sanctum\HasApiTokens;
+use App\Models\Traits\BelongsToCompany;
 use Illuminate\Notifications\Notifiable;
 use Laratrust\Traits\LaratrustUserTrait;
 use Illuminate\Foundation\Auth\User as Authenticatable;
@@ -12,6 +13,7 @@ class User extends Authenticatable
     use LaratrustUserTrait;
     use Notifiable;
     use HasApiTokens;
+    use BelongsToCompany;
 
     /**
      * The attributes that are mass assignable.
@@ -19,7 +21,7 @@ class User extends Authenticatable
      * @var array
      */
     protected $fillable = [
-        'name', 'email', 'password',
+        'name', 'email', 'password', 't_company_id',
     ];
 
     /**

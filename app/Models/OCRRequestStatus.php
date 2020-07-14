@@ -84,4 +84,16 @@ class OCRRequestStatus extends Model
             ->keys()
             ->toArray();
     }
+
+    public static function createUploadRequest(array $statusMetadata): self
+    {
+        $data = [
+            'request_id' => $statusMetadata['request_id'],
+            'status_date' => now(),
+            'status' => static::UPLOAD_REQUESTED,
+            'status_metadata' => json_encode($statusMetadata)
+        ];
+
+        return static::create($data);
+    }
 }

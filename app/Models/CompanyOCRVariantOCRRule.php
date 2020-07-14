@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Models\Traits\BelongsToCompany;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletes;
@@ -9,6 +10,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 class CompanyOCRVariantOCRRule extends Model
 {
     use SoftDeletes;
+    use BelongsToCompany;
 
     public $table = 't_company_ocrvariant_ocrrules';
     const CREATED_AT = 'created_at';
@@ -56,14 +58,6 @@ class CompanyOCRVariantOCRRule extends Model
     public function ocrVariant()
     {
         return $this->belongsTo(OCRVariant::class, 't_ocrvariant_id');
-    }
-
-    /**
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
-     **/
-    public function company()
-    {
-        return $this->belongsTo(Company::class, 't_company_id');
     }
 
     public function scopeAssignedTo(Builder $query, int $companyId, int $variantId): Builder

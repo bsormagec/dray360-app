@@ -4,8 +4,9 @@
       v-if="label === 'error'"
     >
       <v-dialog
-        v-model="dialog"
-        width="40rem"
+        v-model="localdialog"
+        width="45rem"
+        @change="e => $emit('change', e)"
       >
         <div class="errormodal">
           <div class="title_modal">
@@ -19,36 +20,28 @@
             </h2>
           </div>
           <div class="row body_modal">
-            <div class="col-12">
-              <p>{{ message }}</p>
+            <div class="col-10">
+              <p class="">
+                {{ message }}
+              </p>
             </div>
           </div>
 
           <div class="footer_modal">
             <v-btn
               class="btn primary_modal "
-              @click="dialog = false"
+              @click="localdialog = false"
             >
               Cancel
             </v-btn>
             <v-btn
               class="btn btn_ok"
-              @click="dialog = false"
+              @click="localdialog = false"
             >
               Ok
             </v-btn>
           </div>
         </div>
-        <template v-slot:activator="{ on }">
-          <p>
-            <v-btn
-              class="btn_ok ml-0"
-              v-on="on"
-            >
-              {{ label }}
-            </v-btn>
-          </p>
-        </template>
       </v-dialog>
     </div>
     <div
@@ -87,14 +80,10 @@
         </template>
       </v-dialog>
     </div>
-    <div v-else>
+    <div
+      v-else-if="label === 'snackbar'"
+    >
       <div class="text-left snackbar">
-        <v-btn
-          dark
-          @click="snackbar = true"
-        >
-          Snackbar
-        </v-btn>
         <v-snackbar
           v-model="snackbar"
           :top="true"
@@ -111,7 +100,10 @@
       </div>
     </div>
 
-    <div class="error_handling_formfield">
+    <div
+      v-else
+      class="error_handling_formfield"
+    >
       <FormField
         :field="field"
         :is-editing="true"
@@ -158,13 +150,17 @@ export default {
     message: {
       type: String,
       required: true
+    },
+    dialog: {
+      type: Boolean,
+      required: true
     }
   },
   data () {
     return {
-      dialog: false,
+      localdialog: this.dialog,
       dialog2: false,
-      snackbar: false,
+      snackbar: this.dialog,
       field:
         {
           name: 'Error formfield',
@@ -204,10 +200,9 @@ export default {
             }
     }
     .body_modal{
-        display: flex;
-        align-items: center;
-        margin: 0 auto;
+      margin: 0 !important;
     }
+
     .error_handling_formfield{
       margin-top: 5rem;
       width: 20rem;

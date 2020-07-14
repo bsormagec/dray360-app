@@ -108,7 +108,9 @@ export const exampleForm = {
             //   options: addresses()
             // })
             'bill to': buildField({
-              type: 'modal-address'
+              type: 'modal-address',
+              isEditing: true,
+              readonly: false
             })
           }
         }
@@ -222,13 +224,21 @@ export function buildField ({
   children,
   width,
   value,
-  id
+  isEditing,
+  readonly,
+  id,
+  matchedAddress,
+  verified
 }) {
   const field = {
     id,
     name,
     presentationName,
+    isEditing,
+    readonly,
     value,
+    matchedAddress,
+    verified,
     el: {
       type,
       placeholder,

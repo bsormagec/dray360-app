@@ -123,20 +123,6 @@ class OrdersControllerTest extends TestCase
     }
 
     /** @test */
-    public function it_fails_if_not_autorized_to_filter_by_status()
-    {
-        $user = User::whereRoleIs('customer-user')->first();
-        Sanctum::actingAs($user);
-
-        $this->seed(OrdersTableSeeder::class);
-        $this->seed(OrdersTableSeeder::class);
-        factory(OCRRequestStatus::class, 2)->create(['status' => OCRRequestStatus::OCR_WAITING]);
-
-        $this->getJson(route('orders.index', ['filter[status]' => OCRRequestStatus::OCR_WAITING]))
-            ->assertStatus(Response::HTTP_FORBIDDEN);
-    }
-
-    /** @test */
     public function it_should_only_update_the_allowed_order_fields()
     {
         $originalOrder = Order::orderByDesc('id')->first();
