@@ -1,6 +1,6 @@
 {
 	"info": {
-		"_postman_id": "2f602c77-a339-4a30-8ab7-ee453d87dc6e",
+		"_postman_id": "7bfa6bdd-ae6d-465e-a188-884c0a390f4b",
 		"name": "Ordermaster API",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
 	},
@@ -11,7 +11,7 @@
 				{
 					"listen": "test",
 					"script": {
-						"id": "8f74b24a-0562-4a45-b1a7-9ca050ccf7dd",
+						"id": "49630905-2797-407a-aef1-b98fc3317391",
 						"exec": [
 							"var token1=postman.getResponseCookie('XSRF-TOKEN').value;",
 							"var token2=token1.replace('%3D%3D','==');",
@@ -69,7 +69,7 @@
 				{
 					"listen": "test",
 					"script": {
-						"id": "c0ea46f0-0c94-4106-969a-98d94a8f3e5c",
+						"id": "48aad6dc-ccc6-4672-b591-880e571749c6",
 						"exec": [
 							"var token1=postman.getResponseCookie('XSRF-TOKEN').value;",
 							"var token2=token1.replace('%3D%3D','==');",
@@ -142,7 +142,7 @@
 				{
 					"listen": "test",
 					"script": {
-						"id": "faed8870-26a2-4e86-83bd-78ae0efd8786",
+						"id": "aabdda17-1f78-48f5-9922-0da9fe6f232d",
 						"exec": [
 							"var token1=postman.getResponseCookie('XSRF-TOKEN').value;",
 							"var token2=token1.replace('%3D%3D','==');",
@@ -215,7 +215,7 @@
 				{
 					"listen": "test",
 					"script": {
-						"id": "3de452cc-ff80-486f-9bd8-6afec49c05b7",
+						"id": "9007d7ae-3b5d-4027-8f0d-be0bf1af7fa2",
 						"exec": [
 							"var token1=postman.getResponseCookie('XSRF-TOKEN').value;",
 							"var token2=token1.replace('%3D%3D','==');",
@@ -284,7 +284,7 @@
 				{
 					"listen": "test",
 					"script": {
-						"id": "c8f0a087-f159-4a64-9692-17fed5586874",
+						"id": "f1e28afb-1552-49fb-ad1c-5b13952ed946",
 						"exec": [
 							"var token1=postman.getResponseCookie('XSRF-TOKEN').value;",
 							"var token2=token1.replace('%3D%3D','==');",
@@ -372,7 +372,7 @@
 				{
 					"listen": "test",
 					"script": {
-						"id": "b45ac4d9-fdb4-49a2-aee0-80101cff704f",
+						"id": "b6d7fbf8-6975-4432-bc15-3a586525f70e",
 						"exec": [
 							"var token1=postman.getResponseCookie('XSRF-TOKEN').value;",
 							"var token2=token1.replace('%3D%3D','==');",
@@ -519,7 +519,7 @@
 				{
 					"listen": "test",
 					"script": {
-						"id": "696bb4a0-2713-4c0c-9c31-a6141523026a",
+						"id": "4e112b68-71f0-4c8f-b679-2733d3cf6927",
 						"exec": [
 							"var token1=postman.getResponseCookie('XSRF-TOKEN').value;",
 							"var token2=token1.replace('%3D%3D','==');",
@@ -579,7 +579,7 @@
 				{
 					"listen": "test",
 					"script": {
-						"id": "c35fe200-5fa1-4348-93d5-6bdbea18971a",
+						"id": "25059e09-fdc4-46b5-8acf-279609ea9756",
 						"exec": [
 							"var token1=postman.getResponseCookie('XSRF-TOKEN').value;",
 							"var token2=token1.replace('%3D%3D','==');",
@@ -640,12 +640,12 @@
 			"response": []
 		},
 		{
-			"name": "/api/orders/:id/download-pdf",
+			"name": "/api/companies/:id",
 			"event": [
 				{
 					"listen": "test",
 					"script": {
-						"id": "681fd33f-d3d9-44d4-ba3d-29898f6947cb",
+						"id": "c8c33622-05fc-403c-99b6-5e9e16e35f59",
 						"exec": [
 							"var token1=postman.getResponseCookie('XSRF-TOKEN').value;",
 							"var token2=token1.replace('%3D%3D','==');",
@@ -657,46 +657,53 @@
 				}
 			],
 			"request": {
-				"method": "GET",
+				"method": "PUT",
 				"header": [
 					{
-						"key": "Content-Type",
-						"value": "application/x-www-form-urlencoded"
-					},
-					{
 						"key": "Referer",
-						"type": "text",
-						"value": "{{server}}"
+						"value": "{{server}}",
+						"type": "text"
 					},
 					{
 						"key": "Accept",
-						"type": "text",
-						"value": "application/json, text/plain, */*"
+						"value": "application/json, text/plain, */*",
+						"type": "text"
 					},
 					{
 						"key": "X-XSRF-TOKEN",
-						"type": "text",
-						"value": "{{X-XSRF-TOKEN}}"
+						"value": "{{X-XSRF-TOKEN}}",
+						"type": "text"
 					}
 				],
+				"body": {
+					"mode": "urlencoded",
+					"urlencoded": [],
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
 				"url": {
-					"raw": "{{server}}/api/orders/:id/download-pdf",
+					"raw": "{{server}}/api/companies/:id",
 					"host": [
 						"{{server}}"
 					],
 					"path": [
 						"api",
-						"orders",
-						":id",
-						"download-pdf"
+						"companies",
+						":id"
 					],
 					"variable": [
 						{
 							"key": "id",
-							"value": "125"
+							"value": "3",
+							"type": "text",
+							"enabled": true
 						}
 					]
-				}
+				},
+				"description": "Update the company object including the refs_comments_mapping_tools."
 			},
 			"response": []
 		},
@@ -706,7 +713,7 @@
 				{
 					"listen": "test",
 					"script": {
-						"id": "06f920cb-11f4-4aaf-aa3e-668b28134240",
+						"id": "3eb6922c-e125-4eb3-a65b-d3b764cf4406",
 						"exec": [
 							"var token1=postman.getResponseCookie('XSRF-TOKEN').value;",
 							"var token2=token1.replace('%3D%3D','==');",
@@ -774,7 +781,7 @@
 				{
 					"listen": "test",
 					"script": {
-						"id": "aa10ee94-f3f3-4381-ae28-469e08720b93",
+						"id": "59ffb111-2b7c-4a28-abdb-92638b35753e",
 						"exec": [
 							"var token1=postman.getResponseCookie('XSRF-TOKEN').value;",
 							"var token2=token1.replace('%3D%3D','==');",
@@ -829,12 +836,73 @@
 			"response": []
 		},
 		{
+			"name": "/api/orders/:id/download-pdf",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "b74a5529-de23-4905-b5d6-bd7683ec9dd8",
+						"exec": [
+							"var token1=postman.getResponseCookie('XSRF-TOKEN').value;",
+							"var token2=token1.replace('%3D%3D','==');",
+							"postman.setEnvironmentVariable('X-XSRF-TOKEN', token2);",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/x-www-form-urlencoded"
+					},
+					{
+						"key": "Referer",
+						"type": "text",
+						"value": "{{server}}"
+					},
+					{
+						"key": "Accept",
+						"type": "text",
+						"value": "application/json, text/plain, */*"
+					},
+					{
+						"key": "X-XSRF-TOKEN",
+						"type": "text",
+						"value": "{{X-XSRF-TOKEN}}"
+					}
+				],
+				"url": {
+					"raw": "{{server}}/api/orders/:id/download-pdf",
+					"host": [
+						"{{server}}"
+					],
+					"path": [
+						"api",
+						"orders",
+						":id",
+						"download-pdf"
+					],
+					"variable": [
+						{
+							"key": "id",
+							"value": "125"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
 			"name": "/api/getocruploaduri",
 			"event": [
 				{
 					"listen": "test",
 					"script": {
-						"id": "00c5b913-185e-4f9a-a2d2-0183d2a8c61d",
+						"id": "b6f1ed21-4e11-4862-9b47-1a54d455a92e",
 						"exec": [
 							"var token1=postman.getResponseCookie('XSRF-TOKEN').value;",
 							"var token2=token1.replace('%3D%3D','==');",
@@ -897,7 +965,7 @@
 				{
 					"listen": "test",
 					"script": {
-						"id": "959432fb-b159-461c-9e25-9a0088fc813c",
+						"id": "0328afa5-a7ef-471b-894a-e129bec3b706",
 						"exec": [
 							"var token1=postman.getResponseCookie('XSRF-TOKEN').value;",
 							"var token2=token1.replace('%3D%3D','==');",
@@ -952,7 +1020,7 @@
 				{
 					"listen": "test",
 					"script": {
-						"id": "cdf4c11e-b753-46ed-adf4-5d7a4612a3ec",
+						"id": "a8268ae6-86e6-4d26-8dda-fe49d9e5d1af",
 						"exec": [
 							"var token1=postman.getResponseCookie('XSRF-TOKEN').value;",
 							"var token2=token1.replace('%3D%3D','==');",
@@ -1011,7 +1079,7 @@
 				{
 					"listen": "test",
 					"script": {
-						"id": "0d2c6de5-7f13-46de-8434-feaded0234ab",
+						"id": "b29e85ea-4e03-450a-9121-6f1b7dca0b59",
 						"exec": [
 							"var token1=postman.getResponseCookie('XSRF-TOKEN').value;",
 							"var token2=token1.replace('%3D%3D','==');",
@@ -1083,7 +1151,7 @@
 				{
 					"listen": "test",
 					"script": {
-						"id": "868a93ff-9a23-455d-85dd-701abff7876a",
+						"id": "2d6d1e18-4920-4b7e-b03e-14f53bf96129",
 						"exec": [
 							"var token1=postman.getResponseCookie('XSRF-TOKEN').value;",
 							"var token2=token1.replace('%3D%3D','==');",
@@ -1150,7 +1218,7 @@
 				{
 					"listen": "test",
 					"script": {
-						"id": "4a8feb9a-a025-491d-8410-8af76d9361e3",
+						"id": "8a22dc30-9ce0-498f-a4d7-100c28ea2fd8",
 						"exec": [
 							"var token1=postman.getResponseCookie('XSRF-TOKEN').value;",
 							"var token2=token1.replace('%3D%3D','==');",
@@ -1214,7 +1282,7 @@
 				{
 					"listen": "test",
 					"script": {
-						"id": "699c7ecf-6b1c-4d35-afa5-d1694273f08c",
+						"id": "d59655d0-3614-4263-a643-04bd7088b4b2",
 						"exec": [
 							"var token1=postman.getResponseCookie('XSRF-TOKEN').value;",
 							"var token2=token1.replace('%3D%3D','==');",
@@ -1326,7 +1394,7 @@
 				{
 					"listen": "test",
 					"script": {
-						"id": "bcca55e6-3ec1-4096-9065-256a75b0a443",
+						"id": "f6d9487a-a680-47e3-b2ac-cd3a4db2b322",
 						"exec": [
 							"var token1=postman.getResponseCookie('XSRF-TOKEN').value;",
 							"var token2=token1.replace('%3D%3D','==');",
@@ -1389,7 +1457,7 @@
 				{
 					"listen": "test",
 					"script": {
-						"id": "e905bd9e-9fda-4b43-aa30-a9acca314109",
+						"id": "fc9d6a2d-e6c1-4571-b1aa-b3b95b93de80",
 						"exec": [
 							"var token1=postman.getResponseCookie('XSRF-TOKEN').value;",
 							"var token2=token1.replace('%3D%3D','==');",
@@ -1444,7 +1512,7 @@
 				{
 					"listen": "test",
 					"script": {
-						"id": "23a05666-f4ce-470a-8ea2-04c86f420a1e",
+						"id": "59613b73-6ddc-4504-b318-a90bc84b673a",
 						"exec": [
 							"var token1=postman.getResponseCookie('XSRF-TOKEN').value;",
 							"var token2=token1.replace('%3D%3D','==');",
@@ -1503,7 +1571,7 @@
 				{
 					"listen": "test",
 					"script": {
-						"id": "8ff71b52-0685-4fee-b672-c119d9bce17b",
+						"id": "29f2ac65-f476-49ef-9b6b-789f1a3f3049",
 						"exec": [
 							"var token1=postman.getResponseCookie('XSRF-TOKEN').value;",
 							"var token2=token1.replace('%3D%3D','==');",
@@ -1574,7 +1642,7 @@
 				{
 					"listen": "test",
 					"script": {
-						"id": "03b84a6b-f2b2-48de-a601-c72b2c8370a7",
+						"id": "e95654b5-dedb-4a46-9881-3694ee771e16",
 						"exec": [
 							"var token1=postman.getResponseCookie('XSRF-TOKEN').value;",
 							"var token2=token1.replace('%3D%3D','==');",
