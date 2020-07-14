@@ -117,12 +117,6 @@ const actions = {
     commit(types.setTestingOutput, { testingOutput: data })
   },
 
-  // async [types.getCompanyName] ({ commit }, id) {
-  //   const data = await getCompanyName(id)
-
-  //   commit(types.setCompanyName, { companyName: data })
-  // },
-
   async [types.getCompanyList] ({ commit }) {
     const [error, data] = await getCompanyList()
     if (error) return error.message

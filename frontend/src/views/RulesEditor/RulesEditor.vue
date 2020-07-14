@@ -251,8 +251,6 @@ export default {
   }),
   async mounted () {
     const vc = this
-    // vc.company_id = vc.$route.params.company_id
-    // vc.variant_id = vc.$route.params.variant_id
 
     await vc.fetchRules()
   },
