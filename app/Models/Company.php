@@ -43,7 +43,7 @@ class Company extends Model implements CurrentCompany
     protected $casts = [
         'id' => 'integer',
         't_address_id' => 'integer',
-        'name' => 'string', 
+        'name' => 'string',
         'refs_comments_mapping' => 'json'
     ];
 
@@ -51,7 +51,7 @@ class Company extends Model implements CurrentCompany
      * Validation rules
      */
     public static $rules = [
-        't_address_id' => 'required', 
+        't_address_id' => 'required',
         'refs_comments_mapping' => 'required'
     ];
 

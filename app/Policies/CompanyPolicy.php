@@ -44,7 +44,7 @@ class CompanyPolicy
         if (request()->has('refs_comments_mapping')) {
             return $user->isAbleTo('refs-comments-mapping-edit');
         }
-        
+
         return $user->isAbleTo('companies-edit');
     }
 

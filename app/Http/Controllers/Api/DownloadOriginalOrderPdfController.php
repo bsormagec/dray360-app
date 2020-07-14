@@ -3,7 +3,6 @@
 namespace App\Http\Controllers\Api;
 
 use App\Models\Order;
-use Illuminate\Support\Str;
 use App\Models\OCRRequestStatus;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Storage;

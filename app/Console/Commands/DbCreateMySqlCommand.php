@@ -62,7 +62,7 @@ class DbCreateMySqlCommand extends Command
             try {
                 $hasDb = DB::connection($connection)->select("select schema_name from information_schema.schemata where schema_name = '$dbname' ");
 
-                if (!empty($hasDb)) {
+                if (! empty($hasDb)) {
                     $this->error("Database $dbname already exists for $connection connection");
                 } else {
                     // finally, make the new database (and user)

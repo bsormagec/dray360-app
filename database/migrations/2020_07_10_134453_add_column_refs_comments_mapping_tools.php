@@ -1,8 +1,8 @@
 <?php
 
-use Illuminate\Database\Migrations\Migration;
-use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Database\Migrations\Migration;
 
 class AddColumnRefsCommentsMappingTools extends Migration
 {
@@ -25,7 +25,7 @@ class AddColumnRefsCommentsMappingTools extends Migration
      */
     public function down()
     {
-        if (Schema::hasColumn('t_companies', 'refs_comments_mapping')) {    
+        if (Schema::hasColumn('t_companies', 'refs_comments_mapping')) {
             Schema::table('t_companies', function (Blueprint $table) {
                 $table->dropColumn('refs_comments_mapping');
             });

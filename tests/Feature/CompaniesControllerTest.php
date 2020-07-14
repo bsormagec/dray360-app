@@ -36,11 +36,12 @@ class CompaniesControllerTest extends TestCase
             ])
             ->assertJsonCount(10, 'data');
     }
-     /** @test */
+
+    /** @test */
     public function it_should__update_the__company_fields()
     {
         $company = factory(Company::class)->create();
-        $company->refs_comments_mapping = json_encode(["Peter"=>35, "Ben"=>37, "Joe"=>43]);
+        $company->refs_comments_mapping = json_encode(["Peter" => 35, "Ben" => 37, "Joe" => 43]);
         $this->putJson(route('companies.update', $company->id), $company->toArray())
             ->assertStatus(Response::HTTP_OK)
             ->assertJsonFragment(['refs_comments_mapping' => $company->refs_comments_mapping]);

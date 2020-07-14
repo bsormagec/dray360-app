@@ -13,6 +13,6 @@ $factory->define(Company::class, function (Faker $faker) {
         'email_intake_address' => $faker->email,
         'email_intake_address_alt' => $faker->email,
         'default_tms_provider_id' => null,
-        'refs_comments_mapping' => array("Peter"=>35, "Ben"=>37, "Joe"=>43)
+        'refs_comments_mapping' => ["Peter" => 35, "Ben" => 37, "Joe" => 43]
     ];
 });
