@@ -12,6 +12,10 @@ export const postAddRule = async (ruleData) => axios.ext.post('/api/ocr/rules', 
 
 export const getRuleCode = async (index, companyId, variantId) => axios.ext.get('/api/ocr/rules-assignment?company_id=' + companyId + '&variant_id=' + variantId, index).then(data => [undefined, data.data]).catch(e => [e])
 
+export const getCompanyList = async () => axios.ext.get('/api/companies').then(data => [undefined, data.data.data]).catch(e => [e])
+
+export const getVariantList = async () => axios.ext.get('/api/ocr/variants').then(data => [undefined, data.data.data]).catch(e => [e])
+
 export const getTestingOutput = async (orderId, singleCompanyVariantRule) => axios.ext.get('/api/orders/' + orderId)
   .then(function (response) {
     let testingOutput = null

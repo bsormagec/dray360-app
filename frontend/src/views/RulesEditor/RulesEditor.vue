@@ -139,8 +139,49 @@
           max-width="300"
           tile
         >
+          <v-menu offset-y>
+            <template v-slot:activator="{ on }">
+              <v-btn
+                color="primary"
+                dark
+                v-on="on"
+              >
+                Select Company
+              </v-btn>
+            </template>
+            <v-list>
+              <v-list-item
+                v-for="(company, index) in company_list()"
+                :key="index"
+                @click="updateSelectedCompany(company)"
+              >
+                <v-list-item-title>{{ company.name }}</v-list-item-title>
+              </v-list-item>
+            </v-list>
+          </v-menu>
+          <v-menu offset-y>
+            <template v-slot:activator="{ on }">
+              <v-btn
+                color="primary"
+                dark
+                v-on="on"
+              >
+                Select Variant
+              </v-btn>
+            </template>
+            <v-list>
+              <v-list-item
+                v-for="(variant, index) in variant_list()"
+                :key="index"
+                @click="updateSelectedVariant(variant)"
+              >
+                <v-list-item-title>{{ variant.abbyy_variant_name }}</v-list-item-title>
+              </v-list-item>
+            </v-list>
+          </v-menu>
           <v-list>
-            <v-subheader>Cushing/Jetspeed Rules</v-subheader>
+            <v-subheader>{{ company_name }}</v-subheader>
+            <v-subheader>{{ variant_name }}</v-subheader>
             <v-list-item-group
               color="primary"
             >
@@ -189,7 +230,9 @@ export default {
     ...mapState(rulesLibrary.moduleName, {
       rules_library: state => state.rules_library,
       company_variant_rules: state => state.company_variant_rules,
-      testing_output: state => state.testing_output
+      testing_output: state => state.testing_output,
+      company_list: state => state.company_list,
+      variant_list: state => state.variant_list
     }),
 
     cmOptions: {
@@ -202,16 +245,17 @@ export default {
     draggable_rules: [],
     selected_rule_index: 0,
     company_id: 8,
-    variant_id: 8
+    variant_id: 8,
+    company_name: '',
+    variant_name: ''
   }),
   async mounted () {
     const vc = this
-    vc.company_id = vc.$route.params.company_id
-    vc.variant_id = vc.$route.params.variant_id
+
     await vc.fetchRules()
   },
   methods: {
-    ...mapActions(rulesLibrary.moduleName, [types.getLibrary, types.getCompanyVariantRules, types.setSequence, types.setRule, types.addRule, types.setRuleCode, types.getTestingOutput]),
+    ...mapActions(rulesLibrary.moduleName, [types.getLibrary, types.getCompanyVariantRules, types.setSequence, types.setRule, types.addRule, types.setRuleCode, types.getTestingOutput, types.getCompanyList, types.getVariantList]),
 
     async fetchRulesLibrary () {
       const status = await this[types.getLibrary]()
@@ -222,6 +266,39 @@ export default {
         console.log('error')
       }
     },
+
+    async fetchCompanyList () {
+      const status = await this[types.getCompanyList]()
+
+      if (status === reqStatus.success) {
+        console.log('getCompanyListsuccess')
+      } else {
+        console.log('getCompanyList error')
+      }
+    },
+
+    async fetchVariantList () {
+      const status = await this[types.getVariantList]()
+
+      if (status === reqStatus.success) {
+        console.log('getVariantListsuccess')
+      } else {
+        console.log('getVariantList error')
+      }
+    },
+
+    async fetchVariantName () {
+      const vc = this
+
+      const status = await this[types.getVariantName](vc.variant_id)
+
+      if (status === reqStatus.success) {
+        console.log('getCompanyName success')
+      } else {
+        console.log('getCompanyName error')
+      }
+    },
+
     async fetchCompanyVariantRules () {
       const vc = this
 
@@ -330,10 +407,27 @@ export default {
       vc.selected_rule_index = i
       console.log('selected index: ' + i)
     },
+
+    updateSelectedCompany (company) {
+      const vc = this
+      vc.company_name = company.name
+      vc.company_id = company.id
+      vc.fetchRules()
+    },
+
+    updateSelectedVariant (variant) {
+      const vc = this
+      vc.variant_name = variant.abbyy_variant_name
+      vc.variant_id = variant.id
+      vc.fetchRules()
+    },
+
     fetchRules () {
       const vc = this
       vc.fetchRulesLibrary()
       vc.fetchCompanyVariantRules()
+      vc.fetchCompanyList()
+      vc.fetchVariantList()
     },
     async testSingleRule (index) {
       const vc = this

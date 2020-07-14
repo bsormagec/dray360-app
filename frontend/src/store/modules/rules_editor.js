@@ -1,5 +1,5 @@
 import { reqStatus } from '@/enums/req_status'
-import { getLibrary, getCompanyVariantRules, putEditRule, postSaveRuleSequence, postAddRule, getRuleCode, getTestingOutput } from '@/store/api_calls/rules_editor'
+import { getLibrary, getCompanyVariantRules, putEditRule, postSaveRuleSequence, postAddRule, getRuleCode, getTestingOutput, getVariantList, getCompanyList } from '@/store/api_calls/rules_editor'
 
 export const types = {
   setLibrary: 'SET_LIBRARY',
@@ -11,13 +11,19 @@ export const types = {
   addRule: 'ADD_RULE',
   setRuleCode: 'SET_RULE_CODE',
   getTestingOutput: 'GET_TESTING_OUTPUT',
-  setTestingOutput: 'SET_TESTING_OUTPUT'
+  setTestingOutput: 'SET_TESTING_OUTPUT',
+  getCompanyList: 'GET_COMPANY_LIST',
+  setCompanyList: 'SET_COMPANY_LIST',
+  getVariantList: 'GET_VARIANT_LIST',
+  setVariantList: 'SET_VARIANT_LIST'
 }
 
 const initialState = {
   rules_library: [],
   company_variant_rules: [],
-  testing_output: null
+  testing_output: null,
+  company_list: [],
+  variant_list: []
 }
 
 const mutations = {
@@ -39,6 +45,12 @@ const mutations = {
   },
   [types.setTestingOutput] (state, { testingOutput }) {
     state.testing_output = testingOutput
+  },
+  [types.setCompanyList] (state, { companyList }) {
+    state.company_list = companyList
+  },
+  [types.setVariantList] (state, { variantList }) {
+    state.variant_list = variantList
   }
 }
 
@@ -103,6 +115,24 @@ const actions = {
     console.log('testing output to be commited: ', data)
 
     commit(types.setTestingOutput, { testingOutput: data })
+  },
+
+  async [types.getCompanyList] ({ commit }) {
+    const [error, data] = await getCompanyList()
+    if (error) return error.message
+
+    commit(types.setCompanyList, { companyList: data })
+    return reqStatus.success
+  },
+
+  async [types.getVariantList] ({ commit }) {
+    const [error, data] = await getVariantList()
+    if (error) return error.message
+
+    console.log('variant_list to commit: ', data)
+
+    commit(types.setVariantList, { variantList: data })
+    return reqStatus.success
   }
 }
 
