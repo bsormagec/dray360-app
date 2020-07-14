@@ -1,4 +1,6 @@
+/* eslint-disable camelcase */
 import { mapState } from '@/utils/vuex_mappings'
+import { has_permissions, has_permission } from '@/utils/has_permissions'
 import auth from '@/store/modules/auth'
 
 export default {
@@ -9,39 +11,12 @@ export default {
   }),
 
   methods: {
-    hasAllPermissions (...requestedPermissions) {
-      console.log('mixins has all permissions')
-      let acceptedPerms = 0
-      this.currentUser().user.permissions.forEach(perm => {
-        console.log('user permission: ', perm)
-        requestedPermissions.forEach(reqPerm => {
-          console.log('requested permission: ', reqPerm)
-          if (perm.name === reqPerm) {
-            console.log('match')
-            acceptedPerms++
-          }
-        })
-      })
-      console.log('requestedpermissions.length: ', requestedPermissions.length)
-      if (acceptedPerms === requestedPermissions.length) {
-        console.log('size match')
-        return true
-      } else {
-        return false
-      }
+    hasPermissions (...requestedPermissions) {
+      return has_permissions(this.currentUser().user, ...requestedPermissions)
     },
 
-    hasOnePermission (...requestedPermissions) {
-      let result = false
-      this.currentUser().user.permissions.forEach(perm => {
-        requestedPermissions.forEach(reqPerm => {
-          if (perm.name === reqPerm) {
-            console.log('match')
-            result = true
-          }
-        })
-      })
-      return result
+    hasPermission (requestedPermission) {
+      return has_permission(this.currentUser().user, requestedPermission)
     }
   }
 }

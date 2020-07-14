@@ -1,30 +1,12 @@
-// import hasAllPermissions from '@/mixins/permissions'
+/* eslint-disable camelcase */
+import { has_permissions } from '@/utils/has_permissions'
 
-export default function permission (requestedPermission) {
-  let canAccess = false
+export default function permission (...requestedPermissions) {
   return async function permission ({ next, store }) {
-    store.state.AUTH.currentUser.user.permissions.forEach(perm => {
-      if (perm.name === requestedPermission) {
-        canAccess = true
-      }
-    })
+    const canAccess = has_permissions(store.state.AUTH.currentUser.user, ...requestedPermissions)
     if (canAccess) {
-      console.log('given permission')
       return next()
-    } else {
-      return next('/')
     }
+    return next('/')
   }
 }
-
-// export default function permission (requestedPermission) {
-//   return async function permission ({ next, store }) {
-//     console.log('middleware permissions')
-//     if (hasAllPermissions(requestedPermission)) {
-//       console.log('given permission')
-//       return next()
-//     } else {
-//       return next('/')
-//     }
-//   }
-// }

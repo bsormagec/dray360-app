@@ -21,7 +21,7 @@
     </div>
 
     <OrdersCreate
-      v-if="shouldShowTab(tabs.create)"
+      v-if="shouldShowTab(tabs.create) && hasPermission('orders-create')"
       :toggle-mobile-sidebar="toggleMobileSidebar"
     />
   </div>
@@ -29,6 +29,7 @@
 
 <script>
 import isMobile from '@/mixins/is_mobile'
+import hasPermission from '@/mixins/permissions'
 import { mapState, mapActions } from '@/utils/vuex_mappings'
 import { reqStatus } from '@/enums/req_status'
 import orders, { types } from '@/store/modules/orders'
@@ -49,7 +50,7 @@ export default {
     OrdersCreate
   },
 
-  mixins: [isMobile],
+  mixins: [isMobile, hasPermission],
 
   data: function () {
     return {
