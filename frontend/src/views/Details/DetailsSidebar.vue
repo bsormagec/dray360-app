@@ -34,7 +34,7 @@
       </v-btn>
 
       <v-btn
-        v-if="!isMobile"
+        v-if="!isMobile && hasAllPermissions('tms-submit')"
         color="primary"
         outlined
         width="11.5rem"
@@ -73,6 +73,7 @@
 
 <script>
 import isMobile from '@/mixins/is_mobile'
+import hasAllPermissions from '@/mixins/permissions'
 import { formModule } from '@/views/Details/inner_store/index'
 import DetailsSidebarNavigation from '@/views/Details/DetailsSidebarNavigation'
 import { mapActions } from '@/utils/vuex_mappings'
@@ -87,7 +88,8 @@ export default {
     ErrorHandling
   },
 
-  mixins: [isMobile],
+
+  mixins: [isMobile, hasAllPermissions],
   data () {
     return {
       message: '',
