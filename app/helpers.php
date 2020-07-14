@@ -41,5 +41,5 @@ function currentCompany(?CurrentCompany $company = null): ?Company
 
 function is_superadmin(?string $guard = null)
 {
-    return ! auth($guard)->guest() && auth($guard)->user()->hasRole('superadmin');
+    return ! auth($guard)->guest() && auth($guard)->user()->isSuperadmin();
 }

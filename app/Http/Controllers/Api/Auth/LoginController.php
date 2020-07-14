@@ -65,7 +65,7 @@ class LoginController extends Controller
             return response()->json(['message' => 'Not authorized'], 401);
         } else {
             $user->setRelation('permissions', $user->allPermissions());
-            $user->is_superadmin = $user->hasRole('superadmin');
+            $user->is_superadmin = $user->isSuperadmin();
             return response()->json($user);
         }
     }
