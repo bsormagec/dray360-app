@@ -23,6 +23,7 @@
       <DetailsSidebarNavigation v-if="!isMobile" />
 
       <v-btn
+        v-if="hasPermissions('orders-edit')"
         :color="saveBtnStyles"
         :outlined="!isEditing && !isMobile"
         :style="{ marginBottom: '1rem' }"
@@ -34,7 +35,7 @@
       </v-btn>
 
       <v-btn
-        v-if="!isMobile && hasAllPermissions('tms-submit')"
+        v-if="!isMobile && hasPermissions('tms-submit')"
         color="primary"
         outlined
         width="11.5rem"
@@ -73,7 +74,7 @@
 
 <script>
 import isMobile from '@/mixins/is_mobile'
-import hasAllPermissions from '@/mixins/permissions'
+import hasPermissions from '@/mixins/permissions'
 import { formModule } from '@/views/Details/inner_store/index'
 import DetailsSidebarNavigation from '@/views/Details/DetailsSidebarNavigation'
 import { mapActions } from '@/utils/vuex_mappings'
@@ -88,8 +89,7 @@ export default {
     ErrorHandling
   },
 
-
-  mixins: [isMobile, hasAllPermissions],
+  mixins: [isMobile, hasPermissions],
   data () {
     return {
       message: '',
