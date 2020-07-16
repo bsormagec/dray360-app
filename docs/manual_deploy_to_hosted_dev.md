@@ -32,8 +32,6 @@ ssh ocr-dev02
 folder="pbn_$(date '+%Y%m%d')"
 sudo rm -fr /var/www/deploybot/${folder}
 sudo mv ./ordermaster /var/www/deploybot/${folder}
-sudo rm /var/www/deploybot/current
-sudo ln -s /var/www/deploybot/${folder}/public /var/www/deploybot/current
 
 # copy env files into new folder
 cd /var/www/deploybot/${folder}
@@ -73,6 +71,17 @@ php artisan horizon:terminate
 cd frontend
 npm install
 npm run build
+
+exit
+
+````
+
+### Symlink the new deploy folder to "current" and restart server
+
+````bash
+# remake symlink
+sudo rm /var/www/deploybot/current
+sudo ln -s /var/www/deploybot/${folder}/public /var/www/deploybot/current
 
 # restart web server
 sudo systemctl restart httpd.service php-fpm.service
