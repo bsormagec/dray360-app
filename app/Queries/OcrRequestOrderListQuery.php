@@ -17,8 +17,10 @@ class OcrRequestOrderListQuery extends QueryBuilder
         $query = OCRRequest::query()
             ->select('t_job_latest_state.*')
             ->addSelect('t_orders.id as t_order_id')
-            ->where('t_orders.'.Company::FOREIGN_KEY, currentCompany()->id) // to return just the orders of the current company. this is bugged! it doesn't return rejected ocrrequests
-            ->orWhereNull('t_orders.'.Company::FOREIGN_KEY) // this returns all requests with no order yet, even if not from the correct company
+            ->when(! is_superadmin() && currentCompany(), function ($query) {
+                return $query->where('t_orders.'.Company::FOREIGN_KEY, currentCompany()->id) // to return just the orders of the current company. this is bugged! it doesn't return rejected ocrrequests
+                    ->orWhereNull('t_orders.'.Company::FOREIGN_KEY); // this returns all requests with no order yet, even if not from the correct company
+            })
             ->with([
                 'order:id,request_id,bill_to_address_raw_text,created_at,equipment_type,shipment_designation,shipment_direction',
                 'latestOcrRequestStatus:id,status,status_date',
