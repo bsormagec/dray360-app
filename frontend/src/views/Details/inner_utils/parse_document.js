@@ -98,14 +98,12 @@ function getHighlights (data) {
           ...getOcrData(key, data),
           name: mapFieldNames.getName({ abbyName: key }),
           value: data.bill_to_address_raw_text,
-          matchedAddress: defaultsTo(() => `${data.bill_to_address?.location_name} \n ${data.bill_to_address?.address_line_1} \n ${data.bill_to_address?.address_line_2} \n ${data.bill_to_address?.city}, ${data.bill_to_address?.state} ${data.bill_to_address?.postal_code} `, '--'),
+          matchedAddress: formatAddress(data.bill_to_address),
           verified: data.bill_to_address_verified
         }
       } else if (key.includes('port_ramp')) {
         /* eslint camelcase: 0 */
-        const valueForMatched = defaultsTo(() => data[key], {})
-        const { location_name, address_line_1, city, state, postal_code } = valueForMatched // matched text
-        const matchedText = `${strSpacer(location_name, ' ')}${strSpacer(address_line_1, ' ')}${strSpacer(city, ', ')}${strSpacer(state, ' ')}${strSpacer(postal_code, ' ')}`
+        const valueForMatched = defaultsTo(() => data[key], null)
 
         /* Matched address */
         const origin = formModule.state.form.sections.shipment.subSections.origin.fields
@@ -116,7 +114,7 @@ function getHighlights (data) {
             type: 'modal-address',
             isEditing: true,
             readonly: false,
-            matchedAddress: matchedText,
+            matchedAddress: formatAddress(valueForMatched),
             value: defaultsTo(() => data[`${key}_raw_text`], '--'),
             verified: data[`${key}_verified`]
           })
@@ -138,6 +136,18 @@ function getHighlights (data) {
   }
 
   return Object.values(highlights)
+}
+
+export function formatAddress (address) {
+  if (address === null) return '--'
+
+  const { location_name, address_line_1, address_line_2, city, state, postal_code } = address
+  return `
+    ${strSpacer(location_name, ' <br>')}
+    ${strSpacer(address_line_1, ' <br>')}
+    ${strSpacer(address_line_2, ' <br>')}
+    ${strSpacer(city, ', ')}${strSpacer(state, ' ')}${strSpacer(postal_code, '')}
+  `
 }
 
 export function shouldParseKey (key) {

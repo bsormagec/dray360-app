@@ -74,8 +74,8 @@
                 mdi-map-marker-outline
               </v-icon>
             </td>
-            <td>
-              {{ getMatchedAddress(props.item) }}
+            <td class="col__address">
+              <span v-html="getMatchedAddress(props.item)" />
             </td>
             <td>
               <v-btn
@@ -98,6 +98,7 @@
 import { mapState, mapActions } from '@/utils/vuex_mappings'
 import { reqStatus } from '@/enums/req_status'
 import address, { types } from '@/store/modules/address'
+import { formatAddress } from '@/views/Details/inner_utils/parse_document'
 
 export default {
   props: {
@@ -159,14 +160,7 @@ export default {
     ...mapActions(address.moduleName, [types.getSearchAddress]),
 
     getMatchedAddress (item) {
-      return `
-                ${item.location_name}
-                ${item.address_line_1}
-                ${item.address_line_2}
-                ${item.city},
-                ${item.state}
-                ${item.postal_code}
-                ${item.t_address_id}`
+      return formatAddress(item)
     },
 
     async searchApi () {
@@ -217,7 +211,7 @@ export default {
   width: 18rem;
 }
 .fullAddress {
-  width: 25rem;
+  width: 40% !important;
   margin: 3rem auto;
   span:last-child {
     width: 20rem !important;
@@ -225,7 +219,11 @@ export default {
   }
 }
 .col__icon {
-  width: 2rem !important;
+  width: 5% !important;
+  padding: 0rem !important;
+}
+.col__address {
+  width: 40% !important;
   padding: 0rem !important;
 }
 </style>

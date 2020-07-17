@@ -1,3 +1,4 @@
+/* eslint-disable vue/no-v-html */
 <template>
   <div class="address-book-modal">
     <span class="address-book-modal__title"><strong>{{ field.name }}</strong></span>
@@ -20,7 +21,10 @@
 
       <div class="address-book-modal__body__block">
         <span class="block__left">{{ !isVerified && !field.verified ? 'Closest Match' : 'Verified Address' }}</span>
-        <span class="block__right">{{ matchedToDisplay }}</span>
+        <span
+          class="block__right"
+          v-html="matchedToDisplay"
+        />
       </div>
     </div>
 
