@@ -41,9 +41,6 @@ function getHighlights (data) {
         const evts = defaultsTo(() => data.order_address_events, [])
         evts.forEach((evt, i) => {
           const evtName = `${evt.event_number} : ${evt.unparsed_event_type || 'Unknown'}`.toLowerCase()
-          // const evtName = defaultsTo(() => (evt.event_number + ':' + evt.unparsed_event_type).toLowerCase(), 'EventType Unknown:' + evt.event_number)
-          const evtValue = getMatchedAddress(evt)
-
           const addrEvents = formModule.state.form.sections.itinerary.rootFields
           Vue.set(
             addrEvents,
@@ -53,7 +50,7 @@ function getHighlights (data) {
               isEditing: true,
               readonly: false,
               id: evt.id,
-              matchedAddress: evtValue,
+              matchedAddress: formatAddress(evt.address),
               verified: evt.t_address_verified
             })
           )
@@ -188,8 +185,4 @@ function strSpacer (str, spacer) {
 
 function portRampKeyParser (key) {
   return key.includes('destination') ? 'Port Ramp of Destination' : 'Port Ramp of Origin'
-}
-
-function getMatchedAddress (evt) {
-  return defaultsTo(() => `${evt.address?.location_name} \n ${evt.address?.address_line_1} \n ${evt.address?.address_line_2} \n ${evt.address?.city}, ${evt.address?.state} ${evt.address?.postal_code}`, '--')
 }
