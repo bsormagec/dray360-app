@@ -2,12 +2,14 @@ import { uuid } from '@/utils/uuid_valid_id'
 
 const mapFieldNamesCreator = () => {
   const mappings = {
-    port_ramp_of_origin_address: 'port ramp of origin',
-    port_ramp_of_destination_address: 'port ramp of destination',
+    actual_origin: 'actual origin',
+    actual_destination: 'actual destination',
     order_type: 'shipment direction',
     master_bol_mawb: 'master BOL MAWB',
     house_bol_hawb: 'house BOL MAWB',
     reference_number: 'reference number',
+    pickup_number: 'pickup number',
+    load_number: 'load number',
     unit_number: 'unit number',
     equipment_size: 'size',
     bill_to_address: 'bill to',
@@ -15,13 +17,18 @@ const mapFieldNamesCreator = () => {
     equipment_type: 'equipment',
     hazardous: 'hazardous',
     one_way: 'one way',
-    owner_or_ss_company: 'owner or SS company',
+    seal_number: 'seal number',
+    SSL: 'SSL',
     rate_quote_number: 'rate quote number',
     shipment_designation: 'shipment designation',
     shipment_direction: 'shipment direction',
     vessel: 'vessel',
     voyage: 'voyage',
-    yard_pre_pull: 'yard pre-pull'
+    yard_pre_pull: 'yard pre-pull',
+    purchase_order_number: 'purchase order number',
+    release_number: 'release number',
+    ship_comment: 'shipment notes',
+    bill_comment: 'billing notes'
   }
 
   const mappingsBackwards = {}
