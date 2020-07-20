@@ -148,12 +148,12 @@ export const exampleForm = {
     itinerary: {
       rootFields: {
         'pickup date': buildField({
-          type: 'modal-address',
+          type: 'date',
           placeholder: 'pickup date'
         }),
 
         'pickup time': buildField({
-          type: 'modal-address',
+          type: 'time',
           placeholder: 'pickup time'
         })
       }
