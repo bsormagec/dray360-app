@@ -8,7 +8,7 @@ export const has_permissions = (currentUser, ...requestedPermissions) => {
       }
     })
   })
-  console.log('requestedpermissions.length: ', requestedPermissions.length)
+
   if (acceptedPerms === requestedPermissions.length) {
     return true
   } else {
