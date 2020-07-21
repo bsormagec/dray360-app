@@ -41,9 +41,9 @@ class OCRRequestStatus extends Model
         self::PROCESS_OCR_OUTPUT_FILE_COMPLETE => 'Processing',
         self::PROCESS_OCR_OUTPUT_FILE_ERROR => 'Rejected',
         self::UPLOAD_REQUESTED => 'Intake',
-        self::SENDING_TO_WINT => 'Verified',
+        self::SENDING_TO_WINT => 'Sending to TMS',
         self::FAILURE_SENDING_TO_WINT => 'Rejected',
-        self::SUCCESS_SENDING_TO_WINT => 'Sending to TMS',
+        self::SUCCESS_SENDING_TO_WINT => 'Sent to TMS',
     ];
 
     public $table = 't_job_state_changes';
