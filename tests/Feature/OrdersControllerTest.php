@@ -200,7 +200,7 @@ class OrdersControllerTest extends TestCase
                 $data['table'],
                 collect($data['data'])
                     ->reject(function ($item, $key) {
-                        return in_array($key, ['id', 'created_at', 'updated_at', 'deleted_at', 'event_number']);
+                        return in_array($key, ['id', 'created_at', 'updated_at', 'deleted_at', 'event_number', 't_address_raw_text']);
                     })
                     ->map(fn ($item) => is_bool($item) ? intval($item) : $item)
                     ->toArray()

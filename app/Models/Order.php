@@ -266,6 +266,7 @@ class Order extends Model
                 ->map(function ($relatedModel, $key) use ($relationName) {
                     if ($relationName == 'orderAddressEvents') {
                         $relatedModel['event_number'] = $key + 1;
+                        unset($relatedModel['t_address_raw_text']);
                     }
 
                     return ['relationship' => $relationName, 'model' => $relatedModel];
