@@ -1,3 +1,4 @@
+/* eslint-disable quote-props */
 // import { uuid } from '@/utils/uuid_valid_id'
 
 export const exampleForm = {
@@ -16,9 +17,9 @@ export const exampleForm = {
           type: 'select',
           options: ['a', 'b', 'c']
         }),
-        'one way': buildField({
-          type: 'switch'
-        }),
+        // 'one way': buildField({
+        //   type: 'switch'
+        // }),
         'expedite shipment': buildField({
           type: 'switch'
         }),
@@ -38,6 +39,10 @@ export const exampleForm = {
               type: 'input',
               placeholder: 'AAAU656578'
             }),
+            'seal number': buildField({
+              type: 'input',
+              placeholder: 'seal number'
+            }),
             equipment: buildField({
               type: 'input',
               placeholder: 'GP-General Purpose'
@@ -46,13 +51,13 @@ export const exampleForm = {
               type: 'input',
               placeholder: '20 ft'
             }),
-            'yard pre-pull': buildField({
-              type: 'switch'
-            }),
+            // 'yard pre-pull': buildField({
+            //   type: 'switch'
+            // }),
             'has chassis': buildField({
               type: 'switch'
             }),
-            'owner or SS company': buildField({
+            'SSL': buildField({
               type: 'input',
               placeholder: 'ACL'
             })
@@ -64,10 +69,26 @@ export const exampleForm = {
               type: 'input',
               placeholder: 'reference number'
             }),
-            'rate quote number': buildField({
+            'pickup number': buildField({
               type: 'input',
-              placeholder: 'rate quote number'
+              placeholder: 'pickup number'
             }),
+            'load number': buildField({
+              type: 'input',
+              placeholder: 'load number'
+            }),
+            'purchase order number': buildField({
+              type: 'input',
+              placeholder: 'ṕurchase order number'
+            }),
+            'release number': buildField({
+              type: 'input',
+              placeholder: 'release number'
+            }),
+            // 'rate quote number': buildField({
+            //   type: 'input',
+            //   placeholder: 'rate quote number'
+            // }),
             vessel: buildField({
               type: 'input',
               placeholder: 'vessel'
@@ -84,20 +105,28 @@ export const exampleForm = {
               type: 'input',
               placeholder: 'house BOL / MAWB'
             }),
-            '(Est) arrival': buildField({
-              type: 'date-time'
-            }),
-            'last free day': buildField({
-              type: 'date-time'
-            })
+            // '(Est) arrival': buildField({
+            //   type: 'date-time'
+            // }),
+            // 'last free day': buildField({
+            //   type: 'date-time'
+            // })
             // 'port ramp of origin': buildField({
             //   type: 'modal-address',
             //   placeholder: 'port/ramp of origin'
             // }),
+            'actual origin': buildField({
+              type: 'modal-address',
+              placeholder: 'port/ramp of origin'
+            }),
             // 'port ramp of destination': buildField({
             //   type: 'modal-address',
             //   placeholder: 'port/ramp of destination'
             // })
+            'actual destination': buildField({
+              type: 'modal-address',
+              placeholder: 'port/ramp of origin'
+            })
           }
         },
         billing: {
@@ -117,7 +146,17 @@ export const exampleForm = {
       }
     },
     itinerary: {
-      rootFields: {}
+      rootFields: {
+        'pickup date': buildField({
+          type: 'date',
+          placeholder: 'pickup date'
+        }),
+
+        'pickup time': buildField({
+          type: 'time',
+          placeholder: 'pickup time'
+        })
+      }
       // subSections: {
       //   'hook: rail or port terminal': {
       //     fields: {
@@ -206,9 +245,9 @@ export const exampleForm = {
     },
     notes: {
       rootFields: {
-        notes: buildField({
+        'shipment notes': buildField({
           type: 'text-area',
-          placeholder: 'notes'
+          placeholder: 'Shipment notes'
         })
       }
     }
