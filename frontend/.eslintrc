@@ -8,6 +8,9 @@
     "eslint:recommended",
     "standard"
   ],
+  "plugins": [
+    "only-warn"
+  ],
   "parserOptions": {
     "parser": "babel-eslint"
   },
