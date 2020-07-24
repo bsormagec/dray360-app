@@ -14,6 +14,7 @@ import EditUser from '@/views/Users/EditUser'
 import EditProfile from '@/views/Users/EditProfile'
 import ChangePassword from '@/views/Users/ChangePassword'
 import { runMiddleware } from '@/router/middleware'
+import PageNotFound from '@/views/PageNotFound'
 import MappingField from '@/views/Mappings/MappingField'
 
 Vue.use(VueRouter)
@@ -81,6 +82,11 @@ const routes = [
       middleware: [superadmin]
     },
     component: RulesEditor
+  },
+  {
+    path: '/pagenotfound',
+    name: 'Page not found',
+    component: PageNotFound
   },
   {
     path: '/companies/:id/refs-custom-mapping',
