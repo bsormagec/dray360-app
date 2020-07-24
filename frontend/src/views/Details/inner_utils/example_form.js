@@ -147,15 +147,15 @@ export const exampleForm = {
     },
     itinerary: {
       rootFields: {
-        'pickup date': buildField({
-          type: 'date',
-          placeholder: 'pickup date'
-        }),
+        // 'pickup date': buildField({
+        //   type: 'date',
+        //   placeholder: 'pickup date'
+        // }),
 
-        'pickup time': buildField({
-          type: 'time',
-          placeholder: 'pickup time'
-        })
+        // 'pickup time': buildField({
+        //   type: 'time',
+        //   placeholder: 'pickup time'
+        // })
       }
       // subSections: {
       //   'hook: rail or port terminal': {
