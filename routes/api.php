@@ -13,6 +13,7 @@ use App\Http\Controllers\Api\Auth\ResetPasswordController;
 use App\Http\Controllers\Api\OCRRulesAssignmentController;
 use App\Http\Controllers\Api\Auth\ForgotPasswordController;
 use App\Http\Controllers\Api\DownloadOriginalOrderPdfController;
+
 /*
 |--------------------------------------------------------------------------
 | API Routes
@@ -55,7 +56,7 @@ Route::group(['middleware' => 'auth:sanctum'], function () {
         ->only(['index', 'update', 'show']);
 
     Route::resource('companies', CompaniesController::class)
-        ->only(['index', 'update']);
+        ->only(['index', 'update', 'show']);
 
     // Authenticated route to get document upload URI
     Route::post('createocrrequestuploaduri', [OCRRequestController::class, 'createOCRRequestUploadURI'])

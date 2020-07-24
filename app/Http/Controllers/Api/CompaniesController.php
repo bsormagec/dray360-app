@@ -23,7 +23,7 @@ class CompaniesController extends Controller
     {
         $this->authorize('update', $company);
         $data = $request->validate([
-            'refs_comments_mapping' => 'sometimes|json',
+            'refs_custom_mapping' => 'sometimes|json',
             't_address_id' => 'sometimes|int',
             'name' => 'sometimes|string',
             'email_intake_address' => 'sometimes|string',
@@ -33,5 +33,14 @@ class CompaniesController extends Controller
         $company->update($data);
 
         return response()->json(['data' => $company]);
+    }
+
+    /**
+    * Display the specified resource.
+    */
+    public function show(Company $company)
+    {
+        $this->authorize('view', $company);
+        return response()->json($company);
     }
 }

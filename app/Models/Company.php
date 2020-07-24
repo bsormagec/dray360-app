@@ -34,7 +34,7 @@ class Company extends Model implements CurrentCompany
         'email_intake_address',
         'email_intake_address_alt',
         'default_tms_provider_id',
-        'refs_comments_mapping',
+        'refs_custom_mapping',
     ];
 
     /**
@@ -44,7 +44,7 @@ class Company extends Model implements CurrentCompany
         'id' => 'integer',
         't_address_id' => 'integer',
         'name' => 'string',
-        'refs_comments_mapping' => 'json'
+        'refs_custom_mapping' => 'json'
     ];
 
     /**
@@ -52,7 +52,7 @@ class Company extends Model implements CurrentCompany
      */
     public static $rules = [
         't_address_id' => 'required',
-        'refs_comments_mapping' => 'required'
+        'refs_custom_mapping' => 'required'
     ];
 
     public function address()

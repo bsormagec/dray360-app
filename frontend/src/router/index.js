@@ -14,6 +14,7 @@ import EditUser from '@/views/Users/EditUser'
 import EditProfile from '@/views/Users/EditProfile'
 import ChangePassword from '@/views/Users/ChangePassword'
 import { runMiddleware } from '@/router/middleware'
+import MappingField from '@/views/Mappings/MappingField'
 
 Vue.use(VueRouter)
 
@@ -80,6 +81,14 @@ const routes = [
       middleware: [superadmin]
     },
     component: RulesEditor
+  },
+  {
+    path: '/companies/:id/refs-custom-mapping',
+    name: 'Mapping',
+    component: MappingField,
+    meta: {
+      middleware: [auth]
+    }
   }
 ]
 

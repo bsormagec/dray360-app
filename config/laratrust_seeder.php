@@ -13,7 +13,7 @@ return [
 
     'roles_structure' => [
         'superadmin' => [
-            'refs-comments-mapping' => 'e',
+            'refs-custom-mapping' => 'e',
             'rules-editor' => 'c,v,e,a',
             'orders' => 'e,v,c',
             'tms' => 's',

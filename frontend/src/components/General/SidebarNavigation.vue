@@ -20,7 +20,7 @@
         >
           <v-list-item-group v-model="group">
             <v-list-item
-              v-for="(item, i) in items"
+              v-for="(item, i) in menuItems"
               :key="i"
               :to="item.path"
             >
@@ -48,26 +48,16 @@
 </template>
 <script>
 export default {
+  props: {
+    menuItems: {
+      type: Array,
+      required: true
+    }
+  },
   data () {
     return {
       drawer: false,
       group: null,
-
-      items: [
-        {
-          text: 'Dashboard',
-          path: '/user/Dashboard'
-        },
-        {
-          text: 'Manage Users'
-        },
-        {
-          text: 'My Profile'
-        },
-        {
-          text: 'Logout'
-        }
-      ],
       model: 1
     }
   },

@@ -92,7 +92,7 @@
           <v-btn
             color="white"
             text
-            @click="snackbar = false"
+            @click="close"
           >
             Close
           </v-btn>
@@ -159,7 +159,7 @@ export default {
   data () {
     return {
       localdialog: this.dialog,
-      dialog2: false,
+      dialog2: this.dialog,
       snackbar: this.dialog,
       field:
         {
@@ -171,6 +171,14 @@ export default {
             type: 'input'
           }
         }
+    }
+  },
+  updated () {
+    // this.snackbar = this.dialog
+  },
+  methods: {
+    close () {
+      this.snackbar = !this.snackbar
     }
   }
 }

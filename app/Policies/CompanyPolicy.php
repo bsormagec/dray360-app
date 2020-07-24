@@ -33,6 +33,17 @@ class CompanyPolicy
     }
 
     /**
+     * Determine whether the user can view models.
+     *
+     * @param  \App\Models\User  $user
+     * @return mixed
+     */
+    public function view(User $user)
+    {
+        return $user->isAbleTo('companies-view');
+    }
+
+    /**
      * Determine whether the user can update the model.
      *
      * @param  \App\Models\User  $user
@@ -41,8 +52,8 @@ class CompanyPolicy
      */
     public function update(User $user, Company $company)
     {
-        if (request()->has('refs_comments_mapping')) {
-            return $user->isAbleTo('refs-comments-mapping-edit');
+        if (request()->has('refs_custom_mapping')) {
+            return $user->isAbleTo('refs-custom-mapping-edit');
         }
 
         return $user->isAbleTo('companies-edit');

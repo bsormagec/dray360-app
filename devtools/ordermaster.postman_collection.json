@@ -1,6 +1,6 @@
 {
 	"info": {
-		"_postman_id": "a99878c7-b1af-48ed-bc6b-576a73e38164",
+		"_postman_id": "8669aad5-4c61-4fcb-8790-0c4888375f08",
 		"name": "Ordermaster API",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
 	},
@@ -11,7 +11,7 @@
 				{
 					"listen": "test",
 					"script": {
-						"id": "41b35a05-10a1-4cb5-b422-673c8410560a",
+						"id": "792c68bb-5d14-4640-ae2f-fbb903e0c8e5",
 						"exec": [
 							"var token1=postman.getResponseCookie('XSRF-TOKEN').value;",
 							"var token2=token1.replace('%3D%3D','==');",
@@ -69,7 +69,7 @@
 				{
 					"listen": "test",
 					"script": {
-						"id": "a6c7aaac-2beb-4e43-b37c-8f1b825e1190",
+						"id": "787b22ce-a16c-443e-bfda-daf8e0608da6",
 						"exec": [
 							"var token1=postman.getResponseCookie('XSRF-TOKEN').value;",
 							"var token2=token1.replace('%3D%3D','==');",
@@ -142,7 +142,7 @@
 				{
 					"listen": "test",
 					"script": {
-						"id": "c955acda-3932-49e2-abe6-93e2fe98667d",
+						"id": "7bd2eba5-7d37-4dd3-8f1e-c87bafa80c4c",
 						"exec": [
 							"var token1=postman.getResponseCookie('XSRF-TOKEN').value;",
 							"var token2=token1.replace('%3D%3D','==');",
@@ -215,7 +215,7 @@
 				{
 					"listen": "test",
 					"script": {
-						"id": "b374c02c-013d-41fa-a6f2-db5c640db18b",
+						"id": "0c112d4f-f87f-4e4b-8d77-bbc5fcb880c1",
 						"exec": [
 							"var token1=postman.getResponseCookie('XSRF-TOKEN').value;",
 							"var token2=token1.replace('%3D%3D','==');",
@@ -284,7 +284,7 @@
 				{
 					"listen": "test",
 					"script": {
-						"id": "54290668-747e-4def-ba2f-70b77710059a",
+						"id": "0ae1d31c-8f13-4c0d-b60b-ed145abdcdc5",
 						"exec": [
 							"var token1=postman.getResponseCookie('XSRF-TOKEN').value;",
 							"var token2=token1.replace('%3D%3D','==');",
@@ -372,7 +372,7 @@
 				{
 					"listen": "test",
 					"script": {
-						"id": "0b5f7f29-b8c3-4aab-9223-59b9a0868478",
+						"id": "9b9e2da0-598f-42bd-84c5-bcbf953ce584",
 						"exec": [
 							"var token1=postman.getResponseCookie('XSRF-TOKEN').value;",
 							"var token2=token1.replace('%3D%3D','==');",
@@ -519,12 +519,12 @@
 			"response": []
 		},
 		{
-			"name": "/api/orders/:id",
+			"name": "/api/companies/:id",
 			"event": [
 				{
 					"listen": "test",
 					"script": {
-						"id": "cd6a3e44-8063-4edf-8268-1378c34df168",
+						"id": "7e21b1b3-86bd-4d4a-90fc-a5859f55f7e7",
 						"exec": [
 							"var token1=postman.getResponseCookie('XSRF-TOKEN').value;",
 							"var token2=token1.replace('%3D%3D','==');",
@@ -584,7 +584,7 @@
 				{
 					"listen": "test",
 					"script": {
-						"id": "0c529353-cd1f-4a77-acf7-ea8d0e17fb56",
+						"id": "70fdd449-00ab-4df7-863e-bf0b0c83cebd",
 						"exec": [
 							"var token1=postman.getResponseCookie('XSRF-TOKEN').value;",
 							"var token2=token1.replace('%3D%3D','==');",
@@ -650,7 +650,7 @@
 				{
 					"listen": "test",
 					"script": {
-						"id": "38fed369-bb9b-4ccb-b611-749d12041f58",
+						"id": "032d0b3f-2e9a-42bc-943f-47b2db56ae5c",
 						"exec": [
 							"var token1=postman.getResponseCookie('XSRF-TOKEN').value;",
 							"var token2=token1.replace('%3D%3D','==');",
@@ -711,7 +711,7 @@
 				{
 					"listen": "test",
 					"script": {
-						"id": "2d4e00f5-f120-42ca-b455-e7891363e275",
+						"id": "c7090d0d-9b55-4a84-bb98-4bd059630320",
 						"exec": [
 							"var token1=postman.getResponseCookie('XSRF-TOKEN').value;",
 							"var token2=token1.replace('%3D%3D','==');",
@@ -777,7 +777,7 @@
 				{
 					"listen": "test",
 					"script": {
-						"id": "ed5aaf34-641a-4933-ab1f-f7cfc063538d",
+						"id": "1f0e7788-a0f0-4e22-b437-5c4d3b01f8d9",
 						"exec": [
 							"var token1=postman.getResponseCookie('XSRF-TOKEN').value;",
 							"var token2=token1.replace('%3D%3D','==');",
@@ -845,7 +845,7 @@
 				{
 					"listen": "test",
 					"script": {
-						"id": "fc3bb9ff-906d-4b83-b200-0ef351c488fd",
+						"id": "8bb4df79-6f8d-4109-8402-362510071a57",
 						"exec": [
 							"var token1=postman.getResponseCookie('XSRF-TOKEN').value;",
 							"var token2=token1.replace('%3D%3D','==');",
@@ -905,7 +905,7 @@
 				{
 					"listen": "test",
 					"script": {
-						"id": "2392ab01-5d69-4f03-99ea-f943c9e5ce30",
+						"id": "afffa35c-acf2-422e-832d-e1b14879f510",
 						"exec": [
 							"var token1=postman.getResponseCookie('XSRF-TOKEN').value;",
 							"var token2=token1.replace('%3D%3D','==');",
@@ -966,7 +966,7 @@
 				{
 					"listen": "test",
 					"script": {
-						"id": "87dd4b28-8bc5-46dd-8c33-e55b1b82c040",
+						"id": "94ff2231-2213-479c-9991-b9353a7951d8",
 						"exec": [
 							"var token1=postman.getResponseCookie('XSRF-TOKEN').value;",
 							"var token2=token1.replace('%3D%3D','==');",
@@ -1029,7 +1029,7 @@
 				{
 					"listen": "test",
 					"script": {
-						"id": "3505aa64-fa62-4fb8-b627-b3d6ffb834b1",
+						"id": "563c3a8d-2606-49c0-a543-9f888bd27981",
 						"exec": [
 							"var token1=postman.getResponseCookie('XSRF-TOKEN').value;",
 							"var token2=token1.replace('%3D%3D','==');",
@@ -1084,7 +1084,7 @@
 				{
 					"listen": "test",
 					"script": {
-						"id": "0b702dc2-c3b9-44e4-8318-70a454b41aeb",
+						"id": "4b296b65-8b1b-470c-b3b0-6e80547eb39f",
 						"exec": [
 							"var token1=postman.getResponseCookie('XSRF-TOKEN').value;",
 							"var token2=token1.replace('%3D%3D','==');",
@@ -1143,7 +1143,7 @@
 				{
 					"listen": "test",
 					"script": {
-						"id": "b4e618c6-22ba-46a1-85b2-80e388ebb524",
+						"id": "d516b378-b6d7-4b07-9764-b8192b04acd2",
 						"exec": [
 							"var token1=postman.getResponseCookie('XSRF-TOKEN').value;",
 							"var token2=token1.replace('%3D%3D','==');",
@@ -1215,7 +1215,7 @@
 				{
 					"listen": "test",
 					"script": {
-						"id": "3976e608-febe-4329-bfb4-823b3449d2fc",
+						"id": "d9cee596-7178-4421-ae19-e3de87346594",
 						"exec": [
 							"var token1=postman.getResponseCookie('XSRF-TOKEN').value;",
 							"var token2=token1.replace('%3D%3D','==');",
@@ -1282,7 +1282,7 @@
 				{
 					"listen": "test",
 					"script": {
-						"id": "35467e3b-3977-45f8-9134-badc8e95b32c",
+						"id": "f9553d82-5202-4749-94c0-7efeedff3386",
 						"exec": [
 							"var token1=postman.getResponseCookie('XSRF-TOKEN').value;",
 							"var token2=token1.replace('%3D%3D','==');",
@@ -1346,7 +1346,7 @@
 				{
 					"listen": "test",
 					"script": {
-						"id": "9aff26b8-3275-430a-887e-f80e58a55a85",
+						"id": "df1efa3d-1580-42a6-8d18-a137e6c43a15",
 						"exec": [
 							"var token1=postman.getResponseCookie('XSRF-TOKEN').value;",
 							"var token2=token1.replace('%3D%3D','==');",
@@ -1458,7 +1458,7 @@
 				{
 					"listen": "test",
 					"script": {
-						"id": "fed00acd-f38c-4984-be15-4aafbaa7e280",
+						"id": "71e4fd02-e98a-40a2-bde1-fa95114ddf46",
 						"exec": [
 							"var token1=postman.getResponseCookie('XSRF-TOKEN').value;",
 							"var token2=token1.replace('%3D%3D','==');",
@@ -1521,7 +1521,7 @@
 				{
 					"listen": "test",
 					"script": {
-						"id": "2c871583-6810-4b30-9f6a-d47b8bbf5854",
+						"id": "70b03f5a-c5d8-4fcc-b676-0a4ba59d97eb",
 						"exec": [
 							"var token1=postman.getResponseCookie('XSRF-TOKEN').value;",
 							"var token2=token1.replace('%3D%3D','==');",
@@ -1576,7 +1576,7 @@
 				{
 					"listen": "test",
 					"script": {
-						"id": "da462e9c-a827-422f-bdff-a0b9579dbfe3",
+						"id": "3e49b4d1-f43f-4738-a353-282070fd1fe4",
 						"exec": [
 							"var token1=postman.getResponseCookie('XSRF-TOKEN').value;",
 							"var token2=token1.replace('%3D%3D','==');",
@@ -1635,7 +1635,7 @@
 				{
 					"listen": "test",
 					"script": {
-						"id": "c34f24d5-c120-4a8b-9651-436d233135b0",
+						"id": "9847ec0e-7420-402b-ba6f-1ddbfdbcbd4f",
 						"exec": [
 							"var token1=postman.getResponseCookie('XSRF-TOKEN').value;",
 							"var token2=token1.replace('%3D%3D','==');",
@@ -1706,7 +1706,7 @@
 				{
 					"listen": "test",
 					"script": {
-						"id": "ce248b32-4d60-4603-9e30-75271e5bf818",
+						"id": "61ee0c8c-2687-43ad-b1ba-3aeab7748aac",
 						"exec": [
 							"var token1=postman.getResponseCookie('XSRF-TOKEN').value;",
 							"var token2=token1.replace('%3D%3D','==');",
@@ -1759,6 +1759,67 @@
 						}
 					]
 				}
+			},
+			"response": []
+		},
+		{
+			"name": "/api/companies/:id",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "7e21b1b3-86bd-4d4a-90fc-a5859f55f7e7",
+						"exec": [
+							"var token1=postman.getResponseCookie('XSRF-TOKEN').value;",
+							"var token2=token1.replace('%3D%3D','==');",
+							"postman.setEnvironmentVariable('X-XSRF-TOKEN', token2);",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/x-www-form-urlencoded"
+					},
+					{
+						"key": "Referer",
+						"type": "text",
+						"value": "{{server}}"
+					},
+					{
+						"key": "Accept",
+						"type": "text",
+						"value": "application/json, text/plain, */*"
+					},
+					{
+						"key": "X-XSRF-TOKEN",
+						"type": "text",
+						"value": "{{X-XSRF-TOKEN}}"
+					}
+				],
+				"url": {
+					"raw": "{{server}}/api/companies/:id",
+					"host": [
+						"{{server}}"
+					],
+					"path": [
+						"api",
+						"companies",
+						":id"
+					],
+					"variable": [
+						{
+							"key": "id",
+							"value": "2"
+						}
+					]
+				},
+				"description": "retrieve a company by ID"
 			},
 			"response": []
 		}

@@ -1,7 +1,7 @@
 <template>
   <div class="row">
     <div class="col-2 sidebar__navigation">
-      <SidebarNavigation />
+      <SidebarNavigation :menu-items="menuitems" />
     </div>
     <div class="user__list col-10">
       <GeneralTable
@@ -11,6 +11,7 @@
         :has-search="true"
         :has-column-filters="true"
         :has-bulk-actions="true"
+        :bulk-actions="['Delete selected', 'Deactivate accounts']"
         :has-action-button="{showButton: false, action: '/'}"
         injections="Orders"
         :has-add-button="{showButton: true, action: '/'}"
@@ -155,6 +156,21 @@ export default {
           permissions: 'Editor',
           status: 'Active',
           password: 'Reset'
+        }
+      ],
+      menuitems: [
+        {
+          text: 'Dashboard',
+          path: '/user/Dashboard'
+        },
+        {
+          text: 'Manage Users'
+        },
+        {
+          text: 'My Profile'
+        },
+        {
+          text: 'Logout'
         }
       ]
     }
