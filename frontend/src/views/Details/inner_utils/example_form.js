@@ -13,14 +13,10 @@ export const exampleForm = {
           type: 'text-area',
           placeholder: 'shipment address'
         }),
-        'shipment handling': buildField({
-          type: 'select',
-          options: ['a', 'b', 'c']
-        }),
         // 'one way': buildField({
         //   type: 'switch'
         // }),
-        'expedite shipment': buildField({
+        'expedite': buildField({
           type: 'switch'
         }),
         hazardous: buildField({
@@ -147,6 +143,8 @@ export const exampleForm = {
     },
     itinerary: {
       rootFields: {
+        // This is a temporary comment
+
         // 'pickup date': buildField({
         //   type: 'date',
         //   placeholder: 'pickup date'
