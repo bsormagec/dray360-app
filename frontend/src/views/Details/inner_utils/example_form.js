@@ -21,7 +21,7 @@ export const exampleForm = {
         }),
         hazardous: buildField({
           type: 'switch',
-          children: hazardousFields()
+          // children: hazardousFields()
         })
       },
       subSections: {
