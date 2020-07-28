@@ -12,6 +12,7 @@
           type="text"
           name="username"
           placeholder="Email"
+          @focus="error = false"
         >
         <br>
         <input
@@ -19,7 +20,14 @@
           type="password"
           name="password"
           placeholder="Password"
+          @focus="error = false"
         >
+        <p
+          v-if="error"
+          class="text__error"
+        >
+          Wrong username or password
+        </p>
         <div class="button_checkbox">
           <v-checkbox
             v-model="disabled"
@@ -52,6 +60,7 @@
 // import axios from '@/store/api_calls/axios_config'
 import { mapState } from '@/utils/vuex_mappings'
 import auth from '@/store/modules/auth'
+import { reqStatus } from '@/enums/req_status'
 
 export default {
   name: 'Login',
@@ -62,6 +71,7 @@ export default {
         loggedIn: state => state.loggedIn
       }),
       disabled: false,
+      error: false,
       email: '',
       password: '',
       loginError: false,
@@ -79,8 +89,18 @@ export default {
       if (this.email !== '' && this.password !== '') {
         this.loginError = false
         try {
-          await this.$store.dispatch('AUTH/login', { email: this.email, password: this.password })
-          if (this.$store.state.AUTH.intendedUrl === undefined) { this.$router.push('/dashboard/') } else { this.$router.push(this.$store.state.AUTH.intendedUrl) }
+          const status = await this.$store.dispatch('AUTH/login', { email: this.email, password: this.password })
+          if (status === reqStatus.success) {
+            this.error = false
+            if (this.$store.state.AUTH.intendedUrl === undefined) {
+              this.$router.push('/dashboard/')
+            } else {
+              this.$router.push(this.$store.state.AUTH.intendedUrl)
+            }
+          } else {
+            this.error = true
+            console.log('error')
+          }
         } catch (exception) {
           this.loginError = true
         }
@@ -113,10 +133,16 @@ export default {
       align-items: center;
       justify-content: center;
       flex-direction: column;
-      border-top: 0.8rem solid map-get($colors, blue );
+      border-top: 0.8rem solid map-get($colors, blue ) !important;
+      border-left: 0.1rem solid map-get($colors, gray );
+      border: 0.1rem solid map-get($colors, gray );
+      box-shadow: 0rem 0.1rem 0.3rem rgba(0, 0, 0, 0.1);
       padding: 3rem;
+      .text__error{
+        color: map-get($colors, red );
+      }
       .logo{
-        width: 24rem;
+        width: 20rem;
         margin-bottom: 5rem;
       }
       input{
@@ -146,7 +172,9 @@ export default {
         flex-direction: row;
         justify-content: space-between;
         width: 36rem;
-        border-top: 0.1rem solid map-get($colors , grey12 );
+        border-top: 0.1rem solid map-get($colors , gray ) !important;
+        border: 0.1rem solid map-get($colors, gray );
+        box-shadow: 0rem 0.1rem 0.3rem rgba(0, 0, 0, 0.1);
         background-color: map-get($colors,white);
         padding-top: 0.2rem;
         padding: 1rem 1rem 0rem 1rem;

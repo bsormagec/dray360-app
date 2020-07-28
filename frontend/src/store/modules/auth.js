@@ -1,4 +1,5 @@
 import { getCsrfCookie, postLogin, getUser, postLogout } from '@/store/api_calls/auth'
+import { reqStatus } from '@/enums/req_status'
 
 const initialState = {
   loggedIn: false,
@@ -20,7 +21,9 @@ const actions = {
     await getCsrfCookie()
     const [error] = await postLogin(authData)
 
-    if (!error) commit('auth_success')
+    if (error) return reqStatus.error
+    commit('auth_success')
+    return reqStatus.success
   },
   async getCurrentUser ({ commit, state }, force = false) {
     const shouldntProceed = state.currentUser && !force

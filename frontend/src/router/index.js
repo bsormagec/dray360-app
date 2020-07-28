@@ -79,7 +79,7 @@ const routes = [
     path: '/rules-editor',
     name: 'RulesEditor',
     meta: {
-      middleware: [superadmin]
+      middleware: [auth, superadmin]
     },
     component: RulesEditor
   },
