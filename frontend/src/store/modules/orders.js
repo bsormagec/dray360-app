@@ -64,9 +64,10 @@ const actions = {
     return reqStatus.success
   },
 
-  async [types.updateOrderDetail] ({ commit }, { id, changes }) {
+  async [types.updateOrderDetail] ({ commit, state }, { id, changes }) {
     const [error] = await updateOrderDetail({ id, changes })
-
+    const data = { ...state.currentOrder, ...changes }
+    commit(types.setCurrentOrder, data)
     if (error) return reqStatus.error
     return reqStatus.success
   },
