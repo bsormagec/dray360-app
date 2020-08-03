@@ -32,12 +32,18 @@ const actions = {
     commit('currentUserLoading', true)
     const [error, user] = await getUser()
 
-    if (!error) commit('currentUser', { user })
+    if (!error) {
+      commit('currentUser', { user })
+      commit('auth_success')
+    }
     commit('currentUserLoading', false)
   },
   async logout ({ commit }) {
     const [error] = await postLogout()
-    if (!error) commit('logout')
+    if (!error) {
+      commit('logout')
+      return reqStatus.success
+    }
   },
 
   async setIntendedUrl (context, { intendedUrl }) {

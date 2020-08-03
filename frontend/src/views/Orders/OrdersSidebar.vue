@@ -113,8 +113,10 @@ export default {
     ...mapActions('AUTH', ['logout']),
     async logoutBtn () {
       this.logoutError = false
-      await this.logout()
-      this.$router.push('/login')
+      const status = await this.logout()
+      if (status) {
+        this.$router.push('/login')
+      }
     }
   }
 }
