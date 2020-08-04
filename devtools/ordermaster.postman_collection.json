@@ -14,7 +14,7 @@
 						"id": "792c68bb-5d14-4640-ae2f-fbb903e0c8e5",
 						"exec": [
 							"var token1=postman.getResponseCookie('XSRF-TOKEN').value;",
-							"var token2=token1.replace('%3D%3D','==');",
+							"var token2=token1.replace(/%3D/g, '=');",
 							"postman.setEnvironmentVariable('X-XSRF-TOKEN', token2);",
 							""
 						],
@@ -72,7 +72,7 @@
 						"id": "787b22ce-a16c-443e-bfda-daf8e0608da6",
 						"exec": [
 							"var token1=postman.getResponseCookie('XSRF-TOKEN').value;",
-							"var token2=token1.replace('%3D%3D','==');",
+							"var token2=token1.replace(/%3D/g, '=');",
 							"postman.setEnvironmentVariable('X-XSRF-TOKEN', token2);",
 							""
 						],
@@ -145,7 +145,7 @@
 						"id": "7bd2eba5-7d37-4dd3-8f1e-c87bafa80c4c",
 						"exec": [
 							"var token1=postman.getResponseCookie('XSRF-TOKEN').value;",
-							"var token2=token1.replace('%3D%3D','==');",
+							"var token2=token1.replace(/%3D/g, '=');",
 							"postman.setEnvironmentVariable('X-XSRF-TOKEN', token2);",
 							""
 						],
@@ -218,7 +218,7 @@
 						"id": "0c112d4f-f87f-4e4b-8d77-bbc5fcb880c1",
 						"exec": [
 							"var token1=postman.getResponseCookie('XSRF-TOKEN').value;",
-							"var token2=token1.replace('%3D%3D','==');",
+							"var token2=token1.replace(/%3D/g, '=');",
 							"postman.setEnvironmentVariable('X-XSRF-TOKEN', token2);",
 							""
 						],
@@ -287,7 +287,7 @@
 						"id": "0ae1d31c-8f13-4c0d-b60b-ed145abdcdc5",
 						"exec": [
 							"var token1=postman.getResponseCookie('XSRF-TOKEN').value;",
-							"var token2=token1.replace('%3D%3D','==');",
+							"var token2=token1.replace(/%3D/g, '=');",
 							"postman.setEnvironmentVariable('X-XSRF-TOKEN', token2);",
 							""
 						],
@@ -375,7 +375,7 @@
 						"id": "9b9e2da0-598f-42bd-84c5-bcbf953ce584",
 						"exec": [
 							"var token1=postman.getResponseCookie('XSRF-TOKEN').value;",
-							"var token2=token1.replace('%3D%3D','==');",
+							"var token2=token1.replace(/%3D/g, '=');",
 							"postman.setEnvironmentVariable('X-XSRF-TOKEN', token2);",
 							""
 						],
@@ -527,7 +527,7 @@
 						"id": "7e21b1b3-86bd-4d4a-90fc-a5859f55f7e7",
 						"exec": [
 							"var token1=postman.getResponseCookie('XSRF-TOKEN').value;",
-							"var token2=token1.replace('%3D%3D','==');",
+							"var token2=token1.replace(/%3D/g, '=');",
 							"postman.setEnvironmentVariable('X-XSRF-TOKEN', token2);",
 							""
 						],
@@ -587,7 +587,7 @@
 						"id": "70fdd449-00ab-4df7-863e-bf0b0c83cebd",
 						"exec": [
 							"var token1=postman.getResponseCookie('XSRF-TOKEN').value;",
-							"var token2=token1.replace('%3D%3D','==');",
+							"var token2=token1.replace(/%3D/g, '=');",
 							"postman.setEnvironmentVariable('X-XSRF-TOKEN', token2);",
 							""
 						],
@@ -653,7 +653,7 @@
 						"id": "032d0b3f-2e9a-42bc-943f-47b2db56ae5c",
 						"exec": [
 							"var token1=postman.getResponseCookie('XSRF-TOKEN').value;",
-							"var token2=token1.replace('%3D%3D','==');",
+							"var token2=token1.replace(/%3D/g, '=');",
 							"postman.setEnvironmentVariable('X-XSRF-TOKEN', token2);",
 							""
 						],
@@ -714,7 +714,7 @@
 						"id": "c7090d0d-9b55-4a84-bb98-4bd059630320",
 						"exec": [
 							"var token1=postman.getResponseCookie('XSRF-TOKEN').value;",
-							"var token2=token1.replace('%3D%3D','==');",
+							"var token2=token1.replace(/%3D/g, '=');",
 							"postman.setEnvironmentVariable('X-XSRF-TOKEN', token2);",
 							""
 						],
@@ -780,7 +780,7 @@
 						"id": "1f0e7788-a0f0-4e22-b437-5c4d3b01f8d9",
 						"exec": [
 							"var token1=postman.getResponseCookie('XSRF-TOKEN').value;",
-							"var token2=token1.replace('%3D%3D','==');",
+							"var token2=token1.replace(/%3D/g, '=');",
 							"postman.setEnvironmentVariable('X-XSRF-TOKEN', token2);",
 							""
 						],
@@ -848,7 +848,7 @@
 						"id": "8bb4df79-6f8d-4109-8402-362510071a57",
 						"exec": [
 							"var token1=postman.getResponseCookie('XSRF-TOKEN').value;",
-							"var token2=token1.replace('%3D%3D','==');",
+							"var token2=token1.replace(/%3D/g, '=');",
 							"postman.setEnvironmentVariable('X-XSRF-TOKEN', token2);",
 							""
 						],
@@ -908,7 +908,7 @@
 						"id": "afffa35c-acf2-422e-832d-e1b14879f510",
 						"exec": [
 							"var token1=postman.getResponseCookie('XSRF-TOKEN').value;",
-							"var token2=token1.replace('%3D%3D','==');",
+							"var token2=token1.replace(/%3D/g, '=');",
 							"postman.setEnvironmentVariable('X-XSRF-TOKEN', token2);",
 							""
 						],
@@ -969,7 +969,7 @@
 						"id": "94ff2231-2213-479c-9991-b9353a7951d8",
 						"exec": [
 							"var token1=postman.getResponseCookie('XSRF-TOKEN').value;",
-							"var token2=token1.replace('%3D%3D','==');",
+							"var token2=token1.replace(/%3D/g, '=');",
 							"postman.setEnvironmentVariable('X-XSRF-TOKEN', token2);",
 							""
 						],
@@ -1032,7 +1032,7 @@
 						"id": "563c3a8d-2606-49c0-a543-9f888bd27981",
 						"exec": [
 							"var token1=postman.getResponseCookie('XSRF-TOKEN').value;",
-							"var token2=token1.replace('%3D%3D','==');",
+							"var token2=token1.replace(/%3D/g, '=');",
 							"postman.setEnvironmentVariable('X-XSRF-TOKEN', token2);",
 							""
 						],
@@ -1087,7 +1087,7 @@
 						"id": "4b296b65-8b1b-470c-b3b0-6e80547eb39f",
 						"exec": [
 							"var token1=postman.getResponseCookie('XSRF-TOKEN').value;",
-							"var token2=token1.replace('%3D%3D','==');",
+							"var token2=token1.replace(/%3D/g, '=');",
 							"postman.setEnvironmentVariable('X-XSRF-TOKEN', token2);",
 							""
 						],
@@ -1146,7 +1146,7 @@
 						"id": "d516b378-b6d7-4b07-9764-b8192b04acd2",
 						"exec": [
 							"var token1=postman.getResponseCookie('XSRF-TOKEN').value;",
-							"var token2=token1.replace('%3D%3D','==');",
+							"var token2=token1.replace(/%3D/g, '=');",
 							"postman.setEnvironmentVariable('X-XSRF-TOKEN', token2);",
 							""
 						],
@@ -1218,7 +1218,7 @@
 						"id": "d9cee596-7178-4421-ae19-e3de87346594",
 						"exec": [
 							"var token1=postman.getResponseCookie('XSRF-TOKEN').value;",
-							"var token2=token1.replace('%3D%3D','==');",
+							"var token2=token1.replace(/%3D/g, '=');",
 							"postman.setEnvironmentVariable('X-XSRF-TOKEN', token2);",
 							""
 						],
@@ -1285,7 +1285,7 @@
 						"id": "f9553d82-5202-4749-94c0-7efeedff3386",
 						"exec": [
 							"var token1=postman.getResponseCookie('XSRF-TOKEN').value;",
-							"var token2=token1.replace('%3D%3D','==');",
+							"var token2=token1.replace(/%3D/g, '=');",
 							"postman.setEnvironmentVariable('X-XSRF-TOKEN', token2);",
 							""
 						],
@@ -1349,7 +1349,7 @@
 						"id": "df1efa3d-1580-42a6-8d18-a137e6c43a15",
 						"exec": [
 							"var token1=postman.getResponseCookie('XSRF-TOKEN').value;",
-							"var token2=token1.replace('%3D%3D','==');",
+							"var token2=token1.replace(/%3D/g, '=');",
 							"postman.setEnvironmentVariable('X-XSRF-TOKEN', token2);",
 							""
 						],
@@ -1461,7 +1461,7 @@
 						"id": "71e4fd02-e98a-40a2-bde1-fa95114ddf46",
 						"exec": [
 							"var token1=postman.getResponseCookie('XSRF-TOKEN').value;",
-							"var token2=token1.replace('%3D%3D','==');",
+							"var token2=token1.replace(/%3D/g, '=');",
 							"postman.setEnvironmentVariable('X-XSRF-TOKEN', token2);",
 							""
 						],
@@ -1524,7 +1524,7 @@
 						"id": "70b03f5a-c5d8-4fcc-b676-0a4ba59d97eb",
 						"exec": [
 							"var token1=postman.getResponseCookie('XSRF-TOKEN').value;",
-							"var token2=token1.replace('%3D%3D','==');",
+							"var token2=token1.replace(/%3D/g, '=');",
 							"postman.setEnvironmentVariable('X-XSRF-TOKEN', token2);",
 							""
 						],
@@ -1579,7 +1579,7 @@
 						"id": "3e49b4d1-f43f-4738-a353-282070fd1fe4",
 						"exec": [
 							"var token1=postman.getResponseCookie('XSRF-TOKEN').value;",
-							"var token2=token1.replace('%3D%3D','==');",
+							"var token2=token1.replace(/%3D/g, '=');",
 							"postman.setEnvironmentVariable('X-XSRF-TOKEN', token2);",
 							""
 						],
@@ -1638,7 +1638,7 @@
 						"id": "9847ec0e-7420-402b-ba6f-1ddbfdbcbd4f",
 						"exec": [
 							"var token1=postman.getResponseCookie('XSRF-TOKEN').value;",
-							"var token2=token1.replace('%3D%3D','==');",
+							"var token2=token1.replace(/%3D/g, '=');",
 							"postman.setEnvironmentVariable('X-XSRF-TOKEN', token2);",
 							""
 						],
@@ -1709,7 +1709,7 @@
 						"id": "61ee0c8c-2687-43ad-b1ba-3aeab7748aac",
 						"exec": [
 							"var token1=postman.getResponseCookie('XSRF-TOKEN').value;",
-							"var token2=token1.replace('%3D%3D','==');",
+							"var token2=token1.replace(/%3D/g, '=');",
 							"postman.setEnvironmentVariable('X-XSRF-TOKEN', token2);",
 							""
 						],
@@ -1771,7 +1771,7 @@
 						"id": "7e21b1b3-86bd-4d4a-90fc-a5859f55f7e7",
 						"exec": [
 							"var token1=postman.getResponseCookie('XSRF-TOKEN').value;",
-							"var token2=token1.replace('%3D%3D','==');",
+							"var token2=token1.replace(/%3D/g, '=');",
 							"postman.setEnvironmentVariable('X-XSRF-TOKEN', token2);",
 							""
 						],
