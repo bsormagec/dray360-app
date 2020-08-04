@@ -78,8 +78,7 @@ export default {
     },
 
     addFiles (newFiles) {
-      console.log('addFiles')
-      const filtered = [...this.files, ...newFiles].filter(f => f.name.includes('.pdf'))
+      const filtered = [...this.files, ...newFiles].filter(f => f.type === 'application/pdf')
       const unique = []
       const uniqueNames = []
 
@@ -90,8 +89,6 @@ export default {
       })
 
       this.files = unique
-
-      console.log('this.files:', this.files)
     },
 
     async uploadFile (file) {
@@ -105,15 +102,14 @@ export default {
     },
 
     createOrder () {
-      const vc = this
-      console.log('vc.files: ', vc.files)
-      if (vc.files.length === 0) {
-        alert('Please upload a PDF first')
-      } else {
-        vc.files.forEach(file => {
-          vc.uploadFile(file)
-        })
+      console.log('vc.files: ', this.files)
+      if (this.files.length === 0) {
+        alert('Please select a PDF to upload first')
+        return
       }
+
+      this.files.forEach(file => this.uploadFile(file))
+      this.files = []
     }
   }
 }

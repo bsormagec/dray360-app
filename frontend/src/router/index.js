@@ -16,6 +16,7 @@ import ChangePassword from '@/views/Users/ChangePassword'
 import { runMiddleware } from '@/router/middleware'
 import PageNotFound from '@/views/PageNotFound'
 import MappingField from '@/views/Mappings/MappingField'
+import LoggedOut from '@/router/middleware/LoggedOut'
 
 Vue.use(VueRouter)
 
@@ -73,13 +74,16 @@ const routes = [
     path: '/login',
     name: 'Login',
     alias: '/',
+    meta: {
+      middleware: [LoggedOut]
+    },
     component: Login
   },
   {
     path: '/rules-editor',
     name: 'RulesEditor',
     meta: {
-      middleware: [superadmin]
+      middleware: [auth, superadmin]
     },
     component: RulesEditor
   },

@@ -20,8 +20,8 @@ export const exampleForm = {
           type: 'switch'
         }),
         hazardous: buildField({
-          type: 'switch',
-          children: hazardousFields()
+          type: 'switch'
+          // children: hazardousFields()
         })
       },
       subSections: {
@@ -378,53 +378,53 @@ export function buildField ({
 //   }
 // }
 
-function hazardousFields () {
-  return {
-    'hazardous item information': buildField({
-      type: 'info-title'
-    }),
-    'contact name': buildField({
-      type: 'input',
-      placeholder: 'contact name'
-    }),
-    phone: buildField({
-      type: 'input',
-      placeholder: 'phone'
-    }),
-    'UN code': buildField({
-      type: 'input',
-      placeholder: 'UN code'
-    }),
-    qualifier: buildField({
-      type: 'input',
-      placeholder: 'qualifier'
-    }),
-    'flashpoint temp': buildField({
-      type: 'input',
-      placeholder: 'flashpoint temp'
-    }),
-    'UN name': buildField({
-      type: 'input',
-      placeholder: 'UN name'
-    }),
-    'HAZ class': buildField({
-      type: 'input',
-      placeholder: 'HAZ class'
-    }),
-    'IMDG page no': buildField({
-      type: 'input',
-      placeholder: 'IMDG page no'
-    }),
-    'packaging group': buildField({
-      type: 'input',
-      placeholder: 'packaging group'
-    }),
-    description: buildField({
-      type: 'text-area',
-      placeholder: 'description'
-    })
-  }
-}
+// function hazardousFields () {
+//   return {
+//     'hazardous item information': buildField({
+//       type: 'info-title'
+//     }),
+//     'contact name': buildField({
+//       type: 'input',
+//       placeholder: 'contact name'
+//     }),
+//     phone: buildField({
+//       type: 'input',
+//       placeholder: 'phone'
+//     }),
+//     'UN code': buildField({
+//       type: 'input',
+//       placeholder: 'UN code'
+//     }),
+//     qualifier: buildField({
+//       type: 'input',
+//       placeholder: 'qualifier'
+//     }),
+//     'flashpoint temp': buildField({
+//       type: 'input',
+//       placeholder: 'flashpoint temp'
+//     }),
+//     'UN name': buildField({
+//       type: 'input',
+//       placeholder: 'UN name'
+//     }),
+//     'HAZ class': buildField({
+//       type: 'input',
+//       placeholder: 'HAZ class'
+//     }),
+//     'IMDG page no': buildField({
+//       type: 'input',
+//       placeholder: 'IMDG page no'
+//     }),
+//     'packaging group': buildField({
+//       type: 'input',
+//       placeholder: 'packaging group'
+//     }),
+//     description: buildField({
+//       type: 'text-area',
+//       placeholder: 'description'
+//     })
+//   }
+// }
 
 export function inventoryItemFields () {
   return {

@@ -19,7 +19,10 @@
                     <h2>&nbsp;</h2>
                   </th>
                   <th class="text-left">
-                    <h2>Dry360 Field</h2>
+                    <h2>Dray360 Field</h2>
+                  </th>
+                  <th class="text-left">
+                    <h2>Enter custom value</h2>
                   </th>
                   <th class="text-left">
                     <h2>Ref Type</h2>
@@ -35,6 +38,13 @@
                       :items="fieldNames"
                       item-text="value"
                       item-value="field_name"
+                      @change="changeRef1"
+                    />
+                  </td>
+                  <td>
+                    <v-text-field
+                      v-if="customRef1"
+                      v-model="ds_ref2_text"
                     />
                   </td>
                   <td>
@@ -54,6 +64,13 @@
                       :items="fieldNames"
                       item-text="value"
                       item-value="field_name"
+                      @change="changeRef2"
+                    />
+                  </td>
+                  <td>
+                    <v-text-field
+                      v-if="customRef2"
+                      v-model="ds_ref3_text"
                     />
                   </td>
                   <td>
@@ -70,6 +87,7 @@
                   :key="(index)"
                 >
                   <td>Custom{{ index+1 }}</td>
+
                   <td>
                     <v-select
                       :key="fieldNames.field_name"
@@ -77,6 +95,13 @@
                       :items="fieldNames"
                       item-text="value"
                       item-value="field_name"
+                      @change="(value) => changeCustomValues(value, index)"
+                    />
+                  </td>
+                  <td>
+                    <v-text-field
+                      v-if="customValue[index]"
+                      v-model="custom[index]"
                     />
                   </td>
                 </tr>
@@ -160,10 +185,14 @@ export default {
       ds_ref2_type: '',
       ds_ref3_text: '',
       ds_ref3_type: '',
-      ref_2: '',
+      objectNameRef1: '',
+      objectNameRef2: '',
+      objectNameCustom: [],
+      customRef1: false,
+      customRef2: false,
+      customValue: [],
       shipment_notes: [],
       billing_notes: [],
-      localCompany: {},
       ref2_field_name: [],
       ref2_type: [],
       custom: [],
@@ -201,12 +230,14 @@ export default {
         { field_name: 'shipment_direction', value: 'shipment direction' },
         { field_name: 'vessel', value: 'vessel' },
         { field_name: 'voyage', value: 'voyage' },
-        { field_name: 'yard_pre_pull', value: 'yard pre-pull' }
+        { field_name: 'yard_pre_pull', value: 'yard pre-pull' },
+        { field_name: 'other_value', value: 'Other' }
       ]
     }
   },
   created () {
     this.custom = new Array(10).fill(null)
+    this.customValue = new Array(10).fill(false)
   },
   mounted () {
     this.getNames()
@@ -219,17 +250,47 @@ export default {
         this.reftypes.push(key)
       })
     },
+    changeRef1 (value) {
+      if (value === 'other_value') {
+        this.customRef1 = true
+        this.ds_ref2_text = ''
+        this.objectNameRef1 = 'value'
+      } else {
+        this.customRef1 = false
+        this.objectNameRef1 = 'source'
+      }
+    },
+    changeRef2 (value) {
+      if (value === 'other_value') {
+        this.customRef2 = true
+        this.ds_ref3_text = ''
+        this.objectNameRef2 = 'value'
+      } else {
+        this.customRef2 = false
+        this.objectNameRef2 = 'source'
+      }
+    },
+    changeCustomValues (value, index) {
+      if (value === 'other_value') {
+        this.customValue[index] = true
+        this.custom[index] = ''
+        this.objectNameCustom[index] = 'value'
+      } else {
+        this.customValue[index] = false
+        this.objectNameCustom[index] = 'source'
+      }
+    },
     async save () {
       const jsondata = {
-        ds_ref2_text: { source: this.ds_ref2_text },
+        ds_ref2_text: { [this.objectNameRef1]: this.ds_ref2_text },
         ds_ref2_type: { value: this.ds_ref2_type },
-        ds_ref3_text: { source: this.ds_ref3_text },
+        ds_ref3_text: { [this.objectNameRef2]: this.ds_ref3_text },
         ds_ref3_type: { value: this.ds_ref3_type },
         bill_comment: { source: this.billing_notes },
         ship_comment: { source: this.shipment_notes }
       }
       this.custom.forEach((value, i) => {
-        jsondata[`Custom${i}`] = { source: value }
+        jsondata[`Custom${i}`] = { [this.objectNameCustom[i]]: value }
       })
       this.dialog = false
       const status = await this[types.updateCompaniesMappingField]({ id: this.$route.params.id, changes: { refs_custom_mapping: JSON.stringify(jsondata) } })
@@ -244,42 +305,64 @@ export default {
     async getCompanybyId () {
       const status = await this[types.getCompany]({ id: this.$route.params.id })
       if (status === reqStatus.success) {
-        if (this.company().refs_custom_mapping !== null) {
-          this.fieldNames.forEach((key, index) => {
-            if (key.field_name === JSON.parse(this.company().refs_custom_mapping).ds_ref2_text.source) {
-              this.ds_ref2_text = key.field_name
-            } else if (key.field_name === JSON.parse(this.company().refs_custom_mapping).ds_ref3_text.source) {
-              this.ds_ref3_text = key.field_name
-            }
-          })
-          if ('ds_ref2_type' in JSON.parse(this.company().refs_custom_mapping)) {
-            this.mappings.forEach((key) => {
-              if (key.value === JSON.parse(this.company().refs_custom_mapping).ds_ref2_type.value) {
-                this.ds_ref2_type = key.value
-              } else if (key.value === JSON.parse(this.company().refs_custom_mapping).ds_ref3_type.value) {
-                this.ds_ref3_type = key.value
-              }
-            })
-          }
-
-          for (let i = 0; i < 10; i++) {
-            if ('Custom' in JSON.parse(this.company().refs_custom_mapping)) {
-              this.customArray.push(JSON.parse(this.company().refs_custom_mapping)['Custom' + i].source)
-              this.custom = this.customArray
-            }
-          }
-          if ('bill_comment' in JSON.parse(this.company().refs_custom_mapping)) {
-            this.billing_notes = JSON.parse(this.company().refs_custom_mapping).bill_comment.source
-          }
-          if ('ship_comment' in JSON.parse(this.company().refs_custom_mapping)) {
-            this.shipment_notes = JSON.parse(this.company().refs_custom_mapping).ship_comment.source
-          }
-
-          this.message = 'Success'
+        if (JSON.parse(this.company().refs_custom_mapping) !== null) {
+          this.getJsonValues(JSON.parse(this.company().refs_custom_mapping))
         }
       } else {
         this.message = 'Error'
       }
+    },
+    getJsonValues (val) {
+      Object.entries(val).forEach(([key, value]) => {
+        switch (key) {
+          case 'ds_ref2_text':
+            if (this.isCustomValue(value.source)) {
+              this.customRef1 = this.isCustomValue(value.source)
+              this.objectNameRef1 = 'value'
+              this.ds_ref2_text = value.value
+            } else {
+              this.objectNameRef1 = 'source'
+              this.ds_ref2_text = value.source
+            }
+            break
+          case 'ds_ref2_type':
+            this.ds_ref2_type = value.value
+            break
+          case 'ds_ref3_text':
+            if (this.isCustomValue(value.source)) {
+              this.customRef2 = this.isCustomValue(value.source)
+              this.objectNameRef2 = 'value'
+              this.ds_ref3_text = value.value
+            } else {
+              this.objectNameRef2 = 'source'
+              this.ds_ref3_text = value.source
+            }
+            break
+          case 'ds_ref3_type':
+            this.ds_ref3_type = value.value
+            break
+          case 'bill_comment':
+            this.billing_notes = value.source
+            break
+          case 'ship_comment':
+            this.shipment_notes = value.source
+            break
+          default:
+            if (this.isCustomValue(value.source)) {
+              this.customValue[key.substr(key.length - 1)] = this.isCustomValue(value.source)
+              this.objectNameCustom[key.substr(key.length - 1)] = 'value'
+              this.customArray.push(value.value)
+            } else {
+              this.objectNameCustom[key.substr(key.length - 1)] = 'source'
+              this.customArray.push(value.source)
+            }
+            this.custom = this.customArray
+            break
+        }
+      })
+    },
+    isCustomValue (val) {
+      if (this.fieldNames.find(element => element.field_name === val) === undefined) { return true } else { return false }
     }
   }
 }
