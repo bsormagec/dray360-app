@@ -3,7 +3,7 @@ import axios from '@/store/api_calls/config/axios'
 
 export const getCsrfCookie = async () => axios.ori.get('/sanctum/csrf-cookie').then(data => [undefined, data]).catch(e => [e])
 
-export const getUser = async () => axios.ori.get('api/user').then(data => [undefined, data.data]).catch(e => [e])
+export const getUser = async () => axios.ori.get('/api/user').then(data => [undefined, data.data]).catch(e => [e])
 
 export const postSignUp = async (signUpData) => axios.ori.post('/api/signup', signUpData).then(data => [undefined, data]).catch(e => [e])
 

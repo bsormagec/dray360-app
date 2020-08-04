@@ -45,7 +45,9 @@ const actions = {
       return reqStatus.success
     }
   },
-
+  simpleLogout ({ commit }) {
+    commit('logout')
+  },
   async setIntendedUrl (context, { intendedUrl }) {
     context.commit('intendedUrl', intendedUrl)
   }

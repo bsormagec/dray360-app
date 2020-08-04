@@ -5,6 +5,8 @@ import store from './store/index'
 import vuetify from './plugins/vuetify'
 import * as Sentry from '@sentry/browser'
 import { Vue as VueIntegration } from '@sentry/integrations'
+import setupInterceptors from '@/store/api_calls/config/setupInterceptors'
+
 Vue.config.productionTip = false
 
 if (process.env.NODE_ENV !== 'development') {
@@ -13,6 +15,8 @@ if (process.env.NODE_ENV !== 'development') {
     integrations: [new VueIntegration({ Vue, attachProps: true })]
   })
 }
+
+setupInterceptors({ store, router })
 
 new Vue({
   router,
