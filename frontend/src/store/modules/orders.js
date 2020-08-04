@@ -17,7 +17,6 @@ const initialState = {
   links: {},
   meta: {},
   currentOrder: {},
-  pdf: {},
   tmsData: {}
 }
 
@@ -32,9 +31,6 @@ const mutations = {
   },
   [types.setCurrentOrder] (state, orderData) {
     state.currentOrder = orderData
-  },
-  [types.setPDF] (state, pdfData) {
-    state.pdf = pdfData
   },
   [types.setSetTms] (state, tmsData) {
     state.tmsdata = tmsData
@@ -73,11 +69,10 @@ const actions = {
   },
 
   async [types.postUploadPDF] ({ commit }, file) {
-    const [error, data] = await postUploadPDF(file)
+    const [error] = await postUploadPDF(file)
 
     if (error) return reqStatus.error
 
-    commit(types.setPDF, data)
     return reqStatus.success
   },
 
