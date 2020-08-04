@@ -88,17 +88,17 @@ const routes = [
     component: RulesEditor
   },
   {
-    path: '/pagenotfound',
-    name: 'Page not found',
-    component: PageNotFound
-  },
-  {
     path: '/companies/:id/refs-custom-mapping',
     name: 'Mapping',
     component: MappingField,
     meta: {
       middleware: [auth]
     }
+  },
+  {
+    path: '*',
+    name: 'Not Found',
+    component: PageNotFound
   }
 ]
 
