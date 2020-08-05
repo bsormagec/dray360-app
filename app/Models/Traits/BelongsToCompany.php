@@ -2,8 +2,11 @@
 
 namespace App\Models\Traits;
 
+use Exception;
+use ReflectionClass;
 use App\Models\Company;
 use App\Contracts\CurrentCompany;
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 trait BelongsToCompany
@@ -27,5 +30,23 @@ trait BelongsToCompany
     public function hasCompany(): bool
     {
         return $this->getAttribute(Company::FOREIGN_KEY) !== null;
+    }
+
+    public function belongsToSameCompanyAs(Model $model): bool
+    {
+        $reflection = new ReflectionClass($model);
+
+        if (! $reflection->hasMethod('hasCompany') || ! $reflection->hasMethod('getCompanyId')) {
+            throw new Exception('The model '.get_class($model).' does not belong to a company.');
+        }
+
+        return $this->hasCompany()
+            && $model->hasCompany()
+            && $model->getCompanyId() == $this->getCompanyId();
+    }
+
+    public function getCompanyId(): ?int
+    {
+        return $this->getAttribute(Company::FOREIGN_KEY);
     }
 }
