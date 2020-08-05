@@ -91,7 +91,7 @@ class OCRRequestStatus extends Model
             'request_id' => $statusMetadata['request_id'],
             'status_date' => now(),
             'status' => static::UPLOAD_REQUESTED,
-            'status_metadata' => json_encode($statusMetadata)
+            'status_metadata' => $statusMetadata,
         ];
 
         return static::create($data);

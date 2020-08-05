@@ -101,7 +101,6 @@ export default {
         )
         return
       }
-      this.$router.push('/pagenotfound')
       console.log('error')
     },
 
