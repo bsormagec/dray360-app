@@ -12,36 +12,63 @@ class OrdersPolicy
 
     /**
      * Determine whether the user can view any models.
-     *
-     * @param  \App\Models\User  $user
-     * @return mixed
      */
-    public function viewAny(User $user)
+    public function viewAny(User $user): bool
     {
         return $user->isAbleTo('orders-view');
     }
 
     /**
      * Determine whether the user can view the model.
-     *
-     * @param  \App\Models\User  $user
-     * @param  \App\Models\Order  $order
-     * @return mixed
      */
-    public function view(User $user, Order $order)
+    public function view(User $user, Order $order): bool
     {
-        return $user->isAbleTo('orders-view');
+        $hasViewPermission = $user->isAbleTo('orders-view');
+
+        if (! $user->isSuperadmin()) {
+            return $hasViewPermission && $user->belongsToSameCompanyAs($order);
+        }
+
+        return $hasViewPermission;
     }
 
     /**
      * Determine whether the user can update the model.
-     *
-     * @param  \App\Models\User  $user
-     * @param  \App\Models\Order  $order
-     * @return mixed
      */
-    public function update(User $user, Order $order)
+    public function update(User $user, Order $order): bool
     {
-        return $user->isAbleTo('orders-edit');
+        $hasUpdatePermissions = $user->isAbleTo('orders-edit');
+
+        if (! $user->isSuperadmin()) {
+            return $hasUpdatePermissions && $user->belongsToSameCompanyAs($order);
+        }
+
+        return $hasUpdatePermissions;
+    }
+
+    /**
+     * Determine if the user can send to an order to the tms.
+     */
+    public function sendToTms(User $user, Order $order): bool
+    {
+        $hasPermissionsToSendToTms = $user->isAbleTo('tms-submit');
+
+        if (! $user->isSuperadmin()) {
+            return $hasPermissionsToSendToTms && $user->belongsToSameCompanyAs($order);
+        }
+
+        return $hasPermissionsToSendToTms;
+    }
+
+    /**
+     * Determine if the user can download an order pdf.
+     */
+    public function downloadPdf(User $user, Order $order): bool
+    {
+        if (! $user->isSuperadmin()) {
+            return $user->belongsToSameCompanyAs($order);
+        }
+
+        return true;
     }
 }

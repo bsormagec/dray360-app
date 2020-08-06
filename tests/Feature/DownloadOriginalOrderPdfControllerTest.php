@@ -3,8 +3,12 @@
 namespace Tests\Feature;
 
 use Tests\TestCase;
+use App\Models\User;
 use App\Models\Order;
 use OrdersTableSeeder;
+use App\Models\Company;
+use Laravel\Sanctum\Sanctum;
+use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
 
@@ -26,5 +30,22 @@ class DownloadOriginalOrderPdfControllerTest extends TestCase
 
         $this->get(route('orders.download-pdf', $order->id))
             ->assertRedirect($signedUrl);
+    }
+
+    /** @test */
+    public function it_should_fail_if_the_order_doesnt_belongs_to_the_user_company()
+    {
+        $this->seedTestUsers();
+        $company1 = factory(Company::class)->create();
+        $company2 = factory(Company::class)->create();
+        $user = factory(User::class)->create(['t_company_id' => $company1->id]);
+        $user->attachRole('customer-admin');
+        $order = factory(Order::class)->create(['t_company_id' => $company2->id]);
+
+        Sanctum::actingAs($user);
+        Storage::fake('s3');
+
+        $this->get(route('orders.download-pdf', $order->id))
+            ->assertStatus(Response::HTTP_FORBIDDEN);
     }
 }
