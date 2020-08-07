@@ -61,9 +61,18 @@ const actions = {
   },
 
   async [types.updateOrderDetail] ({ commit, state }, { id, changes }) {
-    const [error] = await updateOrderDetail({ id, changes })
-    const data = { ...state.currentOrder, ...changes }
-    commit(types.setCurrentOrder, data)
+    const [error, data] = await updateOrderDetail({ id, changes })
+    let newOrder = {}
+
+    if (!error) {
+      delete data.ocr_data
+      newOrder = { ...state.currentOrder, ...data, ...changes }
+    } else {
+      newOrder = { ...state.currentOrder, ...changes }
+    }
+
+    commit(types.setCurrentOrder, newOrder)
+
     if (error) return reqStatus.error
     return reqStatus.success
   },
