@@ -17,6 +17,8 @@
       <OrdersList
         :active-page="activePage"
         :loaded="loaded"
+        :filter-query="filterQuery"
+        :default-selected="['intake-started','ocr-completed']"
       />
     </div>
 
@@ -65,7 +67,8 @@ export default {
       activePage: 0,
       tabs,
       statusFilter: '',
-      searchFilter: {}
+      searchFilter: {},
+      filterQuery: ''
     }
   },
 
@@ -103,12 +106,15 @@ export default {
     },
 
     async fetchOrdersList (filters = { page: new URLSearchParams(window.location.search).get('page') }) {
-      this.activePage = parseInt(this.handleLocationUrl(filters.page))
+      this.filterQuery = this.returnSeachQuery(this.searchFilter['filter[query]'])
+      this.activePage = parseInt(this.returnPage(filters.page, this.filterQuery))
+      this.handleLocationUrl(this.activePage, this.filterQuery)
       const status = await this[types.getOrders]({
-        ...this.searchFilter,
-        ...filters,
+        // ...this.searchFilter,
+        'filter[query]': this.filterQuery,
+        // ...filters, // filterQuery works perfectly
         page: this.activePage,
-        query: this.statusFilter
+        query: ['intake-started,ocr-completed,ocr-waiting'] // the key is here
       })
 
       if (status === reqStatus.success) {
@@ -118,15 +124,25 @@ export default {
       }
     },
 
-    handleLocationUrl (n) {
-      const page = n || location.search.split('=')[1] || 1
-      const search = `?page=${page}`
+    returnPage (n) {
+      const page = n || location.search.split('=')[2] || 1
+      return page
+    },
+
+    returnSeachQuery (filterQuery) {
+      let searchQuery = filterQuery || location.search.split('=')[1] || ''
+      if (searchQuery.includes('&')) {
+        searchQuery = searchQuery.split('&')[0]
+      }
+      return searchQuery
+    },
+
+    handleLocationUrl (page, filterQuery) {
+      const search = `?filter[query]=${filterQuery}&page=${page}`
 
       if (location.search !== search) {
         this.$router.replace(search)
       }
-
-      return page
     },
 
     setStatusFilter (statuses) {
@@ -138,7 +154,9 @@ export default {
     },
 
     setSearchFilter (filters) {
+      // console.log('filters: ', filters)
       this.searchFilter = filters
+      // console.log('this.searchFilter: ', this.searchFilter['filter[query]'])
     }
   },
 
