@@ -9,6 +9,7 @@ use App\Models\User;
 use Aws\MockHandler;
 use App\Models\Order;
 use OrdersTableSeeder;
+use App\Models\Company;
 use Illuminate\Support\Str;
 use Laravel\Sanctum\Sanctum;
 use Illuminate\Http\Response;
@@ -91,6 +92,39 @@ class SendToTmsControllerTest extends TestCase
         $this->seed(OrdersTableSeeder::class);
         $order = Order::first();
         $user = User::whereRoleIs('customer-user')->first();
+        Sanctum::actingAs($user);
+
+        $mockHandler = tap(new MockHandler())
+            ->append(function ($cmd) {
+                return new AwsException('', $cmd, [
+                    'code' => 'failed',
+                    'message' => 'some aws exception',
+                ]);
+            });
+        $snsClient = $this->app['aws']->createClient('sns');
+        $snsClient->getHandlerList()->setHandler($mockHandler);
+
+        $mockAction = Mockery::mock(PublishSnsMessageToSendToTms::class)
+            ->shouldAllowMockingProtectedMethods();
+        $mockAction->shouldNotReceive('getSnsClient');
+        $this->app->instance(PublishSnsMessageToSendToTms::class, $mockAction);
+
+        $this->postJson(route('send-to-tms'), [
+                'status' => 'sending-to-wint',
+                'order_id' => $order->id,
+            ])
+            ->assertStatus(Response::HTTP_FORBIDDEN);
+    }
+
+    /** @test */
+    public function it_should_fail_if_order_is_from_other_company()
+    {
+        $company1 = factory(Company::class)->create();
+        $company2 = factory(Company::class)->create();
+        $user = factory(User::class)->create(['t_company_id' => $company1->id]);
+        $user->attachRole('customer-admin');
+        $order = factory(Order::class)->create(['t_company_id' => $company2->id]);
+
         Sanctum::actingAs($user);
 
         $mockHandler = tap(new MockHandler())

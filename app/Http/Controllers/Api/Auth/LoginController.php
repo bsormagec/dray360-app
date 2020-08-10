@@ -6,6 +6,7 @@ use App\Models\User;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
+use App\Exceptions\ImpersonationException;
 
 class LoginController extends Controller
 {
@@ -51,6 +52,10 @@ class LoginController extends Controller
      */
     public function logout()
     {
+        try {
+            app('impersonate')->stop();
+        } catch (ImpersonationException $e) {
+        }
         Auth::guard('web')->logout();
         return response()->json(['message' => 'Logged Out'], 200);
     }
@@ -66,6 +71,8 @@ class LoginController extends Controller
         } else {
             $user->setRelation('permissions', $user->allPermissions());
             $user->is_superadmin = $user->isSuperadmin();
+            $user->is_impersonated = app('impersonate')->isImpersonating();
+
             return response()->json($user);
         }
     }

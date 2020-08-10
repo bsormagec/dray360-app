@@ -14,6 +14,7 @@ class DownloadOriginalOrderPdfController extends Controller
 
     public function __invoke(Order $order)
     {
+        $this->authorize('downloadPdf', $order);
         $status = OCRRequestStatus::where([
             'request_id' => $order->request_id,
             'status' => OCRRequestStatus::INTAKE_ACCEPTED,

@@ -1,5 +1,6 @@
-import { getCsrfCookie, postLogin, getUser, postLogout } from '@/store/api_calls/auth'
+import { getCsrfCookie, postLogin, getUser, postLogout, postLeaveImpersonation } from '@/store/api_calls/auth'
 import { reqStatus } from '@/enums/req_status'
+import get from 'lodash/get'
 
 const initialState = {
   loggedIn: false,
@@ -38,7 +39,16 @@ const actions = {
     }
     commit('currentUserLoading', false)
   },
-  async logout ({ commit }) {
+  async logout ({ commit, state }) {
+    if (get(state.currentUser, 'user.is_impersonated')) {
+      const [error] = await postLeaveImpersonation()
+
+      if (error) return
+
+      window.location = '/nova'
+      return
+    }
+
     const [error] = await postLogout()
     if (!error) {
       commit('logout')

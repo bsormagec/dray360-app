@@ -7,6 +7,7 @@ use App\Http\Controllers\Api\CompaniesController;
 use App\Http\Controllers\Api\SendToTmsController;
 use App\Http\Controllers\Api\Auth\LoginController;
 use App\Http\Controllers\Api\OCRRequestController;
+use App\Http\Controllers\Api\ImpersonationController;
 use App\Http\Controllers\Api\OCRVariantsController;
 use App\Http\Controllers\Api\SearchAddressController;
 use App\Http\Controllers\Api\Auth\ResetPasswordController;
@@ -35,12 +36,19 @@ Route::post('password/reset', [ResetPasswordController::class, 'reset'])
     ->name('password.update');
 
 // Sanctum Authenticated Routes
-Route::group(['middleware' => 'auth:sanctum'], function () {
+Route::group(['middleware' => ['auth:sanctum', 'impersonate']], function () {
     Route::post('logout', [LoginController::class, 'logout'])->name('logout');
 
     // Authenticated route to get current user
     Route::get('user', [LoginController::class, 'user'])
         ->name('user'); // shows up in `php artisan route:list` command output
+
+    Route::delete('impersonate', [ImpersonationController::class, 'destroy'])
+            ->name('impersonate.stop')
+            ->withoutMiddleware('impersonate');
+    Route::post('impersonate/{user}', [ImpersonationController::class, 'update'])
+        ->name('impersonate.start')
+        ->withoutMiddleware('impersonate');
 
     Route::get('search-address', SearchAddressController::class)
         ->name('search-address');

@@ -6,6 +6,7 @@ use Tests\TestCase;
 use App\Models\User;
 use App\Models\Order;
 use OrdersTableSeeder;
+use App\Models\Company;
 use App\Models\OCRRequest;
 use Laravel\Sanctum\Sanctum;
 use App\Models\OrderLineItem;
@@ -264,6 +265,39 @@ class OrdersControllerTest extends TestCase
                 'order_address_events',
             ])
             ->assertJsonFragment(['presigned_download_uri' => 'http://thesignedurl.com']);
+    }
+
+    /** @test */
+    public function it_should_fail_when_trying_to_access_an_order_from_other_company()
+    {
+        $company1 = factory(Company::class)->create();
+        $company2 = factory(Company::class)->create();
+        $user = factory(User::class)->create(['t_company_id' => $company1->id]);
+        $user->attachRole('customer-user');
+        $order = factory(Order::class)->create(['t_company_id' => $company2->id]);
+
+        Sanctum::actingAs($user);
+
+        $this->getJson(route('orders.show', $order->id))
+            ->assertStatus(Response::HTTP_FORBIDDEN);
+    }
+
+    /** @test */
+    public function it_should_fail_when_trying_to_update_an_order_from_other_company()
+    {
+        $company1 = factory(Company::class)->create();
+        $company2 = factory(Company::class)->create();
+        $user = factory(User::class)->create(['t_company_id' => $company1->id]);
+        $user->attachRole('customer-admin');
+        $order = factory(Order::class)->create(['t_company_id' => $company2->id]);
+
+        Sanctum::actingAs($user);
+
+        $this->putJson(route('orders.update', $order->id), ['ship_comment' => 'test'])
+                ->assertStatus(Response::HTTP_FORBIDDEN);
+
+        $order->refresh();
+        $this->assertNotEquals('test', $order->ship_comment);
     }
 
     protected function fillOrderUpdate($original)

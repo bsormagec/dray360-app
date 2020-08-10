@@ -11,9 +11,6 @@ use App\Http\Resources\Orders as OrdersResource;
 
 class OrdersController extends Controller
 {
-    // expire JPG download URI after this many seconds
-    const MINUTES_URI_REMAINS_VALID = 15;
-
     /**
      * Display a listing of the resource.
      */
@@ -33,44 +30,7 @@ class OrdersController extends Controller
     {
         $this->authorize('view', $order);
 
-        $order = $order->load([
-                'ocrRequest',
-                'ocrRequest.statusList',
-                'ocrRequest.latestOcrRequestStatus',
-                'orderLineItems',
-                'billToAddress',
-                'portRampOfDestinationAddress',
-                'portRampOfOriginAddress',
-                'orderAddressEvents',
-                'orderAddressEvents.address',
-            ]);
-
-        // add a presigned download URI to each
-        try {
-            $ocr_clone = $order->ocr_data;
-            // note the & in the foreach specifies pass-by-reference
-            foreach ($ocr_clone['page_index_filenames']['value'] as $eachPageIndex => &$eachPage) {
-                $s3Config = config('filesystems.disks.s3-base') + [
-                    'bucket' => s3_bucket_from_url($eachPage['value']),
-                ];
-                $storage = Storage::createS3Driver($s3Config);
-                $urlExpiryTime = now()->addMinutes(self::MINUTES_URI_REMAINS_VALID);
-
-                // save presigned info on eachPage
-                $eachPage['presigned_download_uri'] = $storage->temporaryUrl(
-                    s3_file_name_from_url($eachPage['value']),
-                    $urlExpiryTime
-                );
-                $eachPage['presigned_download_uri_expires'] = $urlExpiryTime;
-            }
-            // assign updated ocr_data clone to order object, replacing old ocr_data
-            $order->ocr_data = $ocr_clone;
-        } catch (\Exception $e) {
-            // todo: write something to the laravel error log
-        }
-
-        // all done
-        return response()->json($order);
+        return response()->json($order->prepareForSideBySide());
     }
 
     /**
@@ -94,6 +54,6 @@ class OrdersController extends Controller
         $order->update($orderData);
         $order->updateRelatedModels($relatedModels);
 
-        return response()->json($order);
+        return response()->json($order->prepareForSideBySide(false));
     }
 }
