@@ -5,13 +5,12 @@ namespace App\Models\Traits;
 use Exception;
 use ReflectionClass;
 use App\Models\Company;
-use App\Contracts\CurrentCompany;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 trait BelongsToCompany
 {
-    public function scopeForCurrentCompany($query, CurrentCompany $company = null)
+    public function scopeForCurrentCompany($query, Company $company = null)
     {
         $company = $company ?: currentCompany();
 

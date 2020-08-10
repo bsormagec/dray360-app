@@ -4,21 +4,17 @@ namespace App\Nova;
 
 use Laravel\Nova\Fields\ID;
 use Illuminate\Http\Request;
+use Laravel\Nova\Fields\Code;
 use Laravel\Nova\Fields\Text;
-use Laravel\Nova\Fields\Gravatar;
-use Laravel\Nova\Fields\Password;
-use Laravel\Nova\Fields\BelongsTo;
-use Illuminate\Support\Facades\Gate;
-use App\Nova\Actions\ImpersonateUser;
 
-class User extends Resource
+class Company extends Resource
 {
     /**
      * The model the resource corresponds to.
      *
      * @var string
      */
-    public static $model = 'App\Models\User';
+    public static $model = \App\Models\Company::class;
 
     /**
      * The single value that should be used to represent the resource when being displayed.
@@ -33,7 +29,7 @@ class User extends Resource
      * @var array
      */
     public static $search = [
-        'id', 'name', 'email',
+        'name', 'email_intake_address', 'email_intake_address_alt',
     ];
 
     /**
@@ -45,26 +41,11 @@ class User extends Resource
     public function fields(Request $request)
     {
         return [
-            ID::make()->sortable(),
-
-            Gravatar::make()->maxWidth(50),
-
-            Text::make('Name')
-                ->sortable()
-                ->rules('required', 'max:255'),
-
-            Text::make('Email')
-                ->sortable()
-                ->rules('required', 'email', 'max:254')
-                ->creationRules('unique:users,email')
-                ->updateRules('unique:users,email,{{resourceId}}'),
-
-            BelongsTo::make('Company')->nullable(),
-
-            Password::make('Password')
-                ->onlyOnForms()
-                ->creationRules('required', 'string', 'min:8')
-                ->updateRules('nullable', 'string', 'min:8'),
+            ID::make('Id', 'id')->sortable(),
+            Text::make('Name'),
+            Text::make('Intake Email', 'email_intake_address'),
+            Text::make('Intake Email Alt', 'email_intake_address_alt'),
+            Code::make('Ref Mapping', 'refs_custom_mapping')->json(),
         ];
     }
 
@@ -109,11 +90,6 @@ class User extends Resource
      */
     public function actions(Request $request)
     {
-        return [
-            (new ImpersonateUser())->onlyOnTableRow()
-                ->canRun(function ($request, $user) {
-                    return Gate::allows('impersonate', $user) && $request->user()->id != $user->id;
-                }),
-        ];
+        return [];
     }
 }

@@ -17,7 +17,7 @@ return [
             'rules-editor' => 'c,v,e,a',
             'orders' => 'e,v,c',
             'tms' => 's',
-            'users' => 'v,c,e,r',
+            'users' => 'v,c,e,r,i',
             'roles' => 'u',
             'system-status' => 'f',
             'time-in-status' => 'v',
@@ -44,5 +44,6 @@ return [
         'e' => 'edit',
         'r' => 'remove',
         'f' => 'filter',
+        'i' => 'impersonate',
     ]
 ];
