@@ -25,6 +25,7 @@
         scrollable
         range
         color="#397E92"
+        @change="change"
       >
         <v-spacer />
         <v-btn
@@ -58,11 +59,19 @@ export default {
     dateRangeText () {
       return this.dates.join(' - ')
     }
+  },
+  methods: {
+    change (event) {
+      this.$emit('change', event)
+    }
   }
+
 }
 </script>
-<style lang="scss" scoped>
+<style lang="scss">
 .range__calendar{
       max-width: 30rem;
+      width: 30rem;
+      margin-right: 1rem;
     }
 </style>

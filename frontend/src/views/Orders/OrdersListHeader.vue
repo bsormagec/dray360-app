@@ -11,6 +11,9 @@
     </h1>
 
     <div class="header__right">
+      <DateRangeCalendar
+        @change="handleCalendar"
+      />
       <SearchBar
         :style="getStyle.searchBar"
         @change="handleSearch"
@@ -38,6 +41,7 @@
 import Select from '@/components/Select'
 import SearchBar from '@/components/SearchBar'
 import { providerStateName, providerMethodsName } from '@/views/Orders/inner_types'
+import DateRangeCalendar from '@/components/Orders/DateRangeCalendar'
 
 export default {
   name: 'OrdersListHeader',
@@ -46,7 +50,8 @@ export default {
 
   components: {
     Select,
-    SearchBar
+    SearchBar,
+    DateRangeCalendar
   },
 
   props: {
@@ -112,6 +117,18 @@ export default {
   },
 
   methods: {
+    handleCalendar (e) {
+      if (e.length === 2) {
+        const filters = {
+          'filter[created_between]': e.toString()
+        }
+        this[providerMethodsName].setSearchFilter(filters)
+        this[providerMethodsName].fetchOrdersList({
+          page: this[providerStateName].activePage(),
+          ...filters
+        })
+      }
+    },
     handleSearch (search) {
       const filters = {
         'filter[query]': search
@@ -161,7 +178,7 @@ export default {
 
 .header__right {
   display: flex;
-
+  align-items: center;
   @media screen and (max-width: 580px) {
     position: absolute;
     bottom: 0;
