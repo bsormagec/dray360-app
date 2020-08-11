@@ -115,6 +115,7 @@ import { cleanStrForId } from '@/views/Details/inner_utils/clean_str_for_id'
 import mapFieldNames from '@/views/Details/inner_utils/map_field_names'
 
 import orders, { types } from '@/store/modules/orders'
+import utils, { type } from '@/store/modules/utils'
 
 export default {
   name: 'DetailsForm',
@@ -159,7 +160,6 @@ export default {
       return formModule.state.form
     }
   },
-
   watch: {
     isEditing (val, oldVal) {
       this.lockHandleTimeout()
@@ -182,6 +182,7 @@ export default {
     deleteFormInventoryItem: formModule.methods.deleteFormInventoryItem,
 
     ...mapActions(orders.moduleName, [types.updateOrderDetail]),
+    ...mapActions(utils.moduleName, [type.setSnackbar]),
 
     lockHandleTimeout (manual) {
       if (this.lockTimeout) {
@@ -201,8 +202,12 @@ export default {
 
     async handleChange ({ v, cb, key, formLocation }) {
       if (this.lockHandleChange) return
+      const SnackStatus = await this[type.setSnackbar]({
+        show: true,
+        showSpinner: true,
+        message: ''
+      })
       cb(formLocation)
-
       const changes = {}
 
       if (key.includes('bill to')) {
@@ -243,21 +248,31 @@ export default {
           id: this.$route.params.id,
           changes
         })
-
+        if (SnackStatus.status === 'success') {
+          await this[type.setSnackbar]({
+            show: false,
+            showSpinner: false,
+            message: ''
+          })
+        }
         return status
       }
     },
 
     async saveFormValuesIfNeeded (val, oldVal) {
       if (!shouldSaveFormValues.call(this)) return
-
       const changes = parseFormValues({ currentOrder: this.currentOrder() })
-
       const status = await this[types.updateOrderDetail]({
         id: this.$route.params.id,
         changes
       })
-
+      if (status.status === 'success') {
+        await this[type.setSnackbar]({
+          show: true,
+          showSpinner: false,
+          message: 'Order updated'
+        })
+      }
       return status
 
       function shouldSaveFormValues () {

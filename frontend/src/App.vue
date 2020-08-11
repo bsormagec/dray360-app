@@ -1,12 +1,18 @@
 <template>
   <v-app>
     <router-view />
+    <Snackbar />
   </v-app>
 </template>
 
 <script>
+import Snackbar from '@/components/General/Snackbar'
+
 export default {
-  name: 'App'
+  name: 'App',
+  components: {
+    Snackbar
+  }
 }
 </script>
 
