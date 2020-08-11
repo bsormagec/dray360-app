@@ -18,7 +18,7 @@
         :active-page="activePage"
         :loaded="loaded"
         :filter-query="filterQuery"
-        :default-selected="['intake-started','ocr-completed']"
+        :selected-items="statusQuery"
       />
     </div>
 
@@ -68,7 +68,20 @@ export default {
       tabs,
       statusFilter: '',
       searchFilter: {},
-      filterQuery: ''
+      filterQuery: '',
+      statusQuery: ['intake-accepted',
+        'intake-exception',
+        'intake-started',
+        'ocr-completed',
+        'ocr-post-processing-complete',
+        'ocr-post-processing-error',
+        'ocr-waiting',
+        'process-ocr-output-file-complete',
+        'process-ocr-output-file-error',
+        'upload-requested',
+        'sending-to-wint',
+        'failure-sending-to-wint',
+        'success-sending-to-wint']
     }
   },
 
@@ -79,9 +92,31 @@ export default {
     }
   },
 
-  async mounted () {
-    await this.fetchOrdersList()
+  // Works, but makes this.statusFilter an array of object Objects
+
+  beforeMount () {
+    if (this.searchFilter.length > 0) {
+      console.log('parent mounted this.statusQuery: ', this.statusQuery)
+      console.log('location.search: ', location.search)
+      this.statusQuery = location.search.split('=')[1]
+
+      if (this.statusQuery !== undefined) {
+        if (this.statusQuery.includes('&')) {
+          this.statusQuery = this.statusQuery.split('&')[0]
+        }
+      }
+      this.statusQuery = this.statusQuery.split(',')
+      console.log('parent mounted this.statusQuery wrangled: ', this.statusQuery)
+    }
+  },
+
+  mounted () {
+    this.fetchOrdersList()
     this.loaded = true
+  },
+
+  updated () {
+    console.log('Orders - this.statusQuery: ', this.statusQuery)
   },
 
   methods: {
@@ -106,15 +141,18 @@ export default {
     },
 
     async fetchOrdersList (filters = { page: new URLSearchParams(window.location.search).get('page') }) {
-      this.filterQuery = this.returnSeachQuery(this.searchFilter['filter[query]'])
+      console.log('this.searchFilter fetching: ', this.searchFilter)
+      this.filterQuery = this.returnSearchQuery(this.searchFilter['filter[query]'])
       this.activePage = parseInt(this.returnPage(filters.page, this.filterQuery))
-      this.handleLocationUrl(this.activePage, this.filterQuery)
+      console.log('this.statusFilter: ', this.statusFilter)
+      if (this.statusFilter.length !== 0) {
+        this.statusQuery = this.statusFilterToStatusQuery(this.statusFilter)
+      }
+      this.handleLocationUrl(this.activePage, this.filterQuery, this.statusQuery)
       const status = await this[types.getOrders]({
-        // ...this.searchFilter,
         'filter[query]': this.filterQuery,
-        // ...filters, // filterQuery works perfectly
         page: this.activePage,
-        query: ['intake-started,ocr-completed,ocr-waiting'] // the key is here
+        'filter[status]': this.statusQuery
       })
 
       if (status === reqStatus.success) {
@@ -125,20 +163,35 @@ export default {
     },
 
     returnPage (n) {
-      const page = n || location.search.split('=')[2] || 1
+      const page = n || location.search.split('=')[3] || 1
       return page
     },
 
-    returnSeachQuery (filterQuery) {
-      let searchQuery = filterQuery || location.search.split('=')[1] || ''
+    returnSearchQuery (filterQuery) {
+      let searchQuery = filterQuery || location.search.split('=')[2] || ''
       if (searchQuery.includes('&')) {
         searchQuery = searchQuery.split('&')[0]
       }
       return searchQuery
     },
 
-    handleLocationUrl (page, filterQuery) {
-      const search = `?filter[query]=${filterQuery}&page=${page}`
+    statusFilterToStatusQuery (filter) {
+      console.log('filter to convert: ', filter)
+      filter = filter.split('=')[1]
+      filter = filter.split(',') // Needs to be an array
+      return filter
+    },
+
+    returnStatusQuery (filterQuery) {
+      let statusQuery = filterQuery || location.search.split('=')[1] || ''
+      if (statusQuery.includes('&')) {
+        statusQuery = statusQuery.split('&')[0]
+      }
+      return statusQuery
+    },
+
+    handleLocationUrl (page, filterQuery, statusQuery) {
+      const search = `?filter[status]=${statusQuery}&filter[query]=${filterQuery}&page=${page}`
 
       if (location.search !== search) {
         this.$router.replace(search)

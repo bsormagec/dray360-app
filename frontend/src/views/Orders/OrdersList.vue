@@ -4,7 +4,7 @@
       :statuses="statuses"
       :headers="headers"
       :set-headers="setHeaders"
-      :default-selected="defaultSelected"
+      :selected-items="selectedItems"
     />
 
     <ContentLoading :loaded="loaded">
@@ -47,7 +47,7 @@ export default {
       type: Boolean,
       required: true
     },
-    defaultSelected: {
+    selectedItems: {
       type: Array,
       required: true
     }
@@ -106,10 +106,6 @@ export default {
     'upload-requested' => 'Intake'
   ]
   */
-
- mounted() {
-   console.log('orderlist default selected: ', this.defaultSelected)
- },
 
   methods: {
     setHeaders (newHeaders) {

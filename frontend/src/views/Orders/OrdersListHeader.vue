@@ -20,7 +20,7 @@
         label="View by Status"
         :style="getStyle.statusSelect"
         :items="statuses"
-        :default-items="defaultSelected"
+        :selected-items="selectedItems"
         @change="handleStatuses"
       />
 
@@ -62,7 +62,7 @@ export default {
       type: Function,
       required: true
     },
-    defaultSelected: {
+    selectedItems: {
       type: Array,
       required: true
     }
@@ -72,7 +72,7 @@ export default {
     cachedHeaders: [],
     headerItems: [],
     clientWidth: window.innerWidth
-    // defaultSelected: [
+    // defaultSelected: [ // the one replacing
     //   'intake-accepted',
     //   'intake-exception',
     //   'intake-started',
@@ -114,10 +114,6 @@ export default {
     this.headerItems = this.cachedHeaders.map(({ text }) => text)
     window.addEventListener('resize', () => (this.clientWidth = window.innerWidth))
   },
-
-   mounted() {
-   console.log('header default selected: ', this.defaultSelected)
- },
 
   methods: {
     handleSearch (search) {
