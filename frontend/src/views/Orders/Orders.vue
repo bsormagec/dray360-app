@@ -96,8 +96,6 @@ export default {
 
   beforeMount () {
     if (this.searchFilter.length > 0) {
-      console.log('parent mounted this.statusQuery: ', this.statusQuery)
-      console.log('location.search: ', location.search)
       this.statusQuery = location.search.split('=')[1]
 
       if (this.statusQuery !== undefined) {
@@ -106,17 +104,12 @@ export default {
         }
       }
       this.statusQuery = this.statusQuery.split(',')
-      console.log('parent mounted this.statusQuery wrangled: ', this.statusQuery)
     }
   },
 
   mounted () {
     this.fetchOrdersList()
     this.loaded = true
-  },
-
-  updated () {
-    console.log('Orders - this.statusQuery: ', this.statusQuery)
   },
 
   methods: {
@@ -141,10 +134,8 @@ export default {
     },
 
     async fetchOrdersList (filters = { page: new URLSearchParams(window.location.search).get('page') }) {
-      console.log('this.searchFilter fetching: ', this.searchFilter)
       this.filterQuery = this.returnSearchQuery(this.searchFilter['filter[query]'])
       this.activePage = parseInt(this.returnPage(filters.page, this.filterQuery))
-      console.log('this.statusFilter: ', this.statusFilter)
       if (this.statusFilter.length !== 0) {
         this.statusQuery = this.statusFilterToStatusQuery(this.statusFilter)
       }

@@ -49,37 +49,18 @@ export default {
     selected: []
   }),
 
-  // beforeMount () {
-  //   this.selected = location.search.split('=')[1]
-
-  //   if (this.selected !== undefined) {
-  //     if (this.selected.includes('&')) {
-  //       this.selected = this.selectedsplit('&')[0]
-  //     }
-
-  //     // this.seleted = this.statusQuery.split(',')
-  //   } else {
-  //     this.statusQuery = ''
-  //   }
-  // },
-
   mounted () {
     if (this.selectedItems.length > 0) {
-      console.log('conditional 1')
       this.selected = this.selectedItems
       this.change(this.selected)
       return
     }
 
     if (typeof this.defaultItem.index === 'number') {
-      console.log('conditional 2')
       this.selected = [this.items[this.defaultItem.index].value]
       this.change(this.selected)
       return
     }
-
-    console.log('this.items: ', this.items)
-    console.log('this.selected: ', this.selected)
 
     this.selected = this.items
     this.change(this.selected)
