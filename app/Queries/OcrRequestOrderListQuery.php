@@ -14,17 +14,27 @@ class OcrRequestOrderListQuery extends QueryBuilder
 {
     public function __construct()
     {
+        $noDuplicateOrderRequestsWhereClause = <<<ENDOFSQL
+            (t_job_latest_state.order_id is not null) or
+            (t_job_latest_state.order_id is null and t_job_latest_state.request_id not in (
+                select l2.request_id from t_job_latest_state as l2 where l2.order_id is not null
+            ))
+        ENDOFSQL;
+
         $query = OCRRequest::query()
             ->select('t_job_latest_state.*')
             ->addSelect('t_orders.id as t_order_id')
             ->when(! is_superadmin() && currentCompany(), function ($query) {
-                return $query->where('t_orders.'.Company::FOREIGN_KEY, currentCompany()->id) // to return just the orders of the current company. this is bugged! it doesn't return rejected ocrrequests
-                    ->orWhereNull('t_orders.'.Company::FOREIGN_KEY); // this returns all requests with no order yet, even if not from the correct company
+                return $query->join('t_job_state_changes', function($join) {
+                    $join->on('t_job_latest_state.t_job_state_changes_id', '=', 't_job_state_changes.id')
+                    ->where('t_job_state_changes.company_id', '=', currentCompany()->id);
+                });
             })
             ->with([
                 'order:id,request_id,bill_to_address_raw_text,created_at,equipment_type,shipment_designation,shipment_direction',
                 'latestOcrRequestStatus:id,status,status_date',
-            ]);
+            ])
+            ->whereRaw($noDuplicateOrderRequestsWhereClause);
 
         parent::__construct($query);
 

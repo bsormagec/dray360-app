@@ -20,7 +20,7 @@ class OcrRequestStatusFilter implements Filter
         }
 
         $query->leftJoin('t_orders', function ($query) use ($values) {
-            $query->on('t_orders.request_id', '=', 't_job_latest_state.request_id')
+            $query->on('t_orders.id', '=', 't_job_latest_state.order_id')
                 ->whereExists(function ($query) use ($values) {
                     $query->select('id')
                         ->from('t_job_state_changes')

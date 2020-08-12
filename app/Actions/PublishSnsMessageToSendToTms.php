@@ -25,6 +25,14 @@ class PublishSnsMessageToSendToTms
                             'DataType' => 'String',
                             'StringValue' => $data['status'],
                         ],
+                        'company_id' => [
+                            'DataType' => 'String',
+                            'StringValue' => $data['company_id'],
+                        ],
+                        'order_id' => [
+                            'DataType' => 'String',
+                            'StringValue' => $data['order_id'],
+                        ],
                     ],
                     'TopicArn' => config('services.sns-topics.send-to-tms'),
                 ]);

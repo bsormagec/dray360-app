@@ -231,7 +231,7 @@ class Order extends Model
 
     public function ocrRequest()
     {
-        return $this->hasOne(\App\Models\OCRRequest::class, 'request_id', 'request_id');
+        return $this->hasOne(\App\Models\OCRRequest::class, 'order_id', 'id');
     }
 
     public function billToAddress()

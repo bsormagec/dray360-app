@@ -53,6 +53,7 @@ class OCRRequestStatus extends Model
         'status_date',
         'status',
         'status_metadata',
+        'company_id'
     ];
 
     protected $casts = [
@@ -92,6 +93,7 @@ class OCRRequestStatus extends Model
             'status_date' => now(),
             'status' => static::UPLOAD_REQUESTED,
             'status_metadata' => $statusMetadata,
+            'company_id' => $statusMetadata['company_id']
         ];
 
         return static::create($data);

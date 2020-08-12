@@ -22,4 +22,5 @@
     "files.insertFinalNewline": true,
     "editor.defaultFormatter": "junstyle.php-cs-fixer"
   },
+  "phpcs.warningSeverity": 6,
 }
