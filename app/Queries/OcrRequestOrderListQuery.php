@@ -2,7 +2,6 @@
 
 namespace App\Queries;
 
-use App\Models\Company;
 use App\Models\OCRRequest;
 use Spatie\QueryBuilder\AllowedSort;
 use Spatie\QueryBuilder\QueryBuilder;
@@ -15,17 +14,17 @@ class OcrRequestOrderListQuery extends QueryBuilder
     public function __construct()
     {
         $noDuplicateOrderRequestsWhereClause = <<<ENDOFSQL
-            (t_job_latest_state.order_id is not null) or
+            (t_job_latest_state.order_id is not null or
             (t_job_latest_state.order_id is null and t_job_latest_state.request_id not in (
                 select l2.request_id from t_job_latest_state as l2 where l2.order_id is not null
-            ))
+            )))
         ENDOFSQL;
 
         $query = OCRRequest::query()
             ->select('t_job_latest_state.*')
             ->addSelect('t_orders.id as t_order_id')
             ->when(! is_superadmin() && currentCompany(), function ($query) {
-                return $query->join('t_job_state_changes', function($join) {
+                return $query->join('t_job_state_changes', function ($join) {
                     $join->on('t_job_latest_state.t_job_state_changes_id', '=', 't_job_state_changes.id')
                     ->where('t_job_state_changes.company_id', '=', currentCompany()->id);
                 });

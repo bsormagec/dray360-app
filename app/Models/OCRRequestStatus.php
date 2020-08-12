@@ -38,7 +38,7 @@ class OCRRequestStatus extends Model
         self::OCR_POST_PROCESSING_COMPLETE => 'Verified',
         self::OCR_POST_PROCESSING_ERROR => 'Rejected',
         self::OCR_WAITING => 'Processing',
-        self::PROCESS_OCR_OUTPUT_FILE_COMPLETE => 'Processing',
+        self::PROCESS_OCR_OUTPUT_FILE_COMPLETE => 'Verified',
         self::PROCESS_OCR_OUTPUT_FILE_ERROR => 'Rejected',
         self::UPLOAD_REQUESTED => 'Intake',
         self::SENDING_TO_WINT => 'Sending to TMS',
