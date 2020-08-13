@@ -39,7 +39,7 @@ const mutations = {
 
 const actions = {
   async [types.getOrders] ({ commit }, filters) {
-    const query = filters.query
+    const query = filters['filter[query]']
     const filtersForParams = { ...filters }
     delete filtersForParams.query
 

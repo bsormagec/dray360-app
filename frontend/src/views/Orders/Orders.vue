@@ -92,8 +92,6 @@ export default {
     }
   },
 
-  // Works, but makes this.statusFilter an array of object Objects
-
   beforeMount () {
     if (this.searchFilter.length > 0) {
       this.statusQuery = location.search.split('=')[1]
@@ -167,9 +165,8 @@ export default {
     },
 
     statusFilterToStatusQuery (filter) {
-      console.log('filter to convert: ', filter)
       filter = filter.split('=')[1]
-      filter = filter.split(',') // Needs to be an array
+      filter = filter.split(',')
       return filter
     },
 
@@ -198,9 +195,7 @@ export default {
     },
 
     setSearchFilter (filters) {
-      // console.log('filters: ', filters)
       this.searchFilter = filters
-      // console.log('this.searchFilter: ', this.searchFilter['filter[query]'])
     }
   },
 

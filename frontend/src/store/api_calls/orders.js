@@ -1,7 +1,7 @@
 import axios from '@/store/api_calls/config/axios'
 import toParams from '@/utils/to_params'
 
-export const getOrders = async (filters, query) => axios.ext.get(`/api/orders?${toParams(filters)}&${query}`).then(data => [undefined, data.data]).catch(e => [e])
+export const getOrders = async (filters, query) => axios.ext.get(`/api/orders?${toParams(filters)}${query}`).then(data => [undefined, data.data]).catch(e => [e])
 
 export const getOrderDetail = async (order) => axios.ext.get(`/api/orders/${order}`).then(data => [undefined, data.data]).catch(e => [e])
 
