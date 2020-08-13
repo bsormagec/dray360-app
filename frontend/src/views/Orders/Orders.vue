@@ -69,6 +69,7 @@ export default {
       statusFilter: '',
       searchFilter: {},
       filterQuery: '',
+      dateQuery: '',
       statusQuery: ['intake-accepted',
         'intake-exception',
         'intake-started',
@@ -94,7 +95,7 @@ export default {
 
   beforeMount () {
     if (this.searchFilter.length > 0) {
-      this.statusQuery = location.search.split('=')[1]
+      this.statusQuery = location.search.split('=')[2]
 
       if (this.statusQuery !== undefined) {
         if (this.statusQuery.includes('&')) {
@@ -133,15 +134,17 @@ export default {
 
     async fetchOrdersList (filters = { page: new URLSearchParams(window.location.search).get('page') }) {
       this.filterQuery = this.returnSearchQuery(this.searchFilter['filter[query]'])
-      this.activePage = parseInt(this.returnPage(filters.page, this.filterQuery))
+      this.activePage = parseInt(this.returnPage(filters.page))
+      this.dateQuery = this.returnDateQuery(this.searchFilter['filter[created_between]'])
       if (this.statusFilter.length !== 0) {
         this.statusQuery = this.statusFilterToStatusQuery(this.statusFilter)
       }
-      this.handleLocationUrl(this.activePage, this.filterQuery, this.statusQuery)
+      this.handleLocationUrl(this.activePage, this.filterQuery, this.statusQuery, this.dateQuery)
       const status = await this[types.getOrders]({
         'filter[query]': this.filterQuery,
         page: this.activePage,
-        'filter[status]': this.statusQuery
+        'filter[status]': this.statusQuery,
+        'filter[created_between]': this.dateQuery
       })
 
       if (status === reqStatus.success) {
@@ -152,12 +155,12 @@ export default {
     },
 
     returnPage (n) {
-      const page = n || location.search.split('=')[3] || 1
+      const page = n || location.search.split('=')[4] || 1
       return page
     },
 
     returnSearchQuery (filterQuery) {
-      let searchQuery = filterQuery || location.search.split('=')[2] || ''
+      let searchQuery = filterQuery || location.search.split('=')[3] || ''
       if (searchQuery.includes('&')) {
         searchQuery = searchQuery.split('&')[0]
       }
@@ -171,15 +174,23 @@ export default {
     },
 
     returnStatusQuery (filterQuery) {
-      let statusQuery = filterQuery || location.search.split('=')[1] || ''
+      let statusQuery = filterQuery || location.search.split('=')[2] || ''
       if (statusQuery.includes('&')) {
         statusQuery = statusQuery.split('&')[0]
       }
       return statusQuery
     },
 
-    handleLocationUrl (page, filterQuery, statusQuery) {
-      const search = `?filter[status]=${statusQuery}&filter[query]=${filterQuery}&page=${page}`
+    returnDateQuery (query) {
+      let dateQuery = query || location.search.split('=')[1] || ''
+      if (dateQuery.includes('&')) {
+        dateQuery = dateQuery.split('&')[0]
+      }
+      return dateQuery
+    },
+
+    handleLocationUrl (page, filterQuery, statusQuery, dateQuery) {
+      const search = `?filter[created_between]=${dateQuery}&filter[status]=${statusQuery}&filter[query]=${filterQuery}&page=${page}`
 
       if (location.search !== search) {
         this.$router.replace(search)
