@@ -48,4 +48,11 @@ trait BelongsToCompany
     {
         return $this->getAttribute(Company::FOREIGN_KEY);
     }
+
+    public function setCompany(Company $company)
+    {
+        $this->company()->associate($company);
+
+        return $this;
+    }
 }

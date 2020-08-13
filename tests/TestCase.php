@@ -4,6 +4,7 @@ namespace Tests;
 
 use UsersSeeder;
 use App\Models\User;
+use App\Models\Company;
 use Laravel\Sanctum\Sanctum;
 use Illuminate\Foundation\Testing\TestCase as BaseTestCase;
 
@@ -39,6 +40,15 @@ abstract class TestCase extends BaseTestCase
         $this->seedTestUsers();
 
         $user = User::whereRoleIs('customer-user')->first();
+        Sanctum::actingAs($user);
+    }
+
+    protected function loginCustomerAdmin()
+    {
+        $this->seedTestUsers();
+
+        $user = User::whereRoleIs('customer-admin')->first();
+        $user->setCompany(factory(Company::class)->create())->save();
         Sanctum::actingAs($user);
     }
 }

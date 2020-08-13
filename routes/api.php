@@ -1,14 +1,17 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\Api\UsersController;
 use App\Http\Controllers\Api\OrdersController;
 use App\Http\Controllers\Api\OCRRulesController;
 use App\Http\Controllers\Api\CompaniesController;
 use App\Http\Controllers\Api\SendToTmsController;
 use App\Http\Controllers\Api\Auth\LoginController;
 use App\Http\Controllers\Api\OCRRequestController;
-use App\Http\Controllers\Api\ImpersonationController;
+use App\Http\Controllers\Api\BulkActionsController;
 use App\Http\Controllers\Api\OCRVariantsController;
+use App\Http\Controllers\Api\UsersStatusController;
+use App\Http\Controllers\Api\ImpersonationController;
 use App\Http\Controllers\Api\SearchAddressController;
 use App\Http\Controllers\Api\Auth\ResetPasswordController;
 use App\Http\Controllers\Api\OCRRulesAssignmentController;
@@ -43,6 +46,11 @@ Route::group(['middleware' => ['auth:sanctum', 'impersonate']], function () {
     Route::get('user', [LoginController::class, 'user'])
         ->name('user'); // shows up in `php artisan route:list` command output
 
+    // Users management
+    Route::put('users/{user}/status', UsersStatusController::class)
+        ->name('users.status.update');
+    Route::resource('users', UsersController::class);
+
     Route::delete('impersonate', [ImpersonationController::class, 'destroy'])
             ->name('impersonate.stop')
             ->withoutMiddleware('impersonate');
@@ -59,10 +67,11 @@ Route::group(['middleware' => ['auth:sanctum', 'impersonate']], function () {
     Route::get('orders/{order}/download-pdf', DownloadOriginalOrderPdfController::class)
         ->name('orders.download-pdf');
 
-    // Authenticated route to return all orders
+    // Orders management
     Route::resource('orders', OrdersController::class)
         ->only(['index', 'update', 'show']);
 
+    // Companies management
     Route::resource('companies', CompaniesController::class)
         ->only(['index', 'update', 'show']);
 
@@ -82,4 +91,7 @@ Route::group(['middleware' => ['auth:sanctum', 'impersonate']], function () {
     // Assignment of OCR Rules to an company-variant pair
     Route::apiResource('ocr/rules-assignment', OCRRulesAssignmentController::class, ['as' => 'ocr'])
         ->only(['store', 'index']);
+
+    Route::post('bulk-actions', BulkActionsController::class)
+        ->name('bulk-actions');
 });
