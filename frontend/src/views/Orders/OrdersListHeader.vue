@@ -23,7 +23,7 @@
         label="View by Status"
         :style="getStyle.statusSelect"
         :items="statuses"
-        :default-items="defaultSelected"
+        :selected-items="selectedItems"
         @change="handleStatuses"
       />
 
@@ -66,28 +66,17 @@ export default {
     setHeaders: {
       type: Function,
       required: true
+    },
+    selectedItems: {
+      type: Array,
+      required: true
     }
   },
 
   data: () => ({
     cachedHeaders: [],
     headerItems: [],
-    clientWidth: window.innerWidth,
-    defaultSelected: [
-      'intake-accepted',
-      'intake-exception',
-      'intake-started',
-      'ocr-completed',
-      'ocr-post-processing-complete',
-      'ocr-post-processing-error',
-      'ocr-waiting',
-      'process-ocr-output-file-complete',
-      'process-ocr-output-file-error',
-      'upload-requested',
-      'sending-to-wint',
-      'failure-sending-to-wint',
-      'success-sending-to-wint'
-    ]
+    clientWidth: window.innerWidth
   }),
 
   computed: {

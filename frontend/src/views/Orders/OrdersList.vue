@@ -4,6 +4,7 @@
       :statuses="statuses"
       :headers="headers"
       :set-headers="setHeaders"
+      :selected-items="selectedItems"
     />
 
     <ContentLoading :loaded="loaded">
@@ -44,6 +45,10 @@ export default {
     },
     loaded: {
       type: Boolean,
+      required: true
+    },
+    selectedItems: {
+      type: Array,
       required: true
     }
   },
