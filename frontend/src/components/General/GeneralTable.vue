@@ -44,7 +44,7 @@
             return-object
             :chips="true"
           >
-            <template v-slot:selection="{ item, index }">
+            <template v-slot:selection="{ index }">
               <span
                 v-if="index === 2"
                 class=""
@@ -70,10 +70,10 @@
           </v-btn>
         </v-toolbar>
       </template>
-      <template v-slot:item.email="{ item }">
+      <template v-slot:[`item.email`]="{ item }">
         <a href="">{{ item.email }}</a>
       </template>
-      <template v-slot:item.actions="{ item }">
+      <template v-slot:[`item.actions`]="{ item }">
         <v-icon
           small
           class="mr-2"
@@ -118,7 +118,8 @@ export default {
     },
     customItems: {
       type: Array,
-      required: true
+      required: false,
+      default: () => ([])
     },
     hasColumnFilters: {
       type: Boolean,
@@ -146,7 +147,8 @@ export default {
     },
     bulkActions: {
       type: Array,
-      required: true
+      required: false,
+      default: () => ([])
     }
 
   },
