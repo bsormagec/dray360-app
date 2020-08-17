@@ -14,11 +14,23 @@
       v-if="shouldShowTab(tabs.list)"
       :style="{ width: '100%', minWidth: '65%', display: 'flex' }"
     >
-      <OrdersList
+      <!-- <OrdersList
         :active-page="activePage"
         :loaded="loaded"
         :filter-query="filterQuery"
         :selected-items="statusQuery"
+      /> -->
+      <GeneralTable
+        class="general-table"
+        table-title="User list"
+        :customheaders="headersMap"
+        :custom-items="items"
+        :has-search="true"
+        :has-column-filters="true"
+        :has-bulk-actions="true"
+        :has-action-button="{showButton: false, action: '/'}"
+        injections="Orders"
+        :has-add-button="{showButton: true, action: '/'}"
       />
     </div>
 
@@ -37,19 +49,22 @@ import { reqStatus } from '@/enums/req_status'
 import orders, { types } from '@/store/modules/orders'
 
 import OrdersSidebar from '@/views/Orders/OrdersSidebar'
-import OrdersList from '@/views/Orders/OrdersList'
+// import OrdersList from '@/views/Orders/OrdersList'
 import OrdersCreate from '@/views/Orders/OrdersCreate'
 import { listFormat } from '@/views/Orders/inner_utils'
 import { tabs } from '@/views/Orders/inner_enums'
 import { providerStateName, providerMethodsName } from '@/views/Orders/inner_types'
+
+import GeneralTable from '@/components/General/GeneralTable'
 
 export default {
   name: 'Orders',
 
   components: {
     OrdersSidebar,
-    OrdersList,
-    OrdersCreate
+    // OrdersList,
+    OrdersCreate,
+    GeneralTable
   },
 
   mixins: [isMobile, hasPermission],
@@ -81,10 +96,76 @@ export default {
         'process-ocr-output-file-error',
         'upload-requested',
         'sending-to-wint',
-        'failure-sending-to-wint',
         'success-sending-to-wint',
         'shipment-not-created-by-wint',
-        'shipment-created-by-wint']
+        'shipment-created-by-wint',
+        'success-sending-to-wint'],
+      headersMap: [
+        {
+          text: 'First',
+          align: 'start',
+          sortable: false,
+          value: 'first'
+        },
+        { text: 'Last', value: 'last' },
+        { text: 'Email', value: 'email' },
+        { text: 'Position', value: 'position' },
+        { text: 'Org', value: 'org' },
+        { text: 'Permission', value: 'permissions' },
+        { text: 'Status', value: 'status' },
+        { text: 'Password', value: 'password' },
+        { text: 'Actions', value: 'actions', sortable: false }
+      ],
+      items: [
+        {
+          id: 0,
+          first: 'Bill',
+          last: 'Brasky',
+          email: 'bbrasky@email.com',
+          position: 'Distpatcher',
+          org: 'Operations',
+          permissions: 'Editor',
+          status: 'Active',
+          password: 'Reset'
+        },
+        {
+          id: 1,
+          first: 'Bill',
+          last: 'Brasky',
+          email: 'bbrasky@email.com',
+          position: 'Distpatcher',
+          org: 'Operations',
+          permissions: 'Editor',
+          status: 'Active',
+          password: 'Reset'
+        },
+        {
+          id: 2,
+          first: 'Bill',
+          last: 'Brasky',
+          email: 'bbrasky@email.com',
+          position: 'Distpatcher',
+          org: 'Operations',
+          permissions: 'Editor',
+          status: 'Active',
+          password: 'Reset'
+        }
+      ],
+      menuitems: [
+        {
+          text: 'Dashboard',
+          path: '/user/Dashboard'
+        },
+        {
+          text: 'Manage Users'
+        },
+        {
+          text: 'My Profile'
+        },
+        {
+          text: 'Logout'
+        }
+      ]
     }
   },
 
@@ -246,5 +327,17 @@ export default {
 .orders {
   display: flex;
   height: 100%;
+}
+.general-table {
+  padding: 2rem 1rem;
+  display: flex;
+  flex-direction: column;
+  flex-grow: unset;
+  width: 100%;
+
+  @media screen and (min-width: map-get($breakpoints, med)) {
+    padding: 5.2rem 3.2rem;
+    padding-left: map-get($sizes, sidebar-desktop-width) + 3.2rem;
+  }
 }
 </style>
