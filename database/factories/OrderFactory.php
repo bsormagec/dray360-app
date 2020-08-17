@@ -21,7 +21,6 @@ $factory->define(Order::class, function (Faker $faker) {
         'equipment_size' => Arr::random(['20 ft', '40 ft', '45 ft', '48ft']),
         'owner_or_ss_company' => Arr::random(['ACL', 'Antillean Lines', 'APL/CMA-CGM', 'Atlantic RO-Ro', 'Australia National Line', 'Bahri / National Shipping Company of Saudi Arabia', 'Bermuda International Shipping Ltd', 'BMC Line Shipping LLC', 'CCNI', 'Cheng Lie Navigation Co.,Ltd', 'Dole Ocean Cargo Express', 'Dongjin Shipping', 'Emirates Shipping Line', 'Evergreen Line', 'Frontier Liner Services']),
         'hazardous' => null, // this should roll up from the line item?
-        'expedite_shipment' => $faker->boolean(),
         'reference_number' => $faker->lexify(),
         'rate_quote_number' => $faker->numerify('##########'),
         'seal_number' => $faker->bothify('?#######'),
@@ -38,6 +37,8 @@ $factory->define(Order::class, function (Faker $faker) {
         'port_ramp_of_destination_address_id' => $faker->boolean ? factory(Address::class) : null,
         'ocr_data' => json_encode([$faker->word]),
         'pickup_number' => null,
+        'pickup_by_date' => null,
+        'pickup_by_time' => null,
         'bill_to_address_verified' => $faker->boolean,
         'bill_to_address_raw_text' => $faker->address,
         'port_ramp_of_origin_address_verified' => $faker->boolean,

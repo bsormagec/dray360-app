@@ -75,7 +75,7 @@ export const exampleForm = {
             }),
             'purchase order number': buildField({
               type: 'input',
-              placeholder: 'ṕurchase order number'
+              placeholder: 'purchase order number'
             }),
             'release number': buildField({
               type: 'input',
@@ -141,20 +141,27 @@ export const exampleForm = {
         }
       }
     },
+
+    pickup: {
+      rootFields: {
+        'pickup date': buildField({
+          type: 'date',
+          placeholder: 'pickup date'
+        }),
+        'pickup time': buildField({
+          type: 'time',
+          placeholder: 'pickup time'
+        })
+      }
+    },
+
     itinerary: {
       rootFields: {
-        // This is a temporary comment
-
-        // 'pickup date': buildField({
-        //   type: 'date',
-        //   placeholder: 'pickup date'
-        // }),
-
-        // 'pickup time': buildField({
-        //   type: 'time',
-        //   placeholder: 'pickup time'
-        // })
+        // This section should remain empty. Any fields
+        // listed here will be stored as a large array of address_events
+        // due to special-case handling in views/Details/DetailsForm.vue
       }
+
       // subSections: {
       //   'hook: rail or port terminal': {
       //     fields: {
