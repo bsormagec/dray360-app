@@ -17,6 +17,9 @@ class UsersSeeder extends Seeder
         $user = factory(\App\Models\User::class)->create();
         $user->attachRole('customer-user');
 
+        $user = factory(\App\Models\User::class)->create();
+        $user->attachRole('customer-admin');
+
         $admin = factory(\App\Models\User::class)->create();
         $admin->attachRole('superadmin');
     }

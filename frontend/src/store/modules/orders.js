@@ -39,11 +39,13 @@ const mutations = {
 
 const actions = {
   async [types.getOrders] ({ commit }, filters) {
-    const query = filters.query
+    const query = filters['filter[query]']
+    const dateQuery = filters['filter[created_between]']
     const filtersForParams = { ...filters }
     delete filtersForParams.query
+    delete filtersForParams.dateQuery
 
-    const [error, data] = await getOrders(filtersForParams, query)
+    const [error, data] = await getOrders(filtersForParams, query, dateQuery)
 
     if (error) return reqStatus.error
 

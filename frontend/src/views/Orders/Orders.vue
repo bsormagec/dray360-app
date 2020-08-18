@@ -17,6 +17,8 @@
       <OrdersList
         :active-page="activePage"
         :loaded="loaded"
+        :filter-query="filterQuery"
+        :selected-items="statusQuery"
       />
     </div>
 
@@ -65,7 +67,22 @@ export default {
       activePage: 0,
       tabs,
       statusFilter: '',
-      searchFilter: {}
+      searchFilter: {},
+      filterQuery: '',
+      dateQuery: '',
+      statusQuery: ['intake-accepted',
+        'intake-exception',
+        'intake-started',
+        'ocr-completed',
+        'ocr-post-processing-complete',
+        'ocr-post-processing-error',
+        'ocr-waiting',
+        'process-ocr-output-file-complete',
+        'process-ocr-output-file-error',
+        'upload-requested',
+        'sending-to-wint',
+        'failure-sending-to-wint',
+        'success-sending-to-wint']
     }
   },
 
@@ -76,8 +93,21 @@ export default {
     }
   },
 
-  async mounted () {
-    await this.fetchOrdersList()
+  beforeMount () {
+    if (this.searchFilter.length > 0) {
+      this.statusQuery = location.search.split('=')[2]
+
+      if (this.statusQuery !== undefined) {
+        if (this.statusQuery.includes('&')) {
+          this.statusQuery = this.statusQuery.split('&')[0]
+        }
+      }
+      this.statusQuery = this.statusQuery.split(',')
+    }
+  },
+
+  mounted () {
+    this.fetchOrdersList()
     this.loaded = true
   },
 
@@ -103,12 +133,18 @@ export default {
     },
 
     async fetchOrdersList (filters = { page: new URLSearchParams(window.location.search).get('page') }) {
-      this.activePage = parseInt(this.handleLocationUrl(filters.page))
+      this.filterQuery = this.returnSearchQuery(this.searchFilter['filter[query]'])
+      this.activePage = parseInt(this.returnPage(filters.page))
+      this.dateQuery = this.returnDateQuery(this.searchFilter['filter[created_between]'])
+      if (this.statusFilter.length !== 0) {
+        this.statusQuery = this.statusFilterToStatusQuery(this.statusFilter)
+      }
+      this.handleLocationUrl(this.activePage, this.filterQuery, this.statusQuery, this.dateQuery)
       const status = await this[types.getOrders]({
-        ...this.searchFilter,
-        ...filters,
+        'filter[query]': this.filterQuery,
         page: this.activePage,
-        query: this.statusFilter
+        'filter[status]': this.statusQuery,
+        'filter[created_between]': this.dateQuery
       })
 
       if (status === reqStatus.success) {
@@ -118,15 +154,47 @@ export default {
       }
     },
 
-    handleLocationUrl (n) {
-      const page = n || location.search.split('=')[1] || 1
-      const search = `?page=${page}`
+    returnPage (n) {
+      const page = n || location.search.split('=')[4] || 1
+      return page
+    },
+
+    returnSearchQuery (filterQuery) {
+      let searchQuery = filterQuery || location.search.split('=')[3] || ''
+      if (searchQuery.includes('&')) {
+        searchQuery = searchQuery.split('&')[0]
+      }
+      return searchQuery
+    },
+
+    statusFilterToStatusQuery (filter) {
+      filter = filter.split('=')[1]
+      filter = filter.split(',')
+      return filter
+    },
+
+    returnStatusQuery (filterQuery) {
+      let statusQuery = filterQuery || location.search.split('=')[2] || ''
+      if (statusQuery.includes('&')) {
+        statusQuery = statusQuery.split('&')[0]
+      }
+      return statusQuery
+    },
+
+    returnDateQuery (query) {
+      let dateQuery = query || location.search.split('=')[1] || ''
+      if (dateQuery.includes('&')) {
+        dateQuery = dateQuery.split('&')[0]
+      }
+      return dateQuery
+    },
+
+    handleLocationUrl (page, filterQuery, statusQuery, dateQuery) {
+      const search = `?filter[created_between]=${dateQuery}&filter[status]=${statusQuery}&filter[query]=${filterQuery}&page=${page}`
 
       if (location.search !== search) {
         this.$router.replace(search)
       }
-
-      return page
     },
 
     setStatusFilter (statuses) {

@@ -58,11 +58,23 @@
       "recognized_value": "BNSF LOGISTICS PARK H572\u202826353 ELWOOD INTERNATIONAL PORT RD\u2028ELWOOD IL 60421\u2028UNITED STATES",
       "suspicious_symbols": "00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000"
     },
-    "pickup_no": {
-      "name": "pickup_no",
-      "value": "",
-      "recognized_value": null,
-      "suspicious_symbols": null
+    "pickup_number": {
+        "name": "pickup_number",
+        "value": "",
+        "recognized_value": null,
+        "suspicious_symbols": null
+    },
+    "pickup_by_date": {
+        "name": "pickup_by_date",
+        "value": "",
+        "recognized_value": null,
+        "suspicious_symbols": null
+    },
+    "pickup_by_time": {
+        "name": "pickup_by_time",
+        "value": "",
+        "recognized_value": null,
+        "suspicious_symbols": null
     },
     "booking_no": {
       "name": "booking_no",

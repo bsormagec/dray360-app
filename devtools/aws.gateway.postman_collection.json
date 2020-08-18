@@ -1,6 +1,6 @@
 {
 	"info": {
-		"_postman_id": "9bf2ffc1-b227-4baf-b6bb-01b6db2dc2b5",
+		"_postman_id": "5183c172-3474-43e0-b612-df902c1ccba5",
 		"name": "AWS Gateway",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
 	},
@@ -12,7 +12,7 @@
 				"header": [],
 				"body": {
 					"mode": "raw",
-					"raw": "{\"document_definition_name\": {\"name\": \"document_definition_name\", \"value\": \"Work Order Try 21\"}, \"version\": {\"name\": \"version\", \"value\": \"1.0\"}, \"page_index_filenames\": {\"name\": \"page_index_filenames\", \"value\": {\"1\": {\"name\": \"page_index_1\", \"value\": \"s3://dmedocproc-processedjobs-dev/6ee292b5-2a92-57c1-8c1d-c599ea919c5f_1ceea871efa45cf3dd12ca2bfe2c59bd8ed50e94f8342a15e1e609406ef26fde_singlepage-jetspeed.jpg\"}}}, \"fields\": {\"origin_ramp\": {\"name\": \"origin_ramp\", \"value\": \"BNSF LOGISTICS PARK H572\\n26664 S BASELINE RD\\nFIRMS CODE : H572\\nELWOOD IL 60421\\nUNITED STATES\\nContact: +1 815-424-2100\", \"recognized_value\": \"BNSF LOGISTICS PARK H572\\u202826664 S BASELINE RD\\u2028FIRMS CODE : H572\\u2028ELWOOD IL 60421\\u2028UNITED STATES\\u2028Contact: +1 815-424-2100\", \"suspicious_symbols\": \"000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000\", \"ocr_region\": {\"page_index\": 1, \"bottom\": 1455, \"left\": 277, \"right\": 1230, \"top\": 1218}}, \"dest_ramp\": {\"name\": \"dest_ramp\", \"value\": \"DELIVER TO EMPTY\\nBNSF LOGISTICS PARK H572\\n26664 S BASELINE RD\\nFIRMS CODE : H572\\nELWOOD IL 60421\\nUNITED STATES\\nContact: +1 815-424-2100\", \"recognized_value\": \"DELIVER TO EMPTY\\u2028BNSF LOGISTICS PARK H572\\u202826664 S BASELINE RD\\u2028FIRMS CODE : H572\\u2028ELWOOD IL 60421\\u2028UNITED STATES\\u2028Contact: +1 815-424-2100\", \"suspicious_symbols\": \"00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000\", \"ocr_region\": {\"page_index\": 1, \"bottom\": 1924, \"left\": 1277, \"right\": 2231, \"top\": 1652}}, \"bill_to_address\": {\"name\": \"bill_to_address\", \"value\": \"Jet-Speed Logistics (USA) LLC\\n900 N Arlington Heights Rd, Suite 150\\nItasca, Illinois 60143, USA\\nTel: (630)595-5601\\nFax: (630)595-6361\", \"recognized_value\": \"Jet-Speed Logistics (USA) LLC\\u2028900 N Arlington Heights Rd, Suite 150\\u2028Itasca, Illinois 60143, USA\\u2028Tel: (630)595-5601\\u2028Fax: (630)595-6361\", \"suspicious_symbols\": \"0000000000000000000000000000000000000000000000000000000110000000000000000000000000000000000011100000000000000000000000000000000000000\", \"ocr_region\": {\"page_index\": 1, \"bottom\": 606, \"left\": 337, \"right\": 857, \"top\": 362}}, \"order_type\": {\"name\": \"order_type\", \"value\": \"\", \"recognized_value\": null, \"suspicious_symbols\": null}, \"booking_no\": {\"name\": \"booking_no\", \"value\": \"\", \"recognized_value\": null, \"suspicious_symbols\": null}, \"bol\": {\"name\": \"bol\", \"value\": \"\", \"recognized_value\": null, \"suspicious_symbols\": null}, \"mbol\": {\"name\": \"mbol\", \"value\": \"\", \"recognized_value\": null, \"suspicious_symbols\": null}, \"hbol\": {\"name\": \"hbol\", \"value\": \"\", \"recognized_value\": null, \"suspicious_symbols\": null}, \"pickup_no\": {\"name\": \"pickup_no\", \"value\": \"\", \"recognized_value\": null, \"suspicious_symbols\": null}, \"unit_number\": {\"name\": \"unit_number\", \"value\": \"CAIU9436698\", \"recognized_value\": null, \"suspicious_symbols\": \"00110000000\", \"ocr_region\": {\"page_index\": 1, \"bottom\": 755, \"left\": 1863, \"right\": 2053, \"top\": 729}}, \"container_length\": {\"name\": \"container_length\", \"value\": \"40GP\", \"recognized_value\": null, \"suspicious_symbols\": \"0000\", \"ocr_region\": {\"page_index\": 1, \"bottom\": 2727, \"left\": 597, \"right\": 674, \"top\": 2700}}, \"contents\": {\"name\": \"contents\", \"value\": \"FEDERALIST PIPER RACK\", \"recognized_value\": null, \"suspicious_symbols\": \"000000000000000000000\", \"ocr_region\": {\"page_index\": 1, \"bottom\": 2486, \"left\": 274, \"right\": 652, \"top\": 2458}}, \"multiline_multiorder_area_with_contents\": {\"name\": \"multiline_multiorder_area_with_contents\", \"value\": \"\", \"recognized_value\": null, \"suspicious_symbols\": null}, \"event1_type\": {\"name\": \"event1_type\", \"value\": \"\", \"recognized_value\": null, \"suspicious_symbols\": null}, \"event1_location\": {\"name\": \"event1_location\", \"value\": \"\", \"recognized_value\": null, \"suspicious_symbols\": null}, \"event2_type\": {\"name\": \"event2_type\", \"value\": \"\", \"recognized_value\": null, \"suspicious_symbols\": null}, \"event2_location\": {\"name\": \"event2_location\", \"value\": \"\", \"recognized_value\": null, \"suspicious_symbols\": null}, \"event3_type\": {\"name\": \"event3_type\", \"value\": \"\", \"recognized_value\": null, \"suspicious_symbols\": null}, \"event3_location\": {\"name\": \"event3_location\", \"value\": \"\", \"recognized_value\": null, \"suspicious_symbols\": null}, \"event4_type\": {\"name\": \"event4_type\", \"value\": \"\", \"recognized_value\": null, \"suspicious_symbols\": null}, \"event4_location\": {\"name\": \"event4_location\", \"value\": \"\", \"recognized_value\": null, \"suspicious_symbols\": null}, \"event5_type\": {\"name\": \"event5_type\", \"value\": \"\", \"recognized_value\": null, \"suspicious_symbols\": null}, \"event5_location\": {\"name\": \"event5_location\", \"value\": \"\", \"recognized_value\": null, \"suspicious_symbols\": null}, \"event6_type\": {\"name\": \"event6_type\", \"value\": \"\", \"recognized_value\": null, \"suspicious_symbols\": null}, \"event6_location\": {\"name\": \"event6_location\", \"value\": \"\", \"recognized_value\": null, \"suspicious_symbols\": null}}, \"variant_id\": {\"name\": \"variant_id\", \"value\": \"5\", \"recognized_value\": null, \"suspicious_symbols\": \"0\"}, \"variant_name\": {\"name\": \"variant_name\", \"value\": \"Jetspeed\", \"recognized_value\": null, \"suspicious_symbols\": \"00000000\"}, \"rules\": [{\"always_export\": \"\\npossible_output_fields = {\\\"shipment_type\\\":{\\\"always\\\":True}}\\ndef runrule(input_fields, updated_fields):\\n    #return {\\\"shipment_type\\\":\\\"export\\\"}\\n    updated_fields[\\\"shipment_type\\\"] = \\\"export\\\"\\n\"}, {\"bol_to_mbol\": \"\\npossible_output_fields = {\\\"mbol\\\":{\\\"always\\\":True}}\\ndef runrule(input_fields, updated_fields):\\n    #return {\\\"shipment_type\\\":\\\"export\\\"}\\n    updated_fields[\\\"bol\\\"] = input_fields[\\\"mbol\\\"]\\n\"}]}",
+					"raw": "{\n    \"document_definition_name\": {\n        \"name\": \"document_definition_name\",\n        \"value\": \"Work Order Try 21\"\n    },\n    \"version\": {\n        \"name\": \"version\",\n        \"value\": \"1.0\"\n    },\n    \"page_index_filenames\": {\n        \"name\": \"page_index_filenames\",\n        \"value\": {\n            \"1\": {\n                \"name\": \"page_index_1\",\n                \"value\": \"s3://dmedocproc-processedjobs-dev/6ee292b5-2a92-57c1-8c1d-c599ea919c5f_1ceea871efa45cf3dd12ca2bfe2c59bd8ed50e94f8342a15e1e609406ef26fde_singlepage-jetspeed.jpg\"\n            }\n        }\n    },\n    \"fields\": {\n        \"origin_ramp\": {\n            \"name\": \"origin_ramp\",\n            \"value\": \"BNSF LOGISTICS PARK H572\\n26664 S BASELINE RD\\nFIRMS CODE : H572\\nELWOOD IL 60421\\nUNITED STATES\\nContact: +1 815-424-2100\",\n            \"recognized_value\": \"BNSF LOGISTICS PARK H572\\u202826664 S BASELINE RD\\u2028FIRMS CODE : H572\\u2028ELWOOD IL 60421\\u2028UNITED STATES\\u2028Contact: +1 815-424-2100\",\n            \"suspicious_symbols\": \"000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000\",\n            \"ocr_region\": {\n                \"page_index\": 1,\n                \"bottom\": 1455,\n                \"left\": 277,\n                \"right\": 1230,\n                \"top\": 1218\n            }\n        },\n        \"dest_ramp\": {\n            \"name\": \"dest_ramp\",\n            \"value\": \"DELIVER TO EMPTY\\nBNSF LOGISTICS PARK H572\\n26664 S BASELINE RD\\nFIRMS CODE : H572\\nELWOOD IL 60421\\nUNITED STATES\\nContact: +1 815-424-2100\",\n            \"recognized_value\": \"DELIVER TO EMPTY\\u2028BNSF LOGISTICS PARK H572\\u202826664 S BASELINE RD\\u2028FIRMS CODE : H572\\u2028ELWOOD IL 60421\\u2028UNITED STATES\\u2028Contact: +1 815-424-2100\",\n            \"suspicious_symbols\": \"00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000\",\n            \"ocr_region\": {\n                \"page_index\": 1,\n                \"bottom\": 1924,\n                \"left\": 1277,\n                \"right\": 2231,\n                \"top\": 1652\n            }\n        },\n        \"bill_to_address\": {\n            \"name\": \"bill_to_address\",\n            \"value\": \"Jet-Speed Logistics (USA) LLC\\n900 N Arlington Heights Rd, Suite 150\\nItasca, Illinois 60143, USA\\nTel: (630)595-5601\\nFax: (630)595-6361\",\n            \"recognized_value\": \"Jet-Speed Logistics (USA) LLC\\u2028900 N Arlington Heights Rd, Suite 150\\u2028Itasca, Illinois 60143, USA\\u2028Tel: (630)595-5601\\u2028Fax: (630)595-6361\",\n            \"suspicious_symbols\": \"0000000000000000000000000000000000000000000000000000000110000000000000000000000000000000000011100000000000000000000000000000000000000\",\n            \"ocr_region\": {\n                \"page_index\": 1,\n                \"bottom\": 606,\n                \"left\": 337,\n                \"right\": 857,\n                \"top\": 362\n            }\n        },\n        \"order_type\": {\n            \"name\": \"order_type\",\n            \"value\": \"\",\n            \"recognized_value\": null,\n            \"suspicious_symbols\": null\n        },\n        \"booking_no\": {\n            \"name\": \"booking_no\",\n            \"value\": \"\",\n            \"recognized_value\": null,\n            \"suspicious_symbols\": null\n        },\n        \"bol\": {\n            \"name\": \"bol\",\n            \"value\": \"\",\n            \"recognized_value\": null,\n            \"suspicious_symbols\": null\n        },\n        \"mbol\": {\n            \"name\": \"mbol\",\n            \"value\": \"\",\n            \"recognized_value\": null,\n            \"suspicious_symbols\": null\n        },\n        \"hbol\": {\n            \"name\": \"hbol\",\n            \"value\": \"\",\n            \"recognized_value\": null,\n            \"suspicious_symbols\": null\n        },\n        \"pickup_no\": {\n            \"name\": \"pickup_no\",\n            \"value\": \"\",\n            \"recognized_value\": null,\n            \"suspicious_symbols\": null\n        },\n        \"unit_number\": {\n            \"name\": \"unit_number\",\n            \"value\": \"CAIU9436698\",\n            \"recognized_value\": null,\n            \"suspicious_symbols\": \"00110000000\",\n            \"ocr_region\": {\n                \"page_index\": 1,\n                \"bottom\": 755,\n                \"left\": 1863,\n                \"right\": 2053,\n                \"top\": 729\n            }\n        },\n        \"container_length\": {\n            \"name\": \"container_length\",\n            \"value\": \"40GP\",\n            \"recognized_value\": null,\n            \"suspicious_symbols\": \"0000\",\n            \"ocr_region\": {\n                \"page_index\": 1,\n                \"bottom\": 2727,\n                \"left\": 597,\n                \"right\": 674,\n                \"top\": 2700\n            }\n        },\n        \"contents\": {\n            \"name\": \"contents\",\n            \"value\": \"FEDERALIST PIPER RACK\",\n            \"recognized_value\": null,\n            \"suspicious_symbols\": \"000000000000000000000\",\n            \"ocr_region\": {\n                \"page_index\": 1,\n                \"bottom\": 2486,\n                \"left\": 274,\n                \"right\": 652,\n                \"top\": 2458\n            }\n        },\n        \"multiline_multiorder_area_with_contents\": {\n            \"name\": \"multiline_multiorder_area_with_contents\",\n            \"value\": \"\",\n            \"recognized_value\": null,\n            \"suspicious_symbols\": null\n        },\n        \"event1_type\": {\n            \"name\": \"event1_type\",\n            \"value\": \"\",\n            \"recognized_value\": null,\n            \"suspicious_symbols\": null\n        },\n        \"event1_location\": {\n            \"name\": \"event1_location\",\n            \"value\": \"\",\n            \"recognized_value\": null,\n            \"suspicious_symbols\": null\n        },\n        \"event2_type\": {\n            \"name\": \"event2_type\",\n            \"value\": \"\",\n            \"recognized_value\": null,\n            \"suspicious_symbols\": null\n        },\n        \"event2_location\": {\n            \"name\": \"event2_location\",\n            \"value\": \"\",\n            \"recognized_value\": null,\n            \"suspicious_symbols\": null\n        },\n        \"event3_type\": {\n            \"name\": \"event3_type\",\n            \"value\": \"\",\n            \"recognized_value\": null,\n            \"suspicious_symbols\": null\n        },\n        \"event3_location\": {\n            \"name\": \"event3_location\",\n            \"value\": \"\",\n            \"recognized_value\": null,\n            \"suspicious_symbols\": null\n        },\n        \"event4_type\": {\n            \"name\": \"event4_type\",\n            \"value\": \"\",\n            \"recognized_value\": null,\n            \"suspicious_symbols\": null\n        },\n        \"event4_location\": {\n            \"name\": \"event4_location\",\n            \"value\": \"\",\n            \"recognized_value\": null,\n            \"suspicious_symbols\": null\n        },\n        \"event5_type\": {\n            \"name\": \"event5_type\",\n            \"value\": \"\",\n            \"recognized_value\": null,\n            \"suspicious_symbols\": null\n        },\n        \"event5_location\": {\n            \"name\": \"event5_location\",\n            \"value\": \"\",\n            \"recognized_value\": null,\n            \"suspicious_symbols\": null\n        },\n        \"event6_type\": {\n            \"name\": \"event6_type\",\n            \"value\": \"\",\n            \"recognized_value\": null,\n            \"suspicious_symbols\": null\n        },\n        \"event6_location\": {\n            \"name\": \"event6_location\",\n            \"value\": \"\",\n            \"recognized_value\": null,\n            \"suspicious_symbols\": null\n        }\n    },\n    \"variant_id\": {\n        \"name\": \"variant_id\",\n        \"value\": \"5\",\n        \"recognized_value\": null,\n        \"suspicious_symbols\": \"0\"\n    },\n    \"variant_name\": {\n        \"name\": \"variant_name\",\n        \"value\": \"Jetspeed\",\n        \"recognized_value\": null,\n        \"suspicious_symbols\": \"00000000\"\n    },\n    \"rules\": [\n        {\n            \"always_export\": \"\\npossible_output_fields = {\\\"shipment_type\\\":{\\\"always\\\":True}}\\ndef runrule(input_fields, updated_fields):\\n    #return {\\\"shipment_type\\\":\\\"export\\\"}\\n    updated_fields[\\\"shipment_type\\\"] = \\\"export\\\"\\n\"\n        },\n        {\n            \"bol_to_mbol\": \"\\npossible_output_fields = {\\\"mbol\\\":{\\\"always\\\":True}}\\ndef runrule(input_fields, updated_fields):\\n    #return {\\\"shipment_type\\\":\\\"export\\\"}\\n    updated_fields[\\\"bol\\\"] = input_fields[\\\"mbol\\\"]\\n\"\n        }\n    ]\n}",
 					"options": {
 						"raw": {
 							"language": "json"
@@ -39,19 +39,19 @@
 			"response": []
 		},
 		{
-			"name": "ocr-address-search-dev (cityname/isterminal)",
+			"name": "address-search-dev (rawtext/isterminal)",
 			"request": {
 				"auth": {
 					"type": "apikey",
 					"apikey": [
 						{
-							"key": "key",
-							"value": "X-API-KEY",
+							"key": "value",
+							"value": "ASDF-bwn0OHYUqA57Z3wWauPVC34UZCdcOXpL4snIu377",
 							"type": "string"
 						},
 						{
-							"key": "value",
-							"value": "{{OCR_ADDRESS_SEARCH_API_KEY_DEV}}",
+							"key": "key",
+							"value": "X-API-KEY",
 							"type": "string"
 						}
 					]
@@ -60,7 +60,7 @@
 				"header": [],
 				"body": {
 					"mode": "raw",
-					"raw": "{\n  \"city\": \"Elwood\",\n  \"is_terminal_address\": \"true\"\n}",
+					"raw": "{\n  \"rawtext\": \"up chicago global 2\",\n  \"is_billable_address\": \"false\",\n  \"is_terminal_address\": \"true\",\n  \"example1_rawtext\": \"UP GLOBAL 4 (I206)\\n3000 CENTERPOINT WAY\\nJOLIET IL 60436\\nUNITED STATES\\nContact:\",\n  \"example2_rawtext\": \"3030 S SYLVANIA AVE STE L\\nSTURTEVANT WI 53177\\nUNITED STATES\\nContact:\",\n  \"example3_rawtext\": \"BNSF LOGISTICS PARK H572\\n26353 ELWOOD INTERNATIONAL PORT RD\\nELWOOD IL 60421\\nUNITED STATES\\nContact:\",\n  \"example4_rawtext\": \"CN CHIICAGO/HARVEY I092\\n15840 WEST AVE\\nHARVEY, IL, UNITED STATES\",\n  \"example5_rawtext\": \"J830 CP RAIL BENSENVILLE VANCOUVER,BC,CANADA\\nHMM PROMISE 014E / 10800 S. FRANKLIN AVE.,TEL:630-860-4870\\nFRANKLIN PARK IL\\nTEL:630-860-4872\",\n  \"example6_rawtext\": \"22800 savi ranch pkwy ste 214 yorba linda, ca 92887\",\n  \"company_id\": 1,\n  \"tms_provider_id\": 1\n}",
 					"options": {
 						"raw": {
 							"language": "json"
@@ -68,69 +68,22 @@
 					}
 				},
 				"url": {
-					"raw": "https://i0mgwmnrb1.execute-api.us-east-2.amazonaws.com/default/ocr-address-search-dev",
+					"raw": "https://b9da68xgc1.execute-api.us-east-2.amazonaws.com/api/1.0/dev/address-search",
 					"protocol": "https",
 					"host": [
-						"i0mgwmnrb1",
+						"b9da68xgc1",
 						"execute-api",
 						"us-east-2",
 						"amazonaws",
 						"com"
 					],
 					"path": [
-						"default",
-						"ocr-address-search-dev"
+						"api",
+						"1.0",
+						"dev",
+						"address-search"
 					]
-				},
-				"description": "address search post"
-			},
-			"response": []
-		},
-		{
-			"name": "ocr-address-search-dev (rawtext/isterminal)",
-			"request": {
-				"auth": {
-					"type": "apikey",
-					"apikey": [
-						{
-							"key": "key",
-							"value": "X-API-KEY",
-							"type": "string"
-						},
-						{
-							"key": "value",
-							"value": "{{OCR_ADDRESS_SEARCH_API_KEY_DEV}}",
-							"type": "string"
-						}
-					]
-				},
-				"method": "POST",
-				"header": [],
-				"body": {
-					"mode": "raw",
-					"raw": "{\n  \"rawtext\": \"CHIICAGO/HARVEY I09215840 WEST AVEHARVEY, IL, UNITED STATES\",\n  \"is_terminal_address\": \"true\",\n  \"example1_rawtext\": \"UP GLOBAL 4 (I206)\\n3000 CENTERPOINT WAY\\nJOLIET IL 60436\\nUNITED STATES\\nContact:\",\n  \"example2_rawtext\": \"3030 S SYLVANIA AVE STE L\\nSTURTEVANT WI 53177\\nUNITED STATES\\nContact:\",\n  \"example3_rawtext\": \"BNSF LOGISTICS PARK H572\\n26353 ELWOOD INTERNATIONAL PORT RD\\nELWOOD IL 60421\\nUNITED STATES\\nContact:\",\n  \"example4_rawtext\": \"CN CHIICAGO/HARVEY I092\\n15840 WEST AVE\\nHARVEY, IL, UNITED STATES\",\n  \"example5_rawtext\": \"J830 CP RAIL BENSENVILLE VANCOUVER,BC,CANADA\\nHMM PROMISE 014E / 10800 S. FRANKLIN AVE.,TEL:630-860-4870\\nFRANKLIN PARK IL\\nTEL:630-860-4872\"\n}",
-					"options": {
-						"raw": {
-							"language": "json"
-						}
-					}
-				},
-				"url": {
-					"raw": "https://i0mgwmnrb1.execute-api.us-east-2.amazonaws.com/default/ocr-address-search-dev",
-					"protocol": "https",
-					"host": [
-						"i0mgwmnrb1",
-						"execute-api",
-						"us-east-2",
-						"amazonaws",
-						"com"
-					],
-					"path": [
-						"default",
-						"ocr-address-search-dev"
-					]
-				},
-				"description": "address search post"
+				}
 			},
 			"response": []
 		}

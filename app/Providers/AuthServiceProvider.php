@@ -16,6 +16,7 @@ class AuthServiceProvider extends ServiceProvider
         \App\Models\OCRRule::class => \App\Policies\OcrRulePolicy::class,
         \App\Models\OCRVariant::class => \App\Policies\OcrVariantPolicy::class,
         \App\Models\Company::class => \App\Policies\CompanyPolicy::class,
+        \App\Models\User::class => \App\Policies\UserPolicy::class,
     ];
 
     /**

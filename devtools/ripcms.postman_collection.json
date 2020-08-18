@@ -1,6 +1,6 @@
 {
 	"info": {
-		"_postman_id": "bebcedb9-fadc-4305-b5f3-0096ede51372",
+		"_postman_id": "0771eb85-513c-43cd-97eb-7dfb63aadcb4",
 		"name": "RIPCMS",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
 	},
@@ -11,7 +11,7 @@
 				{
 					"listen": "prerequest",
 					"script": {
-						"id": "f7f3f5ff-10a9-4bba-8435-307a74c41e0b",
+						"id": "21d9a361-23c6-4f65-93f1-453cd87569a0",
 						"exec": [
 							""
 						],
@@ -21,7 +21,7 @@
 				{
 					"listen": "test",
 					"script": {
-						"id": "089f2f35-b7b7-4862-a5bd-dafcee9c832f",
+						"id": "93a38dfb-cdf1-4754-af04-ed2c01ead27f",
 						"exec": [
 							"let jsonData = pm.response.json();",
 							"var token = jsonData.access_token;",
@@ -228,7 +228,7 @@
 				"method": "GET",
 				"header": [],
 				"url": {
-					"raw": "https://www.ripcms.com/api/ProfitTools/GetCompany/:id",
+					"raw": "https://www.ripcms.com/api/ProfitTools/GetShipment/:id",
 					"protocol": "https",
 					"host": [
 						"www",
@@ -238,13 +238,13 @@
 					"path": [
 						"api",
 						"ProfitTools",
-						"GetCompany",
+						"GetShipment",
 						":id"
 					],
 					"variable": [
 						{
 							"key": "id",
-							"value": "2"
+							"value": "2145074"
 						}
 					]
 				},

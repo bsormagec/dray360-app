@@ -28,7 +28,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
  * @property string $equipment_size
  * @property string $owner_or_ss_company
  * @property boolean $hazardous
- * @property boolean $expedite_shipment
+ * @property boolean $expedite
  * @property string $reference_number
  * @property string $rate_quote_number
  * @property string $seal_number
@@ -45,6 +45,8 @@ use Illuminate\Database\Eloquent\SoftDeletes;
  * @property string $port_ramp_of_destination_address_id
  * @property array $ocr_data
  * @property string $pickup_number
+ * @property \Carbon\Carbon $pickup_by_date
+ * @property \Carbon\Carbon $pickup_by_time
  * @property boolean $bill_to_address_verified
  * @property string $bill_to_address_raw_text
  * @property boolean $port_ramp_of_origin_address_verified
@@ -84,7 +86,6 @@ class Order extends Model
         'equipment_size',
         'owner_or_ss_company',
         'hazardous',
-        'expedite_shipment',
         'reference_number',
         'rate_quote_number',
         'seal_number',
@@ -101,6 +102,8 @@ class Order extends Model
         'port_ramp_of_destination_address_id',
         'ocr_data',
         'pickup_number',
+        'pickup_by_date',
+        'pickup_by_time',
         'bill_to_address_verified',
         'bill_to_address_raw_text',
         'port_ramp_of_origin_address_verified',
@@ -142,7 +145,7 @@ class Order extends Model
         'yard_pre_pull' => 'boolean',
         'has_chassis' => 'boolean',
         'hazardous' => 'boolean',
-        'expedite_shipment' => 'boolean',
+        'expedite' => 'boolean',
         'estimated_arrival_utc' => 'datetime',
         'last_free_date_utc' => 'datetime',
         'bill_to_address_id' => 'integer',
@@ -151,7 +154,8 @@ class Order extends Model
         'port_ramp_of_origin_address_verified' => 'boolean',
         'port_ramp_of_destination_address_id' => 'integer',
         'port_ramp_of_destination_address_verified' => 'boolean',
-        'ocr_data' => 'json'
+        'ocr_data' => 'json',
+        'pickup_by_date' => 'datetime:m/d/Y',
     ];
 
     /**
@@ -177,7 +181,6 @@ class Order extends Model
         'equipment_size' => 'sometimes|nullable',
         'owner_or_ss_company' => 'sometimes|nullable',
         'hazardous' => 'sometimes|nullable',
-        'expedite_shipment' => 'sometimes|nullable',
         'reference_number' => 'sometimes|nullable',
         'rate_quote_number' => 'sometimes|nullable',
         'seal_number' => 'sometimes|nullable',
@@ -193,6 +196,8 @@ class Order extends Model
         'port_ramp_of_origin_address_id' => 'sometimes|nullable|exists:t_addresses,id',
         'port_ramp_of_destination_address_id' => 'sometimes|nullable|exists:t_addresses,id',
         'pickup_number' => 'sometimes|nullable',
+        'pickup_by_date' => 'sometimes|nullable',
+        'pickup_by_time' => 'sometimes|nullable',
         'bill_to_address_verified' => 'sometimes|nullable',
         'port_ramp_of_origin_address_verified' => 'sometimes|nullable',
         'port_ramp_of_destination_address_verified' => 'sometimes|nullable',

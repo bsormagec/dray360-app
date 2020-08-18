@@ -173,8 +173,8 @@ sudo mysql --execute "
     drop database if exists ${OM_DBNAME}_test;
     create database ${OM_DBNAME}_test;
     create user if not exists '${OM_DBUSER}'@'%' identified with mysql_native_password by 'secret';
-    grant create view, create routine, alter routine, trigger, references, select, insert, update, delete, create, drop, alter, execute on ${OM_DBNAME}.* to '${OM_DBUSER}'@'%';
-    grant create view, create routine, alter routine, trigger, references, select, insert, update, delete, create, drop, alter, execute on ${OM_DBNAME}_test.* to '${OM_DBUSER}'@'%';
+    grant event, show view, create temporary tables, create view, create routine, alter routine, trigger, references, select, insert, update, delete, create, drop, alter, execute on ${OM_DBNAME}.* to '${OM_DBUSER}'@'%';
+    grant event, show view, create temporary tables, create view, create routine, alter routine, trigger, references, select, insert, update, delete, create, drop, alter, execute on ${OM_DBNAME}_test.* to '${OM_DBUSER}'@'%';
 "
 sudo mysql --execute "show databases"
 
