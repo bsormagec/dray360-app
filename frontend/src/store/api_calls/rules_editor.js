@@ -47,7 +47,8 @@ export const getTestingOutput = async (orderId, singleCompanyVariantRule) => axi
       })
       .then(function (response) {
         console.log('response:', response.data)
-        return response.data
+        const retval = { output: response.data, input: fetchedOcrData }
+        return retval
       })
       .catch(function (error) {
         alert(error)
