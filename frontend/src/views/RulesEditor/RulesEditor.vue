@@ -126,11 +126,24 @@
               :options="cmOptions"
             />
           </div>
-          <vue-json-pretty
-            v-if="testing_output()"
-            :path="'res'"
-            :data="testing_output()"
-          />
+          <v-tabs>
+            <v-tab>Response</v-tab>
+            <v-tab>Test Order Raw Data</v-tab>
+            <v-tab-item>
+              <vue-json-pretty
+                v-if="testing_output()"
+                :path="'res'"
+                :data="testing_output().output"
+              />
+            </v-tab-item>
+            <v-tab-item>
+              <vue-json-pretty
+                v-if="testing_output()"
+                :path="'res2'"
+                :data="testing_output().input"
+              />
+            </v-tab-item>
+          </v-tabs>
         </div>
       </div>
       <div class="col-md-2">
