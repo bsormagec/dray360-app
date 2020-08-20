@@ -82,7 +82,9 @@ export default {
         'upload-requested',
         'sending-to-wint',
         'failure-sending-to-wint',
-        'success-sending-to-wint']
+        'success-sending-to-wint',
+        'shipment-not-created-by-wint',
+        'shipment-created-by-wint']
     }
   },
 
