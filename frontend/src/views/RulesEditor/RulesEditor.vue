@@ -150,7 +150,7 @@
               <vue-json-pretty
                 v-if="testing_output()"
                 :path="'res'"
-                :data="testing_output().input"
+                :data="testing_output().input.fields"
               />
 
               <!-- <vue-json-pretty
