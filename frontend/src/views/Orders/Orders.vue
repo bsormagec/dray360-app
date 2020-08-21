@@ -81,9 +81,13 @@ export default {
         'process-ocr-output-file-error',
         'upload-requested',
         'sending-to-wint',
+<<<<<<< HEAD
         'success-sending-to-wint',
         'shipment-not-created-by-wint',
         'shipment-created-by-wint',
+=======
+        'failure-sending-to-wint',
+>>>>>>> abd5e9fcc2f206677fbd339b5d8324cd27507dd5
         'success-sending-to-wint'],
       headers: [
         {
