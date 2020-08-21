@@ -14,25 +14,11 @@
       v-if="shouldShowTab(tabs.list)"
       :style="{ width: '100%', minWidth: '65%', display: 'flex' }"
     >
-      <!-- <OrdersList
+      <OrdersList
         :active-page="activePage"
         :loaded="loaded"
         :filter-query="filterQuery"
         :selected-items="statusQuery"
-      /> -->
-      <GeneralTable
-        class="general-table"
-        table-title="Order list"
-        :customheaders="headers"
-        :active-page="activePage"
-        :custom-items="list()"
-        :has-search="true"
-        :has-column-filters="true"
-        :has-bulk-actions="false"
-        :has-action-button="{showButton: false, action: '/'}"
-        injections="Orders"
-        :has-add-button="{showButton: false, action: '/'}"
-        v-on:searchToParent="onChildSearchUpdate"
       />
     </div>
 
@@ -51,22 +37,19 @@ import { reqStatus } from '@/enums/req_status'
 import orders, { types } from '@/store/modules/orders'
 
 import OrdersSidebar from '@/views/Orders/OrdersSidebar'
-// import OrdersList from '@/views/Orders/OrdersList'
+import OrdersList from '@/views/Orders/OrdersList'
 import OrdersCreate from '@/views/Orders/OrdersCreate'
 import { listFormat } from '@/views/Orders/inner_utils'
 import { tabs } from '@/views/Orders/inner_enums'
 import { providerStateName, providerMethodsName } from '@/views/Orders/inner_types'
-
-import GeneralTable from '@/components/General/GeneralTable'
 
 export default {
   name: 'Orders',
 
   components: {
     OrdersSidebar,
-    // OrdersList,
-    OrdersCreate,
-    GeneralTable
+    OrdersList,
+    OrdersCreate
   },
 
   mixins: [isMobile, hasPermission],
@@ -120,21 +103,6 @@ export default {
         { text: 'Shipment Designation', value: 'order.shipment_designation', width: '8.5rem' },
         { text: 'Eq. Type', value: 'order.equipment_type', width: '8.5rem' },
         { text: 'Actions', value: 'action', width: '8.5rem' }
-      ],
-      menuitems: [
-        {
-          text: 'Dashboard',
-          path: '/user/Dashboard'
-        },
-        {
-          text: 'Manage Users'
-        },
-        {
-          text: 'My Profile'
-        },
-        {
-          text: 'Logout'
-        }
       ]
     }
   },
@@ -162,7 +130,6 @@ export default {
   mounted () {
     this.fetchOrdersList()
     this.loaded = true
-    console.log('this.list(): ', this.list())
   },
 
   methods: {
@@ -186,22 +153,15 @@ export default {
       return this.activeMobileTab === tab
     },
 
-    onChildSearchUpdate (value) {
-      console.log('onChildSearchUpdate value: ', value)
-      this.filterQuery = value
-    },
-
-    // async fetchOrdersList (filters = { page: new URLSearchParams(window.location.search).get('page') }) {
-    fetchOrdersList (filters = { page: new URLSearchParams(window.location.search).get('page') }) {
+    async fetchOrdersList (filters = { page: new URLSearchParams(window.location.search).get('page') }) {
       this.filterQuery = this.returnSearchQuery(this.searchFilter['filter[query]'])
       this.activePage = parseInt(this.returnPage(filters.page))
       this.dateQuery = this.returnDateQuery(this.searchFilter['filter[created_between]'])
       if (this.statusFilter.length !== 0) {
         this.statusQuery = this.statusFilterToStatusQuery(this.statusFilter)
       }
-      // this.handleLocationUrl(this.activePage, this.filterQuery, this.statusQuery, this.dateQuery)
-      // const status = await this[types.getOrders]({
-      const status = this[types.getOrders]({
+      this.handleLocationUrl(this.activePage, this.filterQuery, this.statusQuery, this.dateQuery)
+      const status = await this[types.getOrders]({
         'filter[query]': this.filterQuery,
         page: this.activePage,
         'filter[status]': this.statusQuery,
@@ -305,17 +265,5 @@ export default {
 .orders {
   display: flex;
   height: 100%;
-}
-.general-table {
-  padding: 2rem 1rem;
-  display: flex;
-  flex-direction: column;
-  flex-grow: unset;
-  width: 100%;
-
-  @media screen and (min-width: map-get($breakpoints, med)) {
-    padding: 5.2rem 3.2rem;
-    padding-left: map-get($sizes, sidebar-desktop-width) + 3.2rem;
-  }
 }
 </style>
