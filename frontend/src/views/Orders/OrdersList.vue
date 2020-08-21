@@ -71,7 +71,8 @@ export default {
       { text: 'Shipment Direction', value: 'order.shipment_direction', width: '8.5rem' },
       { text: 'Shipment Designation', value: 'order.shipment_designation', width: '8.5rem' },
       { text: 'Eq. Type', value: 'order.equipment_type', width: '8.5rem' },
-      { text: 'Actions', value: 'action', width: '8.5rem' }
+      { text: 'Actions', value: 'action', width: '8.5rem' },
+      { text: 'TMS ID', value: 'order.tms_shipment_id', width: '8.5rem'}
     ],
     statuses: [
       { text: 'intake-accepted', value: 'intake-accepted' },

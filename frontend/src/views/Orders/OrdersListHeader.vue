@@ -13,6 +13,7 @@
     <div class="header__right">
       <DateRangeCalendar
         @change="handleCalendar"
+        @click:clear="handleCalendarInput"
       />
       <SearchBar
         :style="getStyle.searchBar"
@@ -117,6 +118,16 @@ export default {
           ...filters
         })
       }
+    },
+    handleCalendarInput (e) {
+      const filters = {
+        'filter[created_between]': ' '
+      }
+      this[providerMethodsName].setSearchFilter(filters)
+      this[providerMethodsName].fetchOrdersList({
+        page: this[providerStateName].activePage(),
+        ...filters
+      })
     },
     handleSearch (search) {
       const filters = {

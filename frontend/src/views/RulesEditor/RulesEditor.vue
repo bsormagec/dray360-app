@@ -132,16 +132,32 @@
             <v-tab-item>
               <vue-json-pretty
                 v-if="testing_output()"
-                :path="'res'"
                 :data="testing_output().output"
               />
             </v-tab-item>
             <v-tab-item>
+              <v-btn
+                v-if="testing_output()"
+                v-clipboard:copy="pasteAbleInput"
+                v-clipboard:success="onCopy"
+                v-clipboard:error="onError"
+                class="ma-2"
+                outlined
+                color="indigo"
+              >
+                Copy to Clipboard!
+              </v-btn>
               <vue-json-pretty
+                v-if="testing_output()"
+                :path="'res'"
+                :data="testing_output().input.fields"
+              />
+
+              <!-- <vue-json-pretty
                 v-if="testing_output()"
                 :path="'res2'"
                 :data="testing_output().input"
-              />
+              /> -->
             </v-tab-item>
           </v-tabs>
         </div>
@@ -232,6 +248,7 @@ import 'codemirror/lib/codemirror.css'
 import 'codemirror/theme/base16-light.css'
 import VueJsonPretty from 'vue-json-pretty'
 import rulesLibrary, { types } from '@/store/modules/rules_editor'
+
 export default {
   name: 'RulesEditor',
   components: {
@@ -262,6 +279,11 @@ export default {
     company_name: '',
     variant_name: ''
   }),
+  computed: {
+    pasteAbleInput: function () {
+      return this.testing_output() ? JSON.stringify(this.testing_output().input.fields).replace(/\n/g, '\\n') : ''
+    }
+  },
   async mounted () {
     const vc = this
 
@@ -269,7 +291,12 @@ export default {
   },
   methods: {
     ...mapActions(rulesLibrary.moduleName, [types.getLibrary, types.getCompanyVariantRules, types.setSequence, types.setRule, types.addRule, types.setRuleCode, types.getTestingOutput, types.getCompanyList, types.getVariantList]),
-
+    onCopy: function (e) {
+      console.log('copied')
+    },
+    onError: function (e) {
+      console.log('Failed to copy texts')
+    },
     async fetchRulesLibrary () {
       const status = await this[types.getLibrary]()
 

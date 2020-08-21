@@ -11,12 +11,17 @@
     >
       <template v-slot:activator="{ on, attrs }">
         <v-text-field
-          v-model="dateRangeText"
-          label="Date Range Filled"
-          append-icon="mdi-calendar-month"
+          :value="dateRangeText"
+          label="YYYY-MM-DD — YYYY-MM-DD"
+          prepend-icon="mdi-calendar-month"
+          class="calendar__input"
+          clearable
           readonly
+          outlined
+          dense
           v-bind="attrs"
           v-on="on"
+          @click:clear="click"
         />
       </template>
       <v-date-picker
@@ -63,6 +68,9 @@ export default {
   methods: {
     change (event) {
       this.$emit('change', event)
+    },
+    click (event) {
+      this.$emit('click:clear', event)
     }
   }
 
@@ -73,5 +81,35 @@ export default {
       max-width: 30rem;
       width: 30rem;
       margin-right: 1rem;
+      height: 0rem;
+      margin-bottom: 2.5rem;
+      .calendar__input {
+        max-height: 3rem !important;
+         .v-input__prepend-outer{
+              margin-top: 0rem !important;
+            }
+          .v-input__slot{
+            min-height: 2rem !important;
+            .v-input__append-inner{
+              margin-top: 0rem !important;
+              .v-input__icon > .v-icon{
+                margin-top: 0.3rem !important;
+              }
+            }
+            label{
+              top: 0.9rem !important;
+              height: 1rem !important;
+              line-height: 1rem !important;
+              font-size: 1rem !important;
+              text-transform: lowercase !important;
+            }
+            fieldset{
+              color: map-get($colors, grey-8 ) !important;
+            }
+          }
+          .v-input__control{
+            height: 3rem;
+          }
+      }
     }
 </style>

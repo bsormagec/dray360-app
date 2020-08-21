@@ -30,7 +30,7 @@ class OcrRequestOrderListQuery extends QueryBuilder
                 });
             })
             ->with([
-                'order:id,request_id,bill_to_address_raw_text,created_at,equipment_type,shipment_designation,shipment_direction',
+                'order:id,request_id,bill_to_address_raw_text,created_at,equipment_type,shipment_designation,shipment_direction,tms_shipment_id',
                 'latestOcrRequestStatus:id,status,status_date',
             ])
             ->whereRaw($noDuplicateOrderRequestsWhereClause);

@@ -41,13 +41,14 @@ class CompaniesControllerTest extends TestCase
     public function it_should__update_the__company_fields()
     {
         $company = factory(Company::class)->create();
-        $company->refs_custom_mapping = json_encode(["Peter" => 35, "Ben" => 37, "Joe" => 43]);
+        $mapping = ['Ben' => 37, 'Joe' => 43, 'Peter' => 35];
+        $company->refs_custom_mapping = $mapping;
         $this->putJson(route('companies.update', $company->id), $company->toArray())
-            ->assertStatus(Response::HTTP_OK)
-            ->assertJsonFragment(['refs_custom_mapping' => $company->refs_custom_mapping]);
-
+            ->assertStatus(Response::HTTP_OK);
         $this->assertDatabaseHas('t_companies', [
-            'refs_custom_mapping' => $company->refs_custom_mapping
+            'refs_custom_mapping->Ben' => $mapping['Ben'],
+            'refs_custom_mapping->Joe' => $mapping['Joe'],
+            'refs_custom_mapping->Peter' => $mapping['Peter'],
         ]);
     }
 

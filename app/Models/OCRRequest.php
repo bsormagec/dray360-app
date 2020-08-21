@@ -53,6 +53,7 @@ class OCRRequest extends Model
                     'equipment_type',
                     'shipment_designation',
                     'shipment_direction',
+                    'tms_shipment_id',
                 ]);
             });
     }

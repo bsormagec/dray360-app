@@ -6,8 +6,12 @@ import vuetify from './plugins/vuetify'
 import * as Sentry from '@sentry/browser'
 import { Vue as VueIntegration } from '@sentry/integrations'
 import setupInterceptors from '@/store/api_calls/config/setupInterceptors'
+import VueClipboard from 'vue-clipboard2'
 
 Vue.config.productionTip = false
+
+VueClipboard.config.autoSetContainer = true // add this line
+Vue.use(VueClipboard)
 
 if (process.env.NODE_ENV !== 'development') {
   Sentry.init({
