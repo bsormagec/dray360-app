@@ -29,6 +29,7 @@
             outlined
             dense
             class="search"
+            @input="emitSearchToParent"
           />
 
           <v-select
@@ -112,14 +113,19 @@
 export default {
   name: 'GeneralTable',
   props: {
+    // Borrowed form OrdersList
+    activePage: {
+      type: Number,
+      required: true
+    },
+    // Unique to this component
     customheaders: {
       type: Array,
       required: true
     },
     customItems: {
       type: Array,
-      required: false,
-      default: () => ([])
+      required: true
     },
     hasColumnFilters: {
       type: Boolean,
@@ -150,12 +156,10 @@ export default {
       required: false,
       default: () => ([])
     }
-
   },
   data () {
     return {
       dialog: false,
-      activePage: 0,
       page: 1,
       headers: [],
       search: '',
@@ -182,6 +186,10 @@ export default {
   methods: {
     initialize () {
       this.items = this.customItems
+    },
+
+    emitSearchToParent (e) {
+      this.$emit('searchToParent', this.search)
     }
   }
 }

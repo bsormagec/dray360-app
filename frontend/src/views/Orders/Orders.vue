@@ -22,15 +22,17 @@
       /> -->
       <GeneralTable
         class="general-table"
-        table-title="User list"
-        :customheaders="headersMap"
-        :custom-items="items"
+        table-title="Order list"
+        :customheaders="headers"
+        :active-page="activePage"
+        :custom-items="list()"
         :has-search="true"
         :has-column-filters="true"
-        :has-bulk-actions="true"
+        :has-bulk-actions="false"
         :has-action-button="{showButton: false, action: '/'}"
         injections="Orders"
-        :has-add-button="{showButton: true, action: '/'}"
+        :has-add-button="{showButton: false, action: '/'}"
+        v-on:searchToParent="onChildSearchUpdate"
       />
     </div>
 
@@ -98,56 +100,24 @@ export default {
         'sending-to-wint',
         'failure-sending-to-wint',
         'success-sending-to-wint'],
-      headersMap: [
+      headers: [
         {
-          text: 'First',
-          align: 'start',
+          text: 'Id',
           sortable: false,
-          value: 'first'
-        },
-        { text: 'Last', value: 'last' },
-        { text: 'Email', value: 'email' },
-        { text: 'Position', value: 'position' },
-        { text: 'Org', value: 'org' },
-        { text: 'Permission', value: 'permissions' },
-        { text: 'Status', value: 'status' },
-        { text: 'Password', value: 'password' },
-        { text: 'Actions', value: 'actions', sortable: false }
-      ],
-      items: [
-        {
-          id: 0,
-          first: 'Bill',
-          last: 'Brasky',
-          email: 'bbrasky@email.com',
-          position: 'Distpatcher',
-          org: 'Operations',
-          permissions: 'Editor',
-          status: 'Active',
-          password: 'Reset'
+          value: 'display_id',
+          width: '6rem'
         },
         {
-          id: 1,
-          first: 'Bill',
-          last: 'Brasky',
-          email: 'bbrasky@email.com',
-          position: 'Distpatcher',
-          org: 'Operations',
-          permissions: 'Editor',
-          status: 'Active',
-          password: 'Reset'
+          text: 'Status',
+          value: 'latest_ocr_request_status.display_status',
+          width: '12rem'
         },
-        {
-          id: 2,
-          first: 'Bill',
-          last: 'Brasky',
-          email: 'bbrasky@email.com',
-          position: 'Distpatcher',
-          org: 'Operations',
-          permissions: 'Editor',
-          status: 'Active',
-          password: 'Reset'
-        }
+        { text: 'Bill to', value: 'order.bill_to_address_raw_text', width: '30rem' },
+        { text: 'Date', value: 'created_at', width: '6rem' },
+        { text: 'Shipment Direction', value: 'order.shipment_direction', width: '8.5rem' },
+        { text: 'Shipment Designation', value: 'order.shipment_designation', width: '8.5rem' },
+        { text: 'Eq. Type', value: 'order.equipment_type', width: '8.5rem' },
+        { text: 'Actions', value: 'action', width: '8.5rem' }
       ],
       menuitems: [
         {
@@ -190,6 +160,7 @@ export default {
   mounted () {
     this.fetchOrdersList()
     this.loaded = true
+    console.log('this.list(): ', this.list())
   },
 
   methods: {
@@ -213,15 +184,22 @@ export default {
       return this.activeMobileTab === tab
     },
 
-    async fetchOrdersList (filters = { page: new URLSearchParams(window.location.search).get('page') }) {
+    onChildSearchUpdate (value) {
+      console.log('onChildSearchUpdate value: ', value)
+      this.filterQuery = value
+    },
+
+    // async fetchOrdersList (filters = { page: new URLSearchParams(window.location.search).get('page') }) {
+    fetchOrdersList (filters = { page: new URLSearchParams(window.location.search).get('page') }) {
       this.filterQuery = this.returnSearchQuery(this.searchFilter['filter[query]'])
       this.activePage = parseInt(this.returnPage(filters.page))
       this.dateQuery = this.returnDateQuery(this.searchFilter['filter[created_between]'])
       if (this.statusFilter.length !== 0) {
         this.statusQuery = this.statusFilterToStatusQuery(this.statusFilter)
       }
-      this.handleLocationUrl(this.activePage, this.filterQuery, this.statusQuery, this.dateQuery)
-      const status = await this[types.getOrders]({
+      // this.handleLocationUrl(this.activePage, this.filterQuery, this.statusQuery, this.dateQuery)
+      // const status = await this[types.getOrders]({
+      const status = this[types.getOrders]({
         'filter[query]': this.filterQuery,
         page: this.activePage,
         'filter[status]': this.statusQuery,
