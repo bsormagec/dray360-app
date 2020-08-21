@@ -53,6 +53,12 @@
 </template>
 <script>
 export default {
+  // props: {
+  //   dateRange: {
+  //     type: Array,
+  //     required: true
+  //   }
+  // },
   data () {
     return {
       dates: [],

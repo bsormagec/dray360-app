@@ -20,6 +20,7 @@
 
           <v-spacer />
           <DateRangeCalendar
+            v-if="hasCalendar"
             @change="handleCalendar"
           />
           <v-text-field
@@ -119,12 +120,10 @@ export default {
     DateRangeCalendar
   },
   props: {
-    // Borrowed form OrdersList
     activePage: {
       type: Number,
       required: true
     },
-    // Unique to this component
     customheaders: {
       type: Array,
       required: true
@@ -149,6 +148,10 @@ export default {
       type: Boolean,
       required: true
     },
+    hasCalendar: {
+      type: Boolean,
+      required: true
+    },
     hasActionButton: {
       type: Object,
       required: true
@@ -169,6 +172,7 @@ export default {
       page: 1,
       headers: [],
       search: '',
+      dateRange: [],
       selected: [],
       selectedHeaders: [],
       itemsPerPageArray: [4, 8, 12],
@@ -188,8 +192,15 @@ export default {
     this.selectedHeaders = this.headers
     this.initialize()
 
-    const urlSearchQuery = new URLSearchParams(window.location.search).get('searchQuery')
-    this.search = urlSearchQuery
+    if (window.location.search.includes('searchQuery')) {
+      const urlSearchQuery = new URLSearchParams(window.location.search).get('searchQuery')
+      this.search = urlSearchQuery
+    }
+
+    if (window.location.search.includes('createdBetween')) {
+      const urlDateRange = new URLSearchParams(window.location.search).get('createdBetween')
+      this.dateRange = urlDateRange
+    }
   },
 
   methods: {
@@ -201,7 +212,7 @@ export default {
       this.$emit('searchToParent', this.search)
     },
     handleCalendar (e) {
-      this.$emit('change', e)
+      this.$emit('dateToParent', e)
     }
 
   }

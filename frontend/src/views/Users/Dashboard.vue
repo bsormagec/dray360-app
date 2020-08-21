@@ -17,7 +17,8 @@
         :has-action-button="{showButton: false, action: '/'}"
         injections="Orders"
         :has-add-button="{showButton: false, action: '/'}"
-        v-on:searchToParent="onChildSearchUpdate"
+        :has-calendar="false"
+        @searchToParent="onChildSearchUpdate"
       />
     </div>
   </div>
@@ -182,14 +183,14 @@ export default {
   methods: {
     onChildSearchUpdate (value) {
       this.searchQuery = value
-      this.handleLocationUrl(this.searchQuery)
+      this.handleLocationUrl()
     },
 
-    handleLocationUrl (searchQuery) {
-      const search = `?searchQuery=${searchQuery}`
+    handleLocationUrl () {
+      const newUrl = `?searchQuery=${this.searchQuery}`
 
-      if (location.search !== search) {
-        this.$router.replace(search)
+      if (location.search !== newUrl) {
+        this.$router.replace(newUrl)
       }
     }
   }
