@@ -23,7 +23,7 @@ class CompaniesController extends Controller
     {
         $this->authorize('update', $company);
         $data = $request->validate([
-            'refs_custom_mapping' => 'sometimes|json',
+            'refs_custom_mapping' => 'sometimes|array',
             't_address_id' => 'sometimes|int',
             'name' => 'sometimes|string',
             'email_intake_address' => 'sometimes|string',

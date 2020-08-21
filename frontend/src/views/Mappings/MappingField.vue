@@ -38,6 +38,7 @@
                       :items="fieldNames"
                       item-text="value"
                       item-value="field_name"
+                      :clearable="true"
                       @change="changeRef1"
                     />
                   </td>
@@ -53,6 +54,7 @@
                       :items="reftypes"
                       item-text="field_name"
                       item-value="value"
+                      :clearable="true"
                     />
                   </td>
                 </tr>
@@ -64,6 +66,7 @@
                       :items="fieldNames"
                       item-text="value"
                       item-value="field_name"
+                      :clearable="true"
                       @change="changeRef2"
                     />
                   </td>
@@ -79,6 +82,7 @@
                       :items="reftypes"
                       item-text="field_name"
                       item-value="value"
+                      :clearable="true"
                     />
                   </td>
                 </tr>
@@ -95,6 +99,7 @@
                       :items="fieldNames"
                       item-text="value"
                       item-value="field_name"
+                      :clearable="true"
                       @change="(value) => changeCustomValues(value, index)"
                     />
                   </td>
@@ -114,6 +119,7 @@
                       item-text="value"
                       item-value="field_name"
                       :multiple="true"
+                      :clearable="true"
                     />
                   </td>
                 </tr>
@@ -126,22 +132,13 @@
                       item-text="value"
                       item-value="field_name"
                       :multiple="true"
+                      :clearable="true"
                     />
                   </td>
                 </tr>
               </tbody>
             </template>
           </v-simple-table>
-          <div
-            v-if="dialog"
-          >
-            <ErrorHandling
-              label="snackbar"
-              :message="message"
-              :dialog="dialog"
-              type="modal"
-            />
-          </div>
         </div>
       </div>
       <div class="row">
@@ -159,16 +156,15 @@
 </template>
 
 <script>
-import ErrorHandling from '@/components/General/ErrorHandling'
 import SidebarNavigation from '@/components/General/SidebarNavigation'
 import { mapActions, mapState } from '@/utils/vuex_mappings'
 import companies, { types } from '@/store/modules/companies'
 import { reqStatus } from '@/enums/req_status'
+import utils, { type } from '@/store/modules/utils'
 
 export default {
   components: {
-    SidebarNavigation,
-    ErrorHandling
+    SidebarNavigation
   },
   data () {
     return {
@@ -179,8 +175,6 @@ export default {
           path: '/mapping'
         }
       ],
-      dialog: false,
-      message: '',
       ds_ref2_text: '',
       ds_ref2_type: '',
       ds_ref3_text: '',
@@ -196,7 +190,6 @@ export default {
       ref2_field_name: [],
       ref2_type: [],
       custom: [],
-      customArray: [],
       reftypes: [],
       mappings: [
         { field_name: 'BOOKING #', value: 18 },
@@ -237,7 +230,7 @@ export default {
   },
   created () {
     this.custom = new Array(10).fill(null)
-    this.customValue = new Array(10).fill(false)
+    this.customValue = new Array(10).fill(null)
   },
   mounted () {
     this.getNames()
@@ -245,6 +238,7 @@ export default {
   },
   methods: {
     ...mapActions(companies.moduleName, [types.updateCompaniesMappingField, types.getCompany]),
+    ...mapActions(utils.moduleName, [type.setSnackbar]),
     getNames () {
       Object.values(this.mappings).forEach(key => {
         this.reftypes.push(key)
@@ -281,35 +275,43 @@ export default {
       }
     },
     async save () {
-      const jsondata = {
-        ds_ref2_text: { [this.objectNameRef1]: this.ds_ref2_text },
-        ds_ref2_type: { value: this.ds_ref2_type },
-        ds_ref3_text: { [this.objectNameRef2]: this.ds_ref3_text },
-        ds_ref3_type: { value: this.ds_ref3_type },
-        bill_comment: { source: this.billing_notes },
-        ship_comment: { source: this.shipment_notes }
-      }
+      const jsondata = {}
+      if (this.ds_ref2_type !== undefined && this.ds_ref2_type !== '') { jsondata.ds_ref2_type = { value: this.ds_ref2_type } }
+      if (this.ds_ref3_type !== undefined && this.ds_ref3_type !== '') { jsondata.ds_ref3_type = { value: this.ds_ref3_type } }
+      if (this.ds_ref2_text !== undefined && this.ds_ref2_text !== '') { jsondata.ds_ref2_text = { [this.objectNameRef1]: this.ds_ref2_text } }
+      if (this.ds_ref3_text !== undefined && this.ds_ref3_text !== '') { jsondata.ds_ref3_text = { [this.objectNameRef2]: this.ds_ref3_text } }
+      if (this.billing_notes.length !== 0) { jsondata.bill_comment = { source: this.billing_notes } }
+      if (this.shipment_notes.length !== 0) { jsondata.ship_comment = { source: this.shipment_notes } }
+
       this.custom.forEach((value, i) => {
-        jsondata[`Custom${i}`] = { [this.objectNameCustom[i]]: value }
+        if (this.isCustomValue(value) && value !== null && value !== undefined && value !== '') {
+          jsondata[`custom${i}`] = { value: value }
+        } else if (!this.isCustomValue(value) && value !== null && value !== '') {
+          jsondata[`custom${i}`] = { source: value }
+        }
       })
-      this.dialog = false
-      const status = await this[types.updateCompaniesMappingField]({ id: this.$route.params.id, changes: { refs_custom_mapping: JSON.stringify(jsondata) } })
-      this.dialog = true
+      const status = await this[types.updateCompaniesMappingField]({ id: this.$route.params.id, changes: { refs_custom_mapping: jsondata } })
       if (status === reqStatus.success) {
-        this.message = 'Success'
+        await this[type.setSnackbar]({
+          show: true,
+          showSpinner: false,
+          message: 'Mappings updated'
+        })
       } else {
-        this.message = 'Error'
+        await this[type.setSnackbar]({
+          show: false,
+          showSpinner: false,
+          message: 'Error'
+        })
       }
     },
 
     async getCompanybyId () {
       const status = await this[types.getCompany]({ id: this.$route.params.id })
       if (status === reqStatus.success) {
-        if (JSON.parse(this.company().refs_custom_mapping) !== null) {
-          this.getJsonValues(JSON.parse(this.company().refs_custom_mapping))
+        if (this.company().refs_custom_mapping !== null) {
+          this.getJsonValues(this.company().refs_custom_mapping)
         }
-      } else {
-        this.message = 'Error'
       }
     },
     getJsonValues (val) {
@@ -347,16 +349,15 @@ export default {
           case 'ship_comment':
             this.shipment_notes = value.source
             break
-          default:
+          case key.substr('custom'):
             if (this.isCustomValue(value.source)) {
-              this.customValue[key.substr(key.length - 1)] = this.isCustomValue(value.source)
-              this.objectNameCustom[key.substr(key.length - 1)] = 'value'
-              this.customArray.push(value.value)
+              this.$set(this.customValue, key.substr(key.length - 1), true)
+              this.$set(this.custom, key.substr(key.length - 1), value.value)
             } else {
-              this.objectNameCustom[key.substr(key.length - 1)] = 'source'
-              this.customArray.push(value.source)
+              this.$set(this.custom, key.substr(key.length - 1), value.source)
             }
-            this.custom = this.customArray
+            break
+          default:
             break
         }
       })
