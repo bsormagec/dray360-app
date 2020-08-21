@@ -161,10 +161,6 @@ export default {
       type: Array,
       required: false,
       default: () => ([])
-    },
-    locationUrl: {
-      type: String,
-      required: true
     }
   },
   data () {
@@ -191,10 +187,9 @@ export default {
     this.headers = Object.values(this.customheaders)
     this.selectedHeaders = this.headers
     this.initialize()
-  },
 
-  updated () {
-    // wrangle URL data here
+    const urlSearchQuery = new URLSearchParams(window.location.search).get('searchQuery')
+    this.search = urlSearchQuery
   },
 
   methods: {

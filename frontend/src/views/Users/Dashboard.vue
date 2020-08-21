@@ -186,7 +186,7 @@ export default {
     },
 
     handleLocationUrl (searchQuery) {
-      const search = `?filter[query]=${searchQuery}`
+      const search = `?searchQuery=${searchQuery}`
 
       if (location.search !== search) {
         this.$router.replace(search)
