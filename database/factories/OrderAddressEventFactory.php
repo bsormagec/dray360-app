@@ -18,6 +18,7 @@ $factory->define(OrderAddressEvent::class, function (Faker $faker) {
         'is_deliver_event' => $faker->boolean,
         'is_dismount_event' => $faker->boolean,
         'is_drop_event' => $faker->boolean,
+        'is_pickup_event' => $faker->boolean,
         'call_for_appointment' => null,
         'delivery_window_from_localtime' => $faker->time(),
         'delivery_window_to_localtime' => $faker->time(),

@@ -122,7 +122,7 @@
           "bottom": 1936,
           "page_index": 1
         },
-        "recognized_value": "BNSF LOGISTICS PARK H572 26353 ELWOOD INTERNATIONAL PORT RD ELWOOD IL 60421 UNITED STATES Contact:",
+        "recognized_value": "BNSF LOGISTICS PARK H57226353 ELWOOD INTERNATIONAL PORT RDELWOOD IL 60421UNITED STATESContact:",
         "suspicious_symbols": "00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000"
       },
       "pickup_no": {
@@ -257,7 +257,7 @@
           "bottom": 583,
           "page_index": 1
         },
-        "recognized_value": "Jet-Speed Logistics (USA) LLC 900 N. Arlington Heights Rd., Suite 150 Itasca. Illinois 60143. U.S.A. Tel: (630) 595-5601 Fax: (630) 595-6361",
+        "recognized_value": "Jet-Speed Logistics (USA) LLC900 N. Arlington Heights Rd., Suite 150Itasca. Illinois 60143. U.S.A.Tel: (630) 595-5601Fax: (630) 595-6361",
         "suspicious_symbols": "00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000"
       },
       "event1_location": {
@@ -271,7 +271,7 @@
           "bottom": 1469,
           "page_index": 1
         },
-        "recognized_value": "BNSF LOGISTICS PARK H572 26353 ELWOOD INTERNATIONAL PORT RD ELWOOD IL 60421 UNITED STATES Contact:",
+        "recognized_value": "BNSF LOGISTICS PARK H57226353 ELWOOD INTERNATIONAL PORT RDELWOOD IL 60421UNITED STATESContact:",
         "suspicious_symbols": "00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000"
       },
       "event2_location": {
@@ -285,7 +285,7 @@
           "bottom": 1469,
           "page_index": 1
         },
-        "recognized_value": "3030 S SYLVANIA AVE STE L STURTEVANT WI 53177 UNITED STATES Contact:",
+        "recognized_value": "3030 S SYLVANIA AVE STE LSTURTEVANT WI 53177UNITED STATESContact:",
         "suspicious_symbols": "00000000000000000000000000000000000000000000000000000000000000000000"
       },
       "event3_location": {
@@ -299,7 +299,7 @@
           "bottom": 1936,
           "page_index": 1
         },
-        "recognized_value": "3030 S SYLVANIA AVE STE L STURTEVANT WI 53177 UNITED STATES Contact:",
+        "recognized_value": "3030 S SYLVANIA AVE STE LSTURTEVANT WI 53177UNITED STATESContact:",
         "suspicious_symbols": "00000000000000000000000000000000000000000000000000000000000000000000"
       },
       "event4_location": {
@@ -313,7 +313,7 @@
           "bottom": 1936,
           "page_index": 1
         },
-        "recognized_value": "BNSF LOGISTICS PARK H572 26353 ELWOOD INTERNATIONAL PORT RD ELWOOD IL 60421 UNITED STATES Contact:",
+        "recognized_value": "BNSF LOGISTICS PARK H57226353 ELWOOD INTERNATIONAL PORT RDELWOOD IL 60421UNITED STATESContact:",
         "suspicious_symbols": "00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000"
       },
       "event5_location": {
@@ -642,6 +642,7 @@
       "is_deliver_event": null,
       "is_dismount_event": null,
       "is_drop_event": null,
+      "is_pickup_event": null,
       "call_for_appointment": null,
       "delivery_window_from_localtime": null,
       "delivery_window_to_localtime": null,
@@ -665,6 +666,7 @@
       "is_deliver_event": null,
       "is_dismount_event": null,
       "is_drop_event": null,
+      "is_pickup_event": null,
       "call_for_appointment": null,
       "delivery_window_from_localtime": null,
       "delivery_window_to_localtime": null,
@@ -688,6 +690,7 @@
       "is_deliver_event": null,
       "is_dismount_event": null,
       "is_drop_event": null,
+      "is_pickup_event": null,
       "call_for_appointment": null,
       "delivery_window_from_localtime": null,
       "delivery_window_to_localtime": null,
@@ -711,6 +714,7 @@
       "is_deliver_event": null,
       "is_dismount_event": null,
       "is_drop_event": null,
+      "is_pickup_event": null,
       "call_for_appointment": null,
       "delivery_window_from_localtime": null,
       "delivery_window_to_localtime": null,
