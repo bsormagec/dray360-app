@@ -212,7 +212,7 @@ export default {
       this.$emit('searchToParent', this.search)
     },
     handleCalendar (e) {
-      this.$emit('dateToParent', e)
+      if (e.length === 2) { this.$emit('dateToParent', e) }
     }
 
   }

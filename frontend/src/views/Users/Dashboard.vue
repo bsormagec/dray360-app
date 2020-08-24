@@ -17,8 +17,9 @@
         :has-action-button="{showButton: false, action: '/'}"
         injections="Orders"
         :has-add-button="{showButton: false, action: '/'}"
-        :has-calendar="false"
+        :has-calendar="true"
         @searchToParent="onChildSearchUpdate"
+        @dateToParent="dateToParent"
       />
     </div>
   </div>
@@ -192,6 +193,9 @@ export default {
       if (location.search !== newUrl) {
         this.$router.replace(newUrl)
       }
+    },
+    dateToParent (e) {
+      console.log('hello from parent', e)
     }
   }
 }
