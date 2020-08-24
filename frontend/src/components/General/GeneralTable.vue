@@ -19,6 +19,10 @@
           <v-toolbar-title><h1>{{ tableTitle }} ({{ customItems.length }})</h1></v-toolbar-title>
 
           <v-spacer />
+          <DateRangeCalendar
+            v-if="hasCalendar"
+            @change="handleCalendar"
+          />
           <v-text-field
             v-if="hasSearch"
             v-model="search"
@@ -29,6 +33,7 @@
             outlined
             dense
             class="search"
+            @input="emitSearchToParent"
           />
 
           <v-select
@@ -44,7 +49,7 @@
             return-object
             :chips="true"
           >
-            <template v-slot:selection="{ item, index }">
+            <template v-slot:selection="{ index }">
               <span
                 v-if="index === 2"
                 class=""
@@ -70,10 +75,10 @@
           </v-btn>
         </v-toolbar>
       </template>
-      <template v-slot:item.email="{ item }">
+      <template v-slot:[`item.email`]="{ item }">
         <a href="">{{ item.email }}</a>
       </template>
-      <template v-slot:item.actions="{ item }">
+      <template v-slot:[`item.actions`]="{ item }">
         <v-icon
           small
           class="mr-2"
@@ -108,10 +113,17 @@
   </div>
 </template>
 <script>
-
+import DateRangeCalendar from '@/components/Orders/DateRangeCalendar'
 export default {
   name: 'GeneralTable',
+  components: {
+    DateRangeCalendar
+  },
   props: {
+    activePage: {
+      type: Number,
+      required: true
+    },
     customheaders: {
       type: Array,
       required: true
@@ -136,6 +148,10 @@ export default {
       type: Boolean,
       required: true
     },
+    hasCalendar: {
+      type: Boolean,
+      required: true
+    },
     hasActionButton: {
       type: Object,
       required: true
@@ -146,17 +162,17 @@ export default {
     },
     bulkActions: {
       type: Array,
-      required: true
+      required: false,
+      default: () => ([])
     }
-
   },
   data () {
     return {
       dialog: false,
-      activePage: 0,
       page: 1,
       headers: [],
       search: '',
+      dateRange: [],
       selected: [],
       selectedHeaders: [],
       itemsPerPageArray: [4, 8, 12],
@@ -175,12 +191,30 @@ export default {
     this.headers = Object.values(this.customheaders)
     this.selectedHeaders = this.headers
     this.initialize()
+
+    if (window.location.search.includes('searchQuery')) {
+      const urlSearchQuery = new URLSearchParams(window.location.search).get('searchQuery')
+      this.search = urlSearchQuery
+    }
+
+    if (window.location.search.includes('createdBetween')) {
+      const urlDateRange = new URLSearchParams(window.location.search).get('createdBetween')
+      this.dateRange = urlDateRange
+    }
   },
 
   methods: {
     initialize () {
       this.items = this.customItems
+    },
+
+    emitSearchToParent (e) {
+      this.$emit('searchToParent', this.search)
+    },
+    handleCalendar (e) {
+      if (e.length === 2) { this.$emit('dateToParent', e) }
     }
+
   }
 }
 </script>
