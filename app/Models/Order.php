@@ -155,7 +155,7 @@ class Order extends Model
         'port_ramp_of_destination_address_id' => 'integer',
         'port_ramp_of_destination_address_verified' => 'boolean',
         'ocr_data' => 'json',
-        'pickup_by_date' => 'datetime:m/d/Y',
+        'pickup_by_date' => 'datetime:Y-m-d',
     ];
 
     /**
