@@ -23,6 +23,7 @@ class CreateTOrderAddressEventsTable extends Migration
             $table->boolean('is_deliver_event')->nullable();
             $table->boolean('is_dismount_event')->nullable();
             $table->boolean('is_drop_event')->nullable();
+            $table->boolean('is_pickup_event')->nullable();
             $table->boolean('call_for_appointment')->nullable();
             $table->time('delivery_window_from_localtime')->nullable();
             $table->time('delivery_window_to_localtime')->nullable();

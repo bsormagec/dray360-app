@@ -4,6 +4,7 @@ namespace App\Nova;
 
 use Laravel\Nova\Fields\ID;
 use Illuminate\Http\Request;
+use Laravel\Nova\Fields\Code;
 use Laravel\Nova\Fields\Text;
 use Laravel\Nova\Fields\Gravatar;
 use Laravel\Nova\Fields\Password;
@@ -60,6 +61,7 @@ class User extends Resource
                 ->updateRules('unique:users,email,{{resourceId}}'),
 
             BelongsTo::make('Company')->nullable(),
+            Code::make('Configuration', 'configuration')->json(),
 
             Password::make('Password')
                 ->onlyOnForms()

@@ -18,7 +18,7 @@ class ImportProfitToolsAddressTest extends TestCase
 {
     use DatabaseTransactions;
 
-    protected function setUp(): void
+    public function setUp(): void
     {
         parent::setUp();
         $this->seed(ProfitToolsCushingSeeder::class);

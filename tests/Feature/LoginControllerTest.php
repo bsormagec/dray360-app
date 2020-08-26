@@ -5,39 +5,72 @@ namespace Tests\Feature;
 use UsersSeeder;
 use Tests\TestCase;
 use App\Models\User;
+use App\Models\Company;
 use Laravel\Sanctum\Sanctum;
+use Illuminate\Http\Response;
+use Illuminate\Support\Facades\Config;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
 
 class LoginControllerTest extends TestCase
 {
     use DatabaseTransactions;
 
+    protected User $user;
+
+    public function setUp(): void
+    {
+        parent::setUp();
+        $this->seed(UsersSeeder::class);
+        $this->user = User::whereRoleIs('customer-user')->first();
+        $this->user->setCompany(factory(Company::class)->create(), true);
+        Config::set('sanctum.stateful', [$this->user->company->domain->hostname, 'anotherdomain.com']);
+    }
+
     /** @test */
     public function it_should_authenticate_a_user()
     {
-        $this->seed(UsersSeeder::class);
-
-        $user = User::first();
-
-        $this->post(route('login'), [
-                'email' => $user->email,
+        $this->postJson(
+            route('login'),
+            [
+                'email' => $this->user->email,
                 'password' => 'password',
-            ])
-            ->assertStatus(200);
+            ],
+            [
+                'Referer' => $this->user->company->domain->hostname,
+            ]
+        )
+        ->assertStatus(Response::HTTP_NO_CONTENT);
 
-        $this->assertEquals(auth()->user()->id, $user->id);
+        $this->assertEquals(auth()->user()->id, $this->user->id);
+    }
+
+    /** @test */
+    public function it_should_fail_and_return_a_json_with_a_redirect()
+    {
+        $this->post(
+            route('login'),
+            [
+                'email' => $this->user->email,
+                'password' => 'password',
+            ],
+            [
+                'Referer' => 'anotherdomain.com',
+            ]
+        )
+        ->assertStatus(Response::HTTP_UNAUTHORIZED)
+        ->assertJsonFragment([
+            'redirect' => $this->user->company->domain->hostname,
+        ]);
     }
 
     /** @test */
     public function it_should_logout_a_logged_in_user()
     {
-        $this->seed(UsersSeeder::class);
-
         $user = User::first();
         Sanctum::actingAs($user, ['*']);
 
         $this->post(route('logout'))
-            ->assertStatus(200);
+            ->assertStatus(Response::HTTP_NO_CONTENT);
 
         $this->assertTrue(auth('web')->guest());
     }
@@ -45,8 +78,6 @@ class LoginControllerTest extends TestCase
     /** @test */
     public function it_should_return_the_logged_in_user_with_its_permissions_and_check_if_its_superadmin()
     {
-        $this->seed(UsersSeeder::class);
-
         $user = User::whereRoleIs('superadmin')->first();
         Sanctum::actingAs($user, ['*']);
 
@@ -55,6 +86,7 @@ class LoginControllerTest extends TestCase
                 'id',
                 'email',
                 'is_superadmin',
+                'configuration',
                 'permissions' => [
                     '*' => [
                         'id',

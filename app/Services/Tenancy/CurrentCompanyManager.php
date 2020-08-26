@@ -11,7 +11,7 @@ class CurrentCompanyManager
     const REQUEST_PARAMETER = 'company_id',
         HEADER = 'X-Company';
     protected Application $app;
-    protected ?Company $currentCompany = null;
+    protected ?Company $company = null;
 
     public function __construct(Application $app)
     {
@@ -29,7 +29,7 @@ class CurrentCompanyManager
     {
         $auth = $this->app['auth'];
         if (! $auth->guest() && $auth->user()->hasCompany()) {
-            $this->setCurrentCompany($auth->user()->company()->first());
+            $this->setCompany($auth->user()->company()->first());
         }
 
         return $this;
@@ -59,14 +59,14 @@ class CurrentCompanyManager
 
     protected function setOrReplaceFromId(?int $companyId)
     {
-        if (! $companyId || ($this->currentCompany && ! is_superadmin())) {
+        if (! $companyId || ($this->company && ! is_superadmin())) {
             return;
         }
 
-        $this->setCurrentCompanyFromId($companyId);
+        $this->setCompanyFromId($companyId);
     }
 
-    public function setCurrentCompanyFromId(?int $id)
+    public function setCompanyFromId(?int $id)
     {
         $company = Company::find($id);
 
@@ -74,26 +74,26 @@ class CurrentCompanyManager
             return;
         }
 
-        $this->setCurrentCompany($company);
+        $this->setCompany($company);
     }
 
-    public function setCurrentCompany(?Company $company)
+    public function setCompany(?Company $company)
     {
-        $this->currentCompany = $company;
+        $this->company = $company;
     }
 
-    public function getCurrentCompany(): ?Company
+    public function getCompany(): ?Company
     {
-        return $this->currentCompany;
+        return $this->company;
     }
 
-    public function isSetCurrentCompany(): bool
+    public function isCompanySet(): bool
     {
-        return $this->currentCompany != null;
+        return $this->company != null;
     }
 
-    public function currentCompanyId(): ?int
+    public function companyId(): ?int
     {
-        return $this->currentCompany->id ?? null;
+        return $this->company->id ?? null;
     }
 }

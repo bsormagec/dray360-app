@@ -5,8 +5,10 @@
     </div>
     <div class="user__list col-10">
       <GeneralTable
+        class="general-table"
         table-title="User list"
-        :customheaders="headersMap"
+        :customheaders="headers"
+        :active-page="1"
         :custom-items="items"
         :has-search="true"
         :has-column-filters="true"
@@ -14,7 +16,9 @@
         :bulk-actions="['Delete selected', 'Deactivate accounts']"
         :has-action-button="{showButton: false, action: '/'}"
         injections="Orders"
-        :has-add-button="{showButton: true, action: '/'}"
+        :has-add-button="{showButton: false, action: '/'}"
+        :has-calendar="false"
+        @searchToParent="onChildSearchUpdate"
       />
     </div>
   </div>
@@ -30,7 +34,8 @@ export default {
   },
   data () {
     return {
-      headersMap: [
+      searchQuery: '',
+      headers: [
         {
           text: 'First',
           align: 'start',
@@ -49,9 +54,9 @@ export default {
       items: [
         {
           id: 0,
-          first: 'Bill',
-          last: 'Brasky',
-          email: 'bbrasky@email.com',
+          first: 'John',
+          last: 'Doe',
+          email: 'jdoe@email.com',
           position: 'Distpatcher',
           org: 'Operations',
           permissions: 'Editor',
@@ -173,6 +178,20 @@ export default {
           text: 'Logout'
         }
       ]
+    }
+  },
+  methods: {
+    onChildSearchUpdate (value) {
+      this.searchQuery = value
+      this.handleLocationUrl()
+    },
+
+    handleLocationUrl () {
+      const newUrl = `?searchQuery=${this.searchQuery}`
+
+      if (location.search !== newUrl) {
+        this.$router.replace(newUrl)
+      }
     }
   }
 }

@@ -6,6 +6,7 @@ use Laravel\Nova\Fields\ID;
 use Illuminate\Http\Request;
 use Laravel\Nova\Fields\Code;
 use Laravel\Nova\Fields\Text;
+use Laravel\Nova\Fields\BelongsTo;
 
 class Company extends Resource
 {
@@ -33,6 +34,13 @@ class Company extends Resource
     ];
 
     /**
+     * The relationships that should be eager loaded on index queries.
+     *
+     * @var array
+     */
+    public static $with = ['domain'];
+
+    /**
      * Get the fields displayed by the resource.
      *
      * @param  \Illuminate\Http\Request  $request
@@ -46,6 +54,8 @@ class Company extends Resource
             Text::make('Intake Email', 'email_intake_address'),
             Text::make('Intake Email Alt', 'email_intake_address_alt'),
             Code::make('Ref Mapping', 'refs_custom_mapping')->json(),
+            Code::make('Configuration', 'configuration')->json(),
+            BelongsTo::make('Domain', 'domain', Domain::class)->sortable(),
         ];
     }
 

@@ -14,10 +14,10 @@ class SetCurrentCompanyTest extends TestCase
     public function it_should_allow_setting_the_company_into_the_container()
     {
         $company = factory(Company::class)->create();
-        $tenancy = $this->app['tenancy'];
+        $companyManager = $this->app['company_manager'];
         currentCompany($company);
 
-        $this->assertTrue($tenancy->isSetCurrentCompany());
+        $this->assertTrue($companyManager->isCompanySet());
         $this->assertEquals($company->id, currentCompany()->id);
     }
 }

@@ -14,5 +14,6 @@ class DatabaseSeeder extends Seeder
         $this->call(ProfitToolsCushingSeeder::class);
         $this->call(AddressLocationnameOverrideSeeder::class);
         $this->call(LaratrustSeeder::class);
+        $this->call(DefaultTenantSeeder::class);
     }
 }

@@ -5,6 +5,7 @@ namespace App\Providers;
 use App\Models\User;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\ServiceProvider;
+use App\Services\Tenancy\TenancyManager;
 use App\Services\Tenancy\CurrentCompanyManager;
 use App\Services\Impersonation\ImpersonationManager;
 
@@ -26,8 +27,12 @@ class AppServiceProvider extends ServiceProvider
             return new ImpersonationManager($app);
         });
 
-        $this->app->singleton('tenancy', function ($app) {
+        $this->app->singleton('company_manager', function ($app) {
             return new CurrentCompanyManager($app);
+        });
+
+        $this->app->singleton('tenancy', function ($app) {
+            return new TenancyManager($app);
         });
     }
 

@@ -22,7 +22,7 @@ class UserPolicy
      */
     public function view(User $user, User $model)
     {
-        return $user->isAbleTo('users-view') && $user->belongsToSameCompanyAs($model);
+        return $user->isAbleTo('users-view') && $this->belongToSameCompany($user, $model);
     }
 
     /**
@@ -38,7 +38,7 @@ class UserPolicy
      */
     public function update(User $user, User $model): bool
     {
-        return $user->isAbleTo('users-edit') && $user->belongsToSameCompanyAs($model);
+        return $user->isAbleTo('users-edit') && $this->belongToSameCompany($user, $model);
     }
 
     /**
@@ -46,7 +46,7 @@ class UserPolicy
      */
     public function delete(User $user, User $model): bool
     {
-        return $user->isAbleTo('users-remove') && $user->belongsToSameCompanyAs($model);
+        return $user->isAbleTo('users-remove') && $this->belongToSameCompany($user, $model);
     }
 
     /**
@@ -69,5 +69,10 @@ class UserPolicy
             && User::forCurrentCompany()
                 ->whereIn('id', $ids)
                 ->count() == count($ids);
+    }
+
+    protected function belongToSameCompany(User $user, $model): bool
+    {
+        return $user->isSuperadmin() || $user->belongsToSameCompanyAs($model);
     }
 }

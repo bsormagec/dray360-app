@@ -77,9 +77,10 @@ class ImpersonationManagerTest extends TestCase
     }
 
     /** @test */
-    public function it_should_load_the_impersonation_from_the_current_sesssion_only_for_current_request_and_update_the_current_company()
+    public function it_should_load_the_impersonation_from_the_current_sesssion_only_for_current_request_and_update_the_current_company_and_tenant()
     {
         $admin = auth()->user();
+        $tenant = $this->userToImpersonate->company->domain->tenant;
         session()->put(app('impersonate')->getImpersonatedSessionKey(), $this->userToImpersonate->id);
         session()->put(app('impersonate')->getImpersonatorSessionKey(), $admin->id);
 
@@ -88,5 +89,7 @@ class ImpersonationManagerTest extends TestCase
 
         $this->assertEquals($this->userToImpersonate->id, auth()->user()->id);
         $this->assertEquals($this->userToImpersonate->getCompanyId(), currentCompany()->id);
+        $this->assertTrue(app('tenancy')->isTenantSet());
+        $this->assertEquals($tenant->id, app('tenancy')->tenantId());
     }
 }

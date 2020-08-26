@@ -19,42 +19,42 @@ class IdentifyCurrentCompanyMiddlewareTest extends TestCase
     public function it_should_identify_the_current_company_from_the_user_company()
     {
         $user = factory(User::class)->create(['t_company_id' => factory(Company::class)]);
-        $tenancy = $this->app['tenancy'];
+        $companyManager = $this->app['company_manager'];
         Sanctum::actingAs($user);
         $request = Request::create('/test');
 
-        $this->assertFalse($tenancy->isSetCurrentCompany());
+        $this->assertFalse($companyManager->isCompanySet());
 
         app(IdentifyCurrentCompany::class)
             ->handle($request, function ($request) {
             });
 
-        $this->assertTrue($tenancy->isSetCurrentCompany());
-        $this->assertEquals($user->t_company_id, $tenancy->currentCompanyId());
+        $this->assertTrue($companyManager->isCompanySet());
+        $this->assertEquals($user->t_company_id, $companyManager->companyId());
     }
 
     /** @test */
     public function it_should_identify_company_from_request_param()
     {
         $company = factory(Company::class, 5)->create()->get(2);
-        $tenancy = $this->app['tenancy'];
+        $companyManager = $this->app['company_manager'];
         $request = Request::create('/test', 'GET', ['company_id' => $company->id]);
 
-        $this->assertFalse($tenancy->isSetCurrentCompany());
+        $this->assertFalse($companyManager->isCompanySet());
 
         app(IdentifyCurrentCompany::class)
             ->handle($request, function ($request) {
             });
 
-        $this->assertTrue($tenancy->isSetCurrentCompany());
-        $this->assertEquals($company->id, $tenancy->currentCompanyId());
+        $this->assertTrue($companyManager->isCompanySet());
+        $this->assertEquals($company->id, $companyManager->companyId());
     }
 
     /** @test */
     public function it_should_identify_company_from_request_headers()
     {
         $company = factory(Company::class, 5)->create()->get(2);
-        $tenancy = $this->app['tenancy'];
+        $companyManager = $this->app['company_manager'];
         $request = Request::create(
             '/test',
             'GET',
@@ -64,13 +64,13 @@ class IdentifyCurrentCompanyMiddlewareTest extends TestCase
             $this->transformHeadersToServerVars([CurrentCompanyManager::HEADER => $company->id])
         );
 
-        $this->assertFalse($tenancy->isSetCurrentCompany());
+        $this->assertFalse($companyManager->isCompanySet());
 
         app(IdentifyCurrentCompany::class)
             ->handle($request, function ($request) {
             });
 
-        $this->assertTrue($tenancy->isSetCurrentCompany());
-        $this->assertEquals($company->id, $tenancy->currentCompanyId());
+        $this->assertTrue($companyManager->isCompanySet());
+        $this->assertEquals($company->id, $companyManager->companyId());
     }
 }

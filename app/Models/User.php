@@ -10,6 +10,12 @@ use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 
+/**
+ * @property string $name
+ * @property string $email
+ * @property \Carbon\Carbon $deactivated_at
+ * @property array $configuration
+ */
 class User extends Authenticatable
 {
     use LaratrustUserTrait;
@@ -29,6 +35,7 @@ class User extends Authenticatable
         'password',
         't_company_id',
         'deactivated_at',
+        'configuration',
     ];
 
     /**
@@ -49,6 +56,7 @@ class User extends Authenticatable
     protected $casts = [
         'email_verified_at' => 'datetime',
         'deactivated_at' => 'datetime',
+        'configuration' => 'json',
     ];
 
     public function isSuperadmin(): bool

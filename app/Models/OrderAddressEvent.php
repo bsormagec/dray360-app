@@ -19,6 +19,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
  * @property boolean $is_deliver_event
  * @property boolean $is_dismount_event
  * @property boolean $is_drop_event
+ * @property boolean $is_pickup_event
  * @property boolean $call_for_appointment
  * @property string $delivery_window_from_localtime
  * @property string $delivery_window_to_localtime
@@ -46,6 +47,7 @@ class OrderAddressEvent extends Model
         'is_deliver_event',
         'is_dismount_event',
         'is_drop_event',
+        'is_pickup_event',
         'is_hook_event',
         'is_mount_event',
         't_address_id',
@@ -71,6 +73,7 @@ class OrderAddressEvent extends Model
         'is_deliver_event' => 'boolean',
         'is_dismount_event' => 'boolean',
         'is_drop_event' => 'boolean',
+        'is_pickup_event' => 'boolean',
         'call_for_appointment' => 'boolean',
         'delivery_instructions' => 'string',
         'unparsed_event_type' => 'string'
