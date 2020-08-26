@@ -9,7 +9,7 @@ class IdentifyCurrentCompany
 {
     public function handle(Request $request, Closure $next)
     {
-        app('tenancy')->initialize($request);
+        app('company_manager')->initialize($request);
 
         return $next($request);
     }

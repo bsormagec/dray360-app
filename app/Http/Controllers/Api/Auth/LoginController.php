@@ -4,12 +4,16 @@ namespace App\Http\Controllers\Api\Auth;
 
 use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Http\Response;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
 use App\Exceptions\ImpersonationException;
+use Illuminate\Foundation\Auth\AuthenticatesUsers;
 
 class LoginController extends Controller
 {
+    use AuthenticatesUsers;
+
     /**
      * Create new user account
      */
@@ -39,12 +43,18 @@ class LoginController extends Controller
     {
         $credentials = $request->only('email', 'password');
 
-        if (Auth::attempt($credentials)) {
-            // Authentication passed...
-            return response()->json(['message' => 'Login successful'], 200);
-        } else {
+        if (! Auth::attempt($credentials)) {
             return response()->json(['message' => 'Not authorized'], 401);
         }
+
+        $user = auth()->user();
+
+        if (! app('tenancy')->isUsingRightDomain($request, $user)) {
+            Auth::guard('web')->logout();
+            return app('tenancy')->getRedirectErrorResponse($user);
+        }
+
+        return response()->noContent();
     }
 
     /**
@@ -57,7 +67,8 @@ class LoginController extends Controller
         } catch (ImpersonationException $e) {
         }
         Auth::guard('web')->logout();
-        return response()->json(['message' => 'Logged Out'], 200);
+
+        return response()->noContent();
     }
 
     /**
@@ -69,11 +80,14 @@ class LoginController extends Controller
         if (! is_object($user)) {
             return response()->json(['message' => 'Not authorized'], 401);
         } else {
-            $user->setRelation('permissions', $user->allPermissions());
-            $user->is_superadmin = $user->isSuperadmin();
-            $user->is_impersonated = app('impersonate')->isImpersonating();
+            $userData = $user
+                ->setRelation('permissions', $user->allPermissions())
+                ->toArray();
+            $userData['is_superadmin'] = $user->isSuperadmin();
+            $userData['is_impersonated'] = app('impersonate')->isImpersonating();
+            $userData['configuration'] = app('tenancy')->getConfiguration($user);
 
-            return response()->json($user);
+            return response()->json($userData);
         }
     }
 }

@@ -4,25 +4,25 @@ namespace App\Nova;
 
 use Laravel\Nova\Fields\ID;
 use Illuminate\Http\Request;
-use Laravel\Nova\Fields\Code;
 use Laravel\Nova\Fields\Text;
+use Laravel\Nova\Fields\HasMany;
 use Laravel\Nova\Fields\BelongsTo;
 
-class Company extends Resource
+class Domain extends Resource
 {
     /**
      * The model the resource corresponds to.
      *
      * @var string
      */
-    public static $model = \App\Models\Company::class;
+    public static $model = \App\Models\Domain::class;
 
     /**
      * The single value that should be used to represent the resource when being displayed.
      *
      * @var string
      */
-    public static $title = 'name';
+    public static $title = 'hostname';
 
     /**
      * The columns that should be searched.
@@ -30,7 +30,7 @@ class Company extends Resource
      * @var array
      */
     public static $search = [
-        'name', 'email_intake_address', 'email_intake_address_alt',
+        'id', 'hostname'
     ];
 
     /**
@@ -38,7 +38,7 @@ class Company extends Resource
      *
      * @var array
      */
-    public static $with = ['domain'];
+    public static $with = ['tenant'];
 
     /**
      * Get the fields displayed by the resource.
@@ -49,13 +49,13 @@ class Company extends Resource
     public function fields(Request $request)
     {
         return [
-            ID::make('Id', 'id')->sortable(),
-            Text::make('Name'),
-            Text::make('Intake Email', 'email_intake_address'),
-            Text::make('Intake Email Alt', 'email_intake_address_alt'),
-            Code::make('Ref Mapping', 'refs_custom_mapping')->json(),
-            Code::make('Configuration', 'configuration')->json(),
-            BelongsTo::make('Domain', 'domain', Domain::class)->sortable(),
+            ID::make(__('ID'), 'id')->sortable(),
+            Text::make('Description')->sortable(),
+            Text::make('Hostname')
+                ->sortable()
+                ->rules('regex:/^([\w-]+\.)*[\w\-]+\.\w{2,10}$/'),
+            BelongsTo::make('Tenant', 'tenant', Tenant::class)->sortable(),
+            HasMany::make('Companies'),
         ];
     }
 

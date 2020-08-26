@@ -9,6 +9,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
  * @property \App\Models\Address $address
  * @property \Illuminate\Database\Eloquent\Collection $companyAddressTmsCodes
  * @property \Illuminate\Database\Eloquent\Collection $contacts
+ * @property \App\Models\Domain $domain
  * @property integer $t_address_id
  * @property string $name
  */
@@ -34,6 +35,8 @@ class Company extends Model
         'email_intake_address_alt',
         'default_tms_provider_id',
         'refs_custom_mapping',
+        'configuration',
+        't_domain_id',
     ];
 
     /**
@@ -43,7 +46,8 @@ class Company extends Model
         'id' => 'integer',
         't_address_id' => 'integer',
         'name' => 'string',
-        'refs_custom_mapping' => 'json'
+        'refs_custom_mapping' => 'json',
+        'configuration' => 'json',
     ];
 
     /**
@@ -67,6 +71,11 @@ class Company extends Model
     public function contacts()
     {
         return $this->hasMany(\App\Models\Contact::class, 't_company_id');
+    }
+
+    public function domain()
+    {
+        return $this->belongsTo(Domain::class, 't_domain_id');
     }
 
     /**

@@ -1,5 +1,6 @@
 <?php
 
+use App\Models\Tenant;
 use App\Models\Company;
 
 function s3_file_name_from_url(string $url): string
@@ -27,11 +28,21 @@ function s3_bucket_from_url(string $url): string
 function currentCompany(?Company $company = null): ?Company
 {
     if ($company) {
-        app('tenancy')->setCurrentCompany($company);
+        app('company_manager')->setCompany($company);
         return $company;
     }
 
-    return app('tenancy')->getCurrentCompany();
+    return app('company_manager')->getCompany();
+}
+
+function tenant(?Tenant $tenant = null)
+{
+    if ($tenant) {
+        app('tenancy')->setTenant($tenant);
+        return $tenant;
+    }
+
+    return app('tenancy')->getTenant();
 }
 
 function is_superadmin(?string $guard = null)

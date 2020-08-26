@@ -6,6 +6,7 @@ use App\Http\Controllers\Api\OrdersController;
 use App\Http\Controllers\Api\OCRRulesController;
 use App\Http\Controllers\Api\CompaniesController;
 use App\Http\Controllers\Api\SendToTmsController;
+use App\Http\Controllers\CurrentTenantController;
 use App\Http\Controllers\Api\Auth\LoginController;
 use App\Http\Controllers\Api\OCRRequestController;
 use App\Http\Controllers\Api\BulkActionsController;
@@ -38,8 +39,12 @@ Route::post('password/email', [ForgotPasswordController::class, 'sendResetLinkEm
 Route::post('password/reset', [ResetPasswordController::class, 'reset'])
     ->name('password.update');
 
+Route::get('current-tenant', CurrentTenantController::class)
+    ->middleware('tenant-aware')
+    ->name('current-tenant');
+
 // Sanctum Authenticated Routes
-Route::group(['middleware' => ['auth:sanctum', 'impersonate']], function () {
+Route::group(['middleware' => ['auth:sanctum', 'impersonate', 'tenant-aware']], function () {
     Route::post('logout', [LoginController::class, 'logout'])->name('logout');
 
     // Authenticated route to get current user

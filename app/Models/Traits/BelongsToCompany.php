@@ -8,6 +8,10 @@ use App\Models\Company;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
+/**
+ * @property \App\Models\Company $company
+ * @property integer $t_company_id
+ */
 trait BelongsToCompany
 {
     public function scopeForCurrentCompany($query, Company $company = null)
@@ -49,9 +53,13 @@ trait BelongsToCompany
         return $this->getAttribute(Company::FOREIGN_KEY);
     }
 
-    public function setCompany(Company $company)
+    public function setCompany(Company $company, bool $save = false)
     {
         $this->company()->associate($company);
+
+        if ($save) {
+            $this->save();
+        }
 
         return $this;
     }

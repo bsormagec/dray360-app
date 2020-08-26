@@ -25,7 +25,7 @@ class ImpersonationManager
         $this->app['session']->put($this->getImpersonatedSessionKey(), $userToImpersonate->id);
         $this->app['session']->put($this->getImpersonatorSessionKey(), $authGuard->id());
 
-        $this->setCurrentUser($authGuard, $userToImpersonate);
+        $this->setAuthenticatedUser($authGuard, $userToImpersonate);
     }
 
     public function loadForRequest(): void
@@ -37,7 +37,7 @@ class ImpersonationManager
         $toImpersonate = User::find($this->getImpersonatedId());
         $authGuard = $this->app['auth']->guard();
 
-        $this->setCurrentUser($authGuard, $toImpersonate);
+        $this->setAuthenticatedUser($authGuard, $toImpersonate);
     }
 
     public function stop(): void
@@ -52,10 +52,10 @@ class ImpersonationManager
             $this->getImpersonatorSessionKey(),
         ]);
 
-        $this->setCurrentUser($authGuard, $impersonator, true);
+        $this->setAuthenticatedUser($authGuard, $impersonator, true);
     }
 
-    protected function setCurrentUser($authGuard, User $user, bool $loginOnce = true): void
+    protected function setAuthenticatedUser($authGuard, User $user, bool $loginOnce = true): void
     {
         if ($authGuard instanceof RequestGuard) {
             $this->app['auth']->setUser($user);
@@ -65,9 +65,10 @@ class ImpersonationManager
         }
 
         if ($user->hasCompany()) {
-            $this->app['tenancy']->setCurrentCompanyFromId($user->getCompanyId());
+            $this->app['company_manager']->setCompanyFromId($user->getCompanyId());
+            $this->app['tenancy']->loadTenantFromUser($user);
         } else {
-            $this->app['tenancy']->setCurrentCompany(null);
+            $this->app['company_manager']->setCompany(null);
         }
     }
 
