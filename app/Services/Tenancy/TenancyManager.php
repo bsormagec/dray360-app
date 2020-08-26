@@ -8,9 +8,9 @@ use App\Models\Tenant;
 use App\Models\Company;
 use Illuminate\Support\Str;
 use Illuminate\Http\Request;
-use Illuminate\Http\Response;
 use InvalidArgumentException;
 use Illuminate\Support\Collection;
+use Symfony\Component\HttpFoundation\Response;
 use Illuminate\Contracts\Foundation\Application;
 
 class TenancyManager
@@ -43,9 +43,13 @@ class TenancyManager
         return $this->setTenant($tenant);
     }
 
-    public function isUsingRightDomain(Request $request, User $user)
+    public function isUsingRightDomain(Request $request, User $user): bool
     {
         if (is_superadmin()) {
+            return true;
+        }
+
+        if (! $user->hasCompany() || ! ($user->company->domain ?? null)) {
             return true;
         }
 
@@ -55,7 +59,7 @@ class TenancyManager
         return Str::is("$requestHostname*", $userHostname);
     }
 
-    public function getRedirectErrorResponse(User $user)
+    public function getRedirectErrorResponse(User $user): Response
     {
         return response()->json([
             'message' => 'Your company is not registered under this domain',
@@ -105,7 +109,7 @@ class TenancyManager
         $domain = Domain::where(['hostname' => $hostname])->first();
 
         if (! $domain) {
-            $this->setTenantFromId(Tenant::DEFAULT_ID);
+            $this->setTenant(Tenant::getDefaultTenant());
             return $this;
         }
 
@@ -121,17 +125,6 @@ class TenancyManager
         ->finish('/')
         ->before('/')
         ->before(':');
-    }
-
-    public function setTenantFromId(?int $id)
-    {
-        $tenant = Tenant::find($id);
-
-        if (! $tenant) {
-            return;
-        }
-
-        $this->setTenant($tenant);
     }
 
     public function setTenant(?Tenant $tenant): self

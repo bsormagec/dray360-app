@@ -61,6 +61,26 @@ class TenancyManagerTest extends TestCase
     }
 
     /** @test */
+    public function it_should_allow_the_user_to_user_any_domain_if_it_doesnt_have_domain_assigned_and_load_default_tenant()
+    {
+        $this->seed(UsersSeeder::class);
+        $user = User::whereRoleIs('customer-user')->first();
+        $user->setCompany(factory(Company::class)->create(['t_domain_id' => null]), true);
+        $tenancy = app('tenancy');
+
+        $request = Request::create(
+            '/test',
+            'GET',
+            [],
+            [],
+            [],
+            $this->transformHeadersToServerVars(['Referer' => 'https://another.domain.com/somepage'])
+        );
+
+        $this->assertTrue($tenancy->isUsingRightDomain($request, $user));
+    }
+
+    /** @test */
     public function it_should_merge_the_configuration_from_the_base_tenant_with_the_rest_of_the_current_tenant_company_and_user_configuration()
     {
         $this->seedTestUsers();

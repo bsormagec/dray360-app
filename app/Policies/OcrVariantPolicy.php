@@ -12,9 +12,6 @@ class OcrVariantPolicy
 
     /**
      * Determine whether the user can view any models.
-     *
-     * @param  \App\Models\User  $user
-     * @return mixed
      */
     public function viewAny(User $user)
     {
@@ -22,10 +19,15 @@ class OcrVariantPolicy
     }
 
     /**
+     * Determine whether the user can view the model.
+     */
+    public function view(User $user, OCRVariant $oCRVariant): bool
+    {
+        return $user->isAbleTo('ocr-variants-view');
+    }
+
+    /**
      * Determine whether the user can create models.
-     *
-     * @param  \App\Models\User  $user
-     * @return mixed
      */
     public function create(User $user)
     {
@@ -34,10 +36,6 @@ class OcrVariantPolicy
 
     /**
      * Determine whether the user can update the model.
-     *
-     * @param  \App\Models\User  $user
-     * @param  \App\Models\OCRVariant  $oCRVariant
-     * @return mixed
      */
     public function update(User $user, OCRVariant $oCRVariant)
     {
@@ -46,10 +44,6 @@ class OcrVariantPolicy
 
     /**
      * Determine whether the user can delete the model.
-     *
-     * @param  \App\Models\User  $user
-     * @param  \App\Models\OCRVariant  $oCRVariant
-     * @return mixed
      */
     public function delete(User $user, OCRVariant $oCRVariant)
     {
