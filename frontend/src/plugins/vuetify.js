@@ -13,6 +13,9 @@ export default new Vuetify({
         primary: '#326295',
         secondary: '#5F7F00'
       }
+    },
+    options: {
+      customProperties: true
     }
   }
 })

@@ -48,12 +48,12 @@ export default {
   right: 0;
   display: flex;
   background: map-get($colors , white);
-  border-top: 0.1rem solid map-get($colors, blue);
-  border-left: 0.1rem solid map-get($colors, blue);
+  border-top: 0.1rem solid var(--v-primary-base);
+  border-left: 0.1rem solid var(--v-primary-base);
   border-top-left-radius: 0.2rem;
 
   &:not(:last-child) {
-    border-right: 0.1rem solid map-get($colors, blue);
+    border-right: 0.1rem solid var(--v-primary-base);
   }
 }
 
@@ -71,11 +71,11 @@ i {
 }
 
 .btns__close i {
-  color: map-get($colors , blue);
+  color: var(--v-primary-base);
 }
 
 .btns__accept {
-  background: map-get($colors , blue);
+  background: var(--v-primary-base);
 
   i {
     color: map-get($colors , white)

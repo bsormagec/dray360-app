@@ -141,7 +141,7 @@ $border-bottom: 0.1rem solid map-get($colors , grey-11);
   font-size: 1.44rem !important;
   text-decoration: underline;
   text-transform: capitalize;
-  color: map-get($colors , blue);
+  color: var(--v-primary-base);
   margin-bottom: 1rem;
 }
 
@@ -190,7 +190,7 @@ $border-bottom: 0.1rem solid map-get($colors , grey-11);
 
   span {
     &:last-child {
-      color: map-get($colors , blue);
+      color: var(--v-primary-base);
     }
   }
 }

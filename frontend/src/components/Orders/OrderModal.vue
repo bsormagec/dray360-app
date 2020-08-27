@@ -233,9 +233,9 @@ export default {
         padding: 1.5rem;
         .primary_modal{
             background-color: map-get($colors, white ) !important;
-            border: 0.2rem solid map-get($colors, blue );
+            border: 0.2rem solid var(--v-primary-base);
             border-radius: 0.3rem;
-            color:map-get($colors, blue );
+            color: var(--v-primary-base);
             text-transform: capitalize;
         }
     }

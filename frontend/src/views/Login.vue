@@ -3,8 +3,15 @@
     <div class="wrapper">
       <div class="login-box">
         <img
+          v-if="!tenantConfig().logo1"
           class="logo"
           src="../assets/images/dry360_logo.svg"
+          alt=""
+        >
+        <img
+          v-else
+          class="logo"
+          :src="tenantConfig().logo1"
           alt=""
         >
         <input
@@ -26,7 +33,7 @@
           v-if="error"
           class="text__error"
         >
-          Wrong username or password
+          {{ errorMessage }}
         </p>
         <div class="button_checkbox">
           <v-checkbox
@@ -58,7 +65,8 @@
 </template>
 <script>
 // import axios from '@/store/api_calls/axios_config'
-import { mapState } from '@/utils/vuex_mappings'
+import utils, { type } from '@/store/modules/utils'
+import { mapActions, mapState } from '@/utils/vuex_mappings'
 import auth from '@/store/modules/auth'
 import { reqStatus } from '@/enums/req_status'
 
@@ -70,8 +78,12 @@ export default {
       ...mapState(auth.moduleName, {
         loggedIn: state => state.loggedIn
       }),
+      ...mapState(utils.moduleName, {
+        tenantConfig: state => state.tenantConfig
+      }),
       disabled: false,
       error: false,
+      errorMessage: '',
       email: '',
       password: '',
       loginError: false,
@@ -80,30 +92,33 @@ export default {
     }
   },
 
+  async created () {
+    await this[type.getTenantConfig]()
+  },
   mounted () {
     if (this.loggedIn()) this.$router.push('/dashboard/')
   },
 
   methods: {
+    ...mapActions(utils.moduleName, [type.getTenantConfig]),
     async login () {
-      if (this.email !== '' && this.password !== '') {
-        this.loginError = false
-        try {
-          const status = await this.$store.dispatch('AUTH/login', { email: this.email, password: this.password })
-          if (status === reqStatus.success) {
-            this.error = false
-            if (this.$store.state.AUTH.intendedUrl === undefined) {
-              this.$router.push('/dashboard/')
-            } else {
-              this.$router.push(this.$store.state.AUTH.intendedUrl)
-            }
+      this.loginError = false
+      try {
+        const response = await this.$store.dispatch('AUTH/login', { email: this.email, password: this.password })
+        if (response.status === reqStatus.success) {
+          this.error = false
+          if (this.$store.state.AUTH.intendedUrl === undefined) {
+            this.$router.push('/dashboard/')
           } else {
-            this.error = true
-            console.log('error')
+            this.$router.push(this.$store.state.AUTH.intendedUrl)
           }
-        } catch (exception) {
-          this.loginError = true
+        } else {
+          this.errorMessage = response.message
+          this.error = true
+          console.log('error')
         }
+      } catch (exception) {
+        this.loginError = true
       }
     }
   }
@@ -133,7 +148,7 @@ export default {
       align-items: center;
       justify-content: center;
       flex-direction: column;
-      border-top: 0.8rem solid map-get($colors, blue ) !important;
+      border-top: 0.8rem solid var(--v-primary-base) !important;
       border-left: 0.1rem solid map-get($colors, gray );
       border: 0.1rem solid map-get($colors, gray );
       box-shadow: 0rem 0.1rem 0.3rem rgba(0, 0, 0, 0.1);
@@ -161,7 +176,7 @@ export default {
         width: 100%;
         .btn-login{
           padding: 0.5rem 4rem;
-          background-color: map-get($colors, blue);
+          background-color: var(--v-primary-base);
           color: map-get($colors, white);
           border-radius: 0.3rem;
         }

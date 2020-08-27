@@ -81,7 +81,7 @@ export default {
   align-items: center;
   font-size: 1.44rem !important;
   font-weight: bold;
-  color: map-get($colors, blue);
+  color: var(--v-primary-base);
   outline: unset;
 
   i {
@@ -143,7 +143,7 @@ export default {
 
 .link {
   font-weight: normal;
-  color:  map-get($colors , blue);
+  color: var(--v-primary-base);
   text-decoration: underline;
 }
 </style>

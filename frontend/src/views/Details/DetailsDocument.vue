@@ -150,8 +150,8 @@ export default {
   transition: all 200ms ease-in-out;
 
   &.hover, &.edit {
-    border-color: map-get($colors , blue);
-    background: rgba(map-get($colors, blue), 0.3);
+    border-color: var(--v-primary-base);
+    background: rgba(var(--v-primary-base-rgb), 0.3);
   }
 }
 </style>

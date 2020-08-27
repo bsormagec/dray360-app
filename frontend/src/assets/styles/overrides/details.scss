@@ -20,7 +20,7 @@
         }
         span {
           transform: scale(0.7);
-        }    
+        }
       }
       span.primary {
         background: rgba(0, 0, 0, 0.38) !important;
@@ -28,8 +28,8 @@
       }
       &.active {
         span {
-          background: map-get($colors, blue) !important;
-          border-color: map-get($colors, blue) !important;
+          background: var(--v-primary-base) !important;
+          border-color: var(--v-primary-base) !important;
         }
         div {
           text-shadow: 0px 0px 0px black !important;
