@@ -38,7 +38,7 @@ class IdentifyCurrentCompanyMiddlewareTest extends TestCase
     {
         $company = factory(Company::class, 5)->create()->get(2);
         $companyManager = $this->app['company_manager'];
-        $request = Request::create('/test', 'GET', ['company_id' => $company->id]);
+        $request = Request::create('/test', 'GET', ['company_id' => "{$company->id}"]);
 
         $this->assertFalse($companyManager->isCompanySet());
 
@@ -48,6 +48,28 @@ class IdentifyCurrentCompanyMiddlewareTest extends TestCase
 
         $this->assertTrue($companyManager->isCompanySet());
         $this->assertEquals($company->id, $companyManager->companyId());
+    }
+
+    /** @test */
+    public function it_should_not_fail_if_the_request_param_is_empty_null_or_undefined()
+    {
+        $company = factory(Company::class, 5)->create()->get(2);
+        $companyManager = $this->app['company_manager'];
+        $request = Request::create('/test', 'GET', ['company_id' => null]);
+
+        app(IdentifyCurrentCompany::class)
+            ->handle($request, function ($request) {
+            });
+
+        $this->assertFalse($companyManager->isCompanySet());
+
+
+        $request = Request::create('/test', 'GET', ['company_id' => 'undefined']);
+        app(IdentifyCurrentCompany::class)
+            ->handle($request, function ($request) {
+            });
+
+        $this->assertFalse($companyManager->isCompanySet());
     }
 
     /** @test */
