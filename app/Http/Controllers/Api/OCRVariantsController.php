@@ -14,7 +14,7 @@ class OCRVariantsController extends Controller
     {
         $this->authorize('viewAny', OCRVariant::class);
 
-        return JsonResource::collection(OCRVariant::paginate(25));
+        return JsonResource::collection(OCRVariant::paginate(2500));
     }
 
     /**
