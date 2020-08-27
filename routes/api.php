@@ -1,6 +1,7 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\Api\RolesController;
 use App\Http\Controllers\Api\UsersController;
 use App\Http\Controllers\Api\OrdersController;
 use App\Http\Controllers\Api\OCRRulesController;
@@ -50,6 +51,9 @@ Route::group(['middleware' => ['auth:sanctum', 'impersonate', 'tenant-aware']], 
     // Authenticated route to get current user
     Route::get('user', [LoginController::class, 'user'])
         ->name('user'); // shows up in `php artisan route:list` command output
+
+    Route::get('roles', RolesController::class)
+        ->name('roles.index');
 
     // Users management
     Route::put('users/{user}/status', UsersStatusController::class)

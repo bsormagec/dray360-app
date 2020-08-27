@@ -53,8 +53,12 @@ trait BelongsToCompany
         return $this->getAttribute(Company::FOREIGN_KEY);
     }
 
-    public function setCompany(Company $company, bool $save = false)
+    public function setCompany(?Company $company, bool $save = false)
     {
+        if (! $company) {
+            return $this;
+        }
+
         $this->company()->associate($company);
 
         if ($save) {

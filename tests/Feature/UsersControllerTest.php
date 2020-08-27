@@ -3,6 +3,7 @@
 namespace Tests\Feature;
 
 use Tests\TestCase;
+use App\Models\Role;
 use App\Models\User;
 use App\Models\Company;
 use Illuminate\Http\Response;
@@ -95,12 +96,15 @@ class UsersControllerTest extends TestCase
     /** @test */
     public function it_should_allow_to_create_a_new_user()
     {
+        $role = Role::first();
         $user = [
             'name' => $this->faker->name,
             'email' => $this->faker->email,
             'password' => 'testtest',
+            'role_id' => $role->id,
         ];
 
+        $this->withoutExceptionHandling();
         $this->postJson(route('users.store'), $user)
             ->assertStatus(Response::HTTP_CREATED)
             ->assertJsonStructure(['id'])
@@ -109,10 +113,11 @@ class UsersControllerTest extends TestCase
         $user = User::where('email', $user['email'])->first();
         $this->assertEquals($this->customerAdmin->getCompanyId(), $user->getCompanyId());
         $this->assertTrue(Hash::check('testtest', $user->password));
+        $this->assertTrue($user->hasRole($role->name));
     }
 
     /** @test */
-    public function it_should_fail_if_not_authorized_to_create_variants()
+    public function it_should_fail_if_not_authorized_to_create_users()
     {
         $this->loginNoAdmin();
         $user = [
@@ -128,11 +133,13 @@ class UsersControllerTest extends TestCase
     /** @test */
     public function it_should_allow_to_update_a_user()
     {
+        $role = Role::latest()->first();
         $user = factory(User::class)->create();
         $user->setCompany($this->customerAdmin->company)->save();
         $newData = [
             'name' => $this->faker->name,
             'email' => $this->faker->email,
+            'role_id' => $role->id,
         ];
 
         $this->putJson(route('users.update', $user->id), $newData)
@@ -143,10 +150,11 @@ class UsersControllerTest extends TestCase
         $user->refresh();
         $this->assertEquals($this->customerAdmin->getCompanyId(), $user->getCompanyId());
         $this->assertTrue(Hash::check('password', $user->password));
+        $this->assertTrue($user->hasRole($role->name));
     }
 
     /** @test */
-    public function it_should_fail_if_not_authorized_to_update_variants()
+    public function it_should_fail_if_not_authorized_to_update_users()
     {
         $this->loginNoAdmin();
         $user = factory(User::class)->create();
