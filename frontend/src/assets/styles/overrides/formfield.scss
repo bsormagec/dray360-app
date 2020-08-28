@@ -1,15 +1,15 @@
 .form-field {
-  .form-field-element-input {  
+  .form-field-element-input {
     fieldset {
       legend {
         font-size: 1.2rem !important;
       }
-  
+
       transition: border-color 200ms ease-in-out !important;
       border: 0.1rem solid map-get($colors , grey-10) !important;
     }
     .v-input--is-focused fieldset {
-      border-color: map-get($colors, blue) !important;
+      border-color: var(--v-primary-base) !important;
     }
     .v-input__slot, .v-input__control {
       border-top-left-radius: 0.2rem !important;
@@ -26,7 +26,7 @@
     input {
       font-size: 1.4rem !important;
       &::placeholder {
-      
+
         text-transform: capitalize;
       }
     }
@@ -40,12 +40,12 @@
       legend {
         font-size: 1.2rem !important;
       }
-  
+
       transition: border-color 200ms ease-in-out !important;
       border: 0.1rem solid map-get($colors , grey-10) !important;
     }
     .v-input--is-focused fieldset {
-      border-color: map-get($colors, blue) !important;
+      border-color: var(--v-primary-base) !important;
     }
     .v-input__slot, .v-input__control {
       border-top-left-radius: 0.2rem !important;
@@ -63,12 +63,12 @@
     textarea {
       font-size: 1.4rem !important;
       &::placeholder {
-      
+
         text-transform: capitalize;
       }
     }
   }
-  
+
   .form-field-element-select {
     div[role="button"] {
       border-top-left-radius: 0.2rem !important;
@@ -77,13 +77,13 @@
       border-bottom-right-radius: 0.2rem !important;
     }
     .v-input--is-focused fieldset {
-      border-color: map-get($colors, blue) !important;
+      border-color: var(--v-primary-base) !important;
     }
     fieldset {
       legend {
         font-size: 1.2rem !important;
       }
-  
+
       transition: border-color 200ms ease-in-out !important;
       border: 0.1rem solid map-get($colors , grey-10) !important;
     }
@@ -107,8 +107,8 @@
       font-size: 1.4rem !important;
     }
   }
-  
-  .form-field-element-switch {    
+
+  .form-field-element-switch {
     .v-input--switch .v-label {
       color: map-get($colors , black-2) !important;
       font-size: 1.4rem !important;
@@ -121,7 +121,7 @@
       color: map-get($colors , grey-9);
     }
 
-    .v-label {      
+    .v-label {
       text-transform: capitalize;
     }
 
@@ -161,10 +161,10 @@
 
     .form-field-element-select {
       i {
-        color: map-get($colors , blue) !important;
+        color: var(--v-primary-base) !important;
       }
       fieldset {
-        border-color: map-get($colors , blue) !important;
+        border-color: var(--v-primary-base) !important;
       }
       legend {
         width: unset !important;

@@ -49,7 +49,7 @@ export default {
     transition: border-color 200ms ease-in-out;
 
     &:focus {
-      border-color: map-get($colors , blue);
+      border-color: var(--v-primary-base);
     }
   }
 

@@ -100,13 +100,13 @@ const actions = {
     // return reqStatus.succcess
   },
   async [types.addRule] ({ commit }, ruleData) {
-    await postAddRule(ruleData)
+    const [error, data] = await postAddRule(ruleData)
 
-    // if (error) return reqStatus.error
+    if (error) return reqStatus.error
 
     console.log('ruleData to commit:', ruleData)
 
-    commit(types.addRule, { ruleData })
+    commit(types.addRule, { ruleData: data })
     return reqStatus.succcess
   },
   async [types.getTestingOutput] ({ commit }, dataObject) {

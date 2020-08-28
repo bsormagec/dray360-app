@@ -48,15 +48,19 @@ class UsersController extends Controller
 
         $data = $request->validate([
             'name' => 'required|string|min:3',
-            'email' => 'required|email',
+            'email' => 'required|email|unique:users,email',
             'password' => 'required|min:8',
+            'role_id' => 'required|exists:roles,id',
         ]);
+        $roleId = $data['role_id'];
         $password = bcrypt($data['password']);
         unset($data['password']);
+        unset($data['role_id']);
 
         $user = (new User($data))->setCompany(currentCompany());
         $user->password = $password;
         $user->save();
+        $user->attachRole($roleId);
 
         return response()->json($user, Response::HTTP_CREATED);
     }
@@ -90,9 +94,13 @@ class UsersController extends Controller
         $data = $request->validate([
             'name' => 'required|string|min:3',
             'email' => ['required', 'email', Rule::unique('users')->ignoreModel($user)],
+            'role_id' => 'required|exists:roles,id',
         ]);
+        $roleId = $data['role_id'];
+        unset($data['role_id']);
 
         $user->update($data);
+        $user->attachRole($roleId);
 
         return response()->json($user);
     }

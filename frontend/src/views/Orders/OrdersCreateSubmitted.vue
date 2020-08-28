@@ -60,7 +60,7 @@ export default {
     margin-right: 1.9rem;
     font-size: 1.4rem !important;
     font-weight: bold;
-    color: map-get($colors, blue);
+    color: var(--v-primary-base);
     text-decoration-line: underline;
     white-space: nowrap;
     overflow: hidden;

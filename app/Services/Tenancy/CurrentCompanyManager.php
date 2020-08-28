@@ -37,7 +37,8 @@ class CurrentCompanyManager
 
     protected function getCompanyFromRequestParams(Request $request): self
     {
-        if (! $request->has(self::REQUEST_PARAMETER)) {
+        $companyId = $request->get(self::REQUEST_PARAMETER);
+        if (! $companyId || ! is_numeric($companyId)) {
             return $this;
         }
 
