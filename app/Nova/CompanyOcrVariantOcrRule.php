@@ -5,30 +5,36 @@ namespace App\Nova;
 use Laravel\Nova\Fields\ID;
 use Illuminate\Http\Request;
 use Laravel\Nova\Fields\Text;
+use Laravel\Nova\Fields\BelongsTo;
+use App\Models\Company as CompanyModel;
+use App\Models\OCRRule as OCRRuleModel;
+use App\Models\OCRVariant as OCRVariantModel;
+use App\Nova\Filters\BelongsTo as BelongsToFilter;
 
-class OcrVariant extends Resource
+class CompanyOcrVariantOcrRule extends Resource
 {
     /**
      * The model the resource corresponds to.
-     *
-     * @var string
      */
-    public static $model = \App\Models\OCRVariant::class;
+    public static $model = \App\Models\CompanyOCRVariantOCRRule::class;
 
     /**
      * The single value that should be used to represent the resource when being displayed.
-     *
-     * @var string
      */
-    public static $title = 'description';
+    public static $title = 'id';
 
     /**
      * The columns that should be searched.
-     *
-     * @var array
      */
-    public static $search = [
-        'abbyy_variant_id', 'abbyy_variant_name', 'description', 'id',
+    public static $search = [];
+
+    /**
+     * The relationships that should be eager loaded on index queries.
+     */
+    public static $with = [
+        'company',
+        'ocrRule',
+        'ocrVariant',
     ];
 
     /**
@@ -41,9 +47,10 @@ class OcrVariant extends Resource
     {
         return [
             ID::make(__('ID'), 'id')->sortable(),
-            Text::make('Abby variant id', 'abbyy_variant_id')->sortable(),
-            Text::make('Abby variant name', 'abbyy_variant_name')->sortable(),
-            Text::make('Description', 'description')->sortable(),
+            BelongsTo::make('Company', 'company', Company::class)->sortable(),
+            BelongsTo::make('Variant', 'ocrVariant', OcrVariant::class)->sortable()->searchable(),
+            BelongsTo::make('Rule', 'ocrRule', OcrRule::class)->sortable()->searchable(),
+            Text::make('Sequence', 'rule_sequence')->sortable(),
         ];
     }
 
@@ -66,7 +73,11 @@ class OcrVariant extends Resource
      */
     public function filters(Request $request)
     {
-        return [];
+        return [
+            new BelongsToFilter('Company', 'company', CompanyModel::class, 'name'),
+            new BelongsToFilter('Variant', 'ocrVariant', OCRVariantModel::class, 'abbyy_variant_name'),
+            new BelongsToFilter('Rule', 'ocrRule', OCRRuleModel::class, 'name'),
+        ];
     }
 
     /**
