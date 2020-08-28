@@ -53,10 +53,10 @@ export default {
   font-size: 1rem;
   position: relative;
   text-indent: -9999rem;
-  border-top: 0.5rem solid rgba(map-get($colors , blue), 0.2);
-  border-right: 0.5rem solid rgba(map-get($colors , blue), 0.2);
-  border-bottom: 0.5rem solid rgba(map-get($colors , blue), 0.2);
-  border-left: 0.5rem solid map-get($colors , blue);
+  border-top: 0.5rem solid rgba(var(--v-primary-base-rgb), 0.2);
+  border-right: 0.5rem solid rgba(var(--v-primary-base-rgb), 0.2);
+  border-bottom: 0.5rem solid rgba(var(--v-primary-base-rgb), 0.2);
+  border-left: 0.5rem solid var(--v-primary-base);
   -webkit-transform: translateZ(0);
   -ms-transform: translateZ(0);
   transform: translateZ(0);

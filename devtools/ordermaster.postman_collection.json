@@ -2017,6 +2017,60 @@
 			"response": []
 		},
 		{
+			"name": "/api/roles",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "cad59cfd-5cc8-4083-91e7-9b4674c12d61",
+						"exec": [
+							"var token1=postman.getResponseCookie('XSRF-TOKEN').value;",
+							"var token2=token1.replace(/%3D/g, '=');",
+							"postman.setEnvironmentVariable('X-XSRF-TOKEN', token2);",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Content-Type",
+						"type": "text",
+						"value": "application/x-www-form-urlencoded"
+					},
+					{
+						"key": "Referer",
+						"type": "text",
+						"value": "{{server}}"
+					},
+					{
+						"key": "Accept",
+						"type": "text",
+						"value": "application/json, text/plain, */*"
+					},
+					{
+						"key": "X-XSRF-TOKEN",
+						"type": "text",
+						"value": "{{X-XSRF-TOKEN}}"
+					}
+				],
+				"url": {
+					"raw": "{{server}}/api/roles",
+					"host": [
+						"{{server}}"
+					],
+					"path": [
+						"api",
+						"roles"
+					]
+				}
+			},
+			"response": []
+		},
+		{
 			"name": "/api/users/:id",
 			"event": [
 				{
@@ -2118,7 +2172,7 @@
 				],
 				"body": {
 					"mode": "raw",
-					"raw": "{\n    \"name\": null,\n    \"email\": null,\n    \"password\": null\n}",
+					"raw": "{\n    \"name\": null,\n    \"email\": null,\n    \"password\": null,\n    \"role_id\": null\n}",
 					"options": {
 						"raw": {
 							"language": "json"
@@ -2179,7 +2233,7 @@
 				],
 				"body": {
 					"mode": "raw",
-					"raw": "{\n    \"name\": null,\n    \"email\": null\n}",
+					"raw": "{\n    \"name\": null,\n    \"email\": null,\n    \"role_id\": null\n}",
 					"options": {
 						"raw": {
 							"language": "json"

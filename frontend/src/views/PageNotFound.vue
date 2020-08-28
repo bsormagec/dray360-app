@@ -44,8 +44,17 @@
   </div>
 </template>
 <script>
-export default {
+import utils, { type } from '@/store/modules/utils'
+import { mapActions } from '@/utils/vuex_mappings'
 
+export default {
+  name: 'NotFound',
+  async created () {
+    await this[type.getTenantConfig]()
+  },
+  methods: {
+    ...mapActions(utils.moduleName, [type.getTenantConfig])
+  }
 }
 </script>
 <style lang="scss" scoped>
@@ -84,16 +93,16 @@ $background_login: url("../assets/images/login_background.png");
         }
         .contact__us{
           margin-top: 1rem;
-          color: map-get($colors, blue );
+          color: var(--v-primary-base);
         }
       }
         h1{
           font-family: 'Oswald', sans-serif;
           font-size: 14.4rem;
-          color: map-get($colors, blue ) !important;
+          color: var(--v-primary-base) !important;
           span{
             font-size: 6.2rem !important;
-            color: map-get($colors, blue ) !important;
+            color: var(--v-primary-base) !important;
             line-height: 6.5rem;
           }
         }

@@ -107,8 +107,8 @@ i {
   display: block;
   width: 100%;
   height: 100%;
-  color: map-get($colors , blue);
-  border: 0.1rem solid map-get($colors , blue);
+  color: var(--v-primary-base);
+  border: 0.1rem solid var(--v-primary-base);
   border-radius: 0.2rem;
   padding: 0.2rem 2.4rem 0.3rem 0.8rem;
   font-size: 1.3rem;

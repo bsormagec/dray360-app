@@ -1,6 +1,7 @@
 import { getCsrfCookie, postLogin, getUser, postLogout, postLeaveImpersonation } from '@/store/api_calls/auth'
 import { reqStatus } from '@/enums/req_status'
 import get from 'lodash/get'
+import { type as utilsTypes } from './utils'
 
 const initialState = {
   loggedIn: false,
@@ -22,11 +23,13 @@ const actions = {
     await getCsrfCookie()
     const [error] = await postLogin(authData)
 
-    if (error) return reqStatus.error
+    if (error) {
+      return { ...(error.response.data), status: reqStatus.error }
+    }
     commit('auth_success')
-    return reqStatus.success
+    return { status: reqStatus.success }
   },
-  async getCurrentUser ({ commit, state }, force = false) {
+  async getCurrentUser ({ commit, state, dispatch }, force = false) {
     const shouldntProceed = state.currentUser && !force
     if (shouldntProceed) return
 
@@ -35,6 +38,7 @@ const actions = {
 
     if (!error) {
       commit('currentUser', { user })
+      await dispatch(`UTILS/${utilsTypes.setTenantConfig}`, { ...(user.configuration) }, { root: true })
       commit('auth_success')
     }
     commit('currentUserLoading', false)

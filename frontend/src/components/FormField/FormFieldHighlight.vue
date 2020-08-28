@@ -100,11 +100,11 @@ export default {
   transition: all 200ms ease-in-out;
 
   &.hover, &.edit {
-    border-color: map-get($colors, blue);
+    border-color: var(--v-primary-base);
   }
 
   &.hover {
-    background: rgba(map-get($colors , blue), 0.15);
+    background: rgba(var(--v-primary-base-rgb), 0.15);
     padding-left: 1rem;
     padding-right: 3rem;
   }

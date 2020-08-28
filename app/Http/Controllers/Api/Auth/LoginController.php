@@ -44,7 +44,7 @@ class LoginController extends Controller
         $credentials = $request->only('email', 'password');
 
         if (! Auth::attempt($credentials)) {
-            return response()->json(['message' => 'Not authorized'], 401);
+            return response()->json(['message' => trans('auth.failed')], 401);
         }
 
         $user = auth()->user();
