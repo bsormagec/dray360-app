@@ -5,6 +5,7 @@ import address from '@/store/modules/address'
 import auth from '@/store/modules/auth'
 import companies from '@/store/modules/companies'
 import rulesEditor from '@/store/modules/rules_editor'
+import userDashboard from '@/store/modules/users'
 import utils from '@/store/modules/utils'
 
 Vue.use(Vuex)
@@ -15,6 +16,7 @@ export default new Vuex.Store({
     [address.moduleName]: address,
     [auth.moduleName]: auth,
     [rulesEditor.moduleName]: rulesEditor,
+    [userDashboard.moduleName]: userDashboard,
     [companies.moduleName]: companies,
     [utils.moduleName]: utils
   }

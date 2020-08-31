@@ -103,6 +103,8 @@ export default {
       } else {
         console.log('error')
       }
+
+      this.$router.push('/user/dashboard')
     }
 
     // async fetchRoles () {

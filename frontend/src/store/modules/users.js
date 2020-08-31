@@ -64,7 +64,7 @@ const actions = {
 
     if (error) return reqStatus.error
 
-    commit(types.addUser, { userData: data.data })
+    commit(types.addUser, { user })
     return reqStatus.success
   },
 

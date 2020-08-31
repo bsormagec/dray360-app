@@ -4,7 +4,7 @@
       :key="items.id"
       v-model="selected"
       :headers="showHeaders"
-      :items="items"
+      :items="customItems"
       :search="search"
       show-select
       hide-default-footer
@@ -69,7 +69,7 @@
           <v-btn
             v-if="hasAddButton.showButton"
             class="user_btn add__user_btn"
-            @click="hasAddButton.action"
+            @click="addUser()"
           >
             Add User
           </v-btn>
@@ -213,6 +213,10 @@ export default {
     },
     handleCalendar (e) {
       if (e.length === 2) { this.$emit('dateToParent', e) }
+    },
+
+    addUser () {
+      this.$router.push('/user/dashboard/add-user')
     }
 
   }
