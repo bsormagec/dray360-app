@@ -9,16 +9,17 @@
         table-title="User list"
         :customheaders="headers"
         :active-page="1"
-        :custom-items="items"
+        :custom-items="users()"
         :has-search="true"
         :has-column-filters="true"
         :has-bulk-actions="true"
         :bulk-actions="['Delete selected', 'Deactivate accounts']"
         :has-action-button="{showButton: false, action: '/'}"
         injections="Orders"
-        :has-add-button="{showButton: false, action: '/'}"
+        :has-add-button="{showButton: true, action: '/'}"
         :has-calendar="false"
         @searchToParent="onChildSearchUpdate"
+        @deleteItem="deleteUser"
       />
     </div>
   </div>
@@ -27,160 +28,75 @@
 <script>
 import SidebarNavigation from '@/components/General/SidebarNavigation'
 import GeneralTable from '@/components/General/GeneralTable'
+import { mapState, mapActions } from '@/utils/vuex_mappings'
+import { reqStatus } from '@/enums/req_status'
+import userDashboard, { types } from '@/store/modules/users'
 export default {
   components: {
     SidebarNavigation,
     GeneralTable
   },
-  data () {
-    return {
-      searchQuery: '',
-      headers: [
-        {
-          text: 'First',
-          align: 'start',
-          sortable: false,
-          value: 'first'
-        },
-        { text: 'Last', value: 'last' },
-        { text: 'Email', value: 'email' },
-        { text: 'Position', value: 'position' },
-        { text: 'Org', value: 'org' },
-        { text: 'Permission', value: 'permissions' },
-        { text: 'Status', value: 'status' },
-        { text: 'Password', value: 'password' },
-        { text: 'Actions', value: 'actions', sortable: false }
-      ],
-      items: [
-        {
-          id: 0,
-          first: 'John',
-          last: 'Doe',
-          email: 'jdoe@email.com',
-          position: 'Distpatcher',
-          org: 'Operations',
-          permissions: 'Editor',
-          status: 'Active',
-          password: 'Reset'
-        },
-        {
-          id: 1,
-          first: 'Bill',
-          last: 'Brasky',
-          email: 'bbrasky@email.com',
-          position: 'Distpatcher',
-          org: 'Operations',
-          permissions: 'Editor',
-          status: 'Active',
-          password: 'Reset'
-        },
-        {
-          id: 2,
-          first: 'Bill',
-          last: 'Brasky',
-          email: 'bbrasky@email.com',
-          position: 'Distpatcher',
-          org: 'Operations',
-          permissions: 'Editor',
-          status: 'Active',
-          password: 'Reset'
-        },
-        {
-          id: 3,
-          first: 'Bill',
-          last: 'Brasky',
-          email: 'bbrasky@email.com',
-          position: 'Distpatcher',
-          org: 'Operations',
-          permissions: 'Editor',
-          status: 'Active',
-          password: 'Reset'
-        },
-        {
-          id: 4,
-          first: 'Bill',
-          last: 'Brasky',
-          email: 'bbrasky@email.com',
-          position: 'Distpatcher',
-          org: 'Operations',
-          permissions: 'Editor',
-          status: 'Active',
-          password: 'Reset'
-        },
-        {
-          id: 5,
-          first: 'Bill',
-          last: 'Brasky',
-          email: 'bbrasky@email.com',
-          position: 'Distpatcher',
-          org: 'Operations',
-          permissions: 'Editor',
-          status: 'Active',
-          password: 'Reset'
-        },
-        {
-          id: 6,
-          first: 'Bill',
-          last: 'Brasky',
-          email: 'bbrasky@email.com',
-          position: 'Distpatcher',
-          org: 'Operations',
-          permissions: 'Editor',
-          status: 'Active',
-          password: 'Reset'
-        },
-        {
-          id: 7,
-          first: 'Bill',
-          last: 'Brasky',
-          email: 'bbrasky@email.com',
-          position: 'Distpatcher',
-          org: 'Operations',
-          permissions: 'Editor',
-          status: 'Active',
-          password: 'Reset'
-        },
-        {
-          id: 8,
-          first: 'Bill',
-          last: 'Brasky',
-          email: 'bbrasky@email.com',
-          position: 'Distpatcher',
-          org: 'Operations',
-          permissions: 'Editor',
-          status: 'Active',
-          password: 'Reset'
-        },
-        {
-          id: 9,
-          first: 'Bill',
-          last: 'Brasky',
-          email: 'bbrasky@email.com',
-          position: 'Distpatcher',
-          org: 'Operations',
-          permissions: 'Editor',
-          status: 'Active',
-          password: 'Reset'
-        }
-      ],
-      menuitems: [
-        {
-          text: 'Dashboard',
-          path: '/user/Dashboard'
-        },
-        {
-          text: 'Manage Users'
-        },
-        {
-          text: 'My Profile'
-        },
-        {
-          text: 'Logout'
-        }
-      ]
-    }
+  data: () => ({
+    ...mapState(userDashboard.moduleName, {
+      users: state => state.users
+    }),
+
+    searchQuery: '',
+    headers: [
+      { text: 'Name', value: 'name' },
+      { text: 'Email', value: 'email' },
+      { text: 'Org', value: 'company.name' },
+      { text: 'Permission', value: 'roles[0].name' },
+      { text: 'Status', value: 'deactivated_at' },
+      { text: 'Password', value: 'password' },
+      { text: 'Actions', value: 'actions', sortable: false }
+    ],
+    menuitems: [
+      {
+        text: 'Dashboard',
+        path: '/user/Dashboard'
+      },
+      {
+        text: 'Manage Users'
+      },
+      {
+        text: 'My Profile'
+      },
+      {
+        text: 'Logout'
+      }
+    ]
+  }),
+
+  async mounted () {
+    const vc = this
+    await vc.fetchUsers()
   },
+
   methods: {
+    ...mapActions(userDashboard.moduleName, [types.getUsers, types.deleteUser]),
+
+    async fetchUsers () {
+      const status = await this[types.getUsers]()
+      console.log('this.users: ', this.users())
+
+      if (status === reqStatus.success) {
+        console.log('success')
+      } else {
+        console.log('error')
+      }
+    },
+
+    async deleteUser (id) {
+      const status = await this[types.deleteUser](id)
+
+      if (status === reqStatus.success) {
+        console.log('delete user success')
+      } else {
+        console.log('error')
+      }
+    },
+
     onChildSearchUpdate (value) {
       this.searchQuery = value
       this.handleLocationUrl()
