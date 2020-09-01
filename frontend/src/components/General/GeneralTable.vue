@@ -211,8 +211,13 @@ export default {
     emitSearchToParent (e) {
       this.$emit('searchToParent', this.search)
     },
+
     handleCalendar (e) {
       if (e.length === 2) { this.$emit('dateToParent', e) }
+    },
+
+    deleteItem (value) {
+      this.$emit('deleteItem', value)
     },
 
     addUser () {
