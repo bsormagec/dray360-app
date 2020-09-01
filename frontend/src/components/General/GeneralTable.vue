@@ -216,8 +216,8 @@ export default {
       if (e.length === 2) { this.$emit('dateToParent', e) }
     },
 
-    deleteItem (value) {
-      this.$emit('deleteItem', value)
+    deleteItem (e) {
+      this.$emit('deleteItem', e.id)
     },
 
     addUser () {
