@@ -100,7 +100,7 @@ class UsersController extends Controller
         unset($data['role_id']);
 
         $user->update($data);
-        $user->attachRole($roleId);
+        $user->syncRolesWithoutDetaching([$roleId]);
 
         return response()->json($user);
     }
