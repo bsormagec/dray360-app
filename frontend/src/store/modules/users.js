@@ -58,8 +58,6 @@ const actions = {
   },
 
   async [types.addUser] ({ commit }, user) {
-    console.log('types.adduser')
-    console.log('user to send to axios: ', user)
     const [error, data] = await addUser(user)
 
     if (error) return reqStatus.error
@@ -68,8 +66,13 @@ const actions = {
     return reqStatus.success
   },
 
-  async [types.editUser] ({ commit }, i) {
-    const [error, data] = await editUser(i)
+  async [types.editUser] ({ commit }, user) {
+    const userId = user.user_id
+    delete user.user_id
+    console.log('userID for axios. ', userId)
+    console.log('user for axios. ', user)
+
+    const [error, data] = await editUser(user, userId)
 
     if (error) return reqStatus.error
 

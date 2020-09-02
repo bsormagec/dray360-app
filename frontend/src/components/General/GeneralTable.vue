@@ -222,6 +222,10 @@ export default {
 
     addUser () {
       this.$router.push('/user/dashboard/add-user')
+    },
+
+    editItem (item) {
+      this.$router.push(`/user/dashboard/edit-user/${item.id}`)
     }
 
   }
