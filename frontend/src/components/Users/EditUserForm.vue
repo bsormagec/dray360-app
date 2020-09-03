@@ -26,13 +26,13 @@
           type="input"
           outlined
         />
-        <v-text-field
+        <!-- <v-text-field
           v-model="password"
           label="Password"
           placeholder="Password"
           type="password"
           outlined
-        />
+        /> -->
         <v-select
           v-model="role_selected"
           :items="roles"
@@ -101,8 +101,7 @@ export default {
 
     name: '',
     email: '',
-    password: '',
-    org: '',
+    company: '',
     role_selected: 1,
     roles: [1, 2],
     activated: true
@@ -120,8 +119,8 @@ export default {
     }
   },
 
-  mounted () {
-    this.fetchUsers()
+  async mounted () {
+    await this.fetchUsers()
   },
 
   methods: {
@@ -136,15 +135,14 @@ export default {
           return true
         }
       }
-      // if (this.currentUser.deactivated_at != null) {
-      //   return false
-      // } else {
-      //   return true
-      // }
     },
 
     async fetchUsers () {
       const status = await this[types.getUsers]()
+
+      this.name = this.currentUser.name
+      this.email = this.currentUser.email
+      this.role_selected = this.currentUser.roles[0].id
 
       if (status === reqStatus.success) {
         console.log('success')
