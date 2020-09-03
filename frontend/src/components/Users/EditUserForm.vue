@@ -55,10 +55,18 @@
           Delete
         </v-btn>
         <v-btn
+          v-if="getActivationState()"
           class="secondary-button button"
           outlined
         >
           Deactivate
+        </v-btn>
+        <v-btn
+          v-if="!getActivationState()"
+          class="secondary-button button"
+          outlined
+        >
+          Activate
         </v-btn>
       </v-col>
       <v-col
@@ -82,23 +90,68 @@
   </div>
 </template>
 <script>
-import FormField from '@/components/FormField/FormField'
 import userDashboard, { types } from '@/store/modules/users'
 import { mapState, mapActions } from '@/utils/vuex_mappings'
 import { reqStatus } from '@/enums/req_status'
 export default {
   data: () => ({
+    ...mapState(userDashboard.moduleName, {
+      users: state => state.users
+    }),
+
     name: '',
     email: '',
     password: '',
     org: '',
     role_selected: 1,
-    roles: [1, 2]
+    roles: [1, 2],
+    activated: true
 
   }),
 
+  computed: {
+    currentUser () {
+      const routeParam = this.$route.params.id
+      const currentUser = this.users().filter(user =>
+        // eslint-disable-next-line eqeqeq
+        (user.id == routeParam)
+      )
+      return currentUser[0]
+    }
+  },
+
+  mounted () {
+    this.fetchUsers()
+  },
+
   methods: {
-    ...mapActions(userDashboard.moduleName, [types.editUser]),
+    ...mapActions(userDashboard.moduleName, [types.getUsers, types.editUser]),
+
+    getActivationState () {
+      console.log('currentuser computed prop: ', this.currentUser)
+      if (this.currentUser) {
+        if (this.currentUser.deactivated_at != null) {
+          return false
+        } else {
+          return true
+        }
+      }
+      // if (this.currentUser.deactivated_at != null) {
+      //   return false
+      // } else {
+      //   return true
+      // }
+    },
+
+    async fetchUsers () {
+      const status = await this[types.getUsers]()
+
+      if (status === reqStatus.success) {
+        console.log('success')
+      } else {
+        console.log('error')
+      }
+    },
 
     async editUser () {
       const userId = this.$route.params.id

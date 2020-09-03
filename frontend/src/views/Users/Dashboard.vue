@@ -13,7 +13,7 @@
         :has-search="true"
         :has-column-filters="true"
         :has-bulk-actions="true"
-        :bulk-actions="['Delete selected', 'Deactivate accounts']"
+        :bulk-actions="['Delete selected', 'Deactivate account', 'Reset password']"
         :has-action-button="{showButton: false, action: '/'}"
         injections="Orders"
         :has-add-button="{showButton: true, action: '/'}"
@@ -48,7 +48,6 @@ export default {
       { text: 'Org', value: 'company.name' },
       { text: 'Permission', value: 'roles[0].name' },
       { text: 'Status', value: 'deactivated_at' },
-      { text: 'Password', value: 'password' },
       { text: 'Actions', value: 'actions', sortable: false }
     ],
     menuitems: [
