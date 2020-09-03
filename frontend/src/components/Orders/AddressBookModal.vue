@@ -5,11 +5,13 @@
 
     <div class="address-book-modal__body">
       <div
-        v-if="!isVerified && !field.verified"
+        v-if="!isVerified || !addressFound"
         class="address-book-modal__body__status"
       >
-        <span>Address Verification Needed</span>
-        <v-icon color="#cc904c">
+        <span :class="{'not-found': !addressFound}">
+          {{ addressFound ? 'Address Verification Needed': 'Address Not Found' }}
+        </span>
+        <v-icon :color="addressFound ? 'warning' : 'error'">
           mdi-alert
         </v-icon>
       </div>
@@ -20,7 +22,7 @@
       </div>
 
       <div class="address-book-modal__body__block">
-        <span class="block__left">{{ !isVerified && !field.verified ? 'Closest Match' : 'Verified Address' }}</span>
+        <span class="block__left">{{ !isVerified ? 'Closest Match' : 'Verified Address' }}</span>
         <span
           class="block__right"
           v-html="matchedToDisplay"
@@ -30,7 +32,7 @@
 
     <div class="address-book-modal__footer">
       <v-btn
-        v-if="!isVerified && !field.verified"
+        v-if="!isVerified && addressFound"
         color="primary"
         outlined
         style="margin-right: 2rem;"
@@ -83,8 +85,9 @@ export default {
     }
   },
 
-  data: () => ({
-    isVerified: false,
+  data: (vm) => ({
+    isVerified: vm.field.verified === true,
+    addressFound: vm.field.addressId !== null && vm.field.addressId !== undefined,
     isOpen: false,
     matchedToDisplay: '',
     recogEmitted: ''
@@ -99,7 +102,6 @@ export default {
 
   methods: {
     verifyMatch () {
-      this.isVerified = true
       this.change({ id: this.field.value, matchedAddress: this.field.matchedAddress })
     },
 
@@ -110,6 +112,7 @@ export default {
     change ({ id, matchedAddress } = {}) {
       if (typeof id !== 'undefined') {
         this.isVerified = true
+        this.addressFound = true
         this.recogEmitted = this.field.value
         this.matchedToDisplay = matchedAddress
         this.$emit('change', id)
@@ -150,6 +153,9 @@ export default {
       color: #cc904c;
       font-weight: bold;
       font-size: 1.44rem !important;
+      &.not-found {
+        color: map-get($colors, red)
+      }
     }
   }
 

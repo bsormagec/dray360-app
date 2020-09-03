@@ -272,7 +272,8 @@ export function buildField ({
   readonly,
   id,
   matchedAddress,
-  verified
+  verified,
+  addressId
 }) {
   const field = {
     id,
@@ -283,6 +284,7 @@ export function buildField ({
     value,
     matchedAddress,
     verified,
+    addressId,
     el: {
       type,
       placeholder,
