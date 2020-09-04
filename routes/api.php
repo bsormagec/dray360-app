@@ -15,6 +15,7 @@ use App\Http\Controllers\Api\OCRVariantsController;
 use App\Http\Controllers\Api\UsersStatusController;
 use App\Http\Controllers\Api\ImpersonationController;
 use App\Http\Controllers\Api\SearchAddressController;
+use App\Http\Controllers\Api\ChangePasswordController;
 use App\Http\Controllers\Api\Auth\ResetPasswordController;
 use App\Http\Controllers\Api\OCRRulesAssignmentController;
 use App\Http\Controllers\Api\Auth\ForgotPasswordController;
@@ -55,6 +56,9 @@ Route::group(['middleware' => ['auth:sanctum', 'impersonate', 'tenant-aware']], 
 
     Route::get('roles', RolesController::class)
         ->name('roles.index');
+
+    Route::post('password/change', ChangePasswordController::class)
+        ->name('password.change');
 
     // Users management
     Route::put('users/{user}/status', UsersStatusController::class)

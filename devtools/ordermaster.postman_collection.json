@@ -367,6 +367,88 @@
 			"response": []
 		},
 		{
+			"name": "/api/password/change",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "aed9d15f-6650-4dd0-a331-32a7cd172a15",
+						"exec": [
+							"var token1=postman.getResponseCookie('XSRF-TOKEN').value;",
+							"var token2=token1.replace(/%3D/g, '=');",
+							"postman.setEnvironmentVariable('X-XSRF-TOKEN', token2);",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"protocolProfileBehavior": {
+				"disabledSystemHeaders": {
+					"accept": true
+				}
+			},
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/x-www-form-urlencoded"
+					},
+					{
+						"key": "Referer",
+						"type": "text",
+						"value": "{{server}}"
+					},
+					{
+						"key": "Accept",
+						"type": "text",
+						"value": "application/json, text/plain, */*"
+					},
+					{
+						"key": "X-XSRF-TOKEN",
+						"type": "text",
+						"value": "{{X-XSRF-TOKEN}}"
+					}
+				],
+				"body": {
+					"mode": "urlencoded",
+					"urlencoded": [
+						{
+							"key": "old_password",
+							"value": "",
+							"description": "required",
+							"type": "text"
+						},
+						{
+							"key": "password",
+							"value": "",
+							"description": "min:8",
+							"type": "text"
+						},
+						{
+							"key": "password_confirmation",
+							"value": "",
+							"description": "Rrequired",
+							"type": "text"
+						}
+					]
+				},
+				"url": {
+					"raw": "{{server}}/api/password/change",
+					"host": [
+						"{{server}}"
+					],
+					"path": [
+						"api",
+						"password",
+						"change"
+					]
+				}
+			},
+			"response": []
+		},
+		{
 			"name": "/api/orders",
 			"event": [
 				{
