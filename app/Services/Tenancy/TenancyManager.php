@@ -90,6 +90,10 @@ class TenancyManager
 
     public function getConfigurationValue(string $key, $default = null)
     {
+        if ($this->configuration->isEmpty()) {
+            $this->loadConfiguration();
+        }
+
         return $this->configuration->get($key, $default);
     }
 

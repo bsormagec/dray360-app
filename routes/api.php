@@ -36,6 +36,7 @@ Route::post('login', [LoginController::class, 'login'])->name('login');
 Route::post('signup', [LoginController::class, 'signup'])->name('signup');
 
 Route::post('password/email', [ForgotPasswordController::class, 'sendResetLinkEmail'])
+    ->middleware('tenant-aware')
     ->name('password.email');
 Route::post('password/reset', [ResetPasswordController::class, 'reset'])
     ->name('password.update');

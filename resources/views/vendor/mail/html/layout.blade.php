@@ -13,6 +13,16 @@ background-color: {{ $tenancy->getConfigurationValue('primary_color') }};
 a {
 color: {{ $tenancy->getConfigurationValue('primary_color') }} !important;
 }
+a.button{
+color: #fff !important;
+}
+.button-primary {
+background-color: {{ $tenancy->getConfigurationValue('primary_color') }} !important;
+border-bottom: 8px solid {{ $tenancy->getConfigurationValue('primary_color') }} !important;
+border-left: 18px solid {{ $tenancy->getConfigurationValue('primary_color') }} !important;
+border-right: 18px solid {{ $tenancy->getConfigurationValue('primary_color') }} !important;
+border-top: 8px solid {{ $tenancy->getConfigurationValue('primary_color') }} !important;
+}
 @media only screen and (max-width: 600px) {
 .inner-body,.inner-body-top-bar {
 width: 100% !important;
