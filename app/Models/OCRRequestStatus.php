@@ -25,11 +25,19 @@ class OCRRequestStatus extends Model
     PROCESS_OCR_OUTPUT_FILE_COMPLETE = 'process-ocr-output-file-complete',
     PROCESS_OCR_OUTPUT_FILE_ERROR = 'process-ocr-output-file-error',
     UPLOAD_REQUESTED = 'upload-requested',
+
     SENDING_TO_WINT = 'sending-to-wint',
     FAILURE_SENDING_TO_WINT = 'failure-sending-to-wint',
     SUCCESS_SENDING_TO_WINT = 'success-sending-to-wint',
     SHIPMENT_CREATED_BY_WINT = 'shipment-created-by-wint',
-    SHIPMENT_NOT_CREATED_BY_WINT = 'shipment-not-created-by-wint';
+    SHIPMENT_NOT_CREATED_BY_WINT = 'shipment-not-created-by-wint',
+
+    UPDATING_TO_WINT = 'updating-to-wint',
+    FAILURE_UPDATING_TO_WINT = 'failure-updating-to-wint',
+    SUCCESS_UPDATING_TO_WINT = 'success-updating-to-wint',
+    SHIPMENT_UPDATED_BY_WINT = 'shipment-updated-by-wint',
+    SHIPMENT_NOT_UPDATED_BY_WINT = 'shipment-not-updated-by-wint'
+    ;
 
     const STATUS_MAP = [
         self::INTAKE_ACCEPTED => 'Processing',
@@ -43,11 +51,18 @@ class OCRRequestStatus extends Model
         self::PROCESS_OCR_OUTPUT_FILE_COMPLETE => 'Verified',
         self::PROCESS_OCR_OUTPUT_FILE_ERROR => 'Rejected',
         self::UPLOAD_REQUESTED => 'Intake',
+
         self::SENDING_TO_WINT => 'Sending to TMS',
         self::FAILURE_SENDING_TO_WINT => 'Rejected',
         self::SUCCESS_SENDING_TO_WINT => 'Sent to TMS',
         self::SHIPMENT_CREATED_BY_WINT => 'Accepted by TMS',
-        self::SHIPMENT_NOT_CREATED_BY_WINT => 'Rejected'
+        self::SHIPMENT_NOT_CREATED_BY_WINT => 'Rejected',
+
+        self::UPDATING_TO_WINT => 'Sending to TMS',
+        self::FAILURE_UPDATING_TO_WINT => 'Rejected',
+        self::SUCCESS_UPDATING_TO_WINT => 'Sent to TMS',
+        self::SHIPMENT_UPDATED_BY_WINT => 'Accepted by TMS',
+        self::SHIPMENT_NOT_UPDATED_BY_WINT => 'Rejected'
     ];
 
     public $table = 't_job_state_changes';
