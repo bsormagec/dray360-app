@@ -1,16 +1,19 @@
 import { reqStatus } from '@/enums/req_status'
-import { getUsers, deleteUser, editUser, addUser } from '@/store/api_calls/users'
+import { getUsers, deleteUser, editUser, addUser, getRoles } from '@/store/api_calls/users'
 
 export const types = {
   setUsers: 'SET_USERS',
   getUsers: 'GET_USERS',
   deleteUser: 'DELETE_USER',
   editUser: 'EDIT_USER',
-  addUser: 'ADD_USER'
+  addUser: 'ADD_USER',
+  getRoles: 'GET_ROLES',
+  setRoles: 'SET_ROLES'
 }
 
 const initialState = {
-  users: []
+  users: [],
+  roles: []
 }
 
 const mutations = {
@@ -35,6 +38,11 @@ const mutations = {
 
   [types.editUser] (state, { userData, i }) {
     state.users[i] = userData
+  },
+
+  [types.setRoles] (state, { rolesData }) {
+    console.log('rolesdata: ', rolesData)
+    state.roles = rolesData
   }
 }
 
@@ -69,14 +77,23 @@ const actions = {
   async [types.editUser] ({ commit }, user) {
     const userId = user.user_id
     delete user.user_id
-    console.log('userID for axios. ', userId)
-    console.log('user for axios. ', user)
 
     const [error, data] = await editUser(user, userId)
 
     if (error) return reqStatus.error
 
-    commit(types.editUser, { userData: data.data }, i)
+    commit(types.editUser, { userData: data.data }, userId)
+    return reqStatus.success
+  },
+
+  async [types.getRoles] ({ commit }) {
+    const [error, data] = await getRoles()
+
+    if (error) return reqStatus.error
+
+    console.log('roles to commit:', data)
+
+    commit(types.setRoles, { rolesData: data.data })
     return reqStatus.success
   }
 }

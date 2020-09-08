@@ -26,16 +26,11 @@
           type="input"
           outlined
         />
-        <!-- <v-text-field
-          v-model="password"
-          label="Password"
-          placeholder="Password"
-          type="password"
-          outlined
-        /> -->
         <v-select
           v-model="role_selected"
-          :items="roles"
+          item-text="display_name"
+          item-value="id"
+          :items="roles()"
           solo
           dense
           persistent-hint
@@ -96,14 +91,14 @@ import { reqStatus } from '@/enums/req_status'
 export default {
   data: () => ({
     ...mapState(userDashboard.moduleName, {
-      users: state => state.users
+      users: state => state.users,
+      roles: state => state.roles
     }),
 
     name: '',
     email: '',
     company: '',
     role_selected: 1,
-    roles: [1, 2],
     activated: true
 
   }),
@@ -119,12 +114,13 @@ export default {
     }
   },
 
-  async mounted () {
-    await this.fetchUsers()
+  mounted () {
+    this.fetchUsers()
+    this.fetchRoles()
   },
 
   methods: {
-    ...mapActions(userDashboard.moduleName, [types.getUsers, types.editUser]),
+    ...mapActions(userDashboard.moduleName, [types.getUsers, types.editUser, types.getRoles]),
 
     getActivationState () {
       console.log('currentuser computed prop: ', this.currentUser)
@@ -170,7 +166,20 @@ export default {
       }
 
       this.$router.push('/user/dashboard')
+    },
+
+    async fetchRoles () {
+      console.log('fetch roles called')
+      const status = await this[types.getRoles]()
+
+      if (status === reqStatus.successs) {
+        console.log('success')
+      } else {
+        console.log('error')
+      }
     }
+
+    // TODO: Activate / Deactivate user
   }
 }
 </script>
