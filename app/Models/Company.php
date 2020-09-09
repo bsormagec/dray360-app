@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 
 /**
  * @property \App\Models\Address $address
@@ -92,5 +93,17 @@ class Company extends Model
     public static function getTCompaniesDev(): self
     {
         return static::where('name', static::TCOMPANIES_DEV)->first();
+    }
+
+    public function variantsAccessorials(): BelongsToMany
+    {
+        return $this->belongsToMany(
+            OCRVariant::class,
+            't_company_ocrvariant_accessorial_mappings',
+            't_company_id',
+            't_ocrvariant_id'
+        )
+        ->using(AccesorialMappingPivot::class)
+        ->withPivot(['mapping']);
     }
 }

@@ -68,8 +68,6 @@ const actions = {
 
     if (error) return reqStatus.error
 
-    console.log('executed')
-
     commit(types.setCompanyVariantRules, { companyVariantData: data.data })
     return reqStatus.success
   },
@@ -77,8 +75,6 @@ const actions = {
     await putEditRule(ruleData)
 
     // if (error) return reqStatus.error
-
-    console.log('#types.setRule - ruleData to commit:', ruleData)
 
     commit(types.setRule, { ruleData })
     return reqStatus.succcess
@@ -104,15 +100,11 @@ const actions = {
 
     if (error) return reqStatus.error
 
-    console.log('ruleData to commit:', ruleData)
-
     commit(types.addRule, { ruleData: data })
     return reqStatus.succcess
   },
   async [types.getTestingOutput] ({ commit }, dataObject) {
     const data = await getTestingOutput(dataObject.orderId, dataObject.ruleToTest)
-
-    console.log('testing output to be commited: ', data)
 
     commit(types.setTestingOutput, { testingOutput: data })
   },
@@ -128,8 +120,6 @@ const actions = {
   async [types.getVariantList] ({ commit }) {
     const [error, data] = await getVariantList()
     if (error) return error.message
-
-    console.log('variant_list to commit: ', data)
 
     commit(types.setVariantList, { variantList: data })
     return reqStatus.success

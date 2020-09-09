@@ -2531,6 +2531,147 @@
 				"description": "Available actions:\n\n- `users.deactivate`\n- `users.delete`\n- `users.activate`\n- `users.reset_password`"
 			},
 			"response": []
+		},
+		{
+			"name": "/api/companies/:company/variants/:variant/accesorials",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "ac0a98a3-1286-4c7e-a0a7-6c2731c8ac05",
+						"exec": [
+							"var token1=postman.getResponseCookie('XSRF-TOKEN').value;",
+							"var token2=token1.replace(/%3D/g, '=');",
+							"postman.setEnvironmentVariable('X-XSRF-TOKEN', token2);",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"protocolProfileBehavior": {
+				"disabledSystemHeaders": {}
+			},
+			"request": {
+				"method": "PUT",
+				"header": [
+					{
+						"key": "Referer",
+						"type": "text",
+						"value": "{{server}}"
+					},
+					{
+						"key": "Accept",
+						"type": "text",
+						"value": "application/json, text/plain, */*"
+					},
+					{
+						"key": "X-XSRF-TOKEN",
+						"type": "text",
+						"value": "{{X-XSRF-TOKEN}}"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"mapping\": null\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{server}}/api/companies/:company/variants/:variant/accesorials",
+					"host": [
+						"{{server}}"
+					],
+					"path": [
+						"api",
+						"companies",
+						":company",
+						"variants",
+						":variant",
+						"accesorials"
+					],
+					"variable": [
+						{
+							"key": "company",
+							"value": ""
+						},
+						{
+							"key": "variant",
+							"value": ""
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "/api/companies/:company/variants/:variant/accesorials",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "acee5962-e16b-4eb6-a0bd-7f38adb04e36",
+						"exec": [
+							"var token1=postman.getResponseCookie('XSRF-TOKEN').value;",
+							"var token2=token1.replace(/%3D/g, '=');",
+							"postman.setEnvironmentVariable('X-XSRF-TOKEN', token2);",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"protocolProfileBehavior": {
+				"disabledSystemHeaders": {}
+			},
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Referer",
+						"type": "text",
+						"value": "{{server}}"
+					},
+					{
+						"key": "Accept",
+						"type": "text",
+						"value": "application/json, text/plain, */*"
+					},
+					{
+						"key": "X-XSRF-TOKEN",
+						"type": "text",
+						"value": "{{X-XSRF-TOKEN}}"
+					}
+				],
+				"url": {
+					"raw": "{{server}}/api/companies/:company/variants/:variant/accesorials",
+					"host": [
+						"{{server}}"
+					],
+					"path": [
+						"api",
+						"companies",
+						":company",
+						"variants",
+						":variant",
+						"accesorials"
+					],
+					"variable": [
+						{
+							"key": "company",
+							"value": ""
+						},
+						{
+							"key": "variant",
+							"value": ""
+						}
+					]
+				}
+			},
+			"response": []
 		}
 	],
 	"protocolProfileBehavior": {}

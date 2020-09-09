@@ -17,6 +17,7 @@ import { runMiddleware } from '@/router/middleware'
 import PageNotFound from '@/views/PageNotFound'
 import MappingField from '@/views/Mappings/MappingField'
 import LoggedOut from '@/router/middleware/LoggedOut'
+import AccesorialsMapping from '@/views/Mappings/AccesorialsMapping'
 
 Vue.use(VueRouter)
 
@@ -91,6 +92,14 @@ const routes = [
     path: '/companies/:id/refs-custom-mapping',
     name: 'Mapping',
     component: MappingField,
+    meta: {
+      middleware: [auth]
+    }
+  },
+  {
+    path: '/companies/:id/billing-mapping',
+    name: 'Billing Mapping',
+    component: AccesorialsMapping,
     meta: {
       middleware: [auth]
     }

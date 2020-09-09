@@ -10,47 +10,22 @@ class CompanyPolicy
 {
     use HandlesAuthorization;
 
-    /**
-     * Determine whether the user can view any models.
-     *
-     * @param  \App\Models\User  $user
-     * @return mixed
-     */
-    public function viewAny(User $user)
+    public function viewAny(User $user): bool
     {
         return $user->isAbleTo('companies-view');
     }
 
-    /**
-     * Determine whether the user can create models.
-     *
-     * @param  \App\Models\User  $user
-     * @return mixed
-     */
-    public function create(User $user)
+    public function create(User $user): bool
     {
         return $user->isAbleTo('companies-create');
     }
 
-    /**
-     * Determine whether the user can view models.
-     *
-     * @param  \App\Models\User  $user
-     * @return mixed
-     */
-    public function view(User $user)
+    public function view(User $user): bool
     {
         return $user->isAbleTo('companies-view');
     }
 
-    /**
-     * Determine whether the user can update the model.
-     *
-     * @param  \App\Models\User  $user
-     * @param  \App\Models\Company  $company
-     * @return mixed
-     */
-    public function update(User $user, Company $company)
+    public function update(User $user, Company $company): bool
     {
         if (request()->has('refs_custom_mapping')) {
             return $user->isAbleTo('refs-custom-mapping-edit');
@@ -59,15 +34,18 @@ class CompanyPolicy
         return $user->isAbleTo('companies-edit');
     }
 
-    /**
-     * Determine whether the user can delete the model.
-     *
-     * @param  \App\Models\User  $user
-     * @param  \App\Models\Company  $company
-     * @return mixed
-     */
-    public function delete(User $user, Company $company)
+    public function delete(User $user, Company $company): bool
     {
         return $user->isAbleTo('companies-remove');
+    }
+
+    public function viewAccesorialMapping(User $user): bool
+    {
+        return $user->isAbleTo('billing-mapping-view');
+    }
+
+    public function updateAccesorialMapping(User $user, Company $company): bool
+    {
+        return $user->isAbleTo('billing-mapping-edit');
     }
 }

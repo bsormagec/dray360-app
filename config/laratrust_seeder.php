@@ -14,6 +14,7 @@ return [
     'roles_structure' => [
         'superadmin' => [
             'refs-custom-mapping' => 'e',
+            'billing-mapping' => 'e,v',
             'rules-editor' => 'c,v,e,a',
             'orders' => 'e,v,c',
             'tms' => 's',

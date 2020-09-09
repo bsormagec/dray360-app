@@ -7,6 +7,7 @@ import companies from '@/store/modules/companies'
 import rulesEditor from '@/store/modules/rules_editor'
 import userDashboard from '@/store/modules/users'
 import utils from '@/store/modules/utils'
+import accesorialmapping from '@/store/modules/accesorialmapping'
 
 Vue.use(Vuex)
 
@@ -18,6 +19,7 @@ export default new Vuex.Store({
     [rulesEditor.moduleName]: rulesEditor,
     [userDashboard.moduleName]: userDashboard,
     [companies.moduleName]: companies,
-    [utils.moduleName]: utils
+    [utils.moduleName]: utils,
+    [accesorialmapping.moduleName]: accesorialmapping
   }
 })
