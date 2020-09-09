@@ -118,7 +118,7 @@ export default {
   },
 
   mounted () {
-    this.fetchUsers()
+    this.getUserInfo()
     this.fetchRoles()
   },
 
@@ -136,18 +136,10 @@ export default {
       }
     },
 
-    async fetchUsers () {
-      const status = await this[types.getUsers]()
-
+    async getUserInfo () {
       this.name = this.currentUser.name
       this.email = this.currentUser.email
       this.role_selected = this.currentUser.roles[0].id
-
-      if (status === reqStatus.success) {
-        console.log('success')
-      } else {
-        console.log('error')
-      }
     },
 
     async editUser () {
