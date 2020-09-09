@@ -46,6 +46,7 @@
         <v-btn
           class="delete-button button"
           outlined
+          @click="deleteUser()"
         >
           Delete
         </v-btn>
@@ -122,7 +123,7 @@ export default {
   },
 
   methods: {
-    ...mapActions(userDashboard.moduleName, [types.getUsers, types.editUser, types.getRoles, types.changeUserStatus]),
+    ...mapActions(userDashboard.moduleName, [types.getUsers, types.editUser, types.getRoles, types.changeUserStatus, types.deleteUser]),
 
     getActivationState () {
       console.log('currentuser computed prop: ', this.currentUser)
@@ -215,6 +216,20 @@ export default {
 
       if (status === reqStatus.successs) {
         console.log('success')
+      } else {
+        console.log('error')
+      }
+
+      this.$router.push('/user/dashboard')
+    },
+
+    async deleteUser () {
+      const userId = this.$route.params.id
+
+      const status = await this[types.deleteUser](userId)
+
+      if (status === reqStatus.success) {
+        console.log('delete user success')
       } else {
         console.log('error')
       }
