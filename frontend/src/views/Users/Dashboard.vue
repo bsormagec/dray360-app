@@ -94,6 +94,8 @@ export default {
       } else {
         console.log('error')
       }
+
+      location.reload()
     },
 
     onChildSearchUpdate (value) {

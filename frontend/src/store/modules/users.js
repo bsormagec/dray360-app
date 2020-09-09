@@ -62,7 +62,6 @@ const actions = {
 
     if (error) return reqStatus.error
 
-    commit(types.deleteUser, { id })
     return reqStatus.success
   },
 
