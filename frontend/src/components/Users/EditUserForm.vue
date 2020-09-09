@@ -53,6 +53,7 @@
           v-if="getActivationState()"
           class="secondary-button button"
           outlined
+          @click="deactivateUser()"
         >
           Deactivate
         </v-btn>
@@ -60,6 +61,7 @@
           v-if="!getActivationState()"
           class="secondary-button button"
           outlined
+          @click="activateUser()"
         >
           Activate
         </v-btn>
@@ -120,7 +122,7 @@ export default {
   },
 
   methods: {
-    ...mapActions(userDashboard.moduleName, [types.getUsers, types.editUser, types.getRoles]),
+    ...mapActions(userDashboard.moduleName, [types.getUsers, types.editUser, types.getRoles, types.changeUserStatus]),
 
     getActivationState () {
       console.log('currentuser computed prop: ', this.currentUser)
@@ -169,7 +171,6 @@ export default {
     },
 
     async fetchRoles () {
-      console.log('fetch roles called')
       const status = await this[types.getRoles]()
 
       if (status === reqStatus.successs) {
@@ -177,9 +178,49 @@ export default {
       } else {
         console.log('error')
       }
-    }
+    },
 
-    // TODO: Activate / Deactivate user
+    async activateUser () {
+      const userId = this.$route.params.id
+
+      const payload = {
+        userId: userId,
+        newStatus: {
+          active: true
+        }
+      }
+
+      const status = await this[types.changeUserStatus](payload)
+
+      if (status === reqStatus.successs) {
+        console.log('success')
+      } else {
+        console.log('error')
+      }
+
+      this.$router.push('/user/dashboard')
+    },
+
+    async deactivateUser () {
+      const userId = this.$route.params.id
+
+      const payload = {
+        userId: userId,
+        newStatus: {
+          active: false
+        }
+      }
+
+      const status = await this[types.changeUserStatus](payload)
+
+      if (status === reqStatus.successs) {
+        console.log('success')
+      } else {
+        console.log('error')
+      }
+
+      this.$router.push('/user/dashboard')
+    }
   }
 }
 </script>

@@ -1,5 +1,5 @@
 import { reqStatus } from '@/enums/req_status'
-import { getUsers, deleteUser, editUser, addUser, getRoles } from '@/store/api_calls/users'
+import { getUsers, deleteUser, editUser, addUser, getRoles, changeUserStatus } from '@/store/api_calls/users'
 
 export const types = {
   setUsers: 'SET_USERS',
@@ -8,7 +8,8 @@ export const types = {
   editUser: 'EDIT_USER',
   addUser: 'ADD_USER',
   getRoles: 'GET_ROLES',
-  setRoles: 'SET_ROLES'
+  setRoles: 'SET_ROLES',
+  changeUserStatus: 'CHANGE_USER_STATUS'
 }
 
 const initialState = {
@@ -91,9 +92,15 @@ const actions = {
 
     if (error) return reqStatus.error
 
-    console.log('roles to commit:', data)
-
     commit(types.setRoles, { rolesData: data.data })
+    return reqStatus.success
+  },
+
+  async [types.changeUserStatus] ({ commmit }, payload) {
+    const [error, data] = await changeUserStatus(payload.userId, payload.newStatus)
+
+    if (error) return reqStatus.error
+
     return reqStatus.success
   }
 }
