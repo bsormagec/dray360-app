@@ -4,7 +4,7 @@
       <SidebarNavigation :menu-items="menuitems" />
     </div>
     <div class="user__list col-10">
-      <GeneralTable
+      <UserTable
         class="general-table"
         table-title="User list"
         :customheaders="headers"
@@ -27,14 +27,14 @@
 
 <script>
 import SidebarNavigation from '@/components/General/SidebarNavigation'
-import GeneralTable from '@/components/General/GeneralTable'
+import UserTable from '@/components/Users/UserTable'
 import { mapState, mapActions } from '@/utils/vuex_mappings'
 import { reqStatus } from '@/enums/req_status'
 import userDashboard, { types } from '@/store/modules/users'
 export default {
   components: {
     SidebarNavigation,
-    GeneralTable
+    UserTable
   },
   data: () => ({
     ...mapState(userDashboard.moduleName, {
