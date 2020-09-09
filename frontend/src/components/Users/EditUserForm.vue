@@ -11,16 +11,29 @@
       </v-toolbar>
     </template>
     <template>
-      <div
-        v-for="item in fields"
-        :key="item.key"
-        style="width: 44%"
-      >
-        <FormField
-          :field="item"
-          :is-editing="true"
-          :readonly="item.readonly"
-          :callbacks="{}"
+      <div class="form-field-element-input">
+        <v-text-field
+          v-model="name"
+          label="Name"
+          placeholder="Name"
+          type="input"
+          outlined
+        />
+        <v-text-field
+          v-model="email"
+          label="Email"
+          placeholder="Email"
+          type="input"
+          outlined
+        />
+        <v-select
+          v-model="role_selected"
+          item-text="display_name"
+          item-value="id"
+          :items="roles()"
+          solo
+          dense
+          persistent-hint
         />
       </div>
     </template>
@@ -33,14 +46,25 @@
         <v-btn
           class="delete-button button"
           outlined
+          @click="deleteUser()"
         >
           Delete
         </v-btn>
         <v-btn
+          v-if="getActivationState()"
           class="secondary-button button"
           outlined
+          @click="deactivateUser()"
         >
           Deactivate
+        </v-btn>
+        <v-btn
+          v-if="!getActivationState()"
+          class="secondary-button button"
+          outlined
+          @click="activateUser()"
+        >
+          Activate
         </v-btn>
       </v-col>
       <v-col
@@ -55,6 +79,7 @@
         </v-btn>
         <v-btn
           class="save-button button"
+          @click="editUser()"
         >
           Save
         </v-btn>
@@ -63,59 +88,157 @@
   </div>
 </template>
 <script>
-import FormField from '@/components/FormField/FormField'
+import userDashboard, { types } from '@/store/modules/users'
+import { mapState, mapActions } from '@/utils/vuex_mappings'
+import { reqStatus } from '@/enums/req_status'
 export default {
-  components: {
-    FormField
+  data: () => ({
+    ...mapState(userDashboard.moduleName, {
+      users: state => state.users,
+      roles: state => state.roles
+    }),
+
+    name: '',
+    email: '',
+    company: '',
+    role_selected: 1,
+    activated: true
+
+  }),
+
+  computed: {
+    currentUser () {
+      const routeParam = this.$route.params.id
+      const currentUser = this.users().filter(user =>
+        // eslint-disable-next-line eqeqeq
+        (user.id == routeParam)
+      )
+      return currentUser[0]
+    }
   },
-  data () {
-    return {
-      fields: [
-        {
-          name: 'First Name',
-          readonly: false,
-          el: {
-            type: 'input'
-          }
-        },
-        {
-          name: 'Last Name',
-          readonly: false,
-          el: {
-            type: 'input'
-          }
-        },
-        {
-          name: 'Email',
-          readonly: false,
-          el: {
-            type: 'input'
-          }
-        },
-        {
-          name: 'Position',
-          readonly: false,
-          el: {
-            type: 'input'
-          }
-        },
-        {
-          name: 'Org',
-          readonly: false,
-          el: {
-            type: 'input'
-          }
+
+  mounted () {
+    this.getUserInfo()
+    this.fetchRoles()
+  },
+
+  methods: {
+    ...mapActions(userDashboard.moduleName, [types.getUsers, types.editUser, types.getRoles, types.changeUserStatus, types.deleteUser]),
+
+    getActivationState () {
+      console.log('currentuser computed prop: ', this.currentUser)
+      if (this.currentUser) {
+        if (this.currentUser.deactivated_at != null) {
+          return false
+        } else {
+          return true
         }
-      ]
+      }
+    },
+
+    async getUserInfo () {
+      this.name = this.currentUser.name
+      this.email = this.currentUser.email
+      this.role_selected = this.currentUser.roles[0].id
+    },
+
+    async editUser () {
+      const userId = this.$route.params.id
+
+      const userData = {
+        name: this.name,
+        email: this.email,
+        role_id: this.role_selected,
+        user_id: userId
+      }
+
+      const status = await this[types.editUser](userData)
+
+      if (status === reqStatus.success) {
+        console.log('success')
+      } else {
+        console.log('error')
+      }
+
+      this.$router.push('/user/dashboard')
+    },
+
+    async fetchRoles () {
+      const status = await this[types.getRoles]()
+
+      if (status === reqStatus.successs) {
+        console.log('success')
+      } else {
+        console.log('error')
+      }
+    },
+
+    async activateUser () {
+      const userId = this.$route.params.id
+
+      const payload = {
+        userId: userId,
+        newStatus: {
+          active: true
+        }
+      }
+
+      const status = await this[types.changeUserStatus](payload)
+
+      if (status === reqStatus.successs) {
+        console.log('success')
+      } else {
+        console.log('error')
+      }
+
+      this.$router.push('/user/dashboard')
+    },
+
+    async deactivateUser () {
+      const userId = this.$route.params.id
+
+      const payload = {
+        userId: userId,
+        newStatus: {
+          active: false
+        }
+      }
+
+      const status = await this[types.changeUserStatus](payload)
+
+      if (status === reqStatus.successs) {
+        console.log('success')
+      } else {
+        console.log('error')
+      }
+
+      this.$router.push('/user/dashboard')
+    },
+
+    async deleteUser () {
+      const userId = this.$route.params.id
+
+      const status = await this[types.deleteUser](userId)
+
+      if (status === reqStatus.success) {
+        console.log('delete user success')
+      } else {
+        console.log('error')
+      }
+
+      this.$router.push('/user/dashboard')
     }
   }
 }
 </script>
 <style lang="scss" scoped>
 
-h1 {
-  color: rgba(map-get($colors , black-2), 1) !important;
-}
+  h1 {
+    color: rgba(map-get($colors , black-2), 1) !important;
+  }
+  .form-field-element-input {
+    width: 44%
+  }
   .button {
     margin-right: 1rem;
     letter-spacing: 0.075rem;
