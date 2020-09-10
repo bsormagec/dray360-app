@@ -86,9 +86,18 @@ export default {
       { text: 'process-ocr-output-file-complete', value: 'process-ocr-output-file-complete' },
       { text: 'process-ocr-output-file-error', value: 'process-ocr-output-file-error' },
       { text: 'upload-requested', value: 'upload-requested' },
+
       { text: 'sending-to-wint', value: 'sending-to-wint' },
+      { text: 'success-sending-to-wint', value: 'success-sending-to-wint' },
       { text: 'failure-sending-to-wint', value: 'failure-sending-to-wint' },
-      { text: 'success-sending-to-wint', value: 'success-sending-to-wint' }
+      { text: 'shipment-created-by-wint', value: 'shipment-created-by-wint' },
+      { text: 'shipment-not-created-by-wint', value: 'shipment-not-created-by-wint' },
+
+      { text: 'updating-to-wint', value: 'updating-to-wint' },
+      { text: 'success-updating-to-wint', value: 'success-updating-to-wint' },
+      { text: 'failure-updating-to-wint', value: 'failure-updating-to-wint' },
+      { text: 'shipment-updated-by-wint', value: 'shipment-updated-by-wint' },
+      { text: 'shipment-not-updated-by-wint', value: 'shipment-not-updated-by-wint' }
     ]
   }),
 

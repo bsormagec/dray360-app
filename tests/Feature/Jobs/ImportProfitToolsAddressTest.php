@@ -7,6 +7,7 @@ use App\Models\Company;
 use App\Models\TMSProvider;
 use App\Services\Apis\RipCms;
 use ProfitToolsCushingSeeder;
+use App\Exceptions\RipCmsException;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Queue;
@@ -77,6 +78,36 @@ class ImportProfitToolsAddressTest extends TestCase
 
         $this->assertDatabaseCount('t_company_address_tms_code', 1);
         $this->assertDatabaseHas('t_addresses', [
+            'address_line_1' => $modifiedAddress['addr1'],
+            'address_line_2' => $modifiedAddress['addr2'],
+            'city' => $modifiedAddress['city'],
+            'state' => $modifiedAddress['state'],
+            'postal_code' => $modifiedAddress['zip'],
+            'country' => $modifiedAddress['country'],
+            'location_name' => $modifiedAddress['name'],
+            'location_phone' => $modifiedAddress['phone'],
+        ]);
+    }
+
+    /** @test */
+    public function it_fails_if_the_ripcms_api_returns_invalid_json()
+    {
+        $modifiedAddress = $this->getBaseAddresses()[1];
+        $modifiedAddress['id'] = 1;
+        Queue::fake();
+        Http::fakeSequence()
+            ->push(['access_token' => 'test'])
+            ->push('Some weird text response');
+        $company = Company::getCushing();
+        $tmsProvider = TMSProvider::getProfitTools();
+
+        $this->expectException(RipCmsException::class);
+
+        Cache::forget(RipCms::getTokenCacheKeyFor($company));
+        (new ImportProfitToolsAddress(['id' => 1], $company, $tmsProvider))->handle();
+
+        $this->assertDatabaseCount('t_company_address_tms_code', 0);
+        $this->assertDatabaseMissing('t_addresses', [
             'address_line_1' => $modifiedAddress['addr1'],
             'address_line_2' => $modifiedAddress['addr2'],
             'city' => $modifiedAddress['city'],

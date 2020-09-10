@@ -2,9 +2,9 @@
 
 namespace App\Services\Apis;
 
-use Exception;
 use App\Models\Company;
 use Illuminate\Support\Str;
+use App\Exceptions\RipCmsException;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Cache;
 
@@ -41,8 +41,8 @@ class RipCms
                 'password' => $this->password,
             ]);
 
-        if (! $configToken && $response->failed()) {
-            throw new Exception("RipCmsAPI ProfitTools/GetToken failed with message".$response->body());
+        if (! $configToken && ($response->failed() || ! $response->json())) {
+            throw new RipCmsException('GetToken', $response->body(), $response->status());
         }
 
         $this->token = $configToken ?? $response['access_token'];//use the token from the env otherwise use the one from the response.
@@ -56,8 +56,8 @@ class RipCms
         $response = Http::withToken($this->token)
             ->get("{$this->apiUrl}ProfitTools/GetCompanies");
 
-        if ($response->failed()) {
-            throw new Exception("RipCmsAPI ProfitTools/GetCompanies failed with message".$response->body());
+        if ($response->failed() || ! is_array($response->json())) {
+            throw new RipCmsException('GetCompanies', $response->body(), $response->status());
         }
 
         return $response->json();
@@ -68,8 +68,8 @@ class RipCms
         $response = Http::withToken($this->token)
             ->get("{$this->apiUrl}ProfitTools/GetCompany/{$id}");
 
-        if ($response->failed()) {
-            throw new Exception("RipCmsAPI /ProfitTools/GetCompany/{$id} failed with message".$response->body());
+        if ($response->failed() || ! is_array($response->json())) {
+            throw new RipCmsException("GetCompany/{$id}", $response->body(), $response->status());
         }
 
         return $response->json();

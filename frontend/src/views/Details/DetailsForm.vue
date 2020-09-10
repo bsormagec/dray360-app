@@ -218,17 +218,17 @@ export default {
       } else if (formLocation.includes('inventory')) {
         changes.order_line_items = getLineItems(this.currentOrder())
       } else if (formLocation.includes('itinerary')) {
-        changes.order_address_events = getAddressEvents(this.currentOrder())
-        let matchedIndex = -1
-        changes.order_address_events.forEach((address, index) => {
+        changes.order_address_events = getAddressEvents(this.currentOrder()).map((address, i) => {
           delete address.t_address_raw_text
-          if (key.includes(address.event_number)) {
-            matchedIndex = index
+          if (!key.includes(address.event_number)) {
+            return address
           }
+
+          address.t_address_id = typeof v === 'number' ? v : address.t_address_id
+          address.t_address_verified = true
+
+          return address
         })
-        if (typeof v === 'number') {
-          changes.order_address_events[matchedIndex].t_address_id = v
-        }
       } else if (formLocation.includes('Port Ramp of Origin')) {
         if (typeof v === 'number') {
           changes.port_ramp_of_origin_address_id = v

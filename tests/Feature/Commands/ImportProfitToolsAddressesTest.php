@@ -108,6 +108,50 @@ class ImportProfitToolsAddressesTest extends TestCase
         $this->assertNull($anotherCompany->address->deleted_at);
     }
 
+    /** @test */
+    public function it_should_fail_if_the_rip_cms_returns_a_plain_text_with_200_code()
+    {
+        $this->seed(ProfitToolsCushingAddressesSeeder::class);
+        Queue::fake();
+        $cushing = Company::getCushing();
+        Cache::forget(RipCms::getTokenCacheKeyFor($cushing));
+        Http::fake([
+            'https://www.ripcms.com/token*' => Http::response(['access_token' => 'test']),
+            'https://www.ripcms.com/api/*' => Http::response('Some bad error handling returning 200'),
+        ]);
+        $companyAddress = CompanyAddressTMSCode::with('address:id')->first();
+        $anotherCompany = factory(CompanyAddressTMSCode::class)->create();
+
+        $this->artisan('import:profit-tools-addresses', [
+            '--company-name' => Company::getCushing()->name,
+        ])->assertExitCode(0);
+
+        $this->assertDatabaseHas('t_company_address_tms_code', ['id' => $companyAddress->id, 'deleted_at' => null]);
+        $this->assertDatabaseHas('t_addresses', ['id' => $companyAddress->address->id, 'deleted_at' => null]);
+    }
+
+    /** @test */
+    public function it_should_fail_if_the_list_of_addresses_is_empty()
+    {
+        $this->seed(ProfitToolsCushingAddressesSeeder::class);
+        Queue::fake();
+        $cushing = Company::getCushing();
+        Cache::forget(RipCms::getTokenCacheKeyFor($cushing));
+        Http::fake([
+            'https://www.ripcms.com/token*' => Http::response(['access_token' => 'test']),
+            'https://www.ripcms.com/api/*' => Http::response([]),
+        ]);
+        $companyAddress = CompanyAddressTMSCode::with('address:id')->first();
+        $anotherCompany = factory(CompanyAddressTMSCode::class)->create();
+
+        $this->artisan('import:profit-tools-addresses', [
+            '--company-name' => Company::getCushing()->name,
+        ])->assertExitCode(0);
+
+        $this->assertDatabaseHas('t_company_address_tms_code', ['id' => $companyAddress->id, 'deleted_at' => null]);
+        $this->assertDatabaseHas('t_addresses', ['id' => $companyAddress->address->id, 'deleted_at' => null]);
+    }
+
     protected function clearTokenCache()
     {
         collect([

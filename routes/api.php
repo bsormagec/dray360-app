@@ -15,8 +15,10 @@ use App\Http\Controllers\Api\OCRVariantsController;
 use App\Http\Controllers\Api\UsersStatusController;
 use App\Http\Controllers\Api\ImpersonationController;
 use App\Http\Controllers\Api\SearchAddressController;
+use App\Http\Controllers\Api\ChangePasswordController;
 use App\Http\Controllers\Api\Auth\ResetPasswordController;
 use App\Http\Controllers\Api\OCRRulesAssignmentController;
+use App\Http\Controllers\Api\AccesorialCompaniesController;
 use App\Http\Controllers\Api\Auth\ForgotPasswordController;
 use App\Http\Controllers\Api\DownloadOriginalOrderPdfController;
 
@@ -36,6 +38,7 @@ Route::post('login', [LoginController::class, 'login'])->name('login');
 Route::post('signup', [LoginController::class, 'signup'])->name('signup');
 
 Route::post('password/email', [ForgotPasswordController::class, 'sendResetLinkEmail'])
+    ->middleware('tenant-aware')
     ->name('password.email');
 Route::post('password/reset', [ResetPasswordController::class, 'reset'])
     ->name('password.update');
@@ -54,6 +57,9 @@ Route::group(['middleware' => ['auth:sanctum', 'impersonate', 'tenant-aware']], 
 
     Route::get('roles', RolesController::class)
         ->name('roles.index');
+
+    Route::post('password/change', ChangePasswordController::class)
+        ->name('password.change');
 
     // Users management
     Route::put('users/{user}/status', UsersStatusController::class)
@@ -83,6 +89,14 @@ Route::group(['middleware' => ['auth:sanctum', 'impersonate', 'tenant-aware']], 
     // Companies management
     Route::resource('companies', CompaniesController::class)
         ->only(['index', 'update', 'show']);
+
+    //companies/1/variant/1/
+    Route::get('companies/{company}/variants/{variant}/accesorials', [AccesorialCompaniesController::class, 'show'])
+        ->name('company-variants-accessorials.show');
+
+    //companies/1/variant/1/
+    Route::put('companies/{company}/variants/{variant}/accesorials', [AccesorialCompaniesController::class, 'update'])
+        ->name('company-variants-accessorials.put');
 
     // Authenticated route to get document upload URI
     Route::post('createocrrequestuploaduri', [OCRRequestController::class, 'createOCRRequestUploadURI'])

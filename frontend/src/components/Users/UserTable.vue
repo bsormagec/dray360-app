@@ -115,7 +115,7 @@
 <script>
 import DateRangeCalendar from '@/components/Orders/DateRangeCalendar'
 export default {
-  name: 'GeneralTable',
+  name: 'UserTable',
   components: {
     DateRangeCalendar
   },

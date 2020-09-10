@@ -1,3 +1,4 @@
+/* eslint-disable camelcase */
 /*
   [
     {
@@ -20,7 +21,7 @@ import Vue from 'vue'
 import mapFieldNames from '@/views/Details/inner_utils/map_field_names'
 import { formModule } from '@/views/Details/inner_store/index'
 import { defaultsTo } from '@/utils/defaults_to'
-// import { uuid } from '@/utils/uuid_valid_id'
+import get from 'lodash/get'
 import { buildField } from '@/views/Details/inner_utils/example_form'
 
 export const parse = ({ data }) => {
@@ -50,6 +51,7 @@ function getHighlights (data) {
               isEditing: true,
               readonly: false,
               id: evt.id,
+              addressId: evt.t_address_id,
               matchedAddress: formatAddress(evt.address),
               verified: evt.t_address_verified
             })
@@ -58,7 +60,7 @@ function getHighlights (data) {
           highlights[evtName] = {
             ...getOcrData(`order_address_events.${i}`, data),
             name: evtName,
-            value: evt.t_address_raw_text
+            value: defaultsTo(() => evt.t_address_raw_text, '--')
           }
         })
       } else if (key === 'order_line_items') {
@@ -91,16 +93,27 @@ function getHighlights (data) {
           }
         })
       } else if (key === 'bill_to_address') {
+        const billing = formModule.state.form.sections.shipment.subSections.billing.fields
+        Vue.set(
+          billing,
+          'bill to',
+          buildField({
+            type: 'modal-address',
+            isEditing: true,
+            readonly: false,
+            addressId: get(data, 'bill_to_address.id', null),
+            matchedAddress: formatAddress(data.bill_to_address),
+            verified: data.bill_to_address_verified
+          })
+        )
+
         highlights[key] = {
           ...getOcrData(key, data),
           name: mapFieldNames.getName({ abbyName: key }),
-          value: data.bill_to_address_raw_text,
-          matchedAddress: formatAddress(data.bill_to_address),
-          verified: data.bill_to_address_verified
+          value: defaultsTo(() => data.bill_to_address_raw_text, '--')
         }
       } else if (key.includes('port_ramp')) {
-        /* eslint camelcase: 0 */
-        const valueForMatched = defaultsTo(() => data[key], null)
+        const portRampMatchedAddress = get(data, key, null)
 
         /* Matched address */
         const origin = formModule.state.form.sections.shipment.subSections.origin.fields
@@ -111,7 +124,8 @@ function getHighlights (data) {
             type: 'modal-address',
             isEditing: true,
             readonly: false,
-            matchedAddress: formatAddress(valueForMatched),
+            addressId: get(portRampMatchedAddress, 'id', null),
+            matchedAddress: formatAddress(portRampMatchedAddress),
             value: defaultsTo(() => data[`${key}_raw_text`], '--'),
             verified: data[`${key}_verified`]
           })

@@ -117,8 +117,7 @@ export function getAddressEvents (currentOrder) {
       ...addrEvent,
       id: entry[1].id || null,
       t_order_id: currentOrder.id,
-      t_address_raw_text: formAddrEventText,
-      t_address_verified: true
+      t_address_raw_text: formAddrEventText
     }
   })
 

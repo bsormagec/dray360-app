@@ -136,6 +136,7 @@ class UsersControllerTest extends TestCase
         $role = Role::latest()->first();
         $user = factory(User::class)->create();
         $user->setCompany($this->customerAdmin->company)->save();
+        $user->attachRole($role);
         $newData = [
             'name' => $this->faker->name,
             'email' => $this->faker->email,

@@ -40,11 +40,15 @@
                 sm="4"
               >
                 <v-btn
+                  v-if="company_variant_rules().length > 0"
+                  color="success"
                   @click="editRule(selected_rule_index)"
                 >
                   Save
                 </v-btn>
                 <v-btn
+                  v-if="company_variant_rules().length > 0"
+                  disabled
                   @click="cancelRuleEdition(selected_rule_index)"
                 >
                   Cancel
@@ -64,11 +68,14 @@
         <div class="card">
           <div class="card-header">
             <v-btn
+              color="success"
+              :disabled="!companyVariantSelected"
               @click="saveRuleSequence()"
             >
               Save
             </v-btn>
             <v-btn
+              :disabled="!companyVariantSelected"
               @click="cancelSequenceEdition()"
             >
               Cancel
@@ -86,24 +93,31 @@
         >
           <v-list>
             <v-text-field
-              label="Search..."
+              placeholder="Search..."
               outlined
+              append-icon="mdi-magnify"
+              style="padding: 0 1rem;"
             />
             <v-list-item-group
               color="primary"
             >
               <v-list-item
-                v-for="(rule, i) in rules_library()"
-                :key="i"
+                v-for="rule in rules_library()"
+                :key="rule.id"
               >
                 <v-list-item-content>
                   <v-list-item-title
                     v-text="rule.name"
                   />
                 </v-list-item-content>
-                <button @click="addToCompanyVariant(rule.name, rule.code, i)">
-                  ->
-                </button>
+                <v-btn
+                  icon
+                  color="primary"
+                  :ripple="false"
+                  @click="addToCompanyVariant(rule.id)"
+                >
+                  <v-icon>mdi-chevron-right</v-icon>
+                </v-btn>
               </v-list-item>
             </v-list-item-group>
           </v-list>
@@ -227,9 +241,14 @@
                   <v-list-item-content class="draggable-item">
                     <v-list-item-title v-text="rule.name" />
                   </v-list-item-content>
-                  <button @click="removeFromCompanyVariant(i)">
-                    X
-                  </button>
+                  <v-btn
+                    icon
+                    color="primary"
+                    :ripple="false"
+                    @click="removeFromCompanyVariant(i)"
+                  >
+                    <v-icon>mdi-window-close</v-icon>
+                  </v-btn>
                 </v-list-item>
               </draggable>
             </v-list-item-group>
@@ -274,20 +293,21 @@ export default {
     },
     draggable_rules: [],
     selected_rule_index: 0,
-    company_id: 8,
-    variant_id: 8,
+    company_id: null,
+    variant_id: null,
     company_name: '',
     variant_name: ''
   }),
   computed: {
+    companyVariantSelected () {
+      return this.company_id !== null && this.variant_id !== null
+    },
     pasteAbleInput: function () {
       return this.testing_output() ? JSON.stringify(this.testing_output().input.fields).replace(/\n/g, '\\n') : ''
     }
   },
   async mounted () {
-    const vc = this
-
-    await vc.fetchRules()
+    await this.fetchRules()
   },
   methods: {
     ...mapActions(rulesLibrary.moduleName, [types.getLibrary, types.getCompanyVariantRules, types.setSequence, types.setRule, types.addRule, types.setRuleCode, types.getTestingOutput, types.getCompanyList, types.getVariantList]),
@@ -328,9 +348,7 @@ export default {
     },
 
     async fetchVariantName () {
-      const vc = this
-
-      const status = await this[types.getVariantName](vc.variant_id)
+      const status = await this[types.getVariantName](this.variant_id)
 
       if (status === reqStatus.success) {
         console.log('getCompanyName success')
@@ -340,16 +358,14 @@ export default {
     },
 
     async fetchCompanyVariantRules () {
-      const vc = this
-
       const pairIds = {
-        company_id: vc.company_id,
-        variant_id: vc.variant_id
+        company_id: this.company_id,
+        variant_id: this.variant_id
       }
 
       const status = await this[types.getCompanyVariantRules](pairIds)
 
-      vc.draggable_rules = vc.company_variant_rules()
+      this.draggable_rules = this.company_variant_rules()
 
       if (status === reqStatus.success) {
         console.log('fetchCompanyVariantRules success')
@@ -358,13 +374,12 @@ export default {
       }
     },
     async editRule (index) {
-      const vc = this
-      console.log('ruleId' + vc.company_variant_rules()[index].id)
-      const ruleId = vc.company_variant_rules()[index].id
-      const ruleName = vc.company_variant_rules()[index].name
+      console.log('ruleId' + this.company_variant_rules()[index].id)
+      const ruleId = this.company_variant_rules()[index].id
+      const ruleName = this.company_variant_rules()[index].name
 
       const ruleData = {
-        code: vc.company_variant_rules()[index].code,
+        code: this.company_variant_rules()[index].code,
         description: 'sample rule ' + ruleName,
         id: ruleId,
         name: ruleName
@@ -379,13 +394,12 @@ export default {
       }
     },
     async saveRuleSequence () {
-      const vc = this
       const idsToSave = []
-      vc.draggable_rules.forEach(rule => idsToSave.push(rule.id))
+      this.draggable_rules.forEach(rule => idsToSave.push(rule.id))
 
       const sequenceData = {
-        company_id: vc.company_id,
-        variant_id: vc.variant_id,
+        company_id: this.company_id,
+        variant_id: this.variant_id,
         rules: idsToSave
       }
 
@@ -405,8 +419,6 @@ export default {
     //   console.log(vc.company_variant_rules[index].code)
     // },
     async addRuleToLibrary () {
-      const vc = this
-
       const newName = prompt('Please type the name of the new rule')
       let newCode = null
       if (newName !== null) {
@@ -417,7 +429,7 @@ export default {
         name: newName,
         description: 'sample rule ' + newName,
         code: newCode,
-        id: (vc.rules_library().length + 1)
+        id: (this.rules_library().length + 1)
       }
 
       const status = await this[types.addRule](ruleData)
@@ -428,51 +440,50 @@ export default {
         console.log('add rule error')
       }
     },
-    addToCompanyVariant (name, code, i) {
-      const vc = this
-      if (confirm('Add ' + name + ' to company variant')) {
-        vc.draggable_rules.push(vc.rules_library()[i])
+    addToCompanyVariant (ruleId) {
+      if (this.company_id === null || this.variant_id === null) {
+        alert('Please select a company/variant pair first.')
+        return
+      }
+      const rule = this.rules_library().find(rule => rule.id === ruleId)
+
+      if (confirm('Add ' + rule.name + ' to company variant')) {
+        this.draggable_rules.push(rule)
       }
     },
     removeFromCompanyVariant (i) {
-      const vc = this
-      if (vc.draggable_rules.length > 1) {
-        vc.draggable_rules.splice(i, 1)
+      if (this.draggable_rules.length > 1) {
+        this.draggable_rules.splice(i, 1)
+        this.updateSelectedIndex(0)
       } else {
         alert('There must be at least 1 rule')
       }
     },
     updateSelectedIndex (i) {
-      const vc = this
-      vc.selected_rule_index = i
+      this.selected_rule_index = i
       console.log('selected index: ' + i)
     },
 
     updateSelectedCompany (company) {
-      const vc = this
-      vc.company_name = company.name
-      vc.company_id = company.id
-      vc.fetchRules()
+      this.company_name = company.name
+      this.company_id = company.id
+      this.fetchRules()
     },
 
     updateSelectedVariant (variant) {
-      const vc = this
-      vc.variant_name = variant.abbyy_variant_name
-      vc.variant_id = variant.id
-      vc.fetchRules()
+      this.variant_name = variant.abbyy_variant_name
+      this.variant_id = variant.id
+      this.fetchRules()
     },
 
     fetchRules () {
-      const vc = this
-      vc.fetchRulesLibrary()
-      vc.fetchCompanyVariantRules()
-      vc.fetchCompanyList()
-      vc.fetchVariantList()
+      this.fetchRulesLibrary()
+      this.fetchCompanyVariantRules()
+      this.fetchCompanyList()
+      this.fetchVariantList()
     },
     async testSingleRule (index) {
-      const vc = this
-
-      const ruleToTest = vc.draggable_rules[index]
+      const ruleToTest = this.draggable_rules[index]
       const orderId = prompt('Please enter order ID')
       const dataObject = { orderId, ruleToTest }
 
@@ -483,12 +494,10 @@ export default {
       }
     },
     async cancelRuleEdition (index) {
-      const vc = this
-      vc.draggable_rules[index].code = await this[types.setRuleCode](index)
+      this.draggable_rules[index].code = await this[types.setRuleCode](index)
     },
     cancelSequenceEdition () {
-      const vc = this
-      vc.fetchCompanyVariantRules()
+      this.fetchCompanyVariantRules()
     }
   }
 }

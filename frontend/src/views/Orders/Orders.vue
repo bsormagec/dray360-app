@@ -70,7 +70,9 @@ export default {
       searchFilter: {},
       filterQuery: '',
       dateQuery: '',
-      statusQuery: ['intake-accepted',
+      statusQuery: [
+        // DO NOT INCLUDE THIS IN DEFAULT LIST: 'intake-rejected',
+        'intake-accepted',
         'intake-exception',
         'intake-started',
         'ocr-completed',
@@ -80,11 +82,19 @@ export default {
         'process-ocr-output-file-complete',
         'process-ocr-output-file-error',
         'upload-requested',
+
         'sending-to-wint',
         'success-sending-to-wint',
-        'shipment-not-created-by-wint',
+        'failure-sending-to-wint',
         'shipment-created-by-wint',
-        'success-sending-to-wint'],
+        'shipment-not-created-by-wint',
+
+        'updating-to-wint',
+        'success-updating-to-wint',
+        'failure-updating-to-wint',
+        'shipment-updated-by-wint',
+        'shipment-not-updated-by-wint'
+      ],
       headers: [
         {
           text: 'Id',
