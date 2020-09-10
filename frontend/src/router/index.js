@@ -32,26 +32,41 @@ const routes = [
   {
     path: '/user/dashboard',
     name: 'Dashboard',
+    meta: {
+      middleware: [auth, permission('users-view')]
+    },
     component: Dashboard
   },
   {
     path: '/user/dashboard/add-user',
     name: 'AddUser',
+    meta: {
+      middleware: [auth, permission('users-view')]
+    },
     component: AddUser
   },
   {
     path: '/user/dashboard/edit-user/:id',
     name: 'EditUser',
+    meta: {
+      middleware: [auth, permission('users-view')]
+    },
     component: EditUser
   },
   {
     path: '/user/dashboard/edit-profile/:id',
     name: 'EditProfile',
+    meta: {
+      middleware: [auth, permission('users-view')]
+    },
     component: EditProfile
   },
   {
     path: '/user/dashboard/change-password/:id',
     name: 'ChangePassword',
+    meta: {
+      middleware: [auth, permission('users-view')]
+    },
     component: ChangePassword
   },
   {

@@ -91,7 +91,10 @@
 import userDashboard, { types } from '@/store/modules/users'
 import { mapState, mapActions } from '@/utils/vuex_mappings'
 import { reqStatus } from '@/enums/req_status'
+import hasPermission from '@/mixins/permissions'
 export default {
+
+  mixins: [hasPermission],
   data: () => ({
     ...mapState(userDashboard.moduleName, {
       users: state => state.users,
