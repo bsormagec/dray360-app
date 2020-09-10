@@ -132,6 +132,10 @@ export const exampleForm = {
             //   placeholder: 'select address',
             //   options: addresses()
             // })
+            'line haul': buildField({
+              type: 'text-area',
+              placeholder: 'line haul'
+            }),
             'bill to': buildField({
               type: 'modal-address',
               isEditing: true,
@@ -252,7 +256,11 @@ export const exampleForm = {
       rootFields: {
         'shipment notes': buildField({
           type: 'text-area',
-          placeholder: 'Shipment notes'
+          placeholder: 'shipment notes'
+        }),
+        'billing notes': buildField({
+          type: 'text-area',
+          placeholder: 'billing notes'
         })
       }
     }
