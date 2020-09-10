@@ -27,6 +27,7 @@
           outlined
         />
         <v-select
+          v-if="hasPermission('roles-update')"
           v-model="role_selected"
           item-text="display_name"
           item-value="id"
@@ -95,6 +96,7 @@ import hasPermission from '@/mixins/permissions'
 export default {
 
   mixins: [hasPermission],
+
   data: () => ({
     ...mapState(userDashboard.moduleName, {
       users: state => state.users,

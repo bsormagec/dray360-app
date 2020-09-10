@@ -34,8 +34,11 @@
           outlined
         />
         <v-select
+          v-if="hasPermission('roles-update')"
           v-model="role_selected"
-          :items="roles"
+          item-text="display_name"
+          item-value="id"
+          :items="roles()"
           solo
           dense
           persistent-hint
@@ -66,27 +69,31 @@
 import userDashboard, { types } from '@/store/modules/users'
 import { mapState, mapActions } from '@/utils/vuex_mappings'
 import { reqStatus } from '@/enums/req_status'
+import hasPermission from '@/mixins/permissions'
 export default {
+
+  mixins: [hasPermission],
+
   data: () => ({
     ...mapState(userDashboard.moduleName, {
-      users: state => state.users
+      users: state => state.users,
+      roles: state => state.roles
     }),
 
     name: '',
     email: '',
     password: '',
     org: '',
-    role_selected: 1,
-    roles: [1, 2]
+    role_selected: 1
 
   }),
 
-  updated () {
-    console.log('role: ', this.role_selected)
+  mounted () {
+    this.fetchRoles()
   },
 
   methods: {
-    ...mapActions(userDashboard.moduleName, [types.addUser]),
+    ...mapActions(userDashboard.moduleName, [types.addUser, types.getRoles]),
 
     async addUser () {
       const userData = {
@@ -105,17 +112,17 @@ export default {
       }
 
       this.$router.push('/user/dashboard')
+    },
+
+    async fetchRoles () {
+      const status = await this[types.getRoles]()
+
+      if (status === reqStatus.successs) {
+        console.log('success')
+      } else {
+        console.log('error')
+      }
     }
-
-    // async fetchRoles () {
-    //   const status = await this[types.getRoles]()
-
-    //   if (status === reqStatus.success) {
-    //     console.log('success')
-    //   } else {
-    //     console.log('error')
-    //   }
-    // }
 
   }
 }
