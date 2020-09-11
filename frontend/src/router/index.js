@@ -17,6 +17,7 @@ import { runMiddleware } from '@/router/middleware'
 import PageNotFound from '@/views/PageNotFound'
 import MappingField from '@/views/Mappings/MappingField'
 import LoggedOut from '@/router/middleware/LoggedOut'
+import AccesorialsMapping from '@/views/Mappings/AccesorialsMapping'
 
 Vue.use(VueRouter)
 
@@ -54,7 +55,7 @@ const routes = [
     component: EditUser
   },
   {
-    path: '/user/dashboard/edit-profile/:id',
+    path: '/user/dashboard/edit-profile',
     name: 'EditProfile',
     meta: {
       middleware: [auth, permission('users-view')]
@@ -62,7 +63,7 @@ const routes = [
     component: EditProfile
   },
   {
-    path: '/user/dashboard/change-password/:id',
+    path: '/user/dashboard/change-password',
     name: 'ChangePassword',
     meta: {
       middleware: [auth, permission('users-view')]
@@ -106,6 +107,14 @@ const routes = [
     path: '/companies/:id/refs-custom-mapping',
     name: 'Mapping',
     component: MappingField,
+    meta: {
+      middleware: [auth]
+    }
+  },
+  {
+    path: '/companies/:id/billing-mapping',
+    name: 'Billing Mapping',
+    component: AccesorialsMapping,
     meta: {
       middleware: [auth]
     }

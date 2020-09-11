@@ -37,4 +37,14 @@ class OCRVariant extends Model
         'abbyy_variant_name' => 'required',
         'description' => 'required'
     ];
+
+    public function companiesAccesorials()
+    {
+        return $this->belongsToMany(
+            Company::class,
+            't_company_ocrvariant_accessorial_mappings',
+            't_ocrvariant_id',
+            't_company_id'
+        )->using(AccesorialMappingPivot::class);
+    }
 }

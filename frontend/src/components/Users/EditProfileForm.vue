@@ -33,6 +33,7 @@
         <v-btn
           class="cancel-button button"
           outlined
+          @click="$router.push({path: '/user/dashboard/change-password/'})"
         >
           Change Password
         </v-btn>

@@ -123,7 +123,7 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-$cushing-logo: url("../../assets/images/cushing_logo.svg");
+// $cushing-logo: url("../../assets/images/cushing_logo.svg");
 $ordermaster-logo: url("../../assets/images/ordermaster_logo.svg");
 
 .sidebar.desktop {
@@ -179,7 +179,7 @@ $ordermaster-logo: url("../../assets/images/ordermaster_logo.svg");
 .sidebar__logo {
   width: 14rem;
   height: 4.3rem;
-  background-image: $cushing-logo;
+  // background-image: $cushing-logo;
   background-size: contain;
   background-position: center center;
 }

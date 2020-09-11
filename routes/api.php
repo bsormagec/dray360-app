@@ -18,6 +18,7 @@ use App\Http\Controllers\Api\SearchAddressController;
 use App\Http\Controllers\Api\ChangePasswordController;
 use App\Http\Controllers\Api\Auth\ResetPasswordController;
 use App\Http\Controllers\Api\OCRRulesAssignmentController;
+use App\Http\Controllers\Api\AccesorialCompaniesController;
 use App\Http\Controllers\Api\Auth\ForgotPasswordController;
 use App\Http\Controllers\Api\DownloadOriginalOrderPdfController;
 
@@ -88,6 +89,14 @@ Route::group(['middleware' => ['auth:sanctum', 'impersonate', 'tenant-aware']], 
     // Companies management
     Route::resource('companies', CompaniesController::class)
         ->only(['index', 'update', 'show']);
+
+    //companies/1/variant/1/
+    Route::get('companies/{company}/variants/{variant}/accesorials', [AccesorialCompaniesController::class, 'show'])
+        ->name('company-variants-accessorials.show');
+
+    //companies/1/variant/1/
+    Route::put('companies/{company}/variants/{variant}/accesorials', [AccesorialCompaniesController::class, 'update'])
+        ->name('company-variants-accessorials.put');
 
     // Authenticated route to get document upload URI
     Route::post('createocrrequestuploaduri', [OCRRequestController::class, 'createOCRRequestUploadURI'])

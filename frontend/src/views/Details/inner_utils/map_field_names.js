@@ -32,6 +32,7 @@ const mapFieldNamesCreator = () => {
     release_number: 'release number',
     ship_comment: 'shipment notes',
     bill_comment: 'billing notes',
+    line_haul: 'line haul',
     expedite: 'expedite shipment',
     has_chassis: 'has chassis'
   }
