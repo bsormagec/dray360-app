@@ -1,5 +1,5 @@
 import { reqStatus } from '@/enums/req_status'
-import { getUsers, deleteUser, editUser, addUser, getRoles, changeUserStatus } from '@/store/api_calls/users'
+import { getUsers, deleteUser, editUser, addUser, getRoles, changeUserStatus, changePassword } from '@/store/api_calls/users'
 
 export const types = {
   setUsers: 'SET_USERS',
@@ -9,7 +9,8 @@ export const types = {
   addUser: 'ADD_USER',
   getRoles: 'GET_ROLES',
   setRoles: 'SET_ROLES',
-  changeUserStatus: 'CHANGE_USER_STATUS'
+  changeUserStatus: 'CHANGE_USER_STATUS',
+  changePassword: 'CHANGE_PASSWORD'
 }
 
 const initialState = {
@@ -41,6 +42,10 @@ const mutations = {
     state.users[i] = userData
   },
 
+  [types.changePassword] (state, { userData }) {
+    state.users = userData
+  },
+
   [types.setRoles] (state, { rolesData }) {
     console.log('rolesdata: ', rolesData)
     state.roles = rolesData
@@ -58,7 +63,7 @@ const actions = {
   },
 
   async [types.deleteUser] ({ commit }, id) {
-    const [error, data] = await deleteUser(id)
+    const [error] = await deleteUser(id)
 
     if (error) return reqStatus.error
 
@@ -66,7 +71,7 @@ const actions = {
   },
 
   async [types.addUser] ({ commit }, user) {
-    const [error, data] = await addUser(user)
+    const [error] = await addUser(user)
 
     if (error) return reqStatus.error
 
@@ -96,10 +101,21 @@ const actions = {
   },
 
   async [types.changeUserStatus] ({ commmit }, payload) {
-    const [error, data] = await changeUserStatus(payload.userId, payload.newStatus)
+    const [error] = await changeUserStatus(payload.userId, payload.newStatus)
 
     if (error) return reqStatus.error
 
+    return reqStatus.success
+  },
+
+  async [types.changePassword] ({ commit }, oldPassword, password, passwordConfirmation) {
+    const [error, data] = await changePassword(oldPassword, password, passwordConfirmation)
+
+    if (error) {
+      return error.response.data
+    }
+
+    commit(types.changePassword, { userData: data.data })
     return reqStatus.success
   }
 }

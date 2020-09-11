@@ -46,14 +46,17 @@ const routes = [
     component: EditUser
   },
   {
-    path: '/user/dashboard/edit-profile/:id',
+    path: '/user/dashboard/edit-profile',
     name: 'EditProfile',
     component: EditProfile
   },
   {
-    path: '/user/dashboard/change-password/:id',
+    path: '/user/dashboard/change-password',
     name: 'ChangePassword',
-    component: ChangePassword
+    component: ChangePassword,
+    meta: {
+      middleware: [auth]
+    }
   },
   {
     path: '/styleguide',
