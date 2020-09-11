@@ -29,6 +29,7 @@
         <v-select
           v-if="hasPermission('roles-update')"
           v-model="role_selected"
+          label="User Role"
           item-text="display_name"
           item-value="id"
           :items="roles()"
