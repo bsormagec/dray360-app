@@ -15,6 +15,7 @@ import EditProfile from '@/views/Users/EditProfile'
 import ChangePassword from '@/views/Users/ChangePassword'
 import { runMiddleware } from '@/router/middleware'
 import PageNotFound from '@/views/PageNotFound'
+import PageNotAuthorized from '@/views/PageNotAuthorized'
 import MappingField from '@/views/Mappings/MappingField'
 import LoggedOut from '@/router/middleware/LoggedOut'
 import AccesorialsMapping from '@/views/Mappings/AccesorialsMapping'
@@ -123,6 +124,11 @@ const routes = [
     path: '*',
     name: 'Not Found',
     component: PageNotFound
+  },
+  {
+    path: '/not-authorized',
+    name: 'Not Authorized',
+    component: PageNotAuthorized
   }
 ]
 

@@ -7,6 +7,6 @@ export default function permission (...requestedPermissions) {
     if (canAccess) {
       return next()
     }
-    return next('/')
+    return next('/not-authorized')
   }
 }
