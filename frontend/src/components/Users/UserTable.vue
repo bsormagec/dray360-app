@@ -67,7 +67,7 @@
             outlined
           />
           <v-btn
-            v-if="hasAddButton.showButton"
+            v-if="hasAddButton.showButton && hasPermission('users-create')"
             class="user_btn add__user_btn"
             @click="addUser()"
           >
@@ -80,6 +80,7 @@
       </template>
       <template v-slot:[`item.actions`]="{ item }">
         <v-icon
+          v-if="hasPermission('users-edit')"
           small
           class="mr-2"
           @click="editItem(item)"
@@ -87,6 +88,7 @@
           mdi-pencil
         </v-icon>
         <v-icon
+          v-if="hasPermission('users-remove')"
           small
           @click="deleteItem(item)"
         >
@@ -114,11 +116,16 @@
 </template>
 <script>
 import DateRangeCalendar from '@/components/Orders/DateRangeCalendar'
+import hasPermission from '@/mixins/permissions'
 export default {
   name: 'UserTable',
+
   components: {
     DateRangeCalendar
   },
+
+  mixins: [hasPermission],
+
   props: {
     activePage: {
       type: Number,
@@ -166,6 +173,7 @@ export default {
       default: () => ([])
     }
   },
+
   data () {
     return {
       dialog: false,
@@ -181,6 +189,7 @@ export default {
       sortDesc: false
     }
   },
+
   computed: {
     showHeaders () {
       return this.headers.filter(s => this.selectedHeaders.includes(s))
