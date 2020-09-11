@@ -8,6 +8,8 @@ use App\Models\TMSProvider;
 use App\Services\Apis\RipCms;
 use Illuminate\Console\Command;
 use Illuminate\Support\Collection;
+use App\Exceptions\RipCmsException;
+use Illuminate\Support\Facades\Log;
 use App\Models\CompanyAddressTMSCode;
 use App\Jobs\ImportProfitToolsAddress;
 
@@ -39,7 +41,12 @@ class ImportProfitToolsAddresses extends Command
         $this->tmsProvider = TMSProvider::getProfitTools();
 
         $this->getCompaniesToImport()
-            ->each(fn ($company) => $this->importAdressesFor($company));
+            ->each(function ($company) {
+                try {
+                    $this->importAdressesFor($company);
+                } catch (RipCmsException $e) {
+                }
+            });
     }
 
     protected function getCompaniesToImport(): Collection
@@ -57,6 +64,11 @@ class ImportProfitToolsAddresses extends Command
         $ripCmsApi = (new RipCms($company))->getToken();
         $this->info("Getting all the information from RipCms for {$company->name}");
         $companiesAddress = collect($ripCmsApi->getCompanies());
+
+        if ($companiesAddress->count() == 0) {
+            Log::info('Aborting addresses import because addresses list is empty');
+            return;
+        }
 
         $this->deleteAddressesRemovedInTheResponse($companiesAddress, $company);
 

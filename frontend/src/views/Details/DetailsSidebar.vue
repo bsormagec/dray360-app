@@ -156,7 +156,7 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-$cushing-logo: url("../../assets/images/cushing_logo.svg");
+// $cushing-logo: url("../../assets/images/cushing_logo.svg");
 $ordermaster-logo: url("../../assets/images/ordermaster_logo.svg");
 
 .sidebar {
@@ -183,14 +183,14 @@ $ordermaster-logo: url("../../assets/images/ordermaster_logo.svg");
   }
 }
 
-.sidebar__logo {
-  width: 14rem;
-  min-height: 4.3rem;
-  height: 4.3rem;
-  background-image: $cushing-logo;
-  background-size: 14rem 4.3rem;
-  background-position: center center;
-}
+// .sidebar__logo {
+//   width: 14rem;
+//   min-height: 4.3rem;
+//   height: 4.3rem;
+//   // background-image: $cushing-logo;
+//   background-size: 14rem 4.3rem;
+//   background-position: center center;
+// }
 
 .sidebar__body {
   margin-top: 6rem;
