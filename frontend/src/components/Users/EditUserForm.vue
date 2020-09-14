@@ -27,7 +27,9 @@
           outlined
         />
         <v-select
+          v-if="hasPermission('roles-update')"
           v-model="role_selected"
+          label="User Role"
           item-text="display_name"
           item-value="id"
           :items="roles()"
@@ -91,7 +93,11 @@
 import userDashboard, { types } from '@/store/modules/users'
 import { mapState, mapActions } from '@/utils/vuex_mappings'
 import { reqStatus } from '@/enums/req_status'
+import hasPermission from '@/mixins/permissions'
 export default {
+
+  mixins: [hasPermission],
+
   data: () => ({
     ...mapState(userDashboard.moduleName, {
       users: state => state.users,

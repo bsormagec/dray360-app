@@ -4,26 +4,28 @@ namespace App\Nova;
 
 use Laravel\Nova\Fields\ID;
 use Illuminate\Http\Request;
-use Laravel\Nova\Fields\Code;
 use Laravel\Nova\Fields\Text;
 use Laravel\Nova\Fields\Number;
+use Laravel\Nova\Fields\Boolean;
+use Laravel\Nova\Fields\Textarea;
 use Laravel\Nova\Fields\BelongsTo;
+use App\Nova\Filters\BelongsTo as BelongsToFilter;
 
-class Company extends Resource
+class VerifiedAddress extends Resource
 {
     /**
      * The model the resource corresponds to.
      *
      * @var string
      */
-    public static $model = \App\Models\Company::class;
+    public static $model = \App\Models\VerifiedAddress::class;
 
     /**
      * The single value that should be used to represent the resource when being displayed.
      *
      * @var string
      */
-    public static $title = 'name';
+    public static $title = 'id';
 
     /**
      * The columns that should be searched.
@@ -31,7 +33,9 @@ class Company extends Resource
      * @var array
      */
     public static $search = [
-        'name', 'email_intake_address', 'email_intake_address_alt',
+        'ocr_address_raw_text',
+        'company_address_tms_code',
+        'company_address_tms_text',
     ];
 
     /**
@@ -39,7 +43,7 @@ class Company extends Resource
      *
      * @var array
      */
-    public static $with = ['domain'];
+    public static $with = ['company', 'tmsProvider'];
 
     /**
      * Get the fields displayed by the resource.
@@ -50,14 +54,24 @@ class Company extends Resource
     public function fields(Request $request)
     {
         return [
-            ID::make('Id', 'id')->sortable(),
-            Text::make('Name'),
-            Text::make('Intake Email', 'email_intake_address'),
-            Text::make('Intake Email Alt', 'email_intake_address_alt'),
-            Number::make('Automatic address verification threshold', 'automatic_address_verification_threshold'),
-            Code::make('Ref Mapping', 'refs_custom_mapping')->json(),
-            Code::make('Configuration', 'configuration')->json(),
-            BelongsTo::make('Domain', 'domain', Domain::class)->sortable(),
+            ID::make(__('ID'), 'id')->sortable(),
+            BelongsTo::make('Company')
+                ->nullable()
+                ->rules('required'),
+            BelongsTo::make('Tms Provider', 'tmsProvider', TmsProvider::class)
+                ->nullable()
+                ->rules('required'),
+            Textarea::make('Ocr address rawtext', 'ocr_address_raw_text')
+                ->rules('required'),
+            Text::make('Company Address Tms Code', 'company_address_tms_code')
+                ->rules('required', 'max:512'),
+            Textarea::make('Company address rawtext', 'company_address_tms_text')
+                ->rules('required'),
+            Number::make('Verified count', 'verified_count')
+                ->rules('integer'),
+            Boolean::make('Skip verification', 'skip_verification')
+                ->rules('boolean'),
+            Textarea::make('Deleted reason', 'deleted_reason'),
         ];
     }
 
@@ -80,7 +94,10 @@ class Company extends Resource
      */
     public function filters(Request $request)
     {
-        return [];
+        return [
+            new BelongsToFilter('Company', 'company', \App\Models\Company::class, 'name'),
+            new BelongsToFilter('Tms Provider', 'tmsProvider', \App\Models\TMSProvider::class, 'name'),
+        ];
     }
 
     /**

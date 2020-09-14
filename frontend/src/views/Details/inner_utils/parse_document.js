@@ -93,9 +93,9 @@ function getHighlights (data) {
           }
         })
       } else if (key === 'bill_to_address') {
-        const billing = formModule.state.form.sections.shipment.subSections.billing.fields
+        const charges = formModule.state.form.sections.shipment.subSections.charges.fields
         Vue.set(
-          billing,
+          charges,
           'bill to',
           buildField({
             type: 'modal-address',

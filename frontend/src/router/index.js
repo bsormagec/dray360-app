@@ -15,6 +15,7 @@ import EditProfile from '@/views/Users/EditProfile'
 import ChangePassword from '@/views/Users/ChangePassword'
 import { runMiddleware } from '@/router/middleware'
 import PageNotFound from '@/views/PageNotFound'
+import PageNotAuthorized from '@/views/PageNotAuthorized'
 import MappingField from '@/views/Mappings/MappingField'
 import LoggedOut from '@/router/middleware/LoggedOut'
 import AccesorialsMapping from '@/views/Mappings/AccesorialsMapping'
@@ -33,26 +34,41 @@ const routes = [
   {
     path: '/user/dashboard',
     name: 'Dashboard',
+    meta: {
+      middleware: [auth, permission('users-view')]
+    },
     component: Dashboard
   },
   {
     path: '/user/dashboard/add-user',
     name: 'AddUser',
+    meta: {
+      middleware: [auth, permission('users-view')]
+    },
     component: AddUser
   },
   {
     path: '/user/dashboard/edit-user/:id',
     name: 'EditUser',
+    meta: {
+      middleware: [auth, permission('users-view')]
+    },
     component: EditUser
   },
   {
-    path: '/user/dashboard/edit-profile/:id',
+    path: '/user/dashboard/edit-profile',
     name: 'EditProfile',
+    meta: {
+      middleware: [auth, permission('users-view')]
+    },
     component: EditProfile
   },
   {
-    path: '/user/dashboard/change-password/:id',
+    path: '/user/dashboard/change-password',
     name: 'ChangePassword',
+    meta: {
+      middleware: [auth, permission('users-view')]
+    },
     component: ChangePassword
   },
   {
@@ -108,6 +124,11 @@ const routes = [
     path: '*',
     name: 'Not Found',
     component: PageNotFound
+  },
+  {
+    path: '/not-authorized',
+    name: 'Not Authorized',
+    component: PageNotAuthorized
   }
 ]
 

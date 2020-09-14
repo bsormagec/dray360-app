@@ -31,8 +31,9 @@ const mapFieldNamesCreator = () => {
     purchase_order_number: 'purchase order number',
     release_number: 'release number',
     ship_comment: 'shipment notes',
-    bill_comment: 'billing notes',
+    bill_comment: 'billing comments',
     line_haul: 'line haul',
+    fuel_surcharge: 'fsc',
     expedite: 'expedite shipment',
     has_chassis: 'has chassis'
   }

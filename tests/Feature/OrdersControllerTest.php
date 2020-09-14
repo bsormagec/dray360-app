@@ -15,6 +15,7 @@ use App\Models\OCRRequestStatus;
 use App\Models\OrderAddressEvent;
 use Illuminate\Support\Facades\DB;
 use Bezhanov\Faker\Provider\Commerce;
+use Illuminate\Support\Facades\Event;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Foundation\Testing\WithFaker;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
@@ -28,6 +29,7 @@ class OrdersControllerTest extends TestCase
     {
         parent::setUp();
 
+        Event::fake();
         $this->loginAdmin();
         $this->seed(OrdersTableSeeder::class);
         $this->faker->addProvider(new Commerce($this->faker));

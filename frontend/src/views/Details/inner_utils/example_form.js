@@ -125,7 +125,7 @@ export const exampleForm = {
             })
           }
         },
-        billing: {
+        charges: {
           fields: {
             // 'bill to': buildField({
             //   type: 'modal-select',
@@ -136,10 +136,18 @@ export const exampleForm = {
               type: 'text-area',
               placeholder: 'line haul'
             }),
+            'fsc': buildField({
+              type: 'text-area',
+              placeholder: 'fsc'
+            }),
             'bill to': buildField({
               type: 'modal-address',
               isEditing: true,
               readonly: false
+            }),
+            'billing comments': buildField({
+              type: 'text-area',
+              placeholder: 'billing comments'
             })
           }
         }
@@ -257,10 +265,6 @@ export const exampleForm = {
         'shipment notes': buildField({
           type: 'text-area',
           placeholder: 'shipment notes'
-        }),
-        'billing notes': buildField({
-          type: 'text-area',
-          placeholder: 'billing notes'
         })
       }
     }
