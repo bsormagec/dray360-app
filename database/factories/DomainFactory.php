@@ -9,7 +9,7 @@ use Faker\Generator as Faker;
 $factory->define(Domain::class, function (Faker $faker) {
     return [
         'description' => $faker->name,
-        'hostname' => $faker->domainName,
+        'hostname' => $faker->unique()->domainName,
         't_tenant_id' => factory(Tenant::class),
     ];
 });

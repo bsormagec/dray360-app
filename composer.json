@@ -83,6 +83,9 @@
         ],
         "fix-style": [
             "vendor/bin/php-cs-fixer fix app/ database/ tests/ --using-cache no --config .php_cs"
+        ],
+        "migrate-test": [
+            "@php artisan migrate:fresh --env=test --drop-views"
         ]
     },
     "repositories": [

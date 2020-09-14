@@ -18,6 +18,8 @@ class AuthServiceProvider extends ServiceProvider
         \App\Models\Company::class => \App\Policies\CompanyPolicy::class,
         \App\Models\User::class => \App\Policies\UserPolicy::class,
         \App\Models\CompanyOCRVariantOCRRule::class => \App\Policies\CompanyOcrVariantOcrRulePolicy::class,
+        \App\Models\TMSProvider::class => \App\Policies\TmsProviderPolicy::class,
+        \App\Models\VerifiedAddress::class => \App\Policies\VerifiedAddressPolicy::class,
     ];
 
     /**

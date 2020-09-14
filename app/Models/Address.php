@@ -26,6 +26,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
  * @property string $hours_of_operation
  * @property string $location_name
  * @property string $location_phone
+ * @property string $address_concatenated_text
  * @property bool $is_terminal
  * @property bool $is_billable
  */
