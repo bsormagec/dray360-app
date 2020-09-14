@@ -37,6 +37,7 @@ class Company extends Model
         'default_tms_provider_id',
         'refs_custom_mapping',
         'configuration',
+        'automatic_address_verification_threshold',
         't_domain_id',
     ];
 
@@ -46,6 +47,7 @@ class Company extends Model
     protected $casts = [
         'id' => 'integer',
         't_address_id' => 'integer',
+        'automatic_address_verification_threshold' => 'integer',
         'name' => 'string',
         'refs_custom_mapping' => 'json',
         'configuration' => 'json',

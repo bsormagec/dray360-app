@@ -44,15 +44,6 @@
       >
         Send to   TMS
       </v-btn>
-      <div>
-        <ErrorHandling
-          v-if="dialog"
-          :dialog="dialog"
-          :label="modaltype"
-          type="modal"
-          :message="message"
-        />
-      </div>
     </div>
 
     <div
@@ -80,13 +71,12 @@ import DetailsSidebarNavigation from '@/views/Details/DetailsSidebarNavigation'
 import { mapActions } from '@/utils/vuex_mappings'
 import orders, { types } from '@/store/modules/orders'
 import { reqStatus } from '@/enums/req_status'
-import ErrorHandling from '@/components/General/ErrorHandling'
+import utils, { type } from '@/store/modules/utils'
 
 export default {
   name: 'DetailsSidebar',
   components: {
-    DetailsSidebarNavigation,
-    ErrorHandling
+    DetailsSidebarNavigation
   },
 
   mixins: [isMobile, hasPermissions],
@@ -119,6 +109,7 @@ export default {
     toggleIsEditing: formModule.methods.toggleIsEditing,
     ...mapActions(orders.moduleName, [types.postSendToTms]),
     ...mapActions('AUTH', ['logout']),
+    ...mapActions(utils.moduleName, [type.setSnackbar]),
 
     async logoutBtn () {
       this.logoutError = false
@@ -132,15 +123,17 @@ export default {
       const status = await this[types.postSendToTms]({ order_id: this.$route.params.id, status: 'sending-to-wint' })
       this.dialog = false
       if (status === reqStatus.success) {
-        console.log('success')
-        this.message = 'Processing'
-        this.modaltype = 'snackbar'
-        this.dialog = true
+        await this[type.setSnackbar]({
+          show: true,
+          showSpinner: false,
+          message: 'Processing'
+        })
       } else {
-        console.log('error')
-        this.dialog = true
-        this.modaltype = 'error'
-        this.message = 'Some of your addresses are not validated'
+        await this[type.setSnackbar]({
+          show: true,
+          showSpinner: false,
+          message: 'Some of your addresses are not validated'
+        })
       }
       this.disabled = true
     },
@@ -156,7 +149,7 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-// $cushing-logo: url("../../assets/images/cushing_logo.svg");
+
 $ordermaster-logo: url("../../assets/images/ordermaster_logo.svg");
 
 .sidebar {

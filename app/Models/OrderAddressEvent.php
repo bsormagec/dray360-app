@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Events\AddressVerified;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
@@ -87,6 +88,18 @@ class OrderAddressEvent extends Model
         't_address_id' => 'required',
         'event_number' => 'required'
     ];
+
+    public static function booted()
+    {
+        static::updated(function ($orderAddressEvent) {
+            if (
+                $orderAddressEvent->getOriginal('t_address_verified') == false
+                && $orderAddressEvent->t_address_verified == true
+            ) {
+                AddressVerified::dispatch($orderAddressEvent);
+            }
+        });
+    }
 
     public function address()
     {

@@ -31,7 +31,7 @@
               </thead>
               <tbody>
                 <tr>
-                  <td>Ref 1</td>
+                  <td>Ref 2</td>
                   <td>
                     <v-select
                       v-model="ds_ref2_text"
@@ -59,7 +59,7 @@
                   </td>
                 </tr>
                 <tr>
-                  <td>Ref 2</td>
+                  <td>Ref 3</td>
                   <td>
                     <v-select
                       v-model="ds_ref3_text"
@@ -124,10 +124,10 @@
                   </td>
                 </tr>
                 <tr>
-                  <td>Billing Notes </td>
+                  <td>Billing Comments </td>
                   <td>
                     <v-select
-                      v-model="billing_notes"
+                      v-model="billing_comments"
                       :items="fieldNames"
                       item-text="value"
                       item-value="field_name"
@@ -193,9 +193,9 @@ export default {
       reftypes: [],
       mappings: [
         { field_name: 'BOOKING #', value: 18 },
-        { field_name: 'CONTAINER #', value: 27 },
+        { field_name: 'CONTAINER #', value: 20 },
         { field_name: 'LOAD #', value: 29 },
-        { field_name: 'CUSTOMER #', value: 18 },
+        { field_name: 'CUSTOMER #', value: 27 },
         { field_name: 'MASTER BL #', value: 15 },
         { field_name: 'PO #', value: 3 },
         { field_name: 'REF #', value: 2 },
@@ -211,8 +211,9 @@ export default {
         { field_name: 'house_bol_hawb', value: 'house BOL MAWB' },
         { field_name: 'reference_number', value: 'reference number' },
         { field_name: 'ship_comment', value: 'shipment notes' },
-        { field_name: 'bill_comment', value: 'billing notes' },
+        { field_name: 'bill_comment', value: 'billing comments' },
         { field_name: 'line_haul', value: 'line haul' },
+        { field_name: 'fuel_surcharge', value: 'fsc' },
         { field_name: 'unit_number', value: 'unit number' },
         { field_name: 'equipment_size', value: 'size' },
         { field_name: 'bill_to_address', value: 'bill to' },
@@ -288,9 +289,9 @@ export default {
 
       this.custom.forEach((value, i) => {
         if (this.isCustomValue(value) && value !== null && value !== undefined && value !== '') {
-          jsondata[`custom${i}`] = { value: value }
+          jsondata[`custom${i + 1}`] = { value: value }
         } else if (!this.isCustomValue(value) && value !== null && value !== '') {
-          jsondata[`custom${i}`] = { source: value }
+          jsondata[`custom${i + 1}`] = { source: value }
         }
       })
       const status = await this[types.updateCompaniesMappingField]({ id: this.$route.params.id, changes: { refs_custom_mapping: jsondata } })
@@ -353,11 +354,12 @@ export default {
             this.shipment_notes = value.source
             break
           case key.substr('custom'):
+            var customIndex = parseInt(key.match(/\d+/g)) - 1
             if (this.isCustomValue(value.source)) {
-              this.$set(this.customValue, key.substr(key.length - 1), true)
-              this.$set(this.custom, key.substr(key.length - 1), value.value)
+              this.$set(this.customValue, customIndex, true)
+              this.$set(this.custom, customIndex, value.value)
             } else {
-              this.$set(this.custom, key.substr(key.length - 1), value.source)
+              this.$set(this.custom, customIndex, value.source)
             }
             break
           default:

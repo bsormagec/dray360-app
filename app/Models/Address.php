@@ -26,6 +26,9 @@ use Illuminate\Database\Eloquent\SoftDeletes;
  * @property string $hours_of_operation
  * @property string $location_name
  * @property string $location_phone
+ * @property string $address_concatenated_text
+ * @property bool $is_terminal
+ * @property bool $is_billable
  */
 class Address extends Model
 {
@@ -63,16 +66,9 @@ class Address extends Model
     protected $casts = [
         'id' => 'integer',
         'latitude' => 'float',
-        'longitude' => 'float',
-        'address_line_1' => 'string',
-        'address_line_2' => 'string',
-        'city' => 'string',
-        'county' => 'string',
-        'state' => 'string',
-        'postal_code' => 'string',
-        'country' => 'string',
-        'hours_of_operation' => 'string',
-        'location_name' => 'string'
+       'longitude' => 'float',
+       'is_billable' => 'boolean',
+       'is_terminal' => 'boolean',
     ];
 
     /**
@@ -118,22 +114,7 @@ class Address extends Model
      */
     public static function createFrom($data, string $dataSource): self
     {
-        $finalData = [];
-
-        switch ($dataSource) {
-            case 'ripcms':
-                $finalData = [
-                    'address_line_1' => $data['addr1'] ?? null,
-                    'address_line_2' => $data['addr2'] ?? null,
-                    'city' => $data['city'] ?? null,
-                    'state' => $data['state'] ?? null,
-                    'postal_code' => $data['zip'] ?? null,
-                    'country' => $data['country'] ?? null,
-                    'location_name' => $data['name'] ?? null,
-                    'location_phone' => $data['phone'] ?? null,
-                ];
-                break;
-        }
+        $finalData = static::transformDataFromTms($data, $dataSource);
 
         return static::create($finalData);
     }
@@ -144,11 +125,19 @@ class Address extends Model
      */
     public function updateFrom($data, string $dataSource): bool
     {
-        $finalData = [];
+        $finalData = static::transformDataFromTms($data, $dataSource);
 
+        return $this->update($finalData);
+    }
+
+    /**
+     * Transform the data from the tms response to the database structure.
+     */
+    public static function transformDataFromTms($data, string $dataSource): array
+    {
         switch ($dataSource) {
             case 'ripcms':
-                $finalData = [
+                return [
                     'address_line_1' => $data['addr1'] ?? null,
                     'address_line_2' => $data['addr2'] ?? null,
                     'city' => $data['city'] ?? null,
@@ -157,11 +146,11 @@ class Address extends Model
                     'country' => $data['country'] ?? null,
                     'location_name' => $data['name'] ?? null,
                     'location_phone' => $data['phone'] ?? null,
+                    'is_billable' => strtoupper($data['co_allow_billing'] ?? '') == 'T',
+                    'is_terminal' => strtoupper($data['terminationlocation'] ?? '') == 'T',
                 ];
                 break;
         }
-
-        return $this->update($finalData);
     }
 
     public function isTheSameAs($address, $source = null): bool

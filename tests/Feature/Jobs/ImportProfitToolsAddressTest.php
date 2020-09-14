@@ -53,6 +53,8 @@ class ImportProfitToolsAddressTest extends TestCase
             'country' => $addresses[1]['country'],
             'location_name' => $addresses[1]['name'],
             'location_phone' => $addresses[1]['phone'],
+            'is_terminal' => 1,
+            'is_billable' => 0,
         ]);
     }
 
@@ -61,6 +63,8 @@ class ImportProfitToolsAddressTest extends TestCase
     {
         $modifiedAddress = $this->getBaseAddresses()[1];
         $modifiedAddress['id'] = 1;
+        $modifiedAddress['terminationlocation'] = 'F';
+        $modifiedAddress['co_allow_billing'] = 'T';
         Queue::fake();
         Http::fakeSequence()
             ->push(['access_token' => 'test'])
@@ -86,6 +90,8 @@ class ImportProfitToolsAddressTest extends TestCase
             'country' => $modifiedAddress['country'],
             'location_name' => $modifiedAddress['name'],
             'location_phone' => $modifiedAddress['phone'],
+            'is_terminal' => 0,
+            'is_billable' => 1,
         ]);
     }
 
@@ -131,7 +137,9 @@ class ImportProfitToolsAddressTest extends TestCase
                 "state" => "IL",
                 "zip" => "61068",
                 "country" => null,
-                "phone" => "8155612421    "
+                "phone" => "8155612421    ",
+                "terminationlocation" => "F",
+                "co_allow_billing" => "T",
             ], [
                 "id" => 2,
                 "name" => "USP   AS 23",
@@ -141,7 +149,9 @@ class ImportProfitToolsAddressTest extends TestCase
                 "state" => "IL",
                 "zip" => "61098",
                 "country" => null,
-                "phone" => "23423    "
+                "phone" => "23423    ",
+                "terminationlocation" => "T",
+                "co_allow_billing" => "F",
             ]
         ];
     }
