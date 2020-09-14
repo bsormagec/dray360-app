@@ -124,10 +124,10 @@
                   </td>
                 </tr>
                 <tr>
-                  <td>Billing Notes </td>
+                  <td>Billing Comments </td>
                   <td>
                     <v-select
-                      v-model="billing_notes"
+                      v-model="billing_comments"
                       :items="fieldNames"
                       item-text="value"
                       item-value="field_name"
@@ -211,8 +211,9 @@ export default {
         { field_name: 'house_bol_hawb', value: 'house BOL MAWB' },
         { field_name: 'reference_number', value: 'reference number' },
         { field_name: 'ship_comment', value: 'shipment notes' },
-        { field_name: 'bill_comment', value: 'billing notes' },
+        { field_name: 'bill_comment', value: 'billing comments' },
         { field_name: 'line_haul', value: 'line haul' },
+        { field_name: 'fuel_surcharge', value: 'fsc' },
         { field_name: 'unit_number', value: 'unit number' },
         { field_name: 'equipment_size', value: 'size' },
         { field_name: 'bill_to_address', value: 'bill to' },
