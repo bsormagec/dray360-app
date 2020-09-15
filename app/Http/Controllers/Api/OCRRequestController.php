@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Api;
 
 use Carbon\Carbon;
+use App\Models\Company;
 use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 use App\Models\OCRRequestStatus;
@@ -46,7 +47,7 @@ class OCRRequestController extends Controller
                 'uploading_filename' => $uploadingFilename,
                 'url_expiry_time' => $expiryTime,
                 'upload_uri' => $uploadRequestUri,
-                'company_id' => currentCompany()->id ?? null,
+                'company_id' => currentCompany()->id ?? Company::TCOMPANIES_DEV,
                 'user_id' => auth()->user()->id,
             ];
 

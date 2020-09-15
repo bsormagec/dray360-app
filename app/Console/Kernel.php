@@ -30,7 +30,7 @@ class Kernel extends ConsoleKernel
             ->onOneServer();
         $schedule
             ->command('import:profit-tools-addresses', ['--insert-only'])
-            ->everyFifteenMinutes()
+            ->hourly()
             ->onOneServer();
         $schedule->command('horizon:snapshot')->everyFiveMinutes();
     }
