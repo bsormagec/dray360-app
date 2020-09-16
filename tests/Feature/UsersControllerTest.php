@@ -141,6 +141,8 @@ class UsersControllerTest extends TestCase
             'name' => $this->faker->name,
             'email' => $this->faker->email,
             'role_id' => $role->id,
+            'position' => $this->faker->jobTitle,
+            'org' => $this->faker->company
         ];
 
         $this->putJson(route('users.update', $user->id), $newData)

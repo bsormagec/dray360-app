@@ -95,7 +95,7 @@
 
 <script>
 import SidebarNavigation from '@/components/General/SidebarNavigation'
-import users, { types } from '@/store/modules/users'
+import profile, { types } from '@/store/modules/profile'
 import { mapActions } from '@/utils/vuex_mappings'
 import utils, { type } from '@/store/modules/utils'
 
@@ -112,7 +112,7 @@ export default {
     }
   },
   methods: {
-    ...mapActions(users.moduleName, [types.changePassword]),
+    ...mapActions(profile.moduleName, [types.changePassword]),
     ...mapActions(utils.moduleName, [type.setSnackbar]),
 
     async save () {

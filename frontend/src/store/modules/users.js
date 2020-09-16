@@ -1,5 +1,5 @@
 import { reqStatus } from '@/enums/req_status'
-import { getUsers, deleteUser, editUser, addUser, getRoles, changeUserStatus, changePassword } from '@/store/api_calls/users'
+import { getUsers, deleteUser, editUser, addUser, getRoles, changeUserStatus } from '@/store/api_calls/users'
 
 export const types = {
   setUsers: 'SET_USERS',
@@ -9,8 +9,7 @@ export const types = {
   addUser: 'ADD_USER',
   getRoles: 'GET_ROLES',
   setRoles: 'SET_ROLES',
-  changeUserStatus: 'CHANGE_USER_STATUS',
-  changePassword: 'CHANGE_PASSWORD'
+  changeUserStatus: 'CHANGE_USER_STATUS'
 }
 
 const initialState = {
@@ -40,10 +39,6 @@ const mutations = {
 
   [types.editUser] (state, { userData, i }) {
     state.users[i] = userData
-  },
-
-  [types.changePassword] (state, { userData }) {
-    state.users = userData
   },
 
   [types.setRoles] (state, { rolesData }) {
@@ -105,17 +100,6 @@ const actions = {
 
     if (error) return reqStatus.error
 
-    return reqStatus.success
-  },
-
-  async [types.changePassword] ({ commit }, oldPassword, password, passwordConfirmation) {
-    const [error, data] = await changePassword(oldPassword, password, passwordConfirmation)
-
-    if (error) {
-      return error.response.data
-    }
-
-    commit(types.changePassword, { userData: data.data })
     return reqStatus.success
   }
 }
