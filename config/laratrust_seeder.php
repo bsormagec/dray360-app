@@ -26,6 +26,7 @@ return [
             'companies' => 'c,v,e,r',
             'tms-providers' => 'c,v,e,r',
             'verified-addresses' => 'c,v,e,r',
+            'equipment-types' => 'c,v,e,r',
         ],
         'customer-admin' => [
             'orders' => 'e,v,c',

@@ -23,7 +23,8 @@ class Company extends Model
         FOREIGN_KEY = 't_company_id',
         CUSHING = 'Cushing',
         TCOMPANIES_DEV = 'TCompaniesDev',
-        POLARIS = 'Polaris';
+        POLARIS = 'Polaris',
+        IXT_ONBOARDING = 'IXTOnboarding';
 
     public $table = 't_companies';
 
@@ -95,6 +96,14 @@ class Company extends Model
     public static function getTCompaniesDev(): self
     {
         return static::where('name', static::TCOMPANIES_DEV)->first();
+    }
+
+    /**
+     * Get company 'Itx onboarding'
+     */
+    public static function getIxtOnboarding(): self
+    {
+        return static::where('name', static::IXT_ONBOARDING)->first();
     }
 
     public function variantsAccessorials(): BelongsToMany

@@ -21,6 +21,7 @@ class ProfitToolsCushingSeeder extends Seeder
             Company::CUSHING,
             Company::TCOMPANIES_DEV,
             Company::POLARIS,
+            Company::IXT_ONBOARDING,
         ])->each(function ($companyName) {
             $company = Company::firstOrCreate(
                 ['name' => $companyName],
