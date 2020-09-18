@@ -134,6 +134,7 @@ class Order extends Model
         't_company_id',
         't_tms_provider_id',
         'division_code',
+        't_equipment_type_id',
     ];
 
     /**
@@ -142,7 +143,6 @@ class Order extends Model
      * @var array
      */
     protected $casts = [
-        'id' => 'integer',
         'one_way' => 'boolean',
         'yard_pre_pull' => 'boolean',
         'has_chassis' => 'boolean',
@@ -150,11 +150,8 @@ class Order extends Model
         'expedite' => 'boolean',
         'estimated_arrival_utc' => 'datetime',
         'last_free_date_utc' => 'datetime',
-        'bill_to_address_id' => 'integer',
         'bill_to_address_verified' => 'boolean',
-        'port_ramp_of_origin_address_id' => 'integer',
         'port_ramp_of_origin_address_verified' => 'boolean',
-        'port_ramp_of_destination_address_id' => 'integer',
         'port_ramp_of_destination_address_verified' => 'boolean',
         'ocr_data' => 'json',
         'pickup_by_date' => 'datetime:Y-m-d',
@@ -224,6 +221,7 @@ class Order extends Model
         'release_number' => 'sometimes|nullable',
         'ship_comment' => 'sometimes|nullable',
         'division_code' => 'sometimes|nullable',
+        't_equipment_type_id' => 'sometimes|nullable|exists:t_equipment_types,id',
     ];
 
     public function orderAddressEvents()
@@ -254,6 +252,11 @@ class Order extends Model
     public function portRampOfDestinationAddress()
     {
         return $this->belongsTo(\App\Models\Address::class, 'port_ramp_of_destination_address_id');
+    }
+
+    public function equipmentType()
+    {
+        return $this->belongsTo(EquipmentType::class, 't_equipment_type_id');
     }
 
     public function updateRelatedModels($relatedModels): void

@@ -90,18 +90,19 @@ class UsersController extends Controller
     public function update(Request $request, User $user)
     {
         $this->authorize('update', $user);
-
         $data = $request->validate([
-            'name' => 'required|string|min:3',
-            'email' => ['required', 'email', Rule::unique('users')->ignoreModel($user)],
-            'role_id' => 'required|exists:roles,id',
+            'name' => 'sometimes|string|min:3',
+            'email' => ['sometimes', 'email', Rule::unique('users')->ignoreModel($user)],
+            'position' => 'sometimes',
+            'org' => 'sometimes',
+            'role_id' => 'sometimes|exists:roles,id',
         ]);
-        $roleId = $data['role_id'];
+        $roleId = $data['role_id'] ?? null;
         unset($data['role_id']);
-
+        if ($roleId) {
+            $user->syncRolesWithoutDetaching([$roleId]);
+        }
         $user->update($data);
-        $user->syncRolesWithoutDetaching([$roleId]);
-
         return response()->json($user);
     }
 

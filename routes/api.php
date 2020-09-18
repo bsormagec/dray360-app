@@ -16,6 +16,7 @@ use App\Http\Controllers\Api\UsersStatusController;
 use App\Http\Controllers\Api\ImpersonationController;
 use App\Http\Controllers\Api\SearchAddressController;
 use App\Http\Controllers\Api\ChangePasswordController;
+use App\Http\Controllers\Api\EquipmentTypesController;
 use App\Http\Controllers\Api\Auth\ResetPasswordController;
 use App\Http\Controllers\Api\OCRRulesAssignmentController;
 use App\Http\Controllers\Api\AccesorialCompaniesController;
@@ -89,6 +90,10 @@ Route::group(['middleware' => ['auth:sanctum', 'impersonate', 'tenant-aware']], 
     // Companies management
     Route::resource('companies', CompaniesController::class)
         ->only(['index', 'update', 'show']);
+
+    //companies/1/tms-provider/1/equipment-types
+    Route::get('companies/{company}/tms-provider/{tmsProvider}/equipment-types', EquipmentTypesController::class)
+        ->name('equipment-types.show');
 
     //companies/1/variant/1/
     Route::get('companies/{company}/variants/{variant}/accesorials', [AccesorialCompaniesController::class, 'show'])

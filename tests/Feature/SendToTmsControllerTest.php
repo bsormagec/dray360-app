@@ -13,7 +13,7 @@ use App\Models\Company;
 use Illuminate\Support\Str;
 use Laravel\Sanctum\Sanctum;
 use Illuminate\Http\Response;
-use ProfitToolsCushingSeeder;
+use ProfitToolsCompaniesSeeder;
 use Aws\Exception\AwsException;
 use App\Actions\PublishSnsMessageToSendToTms;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
@@ -27,7 +27,7 @@ class SendToTmsControllerTest extends TestCase
         parent::setUp();
 
         $this->loginAdmin();
-        $this->seed(ProfitToolsCushingSeeder::class);
+        $this->seed(ProfitToolsCompaniesSeeder::class);
     }
 
     /** @test */

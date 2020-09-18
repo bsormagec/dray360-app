@@ -33,6 +33,8 @@ class User extends Authenticatable
         'name',
         'email',
         'password',
+        'position',
+        'org',
         't_company_id',
         'deactivated_at',
         'configuration',
