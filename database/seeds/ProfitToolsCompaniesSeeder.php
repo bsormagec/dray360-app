@@ -5,7 +5,7 @@ use App\Models\Company;
 use App\Models\TMSProvider;
 use Illuminate\Database\Seeder;
 
-class ProfitToolsCushingSeeder extends Seeder
+class ProfitToolsCompaniesSeeder extends Seeder
 {
     /**
      * Run the database seeds.
@@ -21,6 +21,8 @@ class ProfitToolsCushingSeeder extends Seeder
             Company::CUSHING,
             Company::TCOMPANIES_DEV,
             Company::POLARIS,
+            Company::IXT_ONBOARDING,
+            Company::IXT,
         ])->each(function ($companyName) {
             $company = Company::firstOrCreate(
                 ['name' => $companyName],

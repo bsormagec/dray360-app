@@ -5,7 +5,7 @@ namespace Tests\Feature\Commands;
 use Tests\TestCase;
 use App\Models\Company;
 use App\Services\Apis\RipCms;
-use ProfitToolsCushingSeeder;
+use ProfitToolsCompaniesSeeder;
 use Illuminate\Support\Facades\Http;
 use App\Models\CompanyAddressTMSCode;
 use Illuminate\Support\Facades\Cache;
@@ -21,7 +21,7 @@ class ImportProfitToolsAddressesTest extends TestCase
     public function setUp(): void
     {
         parent::setUp();
-        $this->seed(ProfitToolsCushingSeeder::class);
+        $this->seed(ProfitToolsCompaniesSeeder::class);
     }
 
     /** @test */
@@ -39,7 +39,8 @@ class ImportProfitToolsAddressesTest extends TestCase
             ->push([
                 [ "id" => 23, "name" => "UPG3   Z 6"],
                 ["id" => 24, "name" => "WSI WAREHOUSE"],
-            ]);
+            ])
+            ->whenEmpty([]);
 
         $this->artisan('import:profit-tools-addresses')->assertExitCode(0);
 

@@ -45,6 +45,16 @@ return [
             'password' => env('RIP_CMS_TCOMPANIES_DEV_PASSWORD'),
             'token' => env('RIP_CMS_TCOMPANIES_DEV_TOKEN'),
         ],
+        Str::snake(Company::IXT_ONBOARDING) => [
+            'username' => env('RIP_CMS_IXT_ONBOARDING_USERNAME'),
+            'password' => env('RIP_CMS_IXT_ONBOARDING_PASSWORD'),
+            'token' => env('RIP_CMS_IXT_ONBOARDING_TOKEN'),
+        ],
+        Str::snake(Company::IXT) => [
+            'username' => env('RIP_CMS_IXT_USERNAME'),
+            'password' => env('RIP_CMS_IXT_PASSWORD'),
+            'token' => env('RIP_CMS_IXT_TOKEN'),
+        ],
     ],
 
     'search-address' => [
