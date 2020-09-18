@@ -6,7 +6,7 @@ use Tests\TestCase;
 use App\Models\Company;
 use App\Models\TMSProvider;
 use App\Services\Apis\RipCms;
-use ProfitToolsCushingSeeder;
+use ProfitToolsCompaniesSeeder;
 use App\Exceptions\RipCmsException;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Cache;
@@ -22,7 +22,7 @@ class ImportProfitToolsAddressTest extends TestCase
     public function setUp(): void
     {
         parent::setUp();
-        $this->seed(ProfitToolsCushingSeeder::class);
+        $this->seed(ProfitToolsCompaniesSeeder::class);
         $this->seed(ProfitToolsCushingAddressesSeeder::class);
     }
 
