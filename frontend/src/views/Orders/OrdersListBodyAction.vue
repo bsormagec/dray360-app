@@ -1,27 +1,28 @@
 <template>
-
-  <!-- <v-btn
-    v-if="hasPermission('orders-view')"
-    color="primary"
-    :disabled="item.order.id === undefined"
-    @click="() => item.action(item.order.id)"
-  >
-    View
-  </v-btn> -->
-
-  <!-- :disabled="item.order.id === undefined" -->
-
   <v-menu offset-y>
     <template v-slot:activator="{ on, attrs }">
-      <v-btn
-        v-if="hasPermission('orders-view')"
-        color="primary"
-        dark
-        v-bind="attrs"
-        v-on="on"
-      >
-        View
-      </v-btn>
+      <v-row v-if="hasPermission('orders-view')">
+        <v-btn
+          class="split-button"
+          tile
+          outlined
+          color="primary"
+          dark
+          @click="() => item.action(item.order.id)"
+        >
+          View
+        </v-btn>
+        <v-btn
+          class="selector split-button"
+          tile
+          outlined
+          color="primary"
+          v-bind="attrs"
+          v-on="on"
+        >
+          ▼
+        </v-btn>
+      </v-row>
     </template>
     <v-list>
       <v-list-item>
@@ -36,13 +37,6 @@
           @click="downloadPDF(item.order.id)"
         >
           {{ "Download PDF" }}
-        </v-list-item-title>
-      </v-list-item>
-      <v-list-item>
-        <v-list-item-title
-          @click="viewOrderHistory()"
-        >
-          {{ "View Order History" }}
         </v-list-item-title>
       </v-list-item>
     </v-list>
@@ -65,11 +59,7 @@ export default {
       required: true
     }
   },
-  data: () => ({
-  }),
-  // mounted () {
-  //   console.log('item prop: ', this.item)
-  // },
+
   methods: {
     ...mapActions(orders.moduleName, [types.getDownloadPDF]),
 
@@ -90,3 +80,9 @@ export default {
   }
 }
 </script>
+<style>
+  .selector {
+    min-width: 0 !important;
+    padding: 0 !important;
+  }
+</style>
