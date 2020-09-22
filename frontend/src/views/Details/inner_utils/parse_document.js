@@ -117,19 +117,19 @@ function getHighlights (data) {
 
         /* Matched address */
         const origin = formModule.state.form.sections.shipment.subSections.origin.fields
-        Vue.set(
-          origin,
-          `${portRampKeyParser(key)}`,
-          buildField({
-            type: 'modal-address',
-            isEditing: true,
-            readonly: false,
-            addressId: get(portRampMatchedAddress, 'id', null),
-            matchedAddress: formatAddress(portRampMatchedAddress),
-            value: defaultsTo(() => data[`${key}_raw_text`], '--'),
-            verified: data[`${key}_verified`]
-          })
-        )
+        // Vue.set(
+        //   origin,
+        //   `${portRampKeyParser(key)}`,
+        //   buildField({
+        //     type: 'modal-address',
+        //     isEditing: true,
+        //     readonly: false,
+        //     addressId: get(portRampMatchedAddress, 'id', null),
+        //     matchedAddress: formatAddress(portRampMatchedAddress),
+        //     value: defaultsTo(() => data[`${key}_raw_text`], '--'),
+        //     verified: data[`${key}_verified`]
+        //   })
+        // )
         /* -- */
 
         highlights[key] = {
