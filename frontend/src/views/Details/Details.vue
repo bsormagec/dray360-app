@@ -33,21 +33,23 @@
             transform:'translateX(0%)',
             transform:'translateY(-100%)',
             color: 'black',
-            paddingLeft: '60px',
-            paddingRight: '60px',
+            paddingLeft: '10rem',
+            paddingRight: '10rem',
             paddingTop: '-10px',
-            paddingBottom: '-10px',
-            borderStyle: 'solid'
+            paddingBottom: '-10px'
           }"
           fab
           bottom
           class="split-button"
           tile
           color="white"
-          dark
+
           @click="downloadPDF()"
         >
           Download PDF
+          <v-icon class="ml-5">
+            mdi-arrow-down
+          </v-icon>
         </v-btn>
       </v-row>
     </ContentLoading>
@@ -86,6 +88,7 @@ export default {
     ...mapState(orders.moduleName, {
       currentOrder: state => state.currentOrder
     }),
+    toggle_exclusive: 1,
     resizeDiff: 50,
     startPos: 0,
     loaded: false,
@@ -180,7 +183,16 @@ export default {
     padding-left: unset;
     overflow-x: hidden;
   }
+
 }
+.split-btn{
+  display: inline-block;
+}
+ .split-button.v-btn{
+    color: var(--v-primary-base) !important;
+    border: 1px solid var(--v-primary-base) !important;
+
+  }
 
 .details__content {
   display: flex;
