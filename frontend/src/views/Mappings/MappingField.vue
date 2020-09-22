@@ -1,7 +1,7 @@
 <template>
   <div class="row">
     <div class="col-2">
-      <SidebarNavigation :menu-items="items" />
+      <SidebarNavigation />
     </div>
     <div
       class="col-10 mapping__panel"
@@ -127,7 +127,7 @@
                   <td>Billing Comments </td>
                   <td>
                     <v-select
-                      v-model="billing_comments"
+                      v-model="billing_notes"
                       :items="fieldNames"
                       item-text="value"
                       item-value="field_name"

@@ -1,259 +1,266 @@
 <template>
-  <div class="container">
-    <div class="row justify-content-center">
-      <div class="col-md-2">
-        <div class="card">
-          <div class="card-header" />
-        </div>
-      </div>
-      <div class="col-md-8">
-        <div class="card">
-          <div class="card-header">
-            <v-row>
-              <v-col
-                cols="8"
-                sm="8"
-              >
-                <v-menu offset-y>
-                  <template v-slot:activator="{ on }">
+  <div class="row">
+    <div class="col-2">
+      <SidebarNavigation />
+    </div>
+    <div class="col-10">
+      <div class="container">
+        <div class="row justify-content-center">
+          <div class="col-md-2">
+            <div class="card">
+              <div class="card-header" />
+            </div>
+          </div>
+          <div class="col-md-8">
+            <div class="card">
+              <div class="card-header">
+                <v-row>
+                  <v-col
+                    cols="8"
+                    sm="8"
+                  >
+                    <v-menu offset-y>
+                      <template v-slot:activator="{ on }">
+                        <v-btn
+                          color="primary"
+                          dark
+                          v-on="on"
+                        >
+                          Select Company Variant Rule to Edit
+                        </v-btn>
+                      </template>
+                      <v-list>
+                        <v-list-item
+                          v-for="(rule, index) in company_variant_rules()"
+                          :key="index"
+                          @click="updateSelectedIndex(index)"
+                        >
+                          <v-list-item-title>{{ rule.name }}</v-list-item-title>
+                        </v-list-item>
+                      </v-list>
+                    </v-menu>
+                  </v-col>
+                  <v-col
+                    cols="4"
+                    sm="4"
+                  >
                     <v-btn
-                      color="primary"
-                      dark
-                      v-on="on"
+                      v-if="company_variant_rules().length > 0"
+                      color="success"
+                      @click="editRule(selected_rule_index)"
                     >
-                      Select Company Variant Rule to Edit
+                      Save
                     </v-btn>
-                  </template>
-                  <v-list>
-                    <v-list-item
-                      v-for="(rule, index) in company_variant_rules()"
-                      :key="index"
-                      @click="updateSelectedIndex(index)"
+                    <v-btn
+                      v-if="company_variant_rules().length > 0"
+                      disabled
+                      @click="cancelRuleEdition(selected_rule_index)"
                     >
-                      <v-list-item-title>{{ rule.name }}</v-list-item-title>
-                    </v-list-item>
-                  </v-list>
-                </v-menu>
-              </v-col>
-              <v-col
-                cols="4"
-                sm="4"
-              >
+                      Cancel
+                    </v-btn>
+                    <v-btn
+                      v-if="company_variant_rules().length > 0"
+                      @click="testSingleRule(selected_rule_index)"
+                    >
+                      Test
+                    </v-btn>
+                  </v-col>
+                </v-row>
+              </div>
+            </div>
+          </div>
+          <div class="col-md-2">
+            <div class="card">
+              <div class="card-header">
                 <v-btn
-                  v-if="company_variant_rules().length > 0"
                   color="success"
-                  @click="editRule(selected_rule_index)"
+                  :disabled="!companyVariantSelected"
+                  @click="saveRuleSequence()"
                 >
                   Save
                 </v-btn>
                 <v-btn
-                  v-if="company_variant_rules().length > 0"
-                  disabled
-                  @click="cancelRuleEdition(selected_rule_index)"
+                  :disabled="!companyVariantSelected"
+                  @click="cancelSequenceEdition()"
                 >
                   Cancel
                 </v-btn>
-                <v-btn
-                  v-if="company_variant_rules().length > 0"
-                  @click="testSingleRule(selected_rule_index)"
-                >
-                  Test
-                </v-btn>
-              </v-col>
-            </v-row>
+              </div>
+            </div>
           </div>
         </div>
-      </div>
-      <div class="col-md-2">
-        <div class="card">
-          <div class="card-header">
-            <v-btn
-              color="success"
-              :disabled="!companyVariantSelected"
-              @click="saveRuleSequence()"
+        <div class="row justify-content-center">
+          <div class="col-md-2">
+            <v-card
+              class="mx-auto"
+              max-width="300"
+              tile
             >
-              Save
-            </v-btn>
-            <v-btn
-              :disabled="!companyVariantSelected"
-              @click="cancelSequenceEdition()"
-            >
-              Cancel
-            </v-btn>
-          </div>
-        </div>
-      </div>
-    </div>
-    <div class="row justify-content-center">
-      <div class="col-md-2">
-        <v-card
-          class="mx-auto"
-          max-width="300"
-          tile
-        >
-          <v-list>
-            <v-text-field
-              placeholder="Search..."
-              outlined
-              append-icon="mdi-magnify"
-              style="padding: 0 1rem;"
-            />
-            <v-list-item-group
-              color="primary"
-            >
-              <v-list-item
-                v-for="rule in rules_library()"
-                :key="rule.id"
-              >
-                <v-list-item-content>
-                  <v-list-item-title
-                    v-text="rule.name"
-                  />
-                </v-list-item-content>
-                <v-btn
-                  icon
+              <v-list>
+                <v-text-field
+                  placeholder="Search..."
+                  outlined
+                  append-icon="mdi-magnify"
+                  style="padding: 0 1rem;"
+                />
+                <v-list-item-group
                   color="primary"
-                  :ripple="false"
-                  @click="addToCompanyVariant(rule.id)"
                 >
-                  <v-icon>mdi-chevron-right</v-icon>
-                </v-btn>
-              </v-list-item>
-            </v-list-item-group>
-          </v-list>
-        </v-card>
-        <v-btn
-          @click="addRuleToLibrary()"
-        >
-          Add Rule to Library
-        </v-btn>
-      </div>
-      <div class="col-md-8">
-        <div class="card">
-          <div
-            v-if="company_variant_rules().length > 0"
-            class="card-body"
-          >
-            <codemirror
-              ref="cmEditor"
-              v-model="company_variant_rules()[selected_rule_index].code"
-              :options="cmOptions"
-            />
+                  <v-list-item
+                    v-for="rule in rules_library()"
+                    :key="rule.id"
+                  >
+                    <v-list-item-content>
+                      <v-list-item-title
+                        v-text="rule.name"
+                      />
+                    </v-list-item-content>
+                    <v-btn
+                      icon
+                      color="primary"
+                      :ripple="false"
+                      @click="addToCompanyVariant(rule.id)"
+                    >
+                      <v-icon>mdi-chevron-right</v-icon>
+                    </v-btn>
+                  </v-list-item>
+                </v-list-item-group>
+              </v-list>
+            </v-card>
+            <v-btn
+              @click="addRuleToLibrary()"
+            >
+              Add Rule to Library
+            </v-btn>
           </div>
-          <v-tabs>
-            <v-tab>Response</v-tab>
-            <v-tab>Test Order Raw Data</v-tab>
-            <v-tab-item>
-              <vue-json-pretty
-                v-if="testing_output()"
-                :data="testing_output().output"
-              />
-            </v-tab-item>
-            <v-tab-item>
-              <v-btn
-                v-if="testing_output()"
-                v-clipboard:copy="pasteAbleInput"
-                v-clipboard:success="onCopy"
-                v-clipboard:error="onError"
-                class="ma-2"
-                outlined
-                color="indigo"
+          <div class="col-md-8">
+            <div class="card">
+              <div
+                v-if="company_variant_rules().length > 0"
+                class="card-body"
               >
-                Copy to Clipboard!
-              </v-btn>
-              <vue-json-pretty
-                v-if="testing_output()"
-                :path="'res'"
-                :data="testing_output().input.fields"
-              />
+                <codemirror
+                  ref="cmEditor"
+                  v-model="company_variant_rules()[selected_rule_index].code"
+                  :options="cmOptions"
+                />
+              </div>
+              <v-tabs>
+                <v-tab>Response</v-tab>
+                <v-tab>Test Order Raw Data</v-tab>
+                <v-tab-item>
+                  <vue-json-pretty
+                    v-if="testing_output()"
+                    :data="testing_output().output"
+                  />
+                </v-tab-item>
+                <v-tab-item>
+                  <v-btn
+                    v-if="testing_output()"
+                    v-clipboard:copy="pasteAbleInput"
+                    v-clipboard:success="onCopy"
+                    v-clipboard:error="onError"
+                    class="ma-2"
+                    outlined
+                    color="indigo"
+                  >
+                    Copy to Clipboard!
+                  </v-btn>
+                  <vue-json-pretty
+                    v-if="testing_output()"
+                    :path="'res'"
+                    :data="testing_output().input.fields"
+                  />
 
-              <!-- <vue-json-pretty
+                  <!-- <vue-json-pretty
                 v-if="testing_output()"
                 :path="'res2'"
                 :data="testing_output().input"
               /> -->
-            </v-tab-item>
-          </v-tabs>
-        </div>
-      </div>
-      <div class="col-md-2">
-        <v-card
-          class="mx-auto"
-          max-width="300"
-          tile
-        >
-          <v-menu offset-y>
-            <template v-slot:activator="{ on }">
-              <v-btn
-                color="primary"
-                dark
-                v-on="on"
-              >
-                Select Company
-              </v-btn>
-            </template>
-            <v-list>
-              <v-list-item
-                v-for="(company, index) in company_list()"
-                :key="index"
-                @click="updateSelectedCompany(company)"
-              >
-                <v-list-item-title>{{ company.name }}</v-list-item-title>
-              </v-list-item>
-            </v-list>
-          </v-menu>
-          <v-menu offset-y>
-            <template v-slot:activator="{ on }">
-              <v-btn
-                color="primary"
-                dark
-                v-on="on"
-              >
-                Select Variant
-              </v-btn>
-            </template>
-            <v-list>
-              <v-list-item
-                v-for="(variant, index) in variant_list()"
-                :key="index"
-                @click="updateSelectedVariant(variant)"
-              >
-                <v-list-item-title>{{ variant.abbyy_variant_name }}</v-list-item-title>
-              </v-list-item>
-            </v-list>
-          </v-menu>
-          <v-list>
-            <v-subheader>{{ company_name }}</v-subheader>
-            <v-subheader>{{ variant_name }}</v-subheader>
-            <v-list-item-group
-              color="primary"
+                </v-tab-item>
+              </v-tabs>
+            </div>
+          </div>
+          <div class="col-md-2">
+            <v-card
+              class="mx-auto"
+              max-width="300"
+              tile
             >
-              <draggable
-                v-model="draggable_rules"
-                group="rules"
-                @start="drag=true"
-                @end="drag=false"
-              >
-                <v-list-item
-                  v-for="(rule, i) in draggable_rules"
-                  :key="i"
-                >
-                  <v-list-item-content class="draggable-item">
-                    <v-list-item-title v-text="rule.name" />
-                  </v-list-item-content>
+              <v-menu offset-y>
+                <template v-slot:activator="{ on }">
                   <v-btn
-                    icon
                     color="primary"
-                    :ripple="false"
-                    @click="removeFromCompanyVariant(i)"
+                    dark
+                    v-on="on"
                   >
-                    <v-icon>mdi-window-close</v-icon>
+                    Select Company
                   </v-btn>
-                </v-list-item>
-              </draggable>
-            </v-list-item-group>
-          </v-list>
-        </v-card>
+                </template>
+                <v-list>
+                  <v-list-item
+                    v-for="(company, index) in company_list()"
+                    :key="index"
+                    @click="updateSelectedCompany(company)"
+                  >
+                    <v-list-item-title>{{ company.name }}</v-list-item-title>
+                  </v-list-item>
+                </v-list>
+              </v-menu>
+              <v-menu offset-y>
+                <template v-slot:activator="{ on }">
+                  <v-btn
+                    color="primary"
+                    dark
+                    v-on="on"
+                  >
+                    Select Variant
+                  </v-btn>
+                </template>
+                <v-list>
+                  <v-list-item
+                    v-for="(variant, index) in variant_list()"
+                    :key="index"
+                    @click="updateSelectedVariant(variant)"
+                  >
+                    <v-list-item-title>{{ variant.abbyy_variant_name }}</v-list-item-title>
+                  </v-list-item>
+                </v-list>
+              </v-menu>
+              <v-list>
+                <v-subheader>{{ company_name }}</v-subheader>
+                <v-subheader>{{ variant_name }}</v-subheader>
+                <v-list-item-group
+                  color="primary"
+                >
+                  <draggable
+                    v-model="draggable_rules"
+                    group="rules"
+                    @start="drag=true"
+                    @end="drag=false"
+                  >
+                    <v-list-item
+                      v-for="(rule, i) in draggable_rules"
+                      :key="i"
+                    >
+                      <v-list-item-content class="draggable-item">
+                        <v-list-item-title v-text="rule.name" />
+                      </v-list-item-content>
+                      <v-btn
+                        icon
+                        color="primary"
+                        :ripple="false"
+                        @click="removeFromCompanyVariant(i)"
+                      >
+                        <v-icon>mdi-window-close</v-icon>
+                      </v-btn>
+                    </v-list-item>
+                  </draggable>
+                </v-list-item-group>
+              </v-list>
+            </v-card>
+          </div>
+        </div>
       </div>
     </div>
   </div>
@@ -267,13 +274,15 @@ import 'codemirror/lib/codemirror.css'
 import 'codemirror/theme/base16-light.css'
 import VueJsonPretty from 'vue-json-pretty'
 import rulesLibrary, { types } from '@/store/modules/rules_editor'
+import SidebarNavigation from '@/components/General/SidebarNavigation'
 
 export default {
   name: 'RulesEditor',
   components: {
     draggable,
     codemirror,
-    VueJsonPretty
+    VueJsonPretty,
+    SidebarNavigation
   },
   data: () => ({
     ...mapState(rulesLibrary.moduleName, {

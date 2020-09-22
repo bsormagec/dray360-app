@@ -1,6 +1,5 @@
 <template>
   <div>
-    <v-app-bar-nav-icon @click.stop="drawer = !drawer" />
     <v-navigation-drawer
       v-model="drawer"
       permanent
@@ -9,15 +8,48 @@
       bottom
     >
       <img
-        src="@/assets/images/dry360_logo.png"
+        v-if="!tenantConfig().logo1"
         class="logo__dry"
+        src="@/assets/images/dry360_logo.svg"
         alt=""
       >
+      <img
+        v-else
+        class="logo__dry"
+        :src="tenantConfig().logo1"
+        alt=""
+      >
+      <img
+        v-if="tenantConfig().logo2"
+        class="logo__dry"
+        :src="tenantConfig().logo2"
+        alt=""
+      >
+
       <div class="menu">
-        <v-list
-          nav
-          dense
-        >
+        <v-list>
+          <v-list-group
+            v-if="currentUser.user.is_superadmin"
+            no-action
+            sub-group
+          >
+            <template v-slot:activator>
+              <v-list-item-content>
+                <v-list-item-title>Admin</v-list-item-title>
+              </v-list-item-content>
+            </template>
+
+            <v-list-item
+              v-for="(el, i) in admins"
+              :key="i"
+              :href="el.path"
+              target="_blank"
+              :input-value="false"
+              link
+            >
+              <v-list-item-title v-text="el.name" />
+            </v-list-item>
+          </v-list-group>
           <v-list-item-group v-model="group">
             <v-list-item
               v-for="(item, i) in menuItems"
@@ -29,9 +61,20 @@
               </v-list-item-icon>
               <v-list-item-content>
                 <v-list-item-title
+                  v-if="item.name === 'logout' "
                   :key="i"
-
-                  v-text="item.text"
+                  @click="logoutBtn"
+                  v-text="item.name"
+                />
+                <v-list-item-title
+                  v-else-if="item.name === 'manage users' && hasPermission('users-view')"
+                  :key="i"
+                  v-text="item.name"
+                />
+                <v-list-item-title
+                  v-else
+                  :key="i"
+                  v-text="item.name"
                 />
               </v-list-item-content>
             </v-list-item>
@@ -47,23 +90,58 @@
   </div>
 </template>
 <script>
+import auth from '@/store/modules/auth'
+import { mapState, mapActions } from '@/utils/vuex_mappings'
+import hasPermission from '@/mixins/permissions'
+import utils, { type } from '@/store/modules/utils'
+
 export default {
-  props: {
-    menuItems: {
-      type: Array,
-      required: true
-    }
-  },
+
+  mixins: [hasPermission],
+
   data () {
     return {
+      ...mapState(utils.moduleName, {
+        tenantConfig: state => state.tenantConfig
+      }),
       drawer: false,
       group: null,
-      model: 1
+      model: 1,
+      menuItems: [{ name: 'dashboard', path: '/dashboard' },
+        { name: 'manage users', path: '/user/dashboard' },
+        { name: 'my profile', path: '/user/edit-profile' },
+        { name: 'logout', path: '#' }],
+      admins: []
+
     }
+  },
+  computed: {
+    ...mapState(auth.moduleName, { currentUser: state => state.currentUser })
   },
   watch: {
     group () {
       this.drawer = false
+    }
+  },
+  async created () {
+    this.admins = [{ name: 'Check Horizon', path: '/horizon', role: ['superadmin'] },
+      { name: 'Roles and permissions', path: '/authorization', role: ['superadmin'] },
+      { name: 'Telescope', path: '/telescope', role: ['superadmin'] },
+      { name: 'Nova', path: '/nova', role: ['superadmin'] },
+      { name: 'Sentry', path: 'https://sentry.io/organizations/draymaster/issues/?project=5285677', role: ['superadmin'] },
+      { name: 'Rules Editor', path: '/rules-editor', role: ['admin'] },
+      { name: 'usage stats', path: '' },
+      { name: 'RefsCustoms Mapping', path: `/companies/${this.currentUser.user.t_company_id}/refs-custom-mapping`, role: ['admin'] }
+    ]
+    await this[type.getTenantConfig]()
+  },
+
+  methods: {
+    ...mapActions('AUTH', ['logout']),
+    ...mapActions(utils.moduleName, [type.getTenantConfig]),
+    async logoutBtn () {
+      await this.logout()
+      this.$router.push('/login')
     }
   }
 
@@ -72,7 +150,7 @@ export default {
 
 <style lang="scss" scoped>
 
-$sidebarbackground: url("../../assets/images/sidebarbackground .png");
+$sidebarbackground: url("../../assets/images/bg_sidebar.png");
     .sidebar__nav{
         background: linear-gradient(90deg, rgba(0, 60, 113, 0.1) 0%, rgba(0, 60, 113, 0.05) 31.77%, rgba(0, 60, 113, 0) 100%);
         box-shadow: inset -1px 0px 0px rgba(0, 60, 113, 0.03);
@@ -81,12 +159,12 @@ $sidebarbackground: url("../../assets/images/sidebarbackground .png");
         align-content: center;
         align-self: center;
         background-image: $sidebarbackground;
-        background-size: 100% 100vh;
+        background-size: cover;
 
         .logo__dry{
-            width: 12rem;
+            width: 20rem;
             height: 4.8rem;
-            margin: 5rem auto;
+            margin: 2rem auto;
             display: block;
 
         }
@@ -100,12 +178,12 @@ $sidebarbackground: url("../../assets/images/sidebarbackground .png");
                 border-bottom: 0.2rem solid map-get($colors, gray );
             }
             .v-list-item__title{
-                color: map-get($colors, mainblue ) !important;
+                color: var(--v-primary-base) !important;
                 text-transform: uppercase;
                 font-weight: 500;
                 text-align: right;
                 letter-spacing: 0.75px;
-                padding: 2.2rem 0px;
+                padding: 1.5rem 0px;
             }
             & > div{
                 background: transparent !important;

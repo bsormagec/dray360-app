@@ -4,19 +4,20 @@ import { has_permissions, has_permission } from '@/utils/has_permissions'
 import auth from '@/store/modules/auth'
 
 export default {
-  data: () => ({
+
+  computed: {
     ...mapState(auth.moduleName, {
       currentUser: state => state.currentUser
     })
-  }),
+  },
 
   methods: {
     hasPermissions (...requestedPermissions) {
-      return has_permissions(this.currentUser().user, ...requestedPermissions)
+      return has_permissions(this.currentUser.user, ...requestedPermissions)
     },
 
     hasPermission (requestedPermission) {
-      return has_permission(this.currentUser().user, requestedPermission)
+      return has_permission(this.currentUser.user, requestedPermission)
     }
   }
 }
