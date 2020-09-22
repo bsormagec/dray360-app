@@ -25,6 +25,31 @@
 
         <DetailsDocument :class="`${isMobile && 'mobile'}`" />
       </div>
+      <v-row>
+        <v-btn
+          absolute
+          :style="{
+            left: '57%',
+            transform:'translateX(0%)',
+            transform:'translateY(-100%)',
+            color: 'black',
+            paddingLeft: '60px',
+            paddingRight: '60px',
+            paddingTop: '-10px',
+            paddingBottom: '-10px',
+            borderStyle: 'solid'
+          }"
+          fab
+          bottom
+          class="split-button"
+          tile
+          color="white"
+          dark
+          @click="downloadPDF()"
+        >
+          Download PDF
+        </v-btn>
+      </v-row>
     </ContentLoading>
   </div>
 </template>
@@ -87,7 +112,7 @@ export default {
   },
 
   methods: {
-    ...mapActions(orders.moduleName, [types.getOrderDetail]),
+    ...mapActions(orders.moduleName, [types.getOrderDetail, types.getDownloadPDF]),
 
     async requestOrderDetail () {
       const id = process.env.NODE_ENV === 'test' ? 119 : this.$route.params.id // assuming 119 works when testing
@@ -102,6 +127,16 @@ export default {
         return
       }
       console.log('error')
+    },
+
+    async downloadPDF () {
+      const status = await this[types.getDownloadPDF](this.$route.params.id)
+
+      if (status === reqStatus.success) {
+        console.log('sucesss')
+      } else {
+        console.log('error')
+      }
     },
 
     handleResize (e) {
