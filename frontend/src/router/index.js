@@ -7,6 +7,7 @@ import RulesEditor from '@/views/RulesEditor/RulesEditor'
 import auth from '@/router/middleware/auth'
 import superadmin from '@/router/middleware/superadmin'
 import permission from '@/router/middleware/permissions'
+import dev from '@/router/middleware/dev'
 import StyleGuide from '@/views/StyleGuide'
 import Dashboard from '@/views/Users/Dashboard'
 import AddUser from '@/views/Users/AddUser'
@@ -75,7 +76,7 @@ const routes = [
     path: '/styleguide',
     name: 'StyleGuide',
     meta: {
-      middleware: [auth]
+      middleware: [auth, dev]
     },
     component: StyleGuide
   },
