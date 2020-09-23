@@ -76,7 +76,7 @@ const routes = [
     path: '/styleguide',
     name: 'StyleGuide',
     meta: {
-      middleware: [auth, dev()]
+      middleware: [auth, dev]
     },
     component: StyleGuide
   },
