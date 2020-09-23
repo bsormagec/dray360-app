@@ -25,6 +25,33 @@
 
         <DetailsDocument :class="`${isMobile && 'mobile'}`" />
       </div>
+      <v-row>
+        <v-btn
+          absolute
+          :style="{
+            left: '57%',
+            transform:'translateX(0%)',
+            transform:'translateY(-100%)',
+            color: 'black',
+            paddingLeft: '10rem',
+            paddingRight: '10rem',
+            paddingTop: '-10px',
+            paddingBottom: '-10px'
+          }"
+          fab
+          bottom
+          class="split-button"
+          tile
+          color="white"
+
+          @click="downloadPDF()"
+        >
+          Download PDF
+          <v-icon class="ml-5">
+            mdi-arrow-down
+          </v-icon>
+        </v-btn>
+      </v-row>
     </ContentLoading>
   </div>
 </template>
@@ -61,6 +88,7 @@ export default {
     ...mapState(orders.moduleName, {
       currentOrder: state => state.currentOrder
     }),
+    toggle_exclusive: 1,
     resizeDiff: 50,
     startPos: 0,
     loaded: false,
@@ -87,7 +115,7 @@ export default {
   },
 
   methods: {
-    ...mapActions(orders.moduleName, [types.getOrderDetail]),
+    ...mapActions(orders.moduleName, [types.getOrderDetail, types.getDownloadPDF]),
 
     async requestOrderDetail () {
       const id = process.env.NODE_ENV === 'test' ? 119 : this.$route.params.id // assuming 119 works when testing
@@ -102,6 +130,16 @@ export default {
         return
       }
       console.log('error')
+    },
+
+    async downloadPDF () {
+      const status = await this[types.getDownloadPDF](this.$route.params.id)
+
+      if (status === reqStatus.success) {
+        console.log('sucesss')
+      } else {
+        console.log('error')
+      }
     },
 
     handleResize (e) {
@@ -145,7 +183,16 @@ export default {
     padding-left: unset;
     overflow-x: hidden;
   }
+
 }
+.split-btn{
+  display: inline-block;
+}
+ .split-button.v-btn{
+    color: var(--v-primary-base) !important;
+    border: 1px solid var(--v-primary-base) !important;
+
+  }
 
 .details__content {
   display: flex;

@@ -179,6 +179,10 @@
               <p> <br> <code> The table footer depends on metada that comnes from API. thats why isn't showing here</code></p>
             </div>
           </div>
+          <div>
+            This button group is part of the new UX enhancements
+            <OutlinedButtonGroup />
+          </div>
         </div>
       </div>
     </div>
@@ -194,6 +198,7 @@ import DateRangeCalendar from '@/components/Orders/DateRangeCalendar'
 // import AddressBookModal from '@/components/Orders/AddressBookModal'
 import OrderModal from '@/components/Orders/OrderModal'
 import GeneralTable from '@/components/General/GeneralTable'
+import OutlinedButtonGroup from '@/components/General/OutlinedButtonGroup'
 const callbacks = {
   startEdit: (obj) => {
     obj.field.highlight = 'edit'
@@ -221,7 +226,8 @@ export default {
     DateRangeCalendar,
     // AddressBookModal,
     OrderModal,
-    GeneralTable
+    GeneralTable,
+    OutlinedButtonGroup
   },
   props: {
   },
