@@ -13,7 +13,7 @@
           View
         </v-btn>
         <v-btn
-          class="selector split-button"
+          class="split-button"
           tile
           outlined
           color="primary"
@@ -81,8 +81,8 @@ export default {
 }
 </script>
 <style>
-  .selector {
+  .split-button{
     min-width: 0 !important;
-    padding: 0 !important;
+    padding: 5px !important;
   }
 </style>
