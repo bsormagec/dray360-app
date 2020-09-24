@@ -81,6 +81,12 @@
           </v-list-item-group>
         </v-list>
       </div>
+      <div
+        v-if="currentUser.user.is_superadmin"
+        class="company__name"
+      >
+        <h3>{{ company.name }}</h3>
+      </div>
       <img
         src="@/assets/images/LogoDryPoweredBy.svg"
         class="logo__dry_bottom"
@@ -94,6 +100,7 @@ import auth from '@/store/modules/auth'
 import { mapState, mapActions } from '@/utils/vuex_mappings'
 import hasPermission from '@/mixins/permissions'
 import utils, { type } from '@/store/modules/utils'
+import companies, { types } from '@/store/modules/companies'
 
 export default {
 
@@ -116,7 +123,8 @@ export default {
     }
   },
   computed: {
-    ...mapState(auth.moduleName, { currentUser: state => state.currentUser })
+    ...mapState(auth.moduleName, { currentUser: state => state.currentUser }),
+    ...mapState(companies.moduleName, { company: state => state.company })
   },
   watch: {
     group () {
@@ -134,11 +142,13 @@ export default {
       { name: 'RefsCustoms Mapping', path: `/companies/${this.currentUser.user.t_company_id}/refs-custom-mapping`, role: ['admin'] }
     ]
     await this[type.getTenantConfig]()
+    await this[types.getCompany]({ id: this.currentUser.user.t_company_id })
   },
 
   methods: {
     ...mapActions('AUTH', ['logout']),
     ...mapActions(utils.moduleName, [type.getTenantConfig]),
+    ...mapActions(companies.moduleName, [types.getCompany]),
     async logoutBtn () {
       await this.logout()
       this.$router.push('/login')
@@ -188,6 +198,15 @@ $sidebarbackground: url("../../assets/images/bg_sidebar.png");
             & > div{
                 background: transparent !important;
             }
+        }
+        .company__name{
+          position: absolute;
+          bottom: 15rem;
+          @include center;
+          h3{
+            color: map-get($colors, grey-4 );
+            text-align: center;
+          }
         }
     }
 
