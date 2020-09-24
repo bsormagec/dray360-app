@@ -20,6 +20,9 @@ import PageNotAuthorized from '@/views/PageNotAuthorized'
 import MappingField from '@/views/Mappings/MappingField'
 import LoggedOut from '@/router/middleware/LoggedOut'
 import AccesorialsMapping from '@/views/Mappings/AccesorialsMapping'
+import ForgotPassword from '@/views/ForgotPassword'
+import EmailConfirmation from '@/views/EmailConfirmation'
+import ResetPassword from '@/views/ResetPassword'
 
 Vue.use(VueRouter)
 
@@ -130,6 +133,30 @@ const routes = [
     path: '/not-authorized',
     name: 'Not Authorized',
     component: PageNotAuthorized
+  },
+  {
+    path: '/forgot-password',
+    name: 'Forgot Password',
+    component: ForgotPassword,
+    meta: {
+      middleware: [LoggedOut]
+    }
+  },
+  {
+    path: '/email-confirmation',
+    name: 'Forgot Password',
+    component: EmailConfirmation,
+    meta: {
+      middleware: [LoggedOut]
+    }
+  },
+  {
+    path: '/password/reset/:id',
+    name: 'Reset Password',
+    component: ResetPassword,
+    meta: {
+      middleware: [LoggedOut]
+    }
   }
 ]
 

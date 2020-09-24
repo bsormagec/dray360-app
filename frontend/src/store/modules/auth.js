@@ -1,4 +1,4 @@
-import { getCsrfCookie, postLogin, getUser, postLogout, postLeaveImpersonation } from '@/store/api_calls/auth'
+import { getCsrfCookie, postLogin, getUser, postLogout, postLeaveImpersonation, postForgotPassword, postPasswordReset } from '@/store/api_calls/auth'
 import { reqStatus } from '@/enums/req_status'
 import get from 'lodash/get'
 import { type as utilsTypes } from './utils'
@@ -64,6 +64,26 @@ const actions = {
   },
   async setIntendedUrl (context, { intendedUrl }) {
     context.commit('intendedUrl', intendedUrl)
+  },
+
+  async ForgotPassword ({ commit }, email) {
+    const [error] = await postForgotPassword(email)
+
+    if (error) {
+      return { ...(error.response.data), status: reqStatus.error }
+    }
+
+    return { status: reqStatus.success }
+  },
+
+  async PasswordReset ({ commit }, token, email, password, passwordConfirmation) {
+    const [error] = await postPasswordReset(token, email, password, passwordConfirmation)
+
+    if (error) {
+      return { ...(error.response.data), status: reqStatus.error }
+    }
+
+    return { status: reqStatus.success }
   }
 
 }

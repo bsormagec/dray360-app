@@ -2,65 +2,32 @@
   <div>
     <div class="wrapper">
       <div class="login-box">
-        <img
-          v-if="!tenantConfig().logo1"
-          class="logo"
-          src="../assets/images/dry360_logo.svg"
-          alt=""
-        >
-        <img
-          v-else
-          class="logo"
-          :src="tenantConfig().logo1"
-          alt=""
-        >
+        <h1>Reset your password</h1>
+
         <input
-          v-model="email"
-          type="text"
+          v-model="new_password"
+          type="password"
           name="username"
-          placeholder="Email"
-          @focus="error = false"
+          placeholder="New password"
         >
         <br>
         <input
-          v-model="password"
+          v-model="password_confirmation"
           type="password"
-          name="password"
-          placeholder="Password"
-          @focus="error = false"
+          name="username"
+          placeholder="Password Confirmation"
         >
-        <p
-          v-if="error"
-          class="text__error"
-        >
-          {{ errorMessage }}
-        </p>
+
         <div class="button_checkbox">
-          <v-checkbox
-            v-model="disabled"
-            class="mx-2"
-            label="Remember me"
-          />
-          <button
-            type="button"
+          <v-btn
             class="btn-login"
-            @click="login()"
+            @click="ResetPassword"
           >
-            Login
-          </button>
+            Email
+          </v-btn>
         </div>
       </div>
-      <div class="account">
-        <p>
-          <span><a
-            href="/forgot-password"
-          >Forgot your password?</a></span>
-        </p>
-        <p><span><a href="">Don't have an account?</a></span></p>
-      </div>
-      <br><div v-if="loginError">
-        There was a problem. Please check your email and password.
-      </div>
+
       <div class="copyright">
         <p>©2020 Dray360 — an Affiliate of TCompanies Inc. Privacy Policy • Terms of Use</p>
       </div>
@@ -68,58 +35,55 @@
   </div>
 </template>
 <script>
-// import axios from '@/store/api_calls/axios_config'
+
 import utils, { type } from '@/store/modules/utils'
 import { mapActions, mapState } from '@/utils/vuex_mappings'
 import auth from '@/store/modules/auth'
 import { reqStatus } from '@/enums/req_status'
 
 export default {
-  name: 'Login',
+  name: 'ResetPassword',
 
   data () {
     return {
-      ...mapState(auth.moduleName, {
-        loggedIn: state => state.loggedIn
-      }),
-      ...mapState(utils.moduleName, {
-        tenantConfig: state => state.tenantConfig
-      }),
-      disabled: false,
-      error: false,
-      errorMessage: '',
-      email: '',
-      password: '',
-      loginError: false,
-      fields_email: { name: 'email', label: 'Email', placeholder: 'Email', el: { value: '' } },
-      fields_password: { name: 'Password', type: 'password', label: 'Password', placeholder: 'Password', el: { value: '' } }
+      new_password: '',
+      password_confirmation: ''
     }
+  },
+  computed: {
+    ...mapState(utils.moduleName, {
+      tenantConfig: state => state.tenantConfig
+    })
   },
 
   async created () {
+    console.log('id', this.$route)
     await this[type.getTenantConfig]()
-  },
-  mounted () {
-    if (this.loggedIn()) this.$router.push('/dashboard/')
   },
 
   methods: {
-    ...mapActions(utils.moduleName, [type.getTenantConfig]),
-    async login () {
-      this.loginError = false
+    ...mapActions(utils.moduleName, [type.getTenantConfig, type.setSnackbar]),
+    async ResetPassword () {
       try {
-        const response = await this.$store.dispatch('AUTH/login', { email: this.email, password: this.password })
+        const response = await this.$store.dispatch('AUTH/PasswordReset', {
+          token: this.$route.params.id,
+          email: this.$route.query.email,
+          password: this.new_password,
+          password_confirmation: this.password_confirmation
+        })
         if (response.status === reqStatus.success) {
-          this.error = false
-          if (this.$store.state.AUTH.intendedUrl === undefined) {
-            this.$router.push('/dashboard/')
-          } else {
-            this.$router.push(this.$store.state.AUTH.intendedUrl)
-          }
+          await this[type.setSnackbar]({
+            show: true,
+            showSpinner: false,
+            message: 'Your password has been reset!'
+          })
+          this.$router.push({ path: '/login' })
         } else {
-          this.errorMessage = response.message
-          this.error = true
-          console.log('error')
+          await this[type.setSnackbar]({
+            show: true,
+            showSpinner: false,
+            message: 'A problem has Ocurred'
+          })
         }
       } catch (exception) {
         this.loginError = true
@@ -157,29 +121,31 @@ export default {
       border: 0.1rem solid map-get($colors, gray );
       box-shadow: 0rem 0.1rem 0.3rem rgba(0, 0, 0, 0.1);
       padding: 3rem;
+      h1{
+        align-self: flex-start;
+        margin-bottom: 0.7rem;
+        color: var(--v-primary-base);
+      }
       .text__error{
         color: map-get($colors, red );
-      }
-      .logo{
-        width: 20rem;
-        margin-bottom: 5rem;
       }
       input{
         border: 0.1rem solid lightgray;
         margin: 0.5rem auto;
-        padding: 0.5rem 6.5rem;
+        padding: 0.5rem 6.5rem 0.5rem 9rem;
         border-radius: 0.5rem;
-        max-width: 25rem;
+        max-width: 50rem;
       }
       .button_checkbox{
         display: flex;
         flex-direction: row;
         align-items: center;
-        justify-content: space-around;
+        justify-content: flex-end;
         font-weight: bold;
         width: 100%;
+        margin-top: 2rem;
         .btn-login{
-          padding: 0.5rem 4rem;
+          padding: 0.5rem 2rem;
           background-color: var(--v-primary-base);
           color: map-get($colors, white);
           border-radius: 0.3rem;
