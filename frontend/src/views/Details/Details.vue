@@ -23,35 +23,21 @@
           </div>
         </div>
 
-        <DetailsDocument :class="`${isMobile && 'mobile'}`" />
+        <DetailsDocument :class="`${isMobile && 'mobile'}`">
+          <OutlinedButtonGroup
+            :main-action="{
+              title: 'Download PDF',
+              path: '#'
+            }"
+            :options="[
+              { title: 'Report Errors', action: () => console.log('custom action') },
+              { title: 'Edit Manually', action: () => console.log('custom action') },
+              { title: 'View Order History', action: () => console.log('custom action') },
+            ]"
+            floated
+          />
+        </DetailsDocument>
       </div>
-      <v-row>
-        <v-btn
-          absolute
-          :style="{
-            left: '57%',
-            transform:'translateX(0%)',
-            transform:'translateY(-100%)',
-            color: 'black',
-            paddingLeft: '10rem',
-            paddingRight: '10rem',
-            paddingTop: '-10px',
-            paddingBottom: '-10px'
-          }"
-          fab
-          bottom
-          class="split-button"
-          tile
-          color="white"
-
-          @click="downloadPDF()"
-        >
-          Download PDF
-          <v-icon class="ml-5">
-            mdi-arrow-down
-          </v-icon>
-        </v-btn>
-      </v-row>
     </ContentLoading>
   </div>
 </template>
@@ -65,6 +51,7 @@ import DetailsDocument from '@/views/Details/DetailsDocument'
 import { reqStatus } from '@/enums/req_status'
 
 import ContentLoading from '@/components/ContentLoading'
+import OutlinedButtonGroup from '@/components/General/OutlinedButtonGroup'
 import { formModule, documentModule } from '@/views/Details/inner_store/index'
 import { exampleForm as form } from '@/views/Details/inner_utils/example_form'
 import { parse } from '@/views/Details/inner_utils/parse_document'
@@ -79,7 +66,8 @@ export default {
     DetailsFormEditing,
     DetailsFormViewing,
     DetailsDocument,
-    ContentLoading
+    ContentLoading,
+    OutlinedButtonGroup
   },
 
   mixins: [isMobile],
@@ -115,7 +103,7 @@ export default {
   },
 
   methods: {
-    ...mapActions(orders.moduleName, [types.getOrderDetail, types.getDownloadPDF]),
+    ...mapActions(orders.moduleName, [types.getOrderDetail, types.getDownloadPDFURL]),
 
     async requestOrderDetail () {
       const id = process.env.NODE_ENV === 'test' ? 119 : this.$route.params.id // assuming 119 works when testing
@@ -133,9 +121,9 @@ export default {
     },
 
     async downloadPDF () {
-      const status = await this[types.getDownloadPDF](this.$route.params.id)
+      const request = await this[types.getDownloadPDFURL](this.$route.params.id)
 
-      if (status === reqStatus.success) {
+      if (request.status === reqStatus.success) {
         console.log('sucesss')
       } else {
         console.log('error')

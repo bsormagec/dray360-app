@@ -1,5 +1,6 @@
 <template>
   <div :class="`document ${dimensions.width && dimensions.height ? 'loaded' : ''}`">
+    <slot />
     <div
       v-for="(page, pIndex) in pages"
       :key="pIndex"
