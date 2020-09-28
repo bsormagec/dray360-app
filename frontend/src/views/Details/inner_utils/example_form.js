@@ -39,10 +39,6 @@ export const exampleForm = {
               type: 'input',
               placeholder: 'seal number'
             }),
-            equipment: buildField({
-              type: 'input',
-              placeholder: 'GP-General Purpose'
-            }),
             size: buildField({
               type: 'input',
               placeholder: '20 ft'
