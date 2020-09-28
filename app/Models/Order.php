@@ -25,7 +25,6 @@ use Illuminate\Database\Eloquent\SoftDeletes;
  * @property boolean $yard_pre_pull
  * @property boolean $has_chassis
  * @property string $unit_number
- * @property string $equipment
  * @property string $equipment_size
  * @property string $owner_or_ss_company
  * @property boolean $hazardous
@@ -84,7 +83,6 @@ class Order extends Model
         'yard_pre_pull',
         'has_chassis',
         'unit_number',
-        'equipment',
         'equipment_size',
         'owner_or_ss_company',
         'hazardous',
@@ -176,7 +174,6 @@ class Order extends Model
         'yard_pre_pull' => 'sometimes|nullable',
         'has_chassis' => 'sometimes|nullable',
         'unit_number' => 'sometimes|nullable',
-        'equipment' => 'sometimes|nullable',
         'equipment_size' => 'sometimes|nullable',
         'owner_or_ss_company' => 'sometimes|nullable',
         'hazardous' => 'sometimes|nullable',
