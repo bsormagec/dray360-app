@@ -13,13 +13,13 @@ const initialState = {
 const mutations = {
   auth_success: (state) => (state.loggedIn = true),
   logout: (state) => (state.loggedIn = false),
-  currentUser: (state, user) => (state.currentUser = user),
+  currentUser: (state, { user }) => (state.currentUser = user),
   currentUserLoading: (state, isPending) => (state.currentUserLoading = !!isPending),
   intendedUrl: (state, url) => (state.intendedUrl = url)
 }
 
 const actions = {
-  async login ({ commit }, authData) {
+  async login ({ commit, dispatch }, authData) {
     await getCsrfCookie()
     const [error] = await postLogin(authData)
 
@@ -27,6 +27,7 @@ const actions = {
       return { ...(error.response.data), status: reqStatus.error }
     }
     commit('auth_success')
+    await dispatch('getCurrentUser', true)
     return { status: reqStatus.success }
   },
   async getCurrentUser ({ commit, state, dispatch }, force = false) {

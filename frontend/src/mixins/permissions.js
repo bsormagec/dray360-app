@@ -13,11 +13,11 @@ export default {
 
   methods: {
     hasPermissions (...requestedPermissions) {
-      return has_permissions(this.currentUser.user, ...requestedPermissions)
+      return has_permissions(this.currentUser, ...requestedPermissions)
     },
 
     hasPermission (requestedPermission) {
-      return has_permission(this.currentUser.user, requestedPermission)
+      return has_permission(this.currentUser, requestedPermission)
     }
   }
 }

@@ -8,7 +8,7 @@
       bottom
     >
       <img
-        v-if="!tenantConfig().logo1"
+        v-if="!tenantConfig.logo1"
         class="logo__dry"
         src="@/assets/images/dry360_logo.svg"
         alt=""
@@ -16,20 +16,20 @@
       <img
         v-else
         class="logo__dry"
-        :src="tenantConfig().logo1"
+        :src="tenantConfig.logo1"
         alt=""
       >
       <img
-        v-if="tenantConfig().logo2"
+        v-if="tenantConfig.logo2"
         class="logo__dry"
-        :src="tenantConfig().logo2"
+        :src="tenantConfig.logo2"
         alt=""
       >
 
       <div class="menu">
         <v-list>
           <v-list-group
-            v-if="currentUser.user.is_superadmin"
+            v-if="currentUser !== undefined && currentUser.is_superadmin"
             no-action
             sub-group
           >
@@ -82,7 +82,7 @@
         </v-list>
       </div>
       <div
-        v-if="currentUser.user.is_superadmin"
+        v-if="currentUser !== undefined && currentUser.is_superadmin"
         class="company__name"
       >
         <h3>{{ company.name }}</h3>
@@ -108,9 +108,6 @@ export default {
 
   data () {
     return {
-      ...mapState(utils.moduleName, {
-        tenantConfig: state => state.tenantConfig
-      }),
       drawer: false,
       group: null,
       model: 1,
@@ -124,7 +121,10 @@ export default {
   },
   computed: {
     ...mapState(auth.moduleName, { currentUser: state => state.currentUser }),
-    ...mapState(companies.moduleName, { company: state => state.company })
+    ...mapState(companies.moduleName, { company: state => state.company }),
+    ...mapState(utils.moduleName, {
+      tenantConfig: state => state.tenantConfig
+    })
   },
   watch: {
     group () {
@@ -139,10 +139,10 @@ export default {
       { name: 'Sentry', path: 'https://sentry.io/organizations/draymaster/issues/?project=5285677', role: ['superadmin'] },
       { name: 'Rules Editor', path: '/rules-editor', role: ['admin'] },
       { name: 'usage stats', path: '' },
-      { name: 'RefsCustoms Mapping', path: `/companies/${this.currentUser.user.t_company_id}/refs-custom-mapping`, role: ['admin'] }
+      { name: 'RefsCustoms Mapping', path: `/companies/${this.currentUser.t_company_id}/refs-custom-mapping`, role: ['admin'] }
     ]
     await this[type.getTenantConfig]()
-    await this[types.getCompany]({ id: this.currentUser.user.t_company_id })
+    await this[types.getCompany]({ id: this.currentUser.t_company_id })
   },
 
   methods: {
