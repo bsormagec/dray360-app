@@ -3,6 +3,7 @@
     :value="isOpen"
     max-width="70rem"
     scrollable
+    @click:outside="() => change(undefined)"
   >
     <v-card>
       <v-card-title>
@@ -82,7 +83,7 @@
                 outlined
                 color="primary"
                 class="float-right"
-                @click="() => change({ id: props.item.t_address_id, matchedAddress: getMatchedAddress(props.item) })"
+                @click="() => change({ id: props.item.t_address_id, matchedAddress: getMatchedAddress(props.item), address: props.item })"
               >
                 Select
               </v-btn>
