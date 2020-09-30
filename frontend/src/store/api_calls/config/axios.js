@@ -19,6 +19,17 @@ if (process.env.NODE_ENV === 'test') {
 
 axios.defaults.baseURL = `${process.env.VUE_APP_APP_URL}`
 
+// Forward to application downtime page if the server is currently under maintenance
+axios.interceptors.response.use((response) => {
+  return response
+}, function (error) {
+  if (error.response.status === 503) {
+    window.location.href = axios.defaults.baseURL + '/application-downtime'
+    console.log('application downtime')
+  }
+  return Promise.reject(error.response)
+})
+
 const axiosConfigs = {
   ori: axios,
   ext: {
