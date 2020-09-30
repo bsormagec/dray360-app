@@ -7,8 +7,7 @@
         >
           <h1 class="down-for">
             <span class="span-down-for">DOWN FOR</span>
-          </h1>
-          <h1 class="maintenance">
+            <br>
             <span class="span-maintenance">MAINTENANCE</span>
           </h1>
           <p class="message">
@@ -41,16 +40,6 @@ $background_login: url("../assets/images/login_background.png");
 .text-row {
   padding-top: 30rem;
 }
-.maintenance {
-    font-family: 'Oswald', sans-serif;
-    color: var(--v-primary-base) !important;
-    span{
-      color: var(--v-primary-base) !important;
-    }
-    .span-maintenance {
-      font-size: 6rem !important;
-    }
-}
 .down-for {
   font-family: 'Oswald', sans-serif;
   span{
@@ -59,6 +48,9 @@ $background_login: url("../assets/images/login_background.png");
   }
   .span-down-for {
     font-size: 3rem !important;
+  }
+  .span-maintenance {
+    font-size: 6rem !important;
   }
 }
 .pagenotfound {
@@ -79,10 +71,9 @@ $background_login: url("../assets/images/login_background.png");
   margin-top: 25rem;
   p{
     color: map-get($colors, grey-9 );
-    line-height: 1.6rem;
   }
 }
 img {
-  width: 350px
+  width: 23em;
 }
 </style>

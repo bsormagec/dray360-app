@@ -25,7 +25,6 @@ axios.interceptors.response.use((response) => {
 }, function (error) {
   if (error.response.status === 503) {
     window.location.href = axios.defaults.baseURL + '/application-downtime'
-    console.log('application downtime')
   }
   return Promise.reject(error.response)
 })
