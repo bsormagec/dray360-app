@@ -30,7 +30,7 @@ export OM_VHOST_IP=127.0.0.8 # pick another IP if this is in use already
 export OM_DBNAME=omdb
 export OM_DBUSER=omuser
 export OM_DUMP=
-export OM_REPO=ordermaster
+export OM_REPO=dray360
 
 # don't change this derivative variable
 export OM_ROOT=${GIT_FOLDER}/${OM_REPO}
