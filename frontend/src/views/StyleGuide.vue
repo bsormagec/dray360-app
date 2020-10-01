@@ -68,12 +68,13 @@
           <ErrorHandling
             label="snackbar"
             type="{modal}"
-            :message="snackbarmessage">
+            :message="snackbarmessage"
+          >
             <h2> Date Range Calendar</h2><br>
             <p>
               <DateRangeCalendar />
             </p>
-          <!--
+            <!--
           **************************
           ADDRESS BOOK MODAL SECTION HERE
           **************************
@@ -81,10 +82,10 @@
             <h2>Address Book Modal</h2><br>
             <code>Receive as props: rawtext (String), companyId (Number) and tmsProviderId (Number)</code>
             <!-- <AddressBookModal -->
-              <!-- rawtext="test" -->
-              <!-- :company-id="1" -->
-              <!-- :tms-provider-id="1" -->
-              <!-- @change="change" -->
+            <!-- rawtext="test" -->
+            <!-- :company-id="1" -->
+            <!-- :tms-provider-id="1" -->
+            <!-- @change="change" -->
             <!-- /> -->
             <h2>No Match Modal / Address not found</h2><br>
             <code>Props: *modaltype* = AddressNotFound <br> currentstep = "the position in the stepper component" <br></code>
@@ -179,6 +180,56 @@
               <p> <br> <code> The table footer depends on metada that comnes from API. thats why isn't showing here</code></p>
             </div>
           </div>
+          <div>
+            <p>
+              <code>
+                <p>This button group is part of the new UX enhancements it receives the following properties:</p>
+                <pre>
+mainAction: {
+  type: Object,
+  required: true
+},
+options: {
+  type: Array,
+  required: true
+},
+floated: {
+  type: Boolean
+}
+                </pre>
+              </code>
+            </p>
+            <p>Inline not floated Button Group:</p>
+            <OutlinedButtonGroup
+              :main-action="{
+                title: 'View',
+                path: '#',
+                hasPermission: true
+              }"
+              :options="[
+                { title: 'View Details', action: change, hasPermission: true },
+                { title: 'Download PDF', action: change, hasPermission: false },
+                { title: 'Vew Order History', action: change }
+              ]"
+            />
+            <p />
+            <p>Floated Button Group:</p>
+            <div class="box">
+              <OutlinedButtonGroup
+                :main-action="{
+                  title: 'Longer Action Title',
+                  path: '#',
+                  hasPermission: true
+                }"
+                :options="[
+                  { title: 'View Details', action: change, hasPermission: true },
+                  { title: 'Download PDF', action: change, hasPermission: false },
+                  { title: 'Vew Order History', action: change }
+                ]"
+                floated
+              />
+            </div>
+          </div>
         </div>
       </div>
     </div>
@@ -194,6 +245,7 @@ import DateRangeCalendar from '@/components/Orders/DateRangeCalendar'
 // import AddressBookModal from '@/components/Orders/AddressBookModal'
 import OrderModal from '@/components/Orders/OrderModal'
 import GeneralTable from '@/components/General/GeneralTable'
+import OutlinedButtonGroup from '@/components/General/OutlinedButtonGroup'
 const callbacks = {
   startEdit: (obj) => {
     obj.field.highlight = 'edit'
@@ -221,7 +273,8 @@ export default {
     DateRangeCalendar,
     // AddressBookModal,
     OrderModal,
-    GeneralTable
+    GeneralTable,
+    OutlinedButtonGroup
   },
   props: {
   },
@@ -370,5 +423,17 @@ export default {
     padding: 2rem;
     margin-bottom: 2rem;
   }
+}
+.box {
+  box-sizing: border-box;
+  position: relative;
+  padding: 2rem;
+  display: block;
+  width: 100%;
+  height: 420px;
+  border: 1px solid #CCCCCC;
+}
+.box::v-deep .split-btn.split-btn--floated {
+  position: absolute !important;
 }
 </style>

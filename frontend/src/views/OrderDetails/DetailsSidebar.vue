@@ -25,13 +25,13 @@
       <v-btn
         v-if="hasPermissions('orders-edit')"
         :color="saveBtnStyles"
-        :outlined="!isEditing && !isMobile"
+        :outlined="!editMode && !isMobile"
         :style="{ marginBottom: '1rem' }"
         test-id="toggle-btn"
         width="11.5rem"
-        @click="toggleIsEditing"
+        @click="toggleEdit"
       >
-        {{ isEditing ? 'Save' : 'Edit Order' }}
+        {{ editMode ? 'Save' : 'Edit Order' }}
       </v-btn>
 
       <v-btn
@@ -66,18 +66,17 @@
 <script>
 import isMobile from '@/mixins/is_mobile'
 import hasPermissions from '@/mixins/permissions'
-import { formModule } from '@/views/Details/inner_store/index'
-import DetailsSidebarNavigation from '@/views/Details/DetailsSidebarNavigation'
-import { mapActions } from '@/utils/vuex_mappings'
+import { mapActions, mapState } from '@/utils/vuex_mappings'
 import orders, { types } from '@/store/modules/orders'
+import orderForm, { types as orderFormTypes } from '@/store/modules/order-form'
 import { reqStatus } from '@/enums/req_status'
 import utils, { type } from '@/store/modules/utils'
+import DetailsSidebarNavigation from './DetailsSidebarNavigation'
 
 export default {
   name: 'DetailsSidebar',
-  components: {
-    DetailsSidebarNavigation
-  },
+
+  components: { DetailsSidebarNavigation },
 
   mixins: [isMobile, hasPermissions],
   data () {
@@ -90,13 +89,13 @@ export default {
   },
 
   computed: {
-    isEditing () {
-      return formModule.state.isEditing
-    },
+    ...mapState(orderForm.moduleName, {
+      editMode: state => state.editMode
+    }),
 
     saveBtnStyles () {
       if (this.isMobile) return 'secondary'
-      if (this.isEditing) return 'success'
+      if (this.editMode) return 'success'
       return 'primary'
     }
   },
@@ -106,8 +105,10 @@ export default {
   },
 
   methods: {
-    toggleIsEditing: formModule.methods.toggleIsEditing,
     ...mapActions(orders.moduleName, [types.postSendToTms]),
+    ...mapActions(orderForm.moduleName, {
+      toggleEdit: orderFormTypes.toggleEdit
+    }),
     ...mapActions('AUTH', ['logout']),
     ...mapActions(utils.moduleName, [type.setSnackbar]),
 
@@ -121,6 +122,7 @@ export default {
 
     async postSendToTms () {
       const status = await this[types.postSendToTms]({ order_id: this.$route.params.id, status: 'sending-to-wint' })
+      this.dialog = false
       if (status === reqStatus.success) {
         await this[type.setSnackbar]({
           show: true,
@@ -128,13 +130,10 @@ export default {
           message: 'Processing'
         })
       } else {
-        this[type.setSnackbar]({
+        await this[type.setSnackbar]({
           show: true,
           showSpinner: false,
-          message: status.request.status === 422
-            ? 'Some addresses are not verified'
-            : status.request.status === 403
-              ? 'You are not authorized' : 'An error has occurred, please contact to technical support'
+          message: 'Some of your addresses are not validated'
         })
       }
       this.disabled = true

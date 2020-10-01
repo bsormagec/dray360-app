@@ -29,7 +29,10 @@ class DownloadOriginalOrderPdfControllerTest extends TestCase
         $order = Order::first(['id']);
 
         $this->get(route('orders.download-pdf', $order->id))
-            ->assertRedirect($signedUrl);
+            ->assertJsonFragment([
+                'data' => $signedUrl
+            ])
+            ->assertStatus(Response::HTTP_OK);
     }
 
     /** @test */

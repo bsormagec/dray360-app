@@ -16,3 +16,7 @@ export const postLogin = async (authData) => axios.ori.post('/api/login', qs.str
 export const postLogout = async () => axios.ori.post('api/logout').then(data => [undefined, data.data]).catch(e => [e])
 
 export const postLeaveImpersonation = async () => axios.ori.delete('/api/impersonate').then(data => [undefined, data.data]).catch(e => [e])
+
+export const postForgotPassword = async (email) => axios.ori.post('api/password/email', email).then(data => [undefined, data.data]).catch(e => [e])
+
+export const postPasswordReset = async (token, email, password, passwordConfirmation) => axios.ori.post('api/password/reset', token, email, password, passwordConfirmation).then(data => [undefined, data.data]).catch(e => [e])

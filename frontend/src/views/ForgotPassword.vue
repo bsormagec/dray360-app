@@ -2,65 +2,37 @@
   <div>
     <div class="wrapper">
       <div class="login-box">
-        <img
-          v-if="!tenantConfig().logo1"
-          class="logo"
-          src="../assets/images/dry360_logo.svg"
-          alt=""
-        >
-        <img
-          v-else
-          class="logo"
-          :src="tenantConfig().logo1"
-          alt=""
-        >
-        <input
+        <h1>Forgot your password?</h1>
+        <p>Enter your email address below, and we will send a link to reset your password.</p>
+        <v-text-field
           v-model="email"
-          type="text"
-          name="username"
-          placeholder="Email"
+          class="email__input"
+          label="Email"
+          outlined
+          dense
+          :error="error"
+          :error-messages="errorMessage"
           @focus="error = false"
-        >
+        />
         <br>
-        <input
-          v-model="password"
-          type="password"
-          name="password"
-          placeholder="Password"
-          @focus="error = false"
-        >
-        <p
-          v-if="error"
-          class="text__error"
-        >
-          {{ errorMessage }}
-        </p>
+
         <div class="button_checkbox">
-          <v-checkbox
-            v-model="disabled"
-            class="mx-2"
-            label="Remember me"
-          />
-          <button
-            type="button"
-            class="btn-login"
-            @click="login()"
+          <v-btn
+            text
+            small
           >
-            Login
-          </button>
+            Cancel
+          </v-btn>
+          <v-btn
+            class="btn-login"
+            @click="forgotPassword"
+          >
+            Email
+          </v-btn>
         </div>
+        </v-text-field>
       </div>
-      <div class="account">
-        <p>
-          <span><a
-            href="/forgot-password"
-          >Forgot your password?</a></span>
-        </p>
-        <p><span><a href="">Don't have an account?</a></span></p>
-      </div>
-      <br><div v-if="loginError">
-        There was a problem. Please check your email and password.
-      </div>
+
       <div class="copyright">
         <p>©2020 Dray360 — an Affiliate of TCompanies Inc. Privacy Policy • Terms of Use</p>
       </div>
@@ -68,58 +40,49 @@
   </div>
 </template>
 <script>
-// import axios from '@/store/api_calls/axios_config'
+
 import utils, { type } from '@/store/modules/utils'
 import { mapActions, mapState } from '@/utils/vuex_mappings'
-import auth from '@/store/modules/auth'
 import { reqStatus } from '@/enums/req_status'
 
 export default {
-  name: 'Login',
+  name: 'ForgotPassword',
 
   data () {
     return {
-      ...mapState(auth.moduleName, {
-        loggedIn: state => state.loggedIn
-      }),
-      ...mapState(utils.moduleName, {
-        tenantConfig: state => state.tenantConfig
-      }),
-      disabled: false,
-      error: false,
-      errorMessage: '',
       email: '',
-      password: '',
-      loginError: false,
-      fields_email: { name: 'email', label: 'Email', placeholder: 'Email', el: { value: '' } },
-      fields_password: { name: 'Password', type: 'password', label: 'Password', placeholder: 'Password', el: { value: '' } }
+      error: false,
+      errorMessage: ''
     }
+  },
+  computed: {
+    ...mapState(utils.moduleName, {
+      tenantConfig: state => state.tenantConfig
+    })
   },
 
   async created () {
     await this[type.getTenantConfig]()
   },
-  mounted () {
-    if (this.loggedIn()) this.$router.push('/dashboard/')
-  },
 
   methods: {
-    ...mapActions(utils.moduleName, [type.getTenantConfig]),
-    async login () {
+    ...mapActions(utils.moduleName, [type.getTenantConfig, type.setSnackbar]),
+
+    async forgotPassword () {
       this.loginError = false
       try {
-        const response = await this.$store.dispatch('AUTH/login', { email: this.email, password: this.password })
+        const response = await this.$store.dispatch('AUTH/ForgotPassword', { email: this.email })
+
         if (response.status === reqStatus.success) {
-          this.error = false
-          if (this.$store.state.AUTH.intendedUrl === undefined) {
-            this.$router.push('/dashboard/')
-          } else {
-            this.$router.push(this.$store.state.AUTH.intendedUrl)
-          }
+          await this[type.setSnackbar]({
+            show: true,
+            showSpinner: false,
+            message: 'Processing'
+          })
+          this.$router.push({ path: '/email-confirmation', query: { email: this.email } })
         } else {
-          this.errorMessage = response.message
           this.error = true
-          console.log('error')
+          this.errorMessage = response.errors.email
         }
       } catch (exception) {
         this.loginError = true
@@ -157,29 +120,27 @@ export default {
       border: 0.1rem solid map-get($colors, gray );
       box-shadow: 0rem 0.1rem 0.3rem rgba(0, 0, 0, 0.1);
       padding: 3rem;
-      .text__error{
-        color: map-get($colors, red );
+      h1{
+        align-self: flex-start;
+        margin-bottom: 0.7rem;
+        color: var(--v-primary-base);
       }
-      .logo{
-        width: 20rem;
-        margin-bottom: 5rem;
+      .v-messages__message{
+        color: map-get($colors, red ) !important;
       }
-      input{
-        border: 0.1rem solid lightgray;
-        margin: 0.5rem auto;
-        padding: 0.5rem 6.5rem;
-        border-radius: 0.5rem;
-        max-width: 25rem;
+      .email__input{
+        width: 100%;
       }
       .button_checkbox{
         display: flex;
         flex-direction: row;
         align-items: center;
-        justify-content: space-around;
+        justify-content: space-between;
         font-weight: bold;
         width: 100%;
+        margin-top: 2rem;
         .btn-login{
-          padding: 0.5rem 4rem;
+          padding: 0.5rem 2rem;
           background-color: var(--v-primary-base);
           color: map-get($colors, white);
           border-radius: 0.3rem;

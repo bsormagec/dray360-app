@@ -14,7 +14,9 @@
   "parserOptions": {
     "parser": "babel-eslint"
   },
-  "rules": {},
+  "rules": {
+    "vue/require-prop-types": "off"
+  },
   "overrides": [
     {
       "files": [
