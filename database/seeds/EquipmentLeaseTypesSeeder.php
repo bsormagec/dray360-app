@@ -162,7 +162,7 @@ class EquipmentLeaseTypesSeeder extends Seeder
         );
 
         // happy message, return
-        $msg = 'inserted Heather\'s csvfile row:'.$e['rownum'].' as id:'.$equipmentTypeId."\n";
+        $msg = 'inserted Heather\'s equipment csvfile row:'.$e['rownum'].' as id:'.$equipmentTypeId."\n";
         print($msg);
         return ($equipmentTypeId);
     }
