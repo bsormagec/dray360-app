@@ -6,6 +6,30 @@ use Illuminate\Database\Migrations\Migration;
 
 class DropEquipmentColumnFromTOrders extends Migration
 {
+    const NEWEQUIPMENTDISPLAYFORMULA = <<<ENDOFSQL
+        concat(
+            equipment_owner,
+            if (equipment_owner = '', '', ' '),
+            if (row_type = 'combined',
+                equipment_type_and_size,
+                if (row_type = 'separate',
+                    concat(equipment_type, ' ',equipment_size),
+                    ''
+                )
+            )
+        )
+    ENDOFSQL;
+
+    const OLDEQUIPMENTDISPLAYFORMULA = <<<ENDOFSQL
+        if (row_type = 'combined',
+            equipment_type_and_size,
+            if (row_type = 'separate',
+                concat(equipment_type, ' ',equipment_size),
+                ''
+            )
+        )
+    ENDOFSQL;
+
     /**
      * Run the migrations.
      *
@@ -13,6 +37,17 @@ class DropEquipmentColumnFromTOrders extends Migration
      */
     public function up()
     {
+        // drop then update new for t_equipment_types.equipment_display column
+        // which will prefix the equipment_owner
+        if (Schema::hasColumn('t_equipment_types', 'equipment_display')) {
+            Schema::table('t_equipment_types', function (Blueprint $table) {
+                $table->dropColumn('equipment_display');
+            });
+        }
+        Schema::table('t_equipment_types', function (Blueprint $table) {
+            $table->string('equipment_display')->storedAs(DropEquipmentColumnFromTOrders::NEWEQUIPMENTDISPLAYFORMULA);
+        });
+
         // drop t_orders.equipment
         if (Schema::hasColumn('t_orders', 'equipment')) {
             Schema::table('t_orders', function (Blueprint $table) {
@@ -31,25 +66,6 @@ class DropEquipmentColumnFromTOrders extends Migration
         Schema::table('t_orders', function (Blueprint $table) {
             $table->boolean('equipment_type_verified')->nullable();
         });
-
-        // update new formula for t_equipment_types.equipment_display column
-        // to prefix the equipment_owner
-        $storedColumnQuery = <<<'mysql'
-            concat(
-                equipment_owner,
-                if (equipment_owner = '', '', ' '),
-                if (row_type = 'combined',
-                    equipment_type_and_size,
-                    if (row_type = 'separate',
-                        concat(equipment_type, ' ',equipment_size),
-                        ''
-                    )
-                )
-            )
-        mysql;
-        Schema::create('t_equipment_types', function (Blueprint $table) {
-            $table->string('equipment_display')->storedAs($storedColumnQuery);
-        });
     }
 
     /**
@@ -59,9 +75,19 @@ class DropEquipmentColumnFromTOrders extends Migration
      */
     public function down()
     {
-        // restore t_orders.equipment_type
+        // drop then restore original t_equipment_types.equipment_display column
+        if (Schema::hasColumn('t_equipment_types', 'equipment_display')) {
+            Schema::table('t_equipment_types', function (Blueprint $table) {
+                $table->dropColumn('equipment_display');
+            });
+        }
+        Schema::table('t_equipment_types', function (Blueprint $table) {
+            $table->string('equipment_display')->storedAs(DropEquipmentColumnFromTOrders::NEWEQUIPMENTDISPLAYFORMULA);
+        });
+
+        // restore t_orders.equipment
         Schema::table('t_orders', function (Blueprint $table) {
-            $table->string('equipment_type', 64)->nullable();
+            $table->string('equipment', 64)->nullable();
         });
 
         // restore t_orders.owner_or_ss_company
@@ -75,19 +101,5 @@ class DropEquipmentColumnFromTOrders extends Migration
                 $table->dropColumn('equipment_type_verified');
             });
         }
-
-        // restore original t_equipment_types.equipment_display column
-        $storedColumnQuery = <<<'mysql'
-            if (row_type = 'combined',
-                equipment_type_and_size,
-                if (row_type = 'separate',
-                    concat(equipment_type, ' ',equipment_size),
-                    ''
-                )
-            )
-        mysql;
-        Schema::create('t_equipment_types', function (Blueprint $table) {
-            $table->string('equipment_display')->storedAs($storedColumnQuery);
-        });
     }
 }
