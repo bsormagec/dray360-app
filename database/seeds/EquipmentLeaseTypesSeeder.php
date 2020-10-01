@@ -120,10 +120,13 @@ class EquipmentLeaseTypesSeeder extends Seeder
         $type = trim(str_replace($size, '', $sizeAndType));
 
         // if the "size" isn't found within "sizeandtype" then neither size nor type can be trusted
-        if (! $size || ! strpos($sizeAndType, $size)) {
-            $size = null;
-            $type = null;
-        }
+        // On second thought, just leave them alone
+        // if (! $size || ! strpos($sizeAndType, $size)) {
+        //     $size = null;
+        //     $type = null;
+        // }
+        //
+
         return ([
             't_company_id' => $companyId,
             't_tms_provider_id' => $tmsProviderId,
