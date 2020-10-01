@@ -4,13 +4,16 @@
       <div class="login-box">
         <h1>Forgot your password?</h1>
         <p>Enter your email address below, and we will send a link to reset your password.</p>
-        <input
+        <v-text-field
           v-model="email"
-          type="text"
-          name="username"
-          placeholder="Email"
+          class="email__input"
+          label="Email"
+          outlined
+          dense
+          :error="error"
+          :error-messages="errorMessage"
           @focus="error = false"
-        >
+        />
         <br>
 
         <div class="button_checkbox">
@@ -27,6 +30,7 @@
             Email
           </v-btn>
         </div>
+        </v-text-field>
       </div>
 
       <div class="copyright">
@@ -39,7 +43,6 @@
 
 import utils, { type } from '@/store/modules/utils'
 import { mapActions, mapState } from '@/utils/vuex_mappings'
-import auth from '@/store/modules/auth'
 import { reqStatus } from '@/enums/req_status'
 
 export default {
@@ -47,7 +50,9 @@ export default {
 
   data () {
     return {
-      email: ''
+      email: '',
+      error: false,
+      errorMessage: ''
     }
   },
   computed: {
@@ -67,6 +72,7 @@ export default {
       this.loginError = false
       try {
         const response = await this.$store.dispatch('AUTH/ForgotPassword', { email: this.email })
+
         if (response.status === reqStatus.success) {
           await this[type.setSnackbar]({
             show: true,
@@ -75,11 +81,8 @@ export default {
           })
           this.$router.push({ path: '/email-confirmation', query: { email: this.email } })
         } else {
-          await this[type.setSnackbar]({
-            show: true,
-            showSpinner: false,
-            message: 'Error with your email'
-          })
+          this.error = true
+          this.errorMessage = response.errors.email
         }
       } catch (exception) {
         this.loginError = true
@@ -122,15 +125,11 @@ export default {
         margin-bottom: 0.7rem;
         color: var(--v-primary-base);
       }
-      .text__error{
-        color: map-get($colors, red );
+      .v-messages__message{
+        color: map-get($colors, red ) !important;
       }
-      input{
-        border: 0.1rem solid lightgray;
-        margin: 0.5rem auto;
-        padding: 0.5rem 6.5rem 0.5rem 9rem;
-        border-radius: 0.5rem;
-        max-width: 50rem;
+      .email__input{
+        width: 100%;
       }
       .button_checkbox{
         display: flex;

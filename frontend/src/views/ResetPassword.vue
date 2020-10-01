@@ -4,19 +4,29 @@
       <div class="login-box">
         <h1>Reset your password</h1>
 
-        <input
+        <v-text-field
           v-model="new_password"
+          class="password__input"
           type="password"
-          name="username"
-          placeholder="New password"
-        >
-        <br>
-        <input
+          label="password"
+          outlined
+          dense
+          :error="error"
+          :error-messages="errorPassword"
+          @focus="change"
+        />
+
+        <v-text-field
           v-model="password_confirmation"
+          class="password__input"
           type="password"
-          name="username"
-          placeholder="Password Confirmation"
-        >
+          label="Password Confirmation"
+          outlined
+          dense
+          :error="error"
+          :error-messages="TokenError"
+          @focus="change"
+        />
 
         <div class="button_checkbox">
           <v-btn
@@ -38,7 +48,6 @@
 
 import utils, { type } from '@/store/modules/utils'
 import { mapActions, mapState } from '@/utils/vuex_mappings'
-import auth from '@/store/modules/auth'
 import { reqStatus } from '@/enums/req_status'
 
 export default {
@@ -47,7 +56,10 @@ export default {
   data () {
     return {
       new_password: '',
-      password_confirmation: ''
+      password_confirmation: '',
+      error: false,
+      TokenError: '',
+      errorPassword: []
     }
   },
   computed: {
@@ -57,37 +69,39 @@ export default {
   },
 
   async created () {
-    console.log('id', this.$route)
     await this[type.getTenantConfig]()
   },
 
   methods: {
     ...mapActions(utils.moduleName, [type.getTenantConfig, type.setSnackbar]),
     async ResetPassword () {
-      try {
-        const response = await this.$store.dispatch('AUTH/PasswordReset', {
-          token: this.$route.params.id,
-          email: this.$route.query.email,
-          password: this.new_password,
-          password_confirmation: this.password_confirmation
+      const response = await this.$store.dispatch('AUTH/PasswordReset', {
+        token: this.$route.params.id,
+        email: this.$route.query.email,
+        password: this.new_password,
+        password_confirmation: this.password_confirmation
+      })
+
+      if (response.status === reqStatus.success) {
+        await this[type.setSnackbar]({
+          show: true,
+          showSpinner: false,
+          message: 'Your password has been reset!'
         })
-        if (response.status === reqStatus.success) {
-          await this[type.setSnackbar]({
-            show: true,
-            showSpinner: false,
-            message: 'Your password has been reset!'
-          })
-          this.$router.push({ path: '/login' })
-        } else {
-          await this[type.setSnackbar]({
-            show: true,
-            showSpinner: false,
-            message: 'A problem has Ocurred'
-          })
+        this.$router.push({ path: '/login' })
+      } else {
+        this.error = true
+        if (response.errors.password !== undefined && response.errors.password.length > 0) {
+          this.errorPassword = response.errors.password
+        } else if (response.errors.email !== undefined && response.errors.email.length > 0) {
+          this.TokenError = response.errors.email
         }
-      } catch (exception) {
-        this.loginError = true
       }
+    },
+    change () {
+      this.errorPassword = ''
+      this.TokenError = ''
+      this.error = false
     }
   }
 }
@@ -126,15 +140,12 @@ export default {
         margin-bottom: 0.7rem;
         color: var(--v-primary-base);
       }
-      .text__error{
-        color: map-get($colors, red );
+      .v-input  > div{
+        color: map-get($colors, red ) !important
       }
-      input{
-        border: 0.1rem solid lightgray;
-        margin: 0.5rem auto;
-        padding: 0.5rem 6.5rem 0.5rem 9rem;
-        border-radius: 0.5rem;
-        max-width: 50rem;
+
+      .password__input{
+        width: 100%;
       }
       .button_checkbox{
         display: flex;
