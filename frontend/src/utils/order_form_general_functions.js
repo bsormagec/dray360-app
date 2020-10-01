@@ -15,29 +15,33 @@ export function getHighlights (order) {
       order[key].forEach((orderAddressEvent, i) => {
         highlightKey = `order_address_events.${i}`
         getOcrKey = highlightKey
+
+        highlights[highlightKey] = baseHighlight(getOcrData(getOcrKey, order.ocr_data))
       })
+      continue
     } else if (key === 'order_line_items') {
       order[key].forEach((orderLineItem, i) => {
         highlightKey = `order_line_items.${i}`
         getOcrKey = 'order_line_items'
+
+        highlights[highlightKey] = baseHighlight(getOcrData(getOcrKey, order.ocr_data))
       })
-    }
-
-    const ocrData = getOcrData(getOcrKey, order.ocr_data)
-
-    if (ocrData === undefined) {
       continue
     }
 
-    highlights[highlightKey] = {
-      ...ocrData,
-      hover: false,
-      edit: false,
-      hoverTimeout: null
-    }
+    highlights[highlightKey] = baseHighlight(getOcrData(getOcrKey, order.ocr_data))
   }
 
   return highlights
+}
+
+function baseHighlight (ocrData) {
+  return {
+    ...ocrData,
+    hover: false,
+    edit: false,
+    hoverTimeout: null
+  }
 }
 
 export function keyShouldBeParsed (key) {
