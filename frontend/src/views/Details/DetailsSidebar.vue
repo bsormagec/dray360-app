@@ -121,7 +121,6 @@ export default {
 
     async postSendToTms () {
       const status = await this[types.postSendToTms]({ order_id: this.$route.params.id, status: 'sending-to-wint' })
-      this.dialog = false
       if (status === reqStatus.success) {
         await this[type.setSnackbar]({
           show: true,
@@ -129,10 +128,13 @@ export default {
           message: 'Processing'
         })
       } else {
-        await this[type.setSnackbar]({
+        this[type.setSnackbar]({
           show: true,
           showSpinner: false,
-          message: 'Some of your addresses are not validated'
+          message: status.request.status === 422
+            ? 'Some addresses are not verified'
+            : status.request.status === 403
+              ? 'You are not authorized' : 'An error has occurred, please contact to technical support'
         })
       }
       this.disabled = true

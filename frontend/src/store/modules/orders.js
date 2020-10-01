@@ -99,7 +99,11 @@ const actions = {
 
   async [types.postSendToTms] ({ commit }, tmsData) {
     const [error, data] = await postSendToTms(tmsData)
-    if (error) return error.message
+    if (error) {
+      return {
+        ...(error.response), status: reqStatus.error
+      }
+    }
 
     commit(types.setSetTms, data)
     return reqStatus.success
