@@ -134,10 +134,10 @@ export default {
     ...mapActions(utils.moduleName, [type.setSnackbar]),
 
     retrieveUser () {
-      this.name = this.currentUser.user.name
-      this.email = this.currentUser.user.email
-      this.position = this.currentUser.user.position
-      this.org = this.currentUser.user.org
+      this.name = this.currentUser.name
+      this.email = this.currentUser.email
+      this.position = this.currentUser.position
+      this.org = this.currentUser.org
     },
 
     async save () {
@@ -146,7 +146,7 @@ export default {
         email: this.email,
         position: this.position,
         org: this.org,
-        user_id: this.currentUser.user.id
+        user_id: this.currentUser.id
       }
       const status = await this[types.editUser](userData)
       if ('errors' in status) {

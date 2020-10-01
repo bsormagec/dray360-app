@@ -1,9 +1,8 @@
 <template>
   <div :class="`document ${dimensions.width && dimensions.height ? 'loaded' : ''}`">
-    <slot />
     <div
-      v-for="(page, pIndex) in pages"
-      :key="pIndex"
+      v-for="(page) in pages"
+      :key="page.name"
       class="document__page"
     >
       <img
@@ -14,30 +13,18 @@
 
       <div v-if="isTesting || (dimensions.width && dimensions.height)">
         <div
-          v-for="(highlight, hIndex) in page.highlights"
-          :id="`${cleanStrForId(highlight.name)}-document`"
-          :key="hIndex"
+          v-for="(highlight, highlightKey) in getHighlightsForPage(page.number)"
+          :id="`${cleanStrForId(highlightKey)}-document`"
+          :key="highlightKey"
           :style="getPos(highlight)"
           :class="{
             page__highlight: true,
             edit: highlight.edit,
             hover: highlight.hover
           }"
-          @click="startEdit({
-            field: { name: highlight.name },
-            pageIndex: pIndex,
-            highlightIndex: hIndex
-          })"
-          @mouseover="isMobile ? () => {} : startHover({
-            field: { name: highlight.name },
-            pageIndex: pIndex,
-            highlightIndex: hIndex
-          })"
-          @mouseleave="isMobile ? () => {} : stopHover({
-            field: { name: highlight.name },
-            pageIndex: pIndex,
-            highlightIndex: hIndex
-          })"
+          @click="() => startFieldEdit({ path: highlightKey })"
+          @mouseover="isMobile ? () => {} : startHover({ path: highlightKey })"
+          @mouseleave="isMobile ? () => {} : stopHover({ path: highlightKey })"
         />
       </div>
     </div>
@@ -45,12 +32,13 @@
 </template>
 
 <script>
-import { documentModule } from '@/views/Details/inner_store/index'
-import { cleanStrForId } from '@/views/Details/inner_utils/clean_str_for_id'
+import orderForm, { types } from '@/store/modules/order-form'
+import { cleanStrForId } from '@/utils/clean_str_for_id.js'
+import { mapState, mapActions } from '@/utils/vuex_mappings'
 import isMobile from '@/mixins/is_mobile'
 
 export default {
-  name: 'DetailsDocument',
+  name: 'OrderDetailsDocument',
 
   mixins: [isMobile],
 
@@ -62,9 +50,10 @@ export default {
   }),
 
   computed: {
-    pages () {
-      return documentModule.state.document
-    },
+    ...mapState(orderForm.moduleName, {
+      highlights: state => state.highlights,
+      pages: state => state.pages
+    }),
 
     isTesting () {
       return process.env.NODE_ENV === 'test'
@@ -72,10 +61,21 @@ export default {
   },
 
   methods: {
+    ...mapActions(orderForm.moduleName, {
+      startHover: types.startHover,
+      stopHover: types.stopHover,
+      startFieldEdit: types.startFieldEdit
+    }),
     cleanStrForId,
-    startEdit: documentModule.methods.startEdit,
-    startHover: documentModule.methods.startHover,
-    stopHover: documentModule.methods.stopHover,
+    getHighlightsForPage (pageNumber) {
+      const pageHighlights = {}
+      for (const key in this.highlights) {
+        if (parseInt(this.highlights[key].page_index) === parseInt(pageNumber)) {
+          pageHighlights[key] = this.highlights[key]
+        }
+      }
+      return pageHighlights
+    },
 
     getDimensions (evt) {
       const dimensions = (evt.path && evt.path[0]) || evt.target

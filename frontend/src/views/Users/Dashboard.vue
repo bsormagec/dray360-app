@@ -1,7 +1,7 @@
 <template>
   <div class="row">
     <div class="col-2 sidebar__navigation">
-      <SidebarNavigation :menu-items="menuitems" />
+      <SidebarNavigation />
     </div>
     <div class="user__list col-10">
       <UserTable
@@ -49,21 +49,6 @@ export default {
       { text: 'Permission', value: 'roles[0].name' },
       { text: 'Status', value: 'deactivated_at' },
       { text: 'Actions', value: 'actions', sortable: false }
-    ],
-    menuitems: [
-      {
-        text: 'Dashboard',
-        path: '/user/Dashboard'
-      },
-      {
-        text: 'Manage Users'
-      },
-      {
-        text: 'My Profile'
-      },
-      {
-        text: 'Logout'
-      }
     ]
   }),
 
@@ -77,7 +62,6 @@ export default {
 
     async fetchUsers () {
       const status = await this[types.getUsers]()
-      console.log('this.users: ', this.users())
 
       if (status === reqStatus.success) {
         console.log('success')

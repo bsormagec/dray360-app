@@ -1,3 +1,6 @@
 html {
   overflow-y: unset !important;
 }
+.v-messages__message{
+  color: map-get($colors, Red );
+}

@@ -23,17 +23,14 @@ const mutations = {
   },
 
   [types.deleteUser] (state, { id }) {
-    console.log('mutation id: ', id)
     state.users.forEach(element => {
       if (element.id === id) {
-        console.log('element to splice: ', element)
         state.users.splice(element, 1)
       }
     })
   },
 
   [types.addUser] (state, { userData }) {
-    console.log('user to push: ', userData)
     state.users.push(userData)
   },
 
@@ -42,7 +39,6 @@ const mutations = {
   },
 
   [types.setRoles] (state, { rolesData }) {
-    console.log('rolesdata: ', rolesData)
     state.roles = rolesData
   }
 }

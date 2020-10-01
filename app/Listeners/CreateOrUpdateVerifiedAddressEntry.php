@@ -38,6 +38,8 @@ class CreateOrUpdateVerifiedAddressEntry implements ShouldQueue
             $verifiedAddress->skip_verification = true;
         }
 
+        app('company_manager')->setCompany(null);
+
         return tap($verifiedAddress)->save();
     }
 
@@ -74,7 +76,7 @@ class CreateOrUpdateVerifiedAddressEntry implements ShouldQueue
             ->where('t_address_id', $data['t_address_id'])
             ->first(['company_address_tms_code']);
 
-        app('company_manager')->setCompanyFromId($order->company_id);
+        app('company_manager')->setCompanyFromId($order->getCompanyId());
 
         return [
             't_company_id' => $order->t_company_id,

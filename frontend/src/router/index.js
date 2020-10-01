@@ -2,11 +2,13 @@ import Vue from 'vue'
 import VueRouter from 'vue-router'
 import Orders from '@/views/Orders/Orders'
 import Details from '@/views/Details/Details'
+import OrderDetails from '@/views/OrderDetails/OrderDetails'
 import Login from '@/views/Login'
 import RulesEditor from '@/views/RulesEditor/RulesEditor'
 import auth from '@/router/middleware/auth'
 import superadmin from '@/router/middleware/superadmin'
 import permission from '@/router/middleware/permissions'
+import dev from '@/router/middleware/dev'
 import StyleGuide from '@/views/StyleGuide'
 import Dashboard from '@/views/Users/Dashboard'
 import AddUser from '@/views/Users/AddUser'
@@ -19,6 +21,9 @@ import PageNotAuthorized from '@/views/PageNotAuthorized'
 import MappingField from '@/views/Mappings/MappingField'
 import LoggedOut from '@/router/middleware/LoggedOut'
 import AccesorialsMapping from '@/views/Mappings/AccesorialsMapping'
+import ForgotPassword from '@/views/ForgotPassword'
+import EmailConfirmation from '@/views/EmailConfirmation'
+import ResetPassword from '@/views/ResetPassword'
 
 Vue.use(VueRouter)
 
@@ -56,7 +61,7 @@ const routes = [
     component: EditUser
   },
   {
-    path: '/user/dashboard/edit-profile',
+    path: '/user/edit-profile',
     name: 'EditProfile',
     meta: {
       middleware: [auth, permission('users-view')]
@@ -75,7 +80,7 @@ const routes = [
     path: '/styleguide',
     name: 'StyleGuide',
     meta: {
-      middleware: [auth]
+      middleware: [auth, dev]
     },
     component: StyleGuide
   },
@@ -86,6 +91,14 @@ const routes = [
       middleware: [auth]
     },
     component: Details
+  },
+  {
+    path: '/order-test/:id',
+    name: 'OrderDetails',
+    meta: {
+      middleware: [auth]
+    },
+    component: OrderDetails
   },
   {
     path: '/login',
@@ -129,6 +142,30 @@ const routes = [
     path: '/not-authorized',
     name: 'Not Authorized',
     component: PageNotAuthorized
+  },
+  {
+    path: '/forgot-password',
+    name: 'Forgot Password',
+    component: ForgotPassword,
+    meta: {
+      middleware: [LoggedOut]
+    }
+  },
+  {
+    path: '/email-confirmation',
+    name: 'Forgot Password',
+    component: EmailConfirmation,
+    meta: {
+      middleware: [LoggedOut]
+    }
+  },
+  {
+    path: '/password/reset/:id',
+    name: 'Reset Password',
+    component: ResetPassword,
+    meta: {
+      middleware: [LoggedOut]
+    }
   }
 ]
 

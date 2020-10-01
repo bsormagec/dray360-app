@@ -8,10 +8,7 @@
           :class="`details__form ${isMobile && 'mobile'}`"
           :style="{ minWidth: `${resizeDiff}%` }"
         >
-          <DetailsFormEditing v-show="isEditing" />
-          <DetailsFormViewing
-            v-show="!isEditing"
-          />
+          <OrderDetailsForm />
 
           <div
             class="form__resize"
@@ -23,20 +20,7 @@
           </div>
         </div>
 
-        <DetailsDocument :class="`${isMobile && 'mobile'}`">
-          <OutlinedButtonGroup
-            :main-action="{
-              title: 'Download PDF',
-              path: '#'
-            }"
-            :options="[
-              { title: 'Report Errors', action: () => console.log('custom action') },
-              { title: 'Edit Manually', action: () => console.log('custom action') },
-              { title: 'View Order History', action: () => console.log('custom action') },
-            ]"
-            floated
-          />
-        </DetailsDocument>
+        <OrderDetailsDocument :class="`${isMobile && 'mobile'}`" />
       </div>
     </ContentLoading>
   </div>
@@ -44,39 +28,29 @@
 
 <script>
 import isMobile from '@/mixins/is_mobile'
-import DetailsSidebar from '@/views/Details/DetailsSidebar'
-import DetailsFormEditing from '@/views/Details/DetailsFormEditing'
-import DetailsFormViewing from '@/views/Details/DetailsFormViewing'
-import DetailsDocument from '@/views/Details/DetailsDocument'
+import DetailsSidebar from '@/views/OrderDetails/DetailsSidebar'
+import OrderDetailsForm from '@/views/OrderDetails/OrderDetailsForm'
+import OrderDetailsDocument from '@/views/OrderDetails/OrderDetailsDocument'
 import { reqStatus } from '@/enums/req_status'
 
 import ContentLoading from '@/components/ContentLoading'
-import OutlinedButtonGroup from '@/components/General/OutlinedButtonGroup'
-import { formModule, documentModule } from '@/views/Details/inner_store/index'
-import { exampleForm as form } from '@/views/Details/inner_utils/example_form'
-import { parse } from '@/views/Details/inner_utils/parse_document'
 import orders, { types } from '@/store/modules/orders'
+import orderForm, { types as orderFormTypes } from '@/store/modules/order-form'
 import { mapState, mapActions } from '@/utils/vuex_mappings'
 
 export default {
-  name: 'Details',
+  name: 'OrderDetails',
 
   components: {
     DetailsSidebar,
-    DetailsFormEditing,
-    DetailsFormViewing,
-    DetailsDocument,
+    OrderDetailsDocument,
     ContentLoading,
-    OutlinedButtonGroup
+    OrderDetailsForm
   },
 
   mixins: [isMobile],
 
   data: () => ({
-    ...mapState(orders.moduleName, {
-      currentOrder: state => state.currentOrder
-    }),
-    toggle_exclusive: 1,
     resizeDiff: 50,
     startPos: 0,
     loaded: false,
@@ -84,13 +58,9 @@ export default {
   }),
 
   computed: {
-    isEditing () {
-      return formModule.state.isEditing
-    }
-  },
-
-  beforeCreate () {
-    formModule.methods.setForm(form)
+    ...mapState(orders.moduleName, {
+      currentOrder: state => state.currentOrder
+    })
   },
 
   async beforeMount () {
@@ -98,36 +68,21 @@ export default {
     this.loaded = true
   },
 
-  destroyed () {
-    documentModule.methods.reset()
-  },
-
   methods: {
-    ...mapActions(orders.moduleName, [types.getOrderDetail, types.getDownloadPDFURL]),
+    ...mapActions(orders.moduleName, [types.getOrderDetail]),
+    ...mapActions(orderForm.moduleName, {
+      setFormOrder: orderFormTypes.setFormOrder
+    }),
 
     async requestOrderDetail () {
       const id = process.env.NODE_ENV === 'test' ? 119 : this.$route.params.id // assuming 119 works when testing
       const status = await this[types.getOrderDetail](id)
 
       if (status === reqStatus.success) {
-        documentModule.methods.setDocument(
-          parse({
-            data: this.currentOrder()
-          })
-        )
+        this.setFormOrder(this.currentOrder)
         return
       }
       console.log('error')
-    },
-
-    async downloadPDF () {
-      const request = await this[types.getDownloadPDFURL](this.$route.params.id)
-
-      if (request.status === reqStatus.success) {
-        console.log('sucesss')
-      } else {
-        console.log('error')
-      }
     },
 
     handleResize (e) {
@@ -171,16 +126,7 @@ export default {
     padding-left: unset;
     overflow-x: hidden;
   }
-
 }
-.split-btn{
-  display: inline-block;
-}
- .split-button.v-btn{
-    color: var(--v-primary-base) !important;
-    border: 1px solid var(--v-primary-base) !important;
-
-  }
 
 .details__content {
   display: flex;

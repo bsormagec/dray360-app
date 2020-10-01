@@ -72,7 +72,7 @@ export default {
       { text: 'Shipment Designation', value: 'order.shipment_designation', width: '8.5rem' },
       { text: 'Eq. Type', value: 'order.equipment_type', width: '8.5rem' },
       { text: 'Actions', value: 'action', width: '8.5rem' },
-      { text: 'TMS ID', value: 'order.tms_shipment_id', width: '8.5rem'}
+      { text: 'TMS ID', value: 'order.tms_shipment_id', width: '8.5rem' }
     ],
     statuses: [
       { text: 'intake-accepted', value: 'intake-accepted' },
@@ -139,7 +139,7 @@ export default {
 
   @media screen and (min-width: map-get($breakpoints, med)) {
     padding: 5.2rem 3.2rem;
-    padding-left: map-get($sizes, sidebar-desktop-width) + 3.2rem;
+    padding-left: map-get($sizes, sidebar-desktop-width) + 8rem;
   }
 }
 </style>

@@ -94,6 +94,8 @@ import userDashboard, { types } from '@/store/modules/users'
 import { mapState, mapActions } from '@/utils/vuex_mappings'
 import { reqStatus } from '@/enums/req_status'
 import hasPermission from '@/mixins/permissions'
+import utils, { type } from '@/store/modules/utils'
+
 export default {
 
   mixins: [hasPermission],
@@ -113,13 +115,13 @@ export default {
   }),
 
   computed: {
-    currentUser () {
+    editedUser () {
       const routeParam = this.$route.params.id
-      const currentUser = this.users().filter(user =>
+      const editedUser = this.users().filter(user =>
         // eslint-disable-next-line eqeqeq
         (user.id == routeParam)
       )
-      return currentUser[0]
+      return editedUser[0]
     }
   },
 
@@ -130,11 +132,11 @@ export default {
 
   methods: {
     ...mapActions(userDashboard.moduleName, [types.getUsers, types.editUser, types.getRoles, types.changeUserStatus, types.deleteUser]),
+    ...mapActions(utils.moduleName, [type.setSnackbar]),
 
     getActivationState () {
-      console.log('currentuser computed prop: ', this.currentUser)
-      if (this.currentUser) {
-        if (this.currentUser.deactivated_at != null) {
+      if (this.editedUser) {
+        if (this.editedUser.deactivated_at != null) {
           return false
         } else {
           return true
@@ -143,9 +145,9 @@ export default {
     },
 
     async getUserInfo () {
-      this.name = this.currentUser.name
-      this.email = this.currentUser.email
-      this.role_selected = this.currentUser.roles[0].id
+      this.name = this.editedUser.name
+      this.email = this.editedUser.email
+      this.role_selected = this.editedUser.roles[0].id
     },
 
     async editUser () {
@@ -161,22 +163,24 @@ export default {
       const status = await this[types.editUser](userData)
 
       if (status === reqStatus.success) {
-        console.log('success')
+        await this[type.setSnackbar]({
+          show: true,
+          showSpinner: false,
+          message: 'User updated'
+        })
       } else {
-        console.log('error')
+        await this[type.setSnackbar]({
+          show: true,
+          showSpinner: false,
+          message: 'An error has ocurred'
+        })
       }
 
       this.$router.push('/user/dashboard')
     },
 
     async fetchRoles () {
-      const status = await this[types.getRoles]()
-
-      if (status === reqStatus.successs) {
-        console.log('success')
-      } else {
-        console.log('error')
-      }
+      await this[types.getRoles]()
     },
 
     async activateUser () {

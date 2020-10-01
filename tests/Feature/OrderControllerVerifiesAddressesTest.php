@@ -17,7 +17,7 @@ use Illuminate\Support\Facades\Event;
 use Illuminate\Support\Testing\Fakes\EventFake;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
 
-class VerifiedAddressOrderControllerTest extends TestCase
+class OrderControllerVerifiesAddressesTest extends TestCase
 {
     use DatabaseTransactions;
 

@@ -24,7 +24,9 @@ class DownloadOriginalOrderPdfController extends Controller
             abort(404, 'No file was found for the given order.');
         }
 
-        return redirect($this->getTemporaryDownloadUrl($status));
+        return response()->json([
+            'data' => $this->getTemporaryDownloadUrl($status)
+        ]);
     }
 
     protected function getTemporaryDownloadUrl(OCRRequestStatus $status): string
