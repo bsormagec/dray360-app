@@ -66,6 +66,11 @@ class DropEquipmentColumnFromTOrders extends Migration
         Schema::table('t_orders', function (Blueprint $table) {
             $table->boolean('equipment_type_verified')->nullable();
         });
+
+        // add column t_equipment_types.scac
+        Schema::table('t_equipment_types', function (Blueprint $table) {
+            $table->string('scac', 64)->nullable();
+        });
     }
 
     /**
@@ -99,6 +104,13 @@ class DropEquipmentColumnFromTOrders extends Migration
         if (Schema::hasColumn('t_orders', 'equipment_type_verified')) {
             Schema::table('t_orders', function (Blueprint $table) {
                 $table->dropColumn('equipment_type_verified');
+            });
+        }
+
+        // drop t_equipment_types.scac
+        if (Schema::hasColumn('t_equipment_types', 'scac')) {
+            Schema::table('t_equipment_types', function (Blueprint $table) {
+                $table->dropColumn('scac');
             });
         }
     }
