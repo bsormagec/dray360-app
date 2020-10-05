@@ -36,6 +36,9 @@ class OcrRequestsListQuery extends QueryBuilder
                     ->where('s_ur.status', OCRRequestStatus::UPLOAD_REQUESTED);
                 })
                 ->leftJoin('users as u', DB::raw("json_extract(s_ur.status_metadata, '$.user_id')"), '=', 'u.id')
+                ->when(! is_superadmin() && currentCompany(), function ($query) {
+                    return $query->where('s.company_id', '=', currentCompany()->id);
+                })
                 ->whereNull('t_job_latest_state.order_id')
                 ->with([
                     'latestOcrRequestStatus:id,status,status_date,status_metadata',
