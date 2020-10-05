@@ -107,6 +107,11 @@ Route::group(['middleware' => ['auth:sanctum', 'impersonate', 'tenant-aware']], 
     Route::post('createocrrequestuploaduri', [OCRRequestController::class, 'createOCRRequestUploadURI'])
         ->name('createocruploaduri');
 
+    // CRUD for OCR Request
+    Route::apiResource('ocr/requests', OCRRequestController::class, ['as' => 'ocr'])
+        ->parameters(['request' => 'ocrRequest'])
+        ->only(['index']);
+
     // CRUD for OCR Rules
     Route::apiResource('ocr/rules', OCRRulesController::class, ['as' => 'ocr'])
         ->parameters(['rules' => 'ocrRule'])
