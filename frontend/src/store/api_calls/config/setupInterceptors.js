@@ -18,6 +18,8 @@ export default function ({ store, router }) {
       } else if (status === 404) {
         router.push('/pagenotfound')
         return
+      } else if (status === 503) {
+        router.push('/application-downtime')
       }
 
       return Promise.reject(error)
