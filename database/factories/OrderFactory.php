@@ -17,9 +17,7 @@ $factory->define(Order::class, function (Faker $faker) {
         'yard_pre_pull' => $faker->boolean,
         'has_chassis' => $faker->boolean,
         'unit_number' => Arr::random(['ACMU8009943', 'HJCU8281988', 'CSQU3054383', 'TOLU4734787', 'LSCU1077379', 'MSKU2666542', 'NYKU3086856', 'BICU1234565']),
-        'equipment' => Arr::random(['GP-General Purpose', 'HQ-High Cube', 'CC-Car Carrier', 'DD-Double Door']),
         'equipment_size' => Arr::random(['20 ft', '40 ft', '45 ft', '48ft']),
-        'owner_or_ss_company' => Arr::random(['ACL', 'Antillean Lines', 'APL/CMA-CGM', 'Atlantic RO-Ro', 'Australia National Line', 'Bahri / National Shipping Company of Saudi Arabia', 'Bermuda International Shipping Ltd', 'BMC Line Shipping LLC', 'CCNI', 'Cheng Lie Navigation Co.,Ltd', 'Dole Ocean Cargo Express', 'Dongjin Shipping', 'Emirates Shipping Line', 'Evergreen Line', 'Frontier Liner Services']),
         'hazardous' => null, // this should roll up from the line item?
         'reference_number' => $faker->lexify(),
         'rate_quote_number' => $faker->numerify('##########'),
