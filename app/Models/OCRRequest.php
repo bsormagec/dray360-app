@@ -25,6 +25,7 @@ class OCRRequest extends Model
     public $fillable = [
         'request_id',
         't_job_state_changes_id',
+        'order_id'
     ];
 
     public function orders()
