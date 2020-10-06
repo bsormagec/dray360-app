@@ -59,20 +59,21 @@ export default {
         text: 'Id',
         sortable: false,
         value: 'display_id',
-        width: '6rem'
+        width: '4rem'
       },
       {
         text: 'Status',
         value: 'latest_ocr_request_status.display_status',
-        width: '12rem'
+        width: '6rem'
       },
-      { text: 'Bill to', value: 'order.bill_to_address_raw_text', width: '30rem' },
+      { text: 'Bill to', value: 'order.bill_to_address.location_name', width: '8.5rem' },
       { text: 'Date', value: 'created_at', width: '6rem' },
-      { text: 'Shipment Direction', value: 'order.shipment_direction', width: '8.5rem' },
-      { text: 'Shipment Designation', value: 'order.shipment_designation', width: '8.5rem' },
-      { text: 'Eq. Type', value: 'order.equipment_type', width: '8.5rem' },
-      { text: 'Actions', value: 'action', width: '8.5rem' },
-      { text: 'TMS ID', value: 'order.tms_shipment_id', width: '8.5rem' }
+      { text: 'Shipment Direction', value: 'order.shipment_direction', width: '6rem' },
+      { text: 'Reference Number.', value: 'order.reference_number', width: '6rem' },
+      { text: 'Container Number', value: 'order.unit_number', width: '6rem' },
+      { text: 'TMS ID', value: 'order.tms_shipment_id', width: '6rem' },
+      { text: 'Actions', value: 'action', width: '8.5rem' }
+
     ],
     statuses: [
       { text: 'intake-accepted', value: 'intake-accepted' },

@@ -210,6 +210,7 @@ export default {
         { field_name: 'master_bol_mawb', value: 'master BOL MAWB' },
         { field_name: 'house_bol_hawb', value: 'house BOL MAWB' },
         { field_name: 'reference_number', value: 'reference number' },
+        { field_name: 'purchase_order_number', value: 'purchase order number' },
         { field_name: 'ship_comment', value: 'shipment notes' },
         { field_name: 'bill_comment', value: 'billing comments' },
         { field_name: 'line_haul', value: 'line haul' },
