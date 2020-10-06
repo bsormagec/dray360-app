@@ -2,7 +2,7 @@
 
 Instructions for setting up Dray360 local development workstation on Ubuntu 20.0.
 
-These instructions should also work on earlier versions of Ubuntu, and Linux Mint, and any other Debian-derived flavor of Linux.
+These instructions should also work on earlier versions of Ubuntu, Linux Mint, and any other Debian-derived flavor of Linux.
 
 With some modification these instructions should also suffice for macOS.
 
