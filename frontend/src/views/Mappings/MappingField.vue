@@ -220,7 +220,6 @@ export default {
         { field_name: 'equipment_type', value: 'type' },
         { field_name: 'hazardous', value: 'hazardous' },
         { field_name: 'one_way', value: 'one way' },
-        { field_name: 'owner_or_ss_company', value: 'owner or SS company' },
         { field_name: 'rate_quote_number', value: 'rate quote number' },
         { field_name: 'shipment_designation', value: 'shipment designation' },
         { field_name: 'shipment_direction', value: 'shipment direction' },

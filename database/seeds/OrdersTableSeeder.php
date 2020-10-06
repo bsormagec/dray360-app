@@ -31,7 +31,6 @@ class OrdersTableSeeder extends Seeder
     const EQUIPMENT_TYPE_LIST = ['Container', 'Trailer'];
     const UNIT_NUMBER_LIST = ['ACMU8009943', 'HJCU8281988', 'CSQU3054383', 'TOLU4734787', 'LSCU1077379', 'MSKU2666542', 'NYKU3086856', 'BICU1234565'];
     const EQUIPMENT_SIZE_LIST = ['20 ft', '40 ft', '45 ft', '48ft'];
-    const OWNER_OR_SS_COMPANY_LIST = ['ACL', 'Antillean Lines', 'APL/CMA-CGM', 'Atlantic RO-Ro', 'Australia National Line', 'Bahri / National Shipping Company of Saudi Arabia', 'Bermuda International Shipping Ltd', 'BMC Line Shipping LLC', 'CCNI', 'Cheng Lie Navigation Co.,Ltd', 'Dole Ocean Cargo Express', 'Dongjin Shipping', 'Emirates Shipping Line', 'Evergreen Line', 'Frontier Liner Services'];
 
     /**
      * Make an order having a related OCR request, and order line items, etc.
