@@ -3,9 +3,9 @@
 namespace Tests\Feature;
 
 use Tests\TestCase;
-use OrdersTableSeeder;
 use App\Models\OCRRequest;
 use App\Models\OCRRequestStatus;
+use Tests\Seeds\OcrRequestSeeder;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
 
 class OcrRequestControllerTest extends TestCase
@@ -22,7 +22,7 @@ class OcrRequestControllerTest extends TestCase
     /** @test */
     public function it_should_return_the_right_information_about_the_request()
     {
-        (new OrdersTableSeeder())->seedOrderWithPostProcessingComplete();
+        (new OcrRequestSeeder())->seedOcrJob_ocrPostProcessingComplete();
 
         $this->getJson(route('ocr.requests.index'))
             ->assertStatus(200)
@@ -47,10 +47,10 @@ class OcrRequestControllerTest extends TestCase
     /** @test */
     public function it_should_allow_filtering_the_requests()
     {
-        $this->withoutExceptionHandling();
-        $this->seed(OrdersTableSeeder::class);
-        $this->seed(OrdersTableSeeder::class);
-        factory(OCRRequestStatus::class, 2)->create(['status' => OCRRequestStatus::OCR_WAITING]);
+        (new OcrRequestSeeder())->seedOcrJob_intakeRejected();
+        (new OcrRequestSeeder())->seedOcrJob_ocrPostProcessingComplete();
+        (new OcrRequestSeeder())->seedOcrJob_ocrWaiting();
+        (new OcrRequestSeeder())->seedOcrJob_ocrWaiting();
         $ocrRequest = OCRRequest::latest()->first();
         $ocrRequest->created_at = now()->subDays(5);
         $ocrRequest->save();
@@ -75,8 +75,7 @@ class OcrRequestControllerTest extends TestCase
     {
         $this->loginCustomerAdmin();
         $user = auth()->user();
-        $this->seed(OrdersTableSeeder::class);
-        $this->seed(OrdersTableSeeder::class);
+        $this->seed(OcrRequestSeeder::class);
         $ocrRequest = OCRRequest::first();
         $ocrRequest->latestOcrRequestStatus->update(['company_id' => $user->getCompanyId()]);
 
@@ -90,14 +89,13 @@ class OcrRequestControllerTest extends TestCase
     {
         $this->loginCustomerAdmin();
         $user = auth()->user();
-        $this->seed(OrdersTableSeeder::class);
-        $this->seed(OrdersTableSeeder::class);
+        $this->seed(OcrRequestSeeder::class);
         $ocrRequest = OCRRequest::first();
         $ocrRequest->latestOcrRequestStatus->update(['company_id' => $user->getCompanyId()]);
         $this->loginAdmin();
 
         $this->getJson(route('ocr.requests.index'))
         ->assertStatus(200)
-        ->assertJsonCount(2, 'data');
+        ->assertJsonCount(3, 'data');
     }
 }

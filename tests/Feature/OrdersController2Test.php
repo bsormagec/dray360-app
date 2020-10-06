@@ -4,8 +4,8 @@ namespace Tests\Feature;
 
 use Tests\TestCase;
 use App\Models\Order;
-use OrdersTableSeeder;
 use App\Models\OCRRequestStatus;
+use Tests\Seeds\OrdersTableSeeder;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
 
 class OrdersController2Test extends TestCase
