@@ -18,6 +18,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
  * @property string equipment_type
  * @property string equipment_size
  * @property string equipment_display
+ * @property string scac
  */
 class EquipmentType extends Model
 {
@@ -37,6 +38,7 @@ class EquipmentType extends Model
         'equipment_type_and_size',
         'equipment_type',
         'equipment_size',
+        'scac',
     ];
 
     public function tmsProvider()

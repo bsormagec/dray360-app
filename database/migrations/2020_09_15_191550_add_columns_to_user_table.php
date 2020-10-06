@@ -27,7 +27,7 @@ class AddColumnsToUserTable extends Migration
     public function down()
     {
         if (Schema::hasColumn('users', 'position')) {
-            Schema::table('user', function (Blueprint $table) {
+            Schema::table('users', function (Blueprint $table) {
                 $table->dropColumn('position');
                 $table->dropColumn('org');
             });
