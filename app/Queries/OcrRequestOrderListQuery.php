@@ -3,8 +3,6 @@
 namespace App\Queries;
 
 use App\Models\OCRRequest;
-
-
 use Spatie\QueryBuilder\AllowedSort;
 use Spatie\QueryBuilder\QueryBuilder;
 use Spatie\QueryBuilder\AllowedFilter;
