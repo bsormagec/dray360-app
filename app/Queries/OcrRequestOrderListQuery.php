@@ -50,8 +50,8 @@ class OcrRequestOrderListQuery extends QueryBuilder
             AllowedFilter::partial('order.shipment_designation', 't_orders.shipment_designation', false),
             AllowedFilter::partial('order.shipment_direction', 't_orders.shipment_direction', false),
             AllowedFilter::scope('created_between'),
-            AllowedFilter::custom('status', new OcrRequestStatusFilter()),
-            AllowedFilter::custom('display_status', new OcrRequestStatusFilter()),
+            AllowedFilter::custom('status', new OcrRequestStatusFilter(true)),
+            AllowedFilter::custom('display_status', new OcrRequestStatusFilter(true)),
             AllowedFilter::callback('query', function ($query, $value) {
                 $query->where(function ($query) use ($value) {
                     $query->orWhere('t_orders.bill_to_address_raw_text', 'like', "%{$value}%")
