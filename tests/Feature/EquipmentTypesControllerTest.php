@@ -26,6 +26,12 @@ class EquipmentTypesControllerTest extends TestCase
         ]);
         $testEquipmentType = $equipmentTypes->first()->refresh();
 
+        $queryPart = Str::of($testEquipmentType->equipment_display)
+            ->before(' ')
+            ->before(',')
+            ->__toString();
+        $equipmentCount = EquipmentType::where('equipment_display', 'like', "%{$queryPart}%")->count();
+
         $this->getJson(route('equipment-types.show', [
             'company' => $company->id,
             'tmsProvider' => $tmsProvider->id,
@@ -35,6 +41,6 @@ class EquipmentTypesControllerTest extends TestCase
                 ->__toString()
         ]))
         ->assertStatus(Response::HTTP_OK)
-        ->assertJsonCount(1, 'data');
+        ->assertJsonCount($equipmentCount, 'data');
     }
 }
