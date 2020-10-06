@@ -350,6 +350,7 @@ class Order extends Model
             'portRampOfOriginAddress',
             'orderAddressEvents',
             'orderAddressEvents.address',
+            'equipmentType'
         ];
     }
 }
