@@ -10,8 +10,8 @@ use Illuminate\Http\Request;
 use App\Models\OCRRequestStatus;
 use App\Http\Controllers\Controller;
 use App\Queries\OcrRequestsListQuery;
+use App\Http\Resources\OcrRequestJson;
 use Illuminate\Validation\ValidationException;
-use Illuminate\Http\Resources\Json\JsonResource;
 
 class OCRRequestController extends Controller
 {
@@ -31,7 +31,7 @@ class OCRRequestController extends Controller
 
         $ocrRequests = (new OcrRequestsListQuery())->paginate(25);
 
-        return JsonResource::collection($ocrRequests);
+        return OcrRequestJson::collection($ocrRequests);
     }
 
     public function createOCRRequestUploadURI(Request $request)

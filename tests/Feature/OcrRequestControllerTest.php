@@ -32,10 +32,13 @@ class OcrRequestControllerTest extends TestCase
                     '*' => [
                         'request_id',
                         'created_at',
-                        'updated_at',
+                        'updated_at'    ,
                         'email_from_address',
                         'upload_user_name',
-                        'latest_ocr_request_status',
+                        'latest_ocr_request_status' => [
+                            'display_status',
+                            'display_message',
+                        ],
                         'first_order_bill_to_address_id',
                         'first_order_bill_to_address',
                         'first_order_id',
