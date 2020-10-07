@@ -9,6 +9,7 @@ use Spatie\QueryBuilder\AllowedSort;
 use Spatie\QueryBuilder\QueryBuilder;
 use Spatie\QueryBuilder\AllowedFilter;
 use App\Queries\Sorts\OcrRequestStatusSort;
+use App\Queries\Filters\CreatedBetweenFilter;
 use App\Queries\Filters\OcrRequestStatusFilter;
 
 class OcrRequestsListQuery extends QueryBuilder
@@ -50,7 +51,7 @@ class OcrRequestsListQuery extends QueryBuilder
 
         $this->allowedFilters([
             AllowedFilter::partial('request_id', 't_job_latest_state.request_id'),
-            AllowedFilter::scope('created_between'),
+            AllowedFilter::custom('created_between', new CreatedBetweenFilter(), 't_job_latest_state.created_at'),
             AllowedFilter::custom('status', new OcrRequestStatusFilter()),
             AllowedFilter::custom('display_status', new OcrRequestStatusFilter()),
             AllowedFilter::callback('query', function ($query, $value) {
