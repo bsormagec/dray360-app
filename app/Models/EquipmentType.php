@@ -18,6 +18,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
  * @property string equipment_type
  * @property string equipment_size
  * @property string equipment_display
+ * @property string scac
  */
 class EquipmentType extends Model
 {
@@ -37,10 +38,19 @@ class EquipmentType extends Model
         'equipment_type_and_size',
         'equipment_type',
         'equipment_size',
+        'scac',
     ];
 
     public function tmsProvider()
     {
         return $this->belongsTo(TMSProvider::class, 't_tms_provider_id');
+    }
+
+    public function scopeForCompanyAndTmsProvider($query, int $companyId,int $tmsProviderId)
+    {
+        return $query->where([
+            't_company_id' => $companyId,
+            't_tms_provider_id' => $tmsProviderId,
+        ]);
     }
 }

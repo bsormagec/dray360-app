@@ -25,9 +25,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
  * @property boolean $yard_pre_pull
  * @property boolean $has_chassis
  * @property string $unit_number
- * @property string $equipment
  * @property string $equipment_size
- * @property string $owner_or_ss_company
  * @property boolean $hazardous
  * @property boolean $expedite
  * @property string $reference_number
@@ -84,9 +82,7 @@ class Order extends Model
         'yard_pre_pull',
         'has_chassis',
         'unit_number',
-        'equipment',
         'equipment_size',
-        'owner_or_ss_company',
         'hazardous',
         'reference_number',
         'rate_quote_number',
@@ -135,6 +131,7 @@ class Order extends Model
         't_tms_provider_id',
         'division_code',
         't_equipment_type_id',
+        'equipment_type_verified',
     ];
 
     /**
@@ -155,6 +152,7 @@ class Order extends Model
         'port_ramp_of_destination_address_verified' => 'boolean',
         'ocr_data' => 'json',
         'pickup_by_date' => 'datetime:Y-m-d',
+        'equipment_type_verified' => 'boolean',
     ];
 
     /**
@@ -176,9 +174,7 @@ class Order extends Model
         'yard_pre_pull' => 'sometimes|nullable',
         'has_chassis' => 'sometimes|nullable',
         'unit_number' => 'sometimes|nullable',
-        'equipment' => 'sometimes|nullable',
         'equipment_size' => 'sometimes|nullable',
-        'owner_or_ss_company' => 'sometimes|nullable',
         'hazardous' => 'sometimes|nullable',
         'reference_number' => 'sometimes|nullable',
         'rate_quote_number' => 'sometimes|nullable',
@@ -222,36 +218,37 @@ class Order extends Model
         'ship_comment' => 'sometimes|nullable',
         'division_code' => 'sometimes|nullable',
         't_equipment_type_id' => 'sometimes|nullable|exists:t_equipment_types,id',
+        'equipment_type_verified' => 'sometimes|nullable',
     ];
 
     public function orderAddressEvents()
     {
-        return $this->hasMany(\App\Models\OrderAddressEvent::class, 't_order_id');
+        return $this->hasMany(OrderAddressEvent::class, 't_order_id');
     }
 
     public function orderLineItems()
     {
-        return $this->hasMany(\App\Models\OrderLineItem::class, 't_order_id');
+        return $this->hasMany(OrderLineItem::class, 't_order_id');
     }
 
     public function ocrRequest()
     {
-        return $this->hasOne(\App\Models\OCRRequest::class, 'order_id', 'id');
+        return $this->hasOne(OCRRequest::class, 'order_id');
     }
 
     public function billToAddress()
     {
-        return $this->belongsTo(\App\Models\Address::class, 'bill_to_address_id');
+        return $this->belongsTo(Address::class, 'bill_to_address_id');
     }
 
     public function portRampOfOriginAddress()
     {
-        return $this->belongsTo(\App\Models\Address::class, 'port_ramp_of_origin_address_id');
+        return $this->belongsTo(Address::class, 'port_ramp_of_origin_address_id');
     }
 
     public function portRampOfDestinationAddress()
     {
-        return $this->belongsTo(\App\Models\Address::class, 'port_ramp_of_destination_address_id');
+        return $this->belongsTo(Address::class, 'port_ramp_of_destination_address_id');
     }
 
     public function equipmentType()
@@ -356,6 +353,7 @@ class Order extends Model
             'portRampOfOriginAddress',
             'orderAddressEvents',
             'orderAddressEvents.address',
+            'equipmentType'
         ];
     }
 }

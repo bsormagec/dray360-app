@@ -24,6 +24,7 @@ import AccesorialsMapping from '@/views/Mappings/AccesorialsMapping'
 import ForgotPassword from '@/views/ForgotPassword'
 import EmailConfirmation from '@/views/EmailConfirmation'
 import ResetPassword from '@/views/ResetPassword'
+import ApplicationDowntime from '@/views/ApplicationDowntime'
 
 Vue.use(VueRouter)
 
@@ -166,6 +167,11 @@ const routes = [
     meta: {
       middleware: [LoggedOut]
     }
+  },
+  {
+    path: '/application-downtime',
+    name: 'Application Downtime',
+    component: ApplicationDowntime
   }
 ]
 

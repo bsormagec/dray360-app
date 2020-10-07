@@ -11,7 +11,7 @@ class OcrRequestStatusSort implements Sort
     {
         $direction = $descending ? 'DESC' : 'ASC';
 
-        $query->join('t_job_state_changes', 't_job_state_changes.id', '=', 't_job_state_changes_id')
-            ->orderBy('t_job_state_changes.status', $direction);
+        $query->join('t_job_state_changes as sort_status', 'sort_status.id', '=', 't_job_state_changes_id')
+            ->orderBy('sort_status.status', $direction);
     }
 }

@@ -8,13 +8,13 @@ use Tests\TestCase;
 use App\Models\User;
 use Aws\MockHandler;
 use App\Models\Order;
-use OrdersTableSeeder;
 use App\Models\Company;
 use Illuminate\Support\Str;
 use Laravel\Sanctum\Sanctum;
 use Illuminate\Http\Response;
-use ProfitToolsCompaniesSeeder;
 use Aws\Exception\AwsException;
+use ProfitToolsCompaniesSeeder;
+use Tests\Seeds\OrdersTableSeeder;
 use App\Actions\PublishSnsMessageToSendToTms;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
 

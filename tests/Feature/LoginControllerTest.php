@@ -2,11 +2,11 @@
 
 namespace Tests\Feature;
 
-use UsersSeeder;
 use Tests\TestCase;
 use App\Models\User;
 use App\Models\Company;
 use Laravel\Sanctum\Sanctum;
+use Tests\Seeds\UsersSeeder;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Foundation\Testing\DatabaseTransactions;

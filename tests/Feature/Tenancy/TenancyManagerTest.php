@@ -2,7 +2,6 @@
 
 namespace Tests\Feature\Tenancy;
 
-use UsersSeeder;
 use Tests\TestCase;
 use App\Models\User;
 use App\Models\Domain;
@@ -10,6 +9,7 @@ use App\Models\Tenant;
 use App\Models\Company;
 use Illuminate\Support\Str;
 use Illuminate\Http\Request;
+use Tests\Seeds\UsersSeeder;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
 
 class TenancyManagerTest extends TestCase

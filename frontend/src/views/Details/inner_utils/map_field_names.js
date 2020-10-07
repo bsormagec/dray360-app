@@ -15,8 +15,6 @@ const mapFieldNamesCreator = () => {
     unit_number: 'unit number',
     equipment_size: 'size',
     bill_to_address: 'bill to',
-    equipment: 'type',
-    equipment_type: 'equipment',
     hazardous: 'hazardous',
     one_way: 'one way',
     seal_number: 'seal number',
