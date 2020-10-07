@@ -449,218 +449,6 @@
 			"response": []
 		},
 		{
-			"name": "/api/orders",
-			"event": [
-				{
-					"listen": "test",
-					"script": {
-						"id": "0fdea844-6a32-4aef-b2ff-1c38b5130f38",
-						"exec": [
-							"var token1=postman.getResponseCookie('XSRF-TOKEN').value;",
-							"var token2=token1.replace(/%3D/g, '=');",
-							"postman.setEnvironmentVariable('X-XSRF-TOKEN', token2);",
-							""
-						],
-						"type": "text/javascript"
-					}
-				}
-			],
-			"request": {
-				"method": "GET",
-				"header": [
-					{
-						"key": "Content-Type",
-						"value": "application/x-www-form-urlencoded"
-					},
-					{
-						"key": "Referer",
-						"value": "{{server}}",
-						"type": "text"
-					},
-					{
-						"key": "Accept",
-						"value": "application/json, text/plain, */*",
-						"type": "text"
-					},
-					{
-						"key": "X-XSRF-TOKEN",
-						"value": "{{X-XSRF-TOKEN}}",
-						"type": "text"
-					}
-				],
-				"url": {
-					"raw": "{{server}}/api/orders?filter[created_between]=2020-04-30,2020-05-01&sort=-created_at&page=1",
-					"host": [
-						"{{server}}"
-					],
-					"path": [
-						"api",
-						"orders"
-					],
-					"query": [
-						{
-							"key": "filter[request_id]",
-							"value": "",
-							"description": "The ocr request id",
-							"disabled": true
-						},
-						{
-							"key": "filter[order.bill_to_address_raw_text]",
-							"value": "",
-							"disabled": true
-						},
-						{
-							"key": "filter[order.port_ramp_of_origin_address_raw_text]",
-							"value": "",
-							"disabled": true
-						},
-						{
-							"key": "filter[order.port_ramp_of_destination_address_raw_text]",
-							"value": "",
-							"disabled": true
-						},
-						{
-							"key": "filter[order.equipment_type]",
-							"value": "",
-							"disabled": true
-						},
-						{
-							"key": "filter[order.shipment_designation]",
-							"value": "",
-							"disabled": true
-						},
-						{
-							"key": "filter[order.shipment_direction]",
-							"value": "",
-							"disabled": true
-						},
-						{
-							"key": "filter[created_between]",
-							"value": "2020-04-30,2020-05-01",
-							"description": "date range, separated by commas"
-						},
-						{
-							"key": "filter[status]",
-							"value": "intake-started,ocr-completed,ocr-waiting,",
-							"description": "Multiple values comma separated. Available: intake-accepted, intake-exception, intake-rejected, intake-started, ocr-completed, ocr-post-processing-complete, ocr-post-processing-error, ocr-waiting, process-ocr-output-file-complete, process-ocr-output-file-error, upload-requested",
-							"disabled": true
-						},
-						{
-							"key": "filter[display_status]",
-							"value": "Pending,Processing",
-							"description": "Filter by all the fields above except the dates",
-							"disabled": true
-						},
-						{
-							"key": "filter[query]",
-							"value": "whateever",
-							"disabled": true
-						},
-						{
-							"key": "sort",
-							"value": "request_id",
-							"disabled": true
-						},
-						{
-							"key": "sort",
-							"value": "-created_at"
-						},
-						{
-							"key": "sort",
-							"value": "status",
-							"disabled": true
-						},
-						{
-							"key": "sort",
-							"value": "order.bill_to_address_raw_text",
-							"disabled": true
-						},
-						{
-							"key": "sort",
-							"value": "order.equipment_type",
-							"disabled": true
-						},
-						{
-							"key": "sort",
-							"value": "order.shipment_designation",
-							"disabled": true
-						},
-						{
-							"key": "sort",
-							"value": "order.shipment_direction",
-							"disabled": true
-						},
-						{
-							"key": "page",
-							"value": "1"
-						}
-					]
-				},
-				"description": "You can enable multiple values of the `filter[]` but only one `sort` is allowed"
-			},
-			"response": []
-		},
-		{
-			"name": "/api/companies/:id",
-			"event": [
-				{
-					"listen": "test",
-					"script": {
-						"id": "bc037f45-edb5-42f9-ab2c-9d1bb7a1d0af",
-						"exec": [
-							"var token1=postman.getResponseCookie('XSRF-TOKEN').value;",
-							"var token2=token1.replace(/%3D/g, '=');",
-							"postman.setEnvironmentVariable('X-XSRF-TOKEN', token2);",
-							""
-						],
-						"type": "text/javascript"
-					}
-				}
-			],
-			"request": {
-				"method": "GET",
-				"header": [
-					{
-						"key": "Content-Type",
-						"value": "application/x-www-form-urlencoded"
-					},
-					{
-						"key": "Referer",
-						"type": "text",
-						"value": "{{server}}"
-					},
-					{
-						"key": "Accept",
-						"type": "text",
-						"value": "application/json, text/plain, */*"
-					},
-					{
-						"key": "X-XSRF-TOKEN",
-						"type": "text",
-						"value": "{{X-XSRF-TOKEN}}"
-					}
-				],
-				"url": {
-					"raw": "{{server}}/api/orders/:id",
-					"host": [
-						"{{server}}"
-					],
-					"path": [
-						"api",
-						"orders",
-						":id"
-					],
-					"variable": [
-						{
-							"key": "id",
-							"value": "125"
-						}
-					]
-				}
-			},
-			"response": []
-		},
-		{
 			"name": "/api/orders/:id",
 			"event": [
 				{
@@ -784,6 +572,67 @@
 						"companies"
 					]
 				}
+			},
+			"response": []
+		},
+		{
+			"name": "/api/companies/:id",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "45b06fee-8d55-42d6-848b-8a650b02e0c7",
+						"exec": [
+							"var token1=postman.getResponseCookie('XSRF-TOKEN').value;",
+							"var token2=token1.replace(/%3D/g, '=');",
+							"postman.setEnvironmentVariable('X-XSRF-TOKEN', token2);",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/x-www-form-urlencoded"
+					},
+					{
+						"key": "Referer",
+						"type": "text",
+						"value": "{{server}}"
+					},
+					{
+						"key": "Accept",
+						"type": "text",
+						"value": "application/json, text/plain, */*"
+					},
+					{
+						"key": "X-XSRF-TOKEN",
+						"type": "text",
+						"value": "{{X-XSRF-TOKEN}}"
+					}
+				],
+				"url": {
+					"raw": "{{server}}/api/companies/:id",
+					"host": [
+						"{{server}}"
+					],
+					"path": [
+						"api",
+						"companies",
+						":id"
+					],
+					"variable": [
+						{
+							"key": "id",
+							"value": "2"
+						}
+					]
+				},
+				"description": "retrieve a company by ID"
 			},
 			"response": []
 		},
@@ -982,6 +831,255 @@
 			"response": []
 		},
 		{
+			"name": "/api/orders",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "0fdea844-6a32-4aef-b2ff-1c38b5130f38",
+						"exec": [
+							"var token1=postman.getResponseCookie('XSRF-TOKEN').value;",
+							"var token2=token1.replace(/%3D/g, '=');",
+							"postman.setEnvironmentVariable('X-XSRF-TOKEN', token2);",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/x-www-form-urlencoded"
+					},
+					{
+						"key": "Referer",
+						"value": "{{server}}",
+						"type": "text"
+					},
+					{
+						"key": "Accept",
+						"value": "application/json, text/plain, */*",
+						"type": "text"
+					},
+					{
+						"key": "X-XSRF-TOKEN",
+						"value": "{{X-XSRF-TOKEN}}",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "{{server}}/api/orders?filter[created_between]=2020-04-30,2020-05-01&sort=-created_at&page=1",
+					"host": [
+						"{{server}}"
+					],
+					"path": [
+						"api",
+						"orders"
+					],
+					"query": [
+						{
+							"key": "filter[request_id]",
+							"value": "",
+							"description": "The ocr request id",
+							"disabled": true
+						},
+						{
+							"key": "filter[order.bill_to_address_raw_text]",
+							"value": "",
+							"disabled": true
+						},
+						{
+							"key": "filter[order.port_ramp_of_origin_address_raw_text]",
+							"value": "",
+							"disabled": true
+						},
+						{
+							"key": "filter[order.port_ramp_of_destination_address_raw_text]",
+							"value": "",
+							"disabled": true
+						},
+						{
+							"key": "filter[order.equipment_type]",
+							"value": "",
+							"disabled": true
+						},
+						{
+							"key": "filter[order.shipment_designation]",
+							"value": "",
+							"disabled": true
+						},
+						{
+							"key": "filter[order.shipment_direction]",
+							"value": "",
+							"disabled": true
+						},
+						{
+							"key": "filter[created_between]",
+							"value": "2020-04-30,2020-05-01",
+							"description": "date range, separated by commas"
+						},
+						{
+							"key": "filter[status]",
+							"value": "intake-started,ocr-completed,ocr-waiting,",
+							"description": "Multiple values comma separated. Available: intake-accepted, intake-exception, intake-rejected, intake-started, ocr-completed, ocr-post-processing-complete, ocr-post-processing-error, ocr-waiting, process-ocr-output-file-complete, process-ocr-output-file-error, upload-requested",
+							"disabled": true
+						},
+						{
+							"key": "filter[display_status]",
+							"value": "Pending,Processing",
+							"description": "Filter by all the fields above except the dates",
+							"disabled": true
+						},
+						{
+							"key": "filter[query]",
+							"value": "whateever",
+							"disabled": true
+						},
+						{
+							"key": "sort",
+							"value": "request_id",
+							"disabled": true
+						},
+						{
+							"key": "sort",
+							"value": "-created_at"
+						},
+						{
+							"key": "sort",
+							"value": "status",
+							"disabled": true
+						},
+						{
+							"key": "sort",
+							"value": "order.bill_to_address_raw_text",
+							"disabled": true
+						},
+						{
+							"key": "sort",
+							"value": "order.equipment_type",
+							"disabled": true
+						},
+						{
+							"key": "sort",
+							"value": "order.shipment_designation",
+							"disabled": true
+						},
+						{
+							"key": "sort",
+							"value": "order.shipment_direction",
+							"disabled": true
+						},
+						{
+							"key": "page",
+							"value": "1"
+						}
+					]
+				},
+				"description": "You can enable multiple values of the `filter[]` but only one `sort` is allowed"
+			},
+			"response": []
+		},
+		{
+			"name": "/api/orders-2",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "944d5f8d-e953-4811-b560-ccfaca9d7ce6",
+						"exec": [
+							"var token1=postman.getResponseCookie('XSRF-TOKEN').value;",
+							"var token2=token1.replace(/%3D/g, '=');",
+							"postman.setEnvironmentVariable('X-XSRF-TOKEN', token2);",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/x-www-form-urlencoded"
+					},
+					{
+						"key": "Referer",
+						"type": "text",
+						"value": "{{server}}"
+					},
+					{
+						"key": "Accept",
+						"type": "text",
+						"value": "application/json, text/plain, */*"
+					},
+					{
+						"key": "X-XSRF-TOKEN",
+						"type": "text",
+						"value": "{{X-XSRF-TOKEN}}"
+					}
+				],
+				"url": {
+					"raw": "{{server}}/api/orders-2",
+					"host": [
+						"{{server}}"
+					],
+					"path": [
+						"api",
+						"orders-2"
+					],
+					"query": [
+						{
+							"key": "filter[query]",
+							"value": "whateever",
+							"description": "Will search in these fields request_id, equipment_type, shipment_designation, shipment_direction, tms_shipment_id, unit_number, reference_number, location_name",
+							"disabled": true
+						},
+						{
+							"key": "filter[request_id]",
+							"value": "",
+							"description": "The ocr request id",
+							"disabled": true
+						},
+						{
+							"key": "filter[created_between]",
+							"value": "2020-09-29,2020-10-01",
+							"description": "date range, separated by commas",
+							"disabled": true
+						},
+						{
+							"key": "filter[status]",
+							"value": "shipment-not-updated-by-wint",
+							"description": "Multiple values comma separated. Available: intake-accepted, intake-exception, intake-rejected, intake-started, ocr-completed, ocr-post-processing-complete, ocr-post-processing-error, ocr-waiting, process-ocr-output-file-complete, process-ocr-output-file-error, upload-requested",
+							"disabled": true
+						},
+						{
+							"key": "filter[display_status]",
+							"value": "Accepted by TMS",
+							"description": "Filters by the display status. Available: Processing, Exception, Rejected, Intake, Verified, Sending to TMS, Sent to TMS, Accepted by TMS",
+							"disabled": true
+						},
+						{
+							"key": "sort",
+							"value": "request_id",
+							"description": "Available: request_id, created_at, order.equipment_type, order.shipment_designation, order.shipment_direction, order.bill_to_address",
+							"disabled": true
+						},
+						{
+							"key": "page",
+							"value": "1",
+							"disabled": true
+						}
+					]
+				},
+				"description": "You can enable multiple values of the `filter[]` but only one `sort` is allowed"
+			},
+			"response": []
+		},
+		{
 			"name": "/api/orders/:id/download-pdf",
 			"event": [
 				{
@@ -1100,6 +1198,101 @@
 					"path": [
 						"api",
 						"createocrrequestuploaduri"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "/api/ocr/requests",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "6425b43d-5a77-41d0-8825-9bc43c1982d1",
+						"exec": [
+							"var token1=postman.getResponseCookie('XSRF-TOKEN').value;",
+							"var token2=token1.replace(/%3D/g, '=');",
+							"postman.setEnvironmentVariable('X-XSRF-TOKEN', token2);",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Content-Type",
+						"type": "text",
+						"value": "application/x-www-form-urlencoded"
+					},
+					{
+						"key": "Referer",
+						"type": "text",
+						"value": "{{server}}"
+					},
+					{
+						"key": "Accept",
+						"type": "text",
+						"value": "application/json, text/plain"
+					},
+					{
+						"key": "X-XSRF-TOKEN",
+						"type": "text",
+						"value": "{{X-XSRF-TOKEN}}"
+					}
+				],
+				"url": {
+					"raw": "{{server}}/api/ocr/requests",
+					"host": [
+						"{{server}}"
+					],
+					"path": [
+						"api",
+						"ocr",
+						"requests"
+					],
+					"query": [
+						{
+							"key": "filter[request_id]",
+							"value": "06cf759c-182e-4672-bd3d-8fb0deda0a4a",
+							"disabled": true
+						},
+						{
+							"key": "filter[created_between]",
+							"value": "2020-09-28,2020-10-01",
+							"disabled": true
+						},
+						{
+							"key": "filter[status]",
+							"value": "intake-exception",
+							"description": "Multiple values comma separated. Available: intake-accepted, intake-exception, intake-rejected, intake-started, ocr-completed, ocr-post-processing-complete, ocr-post-processing-error, ocr-waiting, process-ocr-output-file-complete, process-ocr-output-file-error, upload-requested",
+							"disabled": true
+						},
+						{
+							"key": "filter[display_status]",
+							"value": "Processing",
+							"description": "Filters by the display status. Available: Processing, Exception, Rejected, Intake, Verified, Sending to TMS, Sent to TMS, Accepted by TMS",
+							"disabled": true
+						},
+						{
+							"key": "filter[query]",
+							"value": null,
+							"disabled": true
+						},
+						{
+							"key": "sort",
+							"value": "-status",
+							"description": "Available: id,status,created_at,request_id",
+							"disabled": true
+						},
+						{
+							"key": "page",
+							"value": "1",
+							"disabled": true
+						}
 					]
 				}
 			},
@@ -1423,6 +1616,194 @@
 			"response": []
 		},
 		{
+			"name": "/api/ocr/variants",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "ee884ba5-e0e5-4790-8f36-423bf39d4fa8",
+						"exec": [
+							"var token1=postman.getResponseCookie('XSRF-TOKEN').value;",
+							"var token2=token1.replace(/%3D/g, '=');",
+							"postman.setEnvironmentVariable('X-XSRF-TOKEN', token2);",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Content-Type",
+						"type": "text",
+						"value": "application/x-www-form-urlencoded"
+					},
+					{
+						"key": "Referer",
+						"type": "text",
+						"value": "{{server}}"
+					},
+					{
+						"key": "Accept",
+						"type": "text",
+						"value": "application/json, text/plain, */*"
+					},
+					{
+						"key": "X-XSRF-TOKEN",
+						"type": "text",
+						"value": "{{X-XSRF-TOKEN}}"
+					}
+				],
+				"url": {
+					"raw": "{{server}}/api/ocr/variants",
+					"host": [
+						"{{server}}"
+					],
+					"path": [
+						"api",
+						"ocr",
+						"variants"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "/api/ocr/variants/:ocr_variant_id",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "d92e54b0-93cf-4ad5-b613-10bc70b0ff1d",
+						"exec": [
+							"var token1=postman.getResponseCookie('XSRF-TOKEN').value;",
+							"var token2=token1.replace(/%3D/g, '=');",
+							"postman.setEnvironmentVariable('X-XSRF-TOKEN', token2);",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "PUT",
+				"header": [
+					{
+						"key": "Referer",
+						"value": "{{server}}",
+						"type": "text"
+					},
+					{
+						"key": "Accept",
+						"value": "application/json, text/plain, */*",
+						"type": "text"
+					},
+					{
+						"key": "X-XSRF-TOKEN",
+						"value": "{{X-XSRF-TOKEN}}",
+						"type": "text"
+					},
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"abbyy_variant_id\":\"\",\n    \"abbyy_variant_name\":\"\",\n    \"description\": \"\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{server}}/api/ocr/variants/:ocr_variant_id",
+					"host": [
+						"{{server}}"
+					],
+					"path": [
+						"api",
+						"ocr",
+						"variants",
+						":ocr_variant_id"
+					],
+					"variable": [
+						{
+							"key": "ocr_variant_id",
+							"value": ""
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "/api/ocr/variants/:ocr_variant_id",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "99c76cec-cba8-4ba9-9688-0730fded2eb3",
+						"exec": [
+							"var token1=postman.getResponseCookie('XSRF-TOKEN').value;",
+							"var token2=token1.replace(/%3D/g, '=');",
+							"postman.setEnvironmentVariable('X-XSRF-TOKEN', token2);",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "DELETE",
+				"header": [
+					{
+						"key": "Referer",
+						"value": "{{server}}",
+						"type": "text"
+					},
+					{
+						"key": "Accept",
+						"value": "application/json, text/plain, */*",
+						"type": "text"
+					},
+					{
+						"key": "X-XSRF-TOKEN",
+						"value": "{{X-XSRF-TOKEN}}",
+						"type": "text"
+					},
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "{{server}}/api/ocr/variants/:ocr_variant_id",
+					"host": [
+						"{{server}}"
+					],
+					"path": [
+						"api",
+						"ocr",
+						"variants",
+						":ocr_variant_id"
+					],
+					"variable": [
+						{
+							"key": "ocr_variant_id",
+							"value": ""
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
 			"name": "/api/search-address",
 			"event": [
 				{
@@ -1603,61 +1984,6 @@
 				{
 					"listen": "test",
 					"script": {
-						"id": "ee884ba5-e0e5-4790-8f36-423bf39d4fa8",
-						"exec": [
-							"var token1=postman.getResponseCookie('XSRF-TOKEN').value;",
-							"var token2=token1.replace(/%3D/g, '=');",
-							"postman.setEnvironmentVariable('X-XSRF-TOKEN', token2);",
-							""
-						],
-						"type": "text/javascript"
-					}
-				}
-			],
-			"request": {
-				"method": "GET",
-				"header": [
-					{
-						"key": "Content-Type",
-						"type": "text",
-						"value": "application/x-www-form-urlencoded"
-					},
-					{
-						"key": "Referer",
-						"type": "text",
-						"value": "{{server}}"
-					},
-					{
-						"key": "Accept",
-						"type": "text",
-						"value": "application/json, text/plain, */*"
-					},
-					{
-						"key": "X-XSRF-TOKEN",
-						"type": "text",
-						"value": "{{X-XSRF-TOKEN}}"
-					}
-				],
-				"url": {
-					"raw": "{{server}}/api/ocr/variants",
-					"host": [
-						"{{server}}"
-					],
-					"path": [
-						"api",
-						"ocr",
-						"variants"
-					]
-				}
-			},
-			"response": []
-		},
-		{
-			"name": "/api/ocr/variants",
-			"event": [
-				{
-					"listen": "test",
-					"script": {
 						"id": "3100c018-2af1-4af8-88a9-689b872998a8",
 						"exec": [
 							"var token1=postman.getResponseCookie('XSRF-TOKEN').value;",
@@ -1708,200 +2034,6 @@
 						"variants"
 					]
 				}
-			},
-			"response": []
-		},
-		{
-			"name": "/api/ocr/variants/:ocr_variant_id",
-			"event": [
-				{
-					"listen": "test",
-					"script": {
-						"id": "d92e54b0-93cf-4ad5-b613-10bc70b0ff1d",
-						"exec": [
-							"var token1=postman.getResponseCookie('XSRF-TOKEN').value;",
-							"var token2=token1.replace(/%3D/g, '=');",
-							"postman.setEnvironmentVariable('X-XSRF-TOKEN', token2);",
-							""
-						],
-						"type": "text/javascript"
-					}
-				}
-			],
-			"request": {
-				"method": "PUT",
-				"header": [
-					{
-						"key": "Referer",
-						"value": "{{server}}",
-						"type": "text"
-					},
-					{
-						"key": "Accept",
-						"value": "application/json, text/plain, */*",
-						"type": "text"
-					},
-					{
-						"key": "X-XSRF-TOKEN",
-						"value": "{{X-XSRF-TOKEN}}",
-						"type": "text"
-					},
-					{
-						"key": "Content-Type",
-						"value": "application/json",
-						"type": "text"
-					}
-				],
-				"body": {
-					"mode": "raw",
-					"raw": "{\n    \"abbyy_variant_id\":\"\",\n    \"abbyy_variant_name\":\"\",\n    \"description\": \"\"\n}",
-					"options": {
-						"raw": {
-							"language": "json"
-						}
-					}
-				},
-				"url": {
-					"raw": "{{server}}/api/ocr/variants/:ocr_variant_id",
-					"host": [
-						"{{server}}"
-					],
-					"path": [
-						"api",
-						"ocr",
-						"variants",
-						":ocr_variant_id"
-					],
-					"variable": [
-						{
-							"key": "ocr_variant_id",
-							"value": ""
-						}
-					]
-				}
-			},
-			"response": []
-		},
-		{
-			"name": "/api/ocr/variants/:ocr_variant_id Copy",
-			"event": [
-				{
-					"listen": "test",
-					"script": {
-						"id": "99c76cec-cba8-4ba9-9688-0730fded2eb3",
-						"exec": [
-							"var token1=postman.getResponseCookie('XSRF-TOKEN').value;",
-							"var token2=token1.replace(/%3D/g, '=');",
-							"postman.setEnvironmentVariable('X-XSRF-TOKEN', token2);",
-							""
-						],
-						"type": "text/javascript"
-					}
-				}
-			],
-			"request": {
-				"method": "DELETE",
-				"header": [
-					{
-						"key": "Referer",
-						"value": "{{server}}",
-						"type": "text"
-					},
-					{
-						"key": "Accept",
-						"value": "application/json, text/plain, */*",
-						"type": "text"
-					},
-					{
-						"key": "X-XSRF-TOKEN",
-						"value": "{{X-XSRF-TOKEN}}",
-						"type": "text"
-					},
-					{
-						"key": "Content-Type",
-						"value": "application/json",
-						"type": "text"
-					}
-				],
-				"url": {
-					"raw": "{{server}}/api/ocr/variants/:ocr_variant_id",
-					"host": [
-						"{{server}}"
-					],
-					"path": [
-						"api",
-						"ocr",
-						"variants",
-						":ocr_variant_id"
-					],
-					"variable": [
-						{
-							"key": "ocr_variant_id",
-							"value": ""
-						}
-					]
-				}
-			},
-			"response": []
-		},
-		{
-			"name": "/api/companies/:id",
-			"event": [
-				{
-					"listen": "test",
-					"script": {
-						"id": "45b06fee-8d55-42d6-848b-8a650b02e0c7",
-						"exec": [
-							"var token1=postman.getResponseCookie('XSRF-TOKEN').value;",
-							"var token2=token1.replace(/%3D/g, '=');",
-							"postman.setEnvironmentVariable('X-XSRF-TOKEN', token2);",
-							""
-						],
-						"type": "text/javascript"
-					}
-				}
-			],
-			"request": {
-				"method": "GET",
-				"header": [
-					{
-						"key": "Content-Type",
-						"value": "application/x-www-form-urlencoded"
-					},
-					{
-						"key": "Referer",
-						"type": "text",
-						"value": "{{server}}"
-					},
-					{
-						"key": "Accept",
-						"type": "text",
-						"value": "application/json, text/plain, */*"
-					},
-					{
-						"key": "X-XSRF-TOKEN",
-						"type": "text",
-						"value": "{{X-XSRF-TOKEN}}"
-					}
-				],
-				"url": {
-					"raw": "{{server}}/api/companies/:id",
-					"host": [
-						"{{server}}"
-					],
-					"path": [
-						"api",
-						"companies",
-						":id"
-					],
-					"variable": [
-						{
-							"key": "id",
-							"value": "2"
-						}
-					]
-				},
-				"description": "retrieve a company by ID"
 			},
 			"response": []
 		},
@@ -2093,60 +2225,6 @@
 							"key": "page",
 							"value": "1"
 						}
-					]
-				}
-			},
-			"response": []
-		},
-		{
-			"name": "/api/roles",
-			"event": [
-				{
-					"listen": "test",
-					"script": {
-						"id": "cad59cfd-5cc8-4083-91e7-9b4674c12d61",
-						"exec": [
-							"var token1=postman.getResponseCookie('XSRF-TOKEN').value;",
-							"var token2=token1.replace(/%3D/g, '=');",
-							"postman.setEnvironmentVariable('X-XSRF-TOKEN', token2);",
-							""
-						],
-						"type": "text/javascript"
-					}
-				}
-			],
-			"request": {
-				"method": "GET",
-				"header": [
-					{
-						"key": "Content-Type",
-						"type": "text",
-						"value": "application/x-www-form-urlencoded"
-					},
-					{
-						"key": "Referer",
-						"type": "text",
-						"value": "{{server}}"
-					},
-					{
-						"key": "Accept",
-						"type": "text",
-						"value": "application/json, text/plain, */*"
-					},
-					{
-						"key": "X-XSRF-TOKEN",
-						"type": "text",
-						"value": "{{X-XSRF-TOKEN}}"
-					}
-				],
-				"url": {
-					"raw": "{{server}}/api/roles",
-					"host": [
-						"{{server}}"
-					],
-					"path": [
-						"api",
-						"roles"
 					]
 				}
 			},
@@ -2471,6 +2549,60 @@
 			"response": []
 		},
 		{
+			"name": "/api/roles",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "cad59cfd-5cc8-4083-91e7-9b4674c12d61",
+						"exec": [
+							"var token1=postman.getResponseCookie('XSRF-TOKEN').value;",
+							"var token2=token1.replace(/%3D/g, '=');",
+							"postman.setEnvironmentVariable('X-XSRF-TOKEN', token2);",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Content-Type",
+						"type": "text",
+						"value": "application/x-www-form-urlencoded"
+					},
+					{
+						"key": "Referer",
+						"type": "text",
+						"value": "{{server}}"
+					},
+					{
+						"key": "Accept",
+						"type": "text",
+						"value": "application/json, text/plain, */*"
+					},
+					{
+						"key": "X-XSRF-TOKEN",
+						"type": "text",
+						"value": "{{X-XSRF-TOKEN}}"
+					}
+				],
+				"url": {
+					"raw": "{{server}}/api/roles",
+					"host": [
+						"{{server}}"
+					],
+					"path": [
+						"api",
+						"roles"
+					]
+				}
+			},
+			"response": []
+		},
+		{
 			"name": "/api/bulk-actions",
 			"event": [
 				{
@@ -2529,147 +2661,6 @@
 					]
 				},
 				"description": "Available actions:\n\n- `users.deactivate`\n- `users.delete`\n- `users.activate`\n- `users.reset_password`"
-			},
-			"response": []
-		},
-		{
-			"name": "/api/companies/:company/variants/:variant/accesorials",
-			"event": [
-				{
-					"listen": "test",
-					"script": {
-						"id": "ac0a98a3-1286-4c7e-a0a7-6c2731c8ac05",
-						"exec": [
-							"var token1=postman.getResponseCookie('XSRF-TOKEN').value;",
-							"var token2=token1.replace(/%3D/g, '=');",
-							"postman.setEnvironmentVariable('X-XSRF-TOKEN', token2);",
-							""
-						],
-						"type": "text/javascript"
-					}
-				}
-			],
-			"protocolProfileBehavior": {
-				"disabledSystemHeaders": {}
-			},
-			"request": {
-				"method": "PUT",
-				"header": [
-					{
-						"key": "Referer",
-						"type": "text",
-						"value": "{{server}}"
-					},
-					{
-						"key": "Accept",
-						"type": "text",
-						"value": "application/json, text/plain, */*"
-					},
-					{
-						"key": "X-XSRF-TOKEN",
-						"type": "text",
-						"value": "{{X-XSRF-TOKEN}}"
-					}
-				],
-				"body": {
-					"mode": "raw",
-					"raw": "{\n    \"mapping\": null\n}",
-					"options": {
-						"raw": {
-							"language": "json"
-						}
-					}
-				},
-				"url": {
-					"raw": "{{server}}/api/companies/:company/variants/:variant/accesorials",
-					"host": [
-						"{{server}}"
-					],
-					"path": [
-						"api",
-						"companies",
-						":company",
-						"variants",
-						":variant",
-						"accesorials"
-					],
-					"variable": [
-						{
-							"key": "company",
-							"value": ""
-						},
-						{
-							"key": "variant",
-							"value": ""
-						}
-					]
-				}
-			},
-			"response": []
-		},
-		{
-			"name": "/api/companies/:company/variants/:variant/accesorials",
-			"event": [
-				{
-					"listen": "test",
-					"script": {
-						"id": "acee5962-e16b-4eb6-a0bd-7f38adb04e36",
-						"exec": [
-							"var token1=postman.getResponseCookie('XSRF-TOKEN').value;",
-							"var token2=token1.replace(/%3D/g, '=');",
-							"postman.setEnvironmentVariable('X-XSRF-TOKEN', token2);",
-							""
-						],
-						"type": "text/javascript"
-					}
-				}
-			],
-			"protocolProfileBehavior": {
-				"disabledSystemHeaders": {}
-			},
-			"request": {
-				"method": "GET",
-				"header": [
-					{
-						"key": "Referer",
-						"type": "text",
-						"value": "{{server}}"
-					},
-					{
-						"key": "Accept",
-						"type": "text",
-						"value": "application/json, text/plain, */*"
-					},
-					{
-						"key": "X-XSRF-TOKEN",
-						"type": "text",
-						"value": "{{X-XSRF-TOKEN}}"
-					}
-				],
-				"url": {
-					"raw": "{{server}}/api/companies/:company/variants/:variant/accesorials",
-					"host": [
-						"{{server}}"
-					],
-					"path": [
-						"api",
-						"companies",
-						":company",
-						"variants",
-						":variant",
-						"accesorials"
-					],
-					"variable": [
-						{
-							"key": "company",
-							"value": ""
-						},
-						{
-							"key": "variant",
-							"value": ""
-						}
-					]
-				}
 			},
 			"response": []
 		}

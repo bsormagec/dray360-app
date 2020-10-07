@@ -4,6 +4,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Api\RolesController;
 use App\Http\Controllers\Api\UsersController;
 use App\Http\Controllers\Api\OrdersController;
+use App\Http\Controllers\Api\OrdersController2;
 use App\Http\Controllers\Api\OCRRulesController;
 use App\Http\Controllers\Api\CompaniesController;
 use App\Http\Controllers\Api\SendToTmsController;
@@ -88,6 +89,10 @@ Route::group(['middleware' => ['auth:sanctum', 'impersonate', 'tenant-aware']], 
     Route::resource('orders', OrdersController::class)
         ->only(['index', 'update', 'show']);
 
+    // New orders endpoint
+    Route::resource('orders-2', OrdersController2::class)
+        ->only(['index']);
+
     // Companies management
     Route::resource('companies', CompaniesController::class)
         ->only(['index', 'update', 'show']);
@@ -111,6 +116,11 @@ Route::group(['middleware' => ['auth:sanctum', 'impersonate', 'tenant-aware']], 
     // Authenticated route to get document upload URI
     Route::post('createocrrequestuploaduri', [OCRRequestController::class, 'createOCRRequestUploadURI'])
         ->name('createocruploaduri');
+
+    // CRUD for OCR Request
+    Route::apiResource('ocr/requests', OCRRequestController::class, ['as' => 'ocr'])
+        ->parameters(['request' => 'ocrRequest'])
+        ->only(['index']);
 
     // CRUD for OCR Rules
     Route::apiResource('ocr/rules', OCRRulesController::class, ['as' => 'ocr'])

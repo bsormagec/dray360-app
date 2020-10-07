@@ -5,10 +5,10 @@ namespace Tests\Feature;
 use Tests\TestCase;
 use App\Models\User;
 use App\Models\Order;
-use OrdersTableSeeder;
 use App\Models\Company;
 use Laravel\Sanctum\Sanctum;
 use Illuminate\Http\Response;
+use Tests\Seeds\OrdersTableSeeder;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
 

@@ -2,7 +2,6 @@
 
 namespace Tests\Feature\Tenancy;
 
-use UsersSeeder;
 use Tests\TestCase;
 use App\Models\User;
 use App\Models\Domain;
@@ -10,6 +9,7 @@ use App\Models\Company;
 use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 use Laravel\Sanctum\Sanctum;
+use Tests\Seeds\UsersSeeder;
 use Illuminate\Http\Response;
 use App\Http\Middleware\TenantAware;
 use Illuminate\Support\Facades\Config;

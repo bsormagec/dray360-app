@@ -7,6 +7,7 @@ use Spatie\QueryBuilder\AllowedSort;
 use Spatie\QueryBuilder\QueryBuilder;
 use Spatie\QueryBuilder\AllowedFilter;
 use App\Queries\Sorts\OcrRequestStatusSort;
+use App\Queries\Filters\CreatedBetweenFilter;
 use App\Queries\Filters\OcrRequestStatusFilter;
 
 class OcrRequestOrderListQuery extends QueryBuilder
@@ -50,9 +51,9 @@ class OcrRequestOrderListQuery extends QueryBuilder
             AllowedFilter::partial('order.equipment_type', 't_orders.equipment_type', false),
             AllowedFilter::partial('order.shipment_designation', 't_orders.shipment_designation', false),
             AllowedFilter::partial('order.shipment_direction', 't_orders.shipment_direction', false),
-            AllowedFilter::scope('created_between'),
-            AllowedFilter::custom('status', new OcrRequestStatusFilter()),
-            AllowedFilter::custom('display_status', new OcrRequestStatusFilter()),
+            AllowedFilter::custom('created_between', new CreatedBetweenFilter(), 't_job_latest_state.created_at'),
+            AllowedFilter::custom('status', new OcrRequestStatusFilter(true)),
+            AllowedFilter::custom('display_status', new OcrRequestStatusFilter(true)),
             AllowedFilter::callback('query', function ($query, $value) {
                 $query->where(function ($query) use ($value) {
                     $query->orWhere('t_orders.bill_to_address_raw_text', 'like', "%{$value}%")

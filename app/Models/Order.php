@@ -223,32 +223,32 @@ class Order extends Model
 
     public function orderAddressEvents()
     {
-        return $this->hasMany(\App\Models\OrderAddressEvent::class, 't_order_id');
+        return $this->hasMany(OrderAddressEvent::class, 't_order_id');
     }
 
     public function orderLineItems()
     {
-        return $this->hasMany(\App\Models\OrderLineItem::class, 't_order_id');
+        return $this->hasMany(OrderLineItem::class, 't_order_id');
     }
 
     public function ocrRequest()
     {
-        return $this->hasOne(\App\Models\OCRRequest::class, 'order_id', 'id');
+        return $this->hasOne(OCRRequest::class, 'order_id');
     }
 
     public function billToAddress()
     {
-        return $this->belongsTo(\App\Models\Address::class, 'bill_to_address_id');
+        return $this->belongsTo(Address::class, 'bill_to_address_id');
     }
 
     public function portRampOfOriginAddress()
     {
-        return $this->belongsTo(\App\Models\Address::class, 'port_ramp_of_origin_address_id');
+        return $this->belongsTo(Address::class, 'port_ramp_of_origin_address_id');
     }
 
     public function portRampOfDestinationAddress()
     {
-        return $this->belongsTo(\App\Models\Address::class, 'port_ramp_of_destination_address_id');
+        return $this->belongsTo(Address::class, 'port_ramp_of_destination_address_id');
     }
 
     public function equipmentType()

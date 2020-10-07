@@ -21,6 +21,7 @@ class AuthServiceProvider extends ServiceProvider
         \App\Models\TMSProvider::class => \App\Policies\TmsProviderPolicy::class,
         \App\Models\VerifiedAddress::class => \App\Policies\VerifiedAddressPolicy::class,
         \App\Models\EquipmentType::class => \App\Policies\EquipmentTypePolicy::class,
+        \App\Models\OCRRequest::class => \App\Policies\OcrRequestPolicy::class,
     ];
 
     /**
