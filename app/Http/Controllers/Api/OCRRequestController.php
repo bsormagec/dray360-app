@@ -4,10 +4,13 @@ namespace App\Http\Controllers\Api;
 
 use Carbon\Carbon;
 use App\Models\Company;
+use App\Models\OCRRequest;
 use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 use App\Models\OCRRequestStatus;
 use App\Http\Controllers\Controller;
+use App\Queries\OcrRequestsListQuery;
+use App\Http\Resources\OcrRequestJson;
 use Illuminate\Validation\ValidationException;
 
 class OCRRequestController extends Controller
@@ -21,6 +24,15 @@ class OCRRequestController extends Controller
 
     // expire upload URI after this many minutes
     const MINUTES_URI_REMAINS_VALID = 15;
+
+    public function index()
+    {
+        $this->authorize('viewAny', OCRRequest::class);
+
+        $ocrRequests = (new OcrRequestsListQuery())->paginate(25);
+
+        return OcrRequestJson::collection($ocrRequests);
+    }
 
     public function createOCRRequestUploadURI(Request $request)
     {

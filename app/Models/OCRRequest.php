@@ -2,10 +2,7 @@
 
 namespace App\Models;
 
-use Illuminate\Support\Carbon;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Validation\ValidationException;
 
 /**
  * @property \Illuminate\Database\Eloquent\Collection $orders
@@ -25,6 +22,7 @@ class OCRRequest extends Model
     public $fillable = [
         'request_id',
         't_job_state_changes_id',
+        'order_id'
     ];
 
     public function orders()
@@ -42,6 +40,10 @@ class OCRRequest extends Model
         return $this->belongsTo(OCRRequestStatus::class, 't_job_state_changes_id');
     }
 
+    /**
+     * Dynamic relationship used in the OcrRequestOrderListQuery, to take advantage of the eager loading.
+     * AKA dynamic relationship.
+     */
     public function order()
     {
         return $this->belongsTo(Order::class, 't_order_id')
@@ -58,18 +60,12 @@ class OCRRequest extends Model
             });
     }
 
-    public function scopeCreatedBetween(Builder $query, ...$dates): Builder
+    /**
+     * This is only used in the OcrRequestsListQuery class, to take advantage of the eager loading.
+     * AKA dynamic relationship.
+     */
+    public function firstOrderBillToAddress()
     {
-        if (count($dates) < 2) {
-            throw ValidationException::withMessages([
-                'created_between' => 'Requires two dates separated by comma. ex 2020-01-01,2020-01-02'
-            ]);
-        }
-        $dates = [
-            (new Carbon($dates[0]))->startOfDay(),
-            (new Carbon($dates[1]))->endOfDay(),
-        ];
-
-        return $query->whereBetween('t_job_latest_state.created_at', $dates);
+        return $this->belongsTo(Address::class, 'first_order_bill_to_address_id');
     }
 }

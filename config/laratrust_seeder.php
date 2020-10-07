@@ -23,6 +23,7 @@ return [
             'system-status' => 'f',
             'time-in-status' => 'v',
             'ocr-variants' => 'c,v,e,r',
+            'ocr-requests' => 'c,v,e,r',
             'companies' => 'c,v,e,r',
             'tms-providers' => 'c,v,e,r',
             'verified-addresses' => 'c,v,e,r',
@@ -30,11 +31,13 @@ return [
         ],
         'customer-admin' => [
             'orders' => 'e,v,c',
+            'ocr-requests' => 'c,v,e',
             'tms' => 's',
             'users' => 'v,c,e,r',
             'roles' => 'u',
         ],
         'customer-user' => [
+            'ocr-requests' => ' v',
             'orders' => 'v',
         ],
     ],

@@ -1,5 +1,8 @@
 <?php
 
+namespace Tests\Seeds;
+
+use LaratrustSeeder;
 use Illuminate\Database\Seeder;
 
 class UsersSeeder extends Seeder

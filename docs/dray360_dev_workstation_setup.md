@@ -2,7 +2,7 @@
 
 Instructions for setting up Dray360 local development workstation on Ubuntu 20.0.
 
-These instructions should also work on earlier versions of Ubuntu, and Linux Mint, and any other Debian-derived flavor of Linux.
+These instructions should also work on earlier versions of Ubuntu, Linux Mint, and any other Debian-derived flavor of Linux.
 
 With some modification these instructions should also suffice for macOS.
 
@@ -553,6 +553,28 @@ sudo apt-get install code
 ````bash
 grep remote_autostart /etc/php/7.4/mods-available/xdebug.ini || echo "xdebug.remote_autostart=true
 xdebug.remote_enable = 1" | sudo tee -a /etc/php/7.4/mods-available/xdebug.ini
+
+````
+
+
+
+#### Troubleshooting: Running "backend" laravel tests
+
+Github Actions automatically runs these tests when a Pull Request is created. If you get an error there it may be more convenient to to troubleshooting locally. Here are the commands to run the API backend tests.
+
+To run all tests:
+
+````bash
+composer run migrate-test  # usually only need to run this command once
+./vendor/bin/phpunit
+
+````
+
+To run a single test:
+
+````bash
+./vendor/bin/phpunit --filter it_should_queue_a_job_for_each_address_from_the_endpoint
+# which is equivalent to: ./vendor/bin/phpunit --filter=ImportProfitToolsAddressesTest
 
 ````
 

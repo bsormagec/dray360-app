@@ -5,17 +5,16 @@ namespace Tests\Feature;
 use Tests\TestCase;
 use App\Models\Company;
 use App\Models\TMSProvider;
-use Illuminate\Support\Str;
 use App\Models\EquipmentType;
 use Illuminate\Http\Response;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
 
-class EquipmentTypesControllerTest extends TestCase
+class EquipmentTypesSelectValuesControllerTest extends TestCase
 {
     use DatabaseTransactions;
 
     /** @test */
-    public function it_should_return_all_the_equipment_types_and_allow_to_filter_by_display()
+    public function it_should_return_the_select_options_for_the_equipment_types_values()
     {
         $this->loginAdmin();
         $company = factory(Company::class)->create();
@@ -26,21 +25,16 @@ class EquipmentTypesControllerTest extends TestCase
         ]);
         $testEquipmentType = $equipmentTypes->first()->refresh();
 
-        $queryPart = Str::of($testEquipmentType->equipment_display)
-            ->before(' ')
-            ->before(',')
-            ->__toString();
-        $equipmentCount = EquipmentType::where('equipment_display', 'like', "%{$queryPart}%")->count();
-
-        $this->getJson(route('equipment-types.show', [
+        $this->getJson(route('equipment-types-options.show', [
             'company' => $company->id,
             'tmsProvider' => $tmsProvider->id,
-            'filter[query]' => Str::of($testEquipmentType->equipment_display)
-                ->before(' ')
-                ->before(',')
-                ->__toString()
         ]))
         ->assertStatus(Response::HTTP_OK)
-        ->assertJsonCount($equipmentCount, 'data');
+        ->assertJsonStructure([
+            'equipment_types',
+            'equipment_owners',
+            'equipment_sizes',
+            'scacs',
+        ]);
     }
 }

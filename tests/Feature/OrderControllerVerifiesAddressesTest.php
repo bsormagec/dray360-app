@@ -4,7 +4,6 @@ namespace Tests\Feature;
 
 use Tests\TestCase;
 use App\Models\Order;
-use OrdersTableSeeder;
 use App\Models\Address;
 use App\Models\Company;
 use App\Models\TMSProvider;
@@ -12,6 +11,7 @@ use Illuminate\Http\Response;
 use App\Events\AddressVerified;
 use App\Models\VerifiedAddress;
 use App\Models\OrderAddressEvent;
+use Tests\Seeds\OrdersTableSeeder;
 use App\Models\CompanyAddressTMSCode;
 use Illuminate\Support\Facades\Event;
 use Illuminate\Support\Testing\Fakes\EventFake;
