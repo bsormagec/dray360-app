@@ -35,6 +35,7 @@ class OcrRequestControllerTest extends TestCase
                         'updated_at'    ,
                         'email_from_address',
                         'upload_user_name',
+                        'orders_count',
                         'latest_ocr_request_status' => [
                             'display_status',
                             'display_message',

@@ -40,6 +40,7 @@ class OcrRequestsListQuery extends QueryBuilder
                     return $query->where('s.company_id', '=', currentCompany()->id);
                 })
                 ->whereNull('t_job_latest_state.order_id')
+                ->withCount('orders')
                 ->with([
                     'latestOcrRequestStatus:id,status,status_date,status_metadata',
                     'firstOrderBillToAddress',
