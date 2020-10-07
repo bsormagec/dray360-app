@@ -123,9 +123,15 @@ export function parseChanges ({ path, value, originalOrder }) {
     order_line_items[index].contents = value
 
     changes = { order_line_items }
+  } else if (path === 't_equipment_type_id') {
+    changes = {
+      t_equipment_type_id: value,
+      equipment_type_verified: true
+    }
   } else {
     changes = { [path]: value }
   }
 
   return changes
 }
+''

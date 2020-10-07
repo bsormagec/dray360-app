@@ -52,12 +52,17 @@
             {{ sections.equipment.label }}
           </h2>
         </div>
-        <FormFieldInput
-          references="equipment_type"
-          label="Type"
-          :value="order.equipment_type"
-          :edit-mode="editMode"
-          @change="value => handleChange('equipment_type', value)"
+
+        <FormFieldEquipmentType
+          label="Equipment Type"
+          :company-id="order.t_company_id"
+          :tms-provider-id="order.t_tms_provider_id"
+          :carrier="order.carrier"
+          :equipment-size="order.equipment_size"
+          :equipment-type="order.equipment_type"
+          :unit-number="order.unit_number"
+          :verified="order.equipment_type_verified"
+          @change="(e) => handleChange('t_equipment_type_id', e)"
         />
         <FormFieldInput
           references="unit_number"
@@ -333,6 +338,7 @@ import FormFieldInput from '@/components/FormFields/FormFieldInput'
 import FormFieldSwitch from '@/components/FormFields/FormFieldSwitch'
 import FormFieldTextArea from '@/components/FormFields/FormFieldTextArea'
 import FormFieldAddressSwitchVerify from '@/components/FormFields/FormFieldAddressSwitchVerify'
+import FormFieldEquipmentType from '@/components/FormFields/FormFieldEquipmentType'
 
 export default {
   name: 'OrderDetailsForm',
@@ -344,7 +350,8 @@ export default {
     FormFieldInput,
     FormFieldSwitch,
     FormFieldTextArea,
-    FormFieldAddressSwitchVerify
+    FormFieldAddressSwitchVerify,
+    FormFieldEquipmentType
   },
 
   mixins: [isMobile],

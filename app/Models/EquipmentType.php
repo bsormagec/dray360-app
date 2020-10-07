@@ -45,4 +45,12 @@ class EquipmentType extends Model
     {
         return $this->belongsTo(TMSProvider::class, 't_tms_provider_id');
     }
+
+    public function scopeForCompanyAndTmsProvider($query, int $companyId,int $tmsProviderId)
+    {
+        return $query->where([
+            't_company_id' => $companyId,
+            't_tms_provider_id' => $tmsProviderId,
+        ]);
+    }
 }

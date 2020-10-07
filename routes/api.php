@@ -22,6 +22,7 @@ use App\Http\Controllers\Api\OCRRulesAssignmentController;
 use App\Http\Controllers\Api\AccesorialCompaniesController;
 use App\Http\Controllers\Api\Auth\ForgotPasswordController;
 use App\Http\Controllers\Api\DownloadOriginalOrderPdfController;
+use App\Http\Controllers\Api\EquipmentTypesSelectValuesController;
 
 /*
 |--------------------------------------------------------------------------
@@ -94,6 +95,10 @@ Route::group(['middleware' => ['auth:sanctum', 'impersonate', 'tenant-aware']], 
     //companies/1/tms-provider/1/equipment-types
     Route::get('companies/{company}/tms-provider/{tmsProvider}/equipment-types', EquipmentTypesController::class)
         ->name('equipment-types.show');
+
+    //companies/1/tms-provider/1/equipment-types-options
+    Route::get('companies/{company}/tms-provider/{tmsProvider}/equipment-types-options', EquipmentTypesSelectValuesController::class)
+        ->name('equipment-types-options.show');
 
     //companies/1/variant/1/
     Route::get('companies/{company}/variants/{variant}/accesorials', [AccesorialCompaniesController::class, 'show'])

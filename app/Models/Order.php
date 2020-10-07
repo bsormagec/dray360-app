@@ -131,6 +131,7 @@ class Order extends Model
         't_tms_provider_id',
         'division_code',
         't_equipment_type_id',
+        'equipment_type_verified',
     ];
 
     /**
@@ -151,6 +152,7 @@ class Order extends Model
         'port_ramp_of_destination_address_verified' => 'boolean',
         'ocr_data' => 'json',
         'pickup_by_date' => 'datetime:Y-m-d',
+        'equipment_type_verified' => 'boolean',
     ];
 
     /**
@@ -216,6 +218,7 @@ class Order extends Model
         'ship_comment' => 'sometimes|nullable',
         'division_code' => 'sometimes|nullable',
         't_equipment_type_id' => 'sometimes|nullable|exists:t_equipment_types,id',
+        'equipment_type_verified' => 'sometimes|nullable',
     ];
 
     public function orderAddressEvents()
