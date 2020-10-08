@@ -36,7 +36,7 @@ import { reqStatus } from '@/enums/req_status'
 import ContentLoading from '@/components/ContentLoading'
 import orders, { types } from '@/store/modules/orders'
 import orderForm, { types as orderFormTypes } from '@/store/modules/order-form'
-import { mapState, mapActions } from '@/utils/vuex_mappings'
+import { mapState, mapActions } from 'vuex'
 
 export default {
   name: 'OrderDetails',
@@ -75,8 +75,7 @@ export default {
     }),
 
     async requestOrderDetail () {
-      const id = process.env.NODE_ENV === 'test' ? 119 : this.$route.params.id // assuming 119 works when testing
-      const status = await this[types.getOrderDetail](id)
+      const status = await this[types.getOrderDetail](this.$route.params.id)
 
       if (status === reqStatus.success) {
         this.setFormOrder(this.currentOrder)

@@ -80,7 +80,7 @@
 <script>
 import isMobile from '@/mixins/is_mobile'
 import { tabs } from '@/views/Orders/inner_enums'
-import { mapActions } from '@/utils/vuex_mappings'
+import { mapActions } from 'vuex'
 
 export default {
   name: 'Sidebar',

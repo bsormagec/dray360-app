@@ -39,7 +39,7 @@
 import { Fragment } from 'vue-fragment'
 import { isInViewport } from '@/utils/is_in_viewport'
 import { scrollTo } from '@/utils/scroll_to'
-import { mapState } from '@/utils/vuex_mappings'
+import { mapState } from 'vuex'
 
 import orderForm from '@/store/modules/order-form'
 

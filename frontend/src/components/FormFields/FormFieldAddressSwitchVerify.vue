@@ -64,7 +64,7 @@
 /* eslint-disable vue/no-v-html */
 import AddressBookModalDialog from '@/components/Orders/AddressBookModalDialog'
 
-import { mapState } from '@/utils/vuex_mappings'
+import { mapState } from 'vuex'
 import orders from '@/store/modules/orders'
 
 import get from 'lodash/get'

@@ -9,7 +9,7 @@
 </template>
 
 <script>
-import { mapState } from '@/utils/vuex_mappings'
+import { mapState } from 'vuex'
 import orders from '@/store/modules/orders'
 
 import AddressBookModal from '@/components/Orders/AddressBookModal'

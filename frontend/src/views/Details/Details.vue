@@ -56,7 +56,7 @@ import { formModule, documentModule } from '@/views/Details/inner_store/index'
 import { exampleForm as form } from '@/views/Details/inner_utils/example_form'
 import { parse } from '@/views/Details/inner_utils/parse_document'
 import orders, { types } from '@/store/modules/orders'
-import { mapState, mapActions } from '@/utils/vuex_mappings'
+import { mapState, mapActions } from 'vuex'
 
 export default {
   name: 'Details',
@@ -106,8 +106,7 @@ export default {
     ...mapActions(orders.moduleName, [types.getOrderDetail, types.getDownloadPDFURL]),
 
     async requestOrderDetail () {
-      const id = process.env.NODE_ENV === 'test' ? 119 : this.$route.params.id // assuming 119 works when testing
-      const status = await this[types.getOrderDetail](id)
+      const status = await this[types.getOrderDetail](this.$route.params.id)
 
       if (status === reqStatus.success) {
         documentModule.methods.setDocument(
