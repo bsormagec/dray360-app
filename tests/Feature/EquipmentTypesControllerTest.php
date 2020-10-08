@@ -5,7 +5,6 @@ namespace Tests\Feature;
 use Tests\TestCase;
 use App\Models\Company;
 use App\Models\TMSProvider;
-use Illuminate\Support\Str;
 use App\Models\EquipmentType;
 use Illuminate\Http\Response;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
@@ -26,19 +25,14 @@ class EquipmentTypesControllerTest extends TestCase
         ]);
         $testEquipmentType = $equipmentTypes->first()->refresh();
 
-        $queryPart = Str::of($testEquipmentType->equipment_display)
-            ->before(' ')
-            ->before(',')
-            ->__toString();
-        $equipmentCount = EquipmentType::where('equipment_display', 'like', "%{$queryPart}%")->count();
+        $equipmentCount = EquipmentType::query()
+            ->where('equipment_size', 'like', "%{$testEquipmentType->equipment_size}%")
+            ->count();
 
         $this->getJson(route('equipment-types.show', [
             'company' => $company->id,
             'tmsProvider' => $tmsProvider->id,
-            'filter[query]' => Str::of($testEquipmentType->equipment_display)
-                ->before(' ')
-                ->before(',')
-                ->__toString()
+            'filter[size]' => $testEquipmentType->equipment_size
         ]))
         ->assertStatus(Response::HTTP_OK)
         ->assertJsonCount($equipmentCount, 'data');
