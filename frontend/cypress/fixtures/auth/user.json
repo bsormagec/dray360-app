@@ -1,0 +1,500 @@
+{
+    "id":3,
+    "name":"Peter Test13",
+    "email":"peter+test13@peternelson.com",
+    "email_verified_at":null,
+    "created_at":"2020-04-29T18:57:02.000000Z",
+    "updated_at":"2020-04-29T18:57:02.000000Z",
+    "t_company_id":2,
+    "deactivated_at":null,
+    "deleted_at":null,
+    "configuration":{
+       "logo1":null,
+       "logo2":null,
+       "title":null,
+       "favicon":null,
+       "contact_url":null,
+       "contact_zip":null,
+       "accent_color":null,
+       "contact_city":null,
+       "display_name":null,
+       "contact_email":null,
+       "contact_phone":null,
+       "contact_state":null,
+       "primary_color":null,
+       "contact_address":null,
+       "secondary_color":null
+    },
+    "permissions":[
+       {
+          "id":1,
+          "name":"rules-editor-create",
+          "display_name":"Create Rules-editor",
+          "description":"Create Rules-editor",
+          "created_at":"2020-06-30T12:24:58.000000Z",
+          "updated_at":"2020-06-30T12:24:58.000000Z",
+          "pivot":{
+             "role_id":1,
+             "permission_id":1
+          }
+       },
+       {
+          "id":2,
+          "name":"rules-editor-view",
+          "display_name":"View Rules-editor",
+          "description":"View Rules-editor",
+          "created_at":"2020-06-30T12:24:58.000000Z",
+          "updated_at":"2020-06-30T12:24:58.000000Z",
+          "pivot":{
+             "role_id":1,
+             "permission_id":2
+          }
+       },
+       {
+          "id":3,
+          "name":"rules-editor-edit",
+          "display_name":"Edit Rules-editor",
+          "description":"Edit Rules-editor",
+          "created_at":"2020-06-30T12:24:58.000000Z",
+          "updated_at":"2020-06-30T12:24:58.000000Z",
+          "pivot":{
+             "role_id":1,
+             "permission_id":3
+          }
+       },
+       {
+          "id":4,
+          "name":"rules-editor-assign",
+          "display_name":"Assign Rules-editor",
+          "description":"Assign Rules-editor",
+          "created_at":"2020-06-30T12:24:58.000000Z",
+          "updated_at":"2020-06-30T12:24:58.000000Z",
+          "pivot":{
+             "role_id":1,
+             "permission_id":4
+          }
+       },
+       {
+          "id":5,
+          "name":"orders-edit",
+          "display_name":"Edit Orders",
+          "description":"Edit Orders",
+          "created_at":"2020-06-30T12:24:58.000000Z",
+          "updated_at":"2020-06-30T12:24:58.000000Z",
+          "pivot":{
+             "role_id":1,
+             "permission_id":5
+          }
+       },
+       {
+          "id":6,
+          "name":"orders-view",
+          "display_name":"View Orders",
+          "description":"View Orders",
+          "created_at":"2020-06-30T12:24:58.000000Z",
+          "updated_at":"2020-06-30T12:24:58.000000Z",
+          "pivot":{
+             "role_id":1,
+             "permission_id":6
+          }
+       },
+       {
+          "id":7,
+          "name":"orders-create",
+          "display_name":"Create Orders",
+          "description":"Create Orders",
+          "created_at":"2020-06-30T12:24:58.000000Z",
+          "updated_at":"2020-06-30T12:24:58.000000Z",
+          "pivot":{
+             "role_id":1,
+             "permission_id":7
+          }
+       },
+       {
+          "id":8,
+          "name":"tms-submit",
+          "display_name":"Submit Tms",
+          "description":"Submit Tms",
+          "created_at":"2020-06-30T12:24:58.000000Z",
+          "updated_at":"2020-06-30T12:24:58.000000Z",
+          "pivot":{
+             "role_id":1,
+             "permission_id":8
+          }
+       },
+       {
+          "id":9,
+          "name":"users-view",
+          "display_name":"View Users",
+          "description":"View Users",
+          "created_at":"2020-06-30T12:24:58.000000Z",
+          "updated_at":"2020-06-30T12:24:58.000000Z",
+          "pivot":{
+             "role_id":1,
+             "permission_id":9
+          }
+       },
+       {
+          "id":10,
+          "name":"users-create",
+          "display_name":"Create Users",
+          "description":"Create Users",
+          "created_at":"2020-06-30T12:24:58.000000Z",
+          "updated_at":"2020-06-30T12:24:58.000000Z",
+          "pivot":{
+             "role_id":1,
+             "permission_id":10
+          }
+       },
+       {
+          "id":11,
+          "name":"users-edit",
+          "display_name":"Edit Users",
+          "description":"Edit Users",
+          "created_at":"2020-06-30T12:24:58.000000Z",
+          "updated_at":"2020-06-30T12:24:58.000000Z",
+          "pivot":{
+             "role_id":1,
+             "permission_id":11
+          }
+       },
+       {
+          "id":12,
+          "name":"users-remove",
+          "display_name":"Remove Users",
+          "description":"Remove Users",
+          "created_at":"2020-06-30T12:24:58.000000Z",
+          "updated_at":"2020-06-30T12:24:58.000000Z",
+          "pivot":{
+             "role_id":1,
+             "permission_id":12
+          }
+       },
+       {
+          "id":13,
+          "name":"roles-update",
+          "display_name":"Update Roles",
+          "description":"Update Roles",
+          "created_at":"2020-06-30T12:24:58.000000Z",
+          "updated_at":"2020-06-30T12:24:58.000000Z",
+          "pivot":{
+             "role_id":1,
+             "permission_id":13
+          }
+       },
+       {
+          "id":14,
+          "name":"system-status-filter",
+          "display_name":"Filter System-status",
+          "description":"Filter System-status",
+          "created_at":"2020-06-30T12:24:58.000000Z",
+          "updated_at":"2020-06-30T12:24:58.000000Z",
+          "pivot":{
+             "role_id":1,
+             "permission_id":14
+          }
+       },
+       {
+          "id":15,
+          "name":"time-in-status-view",
+          "display_name":"View Time-in-status",
+          "description":"View Time-in-status",
+          "created_at":"2020-06-30T12:24:58.000000Z",
+          "updated_at":"2020-06-30T12:24:58.000000Z",
+          "pivot":{
+             "role_id":1,
+             "permission_id":15
+          }
+       },
+       {
+          "id":16,
+          "name":"ocr-variants-create",
+          "display_name":"Create Ocr-variants",
+          "description":"Create Ocr-variants",
+          "created_at":"2020-07-02T11:34:05.000000Z",
+          "updated_at":"2020-07-02T11:34:05.000000Z",
+          "pivot":{
+             "role_id":1,
+             "permission_id":16
+          }
+       },
+       {
+          "id":17,
+          "name":"ocr-variants-view",
+          "display_name":"View Ocr-variants",
+          "description":"View Ocr-variants",
+          "created_at":"2020-07-02T11:34:05.000000Z",
+          "updated_at":"2020-07-02T11:34:05.000000Z",
+          "pivot":{
+             "role_id":1,
+             "permission_id":17
+          }
+       },
+       {
+          "id":18,
+          "name":"ocr-variants-edit",
+          "display_name":"Edit Ocr-variants",
+          "description":"Edit Ocr-variants",
+          "created_at":"2020-07-02T11:34:05.000000Z",
+          "updated_at":"2020-07-02T11:34:05.000000Z",
+          "pivot":{
+             "role_id":1,
+             "permission_id":18
+          }
+       },
+       {
+          "id":19,
+          "name":"ocr-variants-remove",
+          "display_name":"Remove Ocr-variants",
+          "description":"Remove Ocr-variants",
+          "created_at":"2020-07-02T11:34:05.000000Z",
+          "updated_at":"2020-07-02T11:34:05.000000Z",
+          "pivot":{
+             "role_id":1,
+             "permission_id":19
+          }
+       },
+       {
+          "id":20,
+          "name":"companies-create",
+          "display_name":"Create Companies",
+          "description":"Create Companies",
+          "created_at":"2020-07-02T11:34:05.000000Z",
+          "updated_at":"2020-07-02T11:34:05.000000Z",
+          "pivot":{
+             "role_id":1,
+             "permission_id":20
+          }
+       },
+       {
+          "id":21,
+          "name":"companies-view",
+          "display_name":"View Companies",
+          "description":"View Companies",
+          "created_at":"2020-07-02T11:34:05.000000Z",
+          "updated_at":"2020-07-02T11:34:05.000000Z",
+          "pivot":{
+             "role_id":1,
+             "permission_id":21
+          }
+       },
+       {
+          "id":22,
+          "name":"companies-edit",
+          "display_name":"Edit Companies",
+          "description":"Edit Companies",
+          "created_at":"2020-07-02T11:34:05.000000Z",
+          "updated_at":"2020-07-02T11:34:05.000000Z",
+          "pivot":{
+             "role_id":1,
+             "permission_id":22
+          }
+       },
+       {
+          "id":23,
+          "name":"companies-remove",
+          "display_name":"Remove Companies",
+          "description":"Remove Companies",
+          "created_at":"2020-07-02T11:34:05.000000Z",
+          "updated_at":"2020-07-02T11:34:05.000000Z",
+          "pivot":{
+             "role_id":1,
+             "permission_id":23
+          }
+       },
+       {
+          "id":25,
+          "name":"refs-custom-mapping-edit",
+          "display_name":"Edit Refs-custom-mapping",
+          "description":"Edit Refs-custom-mapping",
+          "created_at":"2020-07-30T12:26:34.000000Z",
+          "updated_at":"2020-07-30T12:26:34.000000Z",
+          "pivot":{
+             "role_id":1,
+             "permission_id":25
+          }
+       },
+       {
+          "id":26,
+          "name":"users-impersonate",
+          "display_name":"Impersonate Users",
+          "description":"Impersonate Users",
+          "created_at":"2020-08-13T12:45:09.000000Z",
+          "updated_at":"2020-08-13T12:45:09.000000Z",
+          "pivot":{
+             "role_id":1,
+             "permission_id":26
+          }
+       },
+       {
+          "id":27,
+          "name":"billing-mapping-edit",
+          "display_name":"Edit Billing-mapping",
+          "description":"Edit Billing-mapping",
+          "created_at":"2020-09-14T14:07:51.000000Z",
+          "updated_at":"2020-09-14T14:07:51.000000Z",
+          "pivot":{
+             "role_id":1,
+             "permission_id":27
+          }
+       },
+       {
+          "id":28,
+          "name":"billing-mapping-view",
+          "display_name":"View Billing-mapping",
+          "description":"View Billing-mapping",
+          "created_at":"2020-09-14T14:07:51.000000Z",
+          "updated_at":"2020-09-14T14:07:51.000000Z",
+          "pivot":{
+             "role_id":1,
+             "permission_id":28
+          }
+       },
+       {
+          "id":29,
+          "name":"tms-providers-create",
+          "display_name":"Create Tms-providers",
+          "description":"Create Tms-providers",
+          "created_at":"2020-09-15T14:35:06.000000Z",
+          "updated_at":"2020-09-15T14:35:06.000000Z",
+          "pivot":{
+             "role_id":1,
+             "permission_id":29
+          }
+       },
+       {
+          "id":30,
+          "name":"tms-providers-view",
+          "display_name":"View Tms-providers",
+          "description":"View Tms-providers",
+          "created_at":"2020-09-15T14:35:06.000000Z",
+          "updated_at":"2020-09-15T14:35:06.000000Z",
+          "pivot":{
+             "role_id":1,
+             "permission_id":30
+          }
+       },
+       {
+          "id":31,
+          "name":"tms-providers-edit",
+          "display_name":"Edit Tms-providers",
+          "description":"Edit Tms-providers",
+          "created_at":"2020-09-15T14:35:06.000000Z",
+          "updated_at":"2020-09-15T14:35:06.000000Z",
+          "pivot":{
+             "role_id":1,
+             "permission_id":31
+          }
+       },
+       {
+          "id":32,
+          "name":"tms-providers-remove",
+          "display_name":"Remove Tms-providers",
+          "description":"Remove Tms-providers",
+          "created_at":"2020-09-15T14:35:06.000000Z",
+          "updated_at":"2020-09-15T14:35:06.000000Z",
+          "pivot":{
+             "role_id":1,
+             "permission_id":32
+          }
+       },
+       {
+          "id":33,
+          "name":"verified-addresses-create",
+          "display_name":"Create Verified-addresses",
+          "description":"Create Verified-addresses",
+          "created_at":"2020-09-15T14:35:06.000000Z",
+          "updated_at":"2020-09-15T14:35:06.000000Z",
+          "pivot":{
+             "role_id":1,
+             "permission_id":33
+          }
+       },
+       {
+          "id":34,
+          "name":"verified-addresses-view",
+          "display_name":"View Verified-addresses",
+          "description":"View Verified-addresses",
+          "created_at":"2020-09-15T14:35:06.000000Z",
+          "updated_at":"2020-09-15T14:35:06.000000Z",
+          "pivot":{
+             "role_id":1,
+             "permission_id":34
+          }
+       },
+       {
+          "id":35,
+          "name":"verified-addresses-edit",
+          "display_name":"Edit Verified-addresses",
+          "description":"Edit Verified-addresses",
+          "created_at":"2020-09-15T14:35:06.000000Z",
+          "updated_at":"2020-09-15T14:35:06.000000Z",
+          "pivot":{
+             "role_id":1,
+             "permission_id":35
+          }
+       },
+       {
+          "id":36,
+          "name":"verified-addresses-remove",
+          "display_name":"Remove Verified-addresses",
+          "description":"Remove Verified-addresses",
+          "created_at":"2020-09-15T14:35:06.000000Z",
+          "updated_at":"2020-09-15T14:35:06.000000Z",
+          "pivot":{
+             "role_id":1,
+             "permission_id":36
+          }
+       },
+       {
+          "id":37,
+          "name":"equipment-types-create",
+          "display_name":"Create Equipment-types",
+          "description":"Create Equipment-types",
+          "created_at":"2020-09-16T13:17:41.000000Z",
+          "updated_at":"2020-09-16T13:17:41.000000Z",
+          "pivot":{
+             "role_id":1,
+             "permission_id":37
+          }
+       },
+       {
+          "id":38,
+          "name":"equipment-types-view",
+          "display_name":"View Equipment-types",
+          "description":"View Equipment-types",
+          "created_at":"2020-09-16T13:17:41.000000Z",
+          "updated_at":"2020-09-16T13:17:41.000000Z",
+          "pivot":{
+             "role_id":1,
+             "permission_id":38
+          }
+       },
+       {
+          "id":39,
+          "name":"equipment-types-edit",
+          "display_name":"Edit Equipment-types",
+          "description":"Edit Equipment-types",
+          "created_at":"2020-09-16T13:17:42.000000Z",
+          "updated_at":"2020-09-16T13:17:42.000000Z",
+          "pivot":{
+             "role_id":1,
+             "permission_id":39
+          }
+       },
+       {
+          "id":40,
+          "name":"equipment-types-remove",
+          "display_name":"Remove Equipment-types",
+          "description":"Remove Equipment-types",
+          "created_at":"2020-09-16T13:17:42.000000Z",
+          "updated_at":"2020-09-16T13:17:42.000000Z",
+          "pivot":{
+             "role_id":1,
+             "permission_id":40
+          }
+       }
+    ],
+    "is_superadmin":true,
+    "is_impersonated":false
+ }
