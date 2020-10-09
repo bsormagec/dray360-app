@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use App\Models\Traits\EncryptsAttributes;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 
@@ -17,6 +18,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 class Company extends Model
 {
     use SoftDeletes;
+    use EncryptsAttributes;
 
     const CREATED_AT = 'created_at',
         UPDATED_AT = 'updated_at',
@@ -41,6 +43,15 @@ class Company extends Model
         'configuration',
         'automatic_address_verification_threshold',
         't_domain_id',
+        'blackfly_token',
+        'blackfly_imagetype',
+        'ripcms_username',
+        'ripcms_password',
+    ];
+
+    protected $encryptable = [
+        'blackfly_token',
+        'ripcms_password',
     ];
 
     /**
