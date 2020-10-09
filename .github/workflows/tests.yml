@@ -3,17 +3,15 @@ name: tests
 on: [push, pull_request]
 
 jobs:
-  cypress-frontend-tests:
+  cypress-run:
     name: Frontend Tests
 
     runs-on: ubuntu-latest
 
     steps:
-      -name: Checkout
-      uses: actions/checkout@v1
+    - name: Cypress.io
+      uses: cypress-io/github-action@v1.16.1
 
-      -name: Cypress run
-      uses: cypress-io/github-action@v2
   tests:
     name: Laravel Tests
 
