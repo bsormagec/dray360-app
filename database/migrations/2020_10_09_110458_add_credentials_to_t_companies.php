@@ -17,7 +17,7 @@ class AddCredentialsToTCompanies extends Migration
             $table->text('blackfly_token')->nullable();
             $table->string('blackfly_imagetype', 64)->nullable();
             $table->string('ripcms_username', 128)->nullable();
-            $table->string('ripcms_password', 64)->nullable();
+            $table->text('ripcms_password')->nullable();
         });
     }
 
