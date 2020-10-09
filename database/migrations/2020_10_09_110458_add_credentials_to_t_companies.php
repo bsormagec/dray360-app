@@ -15,6 +15,7 @@ class AddCredentialsToTCompanies extends Migration
     {
         Schema::table('t_companies', function (Blueprint $table) {
             $table->text('blackfly_token')->nullable();
+            $table->string('blackfly_imagetype', 64)->nullable();
             $table->string('ripcms_username', 128)->nullable();
             $table->string('ripcms_password', 64)->nullable();
         });
@@ -30,6 +31,11 @@ class AddCredentialsToTCompanies extends Migration
         if (Schema::hasColumn('t_companies', 'blackfly_token')) {
             Schema::table('t_companies', function (Blueprint $table) {
                 $table->dropColumn('blackfly_token');
+            });
+        }
+        if (Schema::hasColumn('t_companies', 'blackfly_imagetype')) {
+            Schema::table('t_companies', function (Blueprint $table) {
+                $table->dropColumn('blackfly_imagetype');
             });
         }
         if (Schema::hasColumn('t_companies', 'ripcms_username')) {
