@@ -57,7 +57,12 @@ class Company extends Resource
             Number::make('Automatic address verification threshold', 'automatic_address_verification_threshold'),
             Code::make('Ref Mapping', 'refs_custom_mapping')->json(),
             Code::make('Configuration', 'configuration')->json(),
-            BelongsTo::make('Domain', 'domain', Domain::class)->sortable(),
+            BelongsTo::make('Domain', 'domain', Domain::class)->sortable()->nullable(),
+
+            Text::make('Blackfly token', 'blackfly_token')->hideFromIndex(),
+            Text::make('Blackfly imagetype', 'blackfly_imagetype')->hideFromIndex(),
+            Text::make('Ripcms username', 'ripcms_username')->hideFromIndex(),
+            Text::make('Ripcms password', 'ripcms_password')->hideFromIndex(),
         ];
     }
 
