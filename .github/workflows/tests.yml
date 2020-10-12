@@ -12,6 +12,14 @@ jobs:
     - name: Cypress.io
       uses: cypress-io/github-action@v1.16.1
 
+    - name: Checkout
+      uses: actions/checkout@v1
+
+    # Install NPM dependencies, cache them correctly
+    # and run all Cypress tests
+    - name: Cypress run
+      uses: cypress-io/github-action@v2
+
   tests:
     name: Laravel Tests
 
