@@ -6,7 +6,7 @@ jobs:
   cypress-run:
     name: Frontend Tests
 
-    runs-on: runs-on: ubuntu-16.04
+    runs-on: ubuntu-16.04
 
     steps:
       - name: Setup npm package
