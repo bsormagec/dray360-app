@@ -11,7 +11,7 @@ jobs:
     steps:
     
     - name: Setup npm package
-      run: npm init -y && npm install
+      run: npm install
 
     - name: Cypress.io
       uses: cypress-io/github-action@v1.16.1
