@@ -4,32 +4,34 @@ namespace App\Nova;
 
 use Laravel\Nova\Fields\ID;
 use Illuminate\Http\Request;
-use Laravel\Nova\Fields\Code;
 use Laravel\Nova\Fields\Text;
-use Laravel\Nova\Fields\HasMany;
+use Laravel\Nova\Fields\BelongsTo;
+use App\Models\Company as CompanyModel;
+use App\Models\TMSProvider as TmsProviderModel;
+use App\Nova\Filters\BelongsTo as BelongsToFilter;
 
-class Tenant extends Resource
+class CompanyAddressTmsCode extends Resource
 {
     /**
      * The model the resource corresponds to.
      *
      * @var string
      */
-    public static $model = \App\Models\Tenant::class;
+    public static $model = \App\Models\CompanyAddressTMSCode::class;
 
     /**
      * The single value that should be used to represent the resource when being displayed.
      *
      * @var string
      */
-    public static $title = 'name';
+    public static $title = 'id';
 
     /**
      * The logical group associated with the resource.
      *
      * @var string
      */
-    public static $group = 'Tenancy';
+    public static $group = 'Addresses';
 
     /**
      * The columns that should be searched.
@@ -37,7 +39,18 @@ class Tenant extends Resource
      * @var array
      */
     public static $search = [
-        'id', 'name',
+        'id',
+    ];
+
+    /**
+     * The relationships that should be eager loaded on index queries.
+     *
+     * @var array
+     */
+    public static $with = [
+        'company',
+        'address',
+        'tmsProvider',
     ];
 
     /**
@@ -50,9 +63,10 @@ class Tenant extends Resource
     {
         return [
             ID::make(__('ID'), 'id')->sortable(),
-            Text::make('Name')->sortable(),
-            Code::make('Configuration', 'configuration')->json(),
-            HasMany::make('Domains'),
+            BelongsTo::make('Company', 'company', Company::class)->sortable(),
+            BelongsTo::make('Address', 'address', Address::class)->sortable(),
+            BelongsTo::make('Tms Provider', 'tmsProvider', TmsProvider::class)->sortable(),
+            Text::make('Company address tms code', 'company_address_tms_code'),
         ];
     }
 
@@ -75,7 +89,10 @@ class Tenant extends Resource
      */
     public function filters(Request $request)
     {
-        return [];
+        return [
+            new BelongsToFilter('Company', 'company', CompanyModel::class, 'name'),
+            new BelongsToFilter('Tms Providers', 'tmsProvider', TmsProviderModel::class, 'name'),
+        ];
     }
 
     /**

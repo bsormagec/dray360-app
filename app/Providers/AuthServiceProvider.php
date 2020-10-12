@@ -13,6 +13,8 @@ class AuthServiceProvider extends ServiceProvider
      */
     protected $policies = [
         \App\Models\Order::class => \App\Policies\OrdersPolicy::class,
+        \App\Models\OrderLineItem::class => \App\Policies\OrderLineItemPolicy::class,
+        \App\Models\OrderAddressEvent::class => \App\Policies\OrderAddressEventPolicy::class,
         \App\Models\OCRRule::class => \App\Policies\OcrRulePolicy::class,
         \App\Models\OCRVariant::class => \App\Policies\OcrVariantPolicy::class,
         \App\Models\Company::class => \App\Policies\CompanyPolicy::class,
@@ -22,6 +24,9 @@ class AuthServiceProvider extends ServiceProvider
         \App\Models\VerifiedAddress::class => \App\Policies\VerifiedAddressPolicy::class,
         \App\Models\EquipmentType::class => \App\Policies\EquipmentTypePolicy::class,
         \App\Models\OCRRequest::class => \App\Policies\OcrRequestPolicy::class,
+        \App\Models\OCRRequestStatus::class => \App\Policies\OcrRequestStatusPolicy::class,
+        \App\Models\Address::class => \App\Policies\AddressPolicy::class,
+        \App\Models\CompanyAddressTMSCode::class => \App\Policies\CompanyAddressTmsCodePolicy::class,
     ];
 
     /**

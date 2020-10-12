@@ -6,30 +6,35 @@ use Laravel\Nova\Fields\ID;
 use Illuminate\Http\Request;
 use Laravel\Nova\Fields\Code;
 use Laravel\Nova\Fields\Text;
-use Laravel\Nova\Fields\HasMany;
+use Laravel\Nova\Fields\Select;
+use Laravel\Nova\Fields\DateTime;
+use Laravel\Nova\Fields\BelongsTo;
+use App\Models\Company as CompanyModel;
+use App\Nova\Filters\BelongsTo as BelongsToFilter;
+use App\Models\OCRRequestStatus as OcrRequestStatusModel;
 
-class Tenant extends Resource
+class OcrRequestStatus extends Resource
 {
     /**
      * The model the resource corresponds to.
      *
      * @var string
      */
-    public static $model = \App\Models\Tenant::class;
+    public static $model = \App\Models\OCRRequestStatus::class;
 
     /**
      * The single value that should be used to represent the resource when being displayed.
      *
      * @var string
      */
-    public static $title = 'name';
+    public static $title = 'status';
 
     /**
      * The logical group associated with the resource.
      *
      * @var string
      */
-    public static $group = 'Tenancy';
+    public static $group = 'Ocr Entities';
 
     /**
      * The columns that should be searched.
@@ -37,7 +42,17 @@ class Tenant extends Resource
      * @var array
      */
     public static $search = [
-        'id', 'name',
+        'id', 'request_id', 'status', 'order_id', 'company_id'
+    ];
+
+    /**
+     * The relationships that should be eager loaded on index queries.
+     *
+     * @var array
+     */
+    public static $with = [
+        'company',
+        'order',
     ];
 
     /**
@@ -48,11 +63,21 @@ class Tenant extends Resource
      */
     public function fields(Request $request)
     {
+        $statuses = collect(OcrRequestStatusModel::STATUS_MAP)
+            ->mapWithKeys(fn ($displayName, $key) => [$key => $key])
+            ->toArray();
+
         return [
             ID::make(__('ID'), 'id')->sortable(),
-            Text::make('Name')->sortable(),
-            Code::make('Configuration', 'configuration')->json(),
-            HasMany::make('Domains'),
+            Text::make('Request Id', 'request_id'),
+            Select::make('Status', 'status')->options($statuses),
+            DateTime::make('Status date', 'status_date'),
+            Code::make('Status metadata', 'status_metadata')->json(),
+            DateTime::make('Created At', 'created_at')
+                ->hideWhenCreating()
+                ->hideWhenUpdating(),
+            BelongsTo::make('Company', 'company', Company::class),
+            BelongsTo::make('Order', 'order', Order::class),
         ];
     }
 
@@ -75,7 +100,9 @@ class Tenant extends Resource
      */
     public function filters(Request $request)
     {
-        return [];
+        return [
+            new BelongsToFilter('Company', 'company', CompanyModel::class, 'name'),
+        ];
     }
 
     /**

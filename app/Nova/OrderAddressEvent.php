@@ -5,25 +5,31 @@ namespace App\Nova;
 use Laravel\Nova\Fields\ID;
 use Illuminate\Http\Request;
 use Laravel\Nova\Fields\Text;
-use Laravel\Nova\Fields\Select;
+use Laravel\Nova\Fields\Boolean;
 use Laravel\Nova\Fields\BelongsTo;
-use App\Nova\Filters\BelongsTo as BelongsToFilter;
 
-class EquipmentType extends Resource
+class OrderAddressEvent extends Resource
 {
     /**
      * The model the resource corresponds to.
      *
      * @var string
      */
-    public static $model = \App\Models\EquipmentType::class;
+    public static $model = \App\Models\OrderAddressEvent::class;
 
     /**
      * The single value that should be used to represent the resource when being displayed.
      *
      * @var string
      */
-    public static $title = 'equipment_display';
+    public static $title = 'id';
+
+    /**
+     * The logical group associated with the resource.
+     *
+     * @var string
+     */
+    public static $group = 'Orders';
 
     /**
      * The columns that should be searched.
@@ -32,10 +38,7 @@ class EquipmentType extends Resource
      */
     public static $search = [
         'id',
-        'equipment_display',
-        'equipment_type_and_size',
-        'equipment_type',
-        'equipment_size',
+        't_order_id',
     ];
 
     /**
@@ -44,8 +47,8 @@ class EquipmentType extends Resource
      * @var array
      */
     public static $with = [
-        'company',
-        'tmsProvider',
+        'order',
+        'address',
     ];
 
     /**
@@ -58,36 +61,23 @@ class EquipmentType extends Resource
     {
         return [
             ID::make(__('ID'), 'id')->sortable(),
-            BelongsTo::make('Company', 'company', Company::class)
-                ->sortable()
-                ->rules([
-                    'required'
-                ]),
-            BelongsTo::make('Tms provider', 'tmsProvider', TmsProvider::class)
-                ->sortable()
-                ->rules([
-                    'required'
-                ]),
-            Text::make('Equipment id', 'tms_equipment_id')
-                ->sortable()
-                    ->rules([
-                        'required'
-                    ]),
-            Text::make('Equipment owner', 'equipment_owner')
-                ->sortable()
-                ->rules([
-                    'required'
-                ]),
-            Select::make('Row type', 'row_type')
-                ->options(['combined' => 'Combined', 'separate' => 'Separate'])
-                ->sortable()
-                ->rules([
-                    'required',
-                    'in:combined,separate',
-                ]),
-            Text::make('Equipment type & size', 'equipment_type_and_size'),
-            Text::make('Equipment type', 'equipment_type'),
-            Text::make('Equipment size', 'equipment_size'),
+            Text::make('Address schedule description', 'address_schedule_description')->hideFromIndex(),
+            BelongsTo::make('Order', 'order', Order::class),
+            BelongsTo::make('Address', 'address', Address::class),
+            Text::make('Event number', 'event_number'),
+            Boolean::make('Is hook event', 'is_hook_event')->hideFromIndex(),
+            Boolean::make('Is mount event', 'is_mount_event')->hideFromIndex(),
+            Boolean::make('Is deliver event', 'is_deliver_event')->hideFromIndex(),
+            Boolean::make('Is dismount event', 'is_dismount_event')->hideFromIndex(),
+            Boolean::make('Is pickup event', 'is_pickup_event')->hideFromIndex(),
+            Boolean::make('Is drop event', 'is_drop_event')->hideFromIndex(),
+            Text::make('Call for appointment', 'call_for_appointment')->hideFromIndex(),
+            Text::make('Delivery window from localtime', 'delivery_window_from_localtime')->hideFromIndex(),
+            Text::make('Delivery window to localtime', 'delivery_window_to_localtime')->hideFromIndex(),
+            Text::make('Delivery instructions', 'delivery_instructions')->hideFromIndex(),
+            Text::make('Unparsed event type', 'unparsed_event_type'),
+            Boolean::make('Address verified', 't_address_verified'),
+            Text::make('Address raw text', 't_address_raw_text'),
         ];
     }
 
@@ -110,10 +100,7 @@ class EquipmentType extends Resource
      */
     public function filters(Request $request)
     {
-        return [
-            new BelongsToFilter('Company', 'company', \App\Models\Company::class, 'name'),
-            new BelongsToFilter('Tms Provider', 'tmsProvider', \App\Models\TMSProvider::class, 'name'),
-        ];
+        return [];
     }
 
     /**

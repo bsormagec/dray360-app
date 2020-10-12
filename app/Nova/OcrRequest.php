@@ -4,32 +4,32 @@ namespace App\Nova;
 
 use Laravel\Nova\Fields\ID;
 use Illuminate\Http\Request;
-use Laravel\Nova\Fields\Code;
 use Laravel\Nova\Fields\Text;
-use Laravel\Nova\Fields\HasMany;
+use Laravel\Nova\Fields\DateTime;
+use Laravel\Nova\Fields\BelongsTo;
 
-class Tenant extends Resource
+class OcrRequest extends Resource
 {
     /**
      * The model the resource corresponds to.
      *
      * @var string
      */
-    public static $model = \App\Models\Tenant::class;
+    public static $model = \App\Models\OCRRequest::class;
 
     /**
      * The single value that should be used to represent the resource when being displayed.
      *
      * @var string
      */
-    public static $title = 'name';
+    public static $title = 'request_id';
 
     /**
      * The logical group associated with the resource.
      *
      * @var string
      */
-    public static $group = 'Tenancy';
+    public static $group = 'Ocr Entities';
 
     /**
      * The columns that should be searched.
@@ -37,7 +37,16 @@ class Tenant extends Resource
      * @var array
      */
     public static $search = [
-        'id', 'name',
+        'request_id', 'order_id'
+    ];
+
+    /**
+     * The relationships that should be eager loaded on index queries.
+     *
+     * @var array
+     */
+    public static $with = [
+        'order',
     ];
 
     /**
@@ -50,9 +59,15 @@ class Tenant extends Resource
     {
         return [
             ID::make(__('ID'), 'id')->sortable(),
-            Text::make('Name')->sortable(),
-            Code::make('Configuration', 'configuration')->json(),
-            HasMany::make('Domains'),
+            Text::make('Request Id', 'request_id'),
+            BelongsTo::make('Latest status', 'latestOcrRequestStatus', OcrRequestStatus::class),
+            DateTime::make('Created At', 'created_at')
+                ->hideWhenCreating()
+                ->hideWhenUpdating(),
+            DateTime::make('Updated At', 'updated_at')
+                ->hideWhenCreating()
+                ->hideWhenUpdating(),
+            BelongsTo::make('Order', 'order', Order::class),
         ];
     }
 

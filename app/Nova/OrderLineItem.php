@@ -4,33 +4,33 @@ namespace App\Nova;
 
 use Laravel\Nova\Fields\ID;
 use Illuminate\Http\Request;
-use Laravel\Nova\Fields\Code;
 use Laravel\Nova\Fields\Text;
 use Laravel\Nova\Fields\Number;
+use Laravel\Nova\Fields\Boolean;
 use Laravel\Nova\Fields\BelongsTo;
 
-class Company extends Resource
+class OrderLineItem extends Resource
 {
     /**
      * The model the resource corresponds to.
      *
      * @var string
      */
-    public static $model = \App\Models\Company::class;
+    public static $model = \App\Models\OrderLineItem::class;
 
     /**
      * The single value that should be used to represent the resource when being displayed.
      *
      * @var string
      */
-    public static $title = 'name';
+    public static $title = 'contents';
 
     /**
      * The logical group associated with the resource.
      *
      * @var string
      */
-    public static $group = 'User Management';
+    public static $group = 'Orders';
 
     /**
      * The columns that should be searched.
@@ -38,7 +38,7 @@ class Company extends Resource
      * @var array
      */
     public static $search = [
-        'name', 'email_intake_address', 'email_intake_address_alt',
+        'id', 'contents',
     ];
 
     /**
@@ -46,7 +46,9 @@ class Company extends Resource
      *
      * @var array
      */
-    public static $with = ['domain'];
+    public static $with = [
+        'order',
+    ];
 
     /**
      * Get the fields displayed by the resource.
@@ -57,14 +59,26 @@ class Company extends Resource
     public function fields(Request $request)
     {
         return [
-            ID::make('Id', 'id')->sortable(),
-            Text::make('Name'),
-            Text::make('Intake Email', 'email_intake_address'),
-            Text::make('Intake Email Alt', 'email_intake_address_alt'),
-            Number::make('Automatic address verification threshold', 'automatic_address_verification_threshold'),
-            Code::make('Ref Mapping', 'refs_custom_mapping')->json(),
-            Code::make('Configuration', 'configuration')->json(),
-            BelongsTo::make('Domain', 'domain', Domain::class)->sortable(),
+            ID::make(__('ID'), 'id')->sortable(),
+            BelongsTo::make('Order', 'order', Order::class),
+            Text::make('Contents', 'contents'),
+            Text::make('Haz class', 'haz_class')->hideFromIndex(),
+            Text::make('Haz contact name', 'haz_contact_name')->hideFromIndex(),
+            Text::make('Haz description', 'haz_description')->hideFromIndex(),
+            Text::make('Haz flashpoint temp', 'haz_flashpoint_temp')->hideFromIndex(),
+            Text::make('Haz phone', 'haz_phone')->hideFromIndex(),
+            Text::make('Haz qualifier', 'haz_qualifier')->hideFromIndex(),
+            Text::make('Haz un code', 'haz_un_code')->hideFromIndex(),
+            Text::make('Haz un name', 'haz_un_name')->hideFromIndex(),
+            Number::make('Haz flashpoint temp uom', 'haz_flashpoint_temp_uom')->hideFromIndex(),
+            Number::make('Haz imdg page number', 'haz_imdg_page_number')->hideFromIndex(),
+            Boolean::make('Is hazardous', 'is_hazardous'),
+            Text::make('Packaging group', 'packaging_group'),
+            Number::make('Quantity', 'quantity'),
+            Number::make('Weight', 'weight'),
+            Number::make('Total weight', 'total_weight'),
+            Text::make('Unit of measure', 'unit_of_measure'),
+            Text::make('Weight uom', 'weight_uom'),
         ];
     }
 

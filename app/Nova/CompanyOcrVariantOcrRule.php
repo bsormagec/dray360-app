@@ -24,6 +24,13 @@ class CompanyOcrVariantOcrRule extends Resource
     public static $title = 'id';
 
     /**
+     * The logical group associated with the resource.
+     *
+     * @var string
+     */
+    public static $group = 'Ocr Entities';
+
+    /**
      * The columns that should be searched.
      */
     public static $search = [];
