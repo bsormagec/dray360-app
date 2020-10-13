@@ -4,25 +4,34 @@ on: [push, pull_request]
 
 jobs:
   cypress-run:
-    name: Frontend Tests
-
     runs-on: ubuntu-16.04
-
     steps:
+      - uses: actions/checkout@v1
+      - uses: cypress-io/github-action@v2
+        with:
+          start: npm run serve
+          working-directory: frontend
+
+  # cypress-run:
+  #   name: Frontend Tests
+
+  #   runs-on: ubuntu-16.04
+
+  #   steps:
     
-    - name: Setup npm package
-      run: npm install
+  #   - name: Setup npm package
+  #     run: npm install
 
-    - name: Cypress.io
-      uses: cypress-io/github-action@v1.16.1
+  #   - name: Cypress.io
+  #     uses: cypress-io/github-action@v1.16.1
 
-    - name: Checkout
-      uses: actions/checkout@v1
+  #   - name: Checkout
+  #     uses: actions/checkout@v1
 
-    # Install NPM dependencies, cache them correctly
-    # and run all Cypress tests
-    - name: Cypress run
-      uses: cypress-io/github-action@v2
+  #   # Install NPM dependencies, cache them correctly
+  #   # and run all Cypress tests
+  #   - name: Cypress run
+  #     uses: cypress-io/github-action@v2
 
   tests:
     name: Laravel Tests
