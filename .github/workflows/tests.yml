@@ -9,30 +9,11 @@ jobs:
       - uses: actions/checkout@v1
       - uses: cypress-io/github-action@v2
         with:
+          browser: chrome
+          headless: true
           start: npm run serve
           working-directory: frontend
-
-  # cypress-run:
-  #   name: Frontend Tests
-
-  #   runs-on: ubuntu-16.04
-
-  #   steps:
-    
-  #   - name: Setup npm package
-  #     run: npm install
-
-  #   - name: Cypress.io
-  #     uses: cypress-io/github-action@v1.16.1
-
-  #   - name: Checkout
-  #     uses: actions/checkout@v1
-
-  #   # Install NPM dependencies, cache them correctly
-  #   # and run all Cypress tests
-  #   - name: Cypress run
-  #     uses: cypress-io/github-action@v2
-
+          
   tests:
     name: Laravel Tests
 
