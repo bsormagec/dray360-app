@@ -44,7 +44,7 @@
 
 <script>
 import isMobile from '@/mixins/is_mobile'
-import { mapState, mapActions } from '@/utils/vuex_mappings'
+import { mapState, mapActions } from 'vuex'
 import orderForm, { types } from '@/store/modules/order-form'
 import get from 'lodash/get'
 

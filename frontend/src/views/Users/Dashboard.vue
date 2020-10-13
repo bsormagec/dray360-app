@@ -28,7 +28,7 @@
 <script>
 import SidebarNavigation from '@/components/General/SidebarNavigation'
 import UserTable from '@/components/Users/UserTable'
-import { mapState, mapActions } from '@/utils/vuex_mappings'
+import { mapState, mapActions } from 'vuex'
 import { reqStatus } from '@/enums/req_status'
 import userDashboard, { types } from '@/store/modules/users'
 export default {

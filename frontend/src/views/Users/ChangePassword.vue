@@ -96,7 +96,7 @@
 <script>
 import SidebarNavigation from '@/components/General/SidebarNavigation'
 import profile, { types } from '@/store/modules/profile'
-import { mapActions } from '@/utils/vuex_mappings'
+import { mapActions } from 'vuex'
 import utils, { type } from '@/store/modules/utils'
 
 export default {

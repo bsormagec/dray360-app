@@ -157,7 +157,7 @@
 
 <script>
 import SidebarNavigation from '@/components/General/SidebarNavigation'
-import { mapActions, mapState } from '@/utils/vuex_mappings'
+import { mapActions, mapState } from 'vuex'
 import companies, { types } from '@/store/modules/companies'
 import { reqStatus } from '@/enums/req_status'
 import utils, { type } from '@/store/modules/utils'

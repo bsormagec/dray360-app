@@ -23,7 +23,6 @@ class EquipmentTypesSelectValuesControllerTest extends TestCase
             't_company_id' => $company->id,
             't_tms_provider_id' => $tmsProvider->id,
         ]);
-        $testEquipmentType = $equipmentTypes->first()->refresh();
 
         $this->getJson(route('equipment-types-options.show', [
             'company' => $company->id,
@@ -35,6 +34,22 @@ class EquipmentTypesSelectValuesControllerTest extends TestCase
             'equipment_owners',
             'equipment_sizes',
             'scacs',
-        ]);
+        ])
+        ->assertJsonCount(
+            $equipmentTypes->pluck('equipment_type')->unique()->count(),
+            'equipment_types'
+        )
+        ->assertJsonCount(
+            $equipmentTypes->pluck('equipment_owner')->unique()->count(),
+            'equipment_owners'
+        )
+        ->assertJsonCount(
+            $equipmentTypes->pluck('equipment_size')->unique()->count(),
+            'equipment_sizes'
+        )
+        ->assertJsonCount(
+            $equipmentTypes->pluck('scac')->unique()->count(),
+            'scacs'
+        );
     }
 }

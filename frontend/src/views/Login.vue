@@ -70,7 +70,7 @@
 <script>
 // import axios from '@/store/api_calls/axios_config'
 import utils, { type } from '@/store/modules/utils'
-import { mapActions, mapState } from '@/utils/vuex_mappings'
+import { mapActions, mapState } from 'vuex'
 import auth from '@/store/modules/auth'
 import { reqStatus } from '@/enums/req_status'
 

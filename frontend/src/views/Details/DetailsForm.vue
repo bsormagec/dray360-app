@@ -104,7 +104,7 @@
 
 <script>
 import isMobile from '@/mixins/is_mobile'
-import { mapState, mapActions } from '@/utils/vuex_mappings'
+import { mapState, mapActions } from 'vuex'
 
 import FormField from '@/components/FormField/FormField'
 import DetailsFormAddInventoryItem from '@/views/Details/DetailsFormAddInventoryItem'

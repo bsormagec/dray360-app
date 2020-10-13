@@ -33,6 +33,11 @@ class EquipmentTypesSelectValuesController extends Controller
                 ->select(DB::raw('distinct scac'))
                 ->get()
                 ->pluck('scac'),
+            'equipment_types_and_sizes' => EquipmentType::query()
+                ->forCompanyAndTmsProvider($company->id, $tmsProvider->id)
+                ->select(DB::raw('distinct equipment_type_and_size'))
+                ->get()
+                ->pluck('equipment_type_and_size'),
         ]);
     }
 }

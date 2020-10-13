@@ -20,6 +20,6 @@ $factory->define(EquipmentType::class, function (Faker $faker) {
         'row_type' => $rowType,
         'equipment_type_and_size' => $rowType == 'combined' ? implode(',', [$equipmentType, $equipmentSize]) : null,
         'equipment_type' => $rowType == 'separate' ? $equipmentType : null,
-        'equipment_size' => $rowType == 'separate' ? $equipmentSize : null,
+        'equipment_size' => $equipmentSize,
     ];
 });

@@ -91,7 +91,7 @@
 </template>
 <script>
 import userDashboard, { types } from '@/store/modules/users'
-import { mapState, mapActions } from '@/utils/vuex_mappings'
+import { mapState, mapActions } from 'vuex'
 import { reqStatus } from '@/enums/req_status'
 import hasPermission from '@/mixins/permissions'
 import utils, { type } from '@/store/modules/utils'

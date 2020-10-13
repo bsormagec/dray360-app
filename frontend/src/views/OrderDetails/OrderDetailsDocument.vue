@@ -11,7 +11,7 @@
         @load="getDimensions"
       >
 
-      <div v-if="isTesting || (dimensions.width && dimensions.height)">
+      <div v-if="dimensions.width && dimensions.height">
         <div
           v-for="(highlight, highlightKey) in getHighlightsForPage(page.number)"
           :id="`${cleanStrForId(highlightKey)}-document`"
@@ -34,7 +34,7 @@
 <script>
 import orderForm, { types } from '@/store/modules/order-form'
 import { cleanStrForId } from '@/utils/clean_str_for_id.js'
-import { mapState, mapActions } from '@/utils/vuex_mappings'
+import { mapState, mapActions } from 'vuex'
 import isMobile from '@/mixins/is_mobile'
 
 export default {
@@ -53,11 +53,7 @@ export default {
     ...mapState(orderForm.moduleName, {
       highlights: state => state.highlights,
       pages: state => state.pages
-    }),
-
-    isTesting () {
-      return process.env.NODE_ENV === 'test'
-    }
+    })
   },
 
   methods: {

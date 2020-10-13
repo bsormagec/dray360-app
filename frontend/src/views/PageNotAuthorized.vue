@@ -45,7 +45,7 @@
 </template>
 <script>
 import utils, { type } from '@/store/modules/utils'
-import { mapActions } from '@/utils/vuex_mappings'
+import { mapActions } from 'vuex'
 
 export default {
   name: 'NotAuthorized',

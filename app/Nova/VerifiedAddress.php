@@ -28,6 +28,13 @@ class VerifiedAddress extends Resource
     public static $title = 'id';
 
     /**
+     * The logical group associated with the resource.
+     *
+     * @var string
+     */
+    public static $group = 'Addresses';
+
+    /**
      * The columns that should be searched.
      *
      * @var array

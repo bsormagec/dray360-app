@@ -256,6 +256,11 @@ class Order extends Model
         return $this->belongsTo(EquipmentType::class, 't_equipment_type_id');
     }
 
+    public function tmsProvider()
+    {
+        return $this->belongsTo(TMSProvider::class, 't_tms_provider_id');
+    }
+
     public function updateRelatedModels($relatedModels): void
     {
         $existingRelatedModels = [

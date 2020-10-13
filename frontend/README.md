@@ -24,4 +24,4 @@ npm run lint
 ```
 npm run dev
 ```
-> It does and `npm run serve` and `npm run test` simultaneously using [concurrently](https://github.com/kimmobrunfeldt/concurrently)
+> It does and `npm run serve` and `npm run cypress:open` simultaneously using [concurrently](https://github.com/kimmobrunfeldt/concurrently)
