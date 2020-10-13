@@ -1,6 +1,6 @@
 name: tests
 
-on: [push, pull_request]
+on: [pull_request]
 
 jobs:
   cypress-run:
@@ -13,7 +13,7 @@ jobs:
           headless: true
           start: npm run serve
           working-directory: frontend
-          
+
   tests:
     name: Laravel Tests
 
