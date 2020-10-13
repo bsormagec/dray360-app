@@ -33,6 +33,16 @@ class Company extends Model
 
     protected $dates = ['deleted_at'];
 
+    /**
+     * The attributes that should be hidden for arrays.
+     *
+     * @var array
+     */
+    protected $hidden = [
+        'blackfly_token',
+        'ripcms_password',
+    ];
+
     public $fillable = [
         't_address_id',
         'name',
