@@ -2,31 +2,77 @@
   <!--  eslint-disable vue/no-v-html -->
   <div>
     <div>
-      <span><strong> Equipment Type</strong></span>
-      <div>Current Matched Equipment Type {{ equipmentType ? equipmentType.equipment_display : '--' }} </div>
-      <div v-if="!verified">
-        <span>
-          Not Verified!
-        </span>
-        <v-icon color="warning">
-          mdi-alert
-        </v-icon>
-      </div>
-      <v-btn
-        color="primary"
-        outlined
+      <div class="EquipmentType mb-2">
+        <div class="field__name">
+          SSL Container Type
+        </div>
 
-        @click="isOpen=true"
-      >
-        Choose Different Equipment Type
-      </v-btn>
+        <div>
+          <div
+            v-if="!verified && equipmentType === null"
+            class="equipment__section mb-2"
+          >
+            <v-icon color="error">
+              mdi-alert-outline
+            </v-icon>
+            <span
+              class="not__found"
+            >
+              Not Found
+            </span>
+          </div>
+          <div
+            v-if="!verified && equipmentType !== null"
+            class="equipment__section mb-2"
+          >
+            <v-icon color="warning">
+              mdi-alert-outline
+            </v-icon>
+            <span
+              class="not__verify"
+            >
+              Verification Needed
+            </span>
+          </div>
+
+          <div class="selected__equipment">
+            {{ equipmentType ? equipmentType.equipment_display : '---' }}
+          </div>
+          <v-btn
+            color="primary"
+            outlined
+            right
+            class="px-5"
+            @click="toggledialg"
+          >
+            {{ equipmentType === null ? 'Select' : 'Select Different' }}
+          </v-btn>
+        </div>
+      </div>
       <v-dialog
         :value="isOpen"
-        width="900"
+        width="70rem"
+        scrollable
+        class="equipment__dialog"
+        @click:outside="toggledialg"
       >
-        <v-card>
-          <v-container>
-            <v-row align="center">
+        <v-card
+          height="79rem"
+        >
+          <v-card-title>
+            <v-row>
+              <h1 class="title__dialog">
+                Select SSL Container Type
+              </h1><br>
+            </v-row> <p>&nbsp;</p>
+            <v-row
+              class="center py-0 mt-5 mb-0 header__filters"
+            >
+              <v-col cols="2">
+                <span>
+                  Filter by
+                </span>
+              </v-col>
               <v-col cols="3">
                 <v-autocomplete
                   v-model="filters.owner"
@@ -37,28 +83,7 @@
                   label="Steamship Line"
                 />
               </v-col>
-
-              <v-col cols="3">
-                <v-autocomplete
-                  v-model="filters.size"
-                  :items="equipmentTypeOptions.equipment_sizes"
-                  dense
-                  clearable
-                  outlined
-                  label="Length"
-                />
-              </v-col>
-              <v-col cols="3">
-                <v-autocomplete
-                  v-model="filters.type"
-                  :items="equipmentTypeOptions.equipment_types"
-                  dense
-                  clearable
-                  outlined
-                  label="Type"
-                />
-              </v-col>
-              <v-col cols="3">
+              <v-col cols="2">
                 <v-autocomplete
                   v-model="filters.scac"
                   :items="equipmentTypeOptions.scacs"
@@ -68,44 +93,61 @@
                   label="Scac"
                 />
               </v-col>
+              <v-col cols="3">
+                <v-autocomplete
+                  v-model="filters.type_and_size"
+                  :items="equipmentTypeOptions.equipment_types_and_sizes"
+                  dense
+                  clearable
+                  outlined
+                  label="Type and Length"
+                />
+              </v-col>
+              <v-col cols="1">
+                <v-btn
+                  text
+                  color="primary"
+                  @click="clearSelects"
+                >
+                  Clear
+                </v-btn>
+              </v-col>
             </v-row>
-            <div>
-              <v-simple-table>
-                <template v-slot:default>
-                  <thead>
-                    <tr>
-                      <th class="text-left">
-                        Steamship Line
-                      </th>
-                      <th class="text-left">
-                        Length/Type
-                      </th>
-                      <th class="text-left" />
-                    </tr>
-                  </thead>
-                  <tbody>
-                    <tr
-                      v-for="item in equipment_matches"
-                      :key="item.id"
+          </v-card-title>
+          <v-divider />
+          <v-card-text style="height: 40rem;">
+            <v-data-table
+              :loading="loading"
+              :headers="headers"
+              fixed-header
+              :items="equipment_matches"
+              item-key:item.id
+              :hide-default-header="false"
+              :hide-default-footer="false"
+              scrollable
+            >
+              <template
+                slot="item"
+                slot-scope="props"
+              >
+                <tr>
+                  <td>{{ props.item.equipment_owner }}</td>
+                  <td>{{ props.item.equipment_type_and_size }}</td>
+                  <td>
+                    <v-btn
+                      class="ma-2"
+                      outlined
+                      color="indigo"
+                      @click="() => selectEquipmentType(props.item)"
                     >
-                      <td>{{ item.equipment_owner }}</td>
-                      <td>{{ item.equipment_type_and_size }}</td>
-                      <td>
-                        <v-btn
-                          class="ma-2"
-                          outlined
-                          color="indigo"
-                          @click="() => selectEquipmentType(item)"
-                        >
-                          Select
-                        </v-btn>
-                      </td>
-                    </tr>
-                  </tbody>
-                </template>
-              </v-simple-table>
-            </div>
-          </v-container>
+                      Select
+                    </v-btn>
+                  </td>
+                </tr>
+              </template>
+            </v-data-table>
+          </v-card-text>
+          <v-divider />
         </v-card>
       </v-dialog>
     </div>
@@ -151,7 +193,14 @@ export default {
       owner: null,
       scac: null
     },
-    isOpen: false
+    isOpen: false,
+    loading: true,
+    headers: [
+      { text: 'Steamship Line', value: 'equipment_owner', class: 'table__background' },
+      { text: 'Length/Type', value: 'equipment_type_and_size', class: 'table__background' },
+      { text: ' ', value: ' ', class: 'table__background' }
+    ],
+    timerId: null
   }),
 
   computed: {
@@ -160,10 +209,16 @@ export default {
   watch: {
     filters: {
       handler: function (val) {
-        this.getMatchingEquipment()
+        clearTimeout(this.timerId)
+        this.timerId = setTimeout(() => {
+          this.getMatchingEquipment()
+        }, 250)
       },
       deep: true
     }
+  },
+  mounted () {
+    console.log(this.equipmentType)
   },
   async beforeMount () {
     const [error, response] = await getEquipmentTypeOptions(this.companyId, this.tmsProviderId)
@@ -171,9 +226,23 @@ export default {
       this.equipmentTypeOptions = response.data
     }
     this.getMatchingEquipment()
+    this.loading = false
   },
 
   methods: {
+    toggledialg () {
+      this.isOpen = !this.isOpen
+    },
+    clearSelects () {
+      this.filters = {
+        display: null,
+        type_and_size: null,
+        type: null,
+        size: null,
+        owner: null,
+        scac: null
+      }
+    },
     async getMatchingEquipment () {
       const apiFilters = {}
 
@@ -191,13 +260,68 @@ export default {
     },
     selectEquipmentType (e) {
       this.isOpen = false
-
       this.$emit('change', e.id)
     }
   }
 }
 </script>
 
-<style lang="scss" scoped>
+<style lang="scss">
 
+  .title__dialog{
+    color: map-get($colors, slate-gray );
+  }
+
+  .equipment__section{
+    font-weight: bold;
+    font-size: 1.4rem !important;
+    letter-spacing: 0.025rem;
+    .not__found{
+      color: map-get($colors, red);
+    }
+    .not__verify{
+      color: map-get($colors, warning);
+    }
+  }
+  .field__name{
+    font-size: 1.4rem !important;
+    font-weight: bold;
+    text-transform: capitalize;
+
+  }
+  .header__filters{
+    height: 6rem;
+    display: flex;
+    align-items: baseline;
+    span{
+      color: var(--v-primary-base);
+      display: flex;
+      justify-content: center;
+    }
+  }
+  .selected__equipment{
+    display: flex;
+    justify-content: flex-end;
+
+  }
+
+  .table__background{
+    background-color: map-get($colors, modal-header-bg) !important;
+  }
+.v-dialog > .v-card > .v-card__text{
+    padding: 0 0rem 2rem !important;
+  }
+.v-data-table-header th {
+    background-color: #E5E5E5 !important;
+}
+.EquipmentType {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    .equipment__section{
+      justify-content: flex-end;
+      display: flex;
+      align-items: center;
+    }
+}
 </style>

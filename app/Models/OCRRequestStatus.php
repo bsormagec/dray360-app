@@ -87,6 +87,16 @@ class OCRRequestStatus extends Model
         return $this->belongsTo(OCRRequest::class, 'request_id', 'request_id');
     }
 
+    public function company()
+    {
+        return $this->belongsTo(Company::class, 'company_id');
+    }
+
+    public function order()
+    {
+        return $this->belongsTo(Order::class, 'order_id');
+    }
+
     public function ocrRequest()
     {
         return $this->hasOne(OCRRequest::class, 't_job_state_changes_id');

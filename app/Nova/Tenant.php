@@ -25,6 +25,13 @@ class Tenant extends Resource
     public static $title = 'name';
 
     /**
+     * The logical group associated with the resource.
+     *
+     * @var string
+     */
+    public static $group = 'Tenancy';
+
+    /**
      * The columns that should be searched.
      *
      * @var array

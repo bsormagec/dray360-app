@@ -97,7 +97,7 @@
 </template>
 <script>
 import auth from '@/store/modules/auth'
-import { mapState, mapActions } from '@/utils/vuex_mappings'
+import { mapState, mapActions } from 'vuex'
 import hasPermission from '@/mixins/permissions'
 import utils, { type } from '@/store/modules/utils'
 import companies, { types } from '@/store/modules/companies'

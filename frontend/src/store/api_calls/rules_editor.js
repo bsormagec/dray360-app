@@ -1,22 +1,22 @@
 import axios from '@/store/api_calls/config/axios'
 
-export const getLibrary = async () => axios.ext.get('/api/ocr/rules').then(data => [undefined, data.data]).catch(e => [e])
+export const getLibrary = async () => axios.get('/api/ocr/rules').then(data => [undefined, data.data]).catch(e => [e])
 
-export const getCompanyVariantRules = async (companyId, variantId) => axios.ext.get('/api/ocr/rules-assignment?company_id=' + companyId + '&variant_id=' + variantId).then(data => [undefined, data.data]).catch(e => [e])
+export const getCompanyVariantRules = async (companyId, variantId) => axios.get('/api/ocr/rules-assignment?company_id=' + companyId + '&variant_id=' + variantId).then(data => [undefined, data.data]).catch(e => [e])
 
-export const putEditRule = async (ruleData) => axios.ext.put('/api/ocr/rules/' + ruleData.id, ruleData).then(data => [undefined, data.data]).catch(e => [e])
+export const putEditRule = async (ruleData) => axios.put('/api/ocr/rules/' + ruleData.id, ruleData).then(data => [undefined, data.data]).catch(e => [e])
 
-export const postSaveRuleSequence = async (sequenceData) => axios.ext.post('/api/ocr/rules-assignment', sequenceData).then(data => [undefined, data.data]).catch(e => [e])
+export const postSaveRuleSequence = async (sequenceData) => axios.post('/api/ocr/rules-assignment', sequenceData).then(data => [undefined, data.data]).catch(e => [e])
 
-export const postAddRule = async (ruleData) => axios.ext.post('/api/ocr/rules', ruleData).then(data => [undefined, data.data]).catch(e => [e])
+export const postAddRule = async (ruleData) => axios.post('/api/ocr/rules', ruleData).then(data => [undefined, data.data]).catch(e => [e])
 
-export const getRuleCode = async (index, companyId, variantId) => axios.ext.get('/api/ocr/rules-assignment?company_id=' + companyId + '&variant_id=' + variantId, index).then(data => [undefined, data.data]).catch(e => [e])
+export const getRuleCode = async (index, companyId, variantId) => axios.get('/api/ocr/rules-assignment?company_id=' + companyId + '&variant_id=' + variantId, index).then(data => [undefined, data.data]).catch(e => [e])
 
-export const getCompanyList = async () => axios.ext.get('/api/companies').then(data => [undefined, data.data.data]).catch(e => [e])
+export const getCompanyList = async () => axios.get('/api/companies').then(data => [undefined, data.data.data]).catch(e => [e])
 
-export const getVariantList = async () => axios.ext.get('/api/ocr/variants').then(data => [undefined, data.data.data]).catch(e => [e])
+export const getVariantList = async () => axios.get('/api/ocr/variants').then(data => [undefined, data.data.data]).catch(e => [e])
 
-export const getTestingOutput = async (orderId, singleCompanyVariantRule) => axios.ext.get('/api/orders/' + orderId)
+export const getTestingOutput = async (orderId, singleCompanyVariantRule) => axios.get('/api/orders/' + orderId)
   .then(function (response) {
     let testingOutput = null
 
@@ -39,7 +39,7 @@ export const getTestingOutput = async (orderId, singleCompanyVariantRule) => axi
       'Access-Control-Allow-Origin': '*'
     }
 
-    testingOutput = axios.ext.post('https://i0mgwmnrb1.execute-api.us-east-2.amazonaws.com/default/ocr-rules-engine-dev',
+    testingOutput = axios.post('https://i0mgwmnrb1.execute-api.us-east-2.amazonaws.com/default/ocr-rules-engine-dev',
       fetchedOcrData,
       {
         withCredentials: false,

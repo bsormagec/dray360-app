@@ -33,7 +33,7 @@
 <script>
 import isMobile from '@/mixins/is_mobile'
 import hasPermission from '@/mixins/permissions'
-import { mapState, mapActions } from '@/utils/vuex_mappings'
+import { mapState, mapActions } from 'vuex'
 import { reqStatus } from '@/enums/req_status'
 import orders, { types } from '@/store/modules/orders'
 import SidebarNavigation from '@/components/General/SidebarNavigation'

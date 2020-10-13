@@ -1,5 +1,5 @@
 /* eslint-disable camelcase */
-import { mapState } from '@/utils/vuex_mappings'
+import { mapState } from 'vuex'
 import { has_permissions, has_permission } from '@/utils/has_permissions'
 import auth from '@/store/modules/auth'
 

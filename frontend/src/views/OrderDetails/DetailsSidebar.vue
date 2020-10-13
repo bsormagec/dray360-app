@@ -66,7 +66,7 @@
 <script>
 import isMobile from '@/mixins/is_mobile'
 import hasPermissions from '@/mixins/permissions'
-import { mapActions, mapState } from '@/utils/vuex_mappings'
+import { mapActions, mapState } from 'vuex'
 import orders, { types } from '@/store/modules/orders'
 import orderForm, { types as orderFormTypes } from '@/store/modules/order-form'
 import { reqStatus } from '@/enums/req_status'

@@ -23,6 +23,13 @@ class OcrVariant extends Resource
     public static $title = 'description';
 
     /**
+     * The logical group associated with the resource.
+     *
+     * @var string
+     */
+    public static $group = 'Ocr Entities';
+
+    /**
      * The columns that should be searched.
      *
      * @var array

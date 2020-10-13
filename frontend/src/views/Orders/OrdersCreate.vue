@@ -44,7 +44,7 @@
 import OrdersCreateUpload from '@/views/Orders/OrdersCreateUpload'
 import OrdersCreateSubmitted from '@/views/Orders/OrdersCreateSubmitted'
 import orders, { types } from '@/store/modules/orders'
-import { mapActions } from '@/utils/vuex_mappings'
+import { mapActions } from 'vuex'
 import { reqStatus } from '@/enums/req_status'
 
 export default {

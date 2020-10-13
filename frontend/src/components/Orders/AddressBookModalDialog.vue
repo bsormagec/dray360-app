@@ -96,7 +96,7 @@
 </template>
 
 <script>
-import { mapState, mapActions } from '@/utils/vuex_mappings'
+import { mapState, mapActions } from 'vuex'
 import { reqStatus } from '@/enums/req_status'
 import address, { types } from '@/store/modules/address'
 import { formatAddress } from '@/views/Details/inner_utils/parse_document'

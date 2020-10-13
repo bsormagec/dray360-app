@@ -106,7 +106,7 @@
 
 <script>
 import SidebarNavigation from '@/components/General/SidebarNavigation'
-import { mapActions, mapState } from '@/utils/vuex_mappings'
+import { mapActions, mapState } from 'vuex'
 import utils, { type } from '@/store/modules/utils'
 import users, { types } from '@/store/modules/users'
 import auth from '@/store/modules/auth'

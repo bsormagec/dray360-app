@@ -326,7 +326,7 @@
 
 <script>
 import isMobile from '@/mixins/is_mobile'
-import { mapState, mapActions } from '@/utils/vuex_mappings'
+import { mapState, mapActions } from 'vuex'
 
 import orderForm, { types as orderFormTypes } from '@/store/modules/order-form'
 import utils, { type } from '@/store/modules/utils'

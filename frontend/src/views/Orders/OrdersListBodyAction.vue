@@ -17,7 +17,7 @@
 <script>
 import hasPermissions from '@/mixins/permissions'
 import { reqStatus } from '@/enums/req_status'
-import { mapActions } from '@/utils/vuex_mappings'
+import { mapActions } from 'vuex'
 import orders, { types } from '@/store/modules/orders'
 import OutlinedButtonGroup from '@/components/General/OutlinedButtonGroup'
 

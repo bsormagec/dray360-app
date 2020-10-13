@@ -1,7 +1,7 @@
 import axios from './axios'
 
 export default function ({ store, router }) {
-  axios.ori.interceptors.response.use(
+  axios.interceptors.response.use(
     (response) => (response),
     async (error) => {
       const { status, config, data } = error.response
