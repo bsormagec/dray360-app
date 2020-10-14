@@ -47,7 +47,11 @@ export default {
     return {
       list
     }
+  },
+  created () {
+    // console.log('yoyoy', this.list())
   }
+
 }
 </script>
 

@@ -48,6 +48,7 @@ const actions = {
 
     const [error, data] = await getOrders(filtersForParams, query, dateQuery)
 
+    console.log(data)
     if (error) return reqStatus.error
 
     commit(types.setOrders, data)
