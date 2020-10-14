@@ -31,7 +31,7 @@ class OcrRequestPolicy
      */
     public function create(User $user): bool
     {
-        return $user->isAbleTo('ocr-requests-create');
+        return $user->isAbleTo('ocr-requests-create') && ! request_is_from_nova();
     }
 
     /**
@@ -39,7 +39,7 @@ class OcrRequestPolicy
      */
     public function update(User $user, OCRRequest $ocrRequest): bool
     {
-        return $user->isAbleTo('ocr-requests-edit');
+        return $user->isAbleTo('ocr-requests-edit') && ! request_is_from_nova();
     }
 
     /**
@@ -47,6 +47,6 @@ class OcrRequestPolicy
      */
     public function delete(User $user, OCRRequest $ocrRequest): bool
     {
-        return $user->isAbleTo('ocr-requests-remove');
+        return $user->isAbleTo('ocr-requests-remove') && ! request_is_from_nova();
     }
 }

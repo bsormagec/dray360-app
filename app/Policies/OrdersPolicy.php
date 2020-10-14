@@ -33,6 +33,14 @@ class OrdersPolicy
     }
 
     /**
+     * Determine whether the user can view the model.
+     */
+    public function create(User $user): bool
+    {
+        return $user->isAbleTo('orders-create') && ! request_is_from_nova();
+    }
+
+    /**
      * Determine whether the user can update the model.
      */
     public function update(User $user, Order $order): bool
@@ -43,7 +51,7 @@ class OrdersPolicy
             return $hasUpdatePermissions && $user->belongsToSameCompanyAs($order);
         }
 
-        return $hasUpdatePermissions;
+        return $hasUpdatePermissions && ! request_is_from_nova();
     }
 
     /**

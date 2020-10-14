@@ -38,19 +38,23 @@ $background_login: url("../assets/images/login_background.png");
   background: $background_login no-repeat center center fixed;
 }
 .text-row {
-  padding-top: 30rem;
+  padding-top: rem(300);
 }
 .down-for {
   font-family: 'Oswald', sans-serif;
+  font-size: rem(26);
+  letter-spacing: normal;
+  line-height: normal;
+  font-weight: 700;
   span{
-    font-size: 3.0rem !important;
+    font-size: rem(30) !important;
     color: var(--v-primary-base) !important;
   }
   .span-down-for {
-    font-size: 3rem !important;
+    font-size: rem(30) !important;
   }
   .span-maintenance {
-    font-size: 6rem !important;
+    font-size: rem(60) !important;
   }
 }
 .pagenotfound {
@@ -58,22 +62,22 @@ $background_login: url("../assets/images/login_background.png");
   margin: 0 auto;
 }
 .message {
-  font-size: 1.4rem !important;
+  font-size: rem(14) !important;
   font-style: normal;
   color: map-get($colors, black);
-  max-width: 30rem;
+  max-width: rem(300);
   font-weight: 300;
-  padding-top: 5rem;
+  padding-top: rem(50);
 }
 .copyright{
-  bottom: 2rem;
+  bottom: rem(20);
   text-align: center;
-  margin-top: 25rem;
+  margin-top: rem(250);
   p{
     color: map-get($colors, grey-9 );
   }
 }
 img {
-  width: 23em;
+  width: rem(230);
 }
 </style>

@@ -101,7 +101,7 @@
                   placeholder="Search..."
                   outlined
                   append-icon="mdi-magnify"
-                  style="padding: 0 1rem;"
+                  style="padding: 0 10px;"
                 />
                 <v-list-item-group
                   color="primary"
@@ -511,8 +511,8 @@ export default {
   }
 }
 </script>
-<style scoped>
+<style lang="scss" scoped>
   .draggable-item {
-    padding: 10px;
+    padding: rem(10);
   }
 </style>

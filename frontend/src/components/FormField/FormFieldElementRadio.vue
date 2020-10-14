@@ -120,13 +120,13 @@ export default {
 
 <style lang="scss" scoped>
 .radio__option {
-  margin-bottom: 1rem;
+  margin-bottom: rem(10);
 }
 
 .option__children {
   display: flex;
   flex-wrap: wrap;
   justify-content: space-between;
-  padding-left: 3.4rem;
+  padding-left: rem(34);
 }
 </style>

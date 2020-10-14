@@ -92,11 +92,10 @@ export default {
   display: flex;
   align-items: center;
   width: 100%;
-  min-height: 3rem;
-  margin-bottom: 1.1rem;
-  border: 0.1rem solid;
-  border-color: map-get($colors, white);
-  border-radius: 0.2rem;
+  min-height: rem(30);
+  margin-bottom: rem(11);
+  border: rem(1) solid map-get($colors, white);
+  border-radius: rem(2);
   transition: all 200ms ease-in-out;
 
   &.hover, &.edit {
@@ -105,12 +104,12 @@ export default {
 
   &.hover {
     background: rgba(var(--v-primary-base-rgb), 0.15);
-    padding-left: 1rem;
-    padding-right: 3rem;
+    padding-left: rem(10);
+    padding-right: rem(30);
   }
 
   &.edit {
-    min-height: 10rem;
+    min-height: rem(100);
     &.input, &.text-area {
       min-height: unset;
     }
@@ -122,7 +121,7 @@ export default {
     width: 100%;
     display: flex;
     align-items: center;
-    padding: 1rem 3rem 0rem 1rem;
+    padding: rem(10) rem(30) 0 rem(10);
 
     &.input, &.text-area {
       padding: unset;

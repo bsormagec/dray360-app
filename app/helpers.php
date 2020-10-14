@@ -49,3 +49,8 @@ function is_superadmin(?string $guard = null)
 {
     return ! auth($guard)->guest() && auth($guard)->user()->isSuperadmin();
 }
+
+function request_is_from_nova()
+{
+    return request()->is(['nova/*', 'nova-api/*']);
+}

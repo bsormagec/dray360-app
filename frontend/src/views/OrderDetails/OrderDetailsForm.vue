@@ -391,50 +391,50 @@ export default {
   width: 100%;
   height: 100vh;
   overflow-y: auto;
-  padding: 3.6rem 6.5rem;
-  padding-top: 8.4rem;
+  padding: rem(36) rem(65);
+  padding-top: rem(84);
   scroll-behavior: smooth;
 
   &.mobile {
     height: 50vh;
-    padding-bottom: 7rem;
-    padding: 1.6rem;
+    padding-bottom: rem(70);
+    padding: rem(16);
   }
 }
 
 .section__title {
   text-transform: uppercase;
-  font-size: 1.7rem;
-  line-height: 3rem;
+  font-size: rem(17);
+  line-height: rem(30);
   background: map-get($colors, grey-6);
-  padding: 0 0.65rem;
-  margin-bottom: 2rem;
+  padding: 0 rem(6.5);
+  margin-bottom: rem(20);
   color: map-get($colors, grey-7);
 }
 
 .section__rootfields {
-  margin-bottom: 3.6rem;
+  margin-bottom: rem(36);
 }
 
 .section__field {
   display: flex;
   justify-content: space-between;
-  margin-bottom: 1.1rem;
+  margin-bottom: rem(11);
 }
 
 .field__name {
-  font-size: 1.4rem !important;
-  font-weight: bold;
+  font-size: rem(14) !important;
+  font-weight: 700;
   text-transform: capitalize;
 }
 
 .field__value {
-  font-size: 1.44rem !important;
+  font-size: rem(14.4) !important;
   text-transform: capitalize;
 }
 
 .section__sub {
-  margin-bottom: 3.6rem;
+  margin-bottom: rem(36);
 }
 
 .sub__title {
@@ -444,11 +444,11 @@ export default {
 
   h2 {
     width: 100%;
-    font-size: 1.6rem;
-    line-height: 3.6rem;
+    font-size: rem(16);
+    line-height: rem(36);
     color: map-get($colors, grey-4);
-    border-bottom: 0.1rem solid map-get($colors, grey-3);
-    margin-bottom: 1.4rem;
+    border-bottom: rem(1) solid map-get($colors, grey-3);
+    margin-bottom: rem(14);
     text-transform: capitalize;
   }
 

@@ -1,14 +1,13 @@
 <template>
   <div class="header">
-    <h1 class="header__title">
+    <h5 class="header__title">
       <v-icon
-        :style="{ marginRight: '1.5rem' }"
         @click="toggleMobileSidebar"
       >
         mdi-menu
       </v-icon>
       Orders
-    </h1>
+    </h5>
 
     <div class="header__right">
       <DateRangeCalendar
@@ -85,15 +84,15 @@ export default {
       const mobileTrigger = this.clientWidth <= 380
 
       const desktopStyles = {
-        searchBar: { marginRight: '1rem' },
-        statusSelect: { marginRight: '1rem', minWidth: '14rem' },
+        searchBar: { marginRight: '10px' },
+        statusSelect: { marginRight: '10px', minWidth: '140px' },
         columnsSelect: {}
       }
 
       const mobileStyles = {
-        searchBar: { minWidth: '100%', marginBottom: '1rem' },
-        statusSelect: { minWidth: '100%', marginBottom: '1rem' },
-        columnsSelect: { minWidth: '100%', marginBottom: '1rem' }
+        searchBar: { minWidth: '100%', marginBottom: '10px' },
+        statusSelect: { minWidth: '100%', marginBottom: '10px' },
+        columnsSelect: { minWidth: '100%', marginBottom: '10px' }
       }
 
       return mobileTrigger ? mobileStyles : desktopStyles
@@ -166,13 +165,13 @@ export default {
   align-items: center;
 
   @media screen and (max-width: 580px) {
-    height: 7.5rem;
+    height: rem(75);
     position: relative;
     align-items: flex-start;
   }
 
   @media screen and (max-width: 380px) {
-    height: 17.5rem;
+    height: rem(175);
   }
 }
 
@@ -193,6 +192,8 @@ export default {
   display: flex;
   align-items: center;
   width: 100%;
+  font-weight: bold;
+  font-size: rem(26);
 
   button {
     @media screen and (min-width: map-get($breakpoints, med)) {

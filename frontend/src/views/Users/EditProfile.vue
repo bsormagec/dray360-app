@@ -11,7 +11,7 @@
             color="white"
           >
             <v-toolbar-title>
-              <h1>
+              <h1 class="edit-profile-headline">
                 Edit Profile
               </h1>
             </v-toolbar-title>
@@ -24,6 +24,7 @@
             <div class="col-6">
               <v-text-field
                 v-model="name"
+                class="profile-field"
                 name="First Name"
                 label="First Name"
                 hide-details
@@ -36,6 +37,7 @@
             <div class="col-6">
               <v-text-field
                 v-model="email"
+                class="profile-field"
                 name="email"
                 label="Email"
                 hide-details
@@ -48,6 +50,7 @@
             <div class="col-6">
               <v-text-field
                 v-model="position"
+                class="profile-field"
                 name="position"
                 label="Position"
                 hide-details
@@ -60,6 +63,7 @@
             <div class="col-6">
               <v-text-field
                 v-model="org"
+                class="profile-field"
                 name="org"
                 label="Org"
                 hide-details
@@ -168,6 +172,22 @@ export default {
 
 }
 </script>
-<style lang="sass" scoped>
-
+<style lang="scss" scoped>
+  .edit-profile-headline {
+    font-size: rem(26);
+    font-weight: 700;
+    letter-spacing: 0;
+  }
+  .profile-field::v-deep label, input[type="text"] {
+    font-size: rem(12);
+    // label {
+    //   font-size: rem(12);
+    // }
+    // input {
+    //   font-size: rem(12);
+    // }
+  }
+  .button::v-deep span {
+    font-size: rem(12);
+  }
 </style>

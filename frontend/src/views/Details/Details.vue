@@ -163,7 +163,7 @@ export default {
   display: flex;
 
   &.loaded {
-    padding-left: map-get($sizes, sidebar-desktop-width);
+    padding-left:rem(map-get($sizes, sidebar-desktop-width));
   }
 
   &.mobile {
@@ -177,7 +177,7 @@ export default {
 }
  .split-button.v-btn{
     color: var(--v-primary-base) !important;
-    border: 1px solid var(--v-primary-base) !important;
+    border: rem(1) solid var(--v-primary-base) !important;
 
   }
 
@@ -204,7 +204,7 @@ export default {
   cursor: col-resize;
   position: absolute;
   top: 50%;
-  right: -1.5rem;
+  right: rem(-15);
   transform: translateY(-50%);
   transition: transform 200ms ease-in-out;
   display: flex;
@@ -214,12 +214,12 @@ export default {
   }
 
   div {
-    width: 0.2rem;
-    height: 6rem;
+    width: rem(2);
+    height: rem(60);
     background: white;
 
     &:not(:last-child) {
-      margin-right: 0.2rem;
+      margin-right: rem(2);
     }
   }
 }
