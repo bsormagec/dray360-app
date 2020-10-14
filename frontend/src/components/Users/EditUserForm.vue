@@ -245,13 +245,16 @@ export default {
 
   h1 {
     color: rgba(map-get($colors , black-2), 1) !important;
+    font-size: rem(26);
+    letter-spacing: 0;
+    font-weight: 700;
   }
   .form-field-element-input {
     width: 44%
   }
   .button {
-    margin-right: 1rem;
-    letter-spacing: 0.075rem;
+    margin-right: rem(10);
+    letter-spacing: rem(.75);
   }
   .delete-button {
     color: rgba(map-get($colors , red), 1) !important;
@@ -266,5 +269,9 @@ export default {
   .cancel-button {
     color: rgba(map-get($colors , secondary-blue), 1) !important;
     border: unset !important;
+  }
+  .v-input::v-deep .v-label,
+  .v-input::v-deep input {
+    font-size: rem(12);
   }
 </style>

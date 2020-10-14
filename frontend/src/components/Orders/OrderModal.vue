@@ -2,7 +2,7 @@
   <div>
     <v-dialog
       v-model="dialog"
-      max-width="50rem"
+      max-width="500px"
     >
       <v-stepper
         v-model="currentstep"
@@ -192,11 +192,11 @@ export default {
     align-content: center;
     justify-content: center;
     flex-direction: column;
-    margin-top: 5rem;
-    height: 27rem;
+    margin-top: rem(50);
+    height: rem(270);
 }
 .v-stepper__content{
-  padding: 0px !important;
+  padding: 0 !important;
 }
 .v-stepper__header{
   box-shadow: none !important;
@@ -208,43 +208,43 @@ export default {
               display: flex;
             }
             span{
-              font-size: 2rem !important;
-              margin-left: 0.5rem;
+              font-size: rem(20) !important;
+              margin-left: rem(5);
             }
             span.verificationNeeded{
-              margin-left: 1.5rem;
+              margin-left: rem(15);
             }
     }
     .body_modal{
         display: flex;
         align-items: center;
-        padding: 1.5rem;
-        width: 50rem;
+        padding: ren(15);
+        width: rem(500);
         margin: 0 auto;
-        border-bottom:0.1rem solid map-get($colors, grey-11 );
+        border-bottom: rem(1) solid map-get($colors, grey-11 );
         .col-6:not(.first-col){
-            border-left:0.3rem solid map-get($colors, grey-2 );
+            border-left: rem(3) solid map-get($colors, grey-2 );
         }
     }
     .footer_modal{
         display: flex;
         justify-content: center;
         align-content: center;
-        padding: 1.5rem;
+        padding: rem(15);
         .primary_modal{
             background-color: map-get($colors, white ) !important;
-            border: 0.2rem solid var(--v-primary-base);
-            border-radius: 0.3rem;
+            border: rem(2) solid var(--v-primary-base);
+            border-radius: rem(3);
             color: var(--v-primary-base);
             text-transform: capitalize;
         }
     }
     span.addressnotfound{
-      font-weight: bold;
+      font-weight: 700;
       color: map-get($colors, red );
     }
     span.verificationNeeded{
-      font-weight: bold;
+      font-weight: 700;
       color: map-get($colors, yellow ) !important;
     }
 </style>

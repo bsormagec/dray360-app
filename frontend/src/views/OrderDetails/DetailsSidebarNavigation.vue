@@ -138,8 +138,8 @@ export default {
 <style lang="scss" scoped>
 .navigation {
   display: flex;
-  margin-top: 3.1rem;
-  margin-bottom: 3.1rem;
+  margin-top: rem(31);
+  margin-bottom: rem(31);
 }
 
 .navigation__link {

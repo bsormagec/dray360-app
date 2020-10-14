@@ -20,6 +20,7 @@
           <v-btn
             text
             small
+            href="/login"
           >
             Cancel
           </v-btn>
@@ -108,28 +109,34 @@ export default {
     flex-direction: column;
     align-items: center;
     .login-box{
-      width: 36rem;
+      width: rem(360);
       justify-items: center;
       background-color: map-get($colors, white );
       display: flex;
       align-items: center;
       justify-content: center;
       flex-direction: column;
-      border-top: 0.8rem solid var(--v-primary-base) !important;
-      border-left: 0.1rem solid map-get($colors, gray );
-      border: 0.1rem solid map-get($colors, gray );
-      box-shadow: 0rem 0.1rem 0.3rem rgba(0, 0, 0, 0.1);
-      padding: 3rem;
+      border-top: rem(8) solid var(--v-primary-base) !important;
+      border-left: rem(1) solid map-get($colors, gray );
+      border: rem(1) solid map-get($colors, gray );
+      box-shadow: 0 rem(1) rem(3) rgba(0, 0, 0, 0.1);
+      padding: rem(30);
       h1{
         align-self: flex-start;
-        margin-bottom: 0.7rem;
+        margin-bottom: rem(7);
         color: var(--v-primary-base);
+        font-size: rem(26);
+        font-weight: 700;
       }
+      p { font-size: rem(12); }
       .v-messages__message{
         color: map-get($colors, red ) !important;
       }
-      .email__input{
+      .email__input {
         width: 100%;
+      }
+      .email__input::v-deep label {
+        font-size: rem(12);
       }
       .button_checkbox{
         display: flex;
@@ -138,12 +145,15 @@ export default {
         justify-content: space-between;
         font-weight: bold;
         width: 100%;
-        margin-top: 2rem;
+        margin-top: rem(20);
         .btn-login{
-          padding: 0.5rem 2rem;
+          padding: rem(5) rem(20);
           background-color: var(--v-primary-base);
           color: map-get($colors, white);
-          border-radius: 0.3rem;
+          border-radius: rem(3);
+        }
+        .btn-login::v-deep span {
+          font-size: rem(12);
         }
       }
     }
@@ -151,20 +161,21 @@ export default {
         display: flex;
         flex-direction: row;
         justify-content: space-between;
-        width: 36rem;
-        border-top: 0.1rem solid map-get($colors , gray ) !important;
-        border: 0.1rem solid map-get($colors, gray );
-        box-shadow: 0rem 0.1rem 0.3rem rgba(0, 0, 0, 0.1);
+        width: rem(360);
+        border-top: rem(1) solid map-get($colors , gray ) !important;
+        border: rem(1) solid map-get($colors, gray );
+        box-shadow: 0 rem(1) rem(3) rgba(0, 0, 0, 0.1);
         background-color: map-get($colors,white);
-        padding-top: 0.2rem;
-        padding: 1rem 1rem 0rem 1rem;
+        padding-top: rem(2);
+        padding: rem(10) rem(10) 0 rem(10);
       }
       .copyright{
         position: absolute;
-        bottom: 2rem;
+        bottom: rem(20);
         p{
           color: map-get($colors, grey-9 );
-          line-height: 1.6rem;
+          line-height: rem(16);
+          font-size: rem(12);
         }
       }
   }

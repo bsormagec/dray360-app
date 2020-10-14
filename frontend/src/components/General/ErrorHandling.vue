@@ -5,7 +5,7 @@
     >
       <v-dialog
         v-model="localdialog"
-        width="45rem"
+        width="450px"
         @change="e => $emit('change', e)"
       >
         <div class="errormodal">
@@ -49,7 +49,7 @@
     >
       <v-dialog
         v-model="dialog2"
-        width="40rem"
+        width="400px"
       >
         <div class="errormodal">
           <div class="alert_modal">
@@ -185,81 +185,77 @@ export default {
 </script>
 
 <style lang="scss" >
-    .errormodal{
-      background-color: map-get($colors, white);
-      border: 0.1rem solid map-get($colors, red );
-    }
-    .title_modal{
-            display:inline-flex;
-            border-bottom:0.1rem solid map-get($colors, grey-11 );
-            width: 100%;
-    }
-    .alert_modal{
-            display:inline-flex;
-            border-bottom:0.1rem solid map-get($colors, grey-11 );
-            width: 100%;
-            color: map-get($colors, red );
-            border-left: 0.5rem solid map-get($colors, red );
-            .body_modal p{
-              color: map-get($colors, red );
-              letter-spacing: 0.05rem;
-              line-height: 2.8rem;
-              font-size: 1.9rem;
-            }
-    }
-    .body_modal{
-      margin: 0 !important;
-    }
-
-    .error_handling_formfield{
-      margin-top: 5rem;
-      width: 20rem;
-      .form-field-presentation .form-field-highlight.edit.input{
-          border-color: map-get($colors, red) !important;
-
-      .action-btns{
-        border-color: map-get($colors, red) !important;
-        .btns__edit{
-          .btns__accept{
-            background: map-get($colors, red) !important;
+.errormodal {
+  background-color: map-get($colors, white);
+  border: rem(1) solid map-get($colors, red );
+}
+.title_modal {
+  display:inline-flex;
+  border-bottom: rem(1) solid map-get($colors, grey-11 );
+  width: 100%;
+}
+.alert_modal {
+  display:inline-flex;
+  border-bottom: rem(1) solid map-get($colors, grey-11 );
+  width: 100%;
+  color: map-get($colors, red );
+  border-left: rem(5) solid map-get($colors, red );
+  .body_modal p {
+    color: map-get($colors, red );
+    letter-spacing: rem(.5);
+    line-height: (28 / 19);
+    font-size: rem(19);
+  }
+}
+.body_modal {
+  margin: 0 !important;
+}
+.error_handling_formfield {
+  margin-top: rem(50);
+  width: rem(200);
+  .form-field-presentation .form-field-highlight.edit.input {
+    border-color: map-get($colors, red) !important;
+    .action-btns {
+      border-color: map-get($colors, red) !important;
+      .btns__edit {
+        .btns__accept {
+          background: map-get($colors, red) !important;
+        }
+        .btns__close {
+          i {
+            color: map-get($colors, red) !important;
           }
-          .btns__close {
-            i{
-              color: map-get($colors, red) !important;
-
-            }
-          }
-      }}
+        }
       }
     }
-    .footer_modal{
-        display: flex;
-        justify-content: flex-end;
-        align-content: center;
-        padding: 1.5rem;
-        .primary_modal{
-            background-color: map-get($colors, white ) !important;
-            border: 0;
-            border-radius: 0.3rem;
-            color:map-get($colors, red );
-            text-transform: uppercase;
-            box-shadow:none
-        }
-
-    }
-    .btn_ok{
-            background-color: map-get($colors,red ) !important;
-            border: 0.2rem solid map-get($colors, red );
-            border-radius: 0.3rem;
-            color:map-get($colors, white ) !important;
-            text-transform: uppercase;
-            margin: 0 1rem;
-            padding: 0 3rem;
-        }
-    .snackbar{
-      .v-snack__content{
-        color: map-get($colors, white ) !important;
-      }
-    }
-
+  }
+}
+.footer_modal {
+  display: flex;
+  justify-content: flex-end;
+  align-content: center;
+  padding: rem(15);
+  .primary_modal{
+    background-color: map-get($colors, white ) !important;
+    border: 0;
+    border-radius: rem(3);
+    color: map-get($colors, red );
+    text-transform: uppercase;
+    box-shadow: none
+  }
+}
+.btn_ok{
+  background-color: map-get($colors,red ) !important;
+  border: rem(2) solid map-get($colors, red );
+  border-radius: rem(3);
+  color:map-get($colors, white ) !important;
+  text-transform: uppercase;
+  margin: 0 rem(10);
+  padding: 0 rem(30);
+}
+.snackbar{
+  .v-snack__content{
+    color: map-get($colors, white ) !important;
+  }
+}
 </style>

@@ -85,7 +85,7 @@ export default {
 .form-field-element-both-datetime {
   display: flex;
   justify-content: space-between;
-  height: 6.6rem;
+  height: rem(66);
 }
 
 .datetime__date, .datetime__time {

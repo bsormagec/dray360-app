@@ -72,17 +72,17 @@ export default {
 
 <style lang="scss">
 .snackbar{
-      .v-snack__wrapper{
-          min-width: 60px !important;
-          max-width: 60px !important;
-      }
-      .v-snack__content{
-        color: map-get($colors, white ) !important;
-      }
-    }
+  .v-snack__wrapper{
+    min-width: rem(60) !important;
+    max-width: rem(60) !important;
+  }
+  .v-snack__content{
+    color: map-get($colors, white ) !important;
+  }
+}
 .snackbar__withMessage{
-      .v-snack__content{
-        color: map-get($colors, white ) !important;
-      }
+  .v-snack__content{
+    color: map-get($colors, white ) !important;
+  }
 }
 </style>

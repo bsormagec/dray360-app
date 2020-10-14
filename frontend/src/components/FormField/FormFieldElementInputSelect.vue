@@ -8,7 +8,7 @@
     />
     <FormFieldElementSelect
       :field="{ ...field, value: selectValue }"
-      :style="{ width: '7rem' }"
+      :style="{ width: '70px' }"
       :is-editing="isEditing"
       :initialized="true"
       @change="changeSelect"

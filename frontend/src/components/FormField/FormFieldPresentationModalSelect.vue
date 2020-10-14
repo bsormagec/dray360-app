@@ -79,65 +79,65 @@ export default {
   position: relative;
   display: flex;
   align-items: center;
-  font-size: 1.44rem !important;
+  font-size: rem(14.4) !important;
   font-weight: bold;
   color: var(--v-primary-base);
   outline: unset;
 
   i {
-    margin-left: 1.05rem;
+    margin-left: rem(10.5);
   }
 }
 
 .link__popover {
   position: absolute;
-  width: 24rem;
-  padding: 2.4rem 1.9rem 1.9rem 3.3rem;
+  width: rem(240);
+  padding: rem(24) rem(19) rem(19) rem(33);
   background: map-get($colors, white);
-  box-shadow: 0rem 0.2rem 0.4rem rgba(0, 0, 0, 0.1);
-  border: 0.1rem solid map-get($colors, grey-2);
-  border-radius: 0.4rem;
-  top: 3.5rem;
+  box-shadow: 0 rem(2) rem(4) rgba(0, 0, 0, 0.1);
+  border: rem(1) solid map-get($colors, grey-2);
+  border-radius: rem(4);
+  top: rem(35);
   right: 0;
   z-index: 2;
 }
 
 .popover__triangle {
   position: absolute;
-  width: 1rem;
-  height: 1rem;
-  top: -0.6rem;
-  right: 2rem;
+  width: rem(10);
+  height: rem(10);
+  top: rem(-6);
+  right: rem(20);
   background: white;
   transform: rotate(45deg);
   border-left-color: map-get($colors, grey-2);
-  border-left-width: 0.1rem;
+  border-left-width: rem(1);
   border-left-style: solid;
   border-top-color: map-get($colors, grey-2);
-  border-top-width: 0.1rem;
+  border-top-width: rem(1);
   border-top-style: solid;
 }
 
 .popover__header {
-  font-size: 2.1rem !important;
+  font-size: rem(21) !important;
   font-weight: bold;
   display: flex;
   align-items: center;
   justify-content: space-between;
-  margin-bottom: 1.6rem;
+  margin-bottom: rem(16);
 }
 
 .popover__address {
   display: block;
-  width: 10rem;
-  font-size: 1.44rem !important;
+  width: rem(100);
+  font-size: rem(14.4) !important;
   font-weight: normal;
-  margin-bottom: 1.6rem;
+  margin-bottom: rem(16);
 }
 
 .popover__info-item {
   span {
-    font-size: 1.44rem !important;
+    font-size: rem(14.4) !important;
   }
 }
 

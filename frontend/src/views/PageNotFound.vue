@@ -74,45 +74,49 @@ $background_login: url("../assets/images/login_background.png");
     align-items: center;
     .title{
       margin: 0 auto;
-      width: 50rem;
+      width: rem(516);
       .rownotfound{
         display: flex;
         align-items: center;
         margin: 0 auto;
         .copy{
-          font-size: 2.1rem !important;
+          font-size: rem(21) !important;
           font-weight: 300;
           text-align: left;
-          margin-top: 3rem;
-          width: 45rem;
+          margin-top: rem(30);
+          width: rem(450);
         }
         .btn-home{
-          margin-top: 3rem;
-          width: 40rem;
-          padding: 2rem;
+          margin-top: rem(30);
+          width: rem(400);
+          padding: rem(20);
         }
         .contact__us{
-          margin-top: 1rem;
+          margin-top: rem(10);
           color: var(--v-primary-base);
         }
       }
         h1{
           font-family: 'Oswald', sans-serif;
-          font-size: 14.4rem;
+          font-size: rem(144);
           color: var(--v-primary-base) !important;
+          letter-spacing: normal;
+          line-height: (32 / 144);
+          font-weight: 700;
           span{
-            font-size: 6.2rem !important;
+            font-size: rem(62) !important;
             color: var(--v-primary-base) !important;
-            line-height: 6.5rem;
+            line-height: (65 / 62);
+            letter-spacing: rem(.125);
           }
         }
       }
       .copyright{
         position: absolute;
-        bottom: 2rem;
+        bottom: rem(20);
         p{
           color: map-get($colors, grey-9 );
-          line-height: 1.6rem;
+          line-height: rem(16);
         }
       }
 }
