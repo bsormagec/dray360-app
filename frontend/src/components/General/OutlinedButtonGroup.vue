@@ -16,6 +16,7 @@
           class="split-btn__primary"
           title="Go to Order Details"
           :href="mainAction.path"
+          :loading="loading"
         >
           {{ mainAction.title }}
         </v-btn>
@@ -36,6 +37,7 @@
     <v-list>
       <v-list-item
         v-for="(option, index) in options"
+        v-show="!needPermission(option.hasPermission)"
         :key="index"
         :disabled="needPermission(option.hasPermission)"
         @click="option.action"
@@ -55,6 +57,11 @@
 export default {
   name: 'OutlinedButtonGroup',
   props: {
+    loading: {
+      type: Boolean,
+      required: false,
+      default: false
+    },
     mainAction: {
       type: Object,
       required: true

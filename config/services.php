@@ -63,7 +63,7 @@ return [
     ],
 
     'sns-topics' => [
-        'send-to-tms' => env('SNS_SEND_TO_TMS_TOPIC', 'arn:aws:sns:us-east-2:228274877766:ocr-status-update-gateway-dev'),
+        'status' => env('SNS_STATUS_TOPIC', 'arn:aws:sns:us-east-2:228274877766:ocr-status-update-gateway-dev'),
     ],
 
 ];

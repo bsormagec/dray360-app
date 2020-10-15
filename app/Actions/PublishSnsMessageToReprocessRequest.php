@@ -4,34 +4,33 @@ namespace App\Actions;
 
 use Aws\Sns\SnsClient;
 use Aws\Exception\AwsException;
+use App\Models\OCRRequestStatus;
 
-class PublishSnsMessageToSendToTms
+class PublishSnsMessageToReprocessRequest
 {
-    public function __invoke(array $data)
+    public function __invoke(OCRRequestStatus $status)
     {
         try {
             $response = $this->getSnsClient()
                 ->publish([
                     'Message' => json_encode([
-                        'request_id' => $data['request_id'],
-                        'company_id' => $data['company_id'],
-                        'tms_provider_id' => $data['tms_provider_id'],
+                        'request_id' => $status->request_id,
                         'datetime_utciso' => now()->toISOString(),
-                        'status' => $data['status'],
-                        'status_metadata' => ['order_id' => $data['order_id']]
+                        'status' => OCRRequestStatus::OCR_COMPLETED,
+                        'status_metadata' => $status->status_metadata,
                     ]),
                     'MessageAttributes' => [
                         'status' => [
                             'DataType' => 'String',
-                            'StringValue' => $data['status'],
+                            'StringValue' => OCRRequestStatus::OCR_COMPLETED,
                         ],
                         'company_id' => [
                             'DataType' => 'String',
-                            'StringValue' => $data['company_id'],
+                            'StringValue' => $status->company_id,
                         ],
                         'order_id' => [
                             'DataType' => 'String',
-                            'StringValue' => $data['order_id'],
+                            'StringValue' => ' ',
                         ],
                     ],
                     'TopicArn' => config('services.sns-topics.status'),
