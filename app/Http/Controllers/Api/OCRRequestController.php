@@ -59,7 +59,7 @@ class OCRRequestController extends Controller
                 'uploading_filename' => $uploadingFilename,
                 'url_expiry_time' => $expiryTime,
                 'upload_uri' => $uploadRequestUri,
-                'company_id' => currentCompany()->id ?? Company::TCOMPANIES_DEV,
+                'company_id' => currentCompany()->id ?? Company::TCOMPANIES_DEMO,
                 'user_id' => auth()->user()->id,
             ];
 
