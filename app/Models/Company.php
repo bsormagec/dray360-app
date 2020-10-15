@@ -24,7 +24,7 @@ class Company extends Model
         UPDATED_AT = 'updated_at',
         FOREIGN_KEY = 't_company_id',
         CUSHING = 'Cushing',
-        TCOMPANIES_DEV = 'TCompaniesDev',
+        TCOMPANIES_DEMO = 'TCompaniesDemo',
         POLARIS = 'Polaris',
         IXT_ONBOARDING = 'IXTOnboarding',
         IXT = 'IXT';
@@ -113,11 +113,11 @@ class Company extends Model
     }
 
     /**
-     * Get company 'TCompanies Dev'
+     * Get company 'TCompanies Demo'
      */
-    public static function getTCompaniesDev(): self
+    public static function getTCompaniesDemo(): self
     {
-        return static::where('name', static::TCOMPANIES_DEV)->first();
+        return static::where('name', static::TCOMPANIES_DEMO)->first();
     }
 
     /**

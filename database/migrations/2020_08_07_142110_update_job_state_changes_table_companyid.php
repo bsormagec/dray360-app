@@ -19,7 +19,7 @@ class UpdateJobStateChangesTableCompanyid extends Migration
         create temporary table t_tmp_request_company_migration_list as
         select distinct
         request_id
-        ,if(company_id_count > 1, 2, company_id_list) as company_id -- company_id '2' is tcompanies-dev
+        ,if(company_id_count > 1, 2, company_id_list) as company_id -- company_id '2' is tcompanies-demo
         from (
         select distinct
             request_id

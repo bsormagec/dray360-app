@@ -40,10 +40,10 @@ return [
             'password' => env('RIP_CMS_CUSHING_PASSWORD'),
             'token' => env('RIP_CMS_CUSHING_TOKEN'),
         ],
-        Str::snake(Company::TCOMPANIES_DEV) => [
-            'username' => env('RIP_CMS_TCOMPANIES_DEV_USERNAME'),
-            'password' => env('RIP_CMS_TCOMPANIES_DEV_PASSWORD'),
-            'token' => env('RIP_CMS_TCOMPANIES_DEV_TOKEN'),
+        Str::snake(Company::TCOMPANIES_DEMO) => [
+            'username' => env('RIP_CMS_TCOMPANIES_DEMO_USERNAME'),
+            'password' => env('RIP_CMS_TCOMPANIES_DEMO_PASSWORD'),
+            'token' => env('RIP_CMS_TCOMPANIES_DEMO_TOKEN'),
         ],
         Str::snake(Company::IXT_ONBOARDING) => [
             'username' => env('RIP_CMS_IXT_ONBOARDING_USERNAME'),
@@ -58,12 +58,12 @@ return [
     ],
 
     'search-address' => [
-        'url' => env('SEARCH_ADDRESS_URL', 'https://i0mgwmnrb1.execute-api.us-east-2.amazonaws.com/default/ocr-address-search-dev'),
+        'url' => env('SEARCH_ADDRESS_URL', 'https://b9da68xgc1.execute-api.us-east-2.amazonaws.com/api/1.0/dev/address-search'),
         'api_key' => env('SEARCH_ADDRESS_API_KEY'),
     ],
 
     'sns-topics' => [
-        'status' => env('SNS_STATUS_TOPIC', 'arn:aws:sns:us-east-2:228274877766:ocr-status-update-gateway-dev'),
+        'status' => env('SNS_STATUS_TOPIC', 'arn:aws:sns:us-east-2:781066913506:dray360-status-topic-dev'),
     ],
 
 ];
