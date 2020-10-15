@@ -23,12 +23,14 @@ const initialState = {
   sections: {
     shipment: { id: 'shipment-section', label: 'Shipment', subsection: false },
     equipment: { id: 'equipment-subsection', label: 'Equipment', subsection: true, parent: 'shipment' },
-    origin: { id: 'origin-subsection', label: 'Origin', subsection: true, parent: 'shipment' },
+    origin: { id: 'origin-subsection', label: 'Shipment Details', subsection: true, parent: 'shipment' },
     charges: { id: 'charges-subsection', label: 'Charges', subsection: true, parent: 'shipment' },
-    pickup: { id: 'pickup-section', label: 'Pickup', subsection: false },
+    bill_to: { id: 'bill-to-subsection', label: 'Bill To', subsection: true, parent: 'false' },
+    // pickup: { id: 'pickup-section', label: 'Pickup', subsection: false },
     itinerary: { id: 'itinerary-section', label: 'Itinerary', subsection: false },
-    inventory: { id: 'inventory-section', label: 'Inventory', subsection: false },
-    notes: { id: 'notes-section', label: 'Notes', subsection: false }
+    notes: { id: 'notes-section', label: 'Notes', subsection: false },
+    inventory: { id: 'inventory-section', label: 'Inventory', subsection: false }
+
   }
 }
 

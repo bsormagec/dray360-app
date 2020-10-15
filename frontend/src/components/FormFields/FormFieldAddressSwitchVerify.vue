@@ -156,7 +156,6 @@ export default {
     display: block;
     font-size: rem(14) !important;
     padding-bottom: rem(11);
-    border-bottom: rem(1) solid map-get($colors, grey-9);
     margin-bottom: rem(20);
     text-transform: capitalize;
   }
