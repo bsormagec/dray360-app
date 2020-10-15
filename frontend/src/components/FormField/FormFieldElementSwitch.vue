@@ -105,12 +105,12 @@ export default {
 
 <style lang="scss" scoped>
 .form-field-element-switch.no-children {
-  height: 6.6rem;
+  height: rem(66);
 }
 
 .switch__children {
   display: flex;
   flex-direction: column;
-  padding-left: 3.4rem;
+  padding-left: rem(34);
 }
 </style>

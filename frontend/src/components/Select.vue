@@ -77,12 +77,12 @@ export default {
 <style lang="scss" scoped>
 .select {
   position: relative;
-  height: 2.4rem;
+  height: rem(24);
   width: 100%;
-  max-width: 16rem;
+  max-width: rem(160);
 
   @media screen and (max-width: 1220px) {
-    max-width: 12rem;
+    max-width: rem(120);
   }
 
   .v-input {
@@ -95,8 +95,8 @@ i {
   position: absolute !important;
   top: 50%;
   transform: translateY(-50%);
-  right: 0.8rem;
-  font-size: 1.6rem !important;
+  right: rem(8);
+  font-size: rem(16) !important;
 }
 
 .select__label {
@@ -108,9 +108,9 @@ i {
   width: 100%;
   height: 100%;
   color: var(--v-primary-base);
-  border: 0.1rem solid var(--v-primary-base);
-  border-radius: 0.2rem;
-  padding: 0.2rem 2.4rem 0.3rem 0.8rem;
-  font-size: 1.3rem;
+  border: rem(1) solid var(--v-primary-base);
+  border-radius: rem(2);
+  padding: rem(2) rem(24) rem(3) rem(8);
+  font-size: rem(13);
 }
 </style>

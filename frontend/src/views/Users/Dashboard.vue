@@ -99,9 +99,9 @@ export default {
 </script>
 <style lang="scss" scoped>
   .user__list{
-    padding: 2rem !important;
+    padding: rem(20) !important;
   }
   .sidebar__navigation{
-    max-width: 20rem !important;
+    max-width: rem(200) !important;
   }
 </style>

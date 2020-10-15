@@ -217,15 +217,15 @@ export default {
 </script>
   <style lang="scss">
   .user__list{
-    padding: 2rem !important;
+    padding: rem(20) !important;
     margin: 0 auto;
     width: 95%;
     .search{
-      max-width: 30rem;
+      max-width: rem(300);
     }
     .v-data-table__wrapper table{
-      border: 0.2rem solid map-get($colors, grey) !important;
-      border-radius: 0.3rem;
+      border: rem(2) solid map-get($colors, grey) !important;
+      border-radius: rem(3);
     }
   }
   </style>

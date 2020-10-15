@@ -12,6 +12,7 @@
     >
       <v-btn
         color="primary"
+        class="footer-btn"
         :disabled="btn.disabled"
         :outlined="isOutlined(btn)"
         @click="btn.action(btn.value)"
@@ -53,7 +54,7 @@ export default {
   display: flex;
 
   &.altStyle {
-    margin: 0 1rem;
+    margin: 0 rem(10);
 
     .buttons__single {
       margin: unset;
@@ -63,18 +64,22 @@ export default {
     }
 
     .buttons__single:first-child .v-btn {
-      border-top-left-radius: 0.4rem;
-      border-bottom-left-radius: 0.4rem;
+      border-top-left-radius: rem(4);
+      border-bottom-left-radius: rem(4);
     }
 
     .buttons__single:last-child .v-btn {
-      border-top-right-radius: 0.4rem;
-      border-bottom-right-radius: 0.4rem;
+      border-top-right-radius: rem(4);
+      border-bottom-right-radius: rem(4);
     }
   }
 }
 
+.footer-btn::v-deep span.v-btn__content {
+  font-size: rem(12);
+}
+
 .buttons__single:not(:last-child) {
-  margin-right: 1rem;
+  margin-right: rem(10);
 }
 </style>

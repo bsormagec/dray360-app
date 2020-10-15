@@ -55,24 +55,24 @@ export default {
 
   data: () => ({
     headers: [
-      { text: 'Date', value: 'created_at', width: '6rem' },
-      { text: 'Shipment Direction', value: 'order.shipment_direction', width: '6rem' },
+      { text: 'Date', value: 'created_at', width: '60px' },
+      { text: 'Shipment Direction', value: 'order.shipment_direction', width: '60px' },
       {
         text: 'Status',
         value: 'latest_ocr_request_status.display_status',
-        width: '6rem'
+        width: '60px'
       },
-      { text: 'Bill to', value: 'order.bill_to_address.location_name', width: '8.5rem' },
-      { text: 'Reference Number.', value: 'order.reference_number', width: '6rem' },
-      { text: 'Container Number', value: 'order.unit_number', width: '6rem' },
-      { text: 'TMS ID', value: 'order.tms_shipment_id', width: '6rem' },
+      { text: 'Bill to', value: 'order.bill_to_address.location_name', width: '85px' },
+      { text: 'Reference Number.', value: 'order.reference_number', width: '60px' },
+      { text: 'Container Number', value: 'order.unit_number', width: '60px' },
+      { text: 'TMS ID', value: 'order.tms_shipment_id', width: '60px' },
       {
         text: 'Id',
         sortable: false,
         value: 'display_id',
-        width: '4rem'
+        width: '40px'
       },
-      { text: 'Actions', value: 'action', width: '8.5rem' }
+      { text: 'Actions', value: 'action', width: '85px' }
 
     ],
     statuses: [
@@ -132,15 +132,16 @@ export default {
 
 <style lang="scss" scoped>
 .list {
-  padding: 2rem 1rem;
+  padding: rem(20) rem(10);
   display: flex;
   flex-direction: column;
   flex-grow: unset;
   width: 100%;
 
   @media screen and (min-width: map-get($breakpoints, med)) {
-    padding: 5.2rem 3.2rem;
-    padding-left: map-get($sizes, sidebar-desktop-width) + 8rem;
+    // padding: 5.2rem 3.2rem;
+    padding: rem(52) rem(32);
+    padding-left: rem(map-get($sizes, sidebar-desktop-width)) + rem(80);
   }
 }
 </style>

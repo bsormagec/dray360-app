@@ -97,7 +97,7 @@ export default {
   height: 100vh;
   flex-grow: 1;
   overflow-y: auto;
-  padding: 2.6rem;
+  padding: rem(26);
   background: map-get($colors, grey-8);
   scroll-behavior: smooth;
   width: 100%;
@@ -111,7 +111,7 @@ export default {
     height: 50vh;
     max-width: 100vw;
     width: 100%;
-    padding: 1.6rem;
+    padding: rem(16);
 
     & .document__page {
       min-width: 100%;
@@ -135,7 +135,7 @@ export default {
   }
 
   &:not(:last-child) {
-    margin-bottom: 2.6rem;
+    margin-bottom: rem(26);
   }
 }
 
@@ -143,7 +143,7 @@ export default {
   cursor: pointer;
   position: absolute;
   background: rgba(yellow, 0.3);
-  border: 0.1rem solid rgba(yellow, 0.3);
+  border: rem(1) solid rgba(yellow, 0.3);
   transition: all 200ms ease-in-out;
 
   &.hover, &.edit {

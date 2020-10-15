@@ -5,18 +5,21 @@
       box-shadow: unset !important;
       padding-bottom: unset !important;
     }
-    .v-icon.v-icon::after {
-      width: 2.4rem !important;
-      height: 2.4rem !important;
+    .v-icon {
+      font-size: rem(12.5);
+      &::after {
+        width: rem(24) !important;
+        height: rem(24) !important;
+      }
     }
     .navigation__step {
       cursor: pointer;
       .v-stepper__label {
-        font-size: 1.4rem !important;
+        font-size: rem(14) !important;
       }
       &.small {
         .v-stepper__label {
-          font-size: 1.2rem !important;
+          font-size: rem(12) !important;
         }
         span {
           transform: scale(0.7);
@@ -32,7 +35,7 @@
           border-color: var(--v-primary-base) !important;
         }
         div {
-          text-shadow: 0px 0px 0px black !important;
+          text-shadow: 0 0 0 black !important;
         }
       }
       &.hide {
@@ -40,7 +43,7 @@
       }
     }
     .navigation__separator {
-      padding: 0.8rem !important;
+      padding: rem(8) !important;
       &.hide {
         display: none !important;
       }

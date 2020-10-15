@@ -8,15 +8,18 @@
       :search="search"
       show-select
       hide-default-footer
-
-      class=" user__list"
+      class="user__list"
     >
       <template v-slot:top>
         <v-toolbar
           flat
           color="white"
         >
-          <v-toolbar-title><h1>{{ tableTitle }} ({{ customItems.length }})</h1></v-toolbar-title>
+          <v-toolbar-title>
+            <h1 class="user-table-title">
+              {{ tableTitle }} ({{ customItems.length }})
+            </h1>
+          </v-toolbar-title>
 
           <v-spacer />
           <DateRangeCalendar
@@ -241,27 +244,34 @@ export default {
 }
 </script>
   <style lang="scss">
-  .user__list{
+  .user__list {
     margin: 0 auto;
     .search{
-      max-width: 30rem;
-       margin: 0 0.5rem;
+      max-width: rem(300);
+       margin: 0 rem(5);
+       font-size: rem(12);
+    }
+    .search {
+      label { font-size: rem(12); }
     }
     .v-data-table__wrapper table{
-      border: 0.2rem solid map-get($colors, grey) !important;
-      border-radius: 0.3rem;
+      td {
+        font-size: rem(12);
+      }
+      border: rem(2) solid map-get($colors, grey) !important;
+      border-radius: rem(3);
     }
     .user__filter{
-      max-width: 18rem;
-      height: 4rem !important;
-      margin: 0 0.5rem;
-
+      max-width: rem(180);
+      height: rem(40) !important;
+      margin: 0 rem(5);
+      span, label { font-size: rem(12); }
        .v-input__slot fieldset {
         border: 1px solid map-get($colors, mainblue ) !important;
 
       }
       .v-input__control > .v-input__slot{
-        min-height: 2rem !important;
+        min-height: rem(20) !important;
       }
       .v-label, span{
         color: map-get($colors, mainblue ) !important;
@@ -270,11 +280,21 @@ export default {
     .user_btn{
         background-color: map-get($colors, mainblue) !important;
         color: map-get($colors, white );
-        .add__user_btn{
-          width: 12rem;
-          height: 4rem !important;
+        // .add__user_btn{
+        //   width: rem(120);
+        //   height: rem(40) !important;
+        //   font-size: rem(12);
+        // }
+        .v-btn__content {
+          font-size: rem(12);
         }
     }
 
+  }
+
+  .user-table-title {
+    font-size: rem(26);
+    font-weight: 700;
+    letter-spacing: 0;
   }
   </style>

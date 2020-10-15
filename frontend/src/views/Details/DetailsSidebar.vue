@@ -11,7 +11,7 @@
       <v-btn
         color="primary"
         outlined
-        width="11.5rem"
+        width="115px"
         @click="goToOrdersList()"
       >
         <v-icon>
@@ -26,9 +26,9 @@
         v-if="hasPermissions('orders-edit')"
         :color="saveBtnStyles"
         :outlined="!isEditing && !isMobile"
-        :style="{ marginBottom: '1rem' }"
+        :style="{ marginBottom: '10px' }"
         test-id="toggle-btn"
-        width="11.5rem"
+        width="115px"
         @click="toggleIsEditing"
       >
         {{ isEditing ? 'Save' : 'Edit Order' }}
@@ -38,7 +38,7 @@
         v-if="!isMobile && hasPermissions('tms-submit')"
         color="primary"
         outlined
-        width="11.5rem"
+        width="115px"
         :disabled="disabled"
         @click="postSendToTms"
       >
@@ -53,7 +53,7 @@
       <v-btn
         color="primary"
         outlined
-        width="11.5rem"
+        width="115px"
         class="logout__btn"
         @click="logoutBtn"
       >
@@ -160,21 +160,21 @@ $ordermaster-logo: url("../../assets/images/ordermaster_logo.svg");
   display: flex;
   position: fixed;
   left: 0;
-  width: map-get($sizes, sidebar-desktop-width);
+  width: rem(map-get($sizes, sidebar-desktop-width));
   height: 100vh;
   flex-direction: column;
   align-items: center;
   background-color: map-get($colors, grey);
   box-shadow: map-get($properties, inset-shadow-right);
-  padding-top: 4rem;
-  padding-bottom: 3rem;
+  padding-top: rem(40);
+  padding-bottom: rem(30);
 
   &.mobile {
-    height: 7rem;
+    height: rem(70);
     bottom: 0;
     width: 100vw;
     padding: unset;
-    box-shadow: 0rem -0.4rem 1rem -0.8rem rgba(0,0,0,0.75);
+    box-shadow: 0 rem(-4) rem(10) rem(-8) rgba(0,0,0,0.75);
   }
 }
 
@@ -188,7 +188,7 @@ $ordermaster-logo: url("../../assets/images/ordermaster_logo.svg");
 // }
 
 .sidebar__body {
-  margin-top: 6rem;
+  margin-top: rem(60);
   margin-bottom: auto;
   display: flex;
   flex-direction: column;
@@ -201,7 +201,7 @@ $ordermaster-logo: url("../../assets/images/ordermaster_logo.svg");
     flex-direction: row;
     justify-content: space-between;
     align-items: center;
-    padding: 0 2rem;
+    padding: 0 rem(20);
 
     button {
       margin: unset!important;
@@ -210,17 +210,17 @@ $ordermaster-logo: url("../../assets/images/ordermaster_logo.svg");
 }
 
 .sidebar__footer {
-  width: 11.1rem;
-  height: 4.5rem;
-  min-height: 4.5rem;
-  margin-top: 6rem;
+  width: rem(111);
+  height: rem(45);
+  min-height: rem(45);
+  margin-top: rem(60);
   background-image: $ordermaster-logo;
   background-size: contain;
   background-position: center center;
   display: flex;
   flex-direction: column-reverse;
   .logout__btn{
-    margin: 5rem auto;
+    margin: rem(50) auto;
   }
 }
 </style>

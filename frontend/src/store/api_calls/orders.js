@@ -24,4 +24,6 @@ export const postUploadPDF = async (file) => axios.post('/api/createocrrequestup
 
 export const getDownloadPDFURL = async (orderId) => axios.get(`/api/orders/${orderId}/download-pdf`).then(data => [undefined, data.data]).catch(e => [e])
 
+export const reprocessOcrRequest = async (requestId) => axios.post(`/api/ocr/requests/${requestId}/reprocess`).then(data => [undefined, data.data]).catch(e => [e])
+
 export const postSendToTms = async (tmsData) => axios.post('/api/send-to-tms', tmsData).then(data => [undefined, data]).catch(e => [e])

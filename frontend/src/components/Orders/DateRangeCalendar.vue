@@ -7,7 +7,7 @@
       :return-value.sync="date"
       transition="scale-transition"
       offset-y
-      min-width="29rem"
+      min-width="290px"
     >
       <template v-slot:activator="{ on, attrs }">
         <v-text-field
@@ -79,29 +79,29 @@ export default {
 </script>
 <style lang="scss">
 .range__calendar{
-      max-width: 30rem;
-      width: 30rem;
-      margin-right: 1rem;
-      height: 0rem;
-      margin-bottom: 2.5rem;
+      max-width: rem(300);
+      width: rem(300);
+      margin-right: rem(10);
+      height: 0;
+      margin-bottom: rem(25);
       .calendar__input {
-        max-height: 3rem !important;
+        max-height: rem(30) !important;
          .v-input__prepend-outer{
-              margin-top: 0rem !important;
+              margin-top: 0 !important;
             }
           .v-input__slot{
-            min-height: 2rem !important;
+            min-height: rem(20) !important;
             .v-input__append-inner{
-              margin-top: 0rem !important;
+              margin-top: 0 !important;
               .v-input__icon > .v-icon{
-                margin-top: 0.3rem !important;
+                margin-top: rem(3);
               }
             }
             label{
-              top: 0.9rem !important;
-              height: 1rem !important;
-              line-height: 1rem !important;
-              font-size: 1rem !important;
+              top: rem(9);
+              height: rem(10);
+              line-height: rem(10);
+              font-size: rem(10);
               text-transform: lowercase !important;
             }
             fieldset{
@@ -109,7 +109,7 @@ export default {
             }
           }
           .v-input__control{
-            height: 3rem;
+            height: rem(30);
           }
       }
     }

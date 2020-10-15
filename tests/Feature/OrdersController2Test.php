@@ -41,6 +41,7 @@ class OrdersController2Test extends TestCase
                         'unit_number',
                         'reference_number',
                         'bill_to_address',
+                        'has_pdf',
                         'latest_ocr_request_status' => [
                             'display_status',
                             'display_message',

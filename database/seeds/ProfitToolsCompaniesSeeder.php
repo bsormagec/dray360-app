@@ -19,7 +19,7 @@ class ProfitToolsCompaniesSeeder extends Seeder
 
         collect([
             Company::CUSHING,
-            Company::TCOMPANIES_DEV,
+            Company::TCOMPANIES_DEMO,
             Company::POLARIS,
             Company::IXT_ONBOARDING,
             Company::IXT,

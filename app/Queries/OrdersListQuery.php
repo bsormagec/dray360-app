@@ -3,6 +3,8 @@
 namespace App\Queries;
 
 use App\Models\Order;
+use App\Models\OCRRequestStatus;
+use Illuminate\Support\Facades\DB;
 use Spatie\QueryBuilder\AllowedSort;
 use Spatie\QueryBuilder\QueryBuilder;
 use App\Queries\Sorts\OrderStatusSort;
@@ -14,6 +16,13 @@ class OrdersListQuery extends QueryBuilder
 {
     public function __construct()
     {
+        $hasPdfSelect = <<<ENDOFSQL
+            if (
+                json_extract(s_pdf.status_metadata, '$.document_archive_location') is null,
+                0,
+                1
+            ) as has_pdf
+        ENDOFSQL;
         $query = Order::query()
             ->select([
                 't_orders.id',
@@ -26,6 +35,12 @@ class OrdersListQuery extends QueryBuilder
                 't_orders.bill_to_address_id',
                 't_orders.unit_number',
                 't_orders.reference_number',
+            ])
+            ->addSelect(['has_pdf' => OCRRequestStatus::from('t_job_state_changes', 's_pdf')
+                ->select(DB::raw($hasPdfSelect))
+                ->whereColumn('s_pdf.request_id', 't_orders.request_id')
+                ->where('status', OCRRequestStatus::INTAKE_ACCEPTED)
+                ->limit(1)
             ])
             ->leftJoin('t_addresses as bill_to', 'bill_to.id', '=', 't_orders.bill_to_address_id')
             ->when(! is_superadmin() && currentCompany(), function ($query) {
