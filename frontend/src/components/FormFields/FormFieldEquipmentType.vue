@@ -51,13 +51,13 @@
       </div>
       <v-dialog
         :value="isOpen"
-        width="70rem"
+        width="49rem"
         scrollable
         class="equipment__dialog"
         @click:outside="toggledialg"
       >
         <v-card
-          height="79rem"
+          height="49rem"
         >
           <v-card-title>
             <v-row>
@@ -217,9 +217,6 @@ export default {
       deep: true
     }
   },
-  mounted () {
-    console.log(this.equipmentType)
-  },
   async beforeMount () {
     const [error, response] = await getEquipmentTypeOptions(this.companyId, this.tmsProviderId)
     if (!error) {
@@ -267,61 +264,60 @@ export default {
 </script>
 
 <style lang="scss">
-
-  .title__dialog{
-    color: map-get($colors, slate-gray );
+.title__dialog{
+  color: map-get($colors, slate-gray );
+  font-size: rem(20);
+  line-height: rem(23.44);
+  letter-spacing: rem(0.15);
+  font-weight: 500;
+}
+.equipment__section{
+  font-weight: bold;
+  font-size: rem(14) !important;
+  letter-spacing: 0.025rem;
+  .not__found{
+    color: map-get($colors, red);
   }
-
-  .equipment__section{
-    font-weight: bold;
-    font-size: 1.4rem !important;
-    letter-spacing: 0.025rem;
-    .not__found{
-      color: map-get($colors, red);
-    }
-    .not__verify{
-      color: map-get($colors, warning);
-    }
+  .not__verify{
+    color: map-get($colors, warning);
   }
-  .field__name{
-    font-size: 1.4rem !important;
-    font-weight: bold;
-    text-transform: capitalize;
-
-  }
-  .header__filters{
-    height: 6rem;
+}
+.field__name{
+  font-size: 0.875rem !important;
+  font-weight: bold;
+  text-transform: capitalize;
+}
+.header__filters{
+  height: rem(60);
+  display: flex;
+  align-items: baseline;
+  span{
+    color: var(--v-primary-base);
     display: flex;
-    align-items: baseline;
-    span{
-      color: var(--v-primary-base);
-      display: flex;
-      justify-content: center;
-    }
+    justify-content: center;
   }
-  .selected__equipment{
-    display: flex;
-    justify-content: flex-end;
-
-  }
-
-  .table__background{
-    background-color: map-get($colors, modal-header-bg) !important;
-  }
+}
+.selected__equipment{
+  display: flex;
+  justify-content: flex-end;
+}
+.table__background{
+  background-color: map-get($colors, modal-header-bg) !important;
+}
 .v-dialog > .v-card > .v-card__text{
-    padding: 0 0rem 2rem !important;
-  }
+  padding: 0 0 rem(20) !important;
+}
 .v-data-table-header th {
-    background-color: #E5E5E5 !important;
+  background-color: #E5E5E5 !important;
 }
 .EquipmentType {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  .equipment__section{
+    justify-content: flex-end;
     display: flex;
-    justify-content: space-between;
     align-items: center;
-    .equipment__section{
-      justify-content: flex-end;
-      display: flex;
-      align-items: center;
-    }
+  }
 }
 </style>

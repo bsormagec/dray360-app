@@ -134,15 +134,15 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-$border-bottom: 0.1rem solid map-get($colors , grey-11);
+$border-bottom: rem(1) solid map-get($colors , grey-11);
 
 .modal-select__link {
   cursor: pointer;
-  font-size: 1.44rem !important;
+  font-size: rem(14.4) !important;
   text-decoration: underline;
   text-transform: capitalize;
   color: var(--v-primary-base);
-  margin-bottom: 1rem;
+  margin-bottom: rem(10);
 }
 
 .modal-select__card {
@@ -154,11 +154,11 @@ $border-bottom: 0.1rem solid map-get($colors , grey-11);
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 2.1rem 2rem 1.8rem 1.7rem;
+  padding: rem(21) rem(20) rem(18) rem(17);
   border-bottom: $border-bottom;
 
   h3 {
-    font-size: 1.8rem;
+    font-size: rem(18);
   }
 }
 
@@ -166,11 +166,11 @@ $border-bottom: 0.1rem solid map-get($colors , grey-11);
   display: flex;
   justify-content: space-between;
   flex-wrap: wrap;
-  padding: 1.5rem 1.5rem 2.1rem 1.9rem;
+  padding: rem(15) rem(15) rem(21) rem(19);
   border-bottom: $border-bottom;
 
   span {
-    font-size: 1.44rem !important;
+    font-size: rem(14.4) !important;
   }
 }
 
@@ -181,12 +181,12 @@ $border-bottom: 0.1rem solid map-get($colors , grey-11);
 
 .item__title {
   width: 100%;
-  font-size: 1.44rem;
-  margin-bottom: 0.5rem;
+  font-size: rem(14.4);
+  margin-bottom: rem(5);
 }
 
 .left__contact-name {
-  margin-bottom: 0.5rem;
+  margin-bottom: rem(5);
 
   span {
     &:last-child {
@@ -200,18 +200,18 @@ $border-bottom: 0.1rem solid map-get($colors , grey-11);
   align-items: center;
 
   i {
-    margin-right: 1rem;
+    margin-right: rem(10);
   }
 }
 
 .left__email {
   i {
-    margin-right: 1rem;
+    margin-right: rem(10);
   }
 }
 
 .item__center {
-  max-width: 20.5rem;
+  max-width: rem(205);
 }
 
 .center__address {
@@ -219,7 +219,7 @@ $border-bottom: 0.1rem solid map-get($colors , grey-11);
   align-items: flex-start;
 
   i {
-    margin-right: 1rem;
+    margin-right: rem(10);
   }
 }
 </style>

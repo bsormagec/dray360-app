@@ -46,19 +46,22 @@ export default {
 
 <style lang="scss" scoped>
 .submitted__title {
-  border-bottom: 0.1rem solid map-get($colors, grey-2);
-  margin-bottom: 1.7rem;
+  border-bottom: rem(1) solid map-get($colors, grey-2);
+  margin-bottom: rem(17);
+  font-size: rem(16);
+  font-weight: 700;
+  letter-spacing: 0;
 }
 
 .submitted__file {
   display: flex;
   align-items: center;
-  margin-bottom: 2.4rem;
+  margin-bottom: rem(24);
 
   span {
-    margin-left: 0.7rem;
-    margin-right: 1.9rem;
-    font-size: 1.4rem !important;
+    margin-left: rem(7);
+    margin-right: rem(19);
+    font-size: rem(14);
     font-weight: bold;
     color: var(--v-primary-base);
     text-decoration-line: underline;
@@ -67,4 +70,5 @@ export default {
     text-overflow: ellipsis;
   }
 }
+
 </style>

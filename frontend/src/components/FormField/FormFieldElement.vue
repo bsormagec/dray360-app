@@ -188,7 +188,7 @@ export default {
 
 .element__label {
   display: block;
-  font-size: 1.4rem !important;
+  font-size: rem(14) !important;
   text-transform: capitalize;
   color: map-get($colors, black-2);
 }
@@ -196,18 +196,18 @@ export default {
 .element__info-title {
   display: flex;
   align-items: center;
-  font-size: 1.6rem !important;
+  font-size: rem(16) !important;
   font-weight: bold;
-  line-height: 3.6rem;
+  line-height: rem(36);
   color: map-get($colors, grey-4);
-  margin-bottom: 3rem;
+  margin-bottom: rem(30);
   text-transform: capitalize;
-  border-bottom: 0.1rem solid map-get($colors, grey-10);
+  border-bottom: ren(1) solid map-get($colors, grey-10);
 
   i {
-    margin-left: 1rem;
-    width: 1.8rem;
-    height: 1.8rem;
+    margin-left: rem(10);
+    width: rem(18);
+    height: rem(18);
   }
 }
 </style>

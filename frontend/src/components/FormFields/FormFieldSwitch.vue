@@ -62,7 +62,7 @@ export default {
 
 <style lang="scss" scoped>
 .form-field-element-switch {
-  margin-left: 2rem;
+  margin-left: rem(20);
   width: 100%;
 }
 </style>

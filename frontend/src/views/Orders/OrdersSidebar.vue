@@ -14,7 +14,7 @@
       <v-btn
         color="primary"
         outlined
-        width="11.5rem"
+        width="115px"
         class="logout__btn"
         @click="logoutBtn"
       >
@@ -39,7 +39,7 @@
           <v-btn
             color="primary"
             :outlined="activeMobileTab !== tabs.list"
-            :style="{marginBottom: '1rem'}"
+            :style="{marginBottom: '10px'}"
             @click="changeMobileTab(tabs.list)"
           >
             orders list
@@ -56,9 +56,9 @@
         <v-btn
           color="primary"
           outlined
-          width="11.5rem"
+          width="115px"
           class="logout__btn"
-          style="margin-top: 4rem;"
+          style="margin-top: 40px;"
           @click="logoutBtn"
         >
           Logout
@@ -131,14 +131,14 @@ $ordermaster-logo: url("../../assets/images/ordermaster_logo.svg");
   z-index: 1;
   display: none;
   position: fixed;
-  width: map-get($sizes, sidebar-desktop-width);
+  width: rem(map-get($sizes, sidebar-desktop-width));
   height: 100%;
   flex-direction: column;
   align-items: center;
   background-color: map-get($colors, grey);
   box-shadow: map-get($properties, inset-shadow-right);
-  padding-top: 4rem;
-  padding-bottom: 3rem;
+  padding-top: rem(40);
+  padding-bottom: rem(30);
 
   @media screen and (min-width: map-get($breakpoints, med)) {
     display: flex;
@@ -156,8 +156,8 @@ $ordermaster-logo: url("../../assets/images/ordermaster_logo.svg");
   align-items: center;
   background-color: map-get($colors, grey);
   box-shadow: map-get($properties, inset-shadow-right);
-  padding-top: 6.1rem;
-  padding-bottom: 3rem;
+  padding-top: rem(61);
+  padding-bottom: rem(30);
 }
 
 .sidebar__backdrop {
@@ -172,22 +172,22 @@ $ordermaster-logo: url("../../assets/images/ordermaster_logo.svg");
 
 .sidebar__close {
   position: absolute;
-  top: 2.4rem;
-  left: 1.5rem;
+  top: rem(24);
+  left: rem(15);
 }
 
 .sidebar__logo {
-  width: 14rem;
-  height: 4.3rem;
+  width: rem(140);
+  height: rem(43);
   // background-image: $cushing-logo;
   background-size: contain;
   background-position: center center;
 }
 
 .sidebar__footer {
-  width: 11.1rem;
-  height: 4.5rem;
-  margin-top: 4rem;
+  width: rem(111);
+  height: rem(45);
+  margin-top: rem(40);
   background-image: $ordermaster-logo;
   background-size: contain;
   background-position: center center;
@@ -199,14 +199,14 @@ $ordermaster-logo: url("../../assets/images/ordermaster_logo.svg");
   }
 
   .logout__btn{
-    margin: 7rem auto;
+    margin: rem(70) auto;
   }
 }
 
 .sidebar__mobile-options {
   display: flex;
   flex-direction: column;
-  margin-top: 3.8rem;
+  margin-top: rem(38);
   margin-bottom: auto;
 }
 </style>

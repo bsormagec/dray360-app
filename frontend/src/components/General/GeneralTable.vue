@@ -235,24 +235,24 @@ export default {
   .user__list{
     margin: 0 auto;
     .search{
-      max-width: 30rem;
-       margin: 0 0.5rem;
+      max-width: rem(30);
+       margin: 0 rem(5);
     }
     .v-data-table__wrapper table{
-      border: 0.2rem solid map-get($colors, grey) !important;
-      border-radius: 0.3rem;
+      border: rem(2) solid map-get($colors, grey) !important;
+      border-radius: rem(3);
     }
     .user__filter{
-      max-width: 18rem;
-      height: 4rem !important;
-      margin: 0 0.5rem;
+      max-width: rem(180);
+      height: rem(40) !important;
+      margin: 0 rem(5);
 
        .v-input__slot fieldset {
         border: 1px solid map-get($colors, mainblue ) !important;
 
       }
       .v-input__control > .v-input__slot{
-        min-height: 2rem !important;
+        min-height: rem(20) !important;
       }
       .v-label, span{
         color: map-get($colors, mainblue ) !important;
@@ -262,8 +262,8 @@ export default {
         background-color: map-get($colors, mainblue) !important;
         color: map-get($colors, white );
         .add__user_btn{
-          width: 12rem;
-          height: 4rem !important;
+          width: rem(120);
+          height: rem(40) !important;
         }
     }
 

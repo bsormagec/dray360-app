@@ -2,7 +2,7 @@
   <div class="create">
     <div class="create__close">
       <v-icon
-        :style="{ position: 'absolute', top: '2.4rem', left: '1.5rem' }"
+        :style="{ position: 'absolute', top: '24px', left: '15' }"
         @click="toggleMobileSidebar"
       >
         mdi-menu
@@ -32,7 +32,8 @@
 
     <v-btn
       color="primary"
-      :style="{ marginLeft: 'auto', marginTop: '1.1rem' }"
+      class="submit-order-btn"
+      :style="{ marginLeft: 'auto', marginTop: '11px' }"
       @click="createOrder()"
     >
       create order
@@ -120,20 +121,20 @@ export default {
   display: flex;
   flex-direction: column;
   width: 100%;
-  padding: 5rem 1rem;
+  padding: rem(50) rem(10);
   overflow-x: hidden;
 
   @media screen and (min-width: map-get($breakpoints, med)) {
     min-width: 25%;
     max-width: 25%;
     box-shadow: map-get($properties, inset-shadow-left);
-    border-left: 0.1rem solid map-get($colors, grey-2);
-    padding: 5.2rem 1.6rem;
-    padding-bottom: 3rem;
+    border-left: rem(1) solid map-get($colors, grey-2);
+    padding: rem(52) rem(16);
+    padding-bottom: rem(30);
   }
 
   @media screen and (min-width: map-get($breakpoints, lg)) {
-    padding: 5.2rem 3.6rem;
+    padding: rem(52) rem(36);
   }
 }
 
@@ -146,11 +147,16 @@ export default {
 .create__header {
   display: flex;
   width: 100%;
-  border-bottom: .2rem solid map-get($colors, grey-2);
+  border-bottom: rem(2) solid map-get($colors, grey-2);
 }
 
 .header__btn {
   margin: 0 auto;
-  margin-bottom: 3.2rem;
+  margin-bottom: rem(32);
+  font-size: rem(12);
+}
+
+.submit-order-btn::v-deep .v-btn__content {
+  font-size: rem(12);
 }
 </style>

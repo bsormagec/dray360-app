@@ -87,19 +87,19 @@ const routes = [
   },
   {
     path: '/order/:id',
-    name: 'Details',
-    meta: {
-      middleware: [auth]
-    },
-    component: Details
-  },
-  {
-    path: '/order-test/:id',
     name: 'OrderDetails',
     meta: {
       middleware: [auth]
     },
     component: OrderDetails
+  },
+  {
+    path: '/order-test/:id',
+    name: 'Details',
+    meta: {
+      middleware: [auth]
+    },
+    component: Details
   },
   {
     path: '/login',

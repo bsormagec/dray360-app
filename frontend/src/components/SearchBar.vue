@@ -36,17 +36,18 @@ export default {
 <style lang="scss" scoped>
 .search-bar {
   position: relative;
-  height: 2.4rem;
-  min-width: 9rem;
+  height: rem(24);
+  min-width: rem(90);
 
   input {
     width: 100%;
     height: 100%;
     outline: none;
-    padding: 0 2.5rem 0 1rem;
-    border-radius: 0.2rem;
-    border: 0.1rem solid map-get($colors , grey-10);
+    padding: 0 rem(25) 0 rem(10);
+    border-radius: rem(2);
+    border: rem(1) solid map-get($colors , grey-10);
     transition: border-color 200ms ease-in-out;
+    font-size: rem(12);
 
     &:focus {
       border-color: var(--v-primary-base);
@@ -57,8 +58,8 @@ export default {
     position: absolute;
     top: 50%;
     transform: translateY(-50%);
-    right: 0.5rem;
-    font-size: 1.8rem;
+    right: rem(5);
+    font-size: rem(18);
   }
 }
 </style>

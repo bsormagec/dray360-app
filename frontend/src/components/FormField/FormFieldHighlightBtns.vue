@@ -48,12 +48,12 @@ export default {
   right: 0;
   display: flex;
   background: map-get($colors , white);
-  border-top: 0.1rem solid var(--v-primary-base);
-  border-left: 0.1rem solid var(--v-primary-base);
-  border-top-left-radius: 0.2rem;
+  border-top: rem(1) solid var(--v-primary-base);
+  border-left: rem(1) solid var(--v-primary-base);
+  border-top-left-radius: rem(2);
 
   &:not(:last-child) {
-    border-right: 0.1rem solid var(--v-primary-base);
+    border-right: rem(1) solid var(--v-primary-base);
   }
 }
 
@@ -62,11 +62,11 @@ export default {
 }
 
 i {
-  font-size: 1.6rem !important;
+  font-size: rem(16) !important;
 }
 
 .btns__close, .btns__accept {
-  margin-top: -0.1rem;
+  margin-top: rem(-1);
   cursor: pointer;
 }
 

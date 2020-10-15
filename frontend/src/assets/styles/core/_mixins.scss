@@ -1,0 +1,15 @@
+@mixin media($breakpoint) {
+  @each $breakpoint-name, $breakpoint-query in $breakpoints {
+    @if $breakpoint == $breakpoint-name {
+      @media #{$breakpoint-query} {
+        @content;
+      }
+    }
+  }
+}
+
+@mixin center{
+  position: absolute;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}

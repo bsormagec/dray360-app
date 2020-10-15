@@ -22,6 +22,7 @@ use App\Http\Controllers\Api\Auth\ResetPasswordController;
 use App\Http\Controllers\Api\OCRRulesAssignmentController;
 use App\Http\Controllers\Api\AccesorialCompaniesController;
 use App\Http\Controllers\Api\Auth\ForgotPasswordController;
+use App\Http\Controllers\Api\OcrRequestReprocessController;
 use App\Http\Controllers\Api\DownloadOriginalOrderPdfController;
 use App\Http\Controllers\Api\EquipmentTypesSelectValuesController;
 
@@ -116,6 +117,10 @@ Route::group(['middleware' => ['auth:sanctum', 'impersonate', 'tenant-aware']], 
     // Authenticated route to get document upload URI
     Route::post('createocrrequestuploaduri', [OCRRequestController::class, 'createOCRRequestUploadURI'])
         ->name('createocruploaduri');
+
+    // Reprocess the given OCR request
+    Route::post('ocr/requests/{request_id}/reprocess', OcrRequestReprocessController::class)
+        ->name('ocr.requests.reprocess');
 
     // CRUD for OCR Request
     Route::apiResource('ocr/requests', OCRRequestController::class, ['as' => 'ocr'])

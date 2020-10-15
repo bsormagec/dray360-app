@@ -9,7 +9,7 @@
       }
 
       td {
-        border: 0.1rem solid #dadddd;
+        border: rem(1) solid #dadddd;
         .split-btn {
           margin: 0 -16px;
         }
@@ -27,7 +27,7 @@
       }
     
       .v-select__selections {
-        max-height: 2.5rem;
+        max-height: rem(25);
         overflow: hidden;
         display: flex;
         flex-direction: column;
@@ -37,10 +37,10 @@
   
   .buttons {
     button {
-      min-width: 4rem !important;
+      min-width: rem(40) !important;
     
       @media screen and (min-width: map-get($breakpoints, med)) {
-        min-width: 6.4rem !important;
+        min-width: rem(64) !important;
       }
     }
   }

@@ -143,15 +143,24 @@ export default {
 }
 </script>
 <style lang="scss" scoped>
-input{
-        border: 0.1rem solid lightgray;
-        margin: 0.5rem auto;
-        padding: 0.5rem 6.5rem;
-        border-radius: 0.5rem;
+.v-toolbar__title h1 {
+  font-size: rem(26);
+  font-weight: 700;
+  letter-spacing: 0;
+}
+input {
+  font-size: rem(12);
+  border: rem(1) solid lightgray;
+  margin: rem(5) auto;
+  padding: rem(5) rem(65);
+  border-radius: rem(5);
 
-      }
-  .button {
-    margin-right: 1.0rem;
-    letter-spacing: 0.07rem;
-  }
+}
+.button {
+  margin-right: rem(10);
+  letter-spacing: rem(.7);
+}
+.v-input::v-deep input {
+  font-size: rem(12);
+}
 </style>

@@ -1,7 +1,7 @@
 <template>
   <v-dialog
     :value="isOpen"
-    max-width="70rem"
+    max-width="700px"
     scrollable
     @click:outside="() => change(undefined)"
   >
@@ -199,32 +199,41 @@ export default {
 
 <style lang="scss" scoped>
 .address__search fieldset {
-  height: 5.5rem;
+  height: rem(55);
 }
 .v-card__title {
   display: flex;
   align-items: baseline;
-  border-bottom: 0.1rem solid map-get($colors, grey-11);
-  height: 8rem;
+  border-bottom: rem(1) solid map-get($colors, grey-11);
+  height: rem(80);
+  h1 {
+    font-size: rem(26);
+    font-weight: 700;
+    letter-spacing: rem(.15);
+    line-height: (20 / 26);
+  }
 }
-.v-data-table td {
-  height: 10rem;
-  width: 18rem;
+.v-data-table {
+  td {
+    height: rem(100);
+    width: rem(180);
+    font-size: rem(12);
+  }
 }
 .fullAddress {
   width: 40% !important;
-  margin: 3rem auto;
+  margin: rem(30) auto;
   span:last-child {
-    width: 20rem !important;
+    width: rem(200) !important;
     display: inline-block;
   }
 }
 .col__icon {
   width: 5% !important;
-  padding: 0rem !important;
+  padding: 0 !important;
 }
 .col__address {
   width: 40% !important;
-  padding: 0rem !important;
+  padding: 0 !important;
 }
 </style>
