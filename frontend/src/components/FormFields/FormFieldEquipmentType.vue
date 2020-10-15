@@ -51,13 +51,13 @@
       </div>
       <v-dialog
         :value="isOpen"
-        width="70rem"
+        width="49rem"
         scrollable
         class="equipment__dialog"
         @click:outside="toggledialg"
       >
         <v-card
-          height="79rem"
+          height="49rem"
         >
           <v-card-title>
             <v-row>
@@ -217,9 +217,6 @@ export default {
       deep: true
     }
   },
-  mounted () {
-    console.log(this.equipmentType)
-  },
   async beforeMount () {
     const [error, response] = await getEquipmentTypeOptions(this.companyId, this.tmsProviderId)
     if (!error) {
@@ -269,6 +266,10 @@ export default {
 <style lang="scss">
 .title__dialog{
   color: map-get($colors, slate-gray );
+  font-size: rem(20);
+  line-height: rem(23.44);
+  letter-spacing: rem(0.15);
+  font-weight: 500;
 }
 .equipment__section{
   font-weight: bold;
@@ -282,7 +283,7 @@ export default {
   }
 }
 .field__name{
-  font-size: 1.4rem !important;
+  font-size: 0.875rem !important;
   font-weight: bold;
   text-transform: capitalize;
 }
