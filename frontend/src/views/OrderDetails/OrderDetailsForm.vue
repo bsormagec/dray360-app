@@ -293,7 +293,6 @@
             :recognized-text="orderAddressEvent.t_address_raw_text"
             :verified="orderAddressEvent.t_address_verified || false"
             :matched-address="orderAddressEvent.address"
-            billable
             @change="(e) => handleChange(`order_address_events.${index}`, e)"
           />
         </Fragment>
