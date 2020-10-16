@@ -2,7 +2,10 @@
   <!--  eslint-disable vue/no-v-html -->
   <div class="form-field-element-modal-address">
     <div class="address-book-modal">
-      <span class="address-book-modal__title"><strong>{{ label }}</strong></span>
+      <span
+        v-if="label !== ''"
+        class="address-book-modal__title"
+      ><strong>{{ label }}</strong></span>
 
       <div class="address-book-modal__body">
         <div
@@ -78,7 +81,7 @@ export default {
   },
 
   props: {
-    label: { type: String, required: true },
+    label: { type: String, required: false, default: '' },
     verified: { type: Boolean, required: true },
     recognizedText: { type: String, default: '' },
     matchedAddress: { required: true },
