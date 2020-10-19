@@ -263,7 +263,7 @@ export default {
 }
 </script>
 
-<style lang="scss">
+<style lang="scss" scoped>
 .title__dialog{
   color: map-get($colors, slate-gray );
   font-size: rem(20);

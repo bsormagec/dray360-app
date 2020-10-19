@@ -42,7 +42,10 @@ export default {
   },
   methods: {
     ...mapActions(orders.moduleName, [types.getDownloadPDFURL]),
-    ...mapActions(utils.moduleName, { setSnackbar: utilTypes.setSnackbar }),
+    ...mapActions(utils.moduleName, {
+      setSnackbar: utilTypes.setSnackbar,
+      setConfirmDialog: utilTypes.setConfirmationDialog
+    }),
     async downloadPDF (orderId) {
       this.loading = true
       const request = await this[types.getDownloadPDFURL](orderId)
@@ -62,18 +65,23 @@ export default {
       console.log('view order history')
     },
     async reprocessRequest ({ request_id }) {
-      this.loading = true
+      this.setConfirmDialog({
+        title: 'Are you sure you want to reprocess the request associated to this order?',
+        onConfirm: async () => {
+          this.loading = true
 
-      const [error] = await reprocessOcrRequest(request_id)
+          const [error] = await reprocessOcrRequest(request_id)
 
-      if (error !== undefined) {
-        this.loading = false
-        this.setSnackbar({ show: true, message: 'There was an error trying to send the message to reprocess' })
-        return
-      }
+          if (error !== undefined) {
+            this.loading = false
+            this.setSnackbar({ show: true, message: 'There was an error trying to send the message to reprocess' })
+            return
+          }
 
-      this.setSnackbar({ show: true, message: 'Request sent for reprocessing' })
-      this.loading = false
+          this.setSnackbar({ show: true, message: 'Request sent for reprocessing' })
+          this.loading = false
+        }
+      })
     },
     checkId (orderId) {
       if (orderId) {
