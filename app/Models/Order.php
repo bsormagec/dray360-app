@@ -168,7 +168,7 @@ class Order extends Model
      */
     public static $rules = [
         'shipment_designation' => 'sometimes|nullable',
-        'equipment_type' => 'sometimes|nullable',
+        //'equipment_type' => 'sometimes|nullable', comented due to has the same key in relation equipmentType and is throwing an error at save
         'shipment_direction' => 'sometimes|nullable',
         'one_way' => 'sometimes|nullable',
         'yard_pre_pull' => 'sometimes|nullable',

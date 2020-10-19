@@ -11,11 +11,10 @@
         <v-btn
           rounded
           outlined
-          v-bind="buttonAttributes"
+          v-bind="[mainButtonAttributes, buttonAttributes]"
           color="primary"
           class="split-btn__primary"
-          title="Go to Order Details"
-          :href="mainAction.path"
+          @click="mainButtonAttributes.action"
           :loading="loading"
         >
           {{ mainAction.title }}
@@ -95,6 +94,13 @@ export default {
         small: !this.floated,
         elevation: this.floated ? 3 : 0,
         disabled: this.disabled
+      }
+    },
+    mainButtonAttributes () {
+      return {
+        href: this.mainAction.path !== "" ? this.mainAction.path : null,
+        title: this.mainAction.title !== "" ? this.mainAction.title : false,
+        action: typeof this.mainAction.action === 'function' ? this.mainAction.action : ""
       }
     }
   },

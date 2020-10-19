@@ -3,6 +3,7 @@
     :main-action="{
       title: 'View',
       path: `/order/${item.order.id}`,
+      action: false,
       hasPermission: hasPermission('orders-view')
     }"
     :options="[
