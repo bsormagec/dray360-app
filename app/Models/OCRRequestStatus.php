@@ -38,7 +38,9 @@ class OCRRequestStatus extends Model
     FAILURE_UPDATING_TO_WINT = 'failure-updating-to-wint',
     SUCCESS_UPDATING_TO_WINT = 'success-updating-to-wint',
     SHIPMENT_UPDATED_BY_WINT = 'shipment-updated-by-wint',
-    SHIPMENT_NOT_UPDATED_BY_WINT = 'shipment-not-updated-by-wint'
+    SHIPMENT_NOT_UPDATED_BY_WINT = 'shipment-not-updated-by-wint',
+    UPDATES_PRIOR_ORDER = 'updates-prior-order',
+    UPDATED_BY_SUBSEQUENT_ORDER = 'updated-by-subsequent-order'
     ;
 
     const STATUS_MAP = [
@@ -64,7 +66,10 @@ class OCRRequestStatus extends Model
         self::FAILURE_UPDATING_TO_WINT => 'Rejected',
         self::SUCCESS_UPDATING_TO_WINT => 'Sent to TMS',
         self::SHIPMENT_UPDATED_BY_WINT => 'Accepted by TMS',
-        self::SHIPMENT_NOT_UPDATED_BY_WINT => 'Rejected'
+        self::SHIPMENT_NOT_UPDATED_BY_WINT => 'Rejected',
+
+        self::UPDATES_PRIOR_ORDER => 'Update',
+        self::UPDATED_BY_SUBSEQUENT_ORDER => 'Replaced',
     ];
 
     public $table = 't_job_state_changes';

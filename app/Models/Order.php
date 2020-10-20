@@ -57,6 +57,11 @@ use Illuminate\Database\Eloquent\SoftDeletes;
  * @property string $t_tms_provider_id
  * @property string $tms_shipment_id
  * @property string $carrier
+ * @property string $preceded_by_order_id
+ * @property string $succeded_by_order_id
+ * @property \Carbon\Carbon $tms_submission_datetime
+ * @property \Carbon\Carbon $tms_cancelled_datetime
+ * @property \Carbon\Carbon $cancelled_datetime
  */
 class Order extends Model
 {
@@ -132,6 +137,11 @@ class Order extends Model
         'division_code',
         't_equipment_type_id',
         'equipment_type_verified',
+        'preceded_by_order_id',
+        'succeded_by_order_id',
+        'tms_submission_datetime',
+        'tms_cancelled_datetime',
+        'cancelled_datetime',
     ];
 
     /**
@@ -219,7 +229,22 @@ class Order extends Model
         'division_code' => 'sometimes|nullable',
         't_equipment_type_id' => 'sometimes|nullable|exists:t_equipment_types,id',
         'equipment_type_verified' => 'sometimes|nullable',
+        'preceded_by_order_id' => 'sometimes|nullable',
+        'succeded_by_order_id' => 'sometimes|nullable',
+        'tms_submission_datetime' => 'sometimes|nullable',
+        'tms_cancelled_datetime' => 'sometimes|nullable',
+        'cancelled_datetime' => 'sometimes|nullable',
     ];
+
+    public function precededByOrder()
+    {
+        return $this->belongsTo(Order::class, 'preceded_by_order_id');
+    }
+
+    public function succededByOrder()
+    {
+        return $this->belongsTo(Order::class, 'succeded_by_order_id');
+    }
 
     public function orderAddressEvents()
     {

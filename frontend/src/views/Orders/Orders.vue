@@ -94,7 +94,9 @@ export default {
         'success-updating-to-wint',
         'failure-updating-to-wint',
         'shipment-updated-by-wint',
-        'shipment-not-updated-by-wint'
+        'shipment-not-updated-by-wint',
+        'updates-prior-order',
+        'updated-by-subsequent-order'
       ]
     }
   },

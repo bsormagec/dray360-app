@@ -98,7 +98,10 @@ export default {
       { text: 'success-updating-to-wint', value: 'success-updating-to-wint' },
       { text: 'failure-updating-to-wint', value: 'failure-updating-to-wint' },
       { text: 'shipment-updated-by-wint', value: 'shipment-updated-by-wint' },
-      { text: 'shipment-not-updated-by-wint', value: 'shipment-not-updated-by-wint' }
+      { text: 'shipment-not-updated-by-wint', value: 'shipment-not-updated-by-wint' },
+
+      { text: 'updates-prior-order', value: 'updates-prior-order' },
+      { text: 'updated-by-subsequent-order', value: 'updated-by-subsequent-order' }
     ]
   }),
 

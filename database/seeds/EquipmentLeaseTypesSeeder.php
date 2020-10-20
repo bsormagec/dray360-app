@@ -48,8 +48,6 @@ class EquipmentLeaseTypesSeeder extends Seeder
         ]
     ];
 
-    const TOMS_TERMINAL_LIST_CSV_FILE = 'database/seeds/Copy-of-list-of-terminals-work-in-progress.20200517.csv';
-
     /**
      * Run the database seeds.
      *
