@@ -56,4 +56,13 @@ class OrdersController extends Controller
 
         return response()->json($order->prepareForSideBySide(false));
     }
+
+    public function destroy(Order $order)
+    {
+        $this->authorize('delete', $order);
+
+        $order->delete();
+
+        return response()->noContent();
+    }
 }

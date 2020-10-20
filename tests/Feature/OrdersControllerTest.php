@@ -302,6 +302,53 @@ class OrdersControllerTest extends TestCase
         $this->assertNotEquals('test', $order->ship_comment);
     }
 
+    /** @test */
+    public function it_should_soft_delete_an_order()
+    {
+        (new OrdersTableSeeder())->seedOrderWithPostProcessingComplete();
+        $this->loginCustomerAdmin();
+        $order = Order::latest()->first();
+        $order->setCompany(auth()->user()->company)->save();
+
+        $this->deleteJson(route('orders.destroy', $order->id))
+            ->assertStatus(Response::HTTP_NO_CONTENT);
+
+        $this->assertSoftDeleted('t_orders', ['id' => $order->id]);
+    }
+
+    /** @test */
+    public function it_should_fail_if_not_authorized_to_delete()
+    {
+        (new OrdersTableSeeder())->seedOrderWithPostProcessingComplete();
+        $this->loginNoAdmin();
+        $order = Order::latest()->first();
+        $order->setCompany(auth()->user()->company);
+
+        $this->deleteJson(route('orders.destroy', $order->id))
+            ->assertStatus(Response::HTTP_FORBIDDEN);
+
+        $this->assertDatabaseHas('t_orders', [
+            'id' => $order->id,
+            'deleted_at' => null,
+        ]);
+    }
+
+    /** @test */
+    public function it_should_fail_if_trying_to_delete_an_order_from_other_company()
+    {
+        (new OrdersTableSeeder())->seedOrderWithPostProcessingComplete();
+        $this->loginCustomerAdmin();
+        $order = Order::latest()->first();
+
+        $this->deleteJson(route('orders.destroy', $order->id))
+            ->assertStatus(Response::HTTP_FORBIDDEN);
+
+        $this->assertDatabaseHas('t_orders', [
+            'id' => $order->id,
+            'deleted_at' => null,
+        ]);
+    }
+
     protected function fillOrderUpdate($original)
     {
         $ocrRequestId = $this->faker->uuid;

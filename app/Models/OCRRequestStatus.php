@@ -11,6 +11,8 @@ use Illuminate\Database\Eloquent\Model;
  * @property string|\Carbon\Carbon $status_date
  * @property string $status
  * @property array $status_metadata
+ * @property int $company_id
+ * @property int $order_id
  */
 class OCRRequestStatus extends Model
 {

@@ -34,6 +34,19 @@ class OCRRequestController extends Controller
         return OcrRequestJson::collection($ocrRequests);
     }
 
+    public function destroy($ocrRequest)
+    {
+        $ocrRequest = OCRRequest::where('request_id', $ocrRequest)->firstOrFail();
+
+        $this->authorize('delete', $ocrRequest);
+
+        tap($ocrRequest, function ($ocrRequest) {
+            $ocrRequest->orders->each->delete();
+        })->delete();
+
+        return response()->noContent();
+    }
+
     public function createOCRRequestUploadURI(Request $request)
     {
         // validate that filename parameter was provided

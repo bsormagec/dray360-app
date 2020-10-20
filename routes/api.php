@@ -87,8 +87,8 @@ Route::group(['middleware' => ['auth:sanctum', 'impersonate', 'tenant-aware']], 
         ->name('orders.download-pdf');
 
     // Orders management
-    Route::resource('orders', OrdersController::class)
-        ->only(['index', 'update', 'show']);
+    Route::apiResource('orders', OrdersController::class)
+        ->only(['index', 'update', 'show', 'destroy']);
 
     // New orders endpoint
     Route::resource('orders-2', OrdersController2::class)
@@ -124,8 +124,8 @@ Route::group(['middleware' => ['auth:sanctum', 'impersonate', 'tenant-aware']], 
 
     // CRUD for OCR Request
     Route::apiResource('ocr/requests', OCRRequestController::class, ['as' => 'ocr'])
-        ->parameters(['request' => 'ocrRequest'])
-        ->only(['index']);
+        ->parameters(['requests' => 'ocrRequest'])
+        ->only(['index', 'destroy']);
 
     // CRUD for OCR Rules
     Route::apiResource('ocr/rules', OCRRulesController::class, ['as' => 'ocr'])
