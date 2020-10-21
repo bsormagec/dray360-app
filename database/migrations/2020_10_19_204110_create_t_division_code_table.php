@@ -33,10 +33,6 @@ class CreateTDivisionCodeTable extends Migration
      */
     public function down()
     {
-<<<<<<< HEAD
         Schema::dropIfExists('t_division_codes');
-=======
-        Schema::dropIfExists('t_division_code');
->>>>>>> add division code table, model and seeder
     }
 }
