@@ -17,7 +17,7 @@ class CreateTDivisionCodeTable extends Migration
             $table->increments('id');
             $table->foreign('t_company_id')->references('id')->on('t_companies');
             $table->foreign('t_tms_provider_id')->references('id')->on('t_tms_providers');
-            $table->varchar('division_code', 32);
+            $table->string('division_code', 32);
             $table->string('division_name', 128);
             $table->timestamps();
         });
