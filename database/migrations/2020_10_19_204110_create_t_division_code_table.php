@@ -15,7 +15,7 @@ class CreateTDivisionCodeTable extends Migration
     {
         Schema::create('t_division_code', function (Blueprint $table) {
             $table->increments('id');
-            $table->foreign('t_company_id')->references('id')->on('t_companies');
+            $table->foreign('t_companies_id')->references('id')->on('t_companies');
             $table->foreign('t_tms_provider_id')->references('id')->on('t_tms_providers');
             $table->string('division_code', 32);
             $table->string('division_name', 128);
