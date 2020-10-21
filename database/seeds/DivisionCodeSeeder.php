@@ -87,7 +87,7 @@ class DivisionCodeSeeder extends Seeder
 
             // // create a new row if needed, otherwise update. does not insert new rows.
             $division_name = [ 'division_name' => $lno['division_name'] ];
-            
+
             unset($lno['division_name']); // i.e. move override_name into 2nd parameter, because that value may be updated in future
             $DivisionCodeOverride = DivisionCode::updateOrCreate($lno, $division_name);
 
