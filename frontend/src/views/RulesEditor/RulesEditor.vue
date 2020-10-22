@@ -367,6 +367,15 @@ export default {
     },
 
     async fetchCompanyVariantRules () {
+      if (
+        this.company_id === null ||
+        this.variant_id === null ||
+        this.company_id === undefined ||
+        this.variant_id === undefined
+      ) {
+        return
+      }
+
       const pairIds = {
         company_id: this.company_id,
         variant_id: this.variant_id

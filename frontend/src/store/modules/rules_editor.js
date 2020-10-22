@@ -72,12 +72,12 @@ const actions = {
     return reqStatus.success
   },
   async [types.setRule] ({ commit }, ruleData) {
-    await putEditRule(ruleData)
+    const [error] = await putEditRule(ruleData)
 
-    // if (error) return reqStatus.error
+    if (error) return reqStatus.error
 
     commit(types.setRule, { ruleData })
-    return reqStatus.succcess
+    return reqStatus.success
   },
   async [types.setRuleCode] ({ commit }, i) {
     const ruleCodeData = await getRuleCode(i)
@@ -88,12 +88,13 @@ const actions = {
     return data
   },
   async [types.setSequence] ({ commit }, sequenceData) {
-    await postSaveRuleSequence(sequenceData)
+    const [error] = await postSaveRuleSequence(sequenceData)
 
-    // if (error) return reqStatus.error
+    if (error) return reqStatus.error
 
     commit(types.setSequence, { sequenceData })
-    // return reqStatus.succcess
+
+    return reqStatus.success
   },
   async [types.addRule] ({ commit }, ruleData) {
     const [error, data] = await postAddRule(ruleData)
@@ -101,7 +102,7 @@ const actions = {
     if (error) return reqStatus.error
 
     commit(types.addRule, { ruleData: data })
-    return reqStatus.succcess
+    return reqStatus.success
   },
   async [types.getTestingOutput] ({ commit }, dataObject) {
     const data = await getTestingOutput(dataObject.orderId, dataObject.ruleToTest)
