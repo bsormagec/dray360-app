@@ -5,7 +5,6 @@ namespace App\Models;
 use App\Models\Traits\FillWithNulls;
 use App\Models\Traits\BelongsToCompany;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Support\Facades\Storage;
 use App\Models\Traits\ValidatesAddresses;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
@@ -73,8 +72,7 @@ class Order extends Model
     public $table = 't_orders';
 
     const CREATED_AT = 'created_at',
-        UPDATED_AT = 'updated_at',
-        MINUTES_URI_REMAINS_VALID = 15;
+        UPDATED_AT = 'updated_at';
 
     protected $dates = ['deleted_at'];
 
@@ -338,42 +336,9 @@ class Order extends Model
         });
     }
 
-    public function prepareForSideBySide(bool $preSignImages = true): self
+    public function loadRelationshipsForSideBySide(): self
     {
-        $this->load($this->relationsForSideBySide());
-
-        if (! $preSignImages) {
-            return $this;
-        }
-
-        try {
-            $ocr_clone = $this->ocr_data;
-            // note the & in the foreach specifies pass-by-reference
-            foreach ($ocr_clone['page_index_filenames']['value'] as $eachPageIndex => &$eachPage) {
-                $s3Config = config('filesystems.disks.s3-base') + [
-                    'bucket' => s3_bucket_from_url($eachPage['value']),
-                ];
-                $storage = Storage::createS3Driver($s3Config);
-                $urlExpiryTime = now()->addMinutes(self::MINUTES_URI_REMAINS_VALID);
-
-                // save presigned info on eachPage
-                $eachPage['presigned_download_uri'] = $storage->temporaryUrl(
-                    s3_file_name_from_url($eachPage['value']),
-                    $urlExpiryTime
-                );
-                $eachPage['presigned_download_uri_expires'] = $urlExpiryTime;
-            }
-            // assign updated ocr_data clone to order object, replacing old ocr_data
-            $this->ocr_data = $ocr_clone;
-        } catch (\Exception $e) {
-        }
-
-        return $this;
-    }
-
-    protected function relationsForSideBySide(): array
-    {
-        return [
+        return $this->load([
             'ocrRequest',
             'ocrRequest.statusList',
             'ocrRequest.latestOcrRequestStatus',
@@ -383,7 +348,7 @@ class Order extends Model
             'portRampOfOriginAddress',
             'orderAddressEvents',
             'orderAddressEvents.address',
-            'equipmentType'
-        ];
+            'equipmentType',
+        ]);
     }
 }

@@ -18,6 +18,7 @@ use Bezhanov\Faker\Provider\Commerce;
 use Illuminate\Support\Facades\Event;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Foundation\Testing\WithFaker;
+use Illuminate\Http\Resources\Json\JsonResource;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
 
 class OrdersControllerTest extends TestCase
@@ -33,6 +34,12 @@ class OrdersControllerTest extends TestCase
         $this->loginAdmin();
         $this->seed(OrdersTableSeeder::class);
         $this->faker->addProvider(new Commerce($this->faker));
+    }
+
+    protected function tearDown(): void
+    {
+        parent::tearDown();
+        JsonResource::wrap('data');
     }
 
     /** @test */
@@ -234,7 +241,7 @@ class OrdersControllerTest extends TestCase
     }
 
     /** @test */
-    public function it_should_return_the_order_with_presigned_url()
+    public function it_should_return_the_order_with_presigned_url_and_updated_values()
     {
         Storage::fake();
         $order = Order::orderByDesc('id')->first();
@@ -249,6 +256,9 @@ class OrdersControllerTest extends TestCase
                 ]
             ]
         ];
+        (new OrdersTableSeeder())->seedOrderWithPostProcessingComplete();
+        $precedOrder = Order::orderByDesc('id')->first();
+        $order->preceded_by_order_id = $precedOrder->id;
         $order->save();
 
         Storage::shouldReceive('createS3Driver')->andReturn(Storage::getFacadeRoot());
@@ -265,6 +275,15 @@ class OrdersControllerTest extends TestCase
                 'port_ramp_of_destination_address',
                 'port_ramp_of_origin_address',
                 'order_address_events',
+                'preceding_order_changes' => collect([
+                    $order->bill_to_address_id ? 'bill_to_address' : '',
+                    $order->port_ramp_of_destination_address_id ? 'port_ramp_of_destination_address' : '',
+                    $order->port_ramp_of_origin_address_id ? 'port_ramp_of_origin_address' : '',
+                    count($order->orderAddressEvents) ? 'order_address_events' : '',
+                    'order_line_items',
+                    'voyage',
+                    'fuel_surcharge',
+                ])->filter()->toArray()
             ])
             ->assertJsonFragment(['presigned_download_uri' => 'http://thesignedurl.com']);
     }
