@@ -22,6 +22,7 @@ class CreateTDivisionCodeTable extends Migration
             $table->string('division_code', 32);
             $table->string('division_name', 128);
             $table->timestamps();
+            $table->softDeletes();
         });
     }
 
