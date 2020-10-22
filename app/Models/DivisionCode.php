@@ -20,7 +20,7 @@ class DivisionCode extends Model
     use SoftDeletes;
     use BelongsToCompany;
 
-    public $table = 't_division_code';
+    public $table = 't_division_codes';
 
     protected $dates = ['deleted_at'];
 
