@@ -14,6 +14,7 @@ use App\Http\Controllers\Api\OCRRequestController;
 use App\Http\Controllers\Api\BulkActionsController;
 use App\Http\Controllers\Api\OCRVariantsController;
 use App\Http\Controllers\Api\UsersStatusController;
+use App\Http\Controllers\Api\DivisionCodeController;
 use App\Http\Controllers\Api\ImpersonationController;
 use App\Http\Controllers\Api\SearchAddressController;
 use App\Http\Controllers\Api\ChangePasswordController;
@@ -101,6 +102,10 @@ Route::group(['middleware' => ['auth:sanctum', 'impersonate', 'tenant-aware']], 
     //companies/1/tms-provider/1/equipment-types
     Route::get('companies/{company}/tms-provider/{tmsProvider}/equipment-types', EquipmentTypesController::class)
         ->name('equipment-types.show');
+
+    //companies/1/tms-provider/1/equipment-types
+    Route::get('companies/{company}/tms-provider/{tmsProvider}/division-names', DivisionCodeController::class)
+        ->name('division-names.show');
 
     //companies/1/tms-provider/1/equipment-types-options
     Route::get('companies/{company}/tms-provider/{tmsProvider}/equipment-types-options', EquipmentTypesSelectValuesController::class)
