@@ -85,7 +85,6 @@ class DivisionCodeSeeder extends Seeder
                 $lno['t_tms_provider_id'] = $profittools_id;
             }
 
-
             // // create a new row if needed, otherwise update. does not insert new rows.
             $division_name = [ 'division_name' => $lno['division_name'] ];
             
