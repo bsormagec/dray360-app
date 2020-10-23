@@ -86,13 +86,14 @@ class DivisionCodeSeeder extends Seeder
             }
 
 
-            // create a new row if needed, otherwise update. does not insert new rows.
-            $override_name = [ 'division_name' => $lno['division_name'] ];
+            // // create a new row if needed, otherwise update. does not insert new rows.
+            $division_name = [ 'division_name' => $lno['division_name'] ];
+            
             unset($lno['division_name']); // i.e. move override_name into 2nd parameter, because that value may be updated in future
-            $DivisionCodeOverride = DivisionCode::updateOrCreate($lno, $override_name);
+            $DivisionCodeOverride = DivisionCode::updateOrCreate($lno, $division_name);
 
             // a little console output
-            $msg = "Id {$DivisionCodeOverride['id']}: company={$lno['t_company_id']}, tms_provider={$lno['t_tms_provider_id']}, lno={$lno['division_name']}";
+            $msg = "Id {$DivisionCodeOverride['id']}: company={$lno['t_company_id']}, tms_provider={$lno['t_tms_provider_id']}, lno={$division_name['division_name']}";
             $this->command->info($msg);
         }
     }

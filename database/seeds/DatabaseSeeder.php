@@ -13,6 +13,7 @@ class DatabaseSeeder extends Seeder
     {
         $this->call(ProfitToolsCompaniesSeeder::class);
         $this->call(AddressLocationnameOverrideSeeder::class);
+        $this->call(DivisionCodeSeeder::class);
         $this->call(LaratrustSeeder::class);
         $this->call(DefaultTenantSeeder::class);
     }
