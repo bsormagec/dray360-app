@@ -1,25 +1,29 @@
-// ***********************************************
-// This example commands.js shows you how to
-// create various custom commands and overwrite
-// existing commands.
-//
-// For more comprehensive examples of custom
-// commands please read more here:
-// https://on.cypress.io/custom-commands
-// ***********************************************
-//
-//
-// -- This is a parent command --
-// Cypress.Commands.add("login", (email, password) => { ... })
-//
-//
-// -- This is a child command --
-// Cypress.Commands.add("drag", { prevSubject: 'element'}, (subject, options) => { ... })
-//
-//
-// -- This is a dual command --
-// Cypress.Commands.add("dismiss", { prevSubject: 'optional'}, (subject, options) => { ... })
-//
-//
-// -- This will overwrite an existing command --
-// Cypress.Commands.overwrite("visit", (originalFn, url, options) => { ... })
+Cypress.Commands.add('login', (email, password, tenant, user) => {
+  cy.server()
+
+  cy.route({
+    url: '**/api/user',
+    status: 401,
+    response: { message: 'Unauthenticated.' }
+  })
+  cy.route({ url: '**/api/current-tenant', response: tenant })
+  cy.route({
+    url: '**/sanctum/csrf-cookie',
+    status: 204,
+    response: ''
+  })
+  cy.route({
+    method: 'POST',
+    url: '**/api/login',
+    status: 204,
+    response: ''
+  })
+
+  cy.visit('localhost:8080')
+  cy.get('input[name=username]').type(email)
+  cy.get('input[name=password]').type(password)
+  cy.get('[type=button]').click()
+
+  cy.route({ url: '**/api/user', response: user })
+  cy.route({ url: '**/api/orders**', response: {} })
+})
