@@ -27,6 +27,7 @@
             v-if="hasSearch"
             v-model="search"
             prepend-icon="mdi-magnify"
+            data-cy="dashboard-search"
             label="Search by..."
             single-line
             hide-details
@@ -39,8 +40,8 @@
           <v-select
             v-if="hasColumnFilters"
             v-model="selectedHeaders"
+            data-cy="column-select"
             :items="headers"
-
             color="primary"
             class="user__filter"
             dense
