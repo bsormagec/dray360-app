@@ -20,7 +20,7 @@
 					}
 				},
 				"url": {
-					"raw": "https://i0mgwmnrb1.execute-api.us-east-2.amazonaws.com/default/ocr-rules-engine-dev",
+					"raw": "https://b9da68xgc1.execute-api.us-east-2.amazonaws.com/api/1.0/dev/ocrrules-engine",
 					"protocol": "https",
 					"host": [
 						"i0mgwmnrb1",

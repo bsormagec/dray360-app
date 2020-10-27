@@ -346,7 +346,7 @@ Link the new project folder to the apache folder
 ````bash
 source ~/tcvars.sh
 
-sudo ln -s ${OM_ROOT}/public /var/www/html/${OM_VHOST}
+sudo ln -sf ${OM_ROOT}/public /var/www/html/${OM_VHOST}
 ll /var/www/html/${OM_VHOST}/ # confirm this looks good
 
 ````
