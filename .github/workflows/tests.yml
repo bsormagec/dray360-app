@@ -3,17 +3,6 @@ name: tests
 on: [pull_request]
 
 jobs:
-  cypress-run:
-    runs-on: ubuntu-16.04
-    steps:
-      - uses: actions/checkout@v1
-      - uses: cypress-io/github-action@v2
-        with:
-          browser: chrome
-          headless: true
-          start: npm run serve
-          working-directory: frontend
-
   tests:
     name: Laravel Tests
 
