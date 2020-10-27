@@ -80,49 +80,59 @@ export default {
 .orders-create-upload {
   display: flex;
   flex-direction: column;
-  padding-top: 2.8rem;
-  margin-bottom: 3.4rem;
+  padding-top: rem(28);
+  margin-bottom: rem(34);
 }
 
 .upload__title {
-  font-size: 2.1rem;
-  line-height: 2.4rem;
-  margin-bottom: 3.4rem;
+  font-size: rem(21);
+  line-height: rem(24);
+  margin-bottom: rem(34);
+  font-weight: 700;
+  letter-spacing: 0;
 }
 
 .upload__subtitle {
-  line-height: 1.8rem;
-  margin-bottom: 0.9rem;
+  font-size: rem(16);
+  line-height: rem(18);
+  margin-bottom: rem(9);
+  font-weight: 700;
+  letter-spacing: 0;
 }
 
 .upload__input {
-  margin-bottom: 2rem;
+  margin-bottom: rem(20);
+}
+
+.upload__input::v-deep .v-label {
+  font-size: rem(12);
 }
 
 .upload__input .input__legend {
   display: block;
-  margin-top: 0.8rem;
+  margin-top: rem(8);
   color: map-get($colors, grey-4);
+  font-size: rem(12);
 }
 
 .upload__area {
   display: flex;
   align-items: center;
   justify-content: center;
-  height: 9.4rem;
+  height: rem(94);
   background-color: map-get($colors, grey-5);
-  border: 0.2rem dashed map-get($colors, grey-3);
-  border-radius: 0.5rem;
+  border: rem(2) dashed map-get($colors, grey-3);
+  border-radius: rem(5);
 }
 
 .area__legend {
   display: block;
-  font-size: 1.4rem !important;
-  font-weight: bold;
+  font-size: rem(14) !important;
+  font-weight: 700;
   color: map-get($colors, grey-4);
 
   @media screen and (min-width: map-get($breakpoints, med)) {
-    font-size: 1.2rem !important;
+    font-size: rem(12) !important;
   }
 }
 </style>

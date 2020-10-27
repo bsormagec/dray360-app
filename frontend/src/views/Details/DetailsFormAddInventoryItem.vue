@@ -63,13 +63,13 @@ export default {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding-top: 3.2rem;
-  border-top: 0.1rem solid map-get($colors , grey-3);
-  margin-bottom: 3.6rem;
+  padding-top: rem(32);
+  border-top: rem(1) solid map-get($colors , grey-3);
+  margin-bottom: rem(36);
 }
 
 .inventory__total {
-  font-size: 1.44rem !important;
+  font-size: rem(14.4) !important;
   font-weight: bold;
 }
 </style>

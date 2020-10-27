@@ -101,7 +101,7 @@
                   placeholder="Search..."
                   outlined
                   append-icon="mdi-magnify"
-                  style="padding: 0 1rem;"
+                  style="padding: 0 10px;"
                 />
                 <v-list-item-group
                   color="primary"
@@ -367,6 +367,15 @@ export default {
     },
 
     async fetchCompanyVariantRules () {
+      if (
+        this.company_id === null ||
+        this.variant_id === null ||
+        this.company_id === undefined ||
+        this.variant_id === undefined
+      ) {
+        return
+      }
+
       const pairIds = {
         company_id: this.company_id,
         variant_id: this.variant_id
@@ -511,8 +520,8 @@ export default {
   }
 }
 </script>
-<style scoped>
+<style lang="scss" scoped>
   .draggable-item {
-    padding: 10px;
+    padding: rem(10);
   }
 </style>

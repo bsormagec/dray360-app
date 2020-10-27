@@ -38,7 +38,7 @@
         <div class="button_checkbox">
           <v-checkbox
             v-model="disabled"
-            class="mx-2"
+            class="remember-me-check mx-2"
             label="Remember me"
           />
           <button
@@ -56,7 +56,7 @@
             href="/forgot-password"
           >Forgot your password?</a></span>
         </p>
-        <p><span><a href="">Don't have an account?</a></span></p>
+        <!-- <p><span><a href="">Don't have an account?</a></span></p> -->
       </div>
       <br><div v-if="loginError">
         There was a problem. Please check your email and password.
@@ -145,31 +145,32 @@ export default {
     flex-direction: column;
     align-items: center;
     .login-box{
-      width: 36rem;
+      width: rem(360);
       justify-items: center;
       background-color: map-get($colors, white );
       display: flex;
       align-items: center;
       justify-content: center;
       flex-direction: column;
-      border-top: 0.8rem solid var(--v-primary-base) !important;
-      border-left: 0.1rem solid map-get($colors, gray );
-      border: 0.1rem solid map-get($colors, gray );
-      box-shadow: 0rem 0.1rem 0.3rem rgba(0, 0, 0, 0.1);
-      padding: 3rem;
+      border-top: rem(8) solid var(--v-primary-base) !important;
+      border-left: rem(1) solid map-get($colors, gray );
+      border: rem(1) solid map-get($colors, gray );
+      box-shadow: 0 rem(1) rem(3) rgba(0, 0, 0, 0.1);
+      padding: rem(30);
       .text__error{
         color: map-get($colors, red );
       }
       .logo{
-        width: 20rem;
-        margin-bottom: 5rem;
+        width: rem(200);
+        margin-bottom: rem(50);
       }
       input{
-        border: 0.1rem solid lightgray;
-        margin: 0.5rem auto;
-        padding: 0.5rem 6.5rem;
-        border-radius: 0.5rem;
-        max-width: 25rem;
+        border: rem(1) solid lightgray;
+        margin: rem(5) auto;
+        padding: rem(5) rem(65);
+        border-radius: rem(5);
+        max-width: rem(250);
+        font-size: rem(12);
       }
       .button_checkbox{
         display: flex;
@@ -179,31 +180,38 @@ export default {
         font-weight: bold;
         width: 100%;
         .btn-login{
-          padding: 0.5rem 4rem;
+          padding: rem(5) rem(40);
           background-color: var(--v-primary-base);
           color: map-get($colors, white);
-          border-radius: 0.3rem;
+          border-radius: rem(3);
+          font-size: rem(12);
         }
       }
+    }
+    .remember-me-check::v-deep label {
+      font-size: rem(12);
     }
     .account{
         display: flex;
         flex-direction: row;
         justify-content: space-between;
-        width: 36rem;
-        border-top: 0.1rem solid map-get($colors , gray ) !important;
-        border: 0.1rem solid map-get($colors, gray );
-        box-shadow: 0rem 0.1rem 0.3rem rgba(0, 0, 0, 0.1);
+        width: rem(360);
+        border-top: rem(1) solid map-get($colors , gray ) !important;
+        border: rem(1) solid map-get($colors, gray );
+        box-shadow: 0 rem(1) rem(3) rgba(0, 0, 0, 0.1);
         background-color: map-get($colors,white);
-        padding-top: 0.2rem;
-        padding: 1rem 1rem 0rem 1rem;
+        padding-top: rem(2);
+        padding: rem(10) rem(10) 0 rem(10);
+
+        a { font-size: rem(12); }
       }
       .copyright{
         position: absolute;
-        bottom: 2rem;
+        bottom: rem(20);
         p{
           color: map-get($colors, grey-9 );
-          line-height: 1.6rem;
+          line-height: rem(16);
+          font-size: rem(12);
         }
       }
   }

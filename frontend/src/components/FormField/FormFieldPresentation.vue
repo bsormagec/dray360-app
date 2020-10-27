@@ -65,7 +65,7 @@ export default {
 
   .field__name,
   .field__children .field__name {
-    font-size: 1.4rem !important;
+    font-size: rem(14) !important;
     font-weight: bold;
     text-transform: capitalize;
   }
@@ -84,14 +84,14 @@ export default {
 
   .field__value,
   .field__children .field__value {
-    font-size: 1.44rem !important;
+    font-size: rem(14.4) !important;
     text-transform: capitalize;
   }
 
   .field__children {
     display: flex;
     justify-content: space-between;
-    padding-left: 1rem;
+    padding-left: rem(10);
   }
 }
 </style>

@@ -39,7 +39,7 @@ class EquipmentLeaseTypesSeeder extends Seeder
         [
             "COMPANY_ID" => 2,
             "T_TMS_PROVIDER_ID" => 1,
-            "FILENAME" => 'database/seeds/TCompaniesDev Equipment Lease Types.20200917.csv'
+            "FILENAME" => 'database/seeds/TCompaniesDemo Equipment Lease Types.20200917.csv'
         ],
         [
             "COMPANY_ID" => 4,
@@ -47,8 +47,6 @@ class EquipmentLeaseTypesSeeder extends Seeder
             "FILENAME" => 'database/seeds/IXTOnboarding Equipment Lease Types.20200917.csv'
         ]
     ];
-
-    const TOMS_TERMINAL_LIST_CSV_FILE = 'database/seeds/Copy-of-list-of-terminals-work-in-progress.20200517.csv';
 
     /**
      * Run the database seeds.

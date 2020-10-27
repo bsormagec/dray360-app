@@ -1299,6 +1299,70 @@
 			"response": []
 		},
 		{
+			"name": "/api/ocr/requests/:request_id/reprocess",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "ab3fc79d-71ef-420b-8e21-4c071395c6dc",
+						"exec": [
+							"var token1=postman.getResponseCookie('XSRF-TOKEN').value;",
+							"var token2=token1.replace(/%3D/g, '=');",
+							"postman.setEnvironmentVariable('X-XSRF-TOKEN', token2);",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"type": "text",
+						"value": "application/x-www-form-urlencoded"
+					},
+					{
+						"key": "Referer",
+						"type": "text",
+						"value": "{{server}}"
+					},
+					{
+						"key": "Accept",
+						"type": "text",
+						"value": "application/json, text/plain"
+					},
+					{
+						"key": "X-XSRF-TOKEN",
+						"type": "text",
+						"value": "{{X-XSRF-TOKEN}}"
+					}
+				],
+				"url": {
+					"raw": "{{server}}/api/ocr/requests/:request_id/reprocess",
+					"host": [
+						"{{server}}"
+					],
+					"path": [
+						"api",
+						"ocr",
+						"requests",
+						":request_id",
+						"reprocess"
+					],
+					"variable": [
+						{
+							"key": "request_id",
+							"value": "",
+							"description": "The UUID of the request we want to reprocess"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
 			"name": "/api/ocr/rules",
 			"event": [
 				{

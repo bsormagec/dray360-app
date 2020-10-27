@@ -2,7 +2,10 @@
   <!--  eslint-disable vue/no-v-html -->
   <div class="form-field-element-modal-address">
     <div class="address-book-modal">
-      <span class="address-book-modal__title"><strong>{{ label }}</strong></span>
+      <span
+        v-if="label !== ''"
+        class="address-book-modal__title"
+      ><strong>{{ label }}</strong></span>
 
       <div class="address-book-modal__body">
         <div
@@ -36,7 +39,7 @@
           v-if="!verified && addressFound"
           color="primary"
           outlined
-          style="margin-right: 2rem;"
+          style="margin-right: 20px;"
           @click="verifyMatch"
         >
           Verify Closest Match
@@ -78,7 +81,7 @@ export default {
   },
 
   props: {
-    label: { type: String, required: true },
+    label: { type: String, required: false, default: '' },
     verified: { type: Boolean, required: true },
     recognizedText: { type: String, default: '' },
     matchedAddress: { required: true },
@@ -154,10 +157,9 @@ export default {
 .address-book-modal {
   .address-book-modal__title {
     display: block;
-    font-size: 1.4rem !important;
-    padding-bottom: 1.1rem;
-    border-bottom: 0.1rem solid map-get($colors, grey-9);
-    margin-bottom: 2rem;
+    font-size: rem(14) !important;
+    padding-bottom: rem(11);
+    margin-bottom: rem(20);
     text-transform: capitalize;
   }
 
@@ -175,10 +177,10 @@ export default {
     span {
       flex-grow: 1;
       text-align: right;
-      padding-right: 1.6rem;
+      padding-right: rem(16);
       color: #cc904c;
       font-weight: bold;
-      font-size: 1.44rem !important;
+      font-size: rem(14.4) !important;
       &.not-found {
         color: map-get($colors, red)
       }
@@ -188,11 +190,11 @@ export default {
   .address-book-modal__body__block {
     display: flex;
     justify-content: space-between;
-    margin-bottom: 2rem;
+    margin-bottom: rem(20);
 
     span {
       width: 50%;
-      font-size: 1.44rem !important;
+      font-size: rem(14.4) !important;
 
       &:first-child {
         font-weight: bold;
@@ -207,7 +209,7 @@ export default {
   .address-book-modal__footer {
     display: flex;
     justify-content: flex-end;
-    margin-bottom: 2rem;
+    margin-bottom: rem(20);
   }
 }
 </style>

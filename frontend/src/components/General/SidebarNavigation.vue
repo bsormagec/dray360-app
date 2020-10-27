@@ -159,55 +159,54 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-
 $sidebarbackground: url("../../assets/images/bg_sidebar.png");
-    .sidebar__nav{
-        background: linear-gradient(90deg, rgba(0, 60, 113, 0.1) 0%, rgba(0, 60, 113, 0.05) 31.77%, rgba(0, 60, 113, 0) 100%);
-        box-shadow: inset -1px 0px 0px rgba(0, 60, 113, 0.03);
-        display: flex;
-        flex-direction: column;
-        align-content: center;
-        align-self: center;
-        background-image: $sidebarbackground;
-        background-size: cover;
+.sidebar__nav{
+  background: linear-gradient(90deg, rgba(0, 60, 113, 0.1) 0%, rgba(0, 60, 113, 0.05) 31.77%, rgba(0, 60, 113, 0) 100%);
+  box-shadow: inset rem(-1) 0px 0px rgba(0, 60, 113, 0.03);
+  display: flex;
+  flex-direction: column;
+  align-content: center;
+  align-self: center;
+  background-image: $sidebarbackground;
+  background-size: cover;
 
-        .logo__dry{
-            width: 20rem;
-            height: 4.8rem;
-            margin: 2rem auto;
-            display: block;
-
-        }
-        .logo__dry_bottom{
-            @include center;
-            bottom: 3rem;
-
-        }
-        .menu{
-            .v-list-item:not(:last-child){
-                border-bottom: 0.2rem solid map-get($colors, gray );
-            }
-            .v-list-item__title{
-                color: var(--v-primary-base) !important;
-                text-transform: uppercase;
-                font-weight: 500;
-                text-align: right;
-                letter-spacing: 0.75px;
-                padding: 1.5rem 0px;
-            }
-            & > div{
-                background: transparent !important;
-            }
-        }
-        .company__name{
-          position: absolute;
-          bottom: 15rem;
-          @include center;
-          h3{
-            color: map-get($colors, grey-4 );
-            text-align: center;
-          }
-        }
+  .logo__dry{
+    width: rem(200);
+    margin: rem(20) auto;
+    display: block;
+  }
+  .logo__dry_bottom{
+    @include center;
+    bottom: rem(30);
+  }
+  .menu{
+    .v-list-item:not(:last-child){
+      border-bottom: rem(2) solid map-get($colors, gray );
     }
+    .v-list-item__title{
+      color: var(--v-primary-base) !important;
+      text-transform: uppercase;
+      font-size: rem(12);
+      font-weight: 500;
+      text-align: right;
+      letter-spacing: rem(.75);
+      padding: rem(15) 0;
+    }
+    & > div{
+      background: transparent !important;
+    }
+  }
+  .company__name{
+    position: absolute;
+    bottom: rem(150);
+    @include center;
 
+    h3{
+      color: map-get($colors, grey-4 );
+      text-align: center;
+      font-size: rem(14);
+      font-weight: 700;
+    }
+  }
+}
 </style>

@@ -3,6 +3,45 @@
     id="order-form"
     :class="`form ${isMobile && 'mobile'}`"
   >
+    <div class="order__title">
+      <h2>Order   #{{ order.id }}</h2>
+      <OutlinedButtonGroup
+        v-if="!editMode"
+        :main-action="{
+          title: 'Send to TMS',
+          action: postSendToTms,
+          path:'',
+          hasPermission: true
+        }"
+        :options="[
+          { title: 'Edit Order' , action: toggleEdit, hasPermission: true },
+          { title: 'Download Order', action: () => downloadPDF(order.id), hasPermission: true }
+        ]"
+        :loading="loading"
+      />
+      <div v-else>
+        <v-btn
+          color="primary"
+          :outlined="!editMode && !isMobile"
+          :style="{ marginBottom: '10px' }"
+          width="115px"
+          text
+          @click="toggleEdit"
+        >
+          Cancel
+        </v-btn>
+        <v-btn
+          color="primary"
+          :outlined="!editMode && !isMobile"
+          :style="{ marginBottom: '10px' }"
+          width="115px"
+          @click="toggleEdit"
+        >
+          {{ editMode ? 'Save' : 'Edit Order' }}
+        </v-btn>
+      </div>
+    </div>
+
     <div class="form__section">
       <h1
         :id="sections.shipment.id"
@@ -12,13 +51,13 @@
       </h1>
 
       <div class="section__rootfields">
-        <FormFieldInput
+        <!-- <FormFieldInput
           references="shipment_designation"
           label="Shipment designation"
           :value="order.shipment_designation"
           :edit-mode="editMode"
           @change="value => handleChange('shipment_designation', value)"
-        />
+        /> -->
         <FormFieldInput
           references="shipment_direction"
           label="Shipment direction"
@@ -78,27 +117,27 @@
           :edit-mode="editMode"
           @change="value => handleChange('seal_number', value)"
         />
-        <FormFieldInput
+        <!-- <FormFieldInput
           references="equipment_size"
           label="Size"
           :value="order.equipment_size"
           :edit-mode="editMode"
           @change="value => handleChange('equipment_size', value)"
-        />
-        <FormFieldSwitch
+        /> -->
+        <!-- <FormFieldSwitch
           references="has_chassis"
           label="Has chassis"
           :value="order.has_chassis"
           :edit-mode="editMode"
           @change="value => handleChange('has_chassis', value)"
-        />
-        <FormFieldInput
+        /> -->
+        <!-- <FormFieldInput
           references="carrier"
           label="SSL"
           :value="order.carrier"
           :edit-mode="editMode"
           @change="value => handleChange('carrier', value)"
-        />
+        /> -->
       </div>
       <div
         class="section__sub"
@@ -117,12 +156,19 @@
           :edit-mode="editMode"
           @change="value => handleChange('reference_number', value)"
         />
-        <FormFieldInput
+        <!-- <FormFieldInput
           references="pickup_number"
           label="Pickup number"
           :value="order.pickup_number"
           :edit-mode="editMode"
           @change="value => handleChange('pickup_number', value)"
+        /> -->
+        <FormFieldInput
+          references="customer_number"
+          label="Customer Number"
+          :value="order.customer_number === null ? '---' : order.customer_number"
+          :edit-mode="editMode"
+          @change="value => handleChange('customer_number', value)"
         />
         <FormFieldInput
           references="load_number"
@@ -160,6 +206,13 @@
           @change="value => handleChange('voyage', value)"
         />
         <FormFieldInput
+          references="booking_number"
+          label="Booking Number"
+          :value="order.booking_number === null ? '---' : order.booking_number"
+          :edit-mode="editMode"
+          @change="value => handleChange('booking_number', value)"
+        />
+        <FormFieldInput
           references="master_bol_mawb"
           label="Master BOL MAWB"
           :value="order.master_bol_mawb"
@@ -173,7 +226,7 @@
           :edit-mode="editMode"
           @change="value => handleChange('house_bol_hawb', value)"
         />
-        <FormFieldInput
+        <!-- <FormFieldInput
           references="actual_origin"
           label="Actual Origin"
           :value="order.actual_origin"
@@ -186,11 +239,32 @@
           :value="order.actual_destination"
           :edit-mode="editMode"
           @change="value => handleChange('actual_destination', value)"
-        />
+        /> -->
       </div>
       <div
         class="section__sub"
       >
+        <div
+          class="sub__title"
+        >
+          <h2 :id="sections.bill_to.id">
+            {{ sections.bill_to.label }}
+          </h2>
+        </div>
+        <FormFieldAddressSwitchVerify
+          :recognized-text="order.bill_to_address_raw_text"
+          :verified="order.bill_to_address_verified"
+          :matched-address="order.bill_to_address"
+          billable
+          @change="(e) => handleChange('bill_to_address', e)"
+        />
+        <FormFieldTextArea
+          references="bill_comment"
+          label="Billing comments"
+          :value="order.bill_comment"
+          :edit-mode="editMode"
+          @change="value => handleChange('bill_comment', value)"
+        />
         <div
           class="sub__title"
         >
@@ -212,24 +286,9 @@
           :edit-mode="editMode"
           @change="value => handleChange('fuel_surcharge', value)"
         />
-        <FormFieldAddressSwitchVerify
-          label="Bill to"
-          :recognized-text="order.bill_to_address_raw_text"
-          :verified="order.bill_to_address_verified"
-          :matched-address="order.bill_to_address"
-          billable
-          @change="(e) => handleChange('bill_to_address', e)"
-        />
-        <FormFieldTextArea
-          references="bill_comment"
-          label="Billing comments"
-          :value="order.bill_comment"
-          :edit-mode="editMode"
-          @change="value => handleChange('bill_comment', value)"
-        />
       </div>
     </div>
-    <div class="form__section">
+    <!-- <div class="form__section">
       <h1
         :id="sections.pickup.id"
         class="section__title"
@@ -253,7 +312,7 @@
           @change="value => handleChange('pickup_by_time', value)"
         />
       </div>
-    </div>
+    </div> -->
 
     <div class="form__section">
       <h1
@@ -273,10 +332,24 @@
             :recognized-text="orderAddressEvent.t_address_raw_text"
             :verified="orderAddressEvent.t_address_verified || false"
             :matched-address="orderAddressEvent.address"
-            billable
             @change="(e) => handleChange(`order_address_events.${index}`, e)"
           />
         </Fragment>
+      </div>
+    </div>
+    <div class="form__section">
+      <h1 class="section__title">
+        {{ sections.notes.label }}
+      </h1>
+
+      <div class="section__rootfields">
+        <FormFieldTextArea
+          references="ship_comment"
+          label="Shipment comments"
+          :value="order.ship_comment"
+          :edit-mode="editMode"
+          @change="value => handleChange('ship_comment', value)"
+        />
       </div>
     </div>
     <div class="form__section">
@@ -305,21 +378,6 @@
           @change="value => handleChange(`order_line_items.${item.real_index}`, value)"
         />
       </div>
-      <div class="form__section">
-        <h1 class="section__title">
-          {{ sections.notes.label }}
-        </h1>
-
-        <div class="section__rootfields">
-          <FormFieldTextArea
-            references="ship_comment"
-            label="Shipment comments"
-            :value="order.ship_comment"
-            :edit-mode="editMode"
-            @change="value => handleChange('ship_comment', value)"
-          />
-        </div>
-      </div>
     </div>
   </div>
 </template>
@@ -332,29 +390,36 @@ import orderForm, { types as orderFormTypes } from '@/store/modules/order-form'
 import utils, { type } from '@/store/modules/utils'
 
 import { Fragment } from 'vue-fragment'
-import FormFieldDate from '@/components/FormFields/FormFieldDate'
-import FormFieldTime from '@/components/FormFields/FormFieldTime'
+// import FormFieldDate from '@/components/FormFields/FormFieldDate'
+// import FormFieldTime from '@/components/FormFields/FormFieldTime'
 import FormFieldInput from '@/components/FormFields/FormFieldInput'
 import FormFieldSwitch from '@/components/FormFields/FormFieldSwitch'
 import FormFieldTextArea from '@/components/FormFields/FormFieldTextArea'
 import FormFieldAddressSwitchVerify from '@/components/FormFields/FormFieldAddressSwitchVerify'
 import FormFieldEquipmentType from '@/components/FormFields/FormFieldEquipmentType'
+import OutlinedButtonGroup from '@/components/General/OutlinedButtonGroup'
+import orders, { types } from '@/store/modules/orders'
+import { reqStatus } from '@/enums/req_status'
 
 export default {
   name: 'OrderDetailsForm',
-
   components: {
     Fragment,
-    FormFieldDate,
-    FormFieldTime,
+    // FormFieldDate,
+    // FormFieldTime,
     FormFieldInput,
     FormFieldSwitch,
     FormFieldTextArea,
     FormFieldAddressSwitchVerify,
-    FormFieldEquipmentType
+    FormFieldEquipmentType,
+    OutlinedButtonGroup
   },
-
   mixins: [isMobile],
+  data () {
+    return {
+      loading: false
+    }
+  },
 
   computed: {
     ...mapState(orderForm.moduleName, {
@@ -367,11 +432,21 @@ export default {
       return this.order.order_line_items
         .map((item, index) => ({ ...item, real_index: index }))
         .filter(item => !item.deleted_at)
+    },
+    saveBtnStyles () {
+      if (this.isMobile) return 'secondary'
+      if (this.editMode) return 'success'
+      return 'primary'
     }
   },
 
   methods: {
+    ...mapActions(orderForm.moduleName, {
+      toggleEdit: orderFormTypes.toggleEdit
+    }),
     ...mapActions(utils.moduleName, [type.setSnackbar]),
+    ...mapActions(orders.moduleName, [types.postSendToTms, types.getDownloadPDFURL]),
+    ...mapActions(orders.moduleName, [types.getDownloadPDFURL]),
     ...mapActions(orderForm.moduleName, {
       updateOrder: orderFormTypes.updateOrder,
       startHover: orderFormTypes.startHover,
@@ -380,6 +455,41 @@ export default {
 
     async handleChange (path, value) {
       await this.updateOrder({ path, value })
+    },
+    async postSendToTms () {
+      const status = await this[types.postSendToTms]({ order_id: this.order.id, status: 'sending-to-wint' })
+      if (status === reqStatus.success) {
+        await this[type.setSnackbar]({
+          show: true,
+          showSpinner: false,
+          message: 'Processing'
+        })
+      } else {
+        this[type.setSnackbar]({
+          show: true,
+          showSpinner: false,
+          message: status.request.status === 422
+            ? 'Some addresses are not verified'
+            : status.request.status === 403
+              ? 'You are not authorized' : 'An error has occurred, please contact to technical support'
+        })
+      }
+      this.disabled = true
+    },
+    async downloadPDF (orderId) {
+      this.loading = true
+      const request = await this[types.getDownloadPDFURL](orderId)
+
+      if (request.status === reqStatus.success) {
+        const link = document.createElement('a')
+        link.href = request.data.data
+        link.download = `order-${orderId}.pdf`
+        link.click()
+        link.remove()
+      } else {
+        console.log('error')
+      }
+      this.loading = false
     }
 
   }
@@ -387,54 +497,69 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+.order__title {
+  position: relative;
+  margin: rem(14) auto;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: 1px solid #dadddd;
+  padding-bottom: 20px;
+
+  h2{
+    font-size: rem(20);
+    color: var(--v-primary-base);
+    font-weight: 500;
+    line-height: rem(23);
+  }}
 .form {
   width: 100%;
   height: 100vh;
   overflow-y: auto;
-  padding: 3.6rem 6.5rem;
-  padding-top: 8.4rem;
+  padding: rem(36) rem(65);
+  padding-top: rem(10);
   scroll-behavior: smooth;
 
   &.mobile {
     height: 50vh;
-    padding-bottom: 7rem;
-    padding: 1.6rem;
+    padding-bottom: rem(70);
+    padding: rem(16);
   }
 }
 
 .section__title {
   text-transform: uppercase;
-  font-size: 1.7rem;
-  line-height: 3rem;
+  font-size: rem(17);
+  line-height: rem(30);
   background: map-get($colors, grey-6);
-  padding: 0 0.65rem;
-  margin-bottom: 2rem;
+  padding: 0 rem(6.5);
+  margin-bottom: rem(20);
   color: map-get($colors, grey-7);
 }
 
 .section__rootfields {
-  margin-bottom: 3.6rem;
+  margin-bottom: rem(36);
 }
 
 .section__field {
   display: flex;
   justify-content: space-between;
-  margin-bottom: 1.1rem;
+  margin-bottom: rem(11);
 }
 
 .field__name {
-  font-size: 1.4rem !important;
-  font-weight: bold;
+  font-size: rem(14) !important;
+  font-weight: 700;
   text-transform: capitalize;
 }
 
 .field__value {
-  font-size: 1.44rem !important;
+  font-size: rem(14.4) !important;
   text-transform: capitalize;
 }
 
 .section__sub {
-  margin-bottom: 3.6rem;
+  margin-bottom: rem(36);
 }
 
 .sub__title {
@@ -444,11 +569,11 @@ export default {
 
   h2 {
     width: 100%;
-    font-size: 1.6rem;
-    line-height: 3.6rem;
+    font-size: rem(16);
+    line-height: rem(36);
     color: map-get($colors, grey-4);
-    border-bottom: 0.1rem solid map-get($colors, grey-3);
-    margin-bottom: 1.4rem;
+    border-bottom: rem(1) solid map-get($colors, grey-3);
+    margin-bottom: rem(14);
     text-transform: capitalize;
   }
 

@@ -34,6 +34,19 @@ class OCRRequestController extends Controller
         return OcrRequestJson::collection($ocrRequests);
     }
 
+    public function destroy($ocrRequest)
+    {
+        $ocrRequest = OCRRequest::where('request_id', $ocrRequest)->firstOrFail();
+
+        $this->authorize('delete', $ocrRequest);
+
+        tap($ocrRequest, function ($ocrRequest) {
+            $ocrRequest->orders->each->delete();
+        })->delete();
+
+        return response()->noContent();
+    }
+
     public function createOCRRequestUploadURI(Request $request)
     {
         // validate that filename parameter was provided
@@ -59,7 +72,7 @@ class OCRRequestController extends Controller
                 'uploading_filename' => $uploadingFilename,
                 'url_expiry_time' => $expiryTime,
                 'upload_uri' => $uploadRequestUri,
-                'company_id' => currentCompany()->id ?? Company::TCOMPANIES_DEV,
+                'company_id' => currentCompany()->id ?? Company::TCOMPANIES_DEMO,
                 'user_id' => auth()->user()->id,
             ];
 

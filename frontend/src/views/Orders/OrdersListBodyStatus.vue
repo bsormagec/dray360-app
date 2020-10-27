@@ -33,10 +33,10 @@ export default {
 }
 
 .status__circle {
-  width: 1rem;
-  height: 1rem;
-  margin-right: 1rem;
-  border: 0.1rem solid !important;
+  width: rem(10);
+  height: rem(10);
+  margin-right: rem(10);
+  border: rem(1) solid !important;
   border-color: lightgray !important;
   border-radius: 50%;
   background: transparent;
@@ -67,7 +67,7 @@ export default {
 
   &.rejected,&.exception {
     color: red;
-    font-weight: bold;
+    font-weight: 700;
   }
 }
 </style>

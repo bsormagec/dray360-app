@@ -6,6 +6,7 @@
       <span>Jump to page</span>
       <v-text-field
         label="#"
+        class="jump-text-field"
         solo
         dense
         hide-details
@@ -173,7 +174,7 @@ export default {
 .footer {
   display: flex;
   align-items: center;
-  margin-top: 2.4rem;
+  margin-top: rem(24);
 
   @media screen and (min-width: map-get($breakpoints , lg)) {
     align-items: center;
@@ -184,8 +185,8 @@ export default {
 
 .footer__indicator {
   margin-right: auto;
-  font-size: 1.44rem !important;
-  font-weight: bold;
+  font-size: rem(14.4) !important;
+  font-weight: 700;
   display: none;
 
   @media screen and (min-width: map-get($breakpoints , lg)) {
@@ -196,18 +197,20 @@ export default {
 .footer__jump {
   display: none;
   align-items: center;
-  width: 14rem;
-  margin-right: 2.1rem;
-
+  width: rem(150);
+  margin-right: rem(30);
+  .jump-text-field::v-deep .v-label {
+    font-size: rem(12);
+  }
   @media screen and (min-width: map-get($breakpoints , lg)) {
     display: flex;
   }
 
   span {
-    min-width: 8rem;
-    font-size: 1.3rem !important;
-    font-weight: bold;
-    margin-right: 0.8rem;
+    min-width: rem(80);
+    font-size: rem(13);
+    font-weight: 700;
+    margin-right: rem(8);
   }
 }
 

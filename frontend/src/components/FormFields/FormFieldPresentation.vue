@@ -114,7 +114,7 @@ export default {
 
   .field__name,
   .field__children .field__name {
-    font-size: 1.4rem !important;
+    font-size: rem(14) !important;
     font-weight: bold;
     text-transform: capitalize;
   }
@@ -133,14 +133,14 @@ export default {
 
   .field__value,
   .field__children .field__value {
-    font-size: 1.44rem !important;
+    font-size: rem(14.4) !important;
     text-transform: capitalize;
   }
 
   .field__children {
     display: flex;
     justify-content: space-between;
-    padding-left: 1rem;
+    padding-left: rem(10);
   }
 
   .form-field-highlight {
@@ -149,11 +149,10 @@ export default {
     display: flex;
     align-items: center;
     width: 100%;
-    min-height: 3rem;
-    margin-bottom: 1.1rem;
-    border: 0.1rem solid;
-    border-color: map-get($colors, white);
-    border-radius: 0.2rem;
+    min-height: rem(30);
+    margin-bottom: rem(11);
+    border: rem(1) solid map-get($colors, white);
+    border-radius: rem(2);
     transition: all 200ms ease-in-out;
 
     &.hover, &.edit {
@@ -162,8 +161,8 @@ export default {
 
     &.hover {
       background: rgba(var(--v-primary-base-rgb), 0.15);
-      padding-left: 1rem;
-      padding-right: 3rem;
+      padding-left: rem(10);
+      padding-right: rem(30);
     }
 
     &.edit {

@@ -1,6 +1,7 @@
 <template>
   <div class="listbody">
     <v-data-table
+      class="order-table"
       :headers="headers"
       :items="list()"
       item-key="key"
@@ -54,5 +55,8 @@ export default {
 <style lang="scss" scoped>
 .listbody {
   width: 100%;
+}
+.order-table::v-deep td {
+  font-size: rem(12);
 }
 </style>

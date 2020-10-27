@@ -5,7 +5,11 @@
         flat
         color="white"
       >
-        <v-toolbar-title><h1>Add User</h1></v-toolbar-title>
+        <v-toolbar-title>
+          <h1 class="headline">
+            Add User
+          </h1>
+        </v-toolbar-title>
 
         <v-spacer />
       </v-toolbar>
@@ -15,6 +19,7 @@
         <v-text-field
           v-model="name"
           data-cy="name-input"
+          class="add-user-field"
           label="Name"
           placeholder="Name"
           type="input"
@@ -23,6 +28,7 @@
         <v-text-field
           v-model="email"
           data-cy="email-input"
+          class="add-user-field"
           label="Email"
           placeholder="Email"
           type="input"
@@ -31,6 +37,7 @@
         <v-text-field
           v-model="password"
           data-cy="password-input"
+          class="add-user-field"
           label="Password"
           placeholder="Password"
           type="password"
@@ -40,6 +47,7 @@
           v-if="hasPermission('roles-update')"
           v-model="role_selected"
           data-cy="roles-selector"
+          class="add-user-field"
           label="User Role"
           item-text="display_name"
           item-value="id"
@@ -139,12 +147,22 @@ export default {
   width: 44%
 }
 
-h1 {
+.add-user-field::v-deep input {
+  font-size: rem(12);
+}
+
+.add-user-field::v-deep .v-label {
+  font-size: rem(12);
+}
+
+h1.headline {
   color: rgba(map-get($colors , black-2), 1) !important;
+  font-size: rem(26);
+  font-weight: 700;
 }
   .button {
-    margin-left: 6rem;
-    letter-spacing: 0.075rem;
+    margin-left: rem(60);
+    letter-spacing: rem(.75);
   }
   .delete-button {
     color: rgba(map-get($colors , red), 1) !important;
