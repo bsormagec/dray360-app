@@ -156,6 +156,7 @@ class OrdersControllerTest extends TestCase
                         'updated_at',
                         'deleted_at',
                         'ocr_data',
+                        'equipment_type',
                     ]);
                 })
                 ->toArray()
@@ -384,6 +385,13 @@ class OrdersControllerTest extends TestCase
             ->merge(
                 factory(Order::class)->make(['request_id' => $ocrRequestId])->toArray()
             )
+            ->map(function ($value) {
+                if (is_bool($value)) {
+                    return $value === true ? 1 : 0;
+                }
+
+                return $value;
+            })
             ->toArray();
     }
 

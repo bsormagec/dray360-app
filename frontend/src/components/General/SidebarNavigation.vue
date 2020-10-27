@@ -172,7 +172,6 @@ $sidebarbackground: url("../../assets/images/bg_sidebar.png");
 
   .logo__dry{
     width: rem(200);
-    height: rem(48);
     margin: rem(20) auto;
     display: block;
   }
