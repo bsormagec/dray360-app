@@ -18,6 +18,10 @@ export default {
 
     hasPermission (requestedPermission) {
       return has_permission(this.currentUser, requestedPermission)
+    },
+
+    isSuperadmin () {
+      return this.currentUser.is_superadmin
     }
   }
 }
