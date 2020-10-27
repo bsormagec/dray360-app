@@ -11,7 +11,7 @@ use Spatie\QueryBuilder\QueryBuilder;
 use Spatie\QueryBuilder\AllowedFilter;
 use Illuminate\Http\Resources\Json\JsonResource;
 
-class DivisionCodeController extends Controller
+class DivisionCodesController extends Controller
 {
     public function __invoke(Company $company, TMSProvider $tmsProvider)
     {
