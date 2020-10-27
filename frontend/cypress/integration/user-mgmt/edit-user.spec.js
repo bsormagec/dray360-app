@@ -25,15 +25,11 @@ describe('Edit user', function () {
 
     cy.get('[data-cy=email-input]').type('bill@example.com')
 
+    cy.route({ method: 'PUT', url: '**/api/users/**', response: this.editedUser })
+
+    cy.route({ method: 'GET', url: '**/api/users', response: this.users })
+
     cy.get('[data-cy=save-button]').click()
-
-    cy.route({ url: '**/api/users/**', response: this.editedUser })
-
-    cy.route({
-      url: '**/api/users',
-      status: 419,
-      response: this.users
-    })
 
     cy.url().should('include', 'user/dashboard')
   })
