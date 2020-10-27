@@ -145,6 +145,29 @@
         <div
           class="sub__title"
         >
+          <h2 :id="sections.division_codes.id">
+            {{ sections.division_codes.label }}
+          </h2>
+        </div>
+        <div class="divisionCodeSection">
+          <FormFieldSelectDivisionCodes
+            references="division_code"
+            label="Division Name"
+            :value="order.division_code"
+            :edit-mode="editMode"
+            :t-company-id="order.t_company_id"
+            :t-tms-provider-id="order.t_tms_provider_id"
+            :division-code="order.division_code"
+            @change="value => handleChange('division_code', value)"
+          />
+        </div>
+      </div>
+      <div
+        class="section__sub"
+      >
+        <div
+          class="sub__title"
+        >
           <h2 :id="sections.origin.id">
             {{ sections.origin.label }}
           </h2>
@@ -400,7 +423,7 @@ import FormFieldEquipmentType from '@/components/FormFields/FormFieldEquipmentTy
 import OutlinedButtonGroup from '@/components/General/OutlinedButtonGroup'
 import orders, { types } from '@/store/modules/orders'
 import { reqStatus } from '@/enums/req_status'
-
+import FormFieldSelectDivisionCodes from '@/components/FormFields/FormFieldSelectDivisionCodes'
 export default {
   name: 'OrderDetailsForm',
   components: {
@@ -412,12 +435,14 @@ export default {
     FormFieldTextArea,
     FormFieldAddressSwitchVerify,
     FormFieldEquipmentType,
-    OutlinedButtonGroup
+    OutlinedButtonGroup,
+    FormFieldSelectDivisionCodes
   },
   mixins: [isMobile],
   data () {
     return {
-      loading: false
+      loading: false,
+      divisionCodes: []
     }
   },
 
