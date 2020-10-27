@@ -578,3 +578,25 @@ To run a single test:
 
 ````
 
+
+
+
+#### Troubleshooting: Test a controller in your local dev workstation
+
+Clean up the local test database 
+
+````bash
+composer run migrate-test
+````
+Open the controller source code, for example: `./app/Http/Controllers/Api/OrderStatusHistoryController.php`
+
+put `dd($whatever)` at the line where you want a breakpoint.
+
+Run the unit test from the command line, like this
+
+````bash
+./vendor/bin/phpunit --filter=OrderStatusHistoryTest
+````
+
+
+
