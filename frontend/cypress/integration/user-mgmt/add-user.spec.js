@@ -5,6 +5,7 @@ describe('Add user', function () {
     cy.fixture('user-mgmt/roles.json').as('roles')
     cy.fixture('user-mgmt/company.json').as('company')
     cy.fixture('user-mgmt/user-list.json').as('users')
+    cy.fixture('user-mgmt/created-user.json').as('createdUser')
   })
 
   it('creates a user successfully', function () {
@@ -26,14 +27,11 @@ describe('Add user', function () {
 
     cy.get('[data-cy=password-input]').type('mockedpass')
 
-    cy.get('button').click()
+    cy.route({ method: 'POST', url: '**/api/users', response: this.createdUser })
 
-    // cy.route({ url: '**/api/users', response: this.users })
-    cy.route({
-      url: '**/api/users',
-      status: 419,
-      response: this.users
-    })
+    cy.route({ method: 'GET', url: '**/api/users', response: this.users })
+
+    cy.get('button').click()
 
     cy.url().should('include', 'user/dashboard')
   })
