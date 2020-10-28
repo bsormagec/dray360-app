@@ -87,3 +87,22 @@ select * from t_ocrvariants where json_contains(t_company_id_list, '2','$');
 Which will find company_id=2, for example. note that the single-quotes are required for integer values. String values would be searched with embedded double-quotes, like `'"two"'`
 
 
+
+
+
+
+
+### t_equipment_types
+
+#### line_prefix_list
+
+This is another JSON array that stores a list of text container code prefixes to help find and identify equipment types. It can be null of no line prefixes are known for that particular equipment.
+
+JSON data structure: [
+    line_prefix_1,
+    line_prefix_2,
+    etc.
+]
+
+See `company_id_list` for sample SQL queries.
+
