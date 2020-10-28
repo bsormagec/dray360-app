@@ -50,7 +50,7 @@ export default {
     }
   },
   created () {
-    // console.log('yoyoy', this.list())
+
   }
 
 }

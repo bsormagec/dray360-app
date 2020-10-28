@@ -1,0 +1,167 @@
+<template>
+  <footer
+    v-if="!loading"
+    class="table-pagination py-5"
+  >
+    <v-container>
+      <v-row>
+        <v-col cols="2">
+          <p class="pagination-info">
+            {{ from || 0 }} &mdash; {{ to || 0 }} of {{ total }}
+          </p>
+        </v-col>
+        <v-col
+          cols="10"
+          class="d-flex align-center justify-end"
+        >
+          <v-form
+            class="page-jump d-flex align-center"
+            @submit.prevent="goToPage(pageIndexTarget)"
+          >
+            <label>Jump to Page</label>
+            <v-text-field
+              v-model="pageIndexTarget"
+              outlined
+              height="35"
+              color="primary"
+              type="number"
+              placeholder="#"
+              class="page-number"
+              hide-details
+            />
+          </v-form>
+
+          <div class="page-links">
+            <v-btn
+              class="pagination-btn"
+              outlined
+              color="primary"
+              @click="goToFirstPage"
+            >
+              First
+            </v-btn>
+            <v-btn
+              v-for="page in pageIndexes"
+              :key="page"
+              class="pagination-btn"
+              :outlined="page !== meta.current_page"
+              color="primary"
+              @click="goToPage(page)"
+            >
+              {{ page }}
+            </v-btn>
+            <v-btn
+              class="pagination-btn"
+              outlined
+              color="primary"
+              @click="goToLastPage"
+            >
+              Last
+            </v-btn>
+          </div>
+        </v-col>
+      </v-row>
+    </v-container>
+  </footer>
+</template>
+<script>
+
+export default {
+  name: 'TablePagination',
+  components: {
+  },
+  props: {
+    meta: {
+      type: Object,
+      required: false
+    },
+    links: {
+      type: Object,
+      required: false
+    },
+    loading: {
+      type: Boolean,
+      required: false
+    }
+  },
+  data () {
+    return {
+      linkLimit: 3,
+      pageIndexTarget: null
+    }
+  },
+  computed: {
+    pageIndexes () {
+      if (this.meta) {
+        const current = this.meta.current_page
+        const linkTotal = Math.min(this.linkLimit, this.meta.last_page)
+        const indexes = []
+        const buffer = Math.floor(this.linkLimit / 2)
+
+        let index = Math.max(current - buffer, 1)
+
+        if (current === this.meta.last_page) {
+          index = Math.max(this.meta.last_page - (linkTotal - 1), 1)
+        }
+
+        for (let i = 0; i < linkTotal; i++) {
+          indexes.push(index++)
+        }
+        return indexes
+      }
+      return []
+    },
+    total () {
+      return this.meta ? this.meta.total : 0
+    },
+    from () {
+      return this.meta ? this.meta.from : 0
+    },
+    to () {
+      return this.meta ? this.meta.to : 0
+    }
+  },
+
+  created () {
+
+  },
+
+  methods: {
+    goToFirstPage () {
+      this.goToPage(1)
+    },
+    goToLastPage () {
+      this.goToPage(this.meta.last_page)
+    },
+    goToPage (pageIndex) {
+      // only emit event if the target page index is different from current_page
+      if (this.meta.current_page !== pageIndex && pageIndex <= this.meta.last_page && pageIndex > 0) {
+        this.$emit('pageIndexChange', pageIndex)
+        // reset this so the field doesn't show the current page number
+        this.pageIndexTarget = null
+      }
+    }
+  }
+}
+</script>
+
+<style lang="scss" scoped>
+    .pagination-btn {
+        margin: 0 rem(6);
+    }
+    .page-jump {
+        label {
+            margin-right:rem(10);
+            font-size: rem(10);
+            font-weight: 500;
+            text-transform: uppercase;
+        }
+        margin-right: rem(10);
+        .page-number {
+            max-width: rem(60);
+        }
+        .page-number::v-deep .v-input__slot {
+            min-height: auto;
+        }
+    }
+</style>

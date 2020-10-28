@@ -1,0 +1,484 @@
+<template>
+  <div class="table-root">
+    <v-data-table
+      v-model="selected"
+      :loading="loading"
+      :headers="showHeaders"
+      :server-items-length="total"
+      :options.sync="options"
+      :items="orders"
+      :class="{'table': true, 'loading': loading }"
+      :hide-default-footer="true"
+      :header-props="{ sortIcon: 'mdi-chevron-down'}"
+    >
+      <template v-slot:top>
+        <h6>{{ tableTitle }} ({{ total }})</h6>
+        <v-toolbar
+          flat
+          color="white"
+          class="table-tools"
+        >
+          <Filters
+            ref="orderFilters"
+            :search="initFilters.search"
+            :date-range="initFilters.dateRange"
+            :status="initFilters.status"
+            :update-type="initFilters.updateType"
+            @change="updateFilters"
+          />
+
+          <v-select
+            v-model="selectedHeaders"
+            :items="headers"
+            color="primary"
+            class="table-column-filter"
+            :menu-props="{ contentClass: 'column-selector-menu', bottom: true, offsetY: true }"
+            dense
+            height="30"
+            min-height="30"
+            outlined
+            hide-details
+            multiple
+            return-object
+            :chips="true"
+          >
+            <template v-slot:selection="{ index }">
+              <span
+                v-if="index === 2"
+                class=""
+              > Columns</span>
+            </template>
+          </v-select>
+        </v-toolbar>
+      </template>
+
+      <template v-slot:[`item.id`]="{ item }">
+        <a :href="`/order/${item.id}`">{{ item.id }}</a>
+      </template>
+
+      <template v-slot:[`item.latest_ocr_request_status?.display_status`]="{ item }">
+        <Chip
+          x-small
+          v-bind="getStatusChip(item)"
+        >
+          {{ item.latest_ocr_request_status.display_status }}
+        </Chip>
+      </template>
+      <template v-slot:[`item.actions`]="{ item }">
+        <div v-if="currentUser !== undefined && currentUser.is_superadmin">
+          supa admin
+        </div>
+        <v-btn
+          v-else
+          color="primary"
+          primary
+          outlined
+          small
+          :href="`/order/${item.id}`"
+        >
+          View
+        </v-btn>
+      </template>
+      <template v-slot:no-data>
+        <v-container>
+          <v-row>
+            <v-col
+              cols="12"
+              class="py-6 mt-4"
+            >
+              <h6>
+                <strong>No Data<strong /></strong>
+              </h6>
+              <div class="mt-5 py-5">
+                <v-btn
+                  small
+                  color="error"
+                  class="reset-filters"
+                  @click="resetFilters"
+                >
+                  Reset Filters
+                </v-btn>
+              </div>
+            </v-col>
+          </v-row>
+        </v-container>
+      </template>
+      <template v-slot:footer>
+        <Pagination
+          :loading="loading"
+          :meta="meta"
+          :links="links"
+          @pageIndexChange="onPageIndexChange"
+        />
+      </template>
+    </v-data-table>
+  </div>
+</template>
+<script>
+import auth from '@/store/modules/auth'
+import Filters from './components/filters'
+import Pagination from './components/Pagination'
+import Chip from '@/components/Chip'
+import hasPermissions from '@/mixins/permissions'
+import { getOrders2 } from '@/store/api_calls/orders'
+import { mapState, mapActions } from 'vuex'
+
+export default {
+  name: 'Table',
+  components: {
+    getOrders2,
+    Pagination,
+    Chip,
+    Filters
+  },
+  mixins: [hasPermissions],
+  props: {
+    activePage: {
+      type: Number,
+      required: false,
+      default: 1
+    },
+    headers: {
+      type: Array,
+      required: false,
+      default: () => [
+        { text: 'Order ID', sortable: false, value: 'id' },
+        { text: 'Update Status', value: 'latest_ocr_request_status.display_status', align: 'center' },
+        { text: 'Container', sortable: false, value: 'unit_number' },
+        { text: 'Bill To', value: 'bill_to_address.location_name' },
+        { text: 'Direction', value: 'shipment_direction', align: 'center' },
+        { text: 'Actions', value: 'actions', sortable: false, align: 'center' }
+      ]
+    },
+    customItems: {
+      type: Array,
+      required: false,
+      default: () => []
+    },
+    requestId: {
+      type: String,
+      required: false,
+      default: null
+    },
+    tableTitle: {
+      type: String,
+      required: true
+    }
+  },
+  data () {
+    return {
+      // main filters array
+      filters: [],
+      dialog: false,
+      loading: false,
+      page: 1,
+      options: {
+      },
+      minPause: 1000, // 1 second minimum delay
+      randomizeDelay: true,
+      ordersPayload: null,
+      // total number of returned orders
+      total: 0,
+      initFilters: {
+        search: '',
+        dateRange: [],
+        status: '',
+        updateType: ''
+      },
+      selected: [],
+      selectedHeaders: [],
+      orders: [],
+      // sorting params
+      sortDesc: false,
+      sortColumn: 'created_at',
+      sortColumnDefault: 'created_at',
+      // pagination links
+      links: null,
+      // query meta data
+      meta: null
+    }
+  },
+  computed: {
+    showHeaders () {
+      return this.headers.filter(s => this.selectedHeaders.includes(s))
+    },
+    ...mapState(auth.moduleName, { currentUser: state => state.currentUser })
+  },
+  watch: {
+    options: {
+      handler () {
+        const sortColumnMap = {
+          shipment_direction: 'order.shipment_direction',
+          'bill_to_address.location_name': 'order.bill_to_address',
+          'latest_ocr_request_status.display_status': 'status'
+        }
+        const sortCol = sortColumnMap.hasOwnProperty(this.options.sortBy.join()) ? sortColumnMap[this.options.sortBy.join()] : 'created_at'
+        this.page = this.options.page
+        this.sortColumn = sortCol
+        this.sortDesc = this.options.sortDesc.join() == 'true'
+        this.setURLParams()
+        this.getOrderData()
+      },
+      deep: true
+    }
+  },
+
+  created () {
+    this.selectedHeaders = Object.values(this.headers)
+
+    // set get params if there are any
+    const params = this.$route.query
+
+    this.initFilters.search = params.search
+    this.initFilters.dateRange = params.dateRange?.split(',')
+    this.initFilters.status = params.status
+    this.initFilters.updateType = params.updateType
+  },
+
+  mounted () {
+    this.initialize()
+    window.onpopstate = this.onHistoryChange.bind(this)
+  },
+
+  unmounted () {
+    // remove popstate event handling
+    window.onpopstate = null
+  },
+
+  methods: {
+
+    initialize () {
+      // if requestID supplied get orders for that ID
+      if (this.requestId) {
+
+      }
+
+      // if there are init filters set from get params grab the active filters from the filters component before querying the DB
+      if (Object.keys(this.initFilters).some(key => this.initFilters[key] && this.initFilters[key].length > 0)) {
+        this.filters = [...this.$refs.orderFilters.getActiveFilters()]
+      }
+
+      // get all orders
+      this.getOrderData()
+    },
+
+    async getOrderData () {
+      const startTime = new Date().getTime()
+      this.loading = true
+
+      const { data, links, meta } = await getOrders2(this.getRequestFilters())
+
+      const now = new Date().getTime()
+
+      const deltaTime = now - startTime
+
+      if (deltaTime < this.minPause) {
+        this.pause(this.minPause - deltaTime).then(() => {
+          this.orders = data
+          this.links = links
+          this.meta = meta
+          this.total = this.meta.total
+          this.loading = false
+        })
+      }
+    },
+    updateFilters (filters) {
+      // copy filters to local scope
+      this.filters = [...filters]
+      // when filters change from within the filter component always reset the pagination
+      this.resetPagination()
+      this.setURLParams()
+      this.getOrderData()
+    },
+
+    resetPagination () {
+      this.page = 1
+      this.sortColumn = this.sortColumnDefault
+    },
+
+    onHistoryChange (e) {
+      console.log('history change handler', e.state)
+      // set filter params from URL
+      // this.initFilters.search = e.state?.search || this.initFilters.search
+      // this.initFilters.status = e.state?.status || this.initFilters.status
+      // this.initFilters.dateRange = e.state?.dateRange.split(',') || this.initFilters
+      const { search, status, dateRange, updateType } = e.state
+
+      console.log(e.state)
+
+      const f = {
+        search: search || '',
+        dateRange: dateRange ? dateRange.split(',') : [],
+        status: status || '',
+        updateType: updateType || ''
+      }
+
+      // set page and sort from state if present
+      this.page = e.state?.page || this.page
+      this.sortColumn = e.state?.sort || this.sortColumn
+
+      this.$refs.orderFilters.setFiltersFromState(f)
+      this.filters = [...this.$refs.orderFilters.getActiveFilters()]
+      console.log(this.filters)
+      this.getOrderData()
+    },
+
+    // sets url get params from current filter set.
+    setURLParams () {
+      const filters = this.getFilters()
+      const filterState = filters.reduce((o, element) => ({ ...o, [element.type]: Array.isArray(element.value) ? element.value.join(',') : element.value }), {})
+      const params = filters.map(element => `${element.type}=${element.value}`).join('&')
+      history.pushState(filterState, document.title, `${window.location.pathname}?${params}`)
+    },
+
+    // sets filter set from URL params
+    setFiltersFromURL () {
+      const params = this.$route.query
+      console.log('!!query params: ', params)
+      // return this.activeFilters.some(element => element.value.length > 0)
+      this.initFilters.search = params.search || ''
+      this.initFilters.dateRange = params.dateRange?.split(',') || []
+      this.initFilters.status = params.status || ''
+      this.initFilters.updateType = params.updateType || ''
+      this.$refs.orderFilters.reset()
+    },
+
+    // this is just for UX aesthetics. A brief pause provides feedback to the user that something is happening. Randomizing it slightly makes it feel even more natural
+    pause (duration) {
+      const modifiedDuration = this.randomizeDelay ? parseInt(duration + (Math.random() * 1000)) : duration
+      return {
+        then: (callback) => {
+          window.setTimeout(callback, modifiedDuration)
+        }
+      }
+    },
+
+    optionUpdate (options) {
+      console.log('update options', options)
+    },
+
+    getFilters () {
+      const metaParams = [
+        { type: 'page', value: this.page },
+        { type: 'sort', value: this.sortDesc ? this.sortColumn : `-${this.sortColumn}` }
+      ]
+
+      return [...this.filters, ...metaParams]
+    },
+    // format filters for endpoint interface
+    getRequestFilters () {
+      const filterMap = {
+        search: 'filter[query]',
+        dateRange: 'filter[created_between]',
+        updateStatus: 'filter[status]',
+        status: 'filter[display_status]',
+        page: 'page',
+        sort: 'sort'
+      }
+      const filters = this.getFilters()
+
+      return filters.reduce((o, element) => ({ ...o, [filterMap[element.type]]: Array.isArray(element.value) ? element.value.join(',') : element.value }), {})
+    },
+
+    getStatusChip (item) {
+      // different colors for different status types
+      switch (item.latest_ocr_request_status.display_status) {
+        case 'new':
+          return { color: 'blue' }
+        case 'updated':
+          return { color: 'blue', outlined: true, textColor: 'blue' }
+        case 'canceled':
+          return { color: 'orange' }
+        default:
+          return { color: 'blue' }
+      }
+    },
+
+    resetFilters () {
+      this.$refs.orderFilters.clearFilters()
+    },
+
+    deleteItem (e) {
+      this.$emit('deleteItem', e.id)
+    },
+
+    onPageIndexChange (pageIndex) {
+      // console.log('changing page index', pageIndex)
+      this.page = pageIndex
+      this.setURLParams()
+      this.getOrderData()
+    }
+
+  }
+}
+</script>
+
+<style lang="scss" scoped>
+    .table-root {
+
+    }
+    .table.loading::v-deep tbody {
+      opacity: 0.5;
+    }
+    .table::v-deep tbody {
+        tr:nth-of-type(even) {
+            background-color: rgba(0, 0, 0, .05);
+            background-color: #F5F6F7;
+        }
+    }
+    .table::v-deep .v-data-table__wrapper {
+        border: solid 1px #E6ECF1;
+        border-radius: 5px;
+    }
+    .table::v-deep th {
+        height: rem(40);
+    }
+    .table::v-deep th.sortable .v-icon {
+        position: absolute;
+    }
+    .table::v-deep .v-data-table-header th {
+        background-color: #F5F6F7 !important;
+    }
+    .table-tools::v-deep .v-toolbar__content {
+      padding-left: 0;
+      padding-right: 0;
+      justify-content: space-between;
+    }
+    .table::v-deep .v-data-table__empty-wrapper {
+      margin-top:rem(46);
+    }
+    .table-column-filter {
+      max-width:rem(100);
+      font-size: rem(12);
+      margin-bottom: rem(8);
+    }
+    .table-column-filter::v-deep .v-icon {
+      margin-top: -6px !important;
+      font-weight: bold;
+      transform: scale(1.2);
+    }
+    .table-column-filter::v-deep .v-text-field__details {
+      padding: 0 10px;
+    }
+    .table-column-filter::v-deep .v-list-item__action {
+      margin-right: 13px !important;
+      transform: scale(0.7) !important;
+    }
+
+    .table-column-filter::v-deep .v-input__slot,
+    .table-column-filter::v-deep .v-select__slot {
+      min-height: rem(20) !important;
+      height: rem(32);
+
+    }
+    .table-column-filter::v-deep .v-input__append-inner {
+      margin-top: 0;
+    }
+    .column-selector-menu {
+      background: black;
+    }
+    .column-selector-menu::v-deep .v-list-item__action {
+      margin-right: 13px !important;
+      transform: scale(0.7) !important;
+    }
+</style>

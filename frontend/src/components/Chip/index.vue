@@ -1,87 +1,91 @@
 <template>
-  <span class="root">{{ text }}</span>
+  <span class="chip">
+    <v-chip
+      v-if="visible"
+      :close="closeable"
+      :color="color"
+      v-bind="$attrs"
+      :text-color="textColor"
+      :class="sizeClasses"
+      @click:close="onClose"
+    ><slot class="chip-content" /></v-chip>
+  </span>
 </template>
 <script>
 
-// import DateRangeCalendar from '@/components/Orders/DateRangeCalendar'
 export default {
   name: 'Chip',
   components: {
-    // DateRangeCalendar
   },
   props: {
+    handleClose: {
+      type: Boolean,
+      required: false,
+      default: false
+    },
     color: {
       type: String,
       required: false,
       default: 'blue'
     },
-    text: {
+    textColor: {
       type: String,
       required: false,
-      default: ''
-    },
-    size: {
-      type: String,
-      required: false,
-      default: 'medium'
+      default: 'white'
     },
     closeable: {
       type: Boolean,
       required: false,
       default: false
+    },
+    meta: {
+      type: Object,
+      required: false,
+      default: null
     }
   },
   data () {
     return {
-      dialog: false,
-      page: 1,
-      headers: [],
-      search: '',
-      dateRange: [],
-      selected: [],
-      selectedHeaders: [],
-      itemsPerPageArray: [4, 8, 12],
-      itemsPerPage: 4,
-      filter: {},
-      sortDesc: false
+      visible: true,
+      sizes: {
+        'x-small': 'px-2 py-2',
+        small: 'px-3',
+        large: 'px-4',
+        'x-large': 'px-5'
+      }
     }
   },
   computed: {
-    // showHeaders () {
-    //   return this.headers.filter(s => this.selectedHeaders.includes(s))
-    // }
-  },
+    sizeClasses () {
+      // design requires different paddings based on size
+      const classes = []
 
-  created () {
-    console.log('chip created')
-    // this.headers = Object.values(this.customheaders)
-    // this.selectedHeaders = this.headers
-    // this.initialize()
+      Object.keys(this.$attrs).forEach(prop => {
+        if (this.sizes.hasOwnProperty(prop)) {
+          classes.push(this.sizes[prop])
+        }
+      })
 
-    // if (window.location.search.includes('searchQuery')) {
-    //   const urlSearchQuery = new URLSearchParams(window.location.search).get('searchQuery')
-    //   this.search = urlSearchQuery
-    // }
-
-    // if (window.location.search.includes('createdBetween')) {
-    //   const urlDateRange = new URLSearchParams(window.location.search).get('createdBetween')
-    //   this.dateRange = urlDateRange
-    // }
+      return classes.join(' ')
+    }
   },
 
   methods: {
-    initialize () {
-      console.log('yo')
+    onClose () {
+      console.log('closing')
+      if (!this.handleClose) {
+        this.visible = false
+      }
+      console.log(this.meta)
+      this.$emit('closed', this.meta)
     }
   }
 }
 </script>
 
 <style lang="scss" scoped>
-    .root {
-        font-size: rem(12);
-        border: black solid 1px;
-        border-radius: rem(60);
-        padding: rem(5) 0px 0px rem(12);
+    // if custom styling is required
+    .chip {
+      display: inline-block;
     }
 </style>
