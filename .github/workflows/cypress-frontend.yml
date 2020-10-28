@@ -1,15 +1,15 @@
-name: cypress-frontend
+# name: cypress-frontend
 
-on: [push]
+# on: [push]
 
-jobs:
-  cypress-run:
-    runs-on: ubuntu-16.04
-    steps:
-      - uses: actions/checkout@v1
-      - uses: cypress-io/github-action@v2
-        with:
-          browser: chrome
-          headless: true
-          start: npm run serve
-          working-directory: frontend
+# jobs:
+#   cypress-run:
+#     runs-on: ubuntu-16.04
+#     steps:
+#       - uses: actions/checkout@v1
+#       - uses: cypress-io/github-action@v2
+#         with:
+#           browser: chrome
+#           headless: true
+#           start: npm run serve
+#           working-directory: frontend
