@@ -470,7 +470,7 @@ export default {
       }
     },
     removeFromCompanyVariant (i) {
-      if (this.draggable_rules.length > 1) {
+      if (this.draggable_rules.length >= 1) {
         this.draggable_rules.splice(i, 1)
         this.updateSelectedIndex(0)
       } else {
@@ -503,6 +503,9 @@ export default {
     async testSingleRule (index) {
       const ruleToTest = this.draggable_rules[index]
       const orderId = prompt('Please enter order ID')
+      if (orderId == null) {
+        return
+      }
       const dataObject = { orderId, ruleToTest }
 
       const status = await this[types.getTestingOutput](dataObject)

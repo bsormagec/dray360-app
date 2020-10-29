@@ -35,7 +35,7 @@ class OCRRulesAssignmentController extends Controller
         $data = $request->validate([
             'company_id' => 'required|integer|exists:t_companies,id',
             'variant_id' => 'required|integer|exists:t_ocrvariants,id',
-            'rules' => 'required|array',
+            'rules' => 'present|array',
             'rules.*' => 'integer|exists:t_ocrrules,id',
         ]);
         $companyId = $data['company_id'];
