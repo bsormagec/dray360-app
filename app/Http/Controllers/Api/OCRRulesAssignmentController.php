@@ -21,6 +21,7 @@ class OCRRulesAssignmentController extends Controller
 
         return new ResourcesOCRRule(
             CompanyOCRVariantOCRRule::assignedTo($filters['company_id'], $filters['variant_id'])
+                ->has('ocrRule')
                 ->with('ocrRule')
                 ->orderBy('rule_sequence')
                 ->get()

@@ -11,7 +11,7 @@
           title: 'Send to TMS',
           action: postSendToTms,
           path:'',
-          hasPermission: true
+          disabled: sendToTmsDisabled
         }"
         :options="[
           { title: 'Edit Order' , action: toggleEdit, hasPermission: true },
@@ -407,10 +407,14 @@
 
 <script>
 import isMobile from '@/mixins/is_mobile'
+import permissions from '@/mixins/permissions'
 import { mapState, mapActions } from 'vuex'
+import { reqStatus } from '@/enums/req_status'
+import get from 'lodash/get'
 
 import orderForm, { types as orderFormTypes } from '@/store/modules/order-form'
 import utils, { type } from '@/store/modules/utils'
+import orders, { types } from '@/store/modules/orders'
 
 import { Fragment } from 'vue-fragment'
 // import FormFieldDate from '@/components/FormFields/FormFieldDate'
@@ -421,8 +425,6 @@ import FormFieldTextArea from '@/components/FormFields/FormFieldTextArea'
 import FormFieldAddressSwitchVerify from '@/components/FormFields/FormFieldAddressSwitchVerify'
 import FormFieldEquipmentType from '@/components/FormFields/FormFieldEquipmentType'
 import OutlinedButtonGroup from '@/components/General/OutlinedButtonGroup'
-import orders, { types } from '@/store/modules/orders'
-import { reqStatus } from '@/enums/req_status'
 import FormFieldSelectDivisionCodes from '@/components/FormFields/FormFieldSelectDivisionCodes'
 export default {
   name: 'OrderDetailsForm',
@@ -438,11 +440,12 @@ export default {
     OutlinedButtonGroup,
     FormFieldSelectDivisionCodes
   },
-  mixins: [isMobile],
+  mixins: [isMobile, permissions],
   data () {
     return {
       loading: false,
-      divisionCodes: []
+      divisionCodes: [],
+      sentToTms: false
     }
   },
 
@@ -462,6 +465,18 @@ export default {
       if (this.isMobile) return 'secondary'
       if (this.editMode) return 'success'
       return 'primary'
+    },
+    sendToTmsDisabled () {
+      if (this.sentToTms) {
+        return true
+      }
+
+      if (this.isSuperadmin()) {
+        return false
+      }
+
+      return (this.order.tms_shipment_id !== null && this.order.tms_shipment_id !== undefined) ||
+        (get(this.order, 'ocr_request.latest_ocr_request_status.status') === 'sending-to-wint')
     }
   },
 
@@ -484,6 +499,7 @@ export default {
     async postSendToTms () {
       const status = await this[types.postSendToTms]({ order_id: this.order.id, status: 'sending-to-wint' })
       if (status === reqStatus.success) {
+        this.sentToTms = true
         await this[type.setSnackbar]({
           show: true,
           showSpinner: false,
@@ -499,7 +515,6 @@ export default {
               ? 'You are not authorized' : 'An error has occurred, please contact to technical support'
         })
       }
-      this.disabled = true
     },
     async downloadPDF (orderId) {
       this.loading = true

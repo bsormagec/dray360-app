@@ -11,11 +11,11 @@
         <v-btn
           rounded
           outlined
-          v-bind="[mainButtonAttributes, buttonAttributes]"
+          v-bind="[buttonAttributes, mainButtonAttributes]"
           color="primary"
           class="split-btn__primary"
-          @click="mainButtonAttributes.action"
           :loading="loading"
+          @click="mainButtonAttributes.action"
         >
           {{ mainAction.title }}
         </v-btn>
@@ -97,10 +97,13 @@ export default {
       }
     },
     mainButtonAttributes () {
+      const mainActionDisabled = this.mainAction.disabled !== undefined ? this.mainAction.disabled : false
+
       return {
-        href: this.mainAction.path !== "" ? this.mainAction.path : null,
-        title: this.mainAction.title !== "" ? this.mainAction.title : false,
-        action: typeof this.mainAction.action === 'function' ? this.mainAction.action : ""
+        href: this.mainAction.path !== '' ? this.mainAction.path : null,
+        title: this.mainAction.title !== '' ? this.mainAction.title : false,
+        action: typeof this.mainAction.action === 'function' ? this.mainAction.action : '',
+        disabled: this.buttonAttributes.disabled ? true : mainActionDisabled
       }
     }
   },

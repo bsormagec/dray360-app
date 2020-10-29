@@ -39,7 +39,7 @@ export const getTestingOutput = async (orderId, singleCompanyVariantRule) => axi
       'Access-Control-Allow-Origin': '*'
     }
 
-    testingOutput = axios.post('https://i0mgwmnrb1.execute-api.us-east-2.amazonaws.com/default/ocr-rules-engine-dev',
+    testingOutput = axios.post('https://b9da68xgc1.execute-api.us-east-2.amazonaws.com/api/1.0/dev/ocrrules-engine',
       fetchedOcrData,
       {
         withCredentials: false,

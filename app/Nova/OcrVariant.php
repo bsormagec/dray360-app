@@ -20,7 +20,7 @@ class OcrVariant extends Resource
      *
      * @var string
      */
-    public static $title = 'description';
+    public static $title = 'abbyy_variant_name';
 
     /**
      * The logical group associated with the resource.

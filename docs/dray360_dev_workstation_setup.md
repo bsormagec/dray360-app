@@ -346,7 +346,7 @@ Link the new project folder to the apache folder
 ````bash
 source ~/tcvars.sh
 
-sudo ln -s ${OM_ROOT}/public /var/www/html/${OM_VHOST}
+sudo ln -sf ${OM_ROOT}/public /var/www/html/${OM_VHOST}
 ll /var/www/html/${OM_VHOST}/ # confirm this looks good
 
 ````
@@ -577,4 +577,26 @@ To run a single test:
 # which is equivalent to: ./vendor/bin/phpunit --filter=ImportProfitToolsAddressesTest
 
 ````
+
+
+
+
+#### Troubleshooting: Test a controller in your local dev workstation
+
+Clean up the local test database 
+
+````bash
+composer run migrate-test
+````
+Open the controller source code, for example: `./app/Http/Controllers/Api/OrderStatusHistoryController.php`
+
+put `dd($whatever)` at the line where you want a breakpoint.
+
+Run the unit test from the command line, like this
+
+````bash
+./vendor/bin/phpunit --filter=OrderStatusHistoryTest
+````
+
+
 

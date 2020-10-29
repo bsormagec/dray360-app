@@ -21,6 +21,7 @@ use App\Http\Controllers\Api\ChangePasswordController;
 use App\Http\Controllers\Api\EquipmentTypesController;
 use App\Http\Controllers\Api\Auth\ResetPasswordController;
 use App\Http\Controllers\Api\OCRRulesAssignmentController;
+use App\Http\Controllers\Api\OrderStatusHistoryController;
 use App\Http\Controllers\Api\AccesorialCompaniesController;
 use App\Http\Controllers\Api\Auth\ForgotPasswordController;
 use App\Http\Controllers\Api\OcrRequestReprocessController;
@@ -86,6 +87,9 @@ Route::group(['middleware' => ['auth:sanctum', 'impersonate', 'tenant-aware']], 
 
     Route::get('orders/{order}/download-pdf', DownloadOriginalOrderPdfController::class)
         ->name('orders.download-pdf');
+
+    Route::get('orders/{order}/status-history', OrderStatusHistoryController::class)
+        ->name('orders.status-history');
 
     // Orders management
     Route::apiResource('orders', OrdersController::class)
