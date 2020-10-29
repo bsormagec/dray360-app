@@ -68,6 +68,8 @@ export default {
     },
     handleAccept () {
       this.$emit('change', this.currentValue)
+      const found = this.divisionCodes.find(element => element.division_code === this.currentValue)
+      this.division_name = found.division_name
     }
   }
 }
