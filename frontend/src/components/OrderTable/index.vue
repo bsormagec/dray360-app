@@ -65,9 +65,21 @@
         </Chip>
       </template>
       <template v-slot:[`item.actions`]="{ item }">
-        <div v-if="currentUser !== undefined && currentUser.is_superadmin">
-          supa admin
-        </div>
+        <OutlinedButtonGroup
+          v-if="currentUser !== undefined && currentUser.is_superadmin"
+          :main-action="{
+            title: 'DETAILS',
+            path: `/order/${item.id}`,
+            hasPermission: hasPermission('orders-view')
+          }"
+          :options="[
+            { title: 'View Details', action: () => item.action(item.id), hasPermission: hasPermission('orders-view') },
+            { title: 'Download PDF', action: () => downloadPDF(item.id) },
+            { title: 'Reprocess Order', action: () => reprocessOrder(item.id) },
+            { title: 'Delete Order', action: () => deleteOrder(item.id) }
+          ]"
+        />
+
         <v-btn
           v-else
           color="primary"
@@ -119,24 +131,35 @@ import auth from '@/store/modules/auth'
 import Filters from './components/filters'
 import Pagination from './components/Pagination'
 import Chip from '@/components/Chip'
-import hasPermissions from '@/mixins/permissions'
-import { getOrders2 } from '@/store/api_calls/orders'
+import hasPermission from '@/mixins/permissions'
+import { getOrders2, getDownloadPDFURL } from '@/store/api_calls/orders'
+
+import orders, { types } from '@/store/modules/orders'
 import { mapState, mapActions } from 'vuex'
+import OutlinedButtonGroup from '@/components/General/OutlinedButtonGroup'
+
+// ...mapActions(orders.moduleName, [types.getDownloadPDFURL]),
 
 export default {
   name: 'Table',
   components: {
-    getOrders2,
+
     Pagination,
     Chip,
+    OutlinedButtonGroup,
     Filters
   },
-  mixins: [hasPermissions],
+  mixins: [hasPermission],
   props: {
     activePage: {
       type: Number,
       required: false,
       default: 1
+    },
+    itemsPerPage: {
+      type: Number,
+      required: false,
+      default: 25
     },
     headers: {
       type: Array,
@@ -246,7 +269,6 @@ export default {
   },
 
   methods: {
-
     initialize () {
       // if requestID supplied get orders for that ID
       if (this.requestId) {
@@ -260,6 +282,22 @@ export default {
 
       // get all orders
       this.getOrderData()
+    },
+
+    // download pdf
+    async downloadPDF (orderId) {
+      const [error, data] = await getDownloadPDFURL(orderId)
+
+      if (!error) {
+        // not entirely sure why this is necessary, but this is the logic for triggering a DL elsewhere in the app.
+        const link = document.createElement('a')
+        link.href = data.data
+        link.download = `order-${orderId}.pdf`
+        link.click()
+        link.remove()
+      } else {
+        console.log('error', error)
+      }
     },
 
     async getOrderData () {
@@ -297,14 +335,7 @@ export default {
     },
 
     onHistoryChange (e) {
-      console.log('history change handler', e.state)
-      // set filter params from URL
-      // this.initFilters.search = e.state?.search || this.initFilters.search
-      // this.initFilters.status = e.state?.status || this.initFilters.status
-      // this.initFilters.dateRange = e.state?.dateRange.split(',') || this.initFilters
       const { search, status, dateRange, updateType } = e.state
-
-      console.log(e.state)
 
       const f = {
         search: search || '',
@@ -319,7 +350,6 @@ export default {
 
       this.$refs.orderFilters.setFiltersFromState(f)
       this.filters = [...this.$refs.orderFilters.getActiveFilters()]
-      console.log(this.filters)
       this.getOrderData()
     },
 
@@ -334,7 +364,7 @@ export default {
     // sets filter set from URL params
     setFiltersFromURL () {
       const params = this.$route.query
-      console.log('!!query params: ', params)
+
       // return this.activeFilters.some(element => element.value.length > 0)
       this.initFilters.search = params.search || ''
       this.initFilters.dateRange = params.dateRange?.split(',') || []
@@ -360,24 +390,29 @@ export default {
     getFilters () {
       const metaParams = [
         { type: 'page', value: this.page },
-        { type: 'sort', value: this.sortDesc ? this.sortColumn : `-${this.sortColumn}` }
+        { type: 'sort', value: this.sortDesc ? this.sortColumn : `-${this.sortColumn}` },
+        // this field is stubbed in, but the number is currently hard coded in the API as 25
+        { type: 'items_per_page', value: this.itemsPerPage },
+        { type: 'requestID', value: this.requestID }
       ]
 
       return [...this.filters, ...metaParams]
     },
     // format filters for endpoint interface
     getRequestFilters () {
-      const filterMap = {
+      const filterKeyMap = {
+        requestID: 'filter[request_id]',
         search: 'filter[query]',
         dateRange: 'filter[created_between]',
         updateStatus: 'filter[status]',
         status: 'filter[display_status]',
         page: 'page',
-        sort: 'sort'
+        sort: 'sort',
+        items_per_page: 'items_per_page'
       }
       const filters = this.getFilters()
 
-      return filters.reduce((o, element) => ({ ...o, [filterMap[element.type]]: Array.isArray(element.value) ? element.value.join(',') : element.value }), {})
+      return filters.reduce((o, element) => ({ ...o, [filterKeyMap[element.type]]: Array.isArray(element.value) ? element.value.join(',') : element.value }), {})
     },
 
     getStatusChip (item) {

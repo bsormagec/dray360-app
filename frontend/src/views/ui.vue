@@ -13,8 +13,7 @@
           <header class="mb-5">
             <h4>Order Table</h4>
           </header>
-          <Table
-
+          <OrderTable
             :table-title="`Request`"
             :has-search="true"
             :has-calendar="true"
@@ -27,12 +26,12 @@
 </template>
 <script>
 
-import Table from '@/components/OrderTable'
+import OrderTable from '@/components/OrderTable'
 
 export default {
   name: 'UI',
   components: {
-    Table
+    OrderTable
   },
   props: {
   },

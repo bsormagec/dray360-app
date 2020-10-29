@@ -7,7 +7,7 @@
     }"
     :options="[
       { title: 'View Details', action: () => item.action(item.order.id), hasPermission: hasPermission('orders-view') },
-      { title: 'Download PDF', action: () => downloadPDF(item.order.id) },
+      { title: 'Download PDF', action: () => downloadPDF(item.id) },
       { title: 'View Order History', action: () => viewOrderHistory() }
     ]"
     :disabled="checkId(item.order.id)"

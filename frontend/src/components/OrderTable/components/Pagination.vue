@@ -1,9 +1,12 @@
 <template>
   <footer
     v-if="!loading"
-    class="table-pagination py-5"
+    class="table-pagination py-1"
   >
-    <v-container>
+    <v-container
+      fluid
+      px-0
+    >
       <v-row>
         <v-col cols="2">
           <p class="pagination-info">
@@ -62,6 +65,7 @@
         </v-col>
       </v-row>
     </v-container>
+    </v-container-fluid>
   </footer>
 </template>
 <script>
@@ -148,6 +152,14 @@ export default {
 <style lang="scss" scoped>
     .pagination-btn {
         margin: 0 rem(6);
+        &:last-child {
+          margin-right: 0;
+        }
+    }
+    .pagination-info {
+      font-size: rem(10);
+      font-weight: 500;
+      letter-spacing: rem(1);
     }
     .page-jump {
         label {
@@ -155,6 +167,7 @@ export default {
             font-size: rem(10);
             font-weight: 500;
             text-transform: uppercase;
+            letter-spacing: rem(1);
         }
         margin-right: rem(10);
         .page-number {

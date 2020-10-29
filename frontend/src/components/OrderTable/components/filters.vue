@@ -117,7 +117,7 @@
               </v-col>
             </v-row>
 
-            <v-row>
+            <v-row v-if="currentUser !== undefined && currentUser.is_superadmin">
               <v-col cols="4 d-flex align-center">
                 <label
                   for="update_type"
@@ -163,6 +163,9 @@
 <script>
 import DateRangeCalendar from './DateRange'
 import Chip from '@/components/Chip'
+import auth from '@/store/modules/auth'
+import hasPermission from '@/mixins/permissions'
+import { mapState } from 'vuex'
 
 export default {
   name: 'Filters',
@@ -196,8 +199,27 @@ export default {
     return {
       open: false,
       statuses: [
-        { text: 'Verified', value: 'verified' },
-        { text: 'Pending', value: 'pending' }
+        { text: 'intake-accepted', value: 'intake-accepted' },
+        { text: 'intake-exception', value: 'intake-exception' },
+        { text: 'intake-rejected', value: 'intake-rejected' },
+        { text: 'intake-started', value: 'intake-started' },
+        { text: 'ocr-completed', value: 'ocr-completed' },
+        { text: 'ocr-post-processing-complete', value: 'ocr-post-processing-complete' },
+        { text: 'ocr-post-processing-error', value: 'ocr-post-processing-error' },
+        { text: 'ocr-waiting', value: 'ocr-waiting' },
+        { text: 'process-ocr-output-file-complete', value: 'process-ocr-output-file-complete' },
+        { text: 'process-ocr-output-file-error', value: 'process-ocr-output-file-error' },
+        { text: 'upload-requested', value: 'upload-requested' },
+        { text: 'sending-to-wint', value: 'sending-to-wint' },
+        { text: 'success-sending-to-wint', value: 'success-sending-to-wint' },
+        { text: 'failure-sending-to-wint', value: 'failure-sending-to-wint' },
+        { text: 'shipment-created-by-wint', value: 'shipment-created-by-wint' },
+        { text: 'shipment-not-created-by-wint', value: 'shipment-not-created-by-wint' },
+        { text: 'updating-to-wint', value: 'updating-to-wint' },
+        { text: 'success-updating-to-wint', value: 'success-updating-to-wint' },
+        { text: 'failure-updating-to-wint', value: 'failure-updating-to-wint' },
+        { text: 'shipment-updated-by-wint', value: 'shipment-updated-by-wint' },
+        { text: 'shipment-not-updated-by-wint', value: 'shipment-not-updated-by-wint' }
       ],
       // these are the models for the form fields
       filters: {
@@ -208,12 +230,6 @@ export default {
       },
       // these are the filters that get rendered as chips and emitted to the parent
       activeFilters: [],
-      /*
-        { type: 'search', value: this.search },
-        { type: 'dateRange', value: this.dateRange },
-        { type: 'status', value: this.status },
-        { type: 'updateType', value: this.updateType }
-      */
       labels: {
         search: 'Search',
         dateRange: 'Date Range',
@@ -233,7 +249,8 @@ export default {
     hasActiveFilters () {
       // if any filter value has a length greater than zero return true
       return this.activeFilters.some(element => element.value.length > 0)
-    }
+    },
+    ...mapState(auth.moduleName, { currentUser: state => state.currentUser })
   },
 
   created () {
