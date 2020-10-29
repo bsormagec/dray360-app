@@ -1,6 +1,6 @@
 name: cypress-frontend
 
-on: [pull_request]
+on: [push]
 
 jobs:
   cypress-run:
@@ -11,5 +11,5 @@ jobs:
         with:
           browser: chrome
           headless: true
-          start: npm run serve
+          start: npm run serve & wait-on http://localhost:8080
           working-directory: frontend
