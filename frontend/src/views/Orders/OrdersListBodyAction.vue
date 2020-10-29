@@ -10,7 +10,8 @@
       { title: 'Download PDF', action: () => downloadPDF(item.order.id) },
       { title: 'Reprocess Request', action: () => reprocessRequest(item), hasPermission: hasPermission('ocr-request-statuses-create') },
       { title: 'View Details', action: () => item.action(item.order.id), hasPermission: hasPermission('orders-view') },
-      { title: 'View Order History', action: () => viewOrderHistory() }
+      { title: 'View Order History', action: () => viewOrderHistory() },
+      { title: 'Delete Order', action: () => deleteOrder(item), hasPermission: hasPermission('orders-remove') }
     ]"
     :disabled="checkId(item.order.id)"
     :loading="loading"
@@ -24,7 +25,7 @@ import { mapActions } from 'vuex'
 import orders, { types } from '@/store/modules/orders'
 import utils, { type as utilTypes } from '@/store/modules/utils'
 import OutlinedButtonGroup from '@/components/General/OutlinedButtonGroup'
-import { reprocessOcrRequest } from '@/store/api_calls/orders'
+import { reprocessOcrRequest, delDeleteOrder } from '@/store/api_calls/orders'
 
 export default {
   name: 'OrdersListBodyAction',
@@ -89,6 +90,32 @@ export default {
         return false
       }
       return true
+    },
+    async deleteOrder (item) {
+      this.loading = true
+      await this.setConfirmDialog({
+        title: 'Are you sure you want to delete this order?',
+        onConfirm: async () => {
+          this.loading = true
+          const [error] = await delDeleteOrder(item.order.id)
+
+          if (!error) {
+            await this.setSnackbar({
+              show: true,
+              showSpinner: false,
+              message: 'Order deleted'
+            })
+            location.reload()
+            this.loading = false
+          } else {
+            await this.setSnackbar({
+              show: true,
+              showSpinner: false,
+              message: 'Error trying to delete the order'
+            })
+          }
+        }
+      })
     }
   }
 }

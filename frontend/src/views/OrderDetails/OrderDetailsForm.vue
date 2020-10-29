@@ -15,7 +15,8 @@
         }"
         :options="[
           { title: 'Edit Order' , action: toggleEdit, hasPermission: true },
-          { title: 'Download Order', action: () => downloadPDF(order.id), hasPermission: true }
+          { title: 'Download Order', action: () => downloadPDF(order.id), hasPermission: true },
+          { title: 'Delete Order', action: () => deleteOrder(order.id), hasPermission: hasPermission('orders-remove') }
         ]"
         :loading="loading"
       />
@@ -426,6 +427,8 @@ import FormFieldAddressSwitchVerify from '@/components/FormFields/FormFieldAddre
 import FormFieldEquipmentType from '@/components/FormFields/FormFieldEquipmentType'
 import OutlinedButtonGroup from '@/components/General/OutlinedButtonGroup'
 import FormFieldSelectDivisionCodes from '@/components/FormFields/FormFieldSelectDivisionCodes'
+import { delDeleteOrder } from '@/store/api_calls/orders'
+
 export default {
   name: 'OrderDetailsForm',
   components: {
@@ -484,7 +487,7 @@ export default {
     ...mapActions(orderForm.moduleName, {
       toggleEdit: orderFormTypes.toggleEdit
     }),
-    ...mapActions(utils.moduleName, [type.setSnackbar]),
+    ...mapActions(utils.moduleName, [type.setSnackbar, type.setConfirmationDialog]),
     ...mapActions(orders.moduleName, [types.postSendToTms, types.getDownloadPDFURL]),
     ...mapActions(orders.moduleName, [types.getDownloadPDFURL]),
     ...mapActions(orderForm.moduleName, {
@@ -530,6 +533,34 @@ export default {
         console.log('error')
       }
       this.loading = false
+    },
+    async deleteOrder (orderId) {
+      this.loading = true
+
+      await this[type.setConfirmationDialog]({
+        title: 'Are you sure you want to delete this order?',
+        onConfirm: async () => {
+          this.loading = true
+
+          const [error] = await delDeleteOrder(this.order.id)
+
+          if (!error) {
+            await this[type.setSnackbar]({
+              show: true,
+              showSpinner: false,
+              message: 'Order deleted'
+            })
+            this.$router.push('/dashboard')
+          } else {
+            await this[type.setSnackbar]({
+              show: true,
+              showSpinner: false,
+              message: 'Error trying to delete the order'
+            })
+          }
+          this.loading = false
+        }
+      })
     }
 
   }

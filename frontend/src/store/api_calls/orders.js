@@ -29,3 +29,5 @@ export const reprocessOcrRequest = async (requestId) => axios.post(`/api/ocr/req
 export const postSendToTms = async (tmsData) => axios.post('/api/send-to-tms', tmsData).then(data => [undefined, data]).catch(e => [e])
 
 export const getDivisionCodes = async (companyId, tmsId) => axios.get(`/api/companies/${companyId}/tms-provider/${tmsId}/division-names`).then(data => [undefined, data.data]).catch(e => [e])
+
+export const delDeleteOrder = async (orderId) => axios.delete(`/api/orders/${orderId}`).then(data => [undefined, data.data]).catch(e => [e])
