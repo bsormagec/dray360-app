@@ -29,25 +29,35 @@ use Illuminate\Database\Seeder;
 class EquipmentLeaseTypesSeeder extends Seeder
 {
     const INPUT_FILES = [
+#        [
+#            "COMPANY_ID" => 1,  # Cushing
+#            "T_TMS_PROVIDER_ID" => 1,
+#            "FILENAME" => 'database/seeds/cushing_equipment_lease_types_20201028.csv'
+#        ],
+#        [
+#            "COMPANY_ID" => 2,  # TCompaniesDemo, doing double duty as CushingOnboarding
+#            "T_TMS_PROVIDER_ID" => 1,
+#            "FILENAME" => 'database/seeds/cushing_equipment_lease_types_20201028.csv'
+#        ],
+#        [
+#            "COMPANY_ID" => 4,  # IXTOnboarding
+#            "T_TMS_PROVIDER_ID" => 1,
+#            "FILENAME" => 'database/seeds/ixt_equipment_lease_types_20201028.csv'
+#        ],
+#        [
+#            "COMPANY_ID" => 5,  # IXT
+#            "T_TMS_PROVIDER_ID" => 1,
+#            "FILENAME" => 'database/seeds/ixt_equipment_lease_types_20201028.csv'
+#        ],
         [
-            "COMPANY_ID" => 1,  # Cushing
+            "COMPANY_ID" => 6,  # PortCityLogisticsOnboarding
             "T_TMS_PROVIDER_ID" => 1,
-            "FILENAME" => 'database/seeds/cushing_equipment_lease_types_20201028.csv'
+            "FILENAME" => 'database/seeds/pcl_equipment_lease_types_20201028.csv'
         ],
         [
-            "COMPANY_ID" => 2,  # TCompaniesDemo, doing double duty as CushingOnboarding
+            "COMPANY_ID" => 7,  # PortCityLogistics
             "T_TMS_PROVIDER_ID" => 1,
-            "FILENAME" => 'database/seeds/cushing_equipment_lease_types_20201028.csv'
-        ],
-        [
-            "COMPANY_ID" => 4,  # IXTOnboarding
-            "T_TMS_PROVIDER_ID" => 1,
-            "FILENAME" => 'database/seeds/ixt_equipment_lease_types_20201028.csv'
-        ],
-        [
-            "COMPANY_ID" => 5,  # IXT
-            "T_TMS_PROVIDER_ID" => 1,
-            "FILENAME" => 'database/seeds/ixt_equipment_lease_types_20201028.csv'
+            "FILENAME" => 'database/seeds/pcl_equipment_lease_types_20201028.csv'
         ],
     ];
 
