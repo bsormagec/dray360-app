@@ -38,7 +38,7 @@
               closeable
               handle-close
               :color="getFilterColor(filter)"
-              :meta="filter"
+              :represents="filter"
               @closed="removeFilter"
             >
               {{ getChipText(filter) }}

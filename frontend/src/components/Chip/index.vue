@@ -38,7 +38,7 @@ export default {
       required: false,
       default: false
     },
-    meta: {
+    represents: {
       type: Object,
       required: false,
       default: null
@@ -76,7 +76,7 @@ export default {
       if (!this.handleClose) {
         this.visible = false
       }
-      this.$emit('closed', this.meta)
+      this.$emit('closed', this.represents)
     }
   }
 }
