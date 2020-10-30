@@ -49,7 +49,7 @@
                 :key="page"
                 height="30"
                 class="page-index-btn"
-                :outlined="page !== meta.current_page"
+                :outlined="page !== pageData.current_page"
                 color="primary"
                 @click="goToPage(page)"
               >
@@ -79,7 +79,7 @@ export default {
   components: {
   },
   props: {
-    meta: {
+    pageData: {
       type: Object,
       required: false
     },
@@ -100,16 +100,16 @@ export default {
   },
   computed: {
     pageIndexes () {
-      if (this.meta) {
-        const current = this.meta.current_page
-        const linkTotal = Math.min(this.linkLimit, this.meta.last_page)
+      if (this.pageData) {
+        const current = this.pageData.current_page
+        const linkTotal = Math.min(this.linkLimit, this.pageData.last_page)
         const indexes = []
         const buffer = Math.floor(this.linkLimit / 2)
 
         let index = Math.max(current - buffer, 1)
 
-        if (current === this.meta.last_page) {
-          index = Math.max(this.meta.last_page - (linkTotal - 1), 1)
+        if (current === this.pageData.last_page) {
+          index = Math.max(this.pageData.last_page - (linkTotal - 1), 1)
         }
 
         for (let i = 0; i < linkTotal; i++) {
@@ -120,13 +120,13 @@ export default {
       return []
     },
     total () {
-      return this.meta ? this.meta.total : 0
+      return this.pageData ? this.pageData.total : 0
     },
     from () {
-      return this.meta ? this.meta.from : 0
+      return this.pageData ? this.pageData.from : 0
     },
     to () {
-      return this.meta ? this.meta.to : 0
+      return this.pageData ? this.pageData.to : 0
     }
   },
 
@@ -139,11 +139,11 @@ export default {
       this.goToPage(1)
     },
     goToLastPage () {
-      this.goToPage(this.meta.last_page)
+      this.goToPage(this.pageData.last_page)
     },
     goToPage (pageIndex) {
       // only emit event if the target page index is different from current_page
-      if (this.meta.current_page !== pageIndex && pageIndex <= this.meta.last_page && pageIndex > 0) {
+      if (this.pageData.current_page !== pageIndex && pageIndex <= this.pageData.last_page && pageIndex > 0) {
         this.$emit('pageIndexChange', pageIndex)
         // reset this so the field doesn't show the current page number
         this.pageIndexTarget = null

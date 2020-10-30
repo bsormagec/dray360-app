@@ -29,7 +29,7 @@
           class="active-filters"
         >
           <li
-            v-for="(filter, index) in activeFilters"
+            v-for="(filter, index) in displayFilters"
             :key="index"
           >
             <Chip
@@ -109,16 +109,23 @@
                   v-model="filters.status"
                   outlined
                   hide-details
+                  multiple
+                  chips
                   :items="statuses"
                   name="update_status"
                   prepend-icon="mdi-check-circle-outline"
                   dense
+                  class="status-selector"
                 />
               </v-col>
             </v-row>
 
             <v-row v-if="currentUser !== undefined && currentUser.is_superadmin">
-              <v-col cols="4 d-flex align-center">
+              <!--
+
+                FUTURE STATE:
+
+                <v-col cols="4 d-flex align-center">
                 <label
                   for="update_type"
                   class="filter-label"
@@ -126,7 +133,7 @@
                   Update Type
                 </label>
               </v-col>
-              <v-col cols="8">
+               <v-col cols="8">
                 <v-select
                   v-model="filters.updateType"
                   outlined
@@ -135,7 +142,7 @@
                   prepend-icon="mdi-restore"
                   dense
                 />
-              </v-col>
+              </v-col> -->
             </v-row>
           </v-container>
         </v-card-text>
@@ -164,7 +171,6 @@
 import DateRangeCalendar from './DateRange'
 import Chip from '@/components/Chip'
 import auth from '@/store/modules/auth'
-import hasPermission from '@/mixins/permissions'
 import { mapState } from 'vuex'
 
 export default {
@@ -185,9 +191,9 @@ export default {
       default: () => []
     },
     status: {
-      type: String,
+      type: Array,
       required: false,
-      default: ''
+      default: () => []
     },
     updateType: {
       type: String,
@@ -199,27 +205,14 @@ export default {
     return {
       open: false,
       statuses: [
-        { text: 'intake-accepted', value: 'intake-accepted' },
-        { text: 'intake-exception', value: 'intake-exception' },
-        { text: 'intake-rejected', value: 'intake-rejected' },
-        { text: 'intake-started', value: 'intake-started' },
-        { text: 'ocr-completed', value: 'ocr-completed' },
-        { text: 'ocr-post-processing-complete', value: 'ocr-post-processing-complete' },
-        { text: 'ocr-post-processing-error', value: 'ocr-post-processing-error' },
-        { text: 'ocr-waiting', value: 'ocr-waiting' },
-        { text: 'process-ocr-output-file-complete', value: 'process-ocr-output-file-complete' },
-        { text: 'process-ocr-output-file-error', value: 'process-ocr-output-file-error' },
-        { text: 'upload-requested', value: 'upload-requested' },
-        { text: 'sending-to-wint', value: 'sending-to-wint' },
-        { text: 'success-sending-to-wint', value: 'success-sending-to-wint' },
-        { text: 'failure-sending-to-wint', value: 'failure-sending-to-wint' },
-        { text: 'shipment-created-by-wint', value: 'shipment-created-by-wint' },
-        { text: 'shipment-not-created-by-wint', value: 'shipment-not-created-by-wint' },
-        { text: 'updating-to-wint', value: 'updating-to-wint' },
-        { text: 'success-updating-to-wint', value: 'success-updating-to-wint' },
-        { text: 'failure-updating-to-wint', value: 'failure-updating-to-wint' },
-        { text: 'shipment-updated-by-wint', value: 'shipment-updated-by-wint' },
-        { text: 'shipment-not-updated-by-wint', value: 'shipment-not-updated-by-wint' }
+        { text: 'Processing', value: 'Processing' },
+        { text: 'Exception', value: 'Exception' },
+        { text: 'Rejected', value: 'Rejected' },
+        { text: 'Intake', value: 'Intake' },
+        { text: 'Verified', value: 'Verified' },
+        { text: 'Sending to TMS', value: 'Sending to TMS' },
+        { text: 'Sent to TMS', value: 'Sent to TMS' },
+        { text: 'Accepted by TMS', value: 'Accepted by TMS' }
       ],
       // these are the models for the form fields
       filters: {
@@ -250,11 +243,27 @@ export default {
       // if any filter value has a length greater than zero return true
       return this.activeFilters.some(element => element.value.length > 0)
     },
+    // necessary because of rendering multiple chips for different statuses
+    displayFilters () {
+      const dFilters = []
+      this.activeFilters.forEach(filter => {
+        console.log('filters')
+        if (filter.type === 'status') {
+          console.log('filter value!!!', filter.value)
+          filter.value.forEach(statusFilter => {
+            dFilters.push({ type: 'status', value: statusFilter })
+          })
+        } else {
+          dFilters.push(filter)
+        }
+      })
+
+      return dFilters.filter(element => !!element.value.length)
+    },
     ...mapState(auth.moduleName, { currentUser: state => state.currentUser })
   },
 
   created () {
-    // console.log(this.search, this.filters.search)
     this.setActiveFilters()
   },
 
@@ -277,7 +286,10 @@ export default {
     },
     removeFilter (filter) {
       // remove from model
-      if (Array.isArray(filter.value)) {
+      if (filter.type === 'status') {
+        console.log(filter)
+        this.filters[filter.type] = this.filters[filter.type].filter(element => element !== filter.value)
+      } else if (Array.isArray(filter.value)) {
         this.filters[filter.type] = []
       } else {
         this.filters[filter.type] = ''
@@ -371,5 +383,8 @@ export default {
       margin: 0 rem(5);
       display: inline-block;
     }
+  }
+  .status-selector::v-deep .v-chip {
+    margin: rem(5);
   }
 </style>

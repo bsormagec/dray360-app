@@ -76,7 +76,6 @@ export default {
       if (!this.handleClose) {
         this.visible = false
       }
-      console.log(this.meta)
       this.$emit('closed', this.meta)
     }
   }

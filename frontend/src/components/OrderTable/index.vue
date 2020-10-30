@@ -58,8 +58,15 @@
         <a :href="`/order/${item.id}`">{{ item.id }}</a>
       </template>
 
-      <template v-slot:[`item.latest_ocr_request_status?.display_status`]="{ item }">
+      <template v-slot:[`item.latest_ocr_request_status.display_status`]="{ item }">
+        <span
+          v-if="item.latest_ocr_request_status.display_status.toLowerCase() === 'verified'"
+          class="verified-status"
+        >
+          {{ item.latest_ocr_request_status.display_status }}
+        </span>
         <Chip
+          v-else
           x-small
           v-bind="getStatusChip(item)"
         >
@@ -120,7 +127,7 @@
       <template v-slot:footer>
         <Pagination
           :loading="loading"
-          :meta="meta"
+          :page-data="meta"
           :links="links"
           @pageIndexChange="onPageIndexChange"
         />
@@ -216,7 +223,7 @@ export default {
       page: 1,
       options: {
       },
-      minPause: 500, // 1 second minimum delay
+      minPause: 500, // 0.5 second minimum delay
       randomizeDelay: true,
       ordersPayload: null,
       // total number of returned orders
@@ -224,8 +231,9 @@ export default {
       initFilters: {
         search: '',
         dateRange: [],
-        status: '',
-        updateType: ''
+        status: [],
+        updateType: '',
+        page: 1
       },
       selected: [],
       selectedHeaders: [],
@@ -255,7 +263,7 @@ export default {
           'latest_ocr_request_status.display_status': 'status'
         }
         const sortCol = sortColumnMap.hasOwnProperty(this.options.sortBy.join()) ? sortColumnMap[this.options.sortBy.join()] : 'created_at'
-        this.page = this.options.page
+        // this.page = this.options.page
         this.sortColumn = sortCol
         this.sortDesc = this.options.sortDesc.join() == 'true'
         this.setURLParams()
@@ -269,13 +277,19 @@ export default {
     this.selectedHeaders = Object.values(this.headers)
 
     // set get params if there are any
+
     const params = this.$route.query
+
+    this.page = params.page
 
     this.initFilters.search = params.search
     this.initFilters.dateRange = params.dateRange?.split(',')
-    this.initFilters.status = params.status
+    this.initFilters.status = params.status.split(',')
     this.initFilters.updateType = params.updateType
     this.initFilters.requestID = params.requestID
+    this.initFilters.page = params.page
+
+    // console.log(this.page)
   },
 
   mounted () {
@@ -438,13 +452,14 @@ export default {
     },
 
     onHistoryChange (e) {
-      const { search, status, dateRange, updateType } = e.state
+      const { search, status, dateRange, updateType, page } = e.state
 
       const f = {
         search: search || '',
         dateRange: dateRange ? dateRange.split(',') : [],
-        status: status || '',
-        updateType: updateType || ''
+        status: status ? status.split(',') : [],
+        updateType: updateType || '',
+        page: page || 1
       }
 
       // set page and sort from state if present
@@ -467,12 +482,11 @@ export default {
     // sets filter set from URL params
     setFiltersFromURL () {
       const params = this.$route.query
-
-      // return this.activeFilters.some(element => element.value.length > 0)
       this.initFilters.search = params.search || ''
       this.initFilters.dateRange = params.dateRange?.split(',') || []
-      this.initFilters.status = params.status || ''
+      this.initFilters.status = params.status?.split(',') || []
       this.initFilters.updateType = params.updateType || ''
+      this.initFilters.page = params.page || 1
       this.$refs.orderFilters.reset()
     },
 
@@ -504,7 +518,7 @@ export default {
         search: 'filter[query]',
         dateRange: 'filter[created_between]',
         updateStatus: 'filter[status]',
-        status: 'filter[display_status]',
+        status: 'filter[display_status]', // Processing, Exception, Rejected, Intake, Verified, Sending to TMS, Sent to TMS, Accepted by TMS
         page: 'page',
         sort: 'sort',
         items_per_page: 'items_per_page'
@@ -515,14 +529,15 @@ export default {
     },
 
     getStatusChip (item) {
+      console.log(item.latest_ocr_request_status.display_status.toLowerCase())
       // different colors for different status types
-      switch (item.latest_ocr_request_status.display_status) {
-        case 'new':
+      switch (item.latest_ocr_request_status.display_status.toLowerCase()) {
+        case 'processing':
           return { color: 'blue' }
         case 'updated':
           return { color: 'blue', outlined: true, textColor: 'blue' }
-        case 'canceled':
-          return { color: 'orange' }
+        case 'rejected':
+          return { color: '#FB7660' }
         default:
           return { color: 'blue' }
       }
@@ -548,7 +563,17 @@ export default {
 
 <style lang="scss" scoped>
     .table-root {
-
+      .verified-status {
+        &:before {
+          content: '';
+          display: inline-block;
+          width: rem(10);
+          height: rem(10);
+          border-radius: 50%;
+          background: #77C19A;
+          margin-right: rem(5);
+        }
+      }
     }
     .table.loading::v-deep tbody {
       opacity: 0.5;
