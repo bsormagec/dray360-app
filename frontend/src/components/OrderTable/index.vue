@@ -415,6 +415,12 @@ export default {
           this.total = this.meta.total
           this.loading = false
         })
+      } else {
+        this.orders = data
+        this.links = links
+        this.meta = meta
+        this.total = this.meta.total
+        this.loading = false
       }
     },
     updateFilters (filters) {
