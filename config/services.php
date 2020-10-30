@@ -55,6 +55,16 @@ return [
             'password' => env('RIP_CMS_IXT_PASSWORD'),
             'token' => env('RIP_CMS_IXT_TOKEN'),
         ],
+        Str::snake(Company::PORT_CITY_LOGISTICS_ONBOARDING) => [
+            'username' => env('RIP_CMS_PORT_CITY_LOGISTICS_ONBOARDING_USERNAME'),
+            'password' => env('RIP_CMS_PORT_CITY_LOGISTICS_ONBOARDING_PASSWORD'),
+            'token' => env('RIP_CMS_PORT_CITY_LOGISTICS_ONBOARDING_TOKEN'),
+        ],
+        Str::snake(Company::PORT_CITY_LOGISTICS) => [
+            'username' => env('RIP_CMS_PORT_CITY_LOGISTICS_USERNAME'),
+            'password' => env('RIP_CMS_PORT_CITY_LOGISTICS_PASSWORD'),
+            'token' => env('RIP_CMS_PORT_CITY_LOGISTICS_TOKEN'),
+        ],
     ],
 
     'search-address' => [

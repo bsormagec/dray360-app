@@ -55,7 +55,9 @@ class ImportProfitToolsAddresses extends Command
             Company::getCushing(),
             Company::getTCompaniesDemo(),
             Company::getIXT(),
-            Company::getIXTOnboarding()
+            Company::getIXTOnboarding(),
+            Company::getPortCityLogistics(),
+            Company::getPortCityLogisticsOnboarding()
         ])->when($this->option('company-name'), function ($collection) {
             return $collection->reject(fn ($company) => $company->name != $this->option('company-name'));
         });
