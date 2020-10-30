@@ -4,6 +4,7 @@ import Orders from '@/views/Orders/Orders'
 import Details from '@/views/Details/Details'
 import OrderDetails from '@/views/OrderDetails/OrderDetails'
 import Login from '@/views/Login'
+import OrderTableTest from '@/views/OrderTableTest'
 import RulesEditor from '@/views/RulesEditor/RulesEditor'
 import auth from '@/router/middleware/auth'
 import superadmin from '@/router/middleware/superadmin'
@@ -84,6 +85,14 @@ const routes = [
       middleware: [auth, dev]
     },
     component: StyleGuide
+  },
+  {
+    path: '/order-table-test',
+    name: 'OrderTableTest',
+    meta: {
+      middleware: [auth, dev]
+    },
+    component: OrderTableTest
   },
   {
     path: '/order/:id',
