@@ -164,7 +164,9 @@ class Address extends Model
                 $this->postal_code == ($address['zip'] ?? null) &&
                 $this->country == ($address['country'] ?? null) &&
                 $this->location_name == ($address['name'] ?? null) &&
-                $this->location_phone == ($address['phone'] ?? null);
+                $this->location_phone == ($address['phone'] ?? null) &&
+                $this->is_billable == (strtoupper($address['co_allow_billing'] ?? '') == 'T') &&
+                $this->is_terminal == (strtoupper($address['co_allow_billing'] ?? '') == 'T');
         }
 
         return false;

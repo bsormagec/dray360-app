@@ -4,7 +4,7 @@ import Orders from '@/views/Orders/Orders'
 import Details from '@/views/Details/Details'
 import OrderDetails from '@/views/OrderDetails/OrderDetails'
 import Login from '@/views/Login'
-import UI from '@/views/ui'
+import OrderTableTest from '@/views/OrderTableTest'
 import RulesEditor from '@/views/RulesEditor/RulesEditor'
 import auth from '@/router/middleware/auth'
 import superadmin from '@/router/middleware/superadmin'
@@ -87,28 +87,28 @@ const routes = [
     component: StyleGuide
   },
   {
-    path: '/ui',
-    name: 'ui',
+    path: '/order-table-test',
+    name: 'OrderTableTest',
     meta: {
       middleware: [auth, dev]
     },
-    component: UI
+    component: OrderTableTest
   },
   {
     path: '/order/:id',
-    name: 'Details',
-    meta: {
-      middleware: [auth]
-    },
-    component: Details
-  },
-  {
-    path: '/order-test/:id',
     name: 'OrderDetails',
     meta: {
       middleware: [auth]
     },
     component: OrderDetails
+  },
+  {
+    path: '/order-test/:id',
+    name: 'Details',
+    meta: {
+      middleware: [auth]
+    },
+    component: Details
   },
   {
     path: '/login',

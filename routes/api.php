@@ -14,14 +14,17 @@ use App\Http\Controllers\Api\OCRRequestController;
 use App\Http\Controllers\Api\BulkActionsController;
 use App\Http\Controllers\Api\OCRVariantsController;
 use App\Http\Controllers\Api\UsersStatusController;
+use App\Http\Controllers\Api\DivisionCodesController;
 use App\Http\Controllers\Api\ImpersonationController;
 use App\Http\Controllers\Api\SearchAddressController;
 use App\Http\Controllers\Api\ChangePasswordController;
 use App\Http\Controllers\Api\EquipmentTypesController;
 use App\Http\Controllers\Api\Auth\ResetPasswordController;
 use App\Http\Controllers\Api\OCRRulesAssignmentController;
+use App\Http\Controllers\Api\OrderStatusHistoryController;
 use App\Http\Controllers\Api\AccesorialCompaniesController;
 use App\Http\Controllers\Api\Auth\ForgotPasswordController;
+use App\Http\Controllers\Api\OcrRequestReprocessController;
 use App\Http\Controllers\Api\DownloadOriginalOrderPdfController;
 use App\Http\Controllers\Api\EquipmentTypesSelectValuesController;
 
@@ -85,9 +88,12 @@ Route::group(['middleware' => ['auth:sanctum', 'impersonate', 'tenant-aware']], 
     Route::get('orders/{order}/download-pdf', DownloadOriginalOrderPdfController::class)
         ->name('orders.download-pdf');
 
+    Route::get('orders/{order}/status-history', OrderStatusHistoryController::class)
+        ->name('orders.status-history');
+
     // Orders management
-    Route::resource('orders', OrdersController::class)
-        ->only(['index', 'update', 'show']);
+    Route::apiResource('orders', OrdersController::class)
+        ->only(['index', 'update', 'show', 'destroy']);
 
     // New orders endpoint
     Route::resource('orders-2', OrdersController2::class)
@@ -100,6 +106,10 @@ Route::group(['middleware' => ['auth:sanctum', 'impersonate', 'tenant-aware']], 
     //companies/1/tms-provider/1/equipment-types
     Route::get('companies/{company}/tms-provider/{tmsProvider}/equipment-types', EquipmentTypesController::class)
         ->name('equipment-types.show');
+
+    //companies/1/tms-provider/1/equipment-types
+    Route::get('companies/{company}/tms-provider/{tmsProvider}/division-names', DivisionCodesController::class)
+        ->name('division-names.show');
 
     //companies/1/tms-provider/1/equipment-types-options
     Route::get('companies/{company}/tms-provider/{tmsProvider}/equipment-types-options', EquipmentTypesSelectValuesController::class)
@@ -117,10 +127,14 @@ Route::group(['middleware' => ['auth:sanctum', 'impersonate', 'tenant-aware']], 
     Route::post('createocrrequestuploaduri', [OCRRequestController::class, 'createOCRRequestUploadURI'])
         ->name('createocruploaduri');
 
+    // Reprocess the given OCR request
+    Route::post('ocr/requests/{request_id}/reprocess', OcrRequestReprocessController::class)
+        ->name('ocr.requests.reprocess');
+
     // CRUD for OCR Request
     Route::apiResource('ocr/requests', OCRRequestController::class, ['as' => 'ocr'])
-        ->parameters(['request' => 'ocrRequest'])
-        ->only(['index']);
+        ->parameters(['requests' => 'ocrRequest'])
+        ->only(['index', 'destroy']);
 
     // CRUD for OCR Rules
     Route::apiResource('ocr/rules', OCRRulesController::class, ['as' => 'ocr'])

@@ -1,7 +1,6 @@
 <template>
   <footer
-    v-if="!loading"
-    class="table-pagination py-1"
+    :class="['table-pagination', 'py-1', loading ? 'loading' : '']"
   >
     <v-container
       fluid
@@ -25,7 +24,7 @@
             <v-text-field
               v-model="pageIndexTarget"
               outlined
-              height="35"
+              height="30"
               color="primary"
               type="number"
               placeholder="#"
@@ -38,24 +37,29 @@
             <v-btn
               class="pagination-btn"
               outlined
+              height="30"
               color="primary"
               @click="goToFirstPage"
             >
               First
             </v-btn>
-            <v-btn
-              v-for="page in pageIndexes"
-              :key="page"
-              class="pagination-btn"
-              :outlined="page !== meta.current_page"
-              color="primary"
-              @click="goToPage(page)"
-            >
-              {{ page }}
-            </v-btn>
+            <div class="page-indexes">
+              <v-btn
+                v-for="page in pageIndexes"
+                :key="page"
+                height="30"
+                class="page-index-btn"
+                :outlined="page !== meta.current_page"
+                color="primary"
+                @click="goToPage(page)"
+              >
+                {{ page }}
+              </v-btn>
+            </div>
             <v-btn
               class="pagination-btn"
               outlined
+              height="30"
               color="primary"
               @click="goToLastPage"
             >
@@ -150,11 +154,38 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+  .loading {
+    opacity: 0.5;
+    transition: opacity 0.3s linear;
+  }
+  .page-links {
+    display: flex;
+  }
     .pagination-btn {
-        margin: 0 rem(6);
+        margin: 0 rem(10);
         &:last-child {
           margin-right: 0;
         }
+    }
+    .page-index-btn {
+      border-radius: 0 !important;
+      padding: 0 !important;
+      min-width: rem(50) !important;
+      &:first-child {
+        border-top-left-radius: 4px !important;
+        border-bottom-left-radius: 4px !important;
+        border-right: none;
+      }
+      &:last-child {
+        border-top-right-radius: 4px !important;
+        border-bottom-right-radius: 4px !important;
+        border-left: none;
+      }
+    }
+
+    .pagination-btn::v-deep .v-btn__content, .page-index-btn::v-deep .v-btn__content {
+      font-size: rem(10);
+
     }
     .pagination-info {
       font-size: rem(10);

@@ -1,0 +1,3126 @@
+{
+	"info": {
+		"_postman_id": "f98e79c1-b8ad-4c01-a49e-a7da6a6fb75a",
+		"name": "Dray360 API",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Login",
+			"item": [
+				{
+					"name": "/sanctum/csrf-cookie",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "ae111d13-a15d-4f48-a894-695a76993f13",
+								"exec": [
+									"var token1=postman.getResponseCookie('XSRF-TOKEN').value;",
+									"var token2=token1.replace(/%3D/g, '=');",
+									"postman.setEnvironmentVariable('X-XSRF-TOKEN', token2);",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"protocolProfileBehavior": {
+						"disabledSystemHeaders": {
+							"accept": true
+						}
+					},
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/x-www-form-urlencoded"
+							},
+							{
+								"key": "Referer",
+								"value": "{{server}}",
+								"type": "text"
+							},
+							{
+								"key": "Accept",
+								"value": "application/json, text/plain, */*",
+								"type": "text"
+							},
+							{
+								"key": "X-XSRF-TOKEN",
+								"value": "{{X-XSRF-TOKEN}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{server}}/sanctum/csrf-cookie",
+							"host": [
+								"{{server}}"
+							],
+							"path": [
+								"sanctum",
+								"csrf-cookie"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "/api/login",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "c974a0ba-36a9-4c76-a733-6b7cf8e9e4a9",
+								"exec": [
+									"var token1=postman.getResponseCookie('XSRF-TOKEN').value;",
+									"var token2=token1.replace(/%3D/g, '=');",
+									"postman.setEnvironmentVariable('X-XSRF-TOKEN', token2);",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"protocolProfileBehavior": {
+						"disabledSystemHeaders": {
+							"accept": true
+						}
+					},
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/x-www-form-urlencoded"
+							},
+							{
+								"key": "Referer",
+								"value": "{{server}}",
+								"type": "text"
+							},
+							{
+								"key": "Accept",
+								"value": "application/json, text/plain, */*",
+								"type": "text"
+							},
+							{
+								"key": "X-XSRF-TOKEN",
+								"value": "{{X-XSRF-TOKEN}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "password",
+									"value": "mongomongo",
+									"type": "text"
+								},
+								{
+									"key": "email",
+									"value": "peter+test13@peternelson.com",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{server}}/api/login",
+							"host": [
+								"{{server}}"
+							],
+							"path": [
+								"api",
+								"login"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "/api/user",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "aa154934-4150-41b9-af10-744045745a40",
+								"exec": [
+									"var token1=postman.getResponseCookie('XSRF-TOKEN').value;",
+									"var token2=token1.replace(/%3D/g, '=');",
+									"postman.setEnvironmentVariable('X-XSRF-TOKEN', token2);",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/x-www-form-urlencoded"
+							},
+							{
+								"key": "Referer",
+								"value": "{{server}}",
+								"type": "text"
+							},
+							{
+								"key": "Accept",
+								"value": "application/json, text/plain, */*",
+								"type": "text"
+							},
+							{
+								"key": "X-XSRF-TOKEN",
+								"value": "{{X-XSRF-TOKEN}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": []
+						},
+						"url": {
+							"raw": "{{server}}/api/user",
+							"host": [
+								"{{server}}"
+							],
+							"path": [
+								"api",
+								"user"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "/api/logout",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "cb6b953d-32ca-41cf-b07d-f7954685926c",
+								"exec": [
+									"var token1=postman.getResponseCookie('XSRF-TOKEN').value;",
+									"var token2=token1.replace(/%3D/g, '=');",
+									"postman.setEnvironmentVariable('X-XSRF-TOKEN', token2);",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/x-www-form-urlencoded"
+							},
+							{
+								"key": "Referer",
+								"value": "{{server}}",
+								"type": "text"
+							},
+							{
+								"key": "Accept",
+								"value": "application/json, text/plain, */*",
+								"type": "text"
+							},
+							{
+								"key": "X-XSRF-TOKEN",
+								"value": "{{X-XSRF-TOKEN}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "password",
+									"value": "mongomongo",
+									"type": "text"
+								},
+								{
+									"key": "email",
+									"value": "peter@peternelson.com",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{server}}/api/logout",
+							"host": [
+								"{{server}}"
+							],
+							"path": [
+								"api",
+								"logout"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "/api/signup",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "a66d86f7-9f93-48c1-93d9-3e29fc06f931",
+								"exec": [
+									"var token1=postman.getResponseCookie('XSRF-TOKEN').value;",
+									"var token2=token1.replace(/%3D/g, '=');",
+									"postman.setEnvironmentVariable('X-XSRF-TOKEN', token2);",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/x-www-form-urlencoded"
+							},
+							{
+								"key": "Referer",
+								"value": "{{server}}",
+								"type": "text"
+							},
+							{
+								"key": "Accept",
+								"value": "application/json, text/plain, */*",
+								"type": "text"
+							},
+							{
+								"key": "X-XSRF-TOKEN",
+								"value": "{{X-XSRF-TOKEN}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "password",
+									"value": "mongomongo",
+									"type": "text"
+								},
+								{
+									"key": "email",
+									"value": "peter+test13@peternelson.com",
+									"type": "text"
+								},
+								{
+									"key": "name",
+									"value": "Peter Test13",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{server}}/api/signup",
+							"host": [
+								"{{server}}"
+							],
+							"path": [
+								"api",
+								"signup"
+							]
+						}
+					},
+					"response": []
+				}
+			],
+			"protocolProfileBehavior": {}
+		},
+		{
+			"name": "Password Reset",
+			"item": [
+				{
+					"name": "/api/password/email",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "3fe4cf2d-d101-4189-9448-e3f65fb9d6b2",
+								"exec": [
+									"var token1=postman.getResponseCookie('XSRF-TOKEN').value;",
+									"var token2=token1.replace(/%3D/g, '=');",
+									"postman.setEnvironmentVariable('X-XSRF-TOKEN', token2);",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"protocolProfileBehavior": {
+						"disabledSystemHeaders": {
+							"accept": true
+						}
+					},
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/x-www-form-urlencoded"
+							},
+							{
+								"key": "Referer",
+								"type": "text",
+								"value": "{{server}}"
+							},
+							{
+								"key": "Accept",
+								"type": "text",
+								"value": "application/json, text/plain, */*"
+							},
+							{
+								"key": "X-XSRF-TOKEN",
+								"type": "text",
+								"value": "{{X-XSRF-TOKEN}}"
+							}
+						],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "email",
+									"value": "peter+test13@peternelson.com",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{server}}/api/password/email",
+							"host": [
+								"{{server}}"
+							],
+							"path": [
+								"api",
+								"password",
+								"email"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "/api/password/change",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "25f33372-0928-4f8e-9f65-dc9057b39039",
+								"exec": [
+									"var token1=postman.getResponseCookie('XSRF-TOKEN').value;",
+									"var token2=token1.replace(/%3D/g, '=');",
+									"postman.setEnvironmentVariable('X-XSRF-TOKEN', token2);",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"protocolProfileBehavior": {
+						"disabledSystemHeaders": {
+							"accept": true
+						}
+					},
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/x-www-form-urlencoded"
+							},
+							{
+								"key": "Referer",
+								"type": "text",
+								"value": "{{server}}"
+							},
+							{
+								"key": "Accept",
+								"type": "text",
+								"value": "application/json, text/plain, */*"
+							},
+							{
+								"key": "X-XSRF-TOKEN",
+								"type": "text",
+								"value": "{{X-XSRF-TOKEN}}"
+							}
+						],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "old_password",
+									"value": "",
+									"description": "required",
+									"type": "text"
+								},
+								{
+									"key": "password",
+									"value": "",
+									"description": "min:8",
+									"type": "text"
+								},
+								{
+									"key": "password_confirmation",
+									"value": "",
+									"description": "Rrequired",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{server}}/api/password/change",
+							"host": [
+								"{{server}}"
+							],
+							"path": [
+								"api",
+								"password",
+								"change"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "/api/password/reset",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "6d53cd02-cfc9-4c8b-abbc-f8040c0746bb",
+								"exec": [
+									"var token1=postman.getResponseCookie('XSRF-TOKEN').value;",
+									"var token2=token1.replace(/%3D/g, '=');",
+									"postman.setEnvironmentVariable('X-XSRF-TOKEN', token2);",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"protocolProfileBehavior": {
+						"disabledSystemHeaders": {
+							"accept": true
+						}
+					},
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/x-www-form-urlencoded"
+							},
+							{
+								"key": "Referer",
+								"type": "text",
+								"value": "{{server}}"
+							},
+							{
+								"key": "Accept",
+								"type": "text",
+								"value": "application/json, text/plain, */*"
+							},
+							{
+								"key": "X-XSRF-TOKEN",
+								"type": "text",
+								"value": "{{X-XSRF-TOKEN}}"
+							}
+						],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "token",
+									"value": "89a920acb33a626a73acdfc88943649559ff6440011b46c8bfd5cc34ec151668",
+									"description": "From the url",
+									"type": "text"
+								},
+								{
+									"key": "email",
+									"value": "peter+test13@peternelson.com",
+									"description": "From one query parameter",
+									"type": "text"
+								},
+								{
+									"key": "password",
+									"value": "12345678",
+									"description": "min:8",
+									"type": "text"
+								},
+								{
+									"key": "password_confirmation",
+									"value": "12345678",
+									"description": "Rrequired",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{server}}/api/password/reset",
+							"host": [
+								"{{server}}"
+							],
+							"path": [
+								"api",
+								"password",
+								"reset"
+							]
+						}
+					},
+					"response": []
+				}
+			],
+			"protocolProfileBehavior": {}
+		},
+		{
+			"name": "Companies",
+			"item": [
+				{
+					"name": "/api/companies",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "6ae0417d-fa5c-469d-a8b0-d56408412a35",
+								"exec": [
+									"var token1=postman.getResponseCookie('XSRF-TOKEN').value;",
+									"var token2=token1.replace(/%3D/g, '=');",
+									"postman.setEnvironmentVariable('X-XSRF-TOKEN', token2);",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Referer",
+								"value": "{{server}}",
+								"type": "text"
+							},
+							{
+								"key": "Accept",
+								"value": "application/json, text/plain, */*",
+								"type": "text"
+							},
+							{
+								"key": "X-XSRF-TOKEN",
+								"value": "{{X-XSRF-TOKEN}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [],
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{server}}/api/companies",
+							"host": [
+								"{{server}}"
+							],
+							"path": [
+								"api",
+								"companies"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "/api/companies/:id",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "eec5e1c6-6c93-4300-8cff-60d995025c8f",
+								"exec": [
+									"var token1=postman.getResponseCookie('XSRF-TOKEN').value;",
+									"var token2=token1.replace(/%3D/g, '=');",
+									"postman.setEnvironmentVariable('X-XSRF-TOKEN', token2);",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/x-www-form-urlencoded"
+							},
+							{
+								"key": "Referer",
+								"type": "text",
+								"value": "{{server}}"
+							},
+							{
+								"key": "Accept",
+								"type": "text",
+								"value": "application/json, text/plain, */*"
+							},
+							{
+								"key": "X-XSRF-TOKEN",
+								"type": "text",
+								"value": "{{X-XSRF-TOKEN}}"
+							}
+						],
+						"url": {
+							"raw": "{{server}}/api/companies/:id",
+							"host": [
+								"{{server}}"
+							],
+							"path": [
+								"api",
+								"companies",
+								":id"
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": "2"
+								}
+							]
+						},
+						"description": "retrieve a company by ID"
+					},
+					"response": []
+				},
+				{
+					"name": "/api/companies/:id",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "954c3183-8ab3-4aec-8fe9-d06ab276f1e4",
+								"exec": [
+									"var token1=postman.getResponseCookie('XSRF-TOKEN').value;",
+									"var token2=token1.replace(/%3D/g, '=');",
+									"postman.setEnvironmentVariable('X-XSRF-TOKEN', token2);",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Referer",
+								"type": "text",
+								"value": "{{server}}"
+							},
+							{
+								"key": "Accept",
+								"type": "text",
+								"value": "application/json, text/plain, */*"
+							},
+							{
+								"key": "X-XSRF-TOKEN",
+								"type": "text",
+								"value": "{{X-XSRF-TOKEN}}"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"refs_comments_mapping\": null,\n    \"t_address_id\": null,\n    \"name\": null,\n    \"email_intake_address\": null,\n    \"email_intake_address_alt\": null\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{server}}/api/companies/:id",
+							"host": [
+								"{{server}}"
+							],
+							"path": [
+								"api",
+								"companies",
+								":id"
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": "3"
+								}
+							]
+						},
+						"description": "Update the company object including the refs_comments_mapping_tools."
+					},
+					"response": []
+				}
+			],
+			"protocolProfileBehavior": {}
+		},
+		{
+			"name": "Orders",
+			"item": [
+				{
+					"name": "/api/orders",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "a18bc5af-8790-4606-9233-f99ee029b50e",
+								"exec": [
+									"var token1=postman.getResponseCookie('XSRF-TOKEN').value;",
+									"var token2=token1.replace(/%3D/g, '=');",
+									"postman.setEnvironmentVariable('X-XSRF-TOKEN', token2);",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/x-www-form-urlencoded"
+							},
+							{
+								"key": "Referer",
+								"value": "{{server}}",
+								"type": "text"
+							},
+							{
+								"key": "Accept",
+								"value": "application/json, text/plain, */*",
+								"type": "text"
+							},
+							{
+								"key": "X-XSRF-TOKEN",
+								"value": "{{X-XSRF-TOKEN}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{server}}/api/orders?filter[created_between]=2020-04-30,2020-05-01&sort=-created_at&page=1",
+							"host": [
+								"{{server}}"
+							],
+							"path": [
+								"api",
+								"orders"
+							],
+							"query": [
+								{
+									"key": "filter[request_id]",
+									"value": "",
+									"description": "The ocr request id",
+									"disabled": true
+								},
+								{
+									"key": "filter[order.bill_to_address_raw_text]",
+									"value": "",
+									"disabled": true
+								},
+								{
+									"key": "filter[order.port_ramp_of_origin_address_raw_text]",
+									"value": "",
+									"disabled": true
+								},
+								{
+									"key": "filter[order.port_ramp_of_destination_address_raw_text]",
+									"value": "",
+									"disabled": true
+								},
+								{
+									"key": "filter[order.equipment_type]",
+									"value": "",
+									"disabled": true
+								},
+								{
+									"key": "filter[order.shipment_designation]",
+									"value": "",
+									"disabled": true
+								},
+								{
+									"key": "filter[order.shipment_direction]",
+									"value": "",
+									"disabled": true
+								},
+								{
+									"key": "filter[created_between]",
+									"value": "2020-04-30,2020-05-01",
+									"description": "date range, separated by commas"
+								},
+								{
+									"key": "filter[status]",
+									"value": "intake-started,ocr-completed,ocr-waiting,",
+									"description": "Multiple values comma separated. Available: intake-accepted, intake-exception, intake-rejected, intake-started, ocr-completed, ocr-post-processing-complete, ocr-post-processing-error, ocr-waiting, process-ocr-output-file-complete, process-ocr-output-file-error, upload-requested",
+									"disabled": true
+								},
+								{
+									"key": "filter[display_status]",
+									"value": "Pending,Processing",
+									"description": "Filter by all the fields above except the dates",
+									"disabled": true
+								},
+								{
+									"key": "filter[query]",
+									"value": "whateever",
+									"disabled": true
+								},
+								{
+									"key": "sort",
+									"value": "request_id",
+									"disabled": true
+								},
+								{
+									"key": "sort",
+									"value": "-created_at"
+								},
+								{
+									"key": "sort",
+									"value": "status",
+									"disabled": true
+								},
+								{
+									"key": "sort",
+									"value": "order.bill_to_address_raw_text",
+									"disabled": true
+								},
+								{
+									"key": "sort",
+									"value": "order.equipment_type",
+									"disabled": true
+								},
+								{
+									"key": "sort",
+									"value": "order.shipment_designation",
+									"disabled": true
+								},
+								{
+									"key": "sort",
+									"value": "order.shipment_direction",
+									"disabled": true
+								},
+								{
+									"key": "page",
+									"value": "1"
+								}
+							]
+						},
+						"description": "You can enable multiple values of the `filter[]` but only one `sort` is allowed"
+					},
+					"response": []
+				},
+				{
+					"name": "/api/orders-2",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "6b98293e-ab6a-460a-9ee3-ffd42d9fb0c9",
+								"exec": [
+									"var token1=postman.getResponseCookie('XSRF-TOKEN').value;",
+									"var token2=token1.replace(/%3D/g, '=');",
+									"postman.setEnvironmentVariable('X-XSRF-TOKEN', token2);",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/x-www-form-urlencoded"
+							},
+							{
+								"key": "Referer",
+								"type": "text",
+								"value": "{{server}}"
+							},
+							{
+								"key": "Accept",
+								"type": "text",
+								"value": "application/json, text/plain, */*"
+							},
+							{
+								"key": "X-XSRF-TOKEN",
+								"type": "text",
+								"value": "{{X-XSRF-TOKEN}}"
+							}
+						],
+						"url": {
+							"raw": "{{server}}/api/orders-2",
+							"host": [
+								"{{server}}"
+							],
+							"path": [
+								"api",
+								"orders-2"
+							],
+							"query": [
+								{
+									"key": "filter[query]",
+									"value": "whateever",
+									"description": "Will search in these fields request_id, equipment_type, shipment_designation, shipment_direction, tms_shipment_id, unit_number, reference_number, location_name",
+									"disabled": true
+								},
+								{
+									"key": "filter[request_id]",
+									"value": "",
+									"description": "The ocr request id",
+									"disabled": true
+								},
+								{
+									"key": "filter[created_between]",
+									"value": "2020-09-29,2020-10-01",
+									"description": "date range, separated by commas",
+									"disabled": true
+								},
+								{
+									"key": "filter[status]",
+									"value": "shipment-not-updated-by-wint",
+									"description": "Multiple values comma separated. Available: intake-accepted, intake-exception, intake-rejected, intake-started, ocr-completed, ocr-post-processing-complete, ocr-post-processing-error, ocr-waiting, process-ocr-output-file-complete, process-ocr-output-file-error, upload-requested",
+									"disabled": true
+								},
+								{
+									"key": "filter[display_status]",
+									"value": "Accepted by TMS",
+									"description": "Filters by the display status. Available: Processing, Exception, Rejected, Intake, Verified, Sending to TMS, Sent to TMS, Accepted by TMS",
+									"disabled": true
+								},
+								{
+									"key": "sort",
+									"value": "request_id",
+									"description": "Available: request_id, created_at, order.equipment_type, order.shipment_designation, order.shipment_direction, order.bill_to_address",
+									"disabled": true
+								},
+								{
+									"key": "page",
+									"value": "1",
+									"disabled": true
+								}
+							]
+						},
+						"description": "You can enable multiple values of the `filter[]` but only one `sort` is allowed"
+					},
+					"response": []
+				},
+				{
+					"name": "/api/orders/:id",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "018757d8-c667-41dc-aa92-109b9329499a",
+								"exec": [
+									"var token1=postman.getResponseCookie('XSRF-TOKEN').value;",
+									"var token2=token1.replace(/%3D/g, '=');",
+									"postman.setEnvironmentVariable('X-XSRF-TOKEN', token2);",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/x-www-form-urlencoded"
+							},
+							{
+								"key": "Referer",
+								"type": "text",
+								"value": "{{server}}"
+							},
+							{
+								"key": "Accept",
+								"type": "text",
+								"value": "application/json, text/plain, */*"
+							},
+							{
+								"key": "X-XSRF-TOKEN",
+								"type": "text",
+								"value": "{{X-XSRF-TOKEN}}"
+							}
+						],
+						"url": {
+							"raw": "{{server}}/api/orders/:id",
+							"host": [
+								"{{server}}"
+							],
+							"path": [
+								"api",
+								"orders",
+								":id"
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": "8332"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "/api/orders/:id",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "7ab28a85-1d09-483a-a793-bee9bb29ec96",
+								"exec": [
+									"var token1=postman.getResponseCookie('XSRF-TOKEN').value;",
+									"var token2=token1.replace(/%3D/g, '=');",
+									"postman.setEnvironmentVariable('X-XSRF-TOKEN', token2);",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Referer",
+								"value": "{{server}}",
+								"type": "text"
+							},
+							{
+								"key": "Accept",
+								"value": "application/json, text/plain, */*",
+								"type": "text"
+							},
+							{
+								"key": "X-XSRF-TOKEN",
+								"value": "{{X-XSRF-TOKEN}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"shipment_designation\": \"International\",\n    \"equipment_type\": null,\n    \"shipment_direction\": \"Import\",\n    \"one_way\": null,\n    \"yard_pre_pull\": null,\n    \"has_chassis\": null,\n    \"unit_number\": \"OOLU9988769\",\n    \"equipment\": null,\n    \"equipment_size\": \"40HC\",\n    \"owner_or_ss_company\": null,\n    \"hazardous\": null,\n    \"expedite_shipment\": null,\n    \"reference_number\": \"SSI100072169\",\n    \"rate_quote_number\": null,\n    \"seal_number\": null,\n    \"vessel\": null,\n    \"voyage\": null,\n    \"master_bol_mawb\": null,\n    \"house_bol_hawb\": \"SHSE2000535\",\n    \"estimated_arrival_utc\": null,\n    \"last_free_date_utc\": null,\n    \"booking_number\": null,\n    \"bill_of_lading\": null,\n    \"bill_to_address_id\": null,\n    \"port_ramp_of_origin_address_id\": null,\n    \"port_ramp_of_destination_address_id\": 345,\n    \"pickup_number\": null,\n    \"bill_to_address_verified\": false,\n    \"bill_to_address_raw_text\": \"Jet-Speed Logistics (USA) LLC\\n900 N. Arlington Heights Rd., Suite 150\\nItasca. Illinois 60143. U.S.A.\\nTel: (630) 595-5601\\nFax: (630) 595-6361\",\n    \"port_ramp_of_origin_address_verified\": false,\n    \"port_ramp_of_origin_address_raw_text\": null,\n    \"port_ramp_of_destination_address_verified\": false,\n    \"port_ramp_of_destination_address_raw_text\": \"BNSF LOGISTICS PARK H572\\n26353 ELWOOD INTERNATIONAL PORT RD\\nELWOOD IL 60421\\nUNITED STATES\",\n    \"variant_id\": null,\n    \"variant_name\": null,\n    \"t_tms_provider_id\": null,\n    \"tms_shipment_id\": null,\n    \"order_line_items\": [\n        {\n            \"id\": 99,\n            \"t_order_id\": 125,\n            \"quantity\": null,\n            \"unit_of_measure\": null,\n            \"contents\": \"Aluminum Tool Case\",\n            \"weight\": null,\n            \"total_weight\": null,\n            \"weight_uom\": null,\n            \"is_hazardous\": null,\n            \"haz_contact_name\": null,\n            \"haz_phone\": null,\n            \"haz_un_code\": null,\n            \"haz_un_name\": null,\n            \"haz_class\": null,\n            \"haz_qualifier\": null,\n            \"haz_description\": null,\n            \"haz_imdg_page_number\": null,\n            \"haz_flashpoint_temp\": null,\n            \"haz_flashpoint_temp_uom\": null,\n            \"packaging_group\": null,\n            \"deleted_at\": null\n        }\n    ],\n    \"order_address_events\": [\n        {\n            \"id\": 296,\n            \"address_schedule_description\": null,\n            \"t_order_id\": 125,\n            \"t_address_id\": null,\n            \"event_number\": 1,\n            \"is_hook_event\": null,\n            \"is_mount_event\": null,\n            \"is_deliver_event\": null,\n            \"is_dismount_event\": null,\n            \"is_drop_event\": null,\n            \"call_for_appointment\": null,\n            \"delivery_window_from_localtime\": null,\n            \"delivery_window_to_localtime\": null,\n            \"delivery_instructions\": null,\n            \"deleted_at\": null,\n            \"unparsed_event_type\": null,\n            \"t_address_verified\": false,\n            \"t_address_raw_text\": \"BNSF LOGISTICS PARK H572\\n26353 ELWOOD INTERNATIONAL PORT RD\\nELWOOD IL 60421\\nUNITED STATES\\nContact:\",\n            \"address\": null\n        },\n        {\n            \"id\": 297,\n            \"address_schedule_description\": null,\n            \"t_order_id\": 125,\n            \"t_address_id\": null,\n            \"event_number\": 2,\n            \"is_hook_event\": null,\n            \"is_mount_event\": null,\n            \"is_deliver_event\": null,\n            \"is_dismount_event\": null,\n            \"is_drop_event\": null,\n            \"call_for_appointment\": null,\n            \"delivery_window_from_localtime\": null,\n            \"delivery_window_to_localtime\": null,\n            \"delivery_instructions\": null,\n            \"deleted_at\": null,\n            \"unparsed_event_type\": \"DELIVER TO FULL\",\n            \"t_address_verified\": false,\n            \"t_address_raw_text\": \"9009 SHERIDAN RD\\nKENOSHA WI 53143\\nUNITED STATES\\nContact:\",\n            \"address\": null\n        },\n        {\n            \"id\": 298,\n            \"address_schedule_description\": null,\n            \"t_order_id\": 125,\n            \"t_address_id\": null,\n            \"event_number\": 3,\n            \"is_hook_event\": null,\n            \"is_mount_event\": null,\n            \"is_deliver_event\": null,\n            \"is_dismount_event\": null,\n            \"is_drop_event\": null,\n            \"call_for_appointment\": null,\n            \"delivery_window_from_localtime\": null,\n            \"delivery_window_to_localtime\": null,\n            \"delivery_instructions\": null,\n            \"deleted_at\": null,\n            \"unparsed_event_type\": null,\n            \"t_address_verified\": false,\n            \"t_address_raw_text\": \"9009 SHERIDAN RD\\nKENOSHA WI 53143\\nUNITED STATES\\nContact:\",\n            \"address\": null\n        },\n        {\n            \"id\": 299,\n            \"address_schedule_description\": null,\n            \"t_order_id\": 125,\n            \"t_address_id\": null,\n            \"event_number\": 4,\n            \"is_hook_event\": null,\n            \"is_mount_event\": null,\n            \"is_deliver_event\": null,\n            \"is_dismount_event\": null,\n            \"is_drop_event\": null,\n            \"call_for_appointment\": null,\n            \"delivery_window_from_localtime\": null,\n            \"delivery_window_to_localtime\": null,\n            \"delivery_instructions\": null,\n            \"deleted_at\": null,\n            \"unparsed_event_type\": \"DELIVER TO EMPTY\",\n            \"t_address_verified\": false,\n            \"t_address_raw_text\": \"BNSF LOGISTICS PARK H572\\n26353 ELWOOD INTERNATIONAL PORT RD\\nELWOOD IL 60421\\nUNITED STATES\",\n            \"address\": null\n        }\n    ]\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{server}}/api/orders/:id",
+							"host": [
+								"{{server}}"
+							],
+							"path": [
+								"api",
+								"orders",
+								":id"
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": "125"
+								}
+							]
+						},
+						"description": "Update the given order.\n\n- If you want to create a new `order_address_events` or `order_line_items` you have to add to the array a new item with all the data filled and the `id` **must** bew `null`\n- If you want to delete an existing `order_address_events` or `order_line_items` set the `deleted_at` attribute of the item to a truthy value (not `null`, ex: `true`, `1`)."
+					},
+					"response": []
+				},
+				{
+					"name": "/api/orders/:id/download-pdf",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "985b2876-6350-4b31-9670-fc93e2102d64",
+								"exec": [
+									"var token1=postman.getResponseCookie('XSRF-TOKEN').value;",
+									"var token2=token1.replace(/%3D/g, '=');",
+									"postman.setEnvironmentVariable('X-XSRF-TOKEN', token2);",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/x-www-form-urlencoded"
+							},
+							{
+								"key": "Referer",
+								"type": "text",
+								"value": "{{server}}"
+							},
+							{
+								"key": "Accept",
+								"type": "text",
+								"value": "application/json, text/plain, */*"
+							},
+							{
+								"key": "X-XSRF-TOKEN",
+								"type": "text",
+								"value": "{{X-XSRF-TOKEN}}"
+							}
+						],
+						"url": {
+							"raw": "{{server}}/api/orders/:id/download-pdf",
+							"host": [
+								"{{server}}"
+							],
+							"path": [
+								"api",
+								"orders",
+								":id",
+								"download-pdf"
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": "125"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "/api/orders/:id/status-history",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "47ba6066-2e33-4e34-8381-934d3b98566f",
+								"exec": [
+									"var token1=postman.getResponseCookie('XSRF-TOKEN').value;",
+									"var token2=token1.replace(/%3D/g, '=');",
+									"postman.setEnvironmentVariable('X-XSRF-TOKEN', token2);",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/x-www-form-urlencoded"
+							},
+							{
+								"key": "Referer",
+								"type": "text",
+								"value": "{{server}}"
+							},
+							{
+								"key": "Accept",
+								"type": "text",
+								"value": "application/json, text/plain, */*"
+							},
+							{
+								"key": "X-XSRF-TOKEN",
+								"type": "text",
+								"value": "{{X-XSRF-TOKEN}}"
+							}
+						],
+						"url": {
+							"raw": "{{server}}/api/orders/:id/status-history",
+							"host": [
+								"{{server}}"
+							],
+							"path": [
+								"api",
+								"orders",
+								":id",
+								"status-history"
+							],
+							"query": [
+								{
+									"key": "system_status",
+									"value": "1",
+									"description": "Returns the history of the order but with the system status",
+									"disabled": true
+								}
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": "8332"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "/api/send-to-tms",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "f185b5ae-6844-4d15-9220-ee9ad5648780",
+								"exec": [
+									"var token1=postman.getResponseCookie('XSRF-TOKEN').value;",
+									"var token2=token1.replace(/%3D/g, '=');",
+									"postman.setEnvironmentVariable('X-XSRF-TOKEN', token2);",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/x-www-form-urlencoded"
+							},
+							{
+								"key": "Referer",
+								"type": "text",
+								"value": "{{server}}"
+							},
+							{
+								"key": "Accept",
+								"type": "text",
+								"value": "application/json, text/plain, */*"
+							},
+							{
+								"key": "X-XSRF-TOKEN",
+								"type": "text",
+								"value": "{{X-XSRF-TOKEN}}"
+							}
+						],
+						"url": {
+							"raw": "{{server}}/api/send-to-tms?status=sending-to-wint&order_id=125",
+							"host": [
+								"{{server}}"
+							],
+							"path": [
+								"api",
+								"send-to-tms"
+							],
+							"query": [
+								{
+									"key": "status",
+									"value": "sending-to-wint"
+								},
+								{
+									"key": "order_id",
+									"value": "125"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "/api/orders/:id",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "acbd6289-c98a-45dc-9de6-4c5ac59bafb5",
+								"exec": [
+									"var token1=postman.getResponseCookie('XSRF-TOKEN').value;",
+									"var token2=token1.replace(/%3D/g, '=');",
+									"postman.setEnvironmentVariable('X-XSRF-TOKEN', token2);",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Referer",
+								"type": "text",
+								"value": "{{server}}"
+							},
+							{
+								"key": "Accept",
+								"type": "text",
+								"value": "application/json, text/plain, */*"
+							},
+							{
+								"key": "X-XSRF-TOKEN",
+								"type": "text",
+								"value": "{{X-XSRF-TOKEN}}"
+							}
+						],
+						"url": {
+							"raw": "{{server}}/api/orders/:id",
+							"host": [
+								"{{server}}"
+							],
+							"path": [
+								"api",
+								"orders",
+								":id"
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": "125"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "/api/companies/:id/tms-provider/:id/division-names",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "2510698b-dc48-4814-b184-172cd625ebbc",
+								"exec": [
+									"var token1=postman.getResponseCookie('XSRF-TOKEN').value;",
+									"var token2=token1.replace(/%3D/g, '=');",
+									"postman.setEnvironmentVariable('X-XSRF-TOKEN', token2);",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/x-www-form-urlencoded"
+							},
+							{
+								"key": "Referer",
+								"type": "text",
+								"value": "{{server}}"
+							},
+							{
+								"key": "Accept",
+								"type": "text",
+								"value": "application/json, text/plain, */*"
+							},
+							{
+								"key": "X-XSRF-TOKEN",
+								"type": "text",
+								"value": "{{X-XSRF-TOKEN}}"
+							}
+						],
+						"url": {
+							"raw": "{{server}}/api/companies/:id/tms-provider/:idtms/division-names",
+							"host": [
+								"{{server}}"
+							],
+							"path": [
+								"api",
+								"companies",
+								":id",
+								"tms-provider",
+								":idtms",
+								"division-names"
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": "2",
+									"type": "text",
+									"enabled": true
+								},
+								{
+									"key": "idtms",
+									"value": "1"
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			],
+			"protocolProfileBehavior": {}
+		},
+		{
+			"name": "OCR Requests",
+			"item": [
+				{
+					"name": "/api/ocr/requests",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "d1205a36-8831-43f4-9a0e-9b8a11a5083f",
+								"exec": [
+									"var token1=postman.getResponseCookie('XSRF-TOKEN').value;",
+									"var token2=token1.replace(/%3D/g, '=');",
+									"postman.setEnvironmentVariable('X-XSRF-TOKEN', token2);",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Content-Type",
+								"type": "text",
+								"value": "application/x-www-form-urlencoded"
+							},
+							{
+								"key": "Referer",
+								"type": "text",
+								"value": "{{server}}"
+							},
+							{
+								"key": "Accept",
+								"type": "text",
+								"value": "application/json, text/plain"
+							},
+							{
+								"key": "X-XSRF-TOKEN",
+								"type": "text",
+								"value": "{{X-XSRF-TOKEN}}"
+							}
+						],
+						"url": {
+							"raw": "{{server}}/api/ocr/requests",
+							"host": [
+								"{{server}}"
+							],
+							"path": [
+								"api",
+								"ocr",
+								"requests"
+							],
+							"query": [
+								{
+									"key": "filter[request_id]",
+									"value": "06cf759c-182e-4672-bd3d-8fb0deda0a4a",
+									"disabled": true
+								},
+								{
+									"key": "filter[created_between]",
+									"value": "2020-09-28,2020-10-01",
+									"disabled": true
+								},
+								{
+									"key": "filter[status]",
+									"value": "intake-exception",
+									"description": "Multiple values comma separated. Available: intake-accepted, intake-exception, intake-rejected, intake-started, ocr-completed, ocr-post-processing-complete, ocr-post-processing-error, ocr-waiting, process-ocr-output-file-complete, process-ocr-output-file-error, upload-requested",
+									"disabled": true
+								},
+								{
+									"key": "filter[display_status]",
+									"value": "Processing",
+									"description": "Filters by the display status. Available: Processing, Exception, Rejected, Intake, Verified, Sending to TMS, Sent to TMS, Accepted by TMS",
+									"disabled": true
+								},
+								{
+									"key": "filter[query]",
+									"value": null,
+									"disabled": true
+								},
+								{
+									"key": "sort",
+									"value": "-status",
+									"description": "Available: id,status,created_at,request_id",
+									"disabled": true
+								},
+								{
+									"key": "page",
+									"value": "1",
+									"disabled": true
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "/api/ocr/requests/:request_id/reprocess",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "9ede3cc0-0059-4d75-a8ae-032f347dc9b7",
+								"exec": [
+									"var token1=postman.getResponseCookie('XSRF-TOKEN').value;",
+									"var token2=token1.replace(/%3D/g, '=');",
+									"postman.setEnvironmentVariable('X-XSRF-TOKEN', token2);",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"type": "text",
+								"value": "application/x-www-form-urlencoded"
+							},
+							{
+								"key": "Referer",
+								"type": "text",
+								"value": "{{server}}"
+							},
+							{
+								"key": "Accept",
+								"type": "text",
+								"value": "application/json, text/plain"
+							},
+							{
+								"key": "X-XSRF-TOKEN",
+								"type": "text",
+								"value": "{{X-XSRF-TOKEN}}"
+							}
+						],
+						"url": {
+							"raw": "{{server}}/api/ocr/requests/:request_id/reprocess",
+							"host": [
+								"{{server}}"
+							],
+							"path": [
+								"api",
+								"ocr",
+								"requests",
+								":request_id",
+								"reprocess"
+							],
+							"variable": [
+								{
+									"key": "request_id",
+									"value": "",
+									"description": "The UUID of the request we want to reprocess"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "/api/ocr/requests/:request_id",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "74d362d6-f5e3-423f-a8c0-aa01f79c2357",
+								"exec": [
+									"var token1=postman.getResponseCookie('XSRF-TOKEN').value;",
+									"var token2=token1.replace(/%3D/g, '=');",
+									"postman.setEnvironmentVariable('X-XSRF-TOKEN', token2);",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Content-Type",
+								"type": "text",
+								"value": "application/x-www-form-urlencoded"
+							},
+							{
+								"key": "Referer",
+								"type": "text",
+								"value": "{{server}}"
+							},
+							{
+								"key": "Accept",
+								"type": "text",
+								"value": "application/json, text/plain"
+							},
+							{
+								"key": "X-XSRF-TOKEN",
+								"type": "text",
+								"value": "{{X-XSRF-TOKEN}}"
+							}
+						],
+						"url": {
+							"raw": "{{server}}/api/ocr/requests/:request_id",
+							"host": [
+								"{{server}}"
+							],
+							"path": [
+								"api",
+								"ocr",
+								"requests",
+								":request_id"
+							],
+							"variable": [
+								{
+									"key": "request_id",
+									"value": "",
+									"description": "The UUID of the request we want to reprocess"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "/api/getocruploaduri",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "c8a5f450-7c50-48e6-ae58-a4ef0c88d2f2",
+								"exec": [
+									"var token1=postman.getResponseCookie('XSRF-TOKEN').value;",
+									"var token2=token1.replace(/%3D/g, '=');",
+									"postman.setEnvironmentVariable('X-XSRF-TOKEN', token2);",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/x-www-form-urlencoded"
+							},
+							{
+								"key": "Referer",
+								"type": "text",
+								"value": "{{server}}"
+							},
+							{
+								"key": "Accept",
+								"type": "text",
+								"value": "application/json, text/plain, */*"
+							},
+							{
+								"key": "X-XSRF-TOKEN",
+								"type": "text",
+								"value": "{{X-XSRF-TOKEN}}"
+							}
+						],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "filename",
+									"value": "asdf.jpg",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{server}}/api/createocrrequestuploaduri",
+							"host": [
+								"{{server}}"
+							],
+							"path": [
+								"api",
+								"createocrrequestuploaduri"
+							]
+						}
+					},
+					"response": []
+				}
+			],
+			"protocolProfileBehavior": {}
+		},
+		{
+			"name": "OCR Rules",
+			"item": [
+				{
+					"name": "/api/ocr/rules",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "ec156ec2-ad54-495d-8d92-85f53513475f",
+								"exec": [
+									"var token1=postman.getResponseCookie('XSRF-TOKEN').value;",
+									"var token2=token1.replace(/%3D/g, '=');",
+									"postman.setEnvironmentVariable('X-XSRF-TOKEN', token2);",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/x-www-form-urlencoded",
+								"type": "text"
+							},
+							{
+								"key": "Referer",
+								"value": "{{server}}",
+								"type": "text"
+							},
+							{
+								"key": "Accept",
+								"value": "application/json, text/plain, */*",
+								"type": "text"
+							},
+							{
+								"key": "X-XSRF-TOKEN",
+								"value": "{{X-XSRF-TOKEN}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{server}}/api/ocr/rules",
+							"host": [
+								"{{server}}"
+							],
+							"path": [
+								"api",
+								"ocr",
+								"rules"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "/api/ocr/rules",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "1d41c1f6-1830-4ff5-99eb-a72378dfd5e7",
+								"exec": [
+									"var token1=postman.getResponseCookie('XSRF-TOKEN').value;",
+									"var token2=token1.replace(/%3D/g, '=');",
+									"postman.setEnvironmentVariable('X-XSRF-TOKEN', token2);",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Referer",
+								"value": "{{server}}",
+								"type": "text"
+							},
+							{
+								"key": "Accept",
+								"value": "application/json, text/plain, */*",
+								"type": "text"
+							},
+							{
+								"key": "X-XSRF-TOKEN",
+								"value": "{{X-XSRF-TOKEN}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"name\":\"\",\n    \"description\":\"\",\n    \"code\": \"\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{server}}/api/ocr/rules",
+							"host": [
+								"{{server}}"
+							],
+							"path": [
+								"api",
+								"ocr",
+								"rules"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "/api/ocr/rules/:ocr_rule_id",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "f798a59e-57d9-46d5-8644-38d442ccbcac",
+								"exec": [
+									"var token1=postman.getResponseCookie('XSRF-TOKEN').value;",
+									"var token2=token1.replace(/%3D/g, '=');",
+									"postman.setEnvironmentVariable('X-XSRF-TOKEN', token2);",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Referer",
+								"value": "{{server}}",
+								"type": "text"
+							},
+							{
+								"key": "Accept",
+								"value": "application/json, text/plain, */*",
+								"type": "text"
+							},
+							{
+								"key": "X-XSRF-TOKEN",
+								"value": "{{X-XSRF-TOKEN}}",
+								"type": "text"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"name\":\"\",\n    \"description\":\"\",\n    \"code\": \"\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{server}}/api/ocr/rules/:ocr_rule_id",
+							"host": [
+								"{{server}}"
+							],
+							"path": [
+								"api",
+								"ocr",
+								"rules",
+								":ocr_rule_id"
+							],
+							"variable": [
+								{
+									"key": "ocr_rule_id",
+									"value": "",
+									"description": "Rule's id"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "/api/ocr/rules-assignment",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "a2ebcab1-b825-4adb-b211-cf0c0f916e3e",
+								"exec": [
+									"var token1=postman.getResponseCookie('XSRF-TOKEN').value;",
+									"var token2=token1.replace(/%3D/g, '=');",
+									"postman.setEnvironmentVariable('X-XSRF-TOKEN', token2);",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Referer",
+								"type": "text",
+								"value": "{{server}}"
+							},
+							{
+								"key": "Accept",
+								"type": "text",
+								"value": "application/json, text/plain, */*"
+							},
+							{
+								"key": "X-XSRF-TOKEN",
+								"type": "text",
+								"value": "{{X-XSRF-TOKEN}}"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{server}}/api/ocr/rules-assignment?company_id=1&variant_id=1",
+							"host": [
+								"{{server}}"
+							],
+							"path": [
+								"api",
+								"ocr",
+								"rules-assignment"
+							],
+							"query": [
+								{
+									"key": "company_id",
+									"value": "1",
+									"description": "account to filter the assigned rules"
+								},
+								{
+									"key": "variant_id",
+									"value": "1",
+									"description": "variant to filter the assigned rules"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "/api/ocr/rules-assignment",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "f4662b01-02e2-4629-89a1-5809a98c02aa",
+								"exec": [
+									"var token1=postman.getResponseCookie('XSRF-TOKEN').value;",
+									"var token2=token1.replace(/%3D/g, '=');",
+									"postman.setEnvironmentVariable('X-XSRF-TOKEN', token2);",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Referer",
+								"type": "text",
+								"value": "{{server}}"
+							},
+							{
+								"key": "Accept",
+								"type": "text",
+								"value": "application/json, text/plain, */*"
+							},
+							{
+								"key": "X-XSRF-TOKEN",
+								"type": "text",
+								"value": "{{X-XSRF-TOKEN}}"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"company_id\": 1,\n    \"variant_id\": 1,\n    \"rules\": [\n        1,\n        2,\n        3,\n        4\n    ]\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{server}}/api/ocr/rules-assignment",
+							"host": [
+								"{{server}}"
+							],
+							"path": [
+								"api",
+								"ocr",
+								"rules-assignment"
+							]
+						}
+					},
+					"response": []
+				}
+			],
+			"protocolProfileBehavior": {}
+		},
+		{
+			"name": "OCR Variants",
+			"item": [
+				{
+					"name": "/api/ocr/variants",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "f4fe4b0f-0447-4b64-936d-98ec353a37e8",
+								"exec": [
+									"var token1=postman.getResponseCookie('XSRF-TOKEN').value;",
+									"var token2=token1.replace(/%3D/g, '=');",
+									"postman.setEnvironmentVariable('X-XSRF-TOKEN', token2);",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Content-Type",
+								"type": "text",
+								"value": "application/x-www-form-urlencoded"
+							},
+							{
+								"key": "Referer",
+								"type": "text",
+								"value": "{{server}}"
+							},
+							{
+								"key": "Accept",
+								"type": "text",
+								"value": "application/json, text/plain, */*"
+							},
+							{
+								"key": "X-XSRF-TOKEN",
+								"type": "text",
+								"value": "{{X-XSRF-TOKEN}}"
+							}
+						],
+						"url": {
+							"raw": "{{server}}/api/ocr/variants",
+							"host": [
+								"{{server}}"
+							],
+							"path": [
+								"api",
+								"ocr",
+								"variants"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "/api/ocr/variants",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "3dc1e981-707c-4bf1-bdf5-7dc2af01ae56",
+								"exec": [
+									"var token1=postman.getResponseCookie('XSRF-TOKEN').value;",
+									"var token2=token1.replace(/%3D/g, '=');",
+									"postman.setEnvironmentVariable('X-XSRF-TOKEN', token2);",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Referer",
+								"type": "text",
+								"value": "{{server}}"
+							},
+							{
+								"key": "Accept",
+								"type": "text",
+								"value": "application/json, text/plain, */*"
+							},
+							{
+								"key": "X-XSRF-TOKEN",
+								"type": "text",
+								"value": "{{X-XSRF-TOKEN}}"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"abbyy_variant_name\": \"\",\n    \"abbyy_variant_id\": \"\",\n    \"description\": \"\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{server}}/api/ocr/variants",
+							"host": [
+								"{{server}}"
+							],
+							"path": [
+								"api",
+								"ocr",
+								"variants"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "/api/ocr/variants/:ocr_variant_id",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "531816b8-e9b9-4ee9-a8c8-af51f8654e51",
+								"exec": [
+									"var token1=postman.getResponseCookie('XSRF-TOKEN').value;",
+									"var token2=token1.replace(/%3D/g, '=');",
+									"postman.setEnvironmentVariable('X-XSRF-TOKEN', token2);",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Referer",
+								"value": "{{server}}",
+								"type": "text"
+							},
+							{
+								"key": "Accept",
+								"value": "application/json, text/plain, */*",
+								"type": "text"
+							},
+							{
+								"key": "X-XSRF-TOKEN",
+								"value": "{{X-XSRF-TOKEN}}",
+								"type": "text"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"abbyy_variant_id\":\"\",\n    \"abbyy_variant_name\":\"\",\n    \"description\": \"\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{server}}/api/ocr/variants/:ocr_variant_id",
+							"host": [
+								"{{server}}"
+							],
+							"path": [
+								"api",
+								"ocr",
+								"variants",
+								":ocr_variant_id"
+							],
+							"variable": [
+								{
+									"key": "ocr_variant_id",
+									"value": ""
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "/api/ocr/variants/:ocr_variant_id",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "9bf7d7bc-a2b0-4442-8ea6-2db4c6cf666e",
+								"exec": [
+									"var token1=postman.getResponseCookie('XSRF-TOKEN').value;",
+									"var token2=token1.replace(/%3D/g, '=');",
+									"postman.setEnvironmentVariable('X-XSRF-TOKEN', token2);",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Referer",
+								"value": "{{server}}",
+								"type": "text"
+							},
+							{
+								"key": "Accept",
+								"value": "application/json, text/plain, */*",
+								"type": "text"
+							},
+							{
+								"key": "X-XSRF-TOKEN",
+								"value": "{{X-XSRF-TOKEN}}",
+								"type": "text"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{server}}/api/ocr/variants/:ocr_variant_id",
+							"host": [
+								"{{server}}"
+							],
+							"path": [
+								"api",
+								"ocr",
+								"variants",
+								":ocr_variant_id"
+							],
+							"variable": [
+								{
+									"key": "ocr_variant_id",
+									"value": ""
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			],
+			"protocolProfileBehavior": {}
+		},
+		{
+			"name": "Users",
+			"item": [
+				{
+					"name": "/api/users",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "9096e05f-86b5-4809-a3eb-084f5a290619",
+								"exec": [
+									"var token1=postman.getResponseCookie('XSRF-TOKEN').value;",
+									"var token2=token1.replace(/%3D/g, '=');",
+									"postman.setEnvironmentVariable('X-XSRF-TOKEN', token2);",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Content-Type",
+								"type": "text",
+								"value": "application/x-www-form-urlencoded"
+							},
+							{
+								"key": "Referer",
+								"type": "text",
+								"value": "{{server}}"
+							},
+							{
+								"key": "Accept",
+								"type": "text",
+								"value": "application/json, text/plain, */*"
+							},
+							{
+								"key": "X-XSRF-TOKEN",
+								"type": "text",
+								"value": "{{X-XSRF-TOKEN}}"
+							}
+						],
+						"url": {
+							"raw": "{{server}}/api/users?page=1",
+							"host": [
+								"{{server}}"
+							],
+							"path": [
+								"api",
+								"users"
+							],
+							"query": [
+								{
+									"key": "filter[name]",
+									"value": "",
+									"disabled": true
+								},
+								{
+									"key": "filter[email]",
+									"value": "",
+									"disabled": true
+								},
+								{
+									"key": "filter[id]",
+									"value": "",
+									"disabled": true
+								},
+								{
+									"key": "filter[active]",
+									"value": "0",
+									"disabled": true
+								},
+								{
+									"key": "page",
+									"value": "1"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "/api/users/:id",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "c5871cf4-2db0-4ae7-99bb-8cad1aaa41d2",
+								"exec": [
+									"var token1=postman.getResponseCookie('XSRF-TOKEN').value;",
+									"var token2=token1.replace(/%3D/g, '=');",
+									"postman.setEnvironmentVariable('X-XSRF-TOKEN', token2);",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Content-Type",
+								"type": "text",
+								"value": "application/x-www-form-urlencoded"
+							},
+							{
+								"key": "Referer",
+								"type": "text",
+								"value": "{{server}}"
+							},
+							{
+								"key": "Accept",
+								"type": "text",
+								"value": "application/json, text/plain, */*"
+							},
+							{
+								"key": "X-XSRF-TOKEN",
+								"type": "text",
+								"value": "{{X-XSRF-TOKEN}}"
+							}
+						],
+						"url": {
+							"raw": "{{server}}/api/users/:id",
+							"host": [
+								"{{server}}"
+							],
+							"path": [
+								"api",
+								"users",
+								":id"
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": "3"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "/api/users",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "c8d6ccfd-8a6c-4e64-b018-8e8a10dc1a6b",
+								"exec": [
+									"var token1=postman.getResponseCookie('XSRF-TOKEN').value;",
+									"var token2=token1.replace(/%3D/g, '=');",
+									"postman.setEnvironmentVariable('X-XSRF-TOKEN', token2);",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"protocolProfileBehavior": {
+						"disabledSystemHeaders": {}
+					},
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Referer",
+								"type": "text",
+								"value": "{{server}}"
+							},
+							{
+								"key": "Accept",
+								"type": "text",
+								"value": "application/json, text/plain, */*"
+							},
+							{
+								"key": "X-XSRF-TOKEN",
+								"type": "text",
+								"value": "{{X-XSRF-TOKEN}}"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"name\": null,\n    \"email\": null,\n    \"password\": null,\n    \"role_id\": null\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{server}}/api/users",
+							"host": [
+								"{{server}}"
+							],
+							"path": [
+								"api",
+								"users"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "/api/users/:id",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "2ce17dfc-5ae5-49a3-b5d6-93eb1973d24f",
+								"exec": [
+									"var token1=postman.getResponseCookie('XSRF-TOKEN').value;",
+									"var token2=token1.replace(/%3D/g, '=');",
+									"postman.setEnvironmentVariable('X-XSRF-TOKEN', token2);",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"protocolProfileBehavior": {
+						"disabledSystemHeaders": {}
+					},
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Referer",
+								"type": "text",
+								"value": "{{server}}"
+							},
+							{
+								"key": "Accept",
+								"type": "text",
+								"value": "application/json, text/plain, */*"
+							},
+							{
+								"key": "X-XSRF-TOKEN",
+								"type": "text",
+								"value": "{{X-XSRF-TOKEN}}"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"name\": null,\n    \"email\": null,\n    \"role_id\": null\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{server}}/api/users/:id",
+							"host": [
+								"{{server}}"
+							],
+							"path": [
+								"api",
+								"users",
+								":id"
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": "1"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "/api/users/:id/status",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "dd8c4b45-0d38-462a-b793-768ced1ef377",
+								"exec": [
+									"var token1=postman.getResponseCookie('XSRF-TOKEN').value;",
+									"var token2=token1.replace(/%3D/g, '=');",
+									"postman.setEnvironmentVariable('X-XSRF-TOKEN', token2);",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"protocolProfileBehavior": {
+						"disabledSystemHeaders": {}
+					},
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Referer",
+								"type": "text",
+								"value": "{{server}}"
+							},
+							{
+								"key": "Accept",
+								"type": "text",
+								"value": "application/json, text/plain, */*"
+							},
+							{
+								"key": "X-XSRF-TOKEN",
+								"type": "text",
+								"value": "{{X-XSRF-TOKEN}}"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"active\": true\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{server}}/api/users/:id/status",
+							"host": [
+								"{{server}}"
+							],
+							"path": [
+								"api",
+								"users",
+								":id",
+								"status"
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": "1"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "/api/users/:id",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "bbd7816a-c3ef-402a-9def-6166f4443a9d",
+								"exec": [
+									"var token1=postman.getResponseCookie('XSRF-TOKEN').value;",
+									"var token2=token1.replace(/%3D/g, '=');",
+									"postman.setEnvironmentVariable('X-XSRF-TOKEN', token2);",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"protocolProfileBehavior": {
+						"disabledSystemHeaders": {}
+					},
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Referer",
+								"type": "text",
+								"value": "{{server}}"
+							},
+							{
+								"key": "Accept",
+								"type": "text",
+								"value": "application/json, text/plain, */*"
+							},
+							{
+								"key": "X-XSRF-TOKEN",
+								"type": "text",
+								"value": "{{X-XSRF-TOKEN}}"
+							}
+						],
+						"url": {
+							"raw": "{{server}}/api/users/:id",
+							"host": [
+								"{{server}}"
+							],
+							"path": [
+								"api",
+								"users",
+								":id"
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": "1"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "/api/roles",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "55943a3d-74fe-4dea-bd1b-d13abdc22e9c",
+								"exec": [
+									"var token1=postman.getResponseCookie('XSRF-TOKEN').value;",
+									"var token2=token1.replace(/%3D/g, '=');",
+									"postman.setEnvironmentVariable('X-XSRF-TOKEN', token2);",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Content-Type",
+								"type": "text",
+								"value": "application/x-www-form-urlencoded"
+							},
+							{
+								"key": "Referer",
+								"type": "text",
+								"value": "{{server}}"
+							},
+							{
+								"key": "Accept",
+								"type": "text",
+								"value": "application/json, text/plain, */*"
+							},
+							{
+								"key": "X-XSRF-TOKEN",
+								"type": "text",
+								"value": "{{X-XSRF-TOKEN}}"
+							}
+						],
+						"url": {
+							"raw": "{{server}}/api/roles",
+							"host": [
+								"{{server}}"
+							],
+							"path": [
+								"api",
+								"roles"
+							]
+						}
+					},
+					"response": []
+				}
+			],
+			"protocolProfileBehavior": {}
+		},
+		{
+			"name": "Impersonation",
+			"item": [
+				{
+					"name": "/api/impersonate/:user_id",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "3eba55bf-9c27-4c74-8e67-b2bcca2128eb",
+								"exec": [
+									"var token1=postman.getResponseCookie('XSRF-TOKEN').value;",
+									"var token2=token1.replace(/%3D/g, '=');",
+									"postman.setEnvironmentVariable('X-XSRF-TOKEN', token2);",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/x-www-form-urlencoded"
+							},
+							{
+								"key": "Referer",
+								"type": "text",
+								"value": "{{server}}"
+							},
+							{
+								"key": "Accept",
+								"type": "text",
+								"value": "application/json, text/plain, */*"
+							},
+							{
+								"key": "X-XSRF-TOKEN",
+								"type": "text",
+								"value": "{{X-XSRF-TOKEN}}"
+							}
+						],
+						"url": {
+							"raw": "{{server}}/api/impersonate/:user_id",
+							"host": [
+								"{{server}}"
+							],
+							"path": [
+								"api",
+								"impersonate",
+								":user_id"
+							],
+							"variable": [
+								{
+									"key": "user_id",
+									"value": ""
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "/api/impersonate",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "810ce447-495a-4767-b77e-7b3fd18aed29",
+								"exec": [
+									"var token1=postman.getResponseCookie('XSRF-TOKEN').value;",
+									"var token2=token1.replace(/%3D/g, '=');",
+									"postman.setEnvironmentVariable('X-XSRF-TOKEN', token2);",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/x-www-form-urlencoded"
+							},
+							{
+								"key": "Referer",
+								"type": "text",
+								"value": "{{server}}"
+							},
+							{
+								"key": "Accept",
+								"type": "text",
+								"value": "application/json, text/plain, */*"
+							},
+							{
+								"key": "X-XSRF-TOKEN",
+								"type": "text",
+								"value": "{{X-XSRF-TOKEN}}"
+							}
+						],
+						"url": {
+							"raw": "{{server}}/api/impersonate",
+							"host": [
+								"{{server}}"
+							],
+							"path": [
+								"api",
+								"impersonate"
+							]
+						}
+					},
+					"response": []
+				}
+			],
+			"protocolProfileBehavior": {}
+		},
+		{
+			"name": "/api/search-address",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "d3957699-2ec8-4377-a654-b2d2b45f5d22",
+						"exec": [
+							"var token1=postman.getResponseCookie('XSRF-TOKEN').value;",
+							"var token2=token1.replace(/%3D/g, '=');",
+							"postman.setEnvironmentVariable('X-XSRF-TOKEN', token2);",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/x-www-form-urlencoded"
+					},
+					{
+						"key": "Referer",
+						"type": "text",
+						"value": "{{server}}"
+					},
+					{
+						"key": "Accept",
+						"type": "text",
+						"value": "application/json, text/plain, */*"
+					},
+					{
+						"key": "X-XSRF-TOKEN",
+						"type": "text",
+						"value": "{{X-XSRF-TOKEN}}"
+					}
+				],
+				"url": {
+					"raw": "{{server}}/api/search-address?rawtext=CHICAGO/HARVEY I09215840 WEST AVEHARVEY, IL, UNITED STATES&company_id=1&tms_provider_id=1",
+					"host": [
+						"{{server}}"
+					],
+					"path": [
+						"api",
+						"search-address"
+					],
+					"query": [
+						{
+							"key": "is_terminal_address",
+							"value": "1",
+							"disabled": true
+						},
+						{
+							"key": "is_billable_address",
+							"value": "true",
+							"disabled": true
+						},
+						{
+							"key": "location_name",
+							"value": "",
+							"disabled": true
+						},
+						{
+							"key": "rawtext",
+							"value": "CHICAGO/HARVEY I09215840 WEST AVEHARVEY, IL, UNITED STATES"
+						},
+						{
+							"key": "postal_code",
+							"value": "",
+							"disabled": true
+						},
+						{
+							"key": "city",
+							"value": "Elwood",
+							"disabled": true
+						},
+						{
+							"key": "address",
+							"value": "",
+							"disabled": true
+						},
+						{
+							"key": "county",
+							"value": "",
+							"disabled": true
+						},
+						{
+							"key": "state",
+							"value": "",
+							"disabled": true
+						},
+						{
+							"key": "country",
+							"value": "",
+							"disabled": true
+						},
+						{
+							"key": "company_id",
+							"value": "1"
+						},
+						{
+							"key": "tms_provider_id",
+							"value": "1"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "/api/bulk-actions",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "0a13ddfa-9c3c-4017-a103-5a58998fc514",
+						"exec": [
+							"var token1=postman.getResponseCookie('XSRF-TOKEN').value;",
+							"var token2=token1.replace(/%3D/g, '=');",
+							"postman.setEnvironmentVariable('X-XSRF-TOKEN', token2);",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"protocolProfileBehavior": {
+				"disabledSystemHeaders": {}
+			},
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Referer",
+						"type": "text",
+						"value": "{{server}}"
+					},
+					{
+						"key": "Accept",
+						"type": "text",
+						"value": "application/json, text/plain, */*"
+					},
+					{
+						"key": "X-XSRF-TOKEN",
+						"type": "text",
+						"value": "{{X-XSRF-TOKEN}}"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"action\": \"users.deactivate\",\n    \"models\": [1]\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{server}}/api/bulk-actions",
+					"host": [
+						"{{server}}"
+					],
+					"path": [
+						"api",
+						"bulk-actions"
+					]
+				},
+				"description": "Available actions:\n\n- `users.deactivate`\n- `users.delete`\n- `users.activate`\n- `users.reset_password`"
+			},
+			"response": []
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"id": "8449a152-bb55-4e75-bfe5-00a2873f4a6a",
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"id": "7f3ff36c-7d5d-4dd6-847a-2f79ba3f7be7",
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"protocolProfileBehavior": {}
+}

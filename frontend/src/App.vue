@@ -2,17 +2,20 @@
   <v-app :style="cssVars">
     <router-view />
     <Snackbar />
+    <ConfirmationDialog />
   </v-app>
 </template>
 
 <script>
 import Snackbar from '@/components/General/Snackbar'
+import ConfirmationDialog from '@/components/General/ConfirmationDialog'
 import { hexToRgb } from '@/utils/hex_to_rgb'
 
 export default {
   name: 'App',
   components: {
-    Snackbar
+    Snackbar,
+    ConfirmationDialog
   },
   computed: {
     cssVars () {

@@ -1,20 +1,13 @@
 <template>
   <div class="wrapper">
     <v-container>
-      <v-row py-4>
-        <v-col col-12>
-          <h2 class="text-center">
-            Pattern Library
-          </h2>
-        </v-col>
-      </v-row>
       <div class="row">
         <div class="col-12">
           <header class="mb-5">
-            <h4>Order Table</h4>
+            <h4>Order Table Test</h4>
           </header>
           <OrderTable
-            :table-title="`Request`"
+
             :has-search="true"
             :has-calendar="true"
             :has-column-filters="true"
@@ -29,7 +22,7 @@
 import OrderTable from '@/components/OrderTable'
 
 export default {
-  name: 'UI',
+  name: 'OrderTableTest',
   components: {
     OrderTable
   },

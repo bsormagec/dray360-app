@@ -130,6 +130,12 @@ class Order extends Resource
             Text::make('Pickup by time', 'pickup_by_time')->hideFromIndex(),
             HasMany::make('Order Address Events', 'orderAddressEvents', OrderAddressEvent::class),
             HasMany::make('Order Line Items', 'orderLineItems', OrderLineItem::class),
+
+            BelongsTo::make('Preceded by Order', 'precededByOrder', Order::class),
+            BelongsTo::make('Succeded by Order', 'succededByOrder', Order::class),
+            DateTime::make('TMS Submission Date', 'tms_submission_datetime')->hideFromIndex(),
+            DateTime::make('TMS Cancelled Date', 'tms_cancelled_datetime')->hideFromIndex(),
+            DateTime::make('Cancelled Date', 'cancelled_datetime')->hideFromIndex(),
         ];
     }
 

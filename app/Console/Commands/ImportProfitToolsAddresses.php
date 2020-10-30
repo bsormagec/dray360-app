@@ -53,7 +53,7 @@ class ImportProfitToolsAddresses extends Command
     {
         return collect([
             Company::getCushing(),
-            Company::getTCompaniesDev(),
+            Company::getTCompaniesDemo(),
             Company::getIXT(),
             Company::getIXTOnboarding()
         ])->when($this->option('company-name'), function ($collection) {

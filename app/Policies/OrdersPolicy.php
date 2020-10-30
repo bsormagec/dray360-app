@@ -55,6 +55,20 @@ class OrdersPolicy
     }
 
     /**
+     * Determine whether the user can delete the model.
+     */
+    public function delete(User $user, Order $order)
+    {
+        $hasDeletePermissions = $user->isAbleTo('orders-remove');
+
+        if (! $user->isSuperadmin()) {
+            return $hasDeletePermissions && $user->belongsToSameCompanyAs($order);
+        }
+
+        return $hasDeletePermissions && ! request_is_from_nova();
+    }
+
+    /**
      * Determine if the user can send to an order to the tms.
      */
     public function sendToTms(User $user, Order $order): bool

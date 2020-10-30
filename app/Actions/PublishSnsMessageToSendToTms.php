@@ -34,7 +34,7 @@ class PublishSnsMessageToSendToTms
                             'StringValue' => $data['order_id'],
                         ],
                     ],
-                    'TopicArn' => config('services.sns-topics.send-to-tms'),
+                    'TopicArn' => config('services.sns-topics.status'),
                 ]);
             return ['status' => 'ok', 'message' => $response['MessageId'], ];
         } catch (AwsException $e) {

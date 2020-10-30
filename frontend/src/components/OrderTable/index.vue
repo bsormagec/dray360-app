@@ -12,7 +12,9 @@
       :header-props="{ sortIcon: 'mdi-chevron-down'}"
     >
       <template v-slot:top>
-        <h6>{{ tableTitle }} ({{ total }})</h6>
+        <h6 v-if="tableTitle">
+          {{ tableTitle }} ({{ total }})
+        </h6>
         <v-toolbar
           flat
           color="white"
@@ -75,8 +77,8 @@
           :options="[
             { title: 'View Details', action: () => item.action(item.id), hasPermission: hasPermission('orders-view') },
             { title: 'Download PDF', action: () => downloadPDF(item.id) },
-            { title: 'Reprocess Order', action: () => reprocessOrder(item.id) },
-            { title: 'Delete Order', action: () => deleteOrder(item.id) }
+            { title: 'Reprocess Order', action: () => reprocessOrder(item.request_id) },
+            { title: 'Delete Order', action: () => deleteOrder(item) }
           ]"
         />
 
@@ -124,6 +126,20 @@
         />
       </template>
     </v-data-table>
+    <v-snackbar
+      v-model="changesDetected"
+      :timeout="0"
+    >
+      <div class="refresh-msg d-flex align-center justify-space-between">
+        <p>New orders available.</p>
+        <v-btn
+          text
+          @click="reloadPage"
+        >
+          REFRESH
+        </v-btn>
+      </div>
+    </v-snackbar>
   </div>
 </template>
 <script>
@@ -132,18 +148,15 @@ import Filters from './components/filters'
 import Pagination from './components/Pagination'
 import Chip from '@/components/Chip'
 import hasPermission from '@/mixins/permissions'
-import { getOrders2, getDownloadPDFURL } from '@/store/api_calls/orders'
+import utils, { type as utilTypes } from '@/store/modules/utils'
+import { getOrders2, getDownloadPDFURL, reprocessOcrRequest, delDeleteOrder } from '@/store/api_calls/orders'
 
-import orders, { types } from '@/store/modules/orders'
 import { mapState, mapActions } from 'vuex'
 import OutlinedButtonGroup from '@/components/General/OutlinedButtonGroup'
 
-// ...mapActions(orders.moduleName, [types.getDownloadPDFURL]),
-
 export default {
-  name: 'Table',
+  name: 'OrderTable',
   components: {
-
     Pagination,
     Chip,
     OutlinedButtonGroup,
@@ -185,11 +198,17 @@ export default {
     },
     tableTitle: {
       type: String,
-      required: true
+      required: false,
+      default: ''
     }
   },
   data () {
     return {
+      // polling stuff
+      pollingInterval: 10000,
+      pollingTimer: null,
+      payload: '',
+      changesDetected: false,
       // main filters array
       filters: [],
       dialog: false,
@@ -197,7 +216,7 @@ export default {
       page: 1,
       options: {
       },
-      minPause: 1000, // 1 second minimum delay
+      minPause: 500, // 1 second minimum delay
       randomizeDelay: true,
       ordersPayload: null,
       // total number of returned orders
@@ -256,6 +275,7 @@ export default {
     this.initFilters.dateRange = params.dateRange?.split(',')
     this.initFilters.status = params.status
     this.initFilters.updateType = params.updateType
+    this.initFilters.requestID = params.requestID
   },
 
   mounted () {
@@ -266,15 +286,11 @@ export default {
   unmounted () {
     // remove popstate event handling
     window.onpopstate = null
+    this.stopPolling()
   },
 
   methods: {
     initialize () {
-      // if requestID supplied get orders for that ID
-      if (this.requestId) {
-
-      }
-
       // if there are init filters set from get params grab the active filters from the filters component before querying the DB
       if (Object.keys(this.initFilters).some(key => this.initFilters[key] && this.initFilters[key].length > 0)) {
         this.filters = [...this.$refs.orderFilters.getActiveFilters()]
@@ -282,6 +298,36 @@ export default {
 
       // get all orders
       this.getOrderData()
+
+      this.startPolling()
+    },
+
+    ...mapActions(utils.moduleName, {
+      setSnackbar: utilTypes.setSnackbar,
+      setConfirmDialog: utilTypes.setConfirmationDialog
+    }),
+
+    // polling
+    async startPolling () {
+      const initPayload = await getOrders2([])
+      this.payload = JSON.stringify(initPayload)
+      this.pollingTimer = window.setInterval(this.checkForChanges.bind(this), this.pollingInterval)
+    },
+
+    async checkForChanges () {
+      const newPayload = await getOrders2([])
+      if (this.payload !== JSON.stringify(newPayload)) {
+        this.changesDetected = true
+      }
+    },
+
+    stopPolling () {
+      window.clearInterval(this.pollingTimer)
+    },
+
+    reloadPage () {
+      this.changesDetected = false
+      window.location.reload()
     },
 
     // download pdf
@@ -298,6 +344,57 @@ export default {
       } else {
         console.log('error', error)
       }
+    },
+
+    // reprocess order
+    async reprocessRequest ({ request_id }) {
+      this.setConfirmDialog({
+        title: 'Are you sure you want to reprocess the request associated to this order?',
+        onConfirm: async () => {
+          this.loading = true
+
+          const [error] = await reprocessOcrRequest(request_id)
+
+          if (error !== undefined) {
+            this.loading = false
+            this.setSnackbar({ show: true, message: 'There was an error trying to send the message to reprocess' })
+            return
+          }
+
+          this.setSnackbar({ show: true, message: 'Request sent for reprocessing' })
+          this.loading = false
+        }
+      })
+    },
+
+    async deleteOrder (item) {
+      this.loading = true
+      await this.setConfirmDialog({
+        title: 'Are you sure you want to delete this order?',
+        onConfirm: async () => {
+          this.loading = true
+          const [error] = await delDeleteOrder(item.id)
+
+          if (!error) {
+            await this.setSnackbar({
+              show: true,
+              showSpinner: false,
+              message: 'Order deleted'
+            })
+            location.reload()
+            this.loading = false
+          } else {
+            await this.setSnackbar({
+              show: true,
+              showSpinner: false,
+              message: 'Error trying to delete the order'
+            })
+          }
+        },
+        onCancel: () => {
+          this.loading = false
+        }
+      })
     },
 
     async getOrderData () {
@@ -383,10 +480,6 @@ export default {
       }
     },
 
-    optionUpdate (options) {
-      console.log('update options', options)
-    },
-
     getFilters () {
       const metaParams = [
         { type: 'page', value: this.page },
@@ -396,7 +489,7 @@ export default {
         { type: 'requestID', value: this.requestID }
       ]
 
-      return [...this.filters, ...metaParams]
+      return [...this.filters, ...metaParams.filter(param => param.value)]
     },
     // format filters for endpoint interface
     getRequestFilters () {
@@ -438,7 +531,6 @@ export default {
     },
 
     onPageIndexChange (pageIndex) {
-      // console.log('changing page index', pageIndex)
       this.page = pageIndex
       this.setURLParams()
       this.getOrderData()
@@ -454,6 +546,7 @@ export default {
     }
     .table.loading::v-deep tbody {
       opacity: 0.5;
+      transition: opacity 0.3s linear;
     }
     .table::v-deep tbody {
         tr:nth-of-type(even) {
@@ -515,5 +608,9 @@ export default {
     .column-selector-menu::v-deep .v-list-item__action {
       margin-right: 13px !important;
       transform: scale(0.7) !important;
+    }
+    .refresh-msg {
+      width: 100%;
+      p { margin: 0; }
     }
 </style>

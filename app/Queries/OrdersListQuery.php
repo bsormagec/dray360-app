@@ -3,9 +3,10 @@
 namespace App\Queries;
 
 use App\Models\Order;
+use App\Models\OCRRequestStatus;
+use Illuminate\Support\Facades\DB;
 use Spatie\QueryBuilder\AllowedSort;
 use Spatie\QueryBuilder\QueryBuilder;
-use App\Queries\Sorts\OrderStatusSort;
 use Spatie\QueryBuilder\AllowedFilter;
 use App\Queries\Filters\OrderStatusFilter;
 use App\Queries\Filters\CreatedBetweenFilter;
@@ -14,6 +15,13 @@ class OrdersListQuery extends QueryBuilder
 {
     public function __construct()
     {
+        $hasPdfSelect = <<<ENDOFSQL
+            if (
+                json_extract(s_pdf.status_metadata, '$.document_archive_location') is null,
+                0,
+                1
+            ) as has_pdf
+        ENDOFSQL;
         $query = Order::query()
             ->select([
                 't_orders.id',
@@ -27,7 +35,15 @@ class OrdersListQuery extends QueryBuilder
                 't_orders.unit_number',
                 't_orders.reference_number',
             ])
+            ->addSelect(['has_pdf' => OCRRequestStatus::from('t_job_state_changes', 's_pdf')
+                ->select(DB::raw($hasPdfSelect))
+                ->whereColumn('s_pdf.request_id', 't_orders.request_id')
+                ->where('status', OCRRequestStatus::INTAKE_ACCEPTED)
+                ->limit(1)
+            ])
             ->leftJoin('t_addresses as bill_to', 'bill_to.id', '=', 't_orders.bill_to_address_id')
+            ->join('t_job_latest_state as ls_sort', 'ls_sort.order_id', '=', 't_orders.id')
+            ->join('t_job_state_changes as s_sort', 's_sort.id', '=', 'ls_sort.t_job_state_changes_id')
             ->when(! is_superadmin() && currentCompany(), function ($query) {
                 return $query->where('t_orders.t_company_id', '=', currentCompany()->id);
             })
@@ -61,7 +77,7 @@ class OrdersListQuery extends QueryBuilder
         ->allowedSorts([
             AllowedSort::field('request_id', 't_orders.request_id'),
             AllowedSort::field('created_at', 't_orders.created_at'),
-            AllowedSort::custom('status', new OrderStatusSort()),
+            AllowedSort::field('status', 's_sort.status'),
             AllowedSort::field('order.equipment_type', 't_orders.equipment_type'),
             AllowedSort::field('order.shipment_designation', 't_orders.shipment_designation'),
             AllowedSort::field('order.shipment_direction', 't_orders.shipment_direction'),

@@ -96,6 +96,45 @@ class ImportProfitToolsAddressTest extends TestCase
     }
 
     /** @test */
+    public function it_updates_the_already_exiting_address_if_the_is_terminal_or_is_billable_changes()
+    {
+        $initialAddress = $this->getBaseAddresses()[0];
+        $initialAddress['co_allow_billing'] = null;
+        $initialAddress['terminationlocation'] = null;
+        $modifiedAddress = $initialAddress;
+        $modifiedAddress['terminationlocation'] = 'T';
+        $modifiedAddress['co_allow_billing'] = 'T';
+        Queue::fake();
+        Http::fakeSequence()
+            ->push(['access_token' => 'test'])
+            ->push($initialAddress)
+            ->push(['access_token' => 'test'])
+            ->push($modifiedAddress)
+            ->whenEmpty(Http::response(null, 500));
+        $company = Company::getCushing();
+        $tmsProvider = TMSProvider::getProfitTools();
+
+        Cache::forget(RipCms::getTokenCacheKeyFor($company));
+        (new ImportProfitToolsAddress(['id' => 1], $company, $tmsProvider))->handle();
+        Cache::forget(RipCms::getTokenCacheKeyFor($company)); // I want to get the token from ripcms again
+        (new ImportProfitToolsAddress(['id' => 1], $company, $tmsProvider))->handle();
+
+        $this->assertDatabaseCount('t_company_address_tms_code', 1);
+        $this->assertDatabaseHas('t_addresses', [
+            'address_line_1' => $modifiedAddress['addr1'],
+            'address_line_2' => $modifiedAddress['addr2'],
+            'city' => $modifiedAddress['city'],
+            'state' => $modifiedAddress['state'],
+            'postal_code' => $modifiedAddress['zip'],
+            'country' => $modifiedAddress['country'],
+            'location_name' => $modifiedAddress['name'],
+            'location_phone' => $modifiedAddress['phone'],
+            'is_terminal' => 1,
+            'is_billable' => 1,
+        ]);
+    }
+
+    /** @test */
     public function it_fails_if_the_ripcms_api_returns_invalid_json()
     {
         $modifiedAddress = $this->getBaseAddresses()[1];

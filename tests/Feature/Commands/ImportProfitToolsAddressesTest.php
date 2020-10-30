@@ -159,7 +159,7 @@ class ImportProfitToolsAddressesTest extends TestCase
     {
         collect([
             Company::getCushing(),
-            Company::getTCompaniesDev(),
+            Company::getTCompaniesDemo(),
         ])->each(function ($company) {
             Cache::forget(RipCms::getTokenCacheKeyFor($company));
         });

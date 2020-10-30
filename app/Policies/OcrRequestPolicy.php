@@ -47,6 +47,13 @@ class OcrRequestPolicy
      */
     public function delete(User $user, OCRRequest $ocrRequest): bool
     {
-        return $user->isAbleTo('ocr-requests-remove') && ! request_is_from_nova();
+        $hasDeletePermissions = $user->isAbleTo('ocr-requests-remove');
+
+        if (! $user->isSuperadmin()) {
+            $ocrRequestCompany = $ocrRequest->latestOcrRequestStatus->company_id ?? null;
+            return $hasDeletePermissions && $user->getCompanyId() == $ocrRequestCompany;
+        }
+
+        return $hasDeletePermissions && ! request_is_from_nova();
     }
 }

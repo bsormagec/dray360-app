@@ -33,6 +33,7 @@ class CreateOrUpdateVerifiedAddressEntry implements ShouldQueue
         }
 
         $verifiedAddress->verified_count++;
+        $verifiedAddress->company_address_tms_text = $address->address_concatenated_text;
 
         if ($verifiedAddress->verified_count > currentCompany()->automatic_address_verification_threshold) {
             $verifiedAddress->skip_verification = true;

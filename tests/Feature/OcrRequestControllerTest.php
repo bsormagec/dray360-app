@@ -4,8 +4,10 @@ namespace Tests\Feature;
 
 use Tests\TestCase;
 use App\Models\OCRRequest;
+use Illuminate\Http\Response;
 use App\Models\OCRRequestStatus;
 use Tests\Seeds\OcrRequestSeeder;
+use Tests\Seeds\OrdersTableSeeder;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
 
 class OcrRequestControllerTest extends TestCase
@@ -101,5 +103,43 @@ class OcrRequestControllerTest extends TestCase
         $this->getJson(route('ocr.requests.index'))
         ->assertStatus(200)
         ->assertJsonCount(3, 'data');
+    }
+
+    /** @test */
+    public function it_should_soft_delete_the_ocr_request_and_the_related_orders()
+    {
+        $this->loginAdmin();
+        (new OrdersTableSeeder())->seedOrderWithPostProcessingComplete();
+        $ocrRequest = OCRRequest::latest()->first();
+
+        $this->deleteJson(route('ocr.requests.destroy', $ocrRequest->request_id))
+            ->assertStatus(Response::HTTP_NO_CONTENT);
+
+        $this->assertSoftDeleted('t_job_latest_state', ['id' => $ocrRequest->id]);
+        $ocrRequest->orders->each(function ($order) {
+            $this->assertSoftDeleted('t_orders', ['id' => $order->id]);
+        });
+    }
+
+    /** @test */
+    public function it_should_fail_if_not_authorized()
+    {
+        $this->loginCustomerAdmin();
+        (new OrdersTableSeeder())->seedOrderWithPostProcessingComplete();
+        $ocrRequest = OCRRequest::latest()->first();
+
+        $this->deleteJson(route('ocr.requests.destroy', $ocrRequest->request_id))
+            ->assertStatus(Response::HTTP_FORBIDDEN);
+
+        $this->assertDatabaseHas('t_job_latest_state', [
+            'id' => $ocrRequest->id,
+            'deleted_at' => null,
+        ]);
+        $ocrRequest->orders->each(function ($order) {
+            $this->assertDatabaseHas('t_orders', [
+                'id' => $order->id,
+                'deleted_at' => null,
+            ]);
+        });
     }
 }
