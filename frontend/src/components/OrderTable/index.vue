@@ -263,7 +263,7 @@ export default {
           'latest_ocr_request_status.display_status': 'status'
         }
         const sortCol = sortColumnMap.hasOwnProperty(this.options.sortBy.join()) ? sortColumnMap[this.options.sortBy.join()] : 'created_at'
-        // this.page = this.options.page
+
         this.sortColumn = sortCol
         this.sortDesc = this.options.sortDesc.join() == 'true'
         this.setURLParams()
@@ -281,15 +281,12 @@ export default {
     const params = this.$route.query
 
     this.page = params.page
-
     this.initFilters.search = params.search
     this.initFilters.dateRange = params.dateRange?.split(',')
-    this.initFilters.status = params.status.split(',')
+    this.initFilters.status = params.status?.split(',')
     this.initFilters.updateType = params.updateType
     this.initFilters.requestID = params.requestID
     this.initFilters.page = params.page
-
-    // console.log(this.page)
   },
 
   mounted () {
@@ -529,7 +526,6 @@ export default {
     },
 
     getStatusChip (item) {
-      console.log(item.latest_ocr_request_status.display_status.toLowerCase())
       // different colors for different status types
       switch (item.latest_ocr_request_status.display_status.toLowerCase()) {
         case 'processing':

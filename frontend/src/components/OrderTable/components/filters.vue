@@ -247,9 +247,7 @@ export default {
     displayFilters () {
       const dFilters = []
       this.activeFilters.forEach(filter => {
-        console.log('filters')
         if (filter.type === 'status') {
-          console.log('filter value!!!', filter.value)
           filter.value.forEach(statusFilter => {
             dFilters.push({ type: 'status', value: statusFilter })
           })
@@ -287,7 +285,6 @@ export default {
     removeFilter (filter) {
       // remove from model
       if (filter.type === 'status') {
-        console.log(filter)
         this.filters[filter.type] = this.filters[filter.type].filter(element => element !== filter.value)
       } else if (Array.isArray(filter.value)) {
         this.filters[filter.type] = []
@@ -325,16 +322,12 @@ export default {
       })
       this.setActiveFilters()
 
-      console.log('resetting filters', this.activeFilters)
       this.$emit('change', this.activeFilters)
     },
 
     setFiltersFromState (stateFilters) {
-      console.log('before filter merge - STATE FILTERS: ', stateFilters)
-      console.log('before filter merge - LOCAL FILTERS: ', this.filters)
       this.filters = { ...stateFilters }
       this.setActiveFilters()
-      console.log('after filter merge: ', this.filters)
     },
     // set all filters to blank or empty array
     clearFilters () {
