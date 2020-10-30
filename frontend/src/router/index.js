@@ -90,7 +90,7 @@ const routes = [
     path: '/order-table-test',
     name: 'OrderTableTest',
     meta: {
-      middleware: [auth, dev]
+      middleware: [auth]
     },
     component: OrderTableTest
   },
