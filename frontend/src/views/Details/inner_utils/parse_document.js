@@ -22,7 +22,7 @@ import mapFieldNames from '@/views/Details/inner_utils/map_field_names'
 import { formModule } from '@/views/Details/inner_store/index'
 import { defaultsTo } from '@/utils/defaults_to'
 import get from 'lodash/get'
-import { buildField } from '@/views/Details/inner_utils/example_form'
+import { buildField } from '@/views/Details/inner_utils/form_functions'
 
 export const parse = ({ data }) => {
   return [
@@ -112,30 +112,6 @@ function getHighlights (data) {
           name: mapFieldNames.getName({ abbyName: key }),
           value: defaultsTo(() => data.bill_to_address_raw_text, '--')
         }
-      } else if (key.includes('port_ramp')) {
-        const portRampMatchedAddress = get(data, key, null)
-
-        /* Matched address */
-        const origin = formModule.state.form.sections.shipment.subSections.origin.fields
-        // Vue.set(
-        //   origin,
-        //   `${portRampKeyParser(key)}`,
-        //   buildField({
-        //     type: 'modal-address',
-        //     isEditing: true,
-        //     readonly: false,
-        //     addressId: get(portRampMatchedAddress, 'id', null),
-        //     matchedAddress: formatAddress(portRampMatchedAddress),
-        //     value: defaultsTo(() => data[`${key}_raw_text`], '--'),
-        //     verified: data[`${key}_verified`]
-        //   })
-        // )
-        /* -- */
-
-        highlights[key] = {
-          ...getOcrData(key, data),
-          name: mapFieldNames.getName({ abbyName: key })
-        }
       } else {
         highlights[key] = {
           ...getOcrData(key, data),
@@ -195,8 +171,4 @@ function getOcrData (key, data) {
 
 function strSpacer (str, spacer) {
   return str ? str + spacer : ''
-}
-
-function portRampKeyParser (key) {
-  return key.includes('destination') ? 'Port Ramp of Destination' : 'Port Ramp of Origin'
 }

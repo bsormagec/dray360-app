@@ -18,6 +18,7 @@
       <div class="form-field-element-input">
         <v-text-field
           v-model="name"
+          data-cy="name-input"
           class="add-user-field"
           label="Name"
           placeholder="Name"
@@ -26,6 +27,7 @@
         />
         <v-text-field
           v-model="email"
+          data-cy="email-input"
           class="add-user-field"
           label="Email"
           placeholder="Email"
@@ -34,6 +36,7 @@
         />
         <v-text-field
           v-model="password"
+          data-cy="password-input"
           class="add-user-field"
           label="Password"
           placeholder="Password"
@@ -43,6 +46,7 @@
         <v-select
           v-if="hasPermission('roles-update')"
           v-model="role_selected"
+          data-cy="roles-selector"
           class="add-user-field"
           label="User Role"
           item-text="display_name"
@@ -65,6 +69,7 @@
         sm="2"
       >
         <v-btn
+          name="add-user"
           class="save-button button"
           @click="addUser()"
         >

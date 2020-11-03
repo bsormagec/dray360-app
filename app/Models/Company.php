@@ -27,7 +27,9 @@ class Company extends Model
         TCOMPANIES_DEMO = 'TCompaniesDemo',
         POLARIS = 'Polaris',
         IXT_ONBOARDING = 'IXTOnboarding',
-        IXT = 'IXT';
+        IXT = 'IXT',
+        PORT_CITY_LOGISTICS_ONBOARDING = 'PortCityLogisticsOnboarding',
+        PORT_CITY_LOGISTICS = 'PortCityLogistics';
 
     public $table = 't_companies';
 
@@ -134,6 +136,22 @@ class Company extends Model
     public static function getIxt(): self
     {
         return static::where('name', static::IXT)->first();
+    }
+
+    /**
+     * Get company 'Port City Logistics onboarding'
+     */
+    public static function getPortCityLogisticsOnboarding(): self
+    {
+        return static::where('name', static::PORT_CITY_LOGISTICS_ONBOARDING)->first();
+    }
+
+    /**
+     * Get company 'Port City Logistics'
+     */
+    public static function getPortCityLogistics(): self
+    {
+        return static::where('name', static::PORT_CITY_LOGISTICS)->first();
     }
 
     public function variantsAccessorials(): BelongsToMany

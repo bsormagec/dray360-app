@@ -11,6 +11,8 @@ use Illuminate\Database\Eloquent\Model;
  * @property string|\Carbon\Carbon $status_date
  * @property string $status
  * @property array $status_metadata
+ * @property int $company_id
+ * @property int $order_id
  */
 class OCRRequestStatus extends Model
 {
@@ -36,33 +38,53 @@ class OCRRequestStatus extends Model
     FAILURE_UPDATING_TO_WINT = 'failure-updating-to-wint',
     SUCCESS_UPDATING_TO_WINT = 'success-updating-to-wint',
     SHIPMENT_UPDATED_BY_WINT = 'shipment-updated-by-wint',
-    SHIPMENT_NOT_UPDATED_BY_WINT = 'shipment-not-updated-by-wint'
+    SHIPMENT_NOT_UPDATED_BY_WINT = 'shipment-not-updated-by-wint',
+    UPDATES_PRIOR_ORDER = 'updates-prior-order',
+    UPDATED_BY_SUBSEQUENT_ORDER = 'updated-by-subsequent-order',
+
+    SUCCESS_IMAGEUPLOADING_TO_BLACKFLY = 'success-imageuploding-to-blackfl',
+    FAILURE_IMAGEUPLOADING_TO_BLACKFLY = 'failure-imageuploding-to-blackfl',
+    UNTRIED_IMAGEUPLOADING_TO_BLACKFLY = 'untried-imageuploding-to-blackfl'
     ;
 
     const STATUS_MAP = [
-        self::INTAKE_ACCEPTED => 'Processing',
-        self::INTAKE_EXCEPTION => 'Exception',
-        self::INTAKE_REJECTED => 'Rejected',
-        self::INTAKE_STARTED => 'Intake',
-        self::OCR_COMPLETED => 'Processing',
-        self::OCR_POST_PROCESSING_COMPLETE => 'Verified',
-        self::OCR_POST_PROCESSING_ERROR => 'Rejected',
-        self::OCR_WAITING => 'Processing',
-        self::PROCESS_OCR_OUTPUT_FILE_COMPLETE => 'Verified',
-        self::PROCESS_OCR_OUTPUT_FILE_ERROR => 'Rejected',
-        self::UPLOAD_REQUESTED => 'Intake',
+        self::INTAKE_ACCEPTED                    => 'Processing',
+        self::OCR_COMPLETED                      => 'Processing',
+        self::OCR_WAITING                        => 'Processing',
 
-        self::SENDING_TO_WINT => 'Sending to TMS',
-        self::FAILURE_SENDING_TO_WINT => 'Rejected',
-        self::SUCCESS_SENDING_TO_WINT => 'Sent to TMS',
-        self::SHIPMENT_CREATED_BY_WINT => 'Accepted by TMS',
-        self::SHIPMENT_NOT_CREATED_BY_WINT => 'Rejected',
+        self::INTAKE_EXCEPTION                   => 'Exception',
 
-        self::UPDATING_TO_WINT => 'Sending to TMS',
-        self::FAILURE_UPDATING_TO_WINT => 'Rejected',
-        self::SUCCESS_UPDATING_TO_WINT => 'Sent to TMS',
-        self::SHIPMENT_UPDATED_BY_WINT => 'Accepted by TMS',
-        self::SHIPMENT_NOT_UPDATED_BY_WINT => 'Rejected'
+        self::INTAKE_STARTED                     => 'Intake',
+        self::UPLOAD_REQUESTED                   => 'Intake',
+
+        self::INTAKE_REJECTED                    => 'Rejected',
+        self::OCR_POST_PROCESSING_ERROR          => 'Rejected',
+        self::PROCESS_OCR_OUTPUT_FILE_ERROR      => 'Rejected',
+
+        self::OCR_POST_PROCESSING_COMPLETE       => 'Verified',
+        self::PROCESS_OCR_OUTPUT_FILE_COMPLETE   => 'Verified',
+
+        self::UPDATES_PRIOR_ORDER                => 'Update',
+
+        self::UPDATED_BY_SUBSEQUENT_ORDER        => 'Replaced',
+
+        self::SENDING_TO_WINT                    => 'Sending to TMS',
+        self::UPDATING_TO_WINT                   => 'Sending to TMS',
+
+        self::SUCCESS_SENDING_TO_WINT            => 'Sent to TMS',
+        self::SUCCESS_UPDATING_TO_WINT           => 'Sent to TMS',
+
+        self::SHIPMENT_CREATED_BY_WINT           => 'Accepted by TMS',
+        self::SHIPMENT_UPDATED_BY_WINT           => 'Accepted by TMS',
+        self::SUCCESS_IMAGEUPLOADING_TO_BLACKFLY >= 'Accepted by TMS',
+        self::UNTRIED_IMAGEUPLOADING_TO_BLACKFLY >= 'Accepted by TMS',
+
+        self::SHIPMENT_NOT_UPDATED_BY_WINT       => 'TMS Warning',
+        self::FAILURE_UPDATING_TO_WINT           => 'TMS Warning',
+        self::FAILURE_IMAGEUPLOADING_TO_BLACKFLY >= 'TMS Warning',
+
+        self::SHIPMENT_NOT_CREATED_BY_WINT       => 'TMS Error',
+        self::FAILURE_SENDING_TO_WINT            => 'TMS Error',
     ];
 
     public $table = 't_job_state_changes';

@@ -263,7 +263,7 @@ export default {
 }
 </script>
 
-<style lang="scss">
+<style lang="scss" scoped>
 .title__dialog{
   color: map-get($colors, slate-gray );
   font-size: rem(20);
@@ -274,7 +274,7 @@ export default {
 .equipment__section{
   font-weight: bold;
   font-size: rem(14) !important;
-  letter-spacing: 0.025rem;
+  letter-spacing: rem(0.25);
   .not__found{
     color: map-get($colors, red);
   }
@@ -283,7 +283,7 @@ export default {
   }
 }
 .field__name{
-  font-size: 0.875rem !important;
+  font-size: rem(14) !important;
   font-weight: bold;
   text-transform: capitalize;
 }
@@ -300,6 +300,7 @@ export default {
 .selected__equipment{
   display: flex;
   justify-content: flex-end;
+  font-size: rem(14);
 }
 .table__background{
   background-color: map-get($colors, modal-header-bg) !important;

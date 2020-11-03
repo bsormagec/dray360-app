@@ -176,6 +176,7 @@ return [
         App\Providers\HorizonServiceProvider::class,
         App\Providers\NovaServiceProvider::class,
         App\Providers\RouteServiceProvider::class,
+        App\Providers\MacrosServiceProvider::class,
 
         /*
          * For AWS, see: https://github.com/aws/aws-sdk-php-laravel

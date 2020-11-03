@@ -15,12 +15,13 @@ class OCRRulesAssignmentController extends Controller
     {
         $this->authorize('viewAny', OCRRule::class);
         $filters = $request->validate([
-            'company_id' => 'required',
-            'variant_id' => 'required',
+            'company_id' => 'required|integer',
+            'variant_id' => 'required|integer',
         ]);
 
         return new ResourcesOCRRule(
             CompanyOCRVariantOCRRule::assignedTo($filters['company_id'], $filters['variant_id'])
+                ->has('ocrRule')
                 ->with('ocrRule')
                 ->orderBy('rule_sequence')
                 ->get()
@@ -32,9 +33,9 @@ class OCRRulesAssignmentController extends Controller
     {
         $this->authorize('assign', OCRRule::class);
         $data = $request->validate([
-            'company_id' => 'required',
-            'variant_id' => 'required',
-            'rules' => 'required|array',
+            'company_id' => 'required|integer|exists:t_companies,id',
+            'variant_id' => 'required|integer|exists:t_ocrvariants,id',
+            'rules' => 'present|array',
             'rules.*' => 'integer|exists:t_ocrrules,id',
         ]);
         $companyId = $data['company_id'];

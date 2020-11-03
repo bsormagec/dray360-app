@@ -1,9 +1,9 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
 import Orders from '@/views/Orders/Orders'
-import Details from '@/views/Details/Details'
 import OrderDetails from '@/views/OrderDetails/OrderDetails'
 import Login from '@/views/Login'
+import OrderTableTest from '@/views/OrderTableTest'
 import RulesEditor from '@/views/RulesEditor/RulesEditor'
 import auth from '@/router/middleware/auth'
 import superadmin from '@/router/middleware/superadmin'
@@ -86,20 +86,20 @@ const routes = [
     component: StyleGuide
   },
   {
+    path: '/order-table-test',
+    name: 'OrderTableTest',
+    meta: {
+      middleware: [auth]
+    },
+    component: OrderTableTest
+  },
+  {
     path: '/order/:id',
     name: 'OrderDetails',
     meta: {
       middleware: [auth]
     },
     component: OrderDetails
-  },
-  {
-    path: '/order-test/:id',
-    name: 'Details',
-    meta: {
-      middleware: [auth]
-    },
-    component: Details
   },
   {
     path: '/login',

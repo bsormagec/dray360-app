@@ -4,12 +4,16 @@ import vuetify from '@/plugins/vuetify'
 
 export const type = {
   setSnackbar: 'SET_SNACKBAR',
+  setConfirmationDialog: 'SET_CONFIRMATION_DIALOG',
+  cancelConfirmationDialog: 'CANCEL_CONFIRMATION_DIALOG',
+  acceptConfirmationDialog: 'ACCEPT_CONFIRMATION_DIALOG',
   setTenantConfig: 'SET_TENANT_CONFIG',
   getTenantConfig: 'GET_TENANT_CONFIG'
 }
 const initialState = {
   snackbar: { show: false, showSpinner: false, message: '' },
-  tenantConfig: {}
+  tenantConfig: {},
+  confirmationDialog: getBaseConfirmationDialog()
 }
 
 const mutations = {
@@ -18,7 +22,11 @@ const mutations = {
   },
   [type.setTenantConfig] (state, tenantConfig) {
     state.tenantConfig = tenantConfig
+  },
+  [type.setConfirmationDialog] (state, confirmationDialog) {
+    state.confirmationDialog = { ...confirmationDialog }
   }
+
 }
 
 const actions = {
@@ -43,6 +51,50 @@ const actions = {
     if (error) return
 
     await dispatch(type.setTenantConfig, { ...response })
+  },
+  [type.setConfirmationDialog] ({ commit }, {
+    title = '',
+    text = '',
+    confirmText = 'Accept',
+    cancelText = 'Cancel',
+    onConfirm,
+    onCancel
+  }) {
+    commit(type.setConfirmationDialog, {
+      open: true,
+      title,
+      text,
+      confirmText,
+      cancelText,
+      onConfirm,
+      onCancel
+    })
+  },
+  [type.acceptConfirmationDialog] ({ commit, state }) {
+    if (state.confirmationDialog.onConfirm) {
+      state.confirmationDialog.onConfirm()
+    }
+
+    commit(type.setConfirmationDialog, getBaseConfirmationDialog())
+  },
+  [type.cancelConfirmationDialog] ({ commit, state }) {
+    if (state.confirmationDialog.onCancel) {
+      state.confirmationDialog.onCancel()
+    }
+
+    commit(type.setConfirmationDialog, getBaseConfirmationDialog())
+  }
+}
+
+function getBaseConfirmationDialog () {
+  return {
+    open: false,
+    title: '',
+    text: '',
+    confirmText: 'Confirm',
+    cancelText: 'Cancel',
+    onConfirm: () => {},
+    onCancel: () => {}
   }
 }
 
