@@ -1,7 +1,6 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
 import Orders from '@/views/Orders/Orders'
-import Details from '@/views/Details/Details'
 import OrderDetails from '@/views/OrderDetails/OrderDetails'
 import Login from '@/views/Login'
 import OrderTableTest from '@/views/OrderTableTest'
@@ -101,14 +100,6 @@ const routes = [
       middleware: [auth]
     },
     component: OrderDetails
-  },
-  {
-    path: '/order-test/:id',
-    name: 'Details',
-    meta: {
-      middleware: [auth]
-    },
-    component: Details
   },
   {
     path: '/login',

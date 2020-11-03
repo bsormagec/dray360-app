@@ -1,7 +1,6 @@
 import Vue from 'vue'
 import { objValFromLocation } from '@/utils/obj_val_from_loc'
 import { getInventoryCount } from '@/views/Details/inner_utils/get_inventory_count'
-import { exampleForm } from '@/views/Details/inner_utils/example_form'
 import cloneDeep from 'lodash/cloneDeep'
 
 const state = Vue.observable({
@@ -71,10 +70,6 @@ const methods = {
 
   deleteFormInventoryItem ({ key }) {
     Vue.delete(state.form.sections.inventory.subSections, key)
-  },
-
-  reset () {
-    this.setForm(exampleForm)
   }
 }
 

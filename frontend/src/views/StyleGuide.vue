@@ -162,18 +162,6 @@
               }<br><br>
               <p>You can use different types according your needs<br> examples below:</p>
             </code>
-            <div
-              v-for="item in fields"
-              :key="item.key"
-            >
-              <code>type: {{ item.el.type }}</code>
-              <FormField
-                :field="item"
-                :is-editing="true"
-                :readonly="item.readonly"
-                :callbacks="{}"
-              />
-            </div>
             <h2>SearchBar / Edit mode</h2><br>
             <code>Just need to import the component and use it</code>
             <p>
@@ -280,13 +268,6 @@
                 :callbacks="object.callbacks"<br>
                 @close="object.callbacks.stopEdit({field:object})
               </code>
-              <FormField
-                :field="fields_2"
-                :is-editing="true"
-                :readonly="fields_2.readonly"
-                :callbacks="fields_2.callbacks"
-                @close="fields_2.callbacks.stopEdit({field:fields_2})"
-              />
             </div>
             <div>
               <h2>
@@ -381,7 +362,7 @@
   </v-main>
 </template>
 <script>
-import FormField from '@/components/FormField/FormField'
+
 import SearchBar from '@/components/SearchBar'
 import Select from '@/components/Select'
 import ContentLoading from '@/components/ContentLoading'
@@ -391,26 +372,9 @@ import DateRangeCalendar from '@/components/Orders/DateRangeCalendar'
 import OrderModal from '@/components/Orders/OrderModal'
 import GeneralTable from '@/components/General/GeneralTable'
 import OutlinedButtonGroup from '@/components/General/OutlinedButtonGroup'
-const callbacks = {
-  startEdit: (obj) => {
-    obj.field.highlight = 'edit'
-  },
-  stopEdit: (obj) => {
-    obj.field.highlight = undefined
-  },
-  startHover: (obj) => {
-    if (obj.field.highlight === 'edit') return
-    obj.field.highlight = 'hover'
-  },
-  stopHover: (obj) => {
-    if (obj.field.highlight === 'edit') return
-    obj.field.highlight = undefined
-  }
-}
 export default {
   name: 'Login',
   components: {
-    FormField,
     SearchBar,
     Select,
     ContentLoading,
@@ -458,79 +422,7 @@ export default {
         el: {
           type: 'input'
         }
-      },
-      fields: [
-        {
-          name: 'name',
-          readonly: false,
-          el: {
-            type: 'input'
-          }
-        },
-        {
-          name: 'choose...',
-          el: {
-            type: 'select',
-            options: ['a', 'b', 'c']
-          }
-        },
-        {
-          name: 'Input - Select',
-          el: {
-            type: 'input-select',
-            options: ['a', 'b', 'c']
-          }
-        },
-        {
-          name: 'Switch',
-          el: {
-            type: 'switch'
-          }
-        },
-        {
-          name: 'Date',
-          el: {
-            type: 'date'
-          }
-        },
-        {
-          name: 'Time',
-          el: {
-            type: 'time'
-          }
-        },
-        {
-          name: 'Date - Time',
-          el: {
-            type: 'date-time'
-          }
-        },
-        {
-          name: 'Textarea',
-          el: {
-            type: 'text-area'
-          }
-        },
-        {
-          name: 'Radio',
-          el: {
-            type: 'radio',
-            options: ['a', 'b', 'c']
-          }
-        },
-        {
-          name: 'Label',
-          el: {
-            type: 'label'
-          }
-        },
-        {
-          name: 'Info title',
-          el: {
-            type: 'info-title'
-          }
-        }
-      ]
+      }
     }
   },
 

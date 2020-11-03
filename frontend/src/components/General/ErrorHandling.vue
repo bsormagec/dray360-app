@@ -99,23 +99,9 @@
         </v-snackbar>
       </div>
     </div>
-
-    <div
-      v-else
-      class="error_handling_formfield"
-    >
-      <FormField
-        :field="field"
-        :is-editing="true"
-        :readonly="field.readonly"
-        :callbacks="field.callbacks"
-        @close="field.callbacks.stopEdit({field:field})"
-      />
-    </div>
   </div>
 </template>
 <script>
-import FormField from '../FormField/FormField'
 
 const callbacks = {
   startEdit: (obj) => {
@@ -135,9 +121,7 @@ const callbacks = {
 }
 
 export default {
-  components: {
-    FormField
-  },
+
   props: {
     label: {
       type: String,
@@ -160,17 +144,7 @@ export default {
     return {
       localdialog: this.dialog,
       dialog2: this.dialog,
-      snackbar: this.dialog,
-      field:
-        {
-          name: 'Error formfield',
-          readonly: true,
-          highlight: undefined,
-          callbacks,
-          el: {
-            type: 'input'
-          }
-        }
+      snackbar: this.dialog
     }
   },
   updated () {
