@@ -212,7 +212,9 @@ export default {
         { text: 'Verified', value: 'Verified' },
         { text: 'Sending to TMS', value: 'Sending to TMS' },
         { text: 'Sent to TMS', value: 'Sent to TMS' },
-        { text: 'Accepted by TMS', value: 'Accepted by TMS' }
+        { text: 'Accepted by TMS', value: 'Accepted by TMS' },
+        { text: 'TMS Warning', value: 'TMS Warning' },
+        { text: 'TMS Error', value: 'TMS Error' }
       ],
       // these are the models for the form fields
       filters: {

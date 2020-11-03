@@ -534,6 +534,10 @@ export default {
           return { color: 'blue', outlined: true, textColor: 'blue' }
         case 'rejected':
           return { color: '#FB7660' }
+        case 'error':
+          return { color: '#FB7660' }
+        case 'warning':
+          return { color: '#FB7660' }
         default:
           return { color: 'blue' }
       }

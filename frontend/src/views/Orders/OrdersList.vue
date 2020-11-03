@@ -101,25 +101,13 @@ export default {
       { text: 'shipment-not-updated-by-wint', value: 'shipment-not-updated-by-wint' },
 
       { text: 'updates-prior-order', value: 'updates-prior-order' },
-      { text: 'updated-by-subsequent-order', value: 'updated-by-subsequent-order' }
+      { text: 'updated-by-subsequent-order', value: 'updated-by-subsequent-order' },
+
+      { text: 'success-imageuploding-to-blackfl', value: 'success-imageuploding-to-blackfl' },
+      { text: 'failure-imageuploding-to-blackfl', value: 'failure-imageuploding-to-blackfl' },
+      { text: 'untried-imageuploding-to-blackfl', value: 'untried-imageuploding-to-blackfl' }
     ]
   }),
-
-  /*
-  [
-    'intake-accepted' => 'Processing',
-    'intake-exception' => 'Exception',
-    'intake-rejected' => 'Rejected',
-    'intake-started' => 'Intake',
-    'ocr-completed' => 'Processing',
-    'ocr-post-processing-complete' => 'Verified',
-    'ocr-post-processing-error' => 'Rejected',
-    'ocr-waiting' => 'Processing',
-    'process-ocr-output-file-complete' => 'Processing',
-    'process-ocr-output-file-error' => 'Rejected',
-    'upload-requested' => 'Intake'
-  ]
-  */
 
   methods: {
     setHeaders (newHeaders) {
