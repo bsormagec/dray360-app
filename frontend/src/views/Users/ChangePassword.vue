@@ -135,7 +135,7 @@ export default {
           showSpinner: false,
           message: 'Password changed'
         })
-        this.$router.push({ path: '/user/dashboard/edit-profile/' })
+        this.$router.push({ path: '/user/edit-profile/' })
       }
     }
   }
