@@ -24,6 +24,7 @@
             <div class="col-6">
               <v-text-field
                 v-model="name"
+                data-cy="name-field"
                 class="profile-field"
                 name="First Name"
                 label="First Name"
@@ -37,6 +38,7 @@
             <div class="col-6">
               <v-text-field
                 v-model="email"
+                data-cy="email-field"
                 class="profile-field"
                 name="email"
                 label="Email"
@@ -50,6 +52,7 @@
             <div class="col-6">
               <v-text-field
                 v-model="position"
+                data-cy="position-field"
                 class="profile-field"
                 name="position"
                 label="Position"
@@ -63,6 +66,7 @@
             <div class="col-6">
               <v-text-field
                 v-model="org"
+                data-cy="org-field"
                 class="profile-field"
                 name="org"
                 label="Org"
@@ -97,6 +101,7 @@
             <v-btn
               class="button"
               color="primary"
+              data-cy="save-button"
               @click="save"
             >
               Save
