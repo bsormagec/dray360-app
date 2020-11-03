@@ -57,6 +57,7 @@
       <AddressBookModalDialog
         :is-open="addressModalOpen"
         :filters="filters"
+        :recognized-text="recognizedText"
         @change="handleChange"
       />
     </div>
