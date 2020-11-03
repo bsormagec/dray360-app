@@ -65,5 +65,10 @@ $factory->define(Order::class, function (Faker $faker) {
         'ship_comment' => null,
         'division_code' => '2202',
         't_company_id' => null,
+        'preceded_by_order_id' => null,
+        'succeded_by_order_id' => null,
+        'tms_submission_datetime' => null,
+        'tms_cancelled_datetime' => null,
+        'cancelled_datetime' => null,
     ];
 });

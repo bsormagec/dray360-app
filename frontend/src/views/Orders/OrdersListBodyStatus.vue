@@ -41,14 +41,24 @@ export default {
   border-radius: 50%;
   background: transparent;
 
+  &.accepted {
+    background: lightgreen;
+    border-color: green !important;
+  }
+
   &.verified {
     background: green;
     border-color: green !important;
   }
 
-  &.rejected,&.exception {
+  &.rejected,&.exception,&.error {
     background: red;
     border-color: red !important;
+  }
+
+  &.warning {
+    background: brown;
+    border-color: brown !important;
   }
 
   &.intake {
@@ -69,5 +79,16 @@ export default {
     color: red;
     font-weight: 700;
   }
+
+  &.error {
+    color: darkred;
+    font-weight: 700;
+  }
+
+  &.warning {
+    color: brown;
+    font-weight: 700;
+  }
+
 }
 </style>

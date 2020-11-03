@@ -96,23 +96,23 @@ class OCRRulesAssignmentControllerTest extends TestCase
     {
         $this->withoutExceptionHandling();
         $this->seed(OCRRulesAssignmentSeed::class);
-        $companys = Company::all(['id']);
+        $companies = Company::all(['id']);
         $ocrVariant = OCRVariant::first(['id']);
         $rulesCompany1 = CompanyOCRVariantOCRRule::query()
-            ->assignedTo($companys->first()->id, $ocrVariant->id)
+            ->assignedTo($companies->first()->id, $ocrVariant->id)
             ->with('ocrRule')
             ->orderBy('rule_sequence')
             ->get()
             ->pluck('ocrRule');
         $rulesCompany2 = CompanyOCRVariantOCRRule::query()
-            ->assignedTo($companys->last()->id, $ocrVariant->id)
+            ->assignedTo($companies->last()->id, $ocrVariant->id)
             ->with('ocrRule')
             ->orderBy('rule_sequence')
             ->get()
             ->pluck('ocrRule');
 
         $this->getJson(route('ocr.rules-assignment.index', [
-                'company_id' => $companys->first()->id,
+                'company_id' => $companies->first()->id,
                 'variant_id' => $ocrVariant->id,
             ]))
             ->assertStatus(200)
@@ -126,7 +126,7 @@ class OCRRulesAssignmentControllerTest extends TestCase
             ->assertJsonPath('data.1.id', $rulesCompany1->get(1)->id);
 
         $this->getJson(route('ocr.rules-assignment.index', [
-                'company_id' => $companys->last()->id,
+                'company_id' => $companies->last()->id,
                 'variant_id' => $ocrVariant->id,
             ]))
             ->assertStatus(200)
@@ -187,23 +187,46 @@ class OCRRulesAssignmentControllerTest extends TestCase
     }
 
     /** @test */
+    public function it_should_only_list_the_associations_with_not_deleted_rules()
+    {
+        $this->seed(OCRRulesAssignmentSeed::class);
+        $companies = Company::all(['id']);
+        $ocrVariant = OCRVariant::first(['id']);
+        $rulesCompany1 = CompanyOCRVariantOCRRule::query()
+            ->assignedTo($companies->first()->id, $ocrVariant->id)
+            ->with('ocrRule')
+            ->orderBy('rule_sequence')
+            ->get()
+            ->tap(fn ($rules) => $rules->first()->ocrRule->delete())
+            ->pluck('ocrRule');
+
+        $this->getJson(route('ocr.rules-assignment.index', [
+                'company_id' => $companies->first()->id,
+                'variant_id' => $ocrVariant->id,
+            ]))
+            ->assertStatus(200)
+            ->assertJsonCount(1, 'data')
+            ->assertJsonPath('data.0.id', $rulesCompany1->get(1)->id);
+    }
+
+    /** @test */
     public function it_should_not_list_the_assignments_if_not_authorized()
     {
         $user = User::whereRoleIs('customer-user')->first();
         Sanctum::actingAs($user);
 
         $this->seed(OCRRulesAssignmentSeed::class);
-        $companys = Company::all(['id']);
+        $companies = Company::all(['id']);
         $ocrVariant = OCRVariant::first(['id']);
 
         $this->getJson(route('ocr.rules-assignment.index', [
-                'company_id' => $companys->first()->id,
+                'company_id' => $companies->first()->id,
                 'variant_id' => $ocrVariant->id,
             ]))
             ->assertStatus(Response::HTTP_FORBIDDEN);
 
         $this->getJson(route('ocr.rules-assignment.index', [
-                'company_id' => $companys->last()->id,
+                'company_id' => $companies->last()->id,
                 'variant_id' => $ocrVariant->id,
             ]))
             ->assertStatus(Response::HTTP_FORBIDDEN);

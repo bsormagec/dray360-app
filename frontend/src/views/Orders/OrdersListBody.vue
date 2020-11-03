@@ -48,7 +48,11 @@ export default {
     return {
       list
     }
+  },
+  created () {
+
   }
+
 }
 </script>
 

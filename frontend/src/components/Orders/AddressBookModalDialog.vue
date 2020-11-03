@@ -30,6 +30,37 @@
           <v-icon>mdi-close</v-icon>
         </v-btn>
       </v-card-title>
+      <div
+        v-if="recognizedText"
+        class="address-as-recognized"
+      >
+        <v-row>
+          <v-col cols="1">
+            <svg
+              width="5"
+              height="70"
+              style="margin-left: 17px"
+            >
+              <rect
+                width="5"
+                height="70"
+                opacity="0.26"
+                left="3"
+                top="9"
+              />
+            </svg>
+          </v-col>
+          <v-col cols="4">
+            <span>
+              Address as recognized
+            </span>
+          </v-col>
+          <v-col cols="7">
+            <p>{{ recognizedText }}</p>
+            <!-- <span v-html="getMatchedAddress(recognizedText)" /> -->
+          </v-col>
+        </v-row>
+      </div>
       <v-data-table
         :headers="headers"
         :items="addressObject"
@@ -107,6 +138,10 @@ export default {
       type: Boolean,
       required: true
     },
+    recognizedText: {
+      type: String,
+      required: true
+    },
     filters: {
       type: Object,
       required: false,
@@ -155,6 +190,7 @@ export default {
 
   async mounted () {
     this.search = this.filters.rawtext
+    console.log('recogonizedText: ', this.recognizedText)
   },
 
   methods: {
@@ -235,5 +271,25 @@ export default {
 .col__address {
   width: 40% !important;
   padding: 0 !important;
+}
+.address-as-recognized {
+  background-color: #F5F6F7;
+  span {
+    color: map-get($colors, slate-gray);
+    font-family: Roboto;
+    font-style: normal;
+    font-weight: bold;
+    font-size: rem(12);
+    margin-left: rem(-20)
+  }
+  p {
+    color: map-get($colors, slate-gray);
+    font-family: Roboto;
+    font-style: normal;
+    font-weight: normal;
+    font-size: rem(12);
+    margin-left: rem(10);
+    width: 12.3rem;
+  }
 }
 </style>

@@ -3,6 +3,46 @@
     id="order-form"
     :class="`form ${isMobile && 'mobile'}`"
   >
+    <div class="order__title">
+      <h2>Order   #{{ order.id }}</h2>
+      <OutlinedButtonGroup
+        v-if="!editMode"
+        :main-action="{
+          title: 'Send to TMS',
+          action: postSendToTms,
+          path:'',
+          disabled: sendToTmsDisabled
+        }"
+        :options="[
+          { title: 'Edit Order' , action: toggleEdit, hasPermission: true },
+          { title: 'Download Order', action: () => downloadPDF(order.id), hasPermission: true },
+          { title: 'Delete Order', action: () => deleteOrder(order.id), hasPermission: hasPermission('orders-remove') }
+        ]"
+        :loading="loading"
+      />
+      <div v-else>
+        <v-btn
+          color="primary"
+          :outlined="!editMode && !isMobile"
+          :style="{ marginBottom: '10px' }"
+          width="115px"
+          text
+          @click="toggleEdit"
+        >
+          Cancel
+        </v-btn>
+        <v-btn
+          color="primary"
+          :outlined="!editMode && !isMobile"
+          :style="{ marginBottom: '10px' }"
+          width="115px"
+          @click="toggleEdit"
+        >
+          {{ editMode ? 'Save' : 'Edit Order' }}
+        </v-btn>
+      </div>
+    </div>
+
     <div class="form__section">
       <h1
         :id="sections.shipment.id"
@@ -99,6 +139,29 @@
           :edit-mode="editMode"
           @change="value => handleChange('carrier', value)"
         /> -->
+      </div>
+      <div
+        class="section__sub"
+      >
+        <div
+          class="sub__title"
+        >
+          <h2 :id="sections.division_codes.id">
+            {{ sections.division_codes.label }}
+          </h2>
+        </div>
+        <div class="divisionCodeSection">
+          <FormFieldSelectDivisionCodes
+            references="division_code"
+            label="Division Name"
+            :value="order.division_code"
+            :edit-mode="editMode"
+            :t-company-id="order.t_company_id"
+            :t-tms-provider-id="order.t_tms_provider_id"
+            :division-code="order.division_code"
+            @change="value => handleChange('division_code', value)"
+          />
+        </div>
       </div>
       <div
         class="section__sub"
@@ -345,10 +408,14 @@
 
 <script>
 import isMobile from '@/mixins/is_mobile'
+import permissions from '@/mixins/permissions'
 import { mapState, mapActions } from 'vuex'
+import { reqStatus } from '@/enums/req_status'
+import get from 'lodash/get'
 
 import orderForm, { types as orderFormTypes } from '@/store/modules/order-form'
 import utils, { type } from '@/store/modules/utils'
+import orders, { types } from '@/store/modules/orders'
 
 import { Fragment } from 'vue-fragment'
 // import FormFieldDate from '@/components/FormFields/FormFieldDate'
@@ -358,10 +425,12 @@ import FormFieldSwitch from '@/components/FormFields/FormFieldSwitch'
 import FormFieldTextArea from '@/components/FormFields/FormFieldTextArea'
 import FormFieldAddressSwitchVerify from '@/components/FormFields/FormFieldAddressSwitchVerify'
 import FormFieldEquipmentType from '@/components/FormFields/FormFieldEquipmentType'
+import OutlinedButtonGroup from '@/components/General/OutlinedButtonGroup'
+import FormFieldSelectDivisionCodes from '@/components/FormFields/FormFieldSelectDivisionCodes'
+import { delDeleteOrder } from '@/store/api_calls/orders'
 
 export default {
   name: 'OrderDetailsForm',
-
   components: {
     Fragment,
     // FormFieldDate,
@@ -370,9 +439,18 @@ export default {
     FormFieldSwitch,
     FormFieldTextArea,
     FormFieldAddressSwitchVerify,
-    FormFieldEquipmentType
+    FormFieldEquipmentType,
+    OutlinedButtonGroup,
+    FormFieldSelectDivisionCodes
   },
-  mixins: [isMobile],
+  mixins: [isMobile, permissions],
+  data () {
+    return {
+      loading: false,
+      divisionCodes: [],
+      sentToTms: false
+    }
+  },
 
   computed: {
     ...mapState(orderForm.moduleName, {
@@ -385,11 +463,33 @@ export default {
       return this.order.order_line_items
         .map((item, index) => ({ ...item, real_index: index }))
         .filter(item => !item.deleted_at)
+    },
+    saveBtnStyles () {
+      if (this.isMobile) return 'secondary'
+      if (this.editMode) return 'success'
+      return 'primary'
+    },
+    sendToTmsDisabled () {
+      if (this.sentToTms) {
+        return true
+      }
+
+      if (this.isSuperadmin()) {
+        return false
+      }
+
+      return (this.order.tms_shipment_id !== null && this.order.tms_shipment_id !== undefined) ||
+        (get(this.order, 'ocr_request.latest_ocr_request_status.status') === 'sending-to-wint')
     }
   },
 
   methods: {
-    ...mapActions(utils.moduleName, [type.setSnackbar]),
+    ...mapActions(orderForm.moduleName, {
+      toggleEdit: orderFormTypes.toggleEdit
+    }),
+    ...mapActions(utils.moduleName, [type.setSnackbar, type.setConfirmationDialog]),
+    ...mapActions(orders.moduleName, [types.postSendToTms, types.getDownloadPDFURL]),
+    ...mapActions(orders.moduleName, [types.getDownloadPDFURL]),
     ...mapActions(orderForm.moduleName, {
       updateOrder: orderFormTypes.updateOrder,
       startHover: orderFormTypes.startHover,
@@ -398,6 +498,69 @@ export default {
 
     async handleChange (path, value) {
       await this.updateOrder({ path, value })
+    },
+    async postSendToTms () {
+      const status = await this[types.postSendToTms]({ order_id: this.order.id, status: 'sending-to-wint' })
+      if (status === reqStatus.success) {
+        this.sentToTms = true
+        await this[type.setSnackbar]({
+          show: true,
+          showSpinner: false,
+          message: 'Processing'
+        })
+      } else {
+        this[type.setSnackbar]({
+          show: true,
+          showSpinner: false,
+          message: status.request.status === 422
+            ? 'Some addresses are not verified'
+            : status.request.status === 403
+              ? 'You are not authorized' : 'An error has occurred, please contact to technical support'
+        })
+      }
+    },
+    async downloadPDF (orderId) {
+      this.loading = true
+      const request = await this[types.getDownloadPDFURL](orderId)
+
+      if (request.status === reqStatus.success) {
+        const link = document.createElement('a')
+        link.href = request.data.data
+        link.download = `order-${orderId}.pdf`
+        link.click()
+        link.remove()
+      } else {
+        console.log('error')
+      }
+      this.loading = false
+    },
+    async deleteOrder (orderId) {
+      this.loading = true
+
+      await this[type.setConfirmationDialog]({
+        title: 'Are you sure you want to delete this order?',
+        onConfirm: async () => {
+          this.loading = true
+
+          const [error] = await delDeleteOrder(this.order.id)
+
+          if (!error) {
+            await this[type.setSnackbar]({
+              show: true,
+              showSpinner: false,
+              message: 'Order deleted'
+            })
+            this.$router.push('/dashboard')
+          } else {
+            await this[type.setSnackbar]({
+              show: true,
+              showSpinner: false,
+              message: 'Error trying to delete the order'
+            })
+          }
+          this.loading = false
+        }
+      })
     }
 
   }
@@ -405,12 +568,27 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+.order__title {
+  position: relative;
+  margin: rem(14) auto;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: 1px solid #dadddd;
+  padding-bottom: 20px;
+
+  h2{
+    font-size: rem(20);
+    color: var(--v-primary-base);
+    font-weight: 500;
+    line-height: rem(23);
+  }}
 .form {
   width: 100%;
   height: 100vh;
   overflow-y: auto;
   padding: rem(36) rem(65);
-  padding-top: rem(84);
+  padding-top: rem(10);
   scroll-behavior: smooth;
 
   &.mobile {

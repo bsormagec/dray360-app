@@ -72,7 +72,7 @@ export default {
       filterQuery: '',
       dateQuery: '',
       statusQuery: [
-        // DO NOT INCLUDE THIS IN DEFAULT LIST: 'intake-rejected',
+        // 'intake-rejected', // DO NOT INCLUDE THIS IN DEFAULT LIST:
         'intake-accepted',
         'intake-exception',
         'intake-started',
@@ -94,7 +94,13 @@ export default {
         'success-updating-to-wint',
         'failure-updating-to-wint',
         'shipment-updated-by-wint',
-        'shipment-not-updated-by-wint'
+        'shipment-not-updated-by-wint',
+        'updates-prior-order',
+        'updated-by-subsequent-order',
+
+        'success-imageuploding-to-blackfl',
+        'failure-imageuploding-to-blackfl',
+        'untried-imageuploding-to-blackfl'
       ]
     }
   },

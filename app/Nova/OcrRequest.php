@@ -46,7 +46,7 @@ class OcrRequest extends Resource
      * @var array
      */
     public static $with = [
-        'order',
+        'order', 'latestOcrRequestStatus',
     ];
 
     /**

@@ -3,6 +3,8 @@ import toParams from '@/utils/to_params'
 
 export const getOrders = async (filters, query) => axios.get(`/api/orders?${toParams(filters)}`).then(data => [undefined, data.data]).catch(e => [e])
 
+export const getOrders2 = async (filters, query) => axios.get(`/api/orders-2?${toParams(filters)}`).then(data => data.data).catch(e => [e])
+
 export const getOrderDetail = async (order) => axios.get(`/api/orders/${order}`).then(data => [undefined, data.data]).catch(e => [e])
 
 export const updateOrderDetail = async ({ id, changes }) => axios.put(`/api/orders/${id}`, changes).then(data => [undefined, data.data]).catch(e => [e])
@@ -27,3 +29,7 @@ export const getDownloadPDFURL = async (orderId) => axios.get(`/api/orders/${ord
 export const reprocessOcrRequest = async (requestId) => axios.post(`/api/ocr/requests/${requestId}/reprocess`).then(data => [undefined, data.data]).catch(e => [e])
 
 export const postSendToTms = async (tmsData) => axios.post('/api/send-to-tms', tmsData).then(data => [undefined, data]).catch(e => [e])
+
+export const getDivisionCodes = async (companyId, tmsId) => axios.get(`/api/companies/${companyId}/tms-provider/${tmsId}/division-names`).then(data => [undefined, data.data]).catch(e => [e])
+
+export const delDeleteOrder = async (orderId) => axios.delete(`/api/orders/${orderId}`).then(data => [undefined, data.data]).catch(e => [e])

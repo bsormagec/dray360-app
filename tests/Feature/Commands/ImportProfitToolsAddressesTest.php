@@ -42,7 +42,9 @@ class ImportProfitToolsAddressesTest extends TestCase
             ])
             // ->whenEmpty([]);  # this didn't work
             ->push([])  # need to push one empty array for every company we address-sync,
-            ->push([]); # currently there are four total (10/6/20) so we have these two. TODO fix this hack!
+            ->push([])  # currently there are 8 total (10/30/20) so we have these four. TODO fix this hack!
+            ->push([])
+            ->push([]);
 
         $this->artisan('import:profit-tools-addresses')->assertExitCode(0);
 

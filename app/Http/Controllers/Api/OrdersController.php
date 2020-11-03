@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Api;
 use App\Models\Order;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use App\Http\Resources\SideBySideOrder;
 use Illuminate\Support\Facades\Storage;
 use App\Queries\OcrRequestOrderListQuery;
 use App\Http\Resources\Orders as OrdersResource;
@@ -30,7 +31,7 @@ class OrdersController extends Controller
     {
         $this->authorize('view', $order);
 
-        return response()->json($order->prepareForSideBySide());
+        return new SideBySideOrder($order);
     }
 
     /**
@@ -54,6 +55,15 @@ class OrdersController extends Controller
         $order->update($orderData);
         $order->updateRelatedModels($relatedModels);
 
-        return response()->json($order->prepareForSideBySide(false));
+        return new SideBySideOrder($order, false);
+    }
+
+    public function destroy(Order $order)
+    {
+        $this->authorize('delete', $order);
+
+        $order->delete();
+
+        return response()->noContent();
     }
 }

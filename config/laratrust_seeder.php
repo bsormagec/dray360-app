@@ -35,7 +35,7 @@ return [
             'company-address-tms-code' => 'c,v,e,r',
         ],
         'customer-admin' => [
-            'orders' => 'e,v,c',
+            'orders' => 'e,v,c,r',
             'ocr-requests' => 'c,v,e',
             'tms' => 's',
             'users' => 'v,c,e,r',

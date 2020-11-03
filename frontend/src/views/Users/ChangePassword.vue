@@ -26,6 +26,7 @@
             <div class="col-4">
               <v-text-field
                 v-model="old_password"
+                data-cy="old-password-field"
                 type="password"
                 name="password"
                 label="Old Password"
@@ -39,6 +40,7 @@
             <div class="col-4">
               <v-text-field
                 v-model="password"
+                data-cy="password-field"
                 type="password"
                 name="password"
                 label="Password"
@@ -52,6 +54,7 @@
             <div class="col-4">
               <v-text-field
                 v-model="password_confirmation"
+                data-cy="password-confirmation-field"
                 type="password"
                 name="password"
                 label="Password Confirmation"
@@ -80,6 +83,7 @@
               Cancel
             </v-btn>
             <v-btn
+              data-cy="save-button"
               class="button"
               color="primary"
               @click="save"
@@ -135,7 +139,7 @@ export default {
           showSpinner: false,
           message: 'Password changed'
         })
-        this.$router.push({ path: '/user/dashboard/edit-profile/' })
+        this.$router.push({ path: '/user/edit-profile/' })
       }
     }
   }

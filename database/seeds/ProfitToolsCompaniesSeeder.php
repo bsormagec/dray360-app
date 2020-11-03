@@ -23,6 +23,8 @@ class ProfitToolsCompaniesSeeder extends Seeder
             Company::POLARIS,
             Company::IXT_ONBOARDING,
             Company::IXT,
+            Company::PORT_CITY_LOGISTICS_ONBOARDING,
+            Company::PORT_CITY_LOGISTICS,
         ])->each(function ($companyName) {
             $company = Company::firstOrCreate(
                 ['name' => $companyName],

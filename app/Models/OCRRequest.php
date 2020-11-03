@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 /**
  * @property \Illuminate\Database\Eloquent\Collection $orders
@@ -15,6 +16,8 @@ use Illuminate\Database\Eloquent\Model;
  */
 class OCRRequest extends Model
 {
+    use SoftDeletes;
+
     public $table = 't_job_latest_state';
 
     protected $casts = [];
