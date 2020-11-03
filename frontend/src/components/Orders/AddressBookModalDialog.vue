@@ -57,6 +57,7 @@
           </v-col>
           <v-col cols="7">
             <p>{{ recognizedText }}</p>
+            <!-- <span v-html="getMatchedAddress(recognizedText)" /> -->
           </v-col>
         </v-row>
       </div>
@@ -189,6 +190,7 @@ export default {
 
   async mounted () {
     this.search = this.filters.rawtext
+    console.log('recogonizedText: ', this.recognizedText)
   },
 
   methods: {
@@ -286,7 +288,8 @@ export default {
     font-style: normal;
     font-weight: normal;
     font-size: rem(12);
-    margin-left: rem(10)
+    margin-left: rem(10);
+    width: 12.3rem;
   }
 }
 </style>
