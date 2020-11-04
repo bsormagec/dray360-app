@@ -59,6 +59,18 @@
           :edit-mode="editMode"
           @change="value => handleChange('shipment_designation', value)"
         /> -->
+        <div class="divisionCodeSection">
+          <FormFieldSelectDivisionCodes
+            references="division_code"
+            label="Division"
+            :value="order.division_code"
+            :edit-mode="editMode"
+            :t-company-id="order.t_company_id"
+            :t-tms-provider-id="order.t_tms_provider_id"
+            :division-code="order.division_code"
+            @change="value => handleChange('division_code', value)"
+          />
+        </div>
         <FormFieldInput
           references="shipment_direction"
           label="Shipment direction"
@@ -66,6 +78,7 @@
           :edit-mode="editMode"
           @change="value => handleChange('shipment_direction', value)"
         />
+        
         <FormFieldSwitch
           references="expedite"
           label="Expedite"
@@ -140,29 +153,7 @@
           @change="value => handleChange('carrier', value)"
         /> -->
       </div>
-      <div
-        class="section__sub"
-      >
-        <div
-          class="sub__title"
-        >
-          <h2 :id="sections.division_codes.id">
-            {{ sections.division_codes.label }}
-          </h2>
-        </div>
-        <div class="divisionCodeSection">
-          <FormFieldSelectDivisionCodes
-            references="division_code"
-            label="Division Name"
-            :value="order.division_code"
-            :edit-mode="editMode"
-            :t-company-id="order.t_company_id"
-            :t-tms-provider-id="order.t_tms_provider_id"
-            :division-code="order.division_code"
-            @change="value => handleChange('division_code', value)"
-          />
-        </div>
-      </div>
+     
       <div
         class="section__sub"
       >

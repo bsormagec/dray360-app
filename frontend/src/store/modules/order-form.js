@@ -23,7 +23,6 @@ const initialState = {
   sections: {
     shipment: { id: 'shipment-section', label: 'Shipment', subsection: false },
     equipment: { id: 'equipment-subsection', label: 'Equipment', subsection: true, parent: 'shipment' },
-    division_codes: { id: 'division-codes-subsection', label: 'Division codes', subsection: true, parent: 'shipment' },
     origin: { id: 'origin-subsection', label: 'Shipment Details', subsection: true, parent: 'shipment' },
     bill_to: { id: 'bill-to-subsection', label: 'Bill To', subsection: true, parent: 'shipment' },
     charges: { id: 'charges-subsection', label: 'Charges', subsection: true, parent: 'shipment' },
