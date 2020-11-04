@@ -327,6 +327,7 @@ sudo a2enmod rewrite
 sudo a2enmod proxy_fcgi
 sudo a2enmod proxy_http
 sudo a2enmod setenvif
+sudo a2enmod ssl
 
 sudo a2enconf php7.4-fpm
 
