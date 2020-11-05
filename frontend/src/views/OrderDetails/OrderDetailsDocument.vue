@@ -66,7 +66,7 @@ export default {
     getHighlightsForPage (pageNumber) {
       const pageHighlights = {}
       for (const key in this.highlights) {
-        if (parseInt(this.highlights[key].page_index) === parseInt(pageNumber)) {
+        if (parseInt(this.highlights[key].page_index) === parseInt(pageNumber) + 1) {
           pageHighlights[key] = this.highlights[key]
         }
       }
