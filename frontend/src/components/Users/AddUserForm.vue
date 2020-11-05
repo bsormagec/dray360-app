@@ -98,7 +98,7 @@ export default {
     email: '',
     password: '',
     org: '',
-    role_selected: 1
+    role_selected: 2
 
   }),
 
