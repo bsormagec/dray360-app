@@ -39,6 +39,7 @@ class OrdersListQuery extends QueryBuilder
                 ->select(DB::raw($hasPdfSelect))
                 ->whereColumn('s_pdf.request_id', 't_orders.request_id')
                 ->where('status', OCRRequestStatus::INTAKE_ACCEPTED)
+                ->orWhere('status', OCRRequestStatus::INTAKE_ACCEPTED_DATAFILE)
                 ->limit(1)
             ])
             ->leftJoin('t_addresses as bill_to', 'bill_to.id', '=', 't_orders.bill_to_address_id')

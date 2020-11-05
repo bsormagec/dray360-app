@@ -77,6 +77,7 @@ export default {
     ],
     statuses: [
       { text: 'intake-accepted', value: 'intake-accepted' },
+      { text: 'intake-accepted-datafile', value: 'intake-accepted-datafile' },
       { text: 'intake-exception', value: 'intake-exception' },
       { text: 'intake-rejected', value: 'intake-rejected' },
       { text: 'intake-started', value: 'intake-started' },

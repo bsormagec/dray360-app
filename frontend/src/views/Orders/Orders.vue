@@ -74,6 +74,7 @@ export default {
       statusQuery: [
         // 'intake-rejected', // DO NOT INCLUDE THIS IN DEFAULT LIST:
         'intake-accepted',
+        'intake-accepted-datafile',
         'intake-exception',
         'intake-started',
         'ocr-completed',
