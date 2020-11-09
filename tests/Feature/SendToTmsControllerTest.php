@@ -48,10 +48,7 @@ class SendToTmsControllerTest extends TestCase
         $mockAction->shouldReceive('getSnsClient')->andReturn($snsClient);
         $this->app->instance(PublishSnsMessageToSendToTms::class, $mockAction);
 
-        $this->postJson(route('send-to-tms'), [
-                'status' => 'sending-to-wint',
-                'order_id' => $order->id,
-            ])
+        $this->postJson(route('orders.send-to-tms', $order->id))
             ->assertJsonFragment(['data' => $messageId])
             ->assertStatus(Response::HTTP_OK);
     }
@@ -78,10 +75,7 @@ class SendToTmsControllerTest extends TestCase
         $mockAction->shouldReceive('getSnsClient')->andReturn($snsClient);
         $this->app->instance(PublishSnsMessageToSendToTms::class, $mockAction);
 
-        $this->postJson(route('send-to-tms'), [
-                'status' => 'sending-to-wint',
-                'order_id' => $order->id,
-            ])
+        $this->postJson(route('orders.send-to-tms', $order->id))
             ->assertJsonFragment(['data' => 'failed-some aws exception'])
             ->assertStatus(Response::HTTP_INTERNAL_SERVER_ERROR);
     }
@@ -109,10 +103,7 @@ class SendToTmsControllerTest extends TestCase
         $mockAction->shouldNotReceive('getSnsClient');
         $this->app->instance(PublishSnsMessageToSendToTms::class, $mockAction);
 
-        $this->postJson(route('send-to-tms'), [
-                'status' => 'sending-to-wint',
-                'order_id' => $order->id,
-            ])
+        $this->postJson(route('orders.send-to-tms', $order->id))
             ->assertStatus(Response::HTTP_FORBIDDEN);
     }
 
@@ -142,10 +133,7 @@ class SendToTmsControllerTest extends TestCase
         $mockAction->shouldNotReceive('getSnsClient');
         $this->app->instance(PublishSnsMessageToSendToTms::class, $mockAction);
 
-        $this->postJson(route('send-to-tms'), [
-                'status' => 'sending-to-wint',
-                'order_id' => $order->id,
-            ])
+        $this->postJson(route('orders.send-to-tms', $order->id))
             ->assertStatus(Response::HTTP_FORBIDDEN);
     }
 
@@ -171,10 +159,7 @@ class SendToTmsControllerTest extends TestCase
         $mockAction->shouldNotReceive('getSnsClient');
         $this->app->instance(PublishSnsMessageToSendToTms::class, $mockAction);
 
-        $this->postJson(route('send-to-tms'), [
-                'status' => 'sending-to-wint',
-                'order_id' => $order->id,
-            ])
+        $this->postJson(route('orders.send-to-tms', $order->id))
             ->assertStatus(Response::HTTP_UNPROCESSABLE_ENTITY)
             ->assertJsonValidationErrors([
                 'port_ramp_of_destination_address_verified',

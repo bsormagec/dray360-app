@@ -13,6 +13,7 @@ class PublishSnsMessageToSendToTms
             $response = $this->getSnsClient()
                 ->publish([
                     'Message' => json_encode([
+                        'user_id' => auth()->id(),
                         'request_id' => $data['request_id'],
                         'company_id' => $data['company_id'],
                         'tms_provider_id' => $data['tms_provider_id'],

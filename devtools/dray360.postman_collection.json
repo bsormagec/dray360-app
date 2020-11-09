@@ -1291,7 +1291,7 @@
 					"response": []
 				},
 				{
-					"name": "/api/send-to-tms",
+					"name": "/api/orders/:id/send-to-tms",
 					"event": [
 						{
 							"listen": "test",
@@ -1331,22 +1331,20 @@
 							}
 						],
 						"url": {
-							"raw": "{{server}}/api/send-to-tms?status=sending-to-wint&order_id=125",
+							"raw": "{{server}}/api/orders/:id/send-to-tms",
 							"host": [
 								"{{server}}"
 							],
 							"path": [
 								"api",
+								"orders",
+								":id",
 								"send-to-tms"
 							],
-							"query": [
+							"variable": [
 								{
-									"key": "status",
-									"value": "sending-to-wint"
-								},
-								{
-									"key": "order_id",
-									"value": "125"
+									"key": "id",
+									"value": "8332"
 								}
 							]
 						}

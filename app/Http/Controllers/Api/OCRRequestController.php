@@ -62,6 +62,7 @@ class OCRRequestController extends Controller
                 'company_id' => currentCompany()->id ?? Company::TCOMPANIES_DEMO,
                 'user_id' => auth()->user()->id,
                 'variant_name' => $request->get('variant_name'),
+                'datetime_utciso' => now()->toISOString(),
             ];
 
             OCRRequestStatus::createUploadRequest($responseData);

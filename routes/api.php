@@ -82,8 +82,8 @@ Route::group(['middleware' => ['auth:sanctum', 'impersonate', 'tenant-aware']], 
     Route::get('search-address', SearchAddressController::class)
         ->name('search-address');
 
-    Route::post('send-to-tms', SendToTmsController::class)
-        ->name('send-to-tms');
+    Route::post('orders/{order}/send-to-tms', SendToTmsController::class)
+        ->name('orders.send-to-tms');
 
     Route::get('orders/{order}/download-pdf', DownloadOriginalOrderPdfController::class)
         ->name('orders.download-pdf');
