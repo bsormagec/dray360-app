@@ -13,13 +13,15 @@ class PublishSnsMessageToSendToTms
             $response = $this->getSnsClient()
                 ->publish([
                     'Message' => json_encode([
-                        'user_id' => auth()->id(),
                         'request_id' => $data['request_id'],
-                        'company_id' => $data['company_id'],
-                        'tms_provider_id' => $data['tms_provider_id'],
                         'datetime_utciso' => now()->toISOString(),
                         'status' => $data['status'],
-                        'status_metadata' => ['order_id' => $data['order_id']]
+                        'status_metadata' => [
+                            'tms_provider_id' => $data['tms_provider_id'],
+                            'user_id' => auth()->id(),
+                            'company_id' => $data['company_id'],
+                            'order_id' => $data['order_id']
+                        ]
                     ]),
                     'MessageAttributes' => [
                         'status' => [
