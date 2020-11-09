@@ -25,6 +25,17 @@
       :delete-all="deleteAll"
     />
 
+    <div v-if="shouldAskForVariantName">
+      <v-text-field
+        v-model="variantName"
+        label="Variant Name"
+        color="primary"
+        outlined
+        clearable
+        dense
+      />
+    </div>
+
     <OrdersCreateSubmitted
       :files="files"
       :delete-file="deleteFile"
@@ -44,9 +55,10 @@
 <script>
 import OrdersCreateUpload from '@/views/Orders/OrdersCreateUpload'
 import OrdersCreateSubmitted from '@/views/Orders/OrdersCreateSubmitted'
-import orders, { types } from '@/store/modules/orders'
+
+import { postUploadPDF } from '@/store/api_calls/orders'
+import utils, { type } from '@/store/modules/utils'
 import { mapActions } from 'vuex'
-import { reqStatus } from '@/enums/req_status'
 
 export default {
   name: 'OrdersCreate',
@@ -64,11 +76,23 @@ export default {
   },
 
   data: () => ({
-    files: []
+    files: [],
+    variantName: ''
   }),
 
+  computed: {
+    shouldAskForVariantName () {
+      for (let index = 0; index < this.files.length; index++) {
+        if (this.files[index].type !== 'application/pdf') {
+          return true
+        }
+      }
+      return false
+    }
+  },
+
   methods: {
-    ...mapActions(orders.moduleName, [types.postUploadPDF]),
+    ...mapActions(utils.moduleName, { setSnackbar: type.setSnackbar }),
 
     deleteFile (file) {
       this.files = this.files.filter(f => f.name !== file.name)
@@ -79,7 +103,18 @@ export default {
     },
 
     addFiles (newFiles) {
-      const filtered = [...this.files, ...newFiles].filter(f => f.type === 'application/pdf')
+      const acceptedMimeTypes = [
+        'application/pdf',
+        'text/csv',
+        'text/plain',
+        'application/wps-office.xlsx',
+        'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+        'application/EDI-X12',
+        'application/EDIFACT',
+        'application/EDI-consent',
+        ''
+      ]
+      const filtered = [...this.files, ...newFiles].filter(f => acceptedMimeTypes.includes(f.type))
       const unique = []
       const uniqueNames = []
 
@@ -93,19 +128,38 @@ export default {
     },
 
     async uploadFile (file) {
-      const status = await this[types.postUploadPDF](file)
+      const [error] = await postUploadPDF(file, this.variantName)
 
-      if (status === reqStatus.success) {
-        console.log('upload file success')
-      } else {
-        console.log('error uploading file')
+      if (error !== undefined) {
+        this.setSnackbar({
+          message: 'There was an error uploading the file',
+          show: true
+        })
+        return
       }
+
+      this.setSnackbar({
+        message: 'File uploaded successfully',
+        show: true
+      })
     },
 
     createOrder () {
       console.log('vc.files: ', this.files)
       if (this.files.length === 0) {
-        alert('Please select a PDF to upload first')
+        this.setSnackbar({
+          message: 'Please select a file to upload first',
+          show: true
+        })
+        // alert('Please select a PDF to upload first')
+        return
+      }
+
+      if (this.shouldAskForVariantName && (this.variantName === '' || this.variantName === null)) {
+        this.setSnackbar({
+          message: 'Please specify a variant name',
+          show: true
+        })
         return
       }
 

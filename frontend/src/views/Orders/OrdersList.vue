@@ -63,7 +63,7 @@ export default {
         width: '60px'
       },
       { text: 'Bill to', value: 'order.bill_to_address.location_name', width: '85px' },
-      { text: 'Reference Number.', value: 'order.reference_number', width: '60px' },
+      { text: 'Reference Number', value: 'order.reference_number', width: '60px' },
       { text: 'Container Number', value: 'order.unit_number', width: '60px' },
       { text: 'TMS ID', value: 'order.tms_shipment_id', width: '60px' },
       {

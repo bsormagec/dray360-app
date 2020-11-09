@@ -22,7 +22,7 @@
       />
 
       <span class="input__legend">
-        <strong>Supported file type:</strong> PDF
+        <strong>Supported file type:</strong> PDF, XLSX, CSV
       </span>
     </div>
 
@@ -64,7 +64,7 @@ export default {
   },
 
   data: () => ({
-    accept: '.pdf'
+    accept: '.pdf,.xlsx,.csv,.edi'
   }),
 
   methods: {
