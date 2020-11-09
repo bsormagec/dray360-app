@@ -23,7 +23,8 @@ class RipCms
         $this->company = $company;
         $this->apiUrl = "{$this->url}api/";
         $this->token = Cache::get(self::getTokenCacheKeyFor($this->company));
-        $this->setupCredentials();
+        $this->username = $company->ripcms_username;
+        $this->password = $company->ripcms_password;
     }
 
     public function getToken(): self
@@ -33,7 +34,7 @@ class RipCms
             return $this;
         }
 
-        $configToken = config('services.ripcms.'.Str::snake($this->company->name).'.token');
+        $configToken = null;//config('services.ripcms.'.Str::snake($this->company->name).'.token');
         $response = Http::asForm()
             ->post("{$this->url}token", [
                 'grant_type' => 'password',
@@ -73,14 +74,6 @@ class RipCms
         }
 
         return $response->json();
-    }
-
-    protected function setupCredentials(): void
-    {
-        $credentials = config('services.ripcms.'.Str::snake($this->company->name));
-
-        $this->username = $credentials['username'];
-        $this->password = $credentials['password'];
     }
 
     public static function getTokenCacheKeyFor(Company $company): string
