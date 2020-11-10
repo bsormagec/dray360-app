@@ -65,7 +65,7 @@ const routes = [
     path: '/user/edit-profile',
     name: 'EditProfile',
     meta: {
-      middleware: [auth, permission('users-view')]
+      middleware: [auth]
     },
     component: EditProfile
   },
