@@ -178,7 +178,6 @@ export default {
   padding: rem(50) rem(10);
   overflow-x: hidden;
 
-  // @media screen and (min-width: map-get($breakpoints, med)) {
   @include media("med") {
     min-width: 25%;
     max-width: 25%;
@@ -188,14 +187,12 @@ export default {
     padding-bottom: rem(30);
   }
 
-  // @media screen and (min-width: map-get($breakpoints, lg)) {
   @include media("lg") {
     padding: rem(52) rem(36);
   }
 }
 
 .create__close {
-  // @media screen and (min-width: map-get($breakpoints, med)) {
   @include media("med") {
     display: none;
   }

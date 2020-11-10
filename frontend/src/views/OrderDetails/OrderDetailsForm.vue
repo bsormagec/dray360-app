@@ -4,18 +4,21 @@
     :class="`form ${isMobile && 'mobile'}`"
   >
     <div class="order__title">
-      <v-btn
-        color="primary"
-        class="px-0 mx-0"
-        text
-        small
-        @click="goToOrdersList()"
-      >
-        <v-icon>
-          mdi-chevron-left
-        </v-icon>
-      </v-btn>
-      <h2>Order #{{ order.id }}</h2>
+      <h2>
+        <v-btn
+          color="primary"
+          outlined
+          small
+          class="px-0"
+          title="Go back to Orders List"
+          @click="goToOrdersList()"
+        >
+          <v-icon>
+            mdi-chevron-left
+          </v-icon>
+        </v-btn>
+        Order #{{ order.id }}
+      </h2>
       <OutlinedButtonGroup
         v-if="!editMode"
         :main-action="{
@@ -601,7 +604,7 @@ export default {
   width: 100%;
   height: 100vh;
   overflow-y: auto;
-  padding: 2.25rem 1rem 2rem 5rem;
+  padding: rem(15);
   scroll-behavior: smooth;
 
   &.mobile {
@@ -631,11 +634,18 @@ export default {
   }
 
   h2 {
+    display: flex;
+    align-items: center;
     font-size: rem(20);
     color: var(--v-primary-base);
     font-weight: 500;
     line-height: (23.4 / 20);
     letter-spacing: rem(.15);
+    
+    & .v-btn {
+      min-width: unset;
+      margin-right: rem(8);
+    }
   }
 
   &::v-deep .split-btn {

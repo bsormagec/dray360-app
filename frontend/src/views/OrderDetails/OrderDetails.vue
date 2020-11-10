@@ -2,8 +2,7 @@
   <div :class="`details ${loaded && 'loaded'} ${isMobile && 'mobile'}`">
     <ContentLoading :loaded="loaded">
       <div :class="`details__content ${isMobile && 'mobile'}`">
-        <SidebarNavigation />
-
+          <SidebarNavigation />
         <div
           :class="`details__form ${isMobile && 'mobile'}`"
           :style="{ minWidth: `${resizeDiff}%` }"
@@ -139,8 +138,7 @@ export default {
 .details__form {
   position: relative;
   transition: width 300ms ease;
-  margin-left: 10px;
-
+  
   &::after {
     content: "";
     position: absolute;

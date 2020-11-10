@@ -130,11 +130,9 @@ export default {
   flex-grow: unset;
   width: 100%;
 
-  // @media screen and (min-width: map-get($breakpoints, med)) {
   @include media("med") {
-  // padding: 5.2rem 3.2rem;
     padding: rem(52) rem(32);
-    padding-left: rem(map-get($sizes, sidebar-desktop-width)) + rem(80);
+    padding-left: rem(map-get($sizes, sidebar-desktop-width) + 32);
   }
 }
 </style>

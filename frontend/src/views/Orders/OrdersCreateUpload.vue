@@ -131,7 +131,6 @@ export default {
   font-weight: 700;
   color: map-get($colors, grey-4);
 
-  // @media screen and (min-width: map-get($breakpoints, med)) {
   @include media("med") {
     font-size: rem(12) !important;
   }
