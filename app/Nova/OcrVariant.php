@@ -3,6 +3,7 @@
 namespace App\Nova;
 
 use Laravel\Nova\Fields\ID;
+use Laravel\Nova\Fields\Code;
 use Illuminate\Http\Request;
 use Laravel\Nova\Fields\Text;
 
@@ -48,9 +49,14 @@ class OcrVariant extends Resource
     {
         return [
             ID::make(__('ID'), 'id')->sortable(),
-            Text::make('Abby variant id', 'abbyy_variant_id')->sortable(),
-            Text::make('Abby variant name', 'abbyy_variant_name')->sortable(),
+            Text::make('Abbyy variant id', 'abbyy_variant_id')->sortable(),
+            Text::make('Abbyy variant name', 'abbyy_variant_name')->sortable(),
             Text::make('Description', 'description')->sortable(),
+            Text::make('Variant Type', 'variant_type')->sortable(),
+            Code::make('Mapping', 'mapping')->json(),
+            Code::make('Company ID List', 'company_id_list')->json(),
+            Code::make('Classification', 'classification')->json(),
+
         ];
     }
 
