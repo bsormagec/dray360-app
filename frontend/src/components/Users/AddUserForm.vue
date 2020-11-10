@@ -70,6 +70,7 @@
       >
         <v-btn
           name="add-user"
+          data-cy="add-user-button"
           class="save-button button"
           @click="addUser()"
         >
