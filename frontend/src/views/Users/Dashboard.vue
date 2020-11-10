@@ -91,7 +91,7 @@ export default {
       const newUrl = `?searchQuery=${this.searchQuery}`
 
       if (location.search !== newUrl) {
-        this.$router.replace(newUrl)
+        this.$router.replace(newUrl).catch(err => {})
       }
     }
   }

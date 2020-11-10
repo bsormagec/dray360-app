@@ -154,7 +154,7 @@ const routes = [
   },
   {
     path: '/email-confirmation',
-    name: 'Forgot Password',
+    name: 'Email Confirmation',
     component: EmailConfirmation,
     meta: {
       middleware: [LoggedOut]
