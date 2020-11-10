@@ -1,12 +1,22 @@
 <template>
   <div>
+    <v-app-bar-nav-icon
+      v-if="isMobile"
+      @click.stop="drawer = !drawer"
+    />
+
     <v-navigation-drawer
       v-model="drawer"
-      permanent
       class="sidebar__nav"
       absolute
-      bottom
+      left
+      :temporary="isMobile"
+      :permanent="!isMobile"
     >
+      <v-app-bar-nav-icon
+        v-if="isMobile"
+        @click.stop="drawer = !drawer"
+      />
       <img
         v-if="!tenantConfig.logo1"
         class="logo__dry"
@@ -63,7 +73,7 @@
                 <v-list-item-title
                   v-if="item.name === 'logout' "
                   :key="i"
-                  @click="logoutBtn"
+                  @click="logoutBtn, drawer = !drawer"
                   v-text="item.name"
                 />
                 <v-list-item-title
@@ -100,15 +110,16 @@ import auth from '@/store/modules/auth'
 import { mapState, mapActions } from 'vuex'
 import hasPermission from '@/mixins/permissions'
 import utils, { type } from '@/store/modules/utils'
+import isMobile from '@/mixins/is_mobile'
 import companies, { types } from '@/store/modules/companies'
 
 export default {
 
-  mixins: [hasPermission],
+  mixins: [hasPermission, isMobile],
 
   data () {
     return {
-      drawer: false,
+      drawer: true,
       group: null,
       model: 1,
       menuItems: [{ name: 'dashboard', path: '/dashboard' },
@@ -144,6 +155,9 @@ export default {
     await this[type.getTenantConfig]()
     await this[types.getCompany]({ id: this.currentUser.t_company_id })
   },
+  beforeMount () {
+    this.drawer = !this.isMobile
+  },
 
   methods: {
     ...mapActions('AUTH', ['logout']),
@@ -161,7 +175,7 @@ export default {
 <style lang="scss" scoped>
 $sidebarbackground: url("../../assets/images/bg_sidebar.png");
 .sidebar__nav{
-  background: linear-gradient(90deg, rgba(0, 60, 113, 0.1) 0%, rgba(0, 60, 113, 0.05) 31.77%, rgba(0, 60, 113, 0) 100%);
+  background: linear-gradient(90deg, rgba(0, 60, 113, 0) 97.95%, rgba(0, 60, 113, 0.1) 100%), linear-gradient(0deg, rgba(0, 60, 113, 0.05), rgba(0, 60, 113, 0.05)), #FFFFFF;
   box-shadow: inset rem(-1) 0px 0px rgba(0, 60, 113, 0.03);
   display: flex;
   flex-direction: column;
@@ -172,12 +186,11 @@ $sidebarbackground: url("../../assets/images/bg_sidebar.png");
 
   .logo__dry{
     width: rem(200);
-    margin: rem(20) auto;
+    margin: rem(15) auto 0 auto;
     display: block;
   }
   .logo__dry_bottom{
-    @include center;
-    bottom: rem(30);
+    @include center;bottom: rem(30);
   }
   .menu{
     .v-list-item:not(:last-child){
@@ -188,12 +201,27 @@ $sidebarbackground: url("../../assets/images/bg_sidebar.png");
       text-transform: uppercase;
       font-size: rem(12);
       font-weight: 500;
-      text-align: right;
+      text-align: center;
       letter-spacing: rem(.75);
       padding: rem(15) 0;
+      @include media('med'){
+        text-align: right;
+        color: var(--v-primary-base) !important;
+        }
+
     }
     & > div{
       background: transparent !important;
+    }
+    .v-list-group{
+      border-bottom: rem(2) solid map-get($colors, gray );
+    }
+    .v-list-group .v-list-item, .v-list-item--active, .v-item--active, .v-list-group--active{
+      box-shadow: 0px -1px 0px 0px #003C71 15% inset;
+      background: linear-gradient(90deg, rgba(0, 60, 113, 0) 97.95%, rgba(0, 60, 113, 0.1) 100%), linear-gradient(0deg, rgba(0, 60, 113, 0.05), rgba(0, 60, 113, 0.05)), #FFFFFF !important;
+      &::before{
+        background-color: unset !important;
+      }
     }
   }
   .company__name{

@@ -4,6 +4,17 @@
     :class="`form ${isMobile && 'mobile'}`"
   >
     <div class="order__title">
+      <v-btn
+        color="primary"
+        class="px-0 mx-0"
+        text
+        small
+        @click="goToOrdersList()"
+      >
+        <v-icon>
+          mdi-chevron-left
+        </v-icon>
+      </v-btn>
       <h2>Order #{{ order.id }}</h2>
       <OutlinedButtonGroup
         v-if="!editMode"
@@ -20,7 +31,10 @@
         ]"
         :loading="loading"
       />
-      <div v-else class="order__title-btn-group">
+      <div
+        v-else
+        class="order__title-btn-group"
+      >
         <v-btn
           color="primary"
           :outlined="!editMode && !isMobile"
@@ -58,7 +72,7 @@
           <v-avatar
             left
           >
-            <v-icon>mdi-toggle-switch-outline</v-icon>  
+            <v-icon>mdi-toggle-switch-outline</v-icon>
           </v-avatar>
           Changes
         </v-chip>
@@ -97,7 +111,7 @@
         :id="sections.shipment.id"
         class="form__section-title"
       >
-        <h3 v-html="sections.shipment.label"/>
+        <h3 v-html="sections.shipment.label" />
       </div>
 
       <div class="section__rootfields">
@@ -127,7 +141,7 @@
           :edit-mode="editMode"
           @change="value => handleChange('shipment_direction', value)"
         />
-        
+
         <FormFieldSwitch
           references="expedite"
           label="Expedite"
@@ -150,7 +164,10 @@
         <div
           class="form__section-title"
         >
-          <h3 :id="sections.equipment.id" v-html="sections.equipment.label"/>
+          <h3
+            :id="sections.equipment.id"
+            v-html="sections.equipment.label"
+          />
         </div>
         <div class="section__rootfields">
           <FormFieldEquipmentType
@@ -180,14 +197,17 @@
           />
         </div>
       </div>
-     
+
       <div
         class="form__sub-section"
       >
         <div
           class="form__section-title"
         >
-          <h3 :id="sections.origin.id" v-html="sections.origin.label"/>
+          <h3
+            :id="sections.origin.id"
+            v-html="sections.origin.label"
+          />
         </div>
         <div class="section__rootfields">
           <FormFieldInput
@@ -268,7 +288,10 @@
         <div
           class="form__section-title"
         >
-          <h3 :id="sections.bill_to.id" v-html="sections.bill_to.label"/>
+          <h3
+            :id="sections.bill_to.id"
+            v-html="sections.bill_to.label"
+          />
         </div>
         <div class="section__rootfields">
           <FormFieldAddressSwitchVerify
@@ -289,7 +312,10 @@
         <div
           class="form__section-title"
         >
-          <h3 :id="sections.charges.id" v-html="sections.charges.label"/>
+          <h3
+            :id="sections.charges.id"
+            v-html="sections.charges.label"
+          />
         </div>
         <div class="section__rootfields">
           <FormFieldTextArea
@@ -315,7 +341,7 @@
         :id="sections.itinerary.id"
         class="form__section-title"
       >
-        <h3 v-html="sections.itinerary.label"/>
+        <h3 v-html="sections.itinerary.label" />
       </div>
 
       <div class="section__rootfields">
@@ -335,7 +361,7 @@
     </div>
     <div class="form__section">
       <div class="form__section-title">
-        <h3 v-html="sections.notes.label"/>
+        <h3 v-html="sections.notes.label" />
       </div>
 
       <div class="section__rootfields">
@@ -353,7 +379,7 @@
         :id="sections.inventory.id"
         class="form__section-title"
       >
-        <h3 v-html="sections.inventory.label"/>
+        <h3 v-html="sections.inventory.label" />
       </div>
 
       <div
@@ -456,25 +482,25 @@ export default {
         (get(this.order, 'ocr_request.latest_ocr_request_status.status') === 'sending-to-wint')
     },
     lastChandedAt () {
-      Number.prototype.padLeft = function(base,chr){
-        let  len = (String(base || 10).length - String(this).length)+1;
-        return len > 0? new Array(len).join(chr || '0')+this : this;
+      Number.prototype.padLeft = function (base, chr) {
+        const len = (String(base || 10).length - String(this).length) + 1
+        return len > 0 ? new Array(len).join(chr || '0') + this : this
       }
 
-      const lastUpdatedAt = new Date(this.order.updated_at);
+      const lastUpdatedAt = new Date(this.order.updated_at)
 
       const date = [
-        (lastUpdatedAt.getMonth()+1).padLeft(), 
-        lastUpdatedAt.getDate().padLeft(), 
+        (lastUpdatedAt.getMonth() + 1).padLeft(),
+        lastUpdatedAt.getDate().padLeft(),
         lastUpdatedAt.getFullYear()
-        ].join('-');
+      ].join('-')
 
       const time = [
-        lastUpdatedAt.getHours().padLeft(), 
+        lastUpdatedAt.getHours().padLeft(),
         lastUpdatedAt.getMinutes().padLeft()
-        ].join(':');
-      
-      return `${date} ${time}`;
+      ].join(':')
+
+      return `${date} ${time}`
     }
   },
 
@@ -559,6 +585,12 @@ export default {
           this.loading = false
         }
       })
+    },
+    goToOrdersList () {
+      const prevListUrl = localStorage.getItem('prevListUrl')
+
+      if (prevListUrl) return this.$router.push(prevListUrl)
+      this.$router.push('/')
     }
   }
 }
@@ -569,7 +601,7 @@ export default {
   width: 100%;
   height: 100vh;
   overflow-y: auto;
-  padding: rem(15);
+  padding: 2.25rem 1rem 2rem 5rem;
   scroll-behavior: smooth;
 
   &.mobile {
@@ -585,7 +617,7 @@ export default {
   align-items: center;
   padding: 0 0 rem(15);
   margin-bottom: rem(15);
-  
+
   &::after {
     content: "";
     position: absolute;
@@ -600,7 +632,7 @@ export default {
 
   h2 {
     font-size: rem(20);
-    color: map-get($colors, slate-gray );
+    color: var(--v-primary-base);
     font-weight: 500;
     line-height: (23.4 / 20);
     letter-spacing: rem(.15);

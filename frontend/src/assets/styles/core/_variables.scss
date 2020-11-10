@@ -52,16 +52,17 @@ $sizes: (
   sidebar-desktop-width: 195px
 );
 
+// $breakpoints: (
+//   min: 375px,
+//   med: 1024px,
+//   lg: 1280px,
+//   max: 1640px
+// );
+
 $breakpoints: (
-  min: 375px,
-  med: 1024px,
-  lg: 1280px,
-  max: 1640px
+  ("min", "(min-width: 375px)"),
+  ("med", "(min-width: 1024px)"),
+  ("lg", "(min-width: 1280px)"),
+  ("max", "(min-width: 1624px)"),
 );
 
-// $breakpoints: (
-//   ("min", "(min-width: 375px)"),
-//   ("med", "(min-width: 1024px)"),
-//   ("lg", "(min-width: 1280px)"),
-//   ("max", "(min-width: 1624px)"),
-// );

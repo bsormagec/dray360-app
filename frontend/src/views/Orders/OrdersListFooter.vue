@@ -176,7 +176,8 @@ export default {
   align-items: center;
   margin-top: rem(24);
 
-  @media screen and (min-width: map-get($breakpoints , lg)) {
+  // @media screen and (min-width: map-get($breakpoints , lg)) {
+  @include media("lg") {
     align-items: center;
     justify-content: center;
     flex-wrap: wrap;
@@ -189,7 +190,8 @@ export default {
   font-weight: 700;
   display: none;
 
-  @media screen and (min-width: map-get($breakpoints , lg)) {
+  // @media screen and (min-width: map-get($breakpoints , lg)) {
+  @include media("lg") {
     display: flex;
   }
 }
@@ -202,7 +204,8 @@ export default {
   .jump-text-field::v-deep .v-label {
     font-size: rem(12);
   }
-  @media screen and (min-width: map-get($breakpoints , lg)) {
+  // @media screen and (min-width: map-get($breakpoints , lg)) {
+  @include media("lg") {
     display: flex;
   }
 
@@ -218,7 +221,8 @@ export default {
   display: flex;
   margin: 0 auto;
 
-  @media screen and (min-width: map-get($breakpoints , lg)) {
+  // @media screen and (min-width: map-get($breakpoints , lg)) {
+  @include media("lg") {
     margin: unset;
   }
 }

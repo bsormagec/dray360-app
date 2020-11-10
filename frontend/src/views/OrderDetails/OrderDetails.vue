@@ -2,7 +2,7 @@
   <div :class="`details ${loaded && 'loaded'} ${isMobile && 'mobile'}`">
     <ContentLoading :loaded="loaded">
       <div :class="`details__content ${isMobile && 'mobile'}`">
-        <DetailsSidebar />
+        <SidebarNavigation />
 
         <div
           :class="`details__form ${isMobile && 'mobile'}`"
@@ -30,6 +30,7 @@ import DetailsSidebar from '@/views/OrderDetails/DetailsSidebar'
 import OrderDetailsForm from '@/views/OrderDetails/OrderDetailsForm'
 import OrderDetailsDocument from '@/views/OrderDetails/OrderDetailsDocument'
 import { reqStatus } from '@/enums/req_status'
+import SidebarNavigation from '@/components/General/SidebarNavigation'
 
 import ContentLoading from '@/components/ContentLoading'
 import orders, { types } from '@/store/modules/orders'
@@ -43,7 +44,8 @@ export default {
     DetailsSidebar,
     OrderDetailsDocument,
     ContentLoading,
-    OrderDetailsForm
+    OrderDetailsForm,
+    SidebarNavigation
   },
 
   mixins: [isMobile],
@@ -137,7 +139,8 @@ export default {
 .details__form {
   position: relative;
   transition: width 300ms ease;
-  
+  margin-left: 10px;
+
   &::after {
     content: "";
     position: absolute;
@@ -172,7 +175,7 @@ export default {
     width: rem(2);
     font-size: 0;
     background-color: #BFCCD6;
-  
+
     &::after,
     &::before {
       content: "";
