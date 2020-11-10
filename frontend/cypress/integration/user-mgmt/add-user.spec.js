@@ -31,7 +31,7 @@ describe('Add user', function () {
 
     cy.route({ method: 'GET', url: '**/api/users', response: this.users })
 
-    cy.get('button').click()
+    cy.get('[data-cy=add-user-button]').click()
 
     cy.url().should('include', 'user/dashboard')
   })
