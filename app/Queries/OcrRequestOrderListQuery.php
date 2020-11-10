@@ -23,7 +23,7 @@ class OcrRequestOrderListQuery extends QueryBuilder
 
         $query = OCRRequest::query()
             ->select('t_job_latest_state.*')
-            ->addSelect('t_orders.id as t_order_id')
+            ->addSelect('t_job_latest_state.order_id as t_order_id')
             ->when(! is_superadmin() && currentCompany(), function ($query) {
                 return $query->join('t_job_state_changes', function ($join) {
                     $join->on('t_job_latest_state.t_job_state_changes_id', '=', 't_job_state_changes.id')

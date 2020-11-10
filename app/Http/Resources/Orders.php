@@ -14,7 +14,7 @@ class Orders extends JsonResource
      */
     public function toArray($request)
     {
-        $this->resource->display_id = $this->order->id ?? substr($this->request_id, 0, 6);
+        $this->resource->display_id = $this->t_order_id ?? substr($this->request_id, 0, 6);
         return parent::toArray($request);
     }
 }
