@@ -111,7 +111,6 @@ export default {
       const form = document.querySelector('#order-form')
 
       const handleScroll = () => {
-        console.log(1)
         if (this.isJumping) return
         try {
           for (const key in this.sections) {

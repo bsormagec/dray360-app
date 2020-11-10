@@ -4,7 +4,7 @@
     :class="`form ${isMobile && 'mobile'}`"
   >
     <div class="order__title">
-      <h2>Order   #{{ order.id }}</h2>
+      <h2>Order #{{ order.id }}</h2>
       <OutlinedButtonGroup
         v-if="!editMode"
         :main-action="{
@@ -20,12 +20,11 @@
         ]"
         :loading="loading"
       />
-      <div v-else>
+      <div v-else class="order__title-btn-group">
         <v-btn
           color="primary"
           :outlined="!editMode && !isMobile"
-          :style="{ marginBottom: '10px' }"
-          width="115px"
+          small
           text
           @click="toggleEdit"
         >
@@ -34,8 +33,7 @@
         <v-btn
           color="primary"
           :outlined="!editMode && !isMobile"
-          :style="{ marginBottom: '10px' }"
-          width="115px"
+          small
           @click="toggleEdit"
         >
           {{ editMode ? 'Save' : 'Edit Order' }}
@@ -43,13 +41,64 @@
       </div>
     </div>
 
+    <!-- <div class="order__changelog">
+      <div class="order__chip-container">
+        <v-chip
+          class="mr-1 mb-3"
+          outlined
+          small
+        >
+          Current
+        </v-chip>
+        <v-chip
+          class="mr-1 mb-3"
+          outlined
+          small
+        >
+          <v-avatar
+            left
+          >
+            <v-icon>mdi-toggle-switch-outline</v-icon>  
+          </v-avatar>
+          Changes
+        </v-chip>
+        <v-chip
+          class="mr-1 mb-3"
+          outlined
+          small
+        >
+          <v-avatar
+            left
+            small>
+            <v-icon>mdi-alert-outline</v-icon>
+          </v-avatar>
+          13 Warning
+        </v-chip>
+        <v-chip
+          class="mr-1 mb-3"
+          outlined
+          small
+        >
+          <v-avatar
+            left
+            small
+          >
+            <v-icon>mdi-alert-circle-outline</v-icon>
+          </v-avatar>
+          1 Error
+        </v-chip>
+      </div>
+      <p>Last Updated <span v-html="lastChandedAt"/> by John Doe</p>
+      <a href="#">History</a>
+    </div> -->
+
     <div class="form__section">
-      <h1
+      <div
         :id="sections.shipment.id"
-        class="section__title"
+        class="form__section-title"
       >
-        {{ sections.shipment.label }}
-      </h1>
+        <h3 v-html="sections.shipment.label"/>
+      </div>
 
       <div class="section__rootfields">
         <!-- <FormFieldInput
@@ -96,246 +145,178 @@
       </div>
 
       <div
-        class="section__sub"
+        class="form__sub-section"
       >
         <div
-          class="sub__title"
+          class="form__section-title"
         >
-          <h2 :id="sections.equipment.id">
-            {{ sections.equipment.label }}
-          </h2>
+          <h3 :id="sections.equipment.id" v-html="sections.equipment.label"/>
         </div>
-
-        <FormFieldEquipmentType
-          label="Equipment Type"
-          :company-id="order.t_company_id"
-          :tms-provider-id="order.t_tms_provider_id"
-          :carrier="order.carrier"
-          :equipment-size="order.equipment_size"
-          :equipment-type="order.equipment_type"
-          :unit-number="order.unit_number"
-          :verified="order.equipment_type_verified"
-          @change="(e) => handleChange('t_equipment_type_id', e)"
-        />
-        <FormFieldInput
-          references="unit_number"
-          label="Unit number"
-          :value="order.unit_number"
-          :edit-mode="editMode"
-          @change="value => handleChange('unit_number', value)"
-        />
-        <FormFieldInput
-          references="seal_number"
-          label="Seal number"
-          :value="order.seal_number"
-          :edit-mode="editMode"
-          @change="value => handleChange('seal_number', value)"
-        />
-        <!-- <FormFieldInput
-          references="equipment_size"
-          label="Size"
-          :value="order.equipment_size"
-          :edit-mode="editMode"
-          @change="value => handleChange('equipment_size', value)"
-        /> -->
-        <!-- <FormFieldSwitch
-          references="has_chassis"
-          label="Has chassis"
-          :value="order.has_chassis"
-          :edit-mode="editMode"
-          @change="value => handleChange('has_chassis', value)"
-        /> -->
-        <!-- <FormFieldInput
-          references="carrier"
-          label="SSL"
-          :value="order.carrier"
-          :edit-mode="editMode"
-          @change="value => handleChange('carrier', value)"
-        /> -->
+        <div class="section__rootfields">
+          <FormFieldEquipmentType
+            label="Equipment Type"
+            :company-id="order.t_company_id"
+            :tms-provider-id="order.t_tms_provider_id"
+            :carrier="order.carrier"
+            :equipment-size="order.equipment_size"
+            :equipment-type="order.equipment_type"
+            :unit-number="order.unit_number"
+            :verified="order.equipment_type_verified"
+            @change="(e) => handleChange('t_equipment_type_id', e)"
+          />
+          <FormFieldInput
+            references="unit_number"
+            label="Unit number"
+            :value="order.unit_number"
+            :edit-mode="editMode"
+            @change="value => handleChange('unit_number', value)"
+          />
+          <FormFieldInput
+            references="seal_number"
+            label="Seal number"
+            :value="order.seal_number"
+            :edit-mode="editMode"
+            @change="value => handleChange('seal_number', value)"
+          />
+        </div>
       </div>
      
       <div
-        class="section__sub"
+        class="form__sub-section"
       >
         <div
-          class="sub__title"
+          class="form__section-title"
         >
-          <h2 :id="sections.origin.id">
-            {{ sections.origin.label }}
-          </h2>
+          <h3 :id="sections.origin.id" v-html="sections.origin.label"/>
         </div>
-        <FormFieldInput
-          references="reference_number"
-          label="Reference number"
-          :value="order.reference_number"
-          :edit-mode="editMode"
-          @change="value => handleChange('reference_number', value)"
-        />
-        <!-- <FormFieldInput
-          references="pickup_number"
-          label="Pickup number"
-          :value="order.pickup_number"
-          :edit-mode="editMode"
-          @change="value => handleChange('pickup_number', value)"
-        /> -->
-        <FormFieldInput
-          references="customer_number"
-          label="Customer Number"
-          :value="order.customer_number === null ? '---' : order.customer_number"
-          :edit-mode="editMode"
-          @change="value => handleChange('customer_number', value)"
-        />
-        <FormFieldInput
-          references="load_number"
-          label="Load number"
-          :value="order.load_number"
-          :edit-mode="editMode"
-          @change="value => handleChange('load_number', value)"
-        />
-        <FormFieldInput
-          references="purchase_order_number"
-          label="Purchase Order Number"
-          :value="order.purchase_order_number"
-          :edit-mode="editMode"
-          @change="value => handleChange('purchase_order_number', value)"
-        />
-        <FormFieldInput
-          references="release_number"
-          label="Release Number"
-          :value="order.release_number"
-          :edit-mode="editMode"
-          @change="value => handleChange('release_number', value)"
-        />
-        <FormFieldInput
-          references="vessel"
-          label="Vessel"
-          :value="order.vessel"
-          :edit-mode="editMode"
-          @change="value => handleChange('vessel', value)"
-        />
-        <FormFieldInput
-          references="voyage"
-          label="Voyage"
-          :value="order.voyage"
-          :edit-mode="editMode"
-          @change="value => handleChange('voyage', value)"
-        />
-        <FormFieldInput
-          references="booking_number"
-          label="Booking Number"
-          :value="order.booking_number === null ? '---' : order.booking_number"
-          :edit-mode="editMode"
-          @change="value => handleChange('booking_number', value)"
-        />
-        <FormFieldInput
-          references="master_bol_mawb"
-          label="Master BOL MAWB"
-          :value="order.master_bol_mawb"
-          :edit-mode="editMode"
-          @change="value => handleChange('master_bol_mawb', value)"
-        />
-        <FormFieldInput
-          references="house_bol_hawb"
-          label="House BOL MAWB"
-          :value="order.house_bol_hawb"
-          :edit-mode="editMode"
-          @change="value => handleChange('house_bol_hawb', value)"
-        />
-        <!-- <FormFieldInput
-          references="actual_origin"
-          label="Actual Origin"
-          :value="order.actual_origin"
-          :edit-mode="editMode"
-          @change="value => handleChange('actual_origin', value)"
-        />
-        <FormFieldInput
-          references="actual_destination"
-          label="Actual Destination"
-          :value="order.actual_destination"
-          :edit-mode="editMode"
-          @change="value => handleChange('actual_destination', value)"
-        /> -->
+        <div class="section__rootfields">
+          <FormFieldInput
+            references="reference_number"
+            label="Reference number"
+            :value="order.reference_number"
+            :edit-mode="editMode"
+            @change="value => handleChange('reference_number', value)"
+          />
+          <FormFieldInput
+            references="customer_number"
+            label="Customer Number"
+            :value="order.customer_number === null ? '---' : order.customer_number"
+            :edit-mode="editMode"
+            @change="value => handleChange('customer_number', value)"
+          />
+          <FormFieldInput
+            references="load_number"
+            label="Load number"
+            :value="order.load_number"
+            :edit-mode="editMode"
+            @change="value => handleChange('load_number', value)"
+          />
+          <FormFieldInput
+            references="purchase_order_number"
+            label="Purchase Order Number"
+            :value="order.purchase_order_number"
+            :edit-mode="editMode"
+            @change="value => handleChange('purchase_order_number', value)"
+          />
+          <FormFieldInput
+            references="release_number"
+            label="Release Number"
+            :value="order.release_number"
+            :edit-mode="editMode"
+            @change="value => handleChange('release_number', value)"
+          />
+          <FormFieldInput
+            references="vessel"
+            label="Vessel"
+            :value="order.vessel"
+            :edit-mode="editMode"
+            @change="value => handleChange('vessel', value)"
+          />
+          <FormFieldInput
+            references="voyage"
+            label="Voyage"
+            :value="order.voyage"
+            :edit-mode="editMode"
+            @change="value => handleChange('voyage', value)"
+          />
+          <FormFieldInput
+            references="booking_number"
+            label="Booking Number"
+            :value="order.booking_number === null ? '---' : order.booking_number"
+            :edit-mode="editMode"
+            @change="value => handleChange('booking_number', value)"
+          />
+          <FormFieldInput
+            references="master_bol_mawb"
+            label="Master BOL MAWB"
+            :value="order.master_bol_mawb"
+            :edit-mode="editMode"
+            @change="value => handleChange('master_bol_mawb', value)"
+          />
+          <FormFieldInput
+            references="house_bol_hawb"
+            label="House BOL MAWB"
+            :value="order.house_bol_hawb"
+            :edit-mode="editMode"
+            @change="value => handleChange('house_bol_hawb', value)"
+          />
+        </div>
       </div>
       <div
-        class="section__sub"
+        class="form__sub-section"
       >
         <div
-          class="sub__title"
+          class="form__section-title"
         >
-          <h2 :id="sections.bill_to.id">
-            {{ sections.bill_to.label }}
-          </h2>
+          <h3 :id="sections.bill_to.id" v-html="sections.bill_to.label"/>
         </div>
-        <FormFieldAddressSwitchVerify
-          :recognized-text="order.bill_to_address_raw_text"
-          :verified="order.bill_to_address_verified"
-          :matched-address="order.bill_to_address"
-          billable
-          @change="(e) => handleChange('bill_to_address', e)"
-        />
-        <FormFieldTextArea
-          references="bill_comment"
-          label="Billing comments"
-          :value="order.bill_comment"
-          :edit-mode="editMode"
-          @change="value => handleChange('bill_comment', value)"
-        />
+        <div class="section__rootfields">
+          <FormFieldAddressSwitchVerify
+            :recognized-text="order.bill_to_address_raw_text"
+            :verified="order.bill_to_address_verified"
+            :matched-address="order.bill_to_address"
+            billable
+            @change="(e) => handleChange('bill_to_address', e)"
+          />
+          <FormFieldTextArea
+            references="bill_comment"
+            label="Billing comments"
+            :value="order.bill_comment"
+            :edit-mode="editMode"
+            @change="value => handleChange('bill_comment', value)"
+          />
+        </div>
         <div
-          class="sub__title"
+          class="form__section-title"
         >
-          <h2 :id="sections.charges.id">
-            {{ sections.charges.label }}
-          </h2>
+          <h3 :id="sections.charges.id" v-html="sections.charges.label"/>
         </div>
-        <FormFieldTextArea
-          references="line_haul"
-          label="Line Haul"
-          :value="order.line_haul"
-          :edit-mode="editMode"
-          @change="value => handleChange('line_haul', value)"
-        />
-        <FormFieldTextArea
-          references="fuel_surcharge"
-          label="FSC"
-          :value="order.fuel_surcharge"
-          :edit-mode="editMode"
-          @change="value => handleChange('fuel_surcharge', value)"
-        />
+        <div class="section__rootfields">
+          <FormFieldTextArea
+            references="line_haul"
+            label="Line Haul"
+            :value="order.line_haul"
+            :edit-mode="editMode"
+            @change="value => handleChange('line_haul', value)"
+          />
+          <FormFieldTextArea
+            references="fuel_surcharge"
+            label="FSC"
+            :value="order.fuel_surcharge"
+            :edit-mode="editMode"
+            @change="value => handleChange('fuel_surcharge', value)"
+          />
+        </div>
       </div>
     </div>
-    <!-- <div class="form__section">
-      <h1
-        :id="sections.pickup.id"
-        class="section__title"
-      >
-        {{ sections.pickup.label }}
-      </h1>
-
-      <div class="section__rootfields">
-        <FormFieldDate
-          references="pickup_by_date"
-          label="Pickup date"
-          :value="order.pickup_by_date"
-          :edit-mode="editMode"
-          @change="value => handleChange('pickup_by_date', value)"
-        />
-        <FormFieldTime
-          references="pickup_by_time"
-          label="Pickup time"
-          :value="order.pickup_by_time"
-          :edit-mode="editMode"
-          @change="value => handleChange('pickup_by_time', value)"
-        />
-      </div>
-    </div> -->
 
     <div class="form__section">
-      <h1
+      <div
         :id="sections.itinerary.id"
-        class="section__title"
+        class="form__section-title"
       >
-        {{ sections.itinerary.label }}
-      </h1>
+        <h3 v-html="sections.itinerary.label"/>
+      </div>
 
       <div class="section__rootfields">
         <Fragment
@@ -353,9 +334,9 @@
       </div>
     </div>
     <div class="form__section">
-      <h1 class="section__title">
-        {{ sections.notes.label }}
-      </h1>
+      <div class="form__section-title">
+        <h3 v-html="sections.notes.label"/>
+      </div>
 
       <div class="section__rootfields">
         <FormFieldTextArea
@@ -368,30 +349,32 @@
       </div>
     </div>
     <div class="form__section">
-      <h1
+      <div
         :id="sections.inventory.id"
-        class="section__title"
+        class="form__section-title"
       >
-        {{ sections.inventory.label }}
-      </h1>
+        <h3 v-html="sections.inventory.label"/>
+      </div>
 
       <div
         v-for="(item, index) in availableLineItems"
         :key="index"
-        class="section__sub"
+        class="form__sub-section"
       >
         <div
-          class="sub__title"
+          class="form__section-title"
         >
-          <h2>Item {{ index + 1 }}</h2>
+          <h3>Item {{ index + 1 }}</h3>
         </div>
-        <FormFieldTextArea
-          :references="`order_line_items.${item.real_index}`"
-          label="Description"
-          :value="item.contents"
-          :edit-mode="editMode"
-          @change="value => handleChange(`order_line_items.${item.real_index}`, value)"
-        />
+        <div class="section__rootfields">
+          <FormFieldTextArea
+            :references="`order_line_items.${item.real_index}`"
+            label="Description"
+            :value="item.contents"
+            :edit-mode="editMode"
+            @change="value => handleChange(`order_line_items.${item.real_index}`, value)"
+          />
+        </div>
       </div>
     </div>
   </div>
@@ -471,6 +454,27 @@ export default {
 
       return (this.order.tms_shipment_id !== null && this.order.tms_shipment_id !== undefined) ||
         (get(this.order, 'ocr_request.latest_ocr_request_status.status') === 'sending-to-wint')
+    },
+    lastChandedAt () {
+      Number.prototype.padLeft = function(base,chr){
+        let  len = (String(base || 10).length - String(this).length)+1;
+        return len > 0? new Array(len).join(chr || '0')+this : this;
+      }
+
+      const lastUpdatedAt = new Date(this.order.updated_at);
+
+      const date = [
+        (lastUpdatedAt.getMonth()+1).padLeft(), 
+        lastUpdatedAt.getDate().padLeft(), 
+        lastUpdatedAt.getFullYear()
+        ].join('-');
+
+      const time = [
+        lastUpdatedAt.getHours().padLeft(), 
+        lastUpdatedAt.getMinutes().padLeft()
+        ].join(':');
+      
+      return `${date} ${time}`;
     }
   },
 
@@ -490,6 +494,7 @@ export default {
     async handleChange (path, value) {
       await this.updateOrder({ path, value })
     },
+
     async postSendToTms () {
       const status = await this[types.postSendToTms]({ order_id: this.order.id, status: 'sending-to-wint' })
       if (status === reqStatus.success) {
@@ -510,6 +515,7 @@ export default {
         })
       }
     },
+
     async downloadPDF (orderId) {
       this.loading = true
       const request = await this[types.getDownloadPDFURL](orderId)
@@ -525,6 +531,7 @@ export default {
       }
       this.loading = false
     },
+
     async deleteOrder (orderId) {
       this.loading = true
 
@@ -553,33 +560,16 @@ export default {
         }
       })
     }
-
   }
 }
 </script>
 
 <style lang="scss" scoped>
-.order__title {
-  position: relative;
-  margin: rem(14) auto;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  border-bottom: 1px solid #dadddd;
-  padding-bottom: 20px;
-
-  h2{
-    font-size: rem(20);
-    color: var(--v-primary-base);
-    font-weight: 500;
-    line-height: rem(23);
-  }}
 .form {
   width: 100%;
   height: 100vh;
   overflow-y: auto;
-  padding: rem(36) rem(65);
-  padding-top: rem(10);
+  padding: rem(15);
   scroll-behavior: smooth;
 
   &.mobile {
@@ -589,58 +579,162 @@ export default {
   }
 }
 
-.section__title {
+.order__title {
+  position: relative;
+  display: flex;
+  align-items: center;
+  padding: 0 0 rem(15);
+  margin-bottom: rem(15);
+  
+  &::after {
+    content: "";
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: rem(-15);
+    display: block;
+    height: rem(15);
+    margin: 0 rem(-15);
+    background: linear-gradient(180deg, rgba(0, 60, 113, 0.1) 0%, rgba(0, 60, 113, 0.05) 31.77%, rgba(0, 60, 113, 0) 100%);
+  }
+
+  h2 {
+    font-size: rem(20);
+    color: map-get($colors, slate-gray );
+    font-weight: 500;
+    line-height: (23.4 / 20);
+    letter-spacing: rem(.15);
+  }
+
+  &::v-deep .split-btn {
+    margin-left: auto;
+  }
+}
+
+.order__title-btn-group {
+  margin-left: auto;
+}
+
+.form__section-title {
+  padding: rem(4) rem(10) rem(3);
+  background-color: map-get($colors, slate-gray);
+}
+
+.form__section-title h3 {
   text-transform: uppercase;
-  font-size: rem(17);
-  line-height: rem(30);
-  background: map-get($colors, grey-6);
-  padding: 0 rem(6.5);
-  margin-bottom: rem(20);
-  color: map-get($colors, grey-7);
+  font-size: rem(13);
+  font-weight: 700;
+  line-height: (24 / 13);
+  letter-spacing: rem(.75);
+  color: map-get($colors, white);
+}
+
+.form__sub-section {
+  .form__section-title {
+    margin-bottom: rem(5);
+    background-color: transparent;
+    border-bottom: 1px solid rgba(map-get($colors, slate-gray), 50%);
+
+    h3 {
+      color: map-get($colors, mainblue);
+    }
+  }
 }
 
 .section__rootfields {
-  margin-bottom: rem(36);
+  margin-bottom: rem(18);
+
+  .form-field:nth-child(even) {
+    background-color: #F5F6F7;
+  }
 }
 
-.section__field {
-  display: flex;
-  justify-content: space-between;
-  margin-bottom: rem(11);
-}
-
-.field__name {
-  font-size: rem(14) !important;
-  font-weight: 700;
-  text-transform: capitalize;
-}
-
-.field__value {
-  font-size: rem(14.4) !important;
-  text-transform: capitalize;
-}
-
-.section__sub {
-  margin-bottom: rem(36);
-}
-
-.sub__title {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-
-  h2 {
-    width: 100%;
-    font-size: rem(16);
-    line-height: rem(36);
-    color: map-get($colors, grey-4);
-    border-bottom: rem(1) solid map-get($colors, grey-3);
-    margin-bottom: rem(14);
-    text-transform: capitalize;
+.section__rootfields {
+  &::v-deep .field__name,
+  &::v-deep .block__left,
+  .field__children .field__name {
+    font-size: rem(13);
+    font-weight: 700;
+    line-height: (20 / 13);
+    letter-spacing: rem(.25);
+    color: map-get($colors, slate-gray);
   }
 
-  button {
-    margin-left: auto;
+  &::v-deep {
+    .equipment__section,
+    .selected__equipment,
+    .field__value,
+    .block__right,
+    .address-book-modal__body__status {
+      font-size: rem(14);
+      font-weight: 400;
+      line-height: (20 / 14);
+      letter-spacing: rem(.25);
+      text-transform: capitalize;
+    }
+
+    .equipment__section {
+      font-weight: 700;
+    }
+  }
+}
+
+.order__changelog {
+  position: relative;
+  padding: 0 rem(22) rem(12);
+  overflow: hidden;
+
+  &::after,
+  &::before {
+    content: "";
+    position: absolute;
+    left: 0;
+    top: 0;
+    background-color: map-get($colors, slate-gray);
+  }
+
+  &::after {
+    height: rem(16);
+    width: rem(16);
+    border-radius: 50%;
+  }
+
+  &::before {
+    height: 100%;
+    width: rem(2);
+    left: rem(7);
+  }
+}
+
+.order__changelog p {
+  margin-bottom: rem(6);
+  font-size: rem(14);
+  line-height: (18 / 14);
+  letter-spacing: rem(.25);
+
+  span {
+    font-weight: 700;
+    text-decoration: underline;
+    color: map-get($colors, mainblue );
+  }
+
+}
+
+.order__changelog a {
+  font-size: rem(10);
+  line-height: (16 / 10);
+  letter-spacing: rem(1.5);
+  font-weight: 500;
+  text-transform: uppercase;
+  color: map-get($colors, slate-gray);
+}
+
+.order__chip-container {
+  .v-chip {
+    border-style: none;
+    .v-avatar {
+      margin-right: rem(3);
+    }
   }
 }
 </style>

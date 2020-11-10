@@ -98,7 +98,7 @@ export default {
   flex-grow: 1;
   overflow-y: auto;
   padding: rem(26);
-  background: map-get($colors, grey-8);
+  background-color: #E5EAEF;
   scroll-behavior: smooth;
   width: 100%;
 

@@ -190,7 +190,6 @@ export default {
 
   async mounted () {
     this.search = this.filters.rawtext
-    console.log('recogonizedText: ', this.recognizedText)
   },
 
   methods: {
