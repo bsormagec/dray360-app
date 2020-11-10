@@ -73,7 +73,7 @@
                 <v-list-item-title
                   v-if="item.name === 'logout' "
                   :key="i"
-                  @click="logoutBtn, drawer = !drawer"
+                  @click="logoutBtn"
                   v-text="item.name"
                 />
                 <v-list-item-title
