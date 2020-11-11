@@ -1,5 +1,5 @@
 import { reqStatus } from '@/enums/req_status'
-import { getOrders, getOrderDetail, updateOrderDetail, getDownloadPDFURL, postSendToTms } from '@/store/api_calls/orders'
+import { getOrders, getOrderDetail, updateOrderDetail, getDownloadPDFURL } from '@/store/api_calls/orders'
 
 export const types = {
   setOrders: 'SET_ORDERS',
@@ -7,8 +7,6 @@ export const types = {
   getOrders: 'GET_ORDERS',
   getOrderDetail: 'GET_ORDER_DETAIL',
   updateOrderDetail: 'UPDATE_ORDER_DETAIL',
-  postSendToTms: 'POST_SEND_TMS',
-  setSetTms: 'SET_SEND_TMS',
   getDownloadPDFURL: 'GET_DOWNLOAD_PDF'
 }
 
@@ -16,8 +14,7 @@ const initialState = {
   list: [],
   links: {},
   meta: {},
-  currentOrder: {},
-  tmsData: {}
+  currentOrder: {}
 }
 
 const mutations = {
@@ -31,9 +28,6 @@ const mutations = {
   },
   [types.setCurrentOrder] (state, orderData) {
     state.currentOrder = orderData
-  },
-  [types.setSetTms] (state, tmsData) {
-    state.tmsdata = tmsData
   }
 }
 
@@ -87,18 +81,6 @@ const actions = {
     if (error) return { status: reqStatus.error, data: error.response.data }
 
     return { status: reqStatus.success, data: data }
-  },
-
-  async [types.postSendToTms] ({ commit }, tmsData) {
-    const [error, data] = await postSendToTms(tmsData)
-    if (error) {
-      return {
-        ...(error.response), status: reqStatus.error
-      }
-    }
-
-    commit(types.setSetTms, data)
-    return reqStatus.success
   }
 }
 

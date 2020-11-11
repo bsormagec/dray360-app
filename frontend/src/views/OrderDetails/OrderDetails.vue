@@ -2,7 +2,7 @@
   <div :class="`details ${loaded && 'loaded'} ${isMobile && 'mobile'}`">
     <ContentLoading :loaded="loaded">
       <div :class="`details__content ${isMobile && 'mobile'}`">
-          <SidebarNavigation />
+        <SidebarNavigation />
         <div
           :class="`details__form ${isMobile && 'mobile'}`"
           :style="{ minWidth: `${resizeDiff}%` }"
@@ -25,7 +25,6 @@
 
 <script>
 import isMobile from '@/mixins/is_mobile'
-import DetailsSidebar from '@/views/OrderDetails/DetailsSidebar'
 import OrderDetailsForm from '@/views/OrderDetails/OrderDetailsForm'
 import OrderDetailsDocument from '@/views/OrderDetails/OrderDetailsDocument'
 import { reqStatus } from '@/enums/req_status'
@@ -40,7 +39,6 @@ export default {
   name: 'OrderDetails',
 
   components: {
-    DetailsSidebar,
     OrderDetailsDocument,
     ContentLoading,
     OrderDetailsForm,
@@ -138,7 +136,7 @@ export default {
 .details__form {
   position: relative;
   transition: width 300ms ease;
-  
+
   &::after {
     content: "";
     position: absolute;
