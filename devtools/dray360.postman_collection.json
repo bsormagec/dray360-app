@@ -2145,6 +2145,36 @@
 								"api",
 								"ocr",
 								"variants"
+							],
+							"query": [
+								{
+									"key": "filter[abbyy_variant_name]",
+									"value": "",
+									"disabled": true
+								},
+								{
+									"key": "filter[description]",
+									"value": "",
+									"disabled": true
+								},
+								{
+									"key": "filter[variant_type]",
+									"value": "",
+									"description": "Available: tabular,edi,ocr. They can be comma separated",
+									"disabled": true
+								},
+								{
+									"key": "filter[company_id]",
+									"value": "",
+									"description": "only one",
+									"disabled": true
+								},
+								{
+									"key": "sort",
+									"value": "-abbyy_variant_name",
+									"description": "Available: abbyy_variant_name, abbyy_variant_id, description",
+									"disabled": true
+								}
 							]
 						}
 					},

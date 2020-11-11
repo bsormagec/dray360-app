@@ -26,10 +26,12 @@
     />
 
     <div v-if="shouldAskForVariantName">
-      <v-text-field
+      <v-autocomplete
         v-model="variantName"
-        label="Variant Name"
-        color="primary"
+        :items="variants"
+        item-value="abbyy_variant_name"
+        item-text="description"
+        label="Variant name"
         outlined
         clearable
         dense
@@ -57,8 +59,14 @@ import OrdersCreateUpload from '@/views/Orders/OrdersCreateUpload'
 import OrdersCreateSubmitted from '@/views/Orders/OrdersCreateSubmitted'
 
 import { postUploadPDF } from '@/store/api_calls/orders'
+import { getVariantList } from '@/store/api_calls/rules_editor'
 import utils, { type } from '@/store/modules/utils'
-import { mapActions } from 'vuex'
+import auth from '@/store/modules/auth'
+import { mapActions, mapState } from 'vuex'
+
+import { getVariantTypeFromFile, isPdf } from '@/utils/files_uploads'
+import uniq from 'lodash/uniq'
+import uniqBy from 'lodash/uniqBy'
 
 export default {
   name: 'OrdersCreate',
@@ -77,17 +85,38 @@ export default {
 
   data: () => ({
     files: [],
-    variantName: ''
+    variantName: null,
+    variants: []
   }),
 
   computed: {
+    ...mapState(auth.moduleName, { currentUser: state => state.currentUser }),
     shouldAskForVariantName () {
       for (let index = 0; index < this.files.length; index++) {
-        if (this.files[index].type !== 'application/pdf') {
+        if (!isPdf(this.files[index])) {
           return true
         }
       }
       return false
+    }
+  },
+
+  watch: {
+    files: async function (files) {
+      const types = []
+
+      files.forEach(file => {
+        types.push(getVariantTypeFromFile(file))
+      })
+
+      if (uniq(types).join('') === 'ocr') return
+
+      const [error, data] = await getVariantList({
+        'filter[company_id]': this.currentUser.t_company_id,
+        'filter[variant_type]': uniq(types).join(','),
+        sort: 'description'
+      })
+      this.variants = data
     }
   },
 
@@ -115,16 +144,7 @@ export default {
         ''
       ]
       const filtered = [...this.files, ...newFiles].filter(f => acceptedMimeTypes.includes(f.type))
-      const unique = []
-      const uniqueNames = []
-
-      filtered.forEach(fil => {
-        if (uniqueNames.includes(fil.name)) return
-        uniqueNames.push(fil.name)
-        unique.push(fil)
-      })
-
-      this.files = unique
+      this.files = uniqBy(filtered, 'name')
     },
 
     async uploadFile (file) {
@@ -145,17 +165,15 @@ export default {
     },
 
     createOrder () {
-      console.log('vc.files: ', this.files)
       if (this.files.length === 0) {
         this.setSnackbar({
           message: 'Please select a file to upload first',
           show: true
         })
-        // alert('Please select a PDF to upload first')
         return
       }
 
-      if (this.shouldAskForVariantName && (this.variantName === '' || this.variantName === null)) {
+      if (this.shouldAskForVariantName && (this.variantName === '' || this.variantName === null || this.variantName === undefined)) {
         this.setSnackbar({
           message: 'Please specify a variant name',
           show: true
@@ -164,6 +182,7 @@ export default {
       }
 
       this.files.forEach(file => this.uploadFile(file))
+      this.variantName = null
       this.files = []
     }
   }
