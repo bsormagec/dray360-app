@@ -40,10 +40,12 @@ return [
             'tms' => 's',
             'users' => 'v,c,e,r',
             'roles' => 'u',
+            'ocr-variants' => 'v',
         ],
         'customer-user' => [
-            'ocr-requests' => ' v',
-            'orders' => 'v',
+            'ocr-requests' => 'c,v',
+            'orders' => 'v,c,e',
+            'ocr-variants' => 'v',
         ],
     ],
 
