@@ -70,6 +70,7 @@
       >
         <v-btn
           name="add-user"
+          data-cy="add-user-button"
           class="save-button button"
           @click="addUser()"
         >
@@ -98,7 +99,7 @@ export default {
     email: '',
     password: '',
     org: '',
-    role_selected: 1
+    role_selected: 2
 
   }),
 
@@ -131,7 +132,7 @@ export default {
     async fetchRoles () {
       const status = await this[types.getRoles]()
 
-      if (status === reqStatus.successs) {
+      if (status === reqStatus.success) {
         console.log('success')
       } else {
         console.log('error')

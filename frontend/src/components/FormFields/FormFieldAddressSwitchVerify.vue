@@ -2,22 +2,24 @@
   <!--  eslint-disable vue/no-v-html -->
   <div class="form-field-element-modal-address">
     <div class="address-book-modal">
-      <span
+      <div
         v-if="label !== ''"
         class="address-book-modal__title"
-      ><strong>{{ label }}</strong></span>
+      >
+        <h3 v-html="label" />
+      </div>
 
       <div class="address-book-modal__body">
         <div
           v-if="!verified || !addressFound"
           class="address-book-modal__body__status"
         >
+          <v-icon :color="addressFound ? 'warning' : 'error'">
+            mdi-alert-outline
+          </v-icon>
           <span :class="{'not-found': !addressFound}">
             {{ addressFound ? 'Address Verification Needed': 'Address Not Found' }}
           </span>
-          <v-icon :color="addressFound ? 'warning' : 'error'">
-            mdi-alert
-          </v-icon>
         </div>
 
         <div class="address-book-modal__body__block">
@@ -39,7 +41,8 @@
           v-if="!verified && addressFound"
           color="primary"
           outlined
-          style="margin-right: 20px;"
+          small
+          class="mr-2"
           @click="verifyMatch"
         >
           Verify Closest Match
@@ -48,6 +51,7 @@
         <v-btn
           color="primary"
           outlined
+          small
           @click="toggleAddressModal"
         >
           Select Different
@@ -157,31 +161,38 @@ export default {
 <style lang="scss" scoped>
 .address-book-modal {
   .address-book-modal__title {
-    display: block;
-    font-size: rem(14) !important;
-    padding-bottom: rem(11);
-    margin-bottom: rem(20);
-    text-transform: capitalize;
+    padding: rem(4) rem(10) rem(3);
+    margin-bottom: rem(5);
+    background-color: transparent;
+    border-bottom: 1px solid rgba(map-get($colors, slate-gray), 50%);
+
+    h3 {
+      text-transform: uppercase;
+      font-size: rem(13);
+      font-weight: 700;
+      line-height: (24 / 13);
+      letter-spacing: rem(.75);
+      color: map-get($colors, mainblue);
+    }
   }
 
   .address-book-modal__body {
     display: flex;
     flex-direction: column;
+    padding: rem(10);
   }
 
   .address-book-modal__body__status {
     display: flex;
     align-items: center;
-    justify-content: space-between;
+    justify-content: flex-end;
     width: 100%;
 
     span {
-      flex-grow: 1;
-      text-align: right;
-      padding-right: rem(16);
-      color: #cc904c;
-      font-weight: bold;
-      font-size: rem(14.4) !important;
+      padding-left: rem(6);
+      color: map-get($colors, yellow );
+      font-weight: 700;
+      
       &.not-found {
         color: map-get($colors, red)
       }
@@ -191,15 +202,14 @@ export default {
   .address-book-modal__body__block {
     display: flex;
     justify-content: space-between;
-    margin-bottom: rem(20);
+    margin-bottom: rem(33);
+
+    &:last-child {
+      margin-bottom: 0;
+    }
 
     span {
       width: 50%;
-      font-size: rem(14.4) !important;
-
-      &:first-child {
-        font-weight: bold;
-      }
 
       &:last-child {
         text-align: right;

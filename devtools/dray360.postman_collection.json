@@ -1,6 +1,6 @@
 {
 	"info": {
-		"_postman_id": "f98e79c1-b8ad-4c01-a49e-a7da6a6fb75a",
+		"_postman_id": "de3bb7fb-4e5d-4928-ae9f-6a6978a4fe5e",
 		"name": "Dray360 API",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
 	},
@@ -14,7 +14,7 @@
 						{
 							"listen": "test",
 							"script": {
-								"id": "ae111d13-a15d-4f48-a894-695a76993f13",
+								"id": "78b74aaf-904d-4261-87b9-c223364b7b5a",
 								"exec": [
 									"var token1=postman.getResponseCookie('XSRF-TOKEN').value;",
 									"var token2=token1.replace(/%3D/g, '=');",
@@ -72,7 +72,7 @@
 						{
 							"listen": "test",
 							"script": {
-								"id": "c974a0ba-36a9-4c76-a733-6b7cf8e9e4a9",
+								"id": "b6351651-d23a-4e41-aa3b-8c656965df56",
 								"exec": [
 									"var token1=postman.getResponseCookie('XSRF-TOKEN').value;",
 									"var token2=token1.replace(/%3D/g, '=');",
@@ -145,7 +145,7 @@
 						{
 							"listen": "test",
 							"script": {
-								"id": "aa154934-4150-41b9-af10-744045745a40",
+								"id": "d26df749-5b37-40a5-a92e-9d9d3623e582",
 								"exec": [
 									"var token1=postman.getResponseCookie('XSRF-TOKEN').value;",
 									"var token2=token1.replace(/%3D/g, '=');",
@@ -205,7 +205,7 @@
 						{
 							"listen": "test",
 							"script": {
-								"id": "cb6b953d-32ca-41cf-b07d-f7954685926c",
+								"id": "0e3eedbe-981f-4841-8827-a4b9292ae9c9",
 								"exec": [
 									"var token1=postman.getResponseCookie('XSRF-TOKEN').value;",
 									"var token2=token1.replace(/%3D/g, '=');",
@@ -273,7 +273,7 @@
 						{
 							"listen": "test",
 							"script": {
-								"id": "a66d86f7-9f93-48c1-93d9-3e29fc06f931",
+								"id": "e66866ea-5196-4c4f-9a90-a155b3293b16",
 								"exec": [
 									"var token1=postman.getResponseCookie('XSRF-TOKEN').value;",
 									"var token2=token1.replace(/%3D/g, '=');",
@@ -352,7 +352,7 @@
 						{
 							"listen": "test",
 							"script": {
-								"id": "3fe4cf2d-d101-4189-9448-e3f65fb9d6b2",
+								"id": "f14a77f8-2a2d-47c2-81d8-a53cd39e1df7",
 								"exec": [
 									"var token1=postman.getResponseCookie('XSRF-TOKEN').value;",
 									"var token2=token1.replace(/%3D/g, '=');",
@@ -421,7 +421,7 @@
 						{
 							"listen": "test",
 							"script": {
-								"id": "25f33372-0928-4f8e-9f65-dc9057b39039",
+								"id": "2836e582-1c66-4e5a-847d-b5dc88241063",
 								"exec": [
 									"var token1=postman.getResponseCookie('XSRF-TOKEN').value;",
 									"var token2=token1.replace(/%3D/g, '=');",
@@ -503,7 +503,7 @@
 						{
 							"listen": "test",
 							"script": {
-								"id": "6d53cd02-cfc9-4c8b-abbc-f8040c0746bb",
+								"id": "03b6f4a5-29e3-43b2-b3fc-e506ebd8379b",
 								"exec": [
 									"var token1=postman.getResponseCookie('XSRF-TOKEN').value;",
 									"var token2=token1.replace(/%3D/g, '=');",
@@ -597,7 +597,7 @@
 						{
 							"listen": "test",
 							"script": {
-								"id": "6ae0417d-fa5c-469d-a8b0-d56408412a35",
+								"id": "51d9a62c-ed8b-489a-ac13-5c257fb0f32d",
 								"exec": [
 									"var token1=postman.getResponseCookie('XSRF-TOKEN').value;",
 									"var token2=token1.replace(/%3D/g, '=');",
@@ -658,7 +658,7 @@
 						{
 							"listen": "test",
 							"script": {
-								"id": "eec5e1c6-6c93-4300-8cff-60d995025c8f",
+								"id": "94217381-68fb-4737-8f53-f3802ca70ebf",
 								"exec": [
 									"var token1=postman.getResponseCookie('XSRF-TOKEN').value;",
 									"var token2=token1.replace(/%3D/g, '=');",
@@ -719,7 +719,7 @@
 						{
 							"listen": "test",
 							"script": {
-								"id": "954c3183-8ab3-4aec-8fe9-d06ab276f1e4",
+								"id": "329b167c-3b29-4b03-9bf1-0eca295dc877",
 								"exec": [
 									"var token1=postman.getResponseCookie('XSRF-TOKEN').value;",
 									"var token2=token1.replace(/%3D/g, '=');",
@@ -791,7 +791,7 @@
 						{
 							"listen": "test",
 							"script": {
-								"id": "a18bc5af-8790-4606-9233-f99ee029b50e",
+								"id": "ebd99ecc-fb37-4780-8038-168af0298b04",
 								"exec": [
 									"var token1=postman.getResponseCookie('XSRF-TOKEN').value;",
 									"var token2=token1.replace(/%3D/g, '=');",
@@ -943,7 +943,7 @@
 						{
 							"listen": "test",
 							"script": {
-								"id": "6b98293e-ab6a-460a-9ee3-ffd42d9fb0c9",
+								"id": "04a1f067-1f61-4760-938d-0e973ad1147a",
 								"exec": [
 									"var token1=postman.getResponseCookie('XSRF-TOKEN').value;",
 									"var token2=token1.replace(/%3D/g, '=');",
@@ -1040,7 +1040,7 @@
 						{
 							"listen": "test",
 							"script": {
-								"id": "018757d8-c667-41dc-aa92-109b9329499a",
+								"id": "4f9db37b-19e0-4703-92b1-90bbbbe85591",
 								"exec": [
 									"var token1=postman.getResponseCookie('XSRF-TOKEN').value;",
 									"var token2=token1.replace(/%3D/g, '=');",
@@ -1100,7 +1100,7 @@
 						{
 							"listen": "test",
 							"script": {
-								"id": "7ab28a85-1d09-483a-a793-bee9bb29ec96",
+								"id": "0fad833b-f149-427d-8b48-7f5f30f85935",
 								"exec": [
 									"var token1=postman.getResponseCookie('XSRF-TOKEN').value;",
 									"var token2=token1.replace(/%3D/g, '=');",
@@ -1166,7 +1166,7 @@
 						{
 							"listen": "test",
 							"script": {
-								"id": "985b2876-6350-4b31-9670-fc93e2102d64",
+								"id": "2dee908c-e34d-48fd-ab87-7d4d46743015",
 								"exec": [
 									"var token1=postman.getResponseCookie('XSRF-TOKEN').value;",
 									"var token2=token1.replace(/%3D/g, '=');",
@@ -1227,7 +1227,7 @@
 						{
 							"listen": "test",
 							"script": {
-								"id": "47ba6066-2e33-4e34-8381-934d3b98566f",
+								"id": "9fa61a49-2694-4b87-9b4a-6ae66e4b1985",
 								"exec": [
 									"var token1=postman.getResponseCookie('XSRF-TOKEN').value;",
 									"var token2=token1.replace(/%3D/g, '=');",
@@ -1291,12 +1291,12 @@
 					"response": []
 				},
 				{
-					"name": "/api/send-to-tms",
+					"name": "/api/orders/:id/send-to-tms",
 					"event": [
 						{
 							"listen": "test",
 							"script": {
-								"id": "f185b5ae-6844-4d15-9220-ee9ad5648780",
+								"id": "5a95ded3-5af9-484e-921d-c307d75d00e1",
 								"exec": [
 									"var token1=postman.getResponseCookie('XSRF-TOKEN').value;",
 									"var token2=token1.replace(/%3D/g, '=');",
@@ -1331,22 +1331,20 @@
 							}
 						],
 						"url": {
-							"raw": "{{server}}/api/send-to-tms?status=sending-to-wint&order_id=125",
+							"raw": "{{server}}/api/orders/:id/send-to-tms",
 							"host": [
 								"{{server}}"
 							],
 							"path": [
 								"api",
+								"orders",
+								":id",
 								"send-to-tms"
 							],
-							"query": [
+							"variable": [
 								{
-									"key": "status",
-									"value": "sending-to-wint"
-								},
-								{
-									"key": "order_id",
-									"value": "125"
+									"key": "id",
+									"value": "8332"
 								}
 							]
 						}
@@ -1359,7 +1357,7 @@
 						{
 							"listen": "test",
 							"script": {
-								"id": "acbd6289-c98a-45dc-9de6-4c5ac59bafb5",
+								"id": "045215aa-26b5-4f78-bad4-db4478ab50aa",
 								"exec": [
 									"var token1=postman.getResponseCookie('XSRF-TOKEN').value;",
 									"var token2=token1.replace(/%3D/g, '=');",
@@ -1415,7 +1413,7 @@
 						{
 							"listen": "test",
 							"script": {
-								"id": "2510698b-dc48-4814-b184-172cd625ebbc",
+								"id": "00417710-3943-4061-b690-487bc59d079d",
 								"exec": [
 									"var token1=postman.getResponseCookie('XSRF-TOKEN').value;",
 									"var token2=token1.replace(/%3D/g, '=');",
@@ -1465,9 +1463,7 @@
 							"variable": [
 								{
 									"key": "id",
-									"value": "2",
-									"type": "text",
-									"enabled": true
+									"value": "2"
 								},
 								{
 									"key": "idtms",
@@ -1490,7 +1486,7 @@
 						{
 							"listen": "test",
 							"script": {
-								"id": "d1205a36-8831-43f4-9a0e-9b8a11a5083f",
+								"id": "5ec15c97-74d4-4c53-ac04-f2bc34257046",
 								"exec": [
 									"var token1=postman.getResponseCookie('XSRF-TOKEN').value;",
 									"var token2=token1.replace(/%3D/g, '=');",
@@ -1585,7 +1581,7 @@
 						{
 							"listen": "test",
 							"script": {
-								"id": "9ede3cc0-0059-4d75-a8ae-032f347dc9b7",
+								"id": "6b329b34-6d52-4676-a833-c7e5782ede71",
 								"exec": [
 									"var token1=postman.getResponseCookie('XSRF-TOKEN').value;",
 									"var token2=token1.replace(/%3D/g, '=');",
@@ -1649,7 +1645,7 @@
 						{
 							"listen": "test",
 							"script": {
-								"id": "74d362d6-f5e3-423f-a8c0-aa01f79c2357",
+								"id": "9c4fcc39-1bc7-4bd1-aaed-0b7d55a357fe",
 								"exec": [
 									"var token1=postman.getResponseCookie('XSRF-TOKEN').value;",
 									"var token2=token1.replace(/%3D/g, '=');",
@@ -1707,12 +1703,12 @@
 					"response": []
 				},
 				{
-					"name": "/api/getocruploaduri",
+					"name": "/api/ocr/requests",
 					"event": [
 						{
 							"listen": "test",
 							"script": {
-								"id": "c8a5f450-7c50-48e6-ae58-a4ef0c88d2f2",
+								"id": "92bc7035-ef55-45fc-9a27-6c19461b7ede",
 								"exec": [
 									"var token1=postman.getResponseCookie('XSRF-TOKEN').value;",
 									"var token2=token1.replace(/%3D/g, '=');",
@@ -1757,13 +1753,14 @@
 							]
 						},
 						"url": {
-							"raw": "{{server}}/api/createocrrequestuploaduri",
+							"raw": "{{server}}/api/ocr/requests",
 							"host": [
 								"{{server}}"
 							],
 							"path": [
 								"api",
-								"createocrrequestuploaduri"
+								"ocr",
+								"requests"
 							]
 						}
 					},
@@ -1781,7 +1778,7 @@
 						{
 							"listen": "test",
 							"script": {
-								"id": "ec156ec2-ad54-495d-8d92-85f53513475f",
+								"id": "662445a0-b2d1-40c1-8ee5-d288e694f617",
 								"exec": [
 									"var token1=postman.getResponseCookie('XSRF-TOKEN').value;",
 									"var token2=token1.replace(/%3D/g, '=');",
@@ -1836,7 +1833,7 @@
 						{
 							"listen": "test",
 							"script": {
-								"id": "1d41c1f6-1830-4ff5-99eb-a72378dfd5e7",
+								"id": "35e25481-cf4e-4080-b71c-7a8b3c00d59a",
 								"exec": [
 									"var token1=postman.getResponseCookie('XSRF-TOKEN').value;",
 									"var token2=token1.replace(/%3D/g, '=');",
@@ -1895,7 +1892,7 @@
 						{
 							"listen": "test",
 							"script": {
-								"id": "f798a59e-57d9-46d5-8644-38d442ccbcac",
+								"id": "0eb1d50c-788c-4806-b288-fa6fbcca5f2c",
 								"exec": [
 									"var token1=postman.getResponseCookie('XSRF-TOKEN').value;",
 									"var token2=token1.replace(/%3D/g, '=');",
@@ -1967,7 +1964,7 @@
 						{
 							"listen": "test",
 							"script": {
-								"id": "a2ebcab1-b825-4adb-b211-cf0c0f916e3e",
+								"id": "2c429a8d-d4ed-473f-8dba-f60df8896e31",
 								"exec": [
 									"var token1=postman.getResponseCookie('XSRF-TOKEN').value;",
 									"var token2=token1.replace(/%3D/g, '=');",
@@ -2034,7 +2031,7 @@
 						{
 							"listen": "test",
 							"script": {
-								"id": "f4662b01-02e2-4629-89a1-5809a98c02aa",
+								"id": "e244855e-2dd6-4e5a-92b0-ffba0c667aa5",
 								"exec": [
 									"var token1=postman.getResponseCookie('XSRF-TOKEN').value;",
 									"var token2=token1.replace(/%3D/g, '=');",
@@ -2104,7 +2101,7 @@
 						{
 							"listen": "test",
 							"script": {
-								"id": "f4fe4b0f-0447-4b64-936d-98ec353a37e8",
+								"id": "9b1faca1-f982-4af9-a29e-68870f853365",
 								"exec": [
 									"var token1=postman.getResponseCookie('XSRF-TOKEN').value;",
 									"var token2=token1.replace(/%3D/g, '=');",
@@ -2148,6 +2145,36 @@
 								"api",
 								"ocr",
 								"variants"
+							],
+							"query": [
+								{
+									"key": "filter[abbyy_variant_name]",
+									"value": "",
+									"disabled": true
+								},
+								{
+									"key": "filter[description]",
+									"value": "",
+									"disabled": true
+								},
+								{
+									"key": "filter[variant_type]",
+									"value": "",
+									"description": "Available: tabular,edi,ocr. They can be comma separated",
+									"disabled": true
+								},
+								{
+									"key": "filter[company_id]",
+									"value": "",
+									"description": "only one",
+									"disabled": true
+								},
+								{
+									"key": "sort",
+									"value": "-abbyy_variant_name",
+									"description": "Available: abbyy_variant_name, abbyy_variant_id, description",
+									"disabled": true
+								}
 							]
 						}
 					},
@@ -2159,7 +2186,7 @@
 						{
 							"listen": "test",
 							"script": {
-								"id": "3dc1e981-707c-4bf1-bdf5-7dc2af01ae56",
+								"id": "6ee4c623-96c8-4d6d-ab4a-08f282323cd4",
 								"exec": [
 									"var token1=postman.getResponseCookie('XSRF-TOKEN').value;",
 									"var token2=token1.replace(/%3D/g, '=');",
@@ -2218,7 +2245,7 @@
 						{
 							"listen": "test",
 							"script": {
-								"id": "531816b8-e9b9-4ee9-a8c8-af51f8654e51",
+								"id": "9c273ef2-7085-42b3-a60c-2ea2ced6977f",
 								"exec": [
 									"var token1=postman.getResponseCookie('XSRF-TOKEN').value;",
 									"var token2=token1.replace(/%3D/g, '=');",
@@ -2289,7 +2316,7 @@
 						{
 							"listen": "test",
 							"script": {
-								"id": "9bf7d7bc-a2b0-4442-8ea6-2db4c6cf666e",
+								"id": "02aa2bf0-23c5-4b7c-bddf-3e7f8232243d",
 								"exec": [
 									"var token1=postman.getResponseCookie('XSRF-TOKEN').value;",
 									"var token2=token1.replace(/%3D/g, '=');",
@@ -2357,7 +2384,7 @@
 						{
 							"listen": "test",
 							"script": {
-								"id": "9096e05f-86b5-4809-a3eb-084f5a290619",
+								"id": "9f84454b-30a5-4d2c-a3e9-22826c9fc5a8",
 								"exec": [
 									"var token1=postman.getResponseCookie('XSRF-TOKEN').value;",
 									"var token2=token1.replace(/%3D/g, '=');",
@@ -2437,7 +2464,7 @@
 						{
 							"listen": "test",
 							"script": {
-								"id": "c5871cf4-2db0-4ae7-99bb-8cad1aaa41d2",
+								"id": "8dbbd97c-4230-4c9c-858b-71a947098966",
 								"exec": [
 									"var token1=postman.getResponseCookie('XSRF-TOKEN').value;",
 									"var token2=token1.replace(/%3D/g, '=');",
@@ -2498,7 +2525,7 @@
 						{
 							"listen": "test",
 							"script": {
-								"id": "c8d6ccfd-8a6c-4e64-b018-8e8a10dc1a6b",
+								"id": "3d4f53c3-9afa-412d-977d-299cb00088b1",
 								"exec": [
 									"var token1=postman.getResponseCookie('XSRF-TOKEN').value;",
 									"var token2=token1.replace(/%3D/g, '=');",
@@ -2559,7 +2586,7 @@
 						{
 							"listen": "test",
 							"script": {
-								"id": "2ce17dfc-5ae5-49a3-b5d6-93eb1973d24f",
+								"id": "d2b199b4-f73d-4585-980e-a1c0e4d7c828",
 								"exec": [
 									"var token1=postman.getResponseCookie('XSRF-TOKEN').value;",
 									"var token2=token1.replace(/%3D/g, '=');",
@@ -2627,7 +2654,7 @@
 						{
 							"listen": "test",
 							"script": {
-								"id": "dd8c4b45-0d38-462a-b793-768ced1ef377",
+								"id": "09aef510-35c6-4d3f-8e01-1c38dd07eae9",
 								"exec": [
 									"var token1=postman.getResponseCookie('XSRF-TOKEN').value;",
 									"var token2=token1.replace(/%3D/g, '=');",
@@ -2696,7 +2723,7 @@
 						{
 							"listen": "test",
 							"script": {
-								"id": "bbd7816a-c3ef-402a-9def-6166f4443a9d",
+								"id": "06e645d0-7e12-4044-9529-1680db3357c2",
 								"exec": [
 									"var token1=postman.getResponseCookie('XSRF-TOKEN').value;",
 									"var token2=token1.replace(/%3D/g, '=');",
@@ -2755,7 +2782,7 @@
 						{
 							"listen": "test",
 							"script": {
-								"id": "55943a3d-74fe-4dea-bd1b-d13abdc22e9c",
+								"id": "3d5b31f2-6994-4d37-8230-db1a3dd49850",
 								"exec": [
 									"var token1=postman.getResponseCookie('XSRF-TOKEN').value;",
 									"var token2=token1.replace(/%3D/g, '=');",
@@ -2815,7 +2842,7 @@
 						{
 							"listen": "test",
 							"script": {
-								"id": "3eba55bf-9c27-4c74-8e67-b2bcca2128eb",
+								"id": "ae103b36-9bd0-4dcf-a901-7119f38bd190",
 								"exec": [
 									"var token1=postman.getResponseCookie('XSRF-TOKEN').value;",
 									"var token2=token1.replace(/%3D/g, '=');",
@@ -2875,7 +2902,7 @@
 						{
 							"listen": "test",
 							"script": {
-								"id": "810ce447-495a-4767-b77e-7b3fd18aed29",
+								"id": "049b7690-cb01-4848-b139-974152fd0ec9",
 								"exec": [
 									"var token1=postman.getResponseCookie('XSRF-TOKEN').value;",
 									"var token2=token1.replace(/%3D/g, '=');",
@@ -2931,7 +2958,7 @@
 				{
 					"listen": "test",
 					"script": {
-						"id": "d3957699-2ec8-4377-a654-b2d2b45f5d22",
+						"id": "dc01ad77-c947-4794-9143-5b7bd0127917",
 						"exec": [
 							"var token1=postman.getResponseCookie('XSRF-TOKEN').value;",
 							"var token2=token1.replace(/%3D/g, '=');",
@@ -3043,7 +3070,7 @@
 				{
 					"listen": "test",
 					"script": {
-						"id": "0a13ddfa-9c3c-4017-a103-5a58998fc514",
+						"id": "57a77d3b-a3ce-4af3-9dc9-7b6666c90c9d",
 						"exec": [
 							"var token1=postman.getResponseCookie('XSRF-TOKEN').value;",
 							"var token2=token1.replace(/%3D/g, '=');",
@@ -3104,7 +3131,7 @@
 		{
 			"listen": "prerequest",
 			"script": {
-				"id": "8449a152-bb55-4e75-bfe5-00a2873f4a6a",
+				"id": "d1408436-d1ca-4fce-a066-a87c12b3a968",
 				"type": "text/javascript",
 				"exec": [
 					""
@@ -3114,7 +3141,7 @@
 		{
 			"listen": "test",
 			"script": {
-				"id": "7f3ff36c-7d5d-4dd6-847a-2f79ba3f7be7",
+				"id": "a13cbd2c-cb2d-46f0-b321-dd8c1d6ff7f6",
 				"type": "text/javascript",
 				"exec": [
 					""

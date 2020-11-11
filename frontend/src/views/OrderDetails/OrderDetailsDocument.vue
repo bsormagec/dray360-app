@@ -66,7 +66,7 @@ export default {
     getHighlightsForPage (pageNumber) {
       const pageHighlights = {}
       for (const key in this.highlights) {
-        if (parseInt(this.highlights[key].page_index) === parseInt(pageNumber)) {
+        if (parseInt(this.highlights[key].page_index) === parseInt(pageNumber) + 1) {
           pageHighlights[key] = this.highlights[key]
         }
       }
@@ -98,7 +98,7 @@ export default {
   flex-grow: 1;
   overflow-y: auto;
   padding: rem(26);
-  background: map-get($colors, grey-8);
+  background-color: #E5EAEF;
   scroll-behavior: smooth;
   width: 100%;
 

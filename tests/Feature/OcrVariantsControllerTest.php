@@ -42,11 +42,20 @@ class OcrVariantsControllerTest extends TestCase
     }
 
     /** @test */
-    public function it_should_fail_if_not_authorized()
+    public function it_should_allow_filtering_by_different_fields()
     {
-        $this->loginNoAdmin();
+        $ocrVariants = factory(OCRVariant::class, 5)->create();
+        $this->loginCustomerAdmin();
+        $firstVariant = $ocrVariants->first();
+        $firstVariant->company_id_list = [auth()->user()->getCompanyId()];
+        $firstVariant->variant_type = 'tabular';
+        $firstVariant->save();
 
-        $this->getJson(route('ocr.variants.index'))->assertStatus(Response::HTTP_FORBIDDEN);
+        $this->getJson(route('ocr.variants.index', [
+                'filter[variant_type]' => 'tabular',
+                'filter[company_id]' => auth()->user()->getCompanyId()
+            ]))
+            ->assertJsonCount(1, 'data');
     }
 
     /** @test */

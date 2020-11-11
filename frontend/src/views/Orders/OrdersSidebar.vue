@@ -140,7 +140,7 @@ $ordermaster-logo: url("../../assets/images/ordermaster_logo.svg");
   padding-top: rem(40);
   padding-bottom: rem(30);
 
-  @media screen and (min-width: map-get($breakpoints, med)) {
+  @include media("med") {
     display: flex;
   }
 }
@@ -194,7 +194,7 @@ $ordermaster-logo: url("../../assets/images/ordermaster_logo.svg");
   display: flex;
   flex-direction: column-reverse;
 
-   @media screen and (min-width: map-get($breakpoints, med)) {
+  @include media("med") {
     margin-top: auto;
   }
 

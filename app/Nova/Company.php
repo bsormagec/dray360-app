@@ -70,6 +70,11 @@ class Company extends Resource
             Text::make('Blackfly imagetype', 'blackfly_imagetype')->hideFromIndex(),
             Text::make('Ripcms username', 'ripcms_username')->hideFromIndex(),
             Text::make('Ripcms password', 'ripcms_password')->hideFromIndex(),
+
+            Text::make('Compcare organization id', 'compcare_organization_id')->hideFromIndex(),
+            Text::make('Compcare username', 'compcare_username')->hideFromIndex(),
+            Text::make('Compcare password', 'compcare_password')->hideFromIndex(),
+            Text::make('Compcare token', 'compcare_token')->hideFromIndex(),
         ];
     }
 

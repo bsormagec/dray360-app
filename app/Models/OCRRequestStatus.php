@@ -17,6 +17,7 @@ use Illuminate\Database\Eloquent\Model;
 class OCRRequestStatus extends Model
 {
     const INTAKE_ACCEPTED = 'intake-accepted',
+    INTAKE_ACCEPTED_DATAFILE = 'intake-accepted-datafile',
     INTAKE_EXCEPTION = 'intake-exception',
     INTAKE_REJECTED = 'intake-rejected',
     INTAKE_STARTED = 'intake-started',
@@ -49,6 +50,7 @@ class OCRRequestStatus extends Model
 
     const STATUS_MAP = [
         self::INTAKE_ACCEPTED                    => 'Processing',
+        self::INTAKE_ACCEPTED_DATAFILE           => 'Processing',
         self::OCR_COMPLETED                      => 'Processing',
         self::OCR_WAITING                        => 'Processing',
 

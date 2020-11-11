@@ -24,16 +24,16 @@ Create a file in your home directory, `~/tcvars.sh`, to export the following var
 
 # Set environment variables for local dev workstation
 export GIT_FOLDER=/home/${USER}/repos/tcompanies  # just the root, not! the project folder, not! pbnelson!
-export OM_VHOST=localom
-export OM_HOSTNAME_ALT=local.ordermaster.com
-export OM_VHOST_IP=127.0.0.8 # pick another IP if this is in use already
-export OM_DBNAME=omdb
-export OM_DBUSER=omuser
-export OM_DUMP=
-export OM_REPO=dray360
+export D3_VHOST=locald3
+export D3_HOSTNAME_ALT=local.dray360.com
+export D3_VHOST_IP=127.0.0.8 # pick another IP if this is in use already
+export D3_DBNAME=d3db
+export D3_DBUSER=d3user
+export D3_DUMP=
+export D3_REPO=dray360-app
 
 # don't change this derivative variable
-export OM_ROOT=${GIT_FOLDER}/${OM_REPO}
+export D3_ROOT=${GIT_FOLDER}/${D3_REPO}
 
 ````
 
@@ -43,8 +43,8 @@ If this fails, do not! go any further, stop and get this working.
 
 ````bash
 source ~/tcvars.sh
-cd ${GIT_FOLDER} # this should take you to the place where you want to clone the ordermaster repo
-echo ${OM_REPO} # this should output "ordermaster" to the console
+cd ${GIT_FOLDER} # this should take you to the place where you want to clone the dray360-app repo
+echo ${D3_REPO} # this should output "dray360-app" to the console
 
 ````
 
@@ -58,7 +58,7 @@ This entry in your /etc/hosts file is needed to access the local server
 ##### Draymaster
 ````bash
 source ~/tcvars.sh
-grep ${OM_VHOST_IP} /etc/hosts || echo "${OM_VHOST_IP} ${OM_VHOST} ${OM_HOSTNAME_ALT}" | sudo tee -a /etc/hosts
+grep ${D3_VHOST_IP} /etc/hosts || echo "${D3_VHOST_IP} ${D3_VHOST} ${D3_HOSTNAME_ALT}" | sudo tee -a /etc/hosts
 
 ````
 
@@ -161,20 +161,20 @@ sudo systemctl restart mysql
 
 ##### Create a database
 
-Warning: this will erase any existing local ordermaster database
+Warning: this will erase any existing local dray360 database
 
 Note that this gives a password of 'secret', you may change this if you like.
 
 ````bash
 source ~/tcvars.sh
 sudo mysql --execute "
-    drop database if exists ${OM_DBNAME};
-    create database ${OM_DBNAME};
-    drop database if exists ${OM_DBNAME}_test;
-    create database ${OM_DBNAME}_test;
-    create user if not exists '${OM_DBUSER}'@'%' identified with mysql_native_password by 'secret';
-    grant event, show view, create temporary tables, create view, create routine, alter routine, trigger, references, select, insert, update, delete, create, drop, alter, execute on ${OM_DBNAME}.* to '${OM_DBUSER}'@'%';
-    grant event, show view, create temporary tables, create view, create routine, alter routine, trigger, references, select, insert, update, delete, create, drop, alter, execute on ${OM_DBNAME}_test.* to '${OM_DBUSER}'@'%';
+    drop database if exists ${D3_DBNAME};
+    create database ${D3_DBNAME};
+    drop database if exists ${D3_DBNAME}_test;
+    create database ${D3_DBNAME}_test;
+    create user if not exists '${D3_DBUSER}'@'%' identified with mysql_native_password by 'secret';
+    grant event, show view, create temporary tables, create view, create routine, alter routine, trigger, references, select, insert, update, delete, create, drop, alter, execute on ${D3_DBNAME}.* to '${D3_DBUSER}'@'%';
+    grant event, show view, create temporary tables, create view, create routine, alter routine, trigger, references, select, insert, update, delete, create, drop, alter, execute on ${D3_DBNAME}_test.* to '${D3_DBUSER}'@'%';
 "
 sudo mysql --execute "show databases"
 
@@ -188,7 +188,7 @@ Ask Peter Nelson for a current backup copy of the dev database
 ````bash
 source ~/tcvars.sh
 dumpfilename='~/Downloads/ocr_dev-dump-20200521-132513.sql' # or whatever the latest SQL dump filename is
-pv ${dumpfilename} | sudo mysql ${OM_DBNAME}
+pv ${dumpfilename} | sudo mysql ${D3_DBNAME}
 
 ````
 
@@ -229,8 +229,8 @@ If this git clone fails, you will need to get your SSL keys setup in github. Pet
 
 ````bash
 source ~/tcvars.sh
-git clone git@github.com:tcompanies/ordermaster.git ${OM_ROOT}
-cd ${OM_ROOT} # this should take you into the project source-code folder
+git clone git@github.com:tcompanies/dray360-app.git ${D3_ROOT}
+cd ${D3_ROOT} # this should take you into the project source-code folder
 
 ````
 
@@ -239,7 +239,7 @@ cd ${OM_ROOT} # this should take you into the project source-code folder
 
 ````bash
 source ~/tcvars.sh
-code ${OM_ROOT}/.env
+code ${D3_ROOT}/.env
 ````
 
 ````text
@@ -248,26 +248,26 @@ code ${OM_ROOT}/.env
 
 
 ````bash
-cat <<EOF > ${OM_ROOT}/frontend/.env.development
+cat <<EOF > ${D3_ROOT}/frontend/.env.development
 VUE_APP_APP_URL=http://localhost:8080
-APP_URL=http://local.ordermaster.com
+APP_URL=http://${D3_HOSTNAME_ALT}
 EOF
 
 ````
 
 
 ````bash
-cat <<EOF > ${OM_ROOT}/frontend/.env.production
-VUE_APP_APP_URL=http://local.ordermaster.com
+cat <<EOF > ${D3_ROOT}/frontend/.env.production
+VUE_APP_APP_URL=http://${D3_HOSTNAME_ALT}
 EOF
 
 ````
 
 
 ````bash
-cat <<EOF > ${OM_ROOT}/frontend/.env.test
+cat <<EOF > ${D3_ROOT}/frontend/.env.test
 VUE_APP_APP_URL=http://localhost:8080
-APP_URL=http://local.ordermaster.com
+APP_URL=http://${D3_HOSTNAME_ALT}
 
 VUE_APP_TEST_USER_NAME=testuser
 VUE_APP_TEST_USER_EMAIL=peter+test13@peternelson.com
@@ -285,7 +285,7 @@ Get Nova username and password from Peter Nelson
 
 ````bash
 source ~/tcvars.sh
-cd $OM_ROOT
+cd $D3_ROOT
 composer install
 # when prompted for Nova username/password, ask Peter Nelson
 
@@ -304,7 +304,7 @@ composer install --ignore-platform-reqs ext-pcntl ext-posix
 
 ````bash
 source ~/tcvars.sh
-cd $OM_ROOT/frontend
+cd $D3_ROOT/frontend
 npm install
 npm run build
 
@@ -327,6 +327,7 @@ sudo a2enmod rewrite
 sudo a2enmod proxy_fcgi
 sudo a2enmod proxy_http
 sudo a2enmod setenvif
+sudo a2enmod ssl
 
 sudo a2enconf php7.4-fpm
 
@@ -346,8 +347,8 @@ Link the new project folder to the apache folder
 ````bash
 source ~/tcvars.sh
 
-sudo ln -sf ${OM_ROOT}/public /var/www/html/${OM_VHOST}
-ll /var/www/html/${OM_VHOST}/ # confirm this looks good
+sudo ln -sf ${D3_ROOT}/public /var/www/html/${D3_VHOST}
+ll /var/www/html/${D3_VHOST}/ # confirm this looks good
 
 ````
 
@@ -384,7 +385,7 @@ add_vhost_config() {
 
 source ~/tcvars.sh
 sudo systemctl stop apache2
-add_vhost_config ${OM_VHOST} ${OM_VHOST_IP}
+add_vhost_config ${D3_VHOST} ${D3_VHOST_IP}
 sudo systemctl restart apache2
 
 ````
@@ -407,8 +408,8 @@ id www-data
 sudo usermod -a -G www-data $USER  # make your user a member of Apache's www-data group
 id $USER
 
-touch ${OM_ROOT}/storage/logs/laravel.log # make a default log file
-sudo chmod g+w -R ${OM_ROOT}/storage # give everything in storage folder group-write permissions
+touch ${D3_ROOT}/storage/logs/laravel.log # make a default log file
+sudo chmod g+w -R ${D3_ROOT}/storage # give everything in storage folder group-write permissions
 
 sudo systemctl restart apache2
 
@@ -421,7 +422,7 @@ sudo systemctl restart apache2
 
 ````bash
 source ~/tcvars.sh
-cd ${OM_ROOT}/frontend
+cd ${D3_ROOT}/frontend
 npm run serve
 
 ````
@@ -444,7 +445,7 @@ source ~/tcvars.sh
 sudo tail \
   -f /var/log/apache2/error.log \
   -f /var/log/php7.4-fpm.log \
-  -f ${OM_ROOT}/storage/logs/laravel.log
+  -f ${D3_ROOT}/storage/logs/laravel.log
 
 ````
 
@@ -456,7 +457,7 @@ It should be possible to make a completely empty, fresh database with these comm
 
 ````bash
 source ~/tcvars.sh
-cd ${OM_ROOT}
+cd ${D3_ROOT}
 php artisan db:createmysql
 php artisan db:seed
 

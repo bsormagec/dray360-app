@@ -16,7 +16,7 @@ use Illuminate\Validation\ValidationException;
 class OCRRequestController extends Controller
 {
     // only these image file extension types are accepted
-    const VALID_IMAGE_TYPES = ['jpeg', 'png', 'jpg', 'tif', 'tiff', 'bmp', 'pdf'];
+    const VALID_FILE_TYPES = ['jpeg', 'png', 'jpg', 'tif', 'tiff', 'bmp', 'pdf', 'csv', 'xlsx', 'edi'];
 
     // use this suffix on all uploaded files (to trigger S3 lambda process)
     const MANUAL_UPLOAD_PREFIX = 'intakeupload/';
@@ -34,28 +34,15 @@ class OCRRequestController extends Controller
         return OcrRequestJson::collection($ocrRequests);
     }
 
-    public function destroy($ocrRequest)
-    {
-        $ocrRequest = OCRRequest::where('request_id', $ocrRequest)->firstOrFail();
-
-        $this->authorize('delete', $ocrRequest);
-
-        tap($ocrRequest, function ($ocrRequest) {
-            $ocrRequest->orders->each->delete();
-        })->delete();
-
-        return response()->noContent();
-    }
-
-    public function createOCRRequestUploadURI(Request $request)
+    public function store(Request $request)
     {
         // validate that filename parameter was provided
         $request->validate(['filename' => 'required|string']);
         $originalFilename = $request->filename;
         $extension = strtolower((new \SplFileInfo($originalFilename))->getExtension());
 
-        if (! in_array($extension, self::VALID_IMAGE_TYPES)) {
-            $extensionList = implode(',', self::VALID_IMAGE_TYPES);
+        if (! in_array($extension, self::VALID_FILE_TYPES)) {
+            $extensionList = implode(',', self::VALID_FILE_TYPES);
             throw ValidationException::withMessages([
                 'filename' => "Invalid file extension '{$extension}'. Must be one of: '{$extensionList}'",
             ]);
@@ -74,6 +61,8 @@ class OCRRequestController extends Controller
                 'upload_uri' => $uploadRequestUri,
                 'company_id' => currentCompany()->id ?? Company::TCOMPANIES_DEMO,
                 'user_id' => auth()->user()->id,
+                'variant_name' => $request->get('variant_name'),
+                'datetime_utciso' => now()->toISOString(),
             ];
 
             OCRRequestStatus::createUploadRequest($responseData);
@@ -88,6 +77,19 @@ class OCRRequestController extends Controller
                 'trace' => $e->getTraceAsString()
             ], 500);
         }
+    }
+
+    public function destroy($ocrRequest)
+    {
+        $ocrRequest = OCRRequest::where('request_id', $ocrRequest)->firstOrFail();
+
+        $this->authorize('delete', $ocrRequest);
+
+        tap($ocrRequest, function ($ocrRequest) {
+            $ocrRequest->orders->each->delete();
+        })->delete();
+
+        return response()->noContent();
     }
 
     protected function getUploadingFilename(string $requestId, string $originalFilename): string

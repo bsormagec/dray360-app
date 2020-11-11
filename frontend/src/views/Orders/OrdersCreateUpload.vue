@@ -22,7 +22,7 @@
       />
 
       <span class="input__legend">
-        <strong>Supported file type:</strong> PDF
+        <strong>Supported file type:</strong> PDF, XLSX, CSV
       </span>
     </div>
 
@@ -64,7 +64,7 @@ export default {
   },
 
   data: () => ({
-    accept: '.pdf'
+    accept: '.pdf,.xlsx,.csv,.edi'
   }),
 
   methods: {
@@ -131,7 +131,7 @@ export default {
   font-weight: 700;
   color: map-get($colors, grey-4);
 
-  @media screen and (min-width: map-get($breakpoints, med)) {
+  @include media("med") {
     font-size: rem(12) !important;
   }
 }

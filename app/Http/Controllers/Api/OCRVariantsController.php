@@ -6,6 +6,8 @@ use App\Models\OCRVariant;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use App\Http\Controllers\Controller;
+use Spatie\QueryBuilder\QueryBuilder;
+use Spatie\QueryBuilder\AllowedFilter;
 use Illuminate\Http\Resources\Json\JsonResource;
 
 class OCRVariantsController extends Controller
@@ -14,7 +16,23 @@ class OCRVariantsController extends Controller
     {
         $this->authorize('viewAny', OCRVariant::class);
 
-        return JsonResource::collection(OCRVariant::paginate(2500));
+        $ocrVariants = QueryBuilder::for(OCRVariant::class)
+            ->allowedFilters([
+                'abbyy_variant_name',
+                'description',
+                'variant_type',
+                AllowedFilter::callback('company_id', function ($query, $value) {
+                    $query->whereJsonContains('company_id_list', intval($value));
+                }),
+            ])
+            ->allowedSorts([
+                'abbyy_variant_name',
+                'abbyy_variant_id',
+                'description',
+            ])
+            ->paginate(2500);
+
+        return JsonResource::collection($ocrVariants);
     }
 
     /**
