@@ -132,7 +132,7 @@ export default {
     async fetchRoles () {
       const status = await this[types.getRoles]()
 
-      if (status === reqStatus.successs) {
+      if (status === reqStatus.success) {
         console.log('success')
       } else {
         console.log('error')
