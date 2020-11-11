@@ -24,7 +24,11 @@ export function getHighlights (order) {
         highlightKey = `order_line_items.${i}`
         getOcrKey = 'order_line_items'
 
-        highlights[highlightKey] = baseHighlight(getOcrData(getOcrKey, order.ocr_data))
+        if (i === 0) {
+          highlights[highlightKey] = baseHighlight(getOcrData(getOcrKey, order.ocr_data))
+        } else {
+          highlights[highlightKey] = baseHighlight({ recognizedText: '' })
+        }
       })
       continue
     }
