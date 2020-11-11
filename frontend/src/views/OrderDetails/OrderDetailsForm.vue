@@ -301,6 +301,7 @@
             :recognized-text="order.bill_to_address_raw_text"
             :verified="order.bill_to_address_verified"
             :matched-address="order.bill_to_address"
+            references="bill_to_address"
             billable
             @change="(e) => handleChange('bill_to_address', e)"
           />
@@ -357,6 +358,7 @@
             :recognized-text="orderAddressEvent.t_address_raw_text"
             :verified="orderAddressEvent.t_address_verified || false"
             :matched-address="orderAddressEvent.address"
+            :references="`order_address_events.${index}`"
             @change="(e) => handleChange(`order_address_events.${index}`, e)"
           />
         </Fragment>
