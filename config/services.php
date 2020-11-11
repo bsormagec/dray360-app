@@ -1,7 +1,5 @@
 <?php
 
-use App\Models\Company;
-use Illuminate\Support\Str;
 
 return [
 
@@ -35,36 +33,6 @@ return [
 
     'ripcms' => [
         'url' => 'https://www.ripcms.com/',
-        Str::snake(Company::CUSHING) => [
-            'username' => env('RIP_CMS_CUSHING_USERNAME'),
-            'password' => env('RIP_CMS_CUSHING_PASSWORD'),
-            'token' => env('RIP_CMS_CUSHING_TOKEN'),
-        ],
-        Str::snake(Company::TCOMPANIES_DEMO) => [
-            'username' => env('RIP_CMS_TCOMPANIES_DEMO_USERNAME'),
-            'password' => env('RIP_CMS_TCOMPANIES_DEMO_PASSWORD'),
-            'token' => env('RIP_CMS_TCOMPANIES_DEMO_TOKEN'),
-        ],
-        Str::snake(Company::IXT_ONBOARDING) => [
-            'username' => env('RIP_CMS_IXT_ONBOARDING_USERNAME'),
-            'password' => env('RIP_CMS_IXT_ONBOARDING_PASSWORD'),
-            'token' => env('RIP_CMS_IXT_ONBOARDING_TOKEN'),
-        ],
-        Str::snake(Company::IXT) => [
-            'username' => env('RIP_CMS_IXT_USERNAME'),
-            'password' => env('RIP_CMS_IXT_PASSWORD'),
-            'token' => env('RIP_CMS_IXT_TOKEN'),
-        ],
-        Str::snake(Company::PORT_CITY_LOGISTICS_ONBOARDING) => [
-            'username' => env('RIP_CMS_PORT_CITY_LOGISTICS_ONBOARDING_USERNAME'),
-            'password' => env('RIP_CMS_PORT_CITY_LOGISTICS_ONBOARDING_PASSWORD'),
-            'token' => env('RIP_CMS_PORT_CITY_LOGISTICS_ONBOARDING_TOKEN'),
-        ],
-        Str::snake(Company::PORT_CITY_LOGISTICS) => [
-            'username' => env('RIP_CMS_PORT_CITY_LOGISTICS_USERNAME'),
-            'password' => env('RIP_CMS_PORT_CITY_LOGISTICS_PASSWORD'),
-            'token' => env('RIP_CMS_PORT_CITY_LOGISTICS_TOKEN'),
-        ],
     ],
 
     'search-address' => [

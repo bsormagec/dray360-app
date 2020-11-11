@@ -2,8 +2,7 @@
   <div :class="`details ${loaded && 'loaded'} ${isMobile && 'mobile'}`">
     <ContentLoading :loaded="loaded">
       <div :class="`details__content ${isMobile && 'mobile'}`">
-        <DetailsSidebar />
-
+          <SidebarNavigation />
         <div
           :class="`details__form ${isMobile && 'mobile'}`"
           :style="{ minWidth: `${resizeDiff}%` }"
@@ -14,9 +13,7 @@
             class="form__resize"
             @mousedown.prevent="handleResize"
           >
-            <div />
-            <div />
-            <div />
+            <div role="presentation" />
           </div>
         </div>
 
@@ -32,6 +29,7 @@ import DetailsSidebar from '@/views/OrderDetails/DetailsSidebar'
 import OrderDetailsForm from '@/views/OrderDetails/OrderDetailsForm'
 import OrderDetailsDocument from '@/views/OrderDetails/OrderDetailsDocument'
 import { reqStatus } from '@/enums/req_status'
+import SidebarNavigation from '@/components/General/SidebarNavigation'
 
 import ContentLoading from '@/components/ContentLoading'
 import orders, { types } from '@/store/modules/orders'
@@ -45,7 +43,8 @@ export default {
     DetailsSidebar,
     OrderDetailsDocument,
     ContentLoading,
-    OrderDetailsForm
+    OrderDetailsForm,
+    SidebarNavigation
   },
 
   mixins: [isMobile],
@@ -139,6 +138,17 @@ export default {
 .details__form {
   position: relative;
   transition: width 300ms ease;
+  
+  &::after {
+    content: "";
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    width: rem(12px);
+    background: linear-gradient(90deg, rgba(0, 0, 0, 0.1) 0%, rgba(0, 0, 0, 0.05) 31.77%, rgba(0, 0, 0, 0) 100%);
+    transform: translateX(#{rem(12)});
+  }
 
   &.mobile {
     height: 50vh;
@@ -146,26 +156,40 @@ export default {
 }
 
 .form__resize {
-  z-index: 2;
-  cursor: col-resize;
   position: absolute;
   top: 50%;
-  right: rem(15);
-  transform: translateY(-50%);
-  transition: transform 200ms ease-in-out;
-  display: flex;
-
-  &:active {
-    transform: translateY(-50%) scale(0.8);
-  }
+  right: 0;
+  height: rem(60);
+  width: rem(10);
+  transform: translateY(-50%) translateX(100%) translateX(#{rem(8)});
+  cursor: col-resize;
+  z-index: 2;
 
   div {
-    width: rem(2);
+    position: absolute;
+    top: 0;
+    left: 0;
     height: rem(60);
-    background: white;
+    width: rem(2);
+    font-size: 0;
+    background-color: #BFCCD6;
 
-    &:not(:last-child) {
-      margin-right: rem(2);
+    &::after,
+    &::before {
+      content: "";
+      position: absolute;
+      top: 0;
+      width: rem(2);
+      height: rem(60);
+      background-color: #BFCCD6;
+    }
+
+    &::after {
+      transform: translateX(#{rem(4)});
+    }
+
+    &::before {
+      transform: translateX(#{rem(8)});
     }
   }
 }

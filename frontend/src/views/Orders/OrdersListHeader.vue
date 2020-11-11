@@ -1,11 +1,6 @@
 <template>
   <div class="header">
     <h5 class="header__title">
-      <v-icon
-        @click="toggleMobileSidebar"
-      >
-        mdi-menu
-      </v-icon>
       Orders
     </h5>
 
@@ -196,7 +191,7 @@ export default {
   font-size: rem(26);
 
   button {
-    @media screen and (min-width: map-get($breakpoints, med)) {
+    @include media("med") {
       display: none;
     }
   }

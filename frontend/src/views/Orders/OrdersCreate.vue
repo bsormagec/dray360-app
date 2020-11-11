@@ -25,6 +25,19 @@
       :delete-all="deleteAll"
     />
 
+    <div v-if="shouldAskForVariantName">
+      <v-autocomplete
+        v-model="variantName"
+        :items="variants"
+        item-value="abbyy_variant_name"
+        item-text="description"
+        label="Variant name"
+        outlined
+        clearable
+        dense
+      />
+    </div>
+
     <OrdersCreateSubmitted
       :files="files"
       :delete-file="deleteFile"
@@ -44,9 +57,16 @@
 <script>
 import OrdersCreateUpload from '@/views/Orders/OrdersCreateUpload'
 import OrdersCreateSubmitted from '@/views/Orders/OrdersCreateSubmitted'
-import orders, { types } from '@/store/modules/orders'
-import { mapActions } from 'vuex'
-import { reqStatus } from '@/enums/req_status'
+
+import { postUploadPDF } from '@/store/api_calls/orders'
+import { getVariantList } from '@/store/api_calls/rules_editor'
+import utils, { type } from '@/store/modules/utils'
+import auth from '@/store/modules/auth'
+import { mapActions, mapState } from 'vuex'
+
+import { getVariantTypeFromFile, isPdf } from '@/utils/files_uploads'
+import uniq from 'lodash/uniq'
+import uniqBy from 'lodash/uniqBy'
 
 export default {
   name: 'OrdersCreate',
@@ -64,11 +84,44 @@ export default {
   },
 
   data: () => ({
-    files: []
+    files: [],
+    variantName: null,
+    variants: []
   }),
 
+  computed: {
+    ...mapState(auth.moduleName, { currentUser: state => state.currentUser }),
+    shouldAskForVariantName () {
+      for (let index = 0; index < this.files.length; index++) {
+        if (!isPdf(this.files[index])) {
+          return true
+        }
+      }
+      return false
+    }
+  },
+
+  watch: {
+    files: async function (files) {
+      const types = []
+
+      files.forEach(file => {
+        types.push(getVariantTypeFromFile(file))
+      })
+
+      if (uniq(types).join('') === 'ocr') return
+
+      const [error, data] = await getVariantList({
+        'filter[company_id]': this.currentUser.t_company_id,
+        'filter[variant_type]': uniq(types).join(','),
+        sort: 'description'
+      })
+      this.variants = data
+    }
+  },
+
   methods: {
-    ...mapActions(orders.moduleName, [types.postUploadPDF]),
+    ...mapActions(utils.moduleName, { setSnackbar: type.setSnackbar }),
 
     deleteFile (file) {
       this.files = this.files.filter(f => f.name !== file.name)
@@ -79,37 +132,57 @@ export default {
     },
 
     addFiles (newFiles) {
-      const filtered = [...this.files, ...newFiles].filter(f => f.type === 'application/pdf')
-      const unique = []
-      const uniqueNames = []
-
-      filtered.forEach(fil => {
-        if (uniqueNames.includes(fil.name)) return
-        uniqueNames.push(fil.name)
-        unique.push(fil)
-      })
-
-      this.files = unique
+      const acceptedMimeTypes = [
+        'application/pdf',
+        'text/csv',
+        'text/plain',
+        'application/wps-office.xlsx',
+        'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+        'application/EDI-X12',
+        'application/EDIFACT',
+        'application/EDI-consent',
+        ''
+      ]
+      const filtered = [...this.files, ...newFiles].filter(f => acceptedMimeTypes.includes(f.type))
+      this.files = uniqBy(filtered, 'name')
     },
 
     async uploadFile (file) {
-      const status = await this[types.postUploadPDF](file)
+      const [error] = await postUploadPDF(file, this.variantName)
 
-      if (status === reqStatus.success) {
-        console.log('upload file success')
-      } else {
-        console.log('error uploading file')
+      if (error !== undefined) {
+        this.setSnackbar({
+          message: 'There was an error uploading the file',
+          show: true
+        })
+        return
       }
+
+      this.setSnackbar({
+        message: 'File uploaded successfully',
+        show: true
+      })
     },
 
     createOrder () {
-      console.log('vc.files: ', this.files)
       if (this.files.length === 0) {
-        alert('Please select a PDF to upload first')
+        this.setSnackbar({
+          message: 'Please select a file to upload first',
+          show: true
+        })
+        return
+      }
+
+      if (this.shouldAskForVariantName && (this.variantName === '' || this.variantName === null || this.variantName === undefined)) {
+        this.setSnackbar({
+          message: 'Please specify a variant name',
+          show: true
+        })
         return
       }
 
       this.files.forEach(file => this.uploadFile(file))
+      this.variantName = null
       this.files = []
     }
   }
@@ -124,7 +197,7 @@ export default {
   padding: rem(50) rem(10);
   overflow-x: hidden;
 
-  @media screen and (min-width: map-get($breakpoints, med)) {
+  @include media("med") {
     min-width: 25%;
     max-width: 25%;
     box-shadow: map-get($properties, inset-shadow-left);
@@ -133,13 +206,13 @@ export default {
     padding-bottom: rem(30);
   }
 
-  @media screen and (min-width: map-get($breakpoints, lg)) {
+  @include media("lg") {
     padding: rem(52) rem(36);
   }
 }
 
 .create__close {
-  @media screen and (min-width: map-get($breakpoints, med)) {
+  @include media("med") {
     display: none;
   }
 }

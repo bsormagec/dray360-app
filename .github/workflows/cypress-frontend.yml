@@ -1,15 +1,16 @@
 name: cypress-frontend
 
-on: [push]
+on: [pull_request]
 
 jobs:
   cypress-run:
-    runs-on: ubuntu-16.04
+    runs-on: ubuntu-20.04
     steps:
       - uses: actions/checkout@v1
       - uses: cypress-io/github-action@v2
         with:
           browser: chrome
           headless: true
-          start: npm run serve & wait-on http://localhost:8080
+          start: npm run serve
+          wait-on: 'http://localhost:8080'
           working-directory: frontend

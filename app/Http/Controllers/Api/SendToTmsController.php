@@ -3,24 +3,21 @@
 namespace App\Http\Controllers\Api;
 
 use App\Models\Order;
-use Illuminate\Http\Request;
 use Illuminate\Http\Response;
-use Illuminate\Validation\Rule;
+use App\Models\OCRRequestStatus;
 use App\Http\Controllers\Controller;
 use App\Actions\PublishSnsMessageToSendToTms;
 use Illuminate\Validation\ValidationException;
 
 class SendToTmsController extends Controller
 {
-    const VALID_STATUSES = ['sending-to-wint'];
-
-    public function __invoke(Request $request)
+    public function __invoke($orderId)
     {
-        $data = $request->validate([
-            'status' => ['required', 'string', Rule::in(self::VALID_STATUSES)],
-            'order_id' => 'required|integer|exists:t_orders,id',
-        ]);
-        $order = $this->getOrder($data['order_id']);
+        $data = [
+            'order_id' => $orderId,
+            'status' => OCRRequestStatus::SENDING_TO_WINT,
+        ];
+        $order = $this->getOrder($orderId);
         $this->authorize('sendToTms', $order);
 
         // Do not validate that addresses are all verified=true, for now (July 7th, 2020, PBN)

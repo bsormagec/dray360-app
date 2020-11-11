@@ -63,7 +63,7 @@ export default {
         width: '60px'
       },
       { text: 'Bill to', value: 'order.bill_to_address.location_name', width: '85px' },
-      { text: 'Reference Number.', value: 'order.reference_number', width: '60px' },
+      { text: 'Reference Number', value: 'order.reference_number', width: '60px' },
       { text: 'Container Number', value: 'order.unit_number', width: '60px' },
       { text: 'TMS ID', value: 'order.tms_shipment_id', width: '60px' },
       {
@@ -77,6 +77,7 @@ export default {
     ],
     statuses: [
       { text: 'intake-accepted', value: 'intake-accepted' },
+      { text: 'intake-accepted-datafile', value: 'intake-accepted-datafile' },
       { text: 'intake-exception', value: 'intake-exception' },
       { text: 'intake-rejected', value: 'intake-rejected' },
       { text: 'intake-started', value: 'intake-started' },
@@ -129,10 +130,9 @@ export default {
   flex-grow: unset;
   width: 100%;
 
-  @media screen and (min-width: map-get($breakpoints, med)) {
-    // padding: 5.2rem 3.2rem;
+  @include media("med") {
     padding: rem(52) rem(32);
-    padding-left: rem(map-get($sizes, sidebar-desktop-width)) + rem(80);
+    padding-left: rem(map-get($sizes, sidebar-desktop-width) + 32);
   }
 }
 </style>

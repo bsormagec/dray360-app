@@ -14,7 +14,7 @@ export const getRuleCode = async (index, companyId, variantId) => axios.get('/ap
 
 export const getCompanyList = async () => axios.get('/api/companies').then(data => [undefined, data.data.data]).catch(e => [e])
 
-export const getVariantList = async () => axios.get('/api/ocr/variants').then(data => [undefined, data.data.data]).catch(e => [e])
+export const getVariantList = async (params = {}) => axios.get('/api/ocr/variants', { params }).then(data => [undefined, data.data.data]).catch(e => [e])
 
 export const getTestingOutput = async (orderId, singleCompanyVariantRule) => axios.get('/api/orders/' + orderId)
   .then(function (response) {

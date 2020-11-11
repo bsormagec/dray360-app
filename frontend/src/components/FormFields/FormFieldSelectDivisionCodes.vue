@@ -54,22 +54,24 @@ export default {
     if (!error) {
       this.divisionCodes = response.data
       const found = this.divisionCodes.find(element => element.division_code === this.value)
-      this.division_name = found.division_name
+      found !== undefined ? this.division_name = found.division_name : this.division_name = '--'
     }
     this.loading = false
   },
-
+ 
   methods: {
     handleChange (e) {
       this.currentValue = e
       if (this.editMode && this.references) {
-        this.$emit('change', this.currentValue)
+        this.$emit('change', this.currentValue !== undefined ? this.currentValue : ' ')
+        const found = this.divisionCodes.find(element => element.division_code === this.currentValue)
+        found !== undefined ? this.division_name = found.division_name : this.division_name = ''
       }
     },
     handleAccept () {
-      this.$emit('change', this.currentValue)
+      this.$emit('change', this.currentValue !== undefined ? this.currentValue : ' ')
       const found = this.divisionCodes.find(element => element.division_code === this.currentValue)
-      this.division_name = found.division_name
+      found !== undefined ? this.division_name = found.division_name : this.division_name = ''
     }
   }
 }

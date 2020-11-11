@@ -65,7 +65,7 @@ const routes = [
     path: '/user/edit-profile',
     name: 'EditProfile',
     meta: {
-      middleware: [auth, permission('users-view')]
+      middleware: [auth]
     },
     component: EditProfile
   },
@@ -154,7 +154,7 @@ const routes = [
   },
   {
     path: '/email-confirmation',
-    name: 'Forgot Password',
+    name: 'Email Confirmation',
     component: EmailConfirmation,
     meta: {
       middleware: [LoggedOut]

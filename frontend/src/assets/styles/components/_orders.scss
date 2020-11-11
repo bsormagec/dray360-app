@@ -39,7 +39,7 @@
     button {
       min-width: rem(40) !important;
     
-      @media screen and (min-width: map-get($breakpoints, med)) {
+      @include media("med") {
         min-width: rem(64) !important;
       }
     }

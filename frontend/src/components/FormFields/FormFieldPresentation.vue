@@ -106,17 +106,11 @@ export default {
 .form-field-presentation {
   .field__group {
     display: flex;
+    padding: rem(7) rem(10) rem(5);
     width: 100%;
     height: 100%;
     justify-content: space-between;
     align-items: center;
-  }
-
-  .field__name,
-  .field__children .field__name {
-    font-size: rem(14) !important;
-    font-weight: bold;
-    text-transform: capitalize;
   }
 
   .field__name {
@@ -129,12 +123,6 @@ export default {
     word-break: break-word;
     width: 40%;
     transition: opacity 200ms ease-in-out;
-  }
-
-  .field__value,
-  .field__children .field__value {
-    font-size: rem(14.4) !important;
-    text-transform: capitalize;
   }
 
   .field__children {
@@ -150,7 +138,6 @@ export default {
     align-items: center;
     width: 100%;
     min-height: rem(30);
-    margin-bottom: rem(11);
     border: rem(1) solid map-get($colors, white);
     border-radius: rem(2);
     transition: all 200ms ease-in-out;
@@ -166,10 +153,7 @@ export default {
     }
 
     &.edit {
-      // min-height: 10rem;
-      // &.input, &.text-area {
-        min-height: unset;
-      // }
+      min-height: unset;
     }
   }
 
@@ -178,11 +162,7 @@ export default {
       width: 100%;
       display: flex;
       align-items: center;
-      // padding: 1rem 3rem 0rem 1rem;
-
-      // &.input, &.text-area {
-        padding: unset;
-      // }
+      padding: unset;
     }
   }
 }

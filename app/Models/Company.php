@@ -59,11 +59,17 @@ class Company extends Model
         'blackfly_imagetype',
         'ripcms_username',
         'ripcms_password',
+        'compcare_organization_id',
+        'compcare_username',
+        'compcare_password',
+        'compcare_token',
     ];
 
     protected $encryptable = [
         'blackfly_token',
         'ripcms_password',
+        'compcare_password',
+        'compcare_token',
     ];
 
     /**

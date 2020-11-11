@@ -29,25 +29,25 @@ class DivisionCodeSeeder extends Seeder
     const T_DIVISION_CODE_OVERRIDES = [
 
         // cushing / profittools
+        ['t_tms_provider_id' => TMSProvider::PROFIT_TOOLS,  't_company_id' => Company::CUSHING,  'division_name' => 'PEPSICO'                         , 'division_code' => '2202'                 ],
+        ['t_tms_provider_id' => TMSProvider::PROFIT_TOOLS,  't_company_id' => Company::CUSHING,  'division_name' => 'Orland Park'                     , 'division_code' => '2204'                 ],
+        ['t_tms_provider_id' => TMSProvider::PROFIT_TOOLS,  't_company_id' => Company::CUSHING,  'division_name' => 'JB HUNT INTERMODAL'              , 'division_code' => '2205'                 ],
+        ['t_tms_provider_id' => TMSProvider::PROFIT_TOOLS,  't_company_id' => Company::CUSHING,  'division_name' => 'Orland Park (OCC)'               , 'division_code' => '2206'                 ],
         ['t_tms_provider_id' => TMSProvider::PROFIT_TOOLS,  't_company_id' => Company::CUSHING,  'division_name' => 'Crosstowns'                      , 'division_code' => '2207'                 ],
         ['t_tms_provider_id' => TMSProvider::PROFIT_TOOLS,  't_company_id' => Company::CUSHING,  'division_name' => 'Crosstowns (OCC)'                , 'division_code' => '2208'                 ],
-        ['t_tms_provider_id' => TMSProvider::PROFIT_TOOLS,  't_company_id' => Company::CUSHING,  'division_name' => 'Orland Park'                     , 'division_code' => '2204'                 ],
-        ['t_tms_provider_id' => TMSProvider::PROFIT_TOOLS,  't_company_id' => Company::CUSHING,  'division_name' => 'Orland Park (OCC)'               , 'division_code' => '2206'                 ],
+        ['t_tms_provider_id' => TMSProvider::PROFIT_TOOLS,  't_company_id' => Company::CUSHING,  'division_name' => 'JB HUNT XTOWNS'                  , 'division_code' => '2210'                 ],
 
+        ['t_tms_provider_id' => TMSProvider::PROFIT_TOOLS,  't_company_id' => Company::TCOMPANIES_DEMO,  'division_name' => 'PEPSICO'                 , 'division_code' => '2202'                 ],
+        ['t_tms_provider_id' => TMSProvider::PROFIT_TOOLS,  't_company_id' => Company::TCOMPANIES_DEMO,  'division_name' => 'Orland Park'             , 'division_code' => '2204'                 ],
+        ['t_tms_provider_id' => TMSProvider::PROFIT_TOOLS,  't_company_id' => Company::TCOMPANIES_DEMO,  'division_name' => 'JB HUNT INTERMODAL'      , 'division_code' => '2205'                 ],
+        ['t_tms_provider_id' => TMSProvider::PROFIT_TOOLS,  't_company_id' => Company::TCOMPANIES_DEMO,  'division_name' => 'Orland Park (OCC)'       , 'division_code' => '2206'                 ],
         ['t_tms_provider_id' => TMSProvider::PROFIT_TOOLS,  't_company_id' => Company::TCOMPANIES_DEMO,  'division_name' => 'Crosstowns'              , 'division_code' => '2207'                 ],
         ['t_tms_provider_id' => TMSProvider::PROFIT_TOOLS,  't_company_id' => Company::TCOMPANIES_DEMO,  'division_name' => 'Crosstowns (OCC)'        , 'division_code' => '2208'                 ],
-        ['t_tms_provider_id' => TMSProvider::PROFIT_TOOLS,  't_company_id' => Company::TCOMPANIES_DEMO,  'division_name' => 'Orland Park'             , 'division_code' => '2204'                 ],
-        ['t_tms_provider_id' => TMSProvider::PROFIT_TOOLS,  't_company_id' => Company::TCOMPANIES_DEMO,  'division_name' => 'Orland Park (OCC)'       , 'division_code' => '2206'                 ],
+        ['t_tms_provider_id' => TMSProvider::PROFIT_TOOLS,  't_company_id' => Company::TCOMPANIES_DEMO,  'division_name' => 'JB HUNT XTOWNS'          , 'division_code' => '2210'                 ],
 
-        ['t_tms_provider_id' => TMSProvider::PROFIT_TOOLS,  't_company_id' => Company::IXT_ONBOARDING,  'division_name' => 'Crosstowns'               , 'division_code' => '2207'                 ],
-        ['t_tms_provider_id' => TMSProvider::PROFIT_TOOLS,  't_company_id' => Company::IXT_ONBOARDING,  'division_name' => 'Crosstowns (OCC)'         , 'division_code' => '2208'                 ],
-        ['t_tms_provider_id' => TMSProvider::PROFIT_TOOLS,  't_company_id' => Company::IXT_ONBOARDING,  'division_name' => 'Orland Park'              , 'division_code' => '2204'                 ],
-        ['t_tms_provider_id' => TMSProvider::PROFIT_TOOLS,  't_company_id' => Company::IXT_ONBOARDING,  'division_name' => 'Orland Park (OCC)'        , 'division_code' => '2206'                 ],
+        ['t_tms_provider_id' => TMSProvider::PROFIT_TOOLS,  't_company_id' => Company::IXT_ONBOARDING,  'division_name' => 'IXT'                      , 'division_code' => '2201'                 ],
 
-        ['t_tms_provider_id' => TMSProvider::PROFIT_TOOLS,  't_company_id' => Company::IXT,  'division_name' => 'Crosstowns'                          , 'division_code' => '2207'                 ],
-        ['t_tms_provider_id' => TMSProvider::PROFIT_TOOLS,  't_company_id' => Company::IXT,  'division_name' => 'Crosstowns (OCC)'                    , 'division_code' => '2208'                 ],
-        ['t_tms_provider_id' => TMSProvider::PROFIT_TOOLS,  't_company_id' => Company::IXT,  'division_name' => 'Orland Park'                         , 'division_code' => '2204'                 ],
-        ['t_tms_provider_id' => TMSProvider::PROFIT_TOOLS,  't_company_id' => Company::IXT,  'division_name' => 'Orland Park (OCC)'                   , 'division_code' => '2206'                 ],
+        ['t_tms_provider_id' => TMSProvider::PROFIT_TOOLS,  't_company_id' => Company::IXT,  'division_name' => 'IXT'                                 , 'division_code' => '2201'                 ],
 
         ['t_tms_provider_id' => TMSProvider::PROFIT_TOOLS,  't_company_id' => Company::PORT_CITY_LOGISTICS_ONBOARDING,  'division_name' => 'Trucking' , 'division_code' => '2201'                 ],
         ['t_tms_provider_id' => TMSProvider::PROFIT_TOOLS,  't_company_id' => Company::PORT_CITY_LOGISTICS_ONBOARDING,  'division_name' => 'Van'      , 'division_code' => '2202'                 ],

@@ -17,7 +17,11 @@ class OCRVariant extends Model
     public $fillable = [
         'abbyy_variant_name',
         'abbyy_variant_id',
-        'description'
+        'description',
+        'variant_type',
+        'classification',
+        'mapping',
+        'company_id_list',
     ];
 
     /**
@@ -25,7 +29,11 @@ class OCRVariant extends Model
      *
      * @var array
      */
-    protected $casts = [];
+    protected $casts = [
+        'company_id_list' => 'json',
+        'classification' => 'json',
+        'mapping' => 'json',
+    ];
 
     /**
      * Validation rules

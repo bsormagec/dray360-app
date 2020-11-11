@@ -82,8 +82,8 @@ Route::group(['middleware' => ['auth:sanctum', 'impersonate', 'tenant-aware']], 
     Route::get('search-address', SearchAddressController::class)
         ->name('search-address');
 
-    Route::post('send-to-tms', SendToTmsController::class)
-        ->name('send-to-tms');
+    Route::post('orders/{order}/send-to-tms', SendToTmsController::class)
+        ->name('orders.send-to-tms');
 
     Route::get('orders/{order}/download-pdf', DownloadOriginalOrderPdfController::class)
         ->name('orders.download-pdf');
@@ -123,10 +123,6 @@ Route::group(['middleware' => ['auth:sanctum', 'impersonate', 'tenant-aware']], 
     Route::put('companies/{company}/variants/{variant}/accesorials', [AccesorialCompaniesController::class, 'update'])
         ->name('company-variants-accessorials.put');
 
-    // Authenticated route to get document upload URI
-    Route::post('createocrrequestuploaduri', [OCRRequestController::class, 'createOCRRequestUploadURI'])
-        ->name('createocruploaduri');
-
     // Reprocess the given OCR request
     Route::post('ocr/requests/{request_id}/reprocess', OcrRequestReprocessController::class)
         ->name('ocr.requests.reprocess');
@@ -134,7 +130,7 @@ Route::group(['middleware' => ['auth:sanctum', 'impersonate', 'tenant-aware']], 
     // CRUD for OCR Request
     Route::apiResource('ocr/requests', OCRRequestController::class, ['as' => 'ocr'])
         ->parameters(['requests' => 'ocrRequest'])
-        ->only(['index', 'destroy']);
+        ->only(['index', 'store', 'destroy']);
 
     // CRUD for OCR Rules
     Route::apiResource('ocr/rules', OCRRulesController::class, ['as' => 'ocr'])

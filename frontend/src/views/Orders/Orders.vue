@@ -74,6 +74,7 @@ export default {
       statusQuery: [
         // 'intake-rejected', // DO NOT INCLUDE THIS IN DEFAULT LIST:
         'intake-accepted',
+        'intake-accepted-datafile',
         'intake-exception',
         'intake-started',
         'ocr-completed',
@@ -212,7 +213,7 @@ export default {
       const search = `?filter[created_between]=${dateQuery}&filter[status]=${statusQuery}&filter[query]=${filterQuery}&page=${page}`
 
       if (location.search !== search) {
-        this.$router.replace(search)
+        this.$router.replace(search).catch(err => {})
       }
     },
 

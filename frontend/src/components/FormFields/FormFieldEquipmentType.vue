@@ -2,15 +2,14 @@
   <!--  eslint-disable vue/no-v-html -->
   <div>
     <div>
-      <div class="EquipmentType mb-2">
+      <div class="EquipmentType">
         <div class="field__name">
           SSL Container Type
         </div>
 
-        <div>
+        <div class="equipment__section">
           <div
             v-if="!verified && equipmentType === null"
-            class="equipment__section mb-2"
           >
             <v-icon color="error">
               mdi-alert-outline
@@ -23,7 +22,6 @@
           </div>
           <div
             v-if="!verified && equipmentType !== null"
-            class="equipment__section mb-2"
           >
             <v-icon color="warning">
               mdi-alert-outline
@@ -41,8 +39,7 @@
           <v-btn
             color="primary"
             outlined
-            right
-            class="px-5"
+            small
             @click="toggledialg"
           >
             {{ equipmentType === null ? 'Select' : 'Select Different' }}
@@ -264,61 +261,61 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.title__dialog{
+.title__dialog {
   color: map-get($colors, slate-gray );
   font-size: rem(20);
   line-height: rem(23.44);
   letter-spacing: rem(0.15);
   font-weight: 500;
 }
-.equipment__section{
-  font-weight: bold;
-  font-size: rem(14) !important;
-  letter-spacing: rem(0.25);
-  .not__found{
-    color: map-get($colors, red);
-  }
-  .not__verify{
-    color: map-get($colors, warning);
-  }
+
+.not__found {
+  color: map-get($colors, red);
 }
-.field__name{
-  font-size: rem(14) !important;
-  font-weight: bold;
-  text-transform: capitalize;
+
+.not__verify {
+  color: map-get($colors, yellow);
 }
-.header__filters{
+
+.header__filters {
   height: rem(60);
   display: flex;
   align-items: baseline;
-  span{
+  
+  span {
     color: var(--v-primary-base);
     display: flex;
     justify-content: center;
   }
 }
-.selected__equipment{
+
+.selected__equipment {
   display: flex;
   justify-content: flex-end;
   font-size: rem(14);
+  margin-bottom: rem(8);
 }
-.table__background{
+
+.table__background {
   background-color: map-get($colors, modal-header-bg) !important;
 }
-.v-dialog > .v-card > .v-card__text{
+
+.v-dialog > .v-card > .v-card__text {
   padding: 0 0 rem(20) !important;
 }
+
 .v-data-table-header th {
   background-color: #E5E5E5 !important;
 }
+
 .EquipmentType {
   display: flex;
-  justify-content: space-between;
+  padding: rem(10);
   align-items: center;
-  .equipment__section{
-    justify-content: flex-end;
-    display: flex;
-    align-items: center;
+  
+  .equipment__section {
+    margin-left: auto;
+    text-align: right;
   }
 }
 </style>
