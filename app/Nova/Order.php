@@ -44,7 +44,7 @@ class Order extends Resource
      * @var array
      */
     public static $search = [
-        'id', 'request_id', 'status'
+        'id', 'request_id'
     ];
 
     /**
