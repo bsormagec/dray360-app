@@ -11,6 +11,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
  * @property integer $quantity
  * @property string $unit_of_measure
  * @property string $contents
+ * @property string $multiline_contents
  * @property number $weight
  * @property number $total_weight
  * @property string $weight_uom
@@ -43,6 +44,7 @@ class OrderLineItem extends Model
         'quantity',
         'unit_of_measure',
         'contents',
+        'multiline_contents',
         'weight',
         'total_weight',
         'weight_uom',
@@ -71,6 +73,7 @@ class OrderLineItem extends Model
         'quantity' => 'integer',
         'unit_of_measure' => 'string',
         'contents' => 'string',
+        'multiline_contents' => 'string',
         'weight' => 'float',
         'total_weight' => 'float',
         'weight_uom' => 'string',

@@ -44,7 +44,9 @@ This indicates what type of variant is being described. Valid values are:
 
 #### classification
 
-JSON data structure: {
+JSON data structure: 
+```json
+{
     "required_header_field_list": [
         "field1",
         "field2",
@@ -56,27 +58,34 @@ JSON data structure: {
         "etc."
     ]    
 }
+```
 
 
 #### mapping
 
-JSON data structure: {
+JSON data structure: 
+```pseudo-json
+{
     need to define this
     ===================
     list of header=fieldname, 
     list of header=fixedvalue
 }
+```
 
 
 #### company_id_list
 
 This is a json array that stores list of companies that can use this datafile variant. If NULL or empty it means all companies can use the variant.
 
-JSON data structure: [
+JSON data structure: 
+````json-list
+[
     company_id_1,
     company_id_2,
     etc.
 ]
+````
 
 Note that to search the company_id_list for a given company_id, use the `json_contains` function, like this:
 
