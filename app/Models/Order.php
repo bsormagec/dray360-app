@@ -61,6 +61,8 @@ use Illuminate\Database\Eloquent\SoftDeletes;
  * @property \Carbon\Carbon $tms_submission_datetime
  * @property \Carbon\Carbon $tms_cancelled_datetime
  * @property \Carbon\Carbon $cancelled_datetime
+ * @property integer $interchange_count
+ * @property integer $interchange_err_count
  */
 class Order extends Model
 {
@@ -140,6 +142,8 @@ class Order extends Model
         'tms_submission_datetime',
         'tms_cancelled_datetime',
         'cancelled_datetime',
+        'interchange_count',
+        'interchange_err_count',
     ];
 
     /**
@@ -232,6 +236,8 @@ class Order extends Model
         'tms_submission_datetime' => 'sometimes|nullable',
         'tms_cancelled_datetime' => 'sometimes|nullable',
         'cancelled_datetime' => 'sometimes|nullable',
+        'interchange_count' => 'sometimes|nullable',
+        'interchange_err_count' => 'sometimes|nullable',
     ];
 
     public function precededByOrder()

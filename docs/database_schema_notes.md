@@ -14,6 +14,76 @@ It is not intended to document every individual column and table, most of which 
 
 
 
+
+#######################
+
+### t_job_state_changes
+
+Every state change for a request/order combination (or request/null when orders don't exist yet) is logged here. 
+
+#### status_metadata
+
+This JSON type column records different information for each `status` type. I will be updating this document to record all possible states here. It is currently documented in a Draw.io diagram and not very accessible.
+
+##### status_metadata.order_id_list
+
+This is an array property in `status_metadata` for both the `ocr-post-processing-error` and `ocr-post-processing-complete` states. Here is a sample query showing how to parse its value and its length.
+
+````sql
+    select 
+         id
+        ,request_id
+        ,status
+        ,json_extract(status_metadata,'$.order_id_list[0]') as first_order_id
+        ,json_extract(status_metadata,'$.order_id_list') as order_id_list
+        ,json_length(json_extract(status_metadata,'$.order_id_list')) as order_id_length
+    from t_job_state_changes 
+    where status in ('ocr-post-processing-error', 'ocr-post-processing-complete') 
+    having order_id_length > 2
+    order by id asc 
+    ;
+````
+
+
+
+
+#######################
+
+### t_job_latest_state
+
+For a given request/order combination (or request/null when orders don't exist yet) the latest row inserted into the `t_job_state_changes` table will be recorded on this table. 
+
+Note that this "latest state" is recorded as written to the database, not as dated. Ergo, in the odd case where an earlier status change is written to the database later than an actual subsequent status change (due to some kind of asynchronous process delay) then the earlier timestamp will be recorded as the "latest state". This is an hypothetical problem only, and has not been seen in practice, but I mention it here in case it ever does happen.
+
+As of November 2020, the only thing that writes to the t_job_latest_state table is an automated mysql trigger called `t_job_state_change_updated`
+
+#### company_id and order_id 
+
+These columns are nullable and _not_ foreign key references to the t_companies/t_orders table. This is intentional, because we can record order_id's for orders that were rolled-back and not actually committed to the database.
+
+
+
+
+#######################
+
+### t_orders
+
+
+#### interchange_count
+
+A given order-creation request (ocr or datafile) can create 0 to <n> orders. Each order will record in this `interchange_count` column the total number of orders created by its order-creation request batch.
+
+#### interchange_err_count
+
+If there were errors in an order-creation batch that resulted in some orders being created but others failing to be created, the total number of failures will be recorded in this `interchange_count_errors` on every order that did get created. Note that this value cannot be recorded on the failed orders because they weren't created and don't exist, heh.
+
+
+
+
+
+
+#######################
+
 ### t_companies
 
 In this data model a "company" is a customer of Dray360. Each company is uniquely identified by name and id. Those name's are hardcoded into the application and must not be allowed to change. .
@@ -78,6 +148,8 @@ JSON data structure:
 
 This is a json array that stores list of companies that can use this datafile variant. If NULL or empty it means all companies can use the variant.
 
+The reason for this column and to *not* to use the `t_company_ocrvariant_ocrrules` table with its `t_company_id`/`t_variant_id` columns to associate a company with the variant is because: the `company_id_list` gets used in conjunction with the aforementioned `classification` column to identify whether a given datafile should be represented by a particular variant; rules don't come into it.
+
 JSON data structure: 
 ````json-list
 [
@@ -100,6 +172,7 @@ Which will find company_id=2, for example. note that the single-quotes are requi
 
 
 
+#######################
 
 ### t_equipment_types
 
@@ -107,11 +180,14 @@ Which will find company_id=2, for example. note that the single-quotes are requi
 
 This is another JSON array that stores a list of text container code prefixes to help find and identify equipment types. It can be null of no line prefixes are known for that particular equipment.
 
-JSON data structure: [
+JSON data structure: 
+````json-list
+[
     line_prefix_1,
     line_prefix_2,
     etc.
 ]
+````
 
-See `company_id_list` for sample SQL queries.
+See `company_id_list` and `status_metadata.order_id_list` for sample SQL queries.
 
