@@ -14,7 +14,6 @@ class OrderStatusHistoryTest extends TestCase
     /** @test */
     public function it_should_return_the_status_history_for_the_display_status_of_an_order()
     {
-        $this->markTestSkipped('skipping this test until Santiago is back');
         $this->loginAdmin();
         (new OrdersTableSeeder())->seedOrderWithPostProcessingComplete();
         $order = Order::latest()->first();
