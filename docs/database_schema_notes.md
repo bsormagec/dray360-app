@@ -25,7 +25,7 @@ Every state change for a request/order combination (or request/null when orders 
 
 This JSON type column records different information for each `status` type. I will be updating this document to record all possible states here. It is currently documented in a Draw.io diagram and not very accessible.
 
-##### status_metadata.order_id_list
+##### status_metadata.order_id_list (ocr-post-processing-error and ocr-post-processing-complete)
 
 This is an array property in `status_metadata` for both the `ocr-post-processing-error` and `ocr-post-processing-complete` states. Here is a sample query showing how to parse its value and its length.
 
@@ -43,6 +43,11 @@ This is an array property in `status_metadata` for both the `ocr-post-processing
     order by id asc 
     ;
 ````
+
+##### status_metadata.file_list (ocr-post-processing-error and ocr-post-processing-complete)
+
+Every file processed in this request. If the list grows too large that it cannot be stored in a single SNS message (256KB max) then it will be truncated by deleting the largest element (and in case of a tie for largest, one will be picked at random) until the total size is under 256KB.
+
 
 
 
