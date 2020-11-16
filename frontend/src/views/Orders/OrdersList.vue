@@ -130,9 +130,9 @@ export default {
   flex-grow: unset;
   width: 100%;
 
-  @include media("med") {
-    padding: rem(52) rem(32);
-    padding-left: rem(map-get($sizes, sidebar-desktop-width) + 32);
-  }
+  // @include media("med") {
+  //   padding: rem(52) rem(32);
+  //   padding-left: rem(map-get($sizes, sidebar-desktop-width) + 32);
+  // }
 }
 </style>

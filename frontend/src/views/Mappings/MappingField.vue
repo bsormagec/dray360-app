@@ -1,171 +1,162 @@
 <template>
-  <div class="row">
-    <div class="col-2">
-      <SidebarNavigation />
-    </div>
+  <div
+    class="mapping__panel"
+  >
+    <h1>Profit tools mapping admin panel</h1>
     <div
-      class="col-10 mapping__panel"
+      class="row"
     >
-      <h1>Profit tools mapping admin panel</h1>
-      <div
-        class="row"
-      >
-        <div class="col-6">
-          <v-simple-table>
-            <template v-slot:default>
-              <thead>
-                <tr>
-                  <th class="text-left">
-                    <h2>&nbsp;</h2>
-                  </th>
-                  <th class="text-left">
-                    <h2>Dray360 Field</h2>
-                  </th>
-                  <th class="text-left">
-                    <h2>Enter custom value</h2>
-                  </th>
-                  <th class="text-left">
-                    <h2>Ref Type</h2>
-                  </th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr>
-                  <td>Ref 2</td>
-                  <td>
-                    <v-select
-                      v-model="ds_ref2_text"
-                      :items="fieldNames"
-                      item-text="value"
-                      item-value="field_name"
-                      :clearable="true"
-                      @change="changeRef1"
-                    />
-                  </td>
-                  <td>
-                    <v-text-field
-                      v-if="customRef1"
-                      v-model="ds_ref2_text"
-                    />
-                  </td>
-                  <td>
-                    <v-select
-                      v-model="ds_ref2_type"
-                      :items="reftypes"
-                      item-text="field_name"
-                      item-value="value"
-                      :clearable="true"
-                    />
-                  </td>
-                </tr>
-                <tr>
-                  <td>Ref 3</td>
-                  <td>
-                    <v-select
-                      v-model="ds_ref3_text"
-                      :items="fieldNames"
-                      item-text="value"
-                      item-value="field_name"
-                      :clearable="true"
-                      @change="changeRef2"
-                    />
-                  </td>
-                  <td>
-                    <v-text-field
-                      v-if="customRef2"
-                      v-model="ds_ref3_text"
-                    />
-                  </td>
-                  <td>
-                    <v-select
-                      v-model="ds_ref3_type"
-                      :items="reftypes"
-                      item-text="field_name"
-                      item-value="value"
-                      :clearable="true"
-                    />
-                  </td>
-                </tr>
-                <tr
-                  v-for="(el, index) in custom"
-                  :key="(index)"
-                >
-                  <td>Custom{{ index+1 }}</td>
+      <div class="col-6">
+        <v-simple-table>
+          <template v-slot:default>
+            <thead>
+              <tr>
+                <th class="text-left">
+                  <h2>&nbsp;</h2>
+                </th>
+                <th class="text-left">
+                  <h2>Dray360 Field</h2>
+                </th>
+                <th class="text-left">
+                  <h2>Enter custom value</h2>
+                </th>
+                <th class="text-left">
+                  <h2>Ref Type</h2>
+                </th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>Ref 2</td>
+                <td>
+                  <v-select
+                    v-model="ds_ref2_text"
+                    :items="fieldNames"
+                    item-text="value"
+                    item-value="field_name"
+                    :clearable="true"
+                    @change="changeRef1"
+                  />
+                </td>
+                <td>
+                  <v-text-field
+                    v-if="customRef1"
+                    v-model="ds_ref2_text"
+                  />
+                </td>
+                <td>
+                  <v-select
+                    v-model="ds_ref2_type"
+                    :items="reftypes"
+                    item-text="field_name"
+                    item-value="value"
+                    :clearable="true"
+                  />
+                </td>
+              </tr>
+              <tr>
+                <td>Ref 3</td>
+                <td>
+                  <v-select
+                    v-model="ds_ref3_text"
+                    :items="fieldNames"
+                    item-text="value"
+                    item-value="field_name"
+                    :clearable="true"
+                    @change="changeRef2"
+                  />
+                </td>
+                <td>
+                  <v-text-field
+                    v-if="customRef2"
+                    v-model="ds_ref3_text"
+                  />
+                </td>
+                <td>
+                  <v-select
+                    v-model="ds_ref3_type"
+                    :items="reftypes"
+                    item-text="field_name"
+                    item-value="value"
+                    :clearable="true"
+                  />
+                </td>
+              </tr>
+              <tr
+                v-for="(el, index) in custom"
+                :key="(index)"
+              >
+                <td>Custom{{ index+1 }}</td>
 
-                  <td>
-                    <v-select
-                      :key="fieldNames.field_name"
-                      v-model="custom[index]"
-                      :items="fieldNames"
-                      item-text="value"
-                      item-value="field_name"
-                      :clearable="true"
-                      @change="(value) => changeCustomValues(value, index)"
-                    />
-                  </td>
-                  <td>
-                    <v-text-field
-                      v-if="customValue[index]"
-                      v-model="custom[index]"
-                    />
-                  </td>
-                </tr>
-                <tr>
-                  <td>Shipment Notes </td>
-                  <td>
-                    <v-select
-                      v-model="shipment_notes"
-                      :items="fieldNames"
-                      item-text="value"
-                      item-value="field_name"
-                      :multiple="true"
-                      :clearable="true"
-                    />
-                  </td>
-                </tr>
-                <tr>
-                  <td>Billing Comments </td>
-                  <td>
-                    <v-select
-                      v-model="billing_notes"
-                      :items="fieldNames"
-                      item-text="value"
-                      item-value="field_name"
-                      :multiple="true"
-                      :clearable="true"
-                    />
-                  </td>
-                </tr>
-              </tbody>
-            </template>
-          </v-simple-table>
-        </div>
+                <td>
+                  <v-select
+                    :key="fieldNames.field_name"
+                    v-model="custom[index]"
+                    :items="fieldNames"
+                    item-text="value"
+                    item-value="field_name"
+                    :clearable="true"
+                    @change="(value) => changeCustomValues(value, index)"
+                  />
+                </td>
+                <td>
+                  <v-text-field
+                    v-if="customValue[index]"
+                    v-model="custom[index]"
+                  />
+                </td>
+              </tr>
+              <tr>
+                <td>Shipment Notes </td>
+                <td>
+                  <v-select
+                    v-model="shipment_notes"
+                    :items="fieldNames"
+                    item-text="value"
+                    item-value="field_name"
+                    :multiple="true"
+                    :clearable="true"
+                  />
+                </td>
+              </tr>
+              <tr>
+                <td>Billing Comments </td>
+                <td>
+                  <v-select
+                    v-model="billing_notes"
+                    :items="fieldNames"
+                    item-text="value"
+                    item-value="field_name"
+                    :multiple="true"
+                    :clearable="true"
+                  />
+                </td>
+              </tr>
+            </tbody>
+          </template>
+        </v-simple-table>
       </div>
-      <div class="row">
-        <div class="col-6 right">
-          <v-btn
-            class="btn large primary d-block "
-            @click="save"
-          >
-            save
-          </v-btn>
-        </div>
+    </div>
+    <div class="row">
+      <div class="col-6 right">
+        <v-btn
+          class="btn large primary d-block "
+          @click="save"
+        >
+          save
+        </v-btn>
       </div>
     </div>
   </div>
 </template>
 
 <script>
-import SidebarNavigation from '@/components/General/SidebarNavigation'
 import { mapActions, mapState } from 'vuex'
 import companies, { types } from '@/store/modules/companies'
 import { reqStatus } from '@/enums/req_status'
 import utils, { type } from '@/store/modules/utils'
 
 export default {
-  components: {
-    SidebarNavigation
-  },
   data () {
     return {
       ...mapState(companies.moduleName, { company: state => state.company }),
@@ -238,10 +229,17 @@ export default {
   mounted () {
     this.getNames()
     this.getCompanybyId()
+    this.showSidebar()
   },
   methods: {
     ...mapActions(companies.moduleName, [types.updateCompaniesMappingField, types.getCompany]),
-    ...mapActions(utils.moduleName, [type.setSnackbar]),
+    ...mapActions(utils.moduleName, [type.setSnackbar, type.setSidebar]),
+
+    async showSidebar () {
+      await this[type.setSidebar]({
+        show: true
+      })
+    },
     getNames () {
       Object.values(this.mappings).forEach(key => {
         this.reftypes.push(key)

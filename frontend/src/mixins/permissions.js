@@ -21,7 +21,7 @@ export default {
     },
 
     isSuperadmin () {
-      return this.currentUser.is_superadmin
+      return this.currentUser !== undefined && this.currentUser.is_superadmin
     }
   }
 }

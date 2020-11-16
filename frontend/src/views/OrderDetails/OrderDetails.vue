@@ -2,7 +2,6 @@
   <div :class="`details ${loaded && 'loaded'} ${isMobile && 'mobile'}`">
     <ContentLoading :loaded="loaded">
       <div :class="`details__content ${isMobile && 'mobile'}`">
-        <SidebarNavigation />
         <div
           :class="`details__form ${isMobile && 'mobile'}`"
           :style="{ minWidth: `${resizeDiff}%` }"
@@ -28,12 +27,12 @@ import isMobile from '@/mixins/is_mobile'
 import OrderDetailsForm from '@/views/OrderDetails/OrderDetailsForm'
 import OrderDetailsDocument from '@/views/OrderDetails/OrderDetailsDocument'
 import { reqStatus } from '@/enums/req_status'
-import SidebarNavigation from '@/components/General/SidebarNavigation'
 
 import ContentLoading from '@/components/ContentLoading'
 import orders, { types } from '@/store/modules/orders'
 import orderForm, { types as orderFormTypes } from '@/store/modules/order-form'
 import { mapState, mapActions } from 'vuex'
+import utils, { type } from '@/store/modules/utils'
 
 export default {
   name: 'OrderDetails',
@@ -41,8 +40,7 @@ export default {
   components: {
     OrderDetailsDocument,
     ContentLoading,
-    OrderDetailsForm,
-    SidebarNavigation
+    OrderDetailsForm
   },
 
   mixins: [isMobile],
@@ -63,6 +61,7 @@ export default {
   async beforeMount () {
     await this.requestOrderDetail()
     this.loaded = true
+    this.showSidebar()
   },
 
   methods: {
@@ -70,7 +69,13 @@ export default {
     ...mapActions(orderForm.moduleName, {
       setFormOrder: orderFormTypes.setFormOrder
     }),
+    ...mapActions(utils.moduleName, [type.setSidebar]),
 
+    async showSidebar () {
+      await this[type.setSidebar]({
+        show: true
+      })
+    },
     async requestOrderDetail () {
       const status = await this[types.getOrderDetail](this.$route.params.id)
 
@@ -103,6 +108,11 @@ export default {
       e.preventDefault()
       window.onmousemove = undefined
       window.onmouseup = undefined
+    },
+    async showSidebar () {
+      await this[type.setSidebar]({
+        show: true
+      })
     }
   }
 }
@@ -113,10 +123,6 @@ export default {
   width: 100%;
   height: 100%;
   display: flex;
-
-  &.loaded {
-    padding-left: rem(map-get($sizes, sidebar-desktop-width));
-  }
 
   &.mobile {
     padding-left: unset;

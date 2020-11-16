@@ -41,7 +41,6 @@ const actions = {
 
     const [error, data] = await getOrders(filtersForParams, query, dateQuery)
 
-    console.log(data)
     if (error) return reqStatus.error
 
     commit(types.setOrders, data)
@@ -75,7 +74,6 @@ const actions = {
   },
 
   async [types.getDownloadPDFURL] ({ commit }, orderId) {
-    console.log('action called with id: ', orderId)
     const [error, data] = await getDownloadPDFURL(orderId)
 
     if (error) return { status: reqStatus.error, data: error.response.data }

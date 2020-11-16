@@ -1,21 +1,16 @@
 <template>
-  <div>
-    <v-app-bar-nav-icon
-      v-if="isMobile"
-      @click.stop="drawer = !drawer"
-    />
-
+  <div v-if="showSidebar">
     <v-navigation-drawer
-      v-model="drawer"
+      :value="showSidebar"
       class="sidebar__nav"
       absolute
       left
       :temporary="isMobile"
-      :permanent="!isMobile"
+      :permanent="showSidebar && !isMobile"
     >
       <v-app-bar-nav-icon
         v-if="isMobile"
-        @click.stop="drawer = !drawer"
+        @click.stop="toogleSidebar()"
       />
       <img
         v-if="!tenantConfig.logo1"
@@ -39,7 +34,7 @@
       <div class="menu">
         <v-list>
           <v-list-group
-            v-if="currentUser !== undefined && currentUser.is_superadmin"
+            v-if="isSuperadmin()"
             no-action
             sub-group
           >
@@ -119,14 +114,21 @@ export default {
 
   data () {
     return {
-      drawer: true,
       group: null,
       model: 1,
       menuItems: [{ name: 'dashboard', path: '/dashboard' },
         { name: 'manage users', path: '/user/dashboard' },
         { name: 'my profile', path: '/user/edit-profile' },
         { name: 'logout', path: '#' }],
-      admins: []
+      admins: [{ name: 'Check Horizon', path: '/horizon', role: ['superadmin'] },
+        { name: 'Roles and permissions', path: '/authorization', role: ['superadmin'] },
+        { name: 'Telescope', path: '/telescope', role: ['superadmin'] },
+        { name: 'Nova', path: '/nova', role: ['superadmin'] },
+        { name: 'Sentry', path: 'https://sentry.io/organizations/draymaster/issues/?project=5285677', role: ['superadmin'] },
+        { name: 'Rules Editor', path: '/rules-editor', role: ['admin'] },
+        { name: 'usage stats', path: '' },
+        { name: 'RefsCustoms Mapping', path: '/companies/1/refs-custom-mapping', role: ['superadmin'] }
+      ]
 
     }
   },
@@ -134,38 +136,32 @@ export default {
     ...mapState(auth.moduleName, { currentUser: state => state.currentUser }),
     ...mapState(companies.moduleName, { company: state => state.company }),
     ...mapState(utils.moduleName, {
-      tenantConfig: state => state.tenantConfig
+      tenantConfig: state => state.tenantConfig,
+      showSidebar: state => state.sidebar.show,
+      showAdminMenu () {
+        return this.currentUser.is_superadmin
+      }
     })
   },
   watch: {
-    group () {
-      this.drawer = false
+
+  },
+  async mounted () {
+    await this[type.getTenantConfig]()
+    if (this.currentUser !== undefined) {
+      await this[types.getCompany]({ id: this.currentUser.t_company_id })
     }
   },
-  async created () {
-    this.admins = [{ name: 'Check Horizon', path: '/horizon', role: ['superadmin'] },
-      { name: 'Roles and permissions', path: '/authorization', role: ['superadmin'] },
-      { name: 'Telescope', path: '/telescope', role: ['superadmin'] },
-      { name: 'Nova', path: '/nova', role: ['superadmin'] },
-      { name: 'Sentry', path: 'https://sentry.io/organizations/draymaster/issues/?project=5285677', role: ['superadmin'] },
-      { name: 'Rules Editor', path: '/rules-editor', role: ['admin'] },
-      { name: 'usage stats', path: '' },
-      { name: 'RefsCustoms Mapping', path: `/companies/${this.currentUser.t_company_id}/refs-custom-mapping`, role: ['admin'] }
-    ]
-    await this[type.getTenantConfig]()
-    await this[types.getCompany]({ id: this.currentUser.t_company_id })
-  },
-  beforeMount () {
-    this.drawer = !this.isMobile
-  },
-
   methods: {
     ...mapActions('AUTH', ['logout']),
-    ...mapActions(utils.moduleName, [type.getTenantConfig]),
+    ...mapActions(utils.moduleName, [type.getTenantConfig, type.setSidebar]),
     ...mapActions(companies.moduleName, [types.getCompany]),
     async logoutBtn () {
       await this.logout()
       this.$router.push('/login')
+    },
+    toogleSidebar () {
+      this[type.setSidebar]({ show: !this.showSidebar })
     }
   }
 
@@ -183,9 +179,10 @@ $sidebarbackground: url("../../assets/images/bg_sidebar.png");
   align-self: center;
   background-image: $sidebarbackground;
   background-size: cover;
+  max-width: rem(196);
 
   .logo__dry{
-    width: rem(200);
+    width: rem(140);
     margin: rem(15) auto 0 auto;
     display: block;
   }
@@ -215,6 +212,9 @@ $sidebarbackground: url("../../assets/images/bg_sidebar.png");
     }
     .v-list-group{
       border-bottom: rem(2) solid map-get($colors, gray );
+      .v-list-group__items > .v-list-item {
+         padding-left: 0px;
+      }
     }
     .v-list-group .v-list-item, .v-list-item--active, .v-item--active, .v-list-group--active{
       box-shadow: 0px -1px 0px 0px #003C71 15% inset;
