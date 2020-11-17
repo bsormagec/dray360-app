@@ -16,26 +16,31 @@ class EquipmentTypesSelectValuesController extends Controller
             'equipment_types' => EquipmentType::query()
                 ->forCompanyAndTmsProvider($company->id, $tmsProvider->id)
                 ->select(DB::raw('distinct equipment_type'))
+                ->orderby('equipment_type')
                 ->get()
                 ->pluck('equipment_type'),
             'equipment_owners' => EquipmentType::query()
                 ->forCompanyAndTmsProvider($company->id, $tmsProvider->id)
                 ->select(DB::raw('distinct equipment_owner'))
+                ->orderby('equipment_owner')
                 ->get()
                 ->pluck('equipment_owner'),
             'equipment_sizes' => EquipmentType::query()
                 ->forCompanyAndTmsProvider($company->id, $tmsProvider->id)
                 ->select(DB::raw('distinct equipment_size'))
+                ->orderby('equipment_size')
                 ->get()
                 ->pluck('equipment_size'),
             'scacs' => EquipmentType::query()
                 ->forCompanyAndTmsProvider($company->id, $tmsProvider->id)
                 ->select(DB::raw('distinct scac'))
+                ->orderby('scac')
                 ->get()
                 ->pluck('scac'),
             'equipment_types_and_sizes' => EquipmentType::query()
                 ->forCompanyAndTmsProvider($company->id, $tmsProvider->id)
                 ->select(DB::raw('distinct equipment_type_and_size'))
+                ->orderby('equipment_type_and_size')
                 ->get()
                 ->pluck('equipment_type_and_size'),
         ]);
