@@ -35,6 +35,11 @@ return [
         'url' => 'https://www.ripcms.com/',
     ],
 
+    'compcare' => [
+        'identity_url' => env('COMPCARE_IDENTITY_URL'),
+        'entities_url' => env('COMPCARE_ENTITIES_URL'),
+    ],
+
     'search-address' => [
         'url' => env('SEARCH_ADDRESS_URL', 'https://b9da68xgc1.execute-api.us-east-2.amazonaws.com/api/1.0/dev/address-search'),
         'api_key' => env('SEARCH_ADDRESS_API_KEY'),

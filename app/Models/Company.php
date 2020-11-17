@@ -20,16 +20,7 @@ class Company extends Model
     use SoftDeletes;
     use EncryptsAttributes;
 
-    const CREATED_AT = 'created_at',
-        UPDATED_AT = 'updated_at',
-        FOREIGN_KEY = 't_company_id',
-        CUSHING = 'Cushing',
-        TCOMPANIES_DEMO = 'TCompaniesDemo',
-        POLARIS = 'Polaris',
-        IXT_ONBOARDING = 'IXTOnboarding',
-        IXT = 'IXT',
-        PORT_CITY_LOGISTICS_ONBOARDING = 'PortCityLogisticsOnboarding',
-        PORT_CITY_LOGISTICS = 'PortCityLogistics';
+    const FOREIGN_KEY = 't_company_id';
 
     public $table = 't_companies';
 
@@ -62,14 +53,13 @@ class Company extends Model
         'compcare_organization_id',
         'compcare_username',
         'compcare_password',
-        'compcare_token',
+        'sync_addresses',
     ];
 
     protected $encryptable = [
         'blackfly_token',
         'ripcms_password',
         'compcare_password',
-        'compcare_token',
     ];
 
     /**
@@ -79,6 +69,7 @@ class Company extends Model
         'id' => 'integer',
         't_address_id' => 'integer',
         'automatic_address_verification_threshold' => 'integer',
+        'sync_addresses' => 'boolean',
         'name' => 'string',
         'refs_custom_mapping' => 'json',
         'configuration' => 'json',
@@ -112,52 +103,9 @@ class Company extends Model
         return $this->belongsTo(Domain::class, 't_domain_id');
     }
 
-    /**
-     * Get company 'Cushing'
-     */
-    public static function getCushing(): self
+    public function defaultTmsProvider()
     {
-        return static::where('name', static::CUSHING)->first();
-    }
-
-    /**
-     * Get company 'TCompanies Demo'
-     */
-    public static function getTCompaniesDemo(): self
-    {
-        return static::where('name', static::TCOMPANIES_DEMO)->first();
-    }
-
-    /**
-     * Get company 'IXT onboarding'
-     */
-    public static function getIxtOnboarding(): self
-    {
-        return static::where('name', static::IXT_ONBOARDING)->first();
-    }
-
-    /**
-     * Get company 'IXT'
-     */
-    public static function getIxt(): self
-    {
-        return static::where('name', static::IXT)->first();
-    }
-
-    /**
-     * Get company 'Port City Logistics onboarding'
-     */
-    public static function getPortCityLogisticsOnboarding(): self
-    {
-        return static::where('name', static::PORT_CITY_LOGISTICS_ONBOARDING)->first();
-    }
-
-    /**
-     * Get company 'Port City Logistics'
-     */
-    public static function getPortCityLogistics(): self
-    {
-        return static::where('name', static::PORT_CITY_LOGISTICS)->first();
+        return $this->belongsTo(TMSProvider::class, 'default_tms_provider_id');
     }
 
     public function variantsAccessorials(): BelongsToMany

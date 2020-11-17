@@ -3,10 +3,9 @@
 namespace Tests\Feature\Jobs;
 
 use Tests\TestCase;
-use App\Models\Company;
 use App\Models\TMSProvider;
 use App\Services\Apis\RipCms;
-use ProfitToolsCompaniesSeeder;
+use Tests\Seeds\CompaniesSeeder;
 use App\Exceptions\RipCmsException;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Cache;
@@ -22,7 +21,7 @@ class ImportProfitToolsAddressTest extends TestCase
     public function setUp(): void
     {
         parent::setUp();
-        $this->seed(ProfitToolsCompaniesSeeder::class);
+        $this->seed(CompaniesSeeder::class);
         $this->seed(ProfitToolsCushingAddressesSeeder::class);
     }
 
@@ -35,7 +34,7 @@ class ImportProfitToolsAddressTest extends TestCase
             ->push(['access_token' => 'test'])
             ->push($addresses[0])  //api/ProfitTools/GetCompany/1
             ->push($addresses[1]); //api/ProfitTools/GetCompany/2
-        $company = Company::getCushing();
+        $company = CompaniesSeeder::getTestCushing();
         $tmsProvider = TMSProvider::getProfitTools();
 
         Cache::forget(RipCms::getTokenCacheKeyFor($company));
@@ -72,7 +71,7 @@ class ImportProfitToolsAddressTest extends TestCase
             ->push(['access_token' => 'test'])
             ->push($modifiedAddress)
             ->whenEmpty(Http::response(null, 500));
-        $company = Company::getCushing();
+        $company = CompaniesSeeder::getTestCushing();
         $tmsProvider = TMSProvider::getProfitTools();
 
         Cache::forget(RipCms::getTokenCacheKeyFor($company));
@@ -111,7 +110,7 @@ class ImportProfitToolsAddressTest extends TestCase
             ->push(['access_token' => 'test'])
             ->push($modifiedAddress)
             ->whenEmpty(Http::response(null, 500));
-        $company = Company::getCushing();
+        $company = CompaniesSeeder::getTestCushing();
         $tmsProvider = TMSProvider::getProfitTools();
 
         Cache::forget(RipCms::getTokenCacheKeyFor($company));
@@ -143,7 +142,7 @@ class ImportProfitToolsAddressTest extends TestCase
         Http::fakeSequence()
             ->push(['access_token' => 'test'])
             ->push('Some weird text response');
-        $company = Company::getCushing();
+        $company = CompaniesSeeder::getTestCushing();
         $tmsProvider = TMSProvider::getProfitTools();
 
         $this->expectException(RipCmsException::class);
