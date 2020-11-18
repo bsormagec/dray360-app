@@ -21,13 +21,13 @@ describe('Edit profile', function () {
 
     cy.visit('http://localhost:8080/user/dashboard/change-password/')
 
-    cy.get('[data-cy=old-password-field]').type('mongomongo')
+    cy.get('[data-cy=old-password-field]').type('mongomongo', { force: true })
 
-    cy.get('[data-cy=password-field]').type('mockednewpass')
+    cy.get('[data-cy=password-field]').type('mockednewpass', { force: true })
 
-    cy.get('[data-cy=password-confirmation-field]').type('mockednewpass')
+    cy.get('[data-cy=password-confirmation-field]').type('mockednewpass', { force: true })
 
-    cy.get('[data-cy=save-button]').click()
+    cy.get('[data-cy=save-button]').click({ force: true })
 
     // Please note that there is something going on with this endpoint
     cy.route({ method: 'POST', url: '**/api/password/change', reponse: {} })

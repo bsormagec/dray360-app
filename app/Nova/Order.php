@@ -44,7 +44,7 @@ class Order extends Resource
      * @var array
      */
     public static $search = [
-        'id', 'request_id', 'status'
+        'id', 'request_id'
     ];
 
     /**
@@ -136,6 +136,9 @@ class Order extends Resource
             DateTime::make('TMS Submission Date', 'tms_submission_datetime')->hideFromIndex(),
             DateTime::make('TMS Cancelled Date', 'tms_cancelled_datetime')->hideFromIndex(),
             DateTime::make('Cancelled Date', 'cancelled_datetime')->hideFromIndex(),
+
+            Number::make('Interchange Count', 'interchange_count')->min(0)->max(10000000)->step(1.0)->hideFromIndex(),
+            Number::make('Interchange Error Count', 'interchange_err_count')->min(0)->max(10000000)->step(1.0)->hideFromIndex(),
         ];
     }
 

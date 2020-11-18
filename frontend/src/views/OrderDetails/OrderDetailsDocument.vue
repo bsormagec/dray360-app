@@ -22,7 +22,7 @@
             edit: highlight.edit,
             hover: highlight.hover
           }"
-          @click="() => startFieldEdit({ path: highlightKey })"
+          @click="() => scrollToAndStartFieldEdit(highlightKey)"
           @mouseover="isMobile ? () => {} : startHover({ path: highlightKey })"
           @mouseleave="isMobile ? () => {} : stopHover({ path: highlightKey })"
         />
@@ -36,6 +36,7 @@ import orderForm, { types } from '@/store/modules/order-form'
 import { cleanStrForId } from '@/utils/clean_str_for_id.js'
 import { mapState, mapActions } from 'vuex'
 import isMobile from '@/mixins/is_mobile'
+import { scrollTo } from '@/utils/scroll_to'
 
 export default {
   name: 'OrderDetailsDocument',
@@ -71,6 +72,11 @@ export default {
         }
       }
       return pageHighlights
+    },
+
+    scrollToAndStartFieldEdit (highlightKey) {
+      scrollTo(`${cleanStrForId(highlightKey)}-formfield`)
+      this.startFieldEdit({ path: highlightKey })
     },
 
     getDimensions (evt) {

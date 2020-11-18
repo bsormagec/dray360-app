@@ -1,112 +1,102 @@
 <template>
-  <div class="row">
-    <div class="col-2">
-      <SidebarNavigation :menu-items="[]" />
-    </div>
-    <div class="col-10">
-      <div>
-        <template>
-          <v-toolbar
-            flat
-            color="white"
-          >
-            <v-toolbar-title>
-              <h1>
-                Change Password
-              </h1>
-            </v-toolbar-title>
+  <div>
+    <template>
+      <v-toolbar
+        flat
+        color="white"
+      >
+        <v-toolbar-title>
+          <h1>
+            Change Password
+          </h1>
+        </v-toolbar-title>
 
-            <v-spacer />
-          </v-toolbar>
-        </template>
-        <template
-          style="width: 44%"
-        >
-          <div class="row">
-            <div class="col-4">
-              <v-text-field
-                v-model="old_password"
-                data-cy="old-password-field"
-                type="password"
-                name="password"
-                label="Old Password"
-                hide-details
-                outlined
-                dense
-              />
-            </div>
-          </div>
-          <div class="row">
-            <div class="col-4">
-              <v-text-field
-                v-model="password"
-                data-cy="password-field"
-                type="password"
-                name="password"
-                label="Password"
-                hide-details
-                outlined
-                dense
-              />
-            </div>
-          </div>
-          <div class="row">
-            <div class="col-4">
-              <v-text-field
-                v-model="password_confirmation"
-                data-cy="password-confirmation-field"
-                type="password"
-                name="password"
-                label="Password Confirmation"
-                hide-details
-                outlined
-                dense
-              />
-            </div>
-          </div>
-        </template>
-        <v-row>
-          <v-col
-            cols="4"
-            sm="4"
+        <v-spacer />
+      </v-toolbar>
+    </template>
+    <template
+      style="width: 44%"
+    >
+      <div class="row">
+        <div class="col-4">
+          <v-text-field
+            v-model="old_password"
+            data-cy="old-password-field"
+            type="password"
+            name="password"
+            label="Old Password"
+            hide-details
+            outlined
+            dense
           />
-          <v-col
-            cols="2"
-            sm="2"
-          >
-            <v-btn
-              class="button"
-              color="primary"
-              text
-              @click="$router.push({ path: '/user/dashboard/edit-profile/' })"
-            >
-              Cancel
-            </v-btn>
-            <v-btn
-              data-cy="save-button"
-              class="button"
-              color="primary"
-              @click="save"
-            >
-              Save
-            </v-btn>
-          </v-col>
-        </v-row>
+        </div>
       </div>
-    </div>
+      <div class="row">
+        <div class="col-4">
+          <v-text-field
+            v-model="password"
+            data-cy="password-field"
+            type="password"
+            name="password"
+            label="Password"
+            hide-details
+            outlined
+            dense
+          />
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-4">
+          <v-text-field
+            v-model="password_confirmation"
+            data-cy="password-confirmation-field"
+            type="password"
+            name="password"
+            label="Password Confirmation"
+            hide-details
+            outlined
+            dense
+          />
+        </div>
+      </div>
+    </template>
+    <v-row>
+      <v-col
+        cols="4"
+        sm="4"
+      />
+      <v-col
+        cols="2"
+        sm="2"
+      >
+        <v-btn
+          class="button"
+          color="primary"
+          text
+          @click="$router.push({ path: '/user/edit-profile/' })"
+        >
+          Cancel
+        </v-btn>
+        <v-btn
+          data-cy="save-button"
+          class="button"
+          color="primary"
+          @click="save"
+        >
+          Save
+        </v-btn>
+      </v-col>
+    </v-row>
   </div>
 </template>
 
 <script>
-import SidebarNavigation from '@/components/General/SidebarNavigation'
 import profile, { types } from '@/store/modules/profile'
 import { mapActions } from 'vuex'
 import utils, { type } from '@/store/modules/utils'
 
 export default {
-  components: {
-    SidebarNavigation
-  },
+
   data () {
     return {
       old_password: '',
@@ -115,10 +105,18 @@ export default {
       error: false
     }
   },
+  beforeMount () {
+    this.showSidebar()
+  },
   methods: {
     ...mapActions(profile.moduleName, [types.changePassword]),
-    ...mapActions(utils.moduleName, [type.setSnackbar]),
+    ...mapActions(utils.moduleName, [type.setSnackbar, type.setSidebar]),
 
+    async showSidebar () {
+      await this[type.setSidebar]({
+        show: true
+      })
+    },
     async save () {
       const status = await this[types.changePassword](
         {

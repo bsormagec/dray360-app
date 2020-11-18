@@ -23,7 +23,7 @@ class OrderLineItem extends Resource
      *
      * @var string
      */
-    public static $title = 'contents';
+    public static $title = 'orderlineitem';
 
     /**
      * The logical group associated with the resource.
@@ -38,7 +38,7 @@ class OrderLineItem extends Resource
      * @var array
      */
     public static $search = [
-        'id', 'contents',
+        'id', 'contents', 'multiline_contents'
     ];
 
     /**
@@ -62,6 +62,7 @@ class OrderLineItem extends Resource
             ID::make(__('ID'), 'id')->sortable(),
             BelongsTo::make('Order', 'order', Order::class),
             Text::make('Contents', 'contents'),
+            Text::make('Multiline Contents', 'multiline_contents'),
             Text::make('Haz class', 'haz_class')->hideFromIndex(),
             Text::make('Haz contact name', 'haz_contact_name')->hideFromIndex(),
             Text::make('Haz description', 'haz_description')->hideFromIndex(),

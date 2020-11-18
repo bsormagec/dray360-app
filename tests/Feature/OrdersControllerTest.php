@@ -18,7 +18,6 @@ use Bezhanov\Faker\Provider\Commerce;
 use Illuminate\Support\Facades\Event;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Foundation\Testing\WithFaker;
-use Illuminate\Http\Resources\Json\JsonResource;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
 
 class OrdersControllerTest extends TestCase
@@ -34,12 +33,6 @@ class OrdersControllerTest extends TestCase
         $this->loginAdmin();
         $this->seed(OrdersTableSeeder::class);
         $this->faker->addProvider(new Commerce($this->faker));
-    }
-
-    protected function tearDown(): void
-    {
-        parent::tearDown();
-        JsonResource::wrap('data');
     }
 
     /** @test */
@@ -188,6 +181,7 @@ class OrdersControllerTest extends TestCase
         $orderLineItems = $order->orderLineItems->toArray();
         $orderLineItems[] = $this->makeFakeDataFor(OrderLineItem::class, $order);
         $orderLineItems[0]['contents'] = $this->faker->productName;
+        $orderLineItems[0]['multiline_contents'] = $this->faker->productName;
 
         $orderAddressEvents = [factory(OrderAddressEvent::class)->create(['t_order_id' => $order->id])->toArray()];
         $orderAddressEvents[] = $this->makeFakeDataFor(OrderAddressEvent::class, $order);

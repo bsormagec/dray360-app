@@ -1,83 +1,71 @@
 <template>
-  <div class="row">
+  <div class="">
     <div class="col-2">
-      <SidebarNavigation :menu-items="items" />
+      <v-select
+        v-model="variant"
+        item-text="abbyy_variant_name"
+        item-value="id"
+        :items="variant_list()"
+        label="Select Variant"
+        clearable
+        @click:clear="createJson"
+        @change="getAccesorialMapping"
+      />
     </div>
-    <div
-      class="col-10 mapping__panel"
-    >
-      <div class="row">
-        <div class="col-2">
-          <v-select
-            v-model="variant"
-            item-text="abbyy_variant_name"
-            item-value="id"
-            :items="variant_list()"
-            label="Select Variant"
-            clearable
-            @click:clear="createJson"
-            @change="getAccesorialMapping"
-          />
-        </div>
 
-        <div class="col-7">
-          <v-simple-table>
-            <template v-slot:default>
-              <thead>
-                <tr>
-                  <th class="text-left">
-                    <h2>supported charges</h2>
-                  </th>
-                  <th class="text-left">
-                    <h2>Enter value</h2>
-                  </th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr
-                  v-for="(el, index) in json"
-                  :key="index"
+    <div class="col-7">
+      <v-simple-table>
+        <template v-slot:default>
+          <thead>
+            <tr>
+              <th class="text-left">
+                <h2>supported charges</h2>
+              </th>
+              <th class="text-left">
+                <h2>Enter value</h2>
+              </th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr
+              v-for="(el, index) in json"
+              :key="index"
+            >
+              <td> {{ index }} </td>
+              <td>
+                <v-text-field
+                  v-model="json[index].amount_type_id"
+                  label="amount_type_id"
+                  clearable
+                  :rules="[onlyNumbers]"
+                  @click:clear="clear(index)"
+                />
+              </td>
+            </tr>
+            <tr>
+              <td>
+                <v-btn
+                  class="btn large primary d-block "
+                  @click="save"
                 >
-                  <td> {{ index }} </td>
-                  <td>
-                    <v-text-field
-                      v-model="json[index].amount_type_id"
-                      label="amount_type_id"
-                      clearable
-                      :rules="[onlyNumbers]"
-                      @click:clear="clear(index)"
-                    />
-                  </td>
-                </tr>
-                <tr>
-                  <td>
-                    <v-btn
-                      class="btn large primary d-block "
-                      @click="save"
-                    >
-                      save
-                    </v-btn>
-                  </td>
-                </tr>
-              </tbody>
-            </template>
-          </v-simple-table>
-        </div>
-      </div>
+                  save
+                </v-btn>
+              </td>
+            </tr>
+          </tbody>
+        </template>
+      </v-simple-table>
     </div>
   </div>
 </template>
 <script>
-import SidebarNavigation from '@/components/General/SidebarNavigation'
+
 import { mapActions, mapState } from 'vuex'
 import rulesLibrary, { types } from '@/store/modules/rules_editor'
 import accesorialmapping, { accesorialmappingtype } from '@/store/modules/accesorialmapping'
 import utils, { type } from '@/store/modules/utils'
 
 export default {
-  components: {
-    SidebarNavigation
-  },
   data () {
     return {
       items: [
@@ -112,11 +100,18 @@ export default {
   },
   mounted () {
     this.fetchVariantList()
+    this.showSidebar()
   },
   methods: {
     ...mapActions(rulesLibrary.moduleName, [types.getVariantList]),
     ...mapActions(accesorialmapping.moduleName, [accesorialmappingtype.updateAccesorialMapping, accesorialmappingtype.getAccesorialMapping]),
-    ...mapActions(utils.moduleName, [type.setSnackbar]),
+    ...mapActions(utils.moduleName, [type.setSnackbar, type.setSidebar]),
+
+    async showSidebar () {
+      await this[type.setSidebar]({
+        show: true
+      })
+    },
     createJson () {
       this.json =
         {

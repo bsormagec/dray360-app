@@ -8,12 +8,14 @@ export const type = {
   cancelConfirmationDialog: 'CANCEL_CONFIRMATION_DIALOG',
   acceptConfirmationDialog: 'ACCEPT_CONFIRMATION_DIALOG',
   setTenantConfig: 'SET_TENANT_CONFIG',
-  getTenantConfig: 'GET_TENANT_CONFIG'
+  getTenantConfig: 'GET_TENANT_CONFIG',
+  setSidebar: 'SET_SIDEBAR'
 }
 const initialState = {
   snackbar: { show: false, showSpinner: false, message: '' },
   tenantConfig: {},
-  confirmationDialog: getBaseConfirmationDialog()
+  confirmationDialog: getBaseConfirmationDialog(),
+  sidebar: { show: false }
 }
 
 const mutations = {
@@ -25,6 +27,9 @@ const mutations = {
   },
   [type.setConfirmationDialog] (state, confirmationDialog) {
     state.confirmationDialog = { ...confirmationDialog }
+  },
+  [type.setSidebar] (state, sidebar) {
+    state.sidebar = sidebar
   }
 
 }
@@ -83,6 +88,9 @@ const actions = {
     }
 
     commit(type.setConfirmationDialog, getBaseConfirmationDialog())
+  },
+  [type.setSidebar] ({ commit }, { show }) {
+    commit(type.setSidebar, { show })
   }
 }
 

@@ -21,19 +21,19 @@ describe('Edit profile', function () {
 
     cy.visit('localhost:8080/user/edit-profile')
 
-    cy.get('[data-cy=name-field]').clear().type('Bill Brasky')
+    cy.get('[data-cy=name-field]').clear({ force: true }).type('Bill Brasky', { force: true })
 
-    cy.get('[data-cy=email-field]').clear().type('bill@example.com')
+    cy.get('[data-cy=email-field]').clear({ force: true }).type('bill@example.com', { force: true })
 
-    cy.get('[data-cy=position-field]').type('Software Developer')
+    cy.get('[data-cy=position-field]').type('Software Developer', { force: true })
 
-    cy.get('[data-cy=org-field]').type('TCompanies')
+    cy.get('[data-cy=org-field]').type('TCompanies', { force: true })
 
     cy.route({ method: 'PUT', url: '**/api/users/**', response: this.editedUser })
 
     cy.route({ method: 'GET', url: '**/api/users', response: this.users })
 
-    cy.get('[data-cy=save-button]').click()
+    cy.get('[data-cy=save-button]').click({ force: true })
 
     cy.url().should('include', 'user/edit-profile')
   })

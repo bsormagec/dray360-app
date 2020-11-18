@@ -46,7 +46,6 @@ class Address extends Resource
         'county',
         'postal_code',
         'country',
-        'Hours of operation',
         'location_name',
         'location_phone',
     ];

@@ -28,7 +28,7 @@ export const getDownloadPDFURL = async (orderId) => axios.get(`/api/orders/${ord
 
 export const reprocessOcrRequest = async (requestId) => axios.post(`/api/ocr/requests/${requestId}/reprocess`).then(data => [undefined, data.data]).catch(e => [e])
 
-export const postSendToTms = async (tmsData) => axios.post(`/api/orders/${tmsData.order_id}/send-to-tms`).then(data => [undefined, data]).catch(e => [e])
+export const postSendToTms = async (orderId) => axios.post(`/api/orders/${orderId}/send-to-tms`).then(data => [undefined, data]).catch(e => [e])
 
 export const getDivisionCodes = async (companyId, tmsId) => axios.get(`/api/companies/${companyId}/tms-provider/${tmsId}/division-names`).then(data => [undefined, data.data]).catch(e => [e])
 

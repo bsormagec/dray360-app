@@ -21,15 +21,15 @@ describe('Edit user', function () {
 
     cy.visit('http://localhost:8080/user/dashboard/edit-user/1')
 
-    cy.get('[data-cy=name-input]').type('Bill Brasky')
+    cy.get('[data-cy=name-input]').type('Bill Brasky', { force: true })
 
-    cy.get('[data-cy=email-input]').type('bill@example.com')
+    cy.get('[data-cy=email-input]').type('bill@example.com', { force: true })
 
     cy.route({ method: 'PUT', url: '**/api/users/**', response: this.editedUser })
 
     cy.route({ method: 'GET', url: '**/api/users', response: this.users })
 
-    cy.get('[data-cy=save-button]').click()
+    cy.get('[data-cy=save-button]').click({ force: true })
 
     cy.url().should('include', 'user/dashboard')
   })
