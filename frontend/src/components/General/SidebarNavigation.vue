@@ -57,6 +57,7 @@
                 target="_blank"
                 :input-value="false"
                 link
+                dense
               >
                 <v-list-item-title
                   class="admin__menu"
@@ -69,6 +70,7 @@
                 v-for="(item, i) in menuItems"
                 :key="i"
                 :to="item.path"
+                dense
               >
                 <v-list-item-icon>
                   <v-icon v-text="item.icon" />
