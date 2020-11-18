@@ -1,103 +1,115 @@
 <template>
-  <div v-if="showSidebar">
-    <v-navigation-drawer
-      :value="showSidebar"
-      class="sidebar__nav"
-      absolute
-      left
-      :temporary="isMobile"
-      :permanent="showSidebar && !isMobile"
-    >
-      <v-app-bar-nav-icon
-        v-if="isMobile"
-        @click.stop="toogleSidebar()"
-      />
-      <img
-        v-if="!tenantConfig.logo1"
-        class="logo__dry"
-        src="@/assets/images/dry360_logo.svg"
-        alt=""
+  <div>
+    <v-app-bar-nav-icon
+      v-if="isMobile"
+      @click="toogleSidebar"
+    />
+    <div v-if="showSidebar">
+      <v-navigation-drawer
+        :value="showSidebar"
+        class="sidebar__nav"
+        absolute
+        left
+        :temporary="isMobile"
+        :permanent="showSidebar && !isMobile"
+        @input="onChangeSidebar"
       >
-      <img
-        v-else
-        class="logo__dry"
-        :src="tenantConfig.logo1"
-        alt=""
-      >
-      <img
-        v-if="tenantConfig.logo2"
-        class="logo__dry"
-        :src="tenantConfig.logo2"
-        alt=""
-      >
+        <v-app-bar-nav-icon
+          v-if="isMobile"
+          @click.stop="toogleSidebar"
+        />
+        <img
+          v-if="!tenantConfig.logo1"
+          class="logo__dry"
+          src="@/assets/images/dry360_logo.svg"
+          alt=""
+        >
+        <img
+          v-else
+          class="logo__dry"
+          :src="tenantConfig.logo1"
+          alt=""
+        >
+        <img
+          v-if="tenantConfig.logo2"
+          class="logo__dry"
+          :src="tenantConfig.logo2"
+          alt=""
+        >
 
-      <div class="menu">
-        <v-list>
-          <v-list-group
-            v-if="isSuperadmin()"
-            no-action
-            sub-group
-          >
-            <template v-slot:activator>
-              <v-list-item-content>
-                <v-list-item-title>Admin</v-list-item-title>
-              </v-list-item-content>
-            </template>
+        <div class="menu">
+          <v-list>
+            <v-list-group
+              v-if="isSuperadmin()"
+              no-action
+              sub-group
+            >
+              <template v-slot:activator>
+                <v-list-item-content>
+                  <v-list-item-title>Admin</v-list-item-title>
+                </v-list-item-content>
+              </template>
 
-            <v-list-item
-              v-for="(el, i) in admins"
-              :key="i"
-              :href="el.path"
-              target="_blank"
-              :input-value="false"
-              link
-            >
-              <v-list-item-title v-text="el.name" />
-            </v-list-item>
-          </v-list-group>
-          <v-list-item-group v-model="group">
-            <v-list-item
-              v-for="(item, i) in menuItems"
-              :key="i"
-              :to="item.path"
-            >
-              <v-list-item-icon>
-                <v-icon v-text="item.icon" />
-              </v-list-item-icon>
-              <v-list-item-content>
+              <v-list-item
+                v-for="(el, i) in admins"
+                :key="i"
+                :href="el.path"
+                target="_blank"
+                :input-value="false"
+                link
+              >
                 <v-list-item-title
-                  v-if="item.name === 'logout' "
-                  :key="i"
-                  @click="logoutBtn"
-                  v-text="item.name"
+                  class="admin__menu"
+                  v-text="el.name"
                 />
-                <v-list-item-title
-                  v-else-if="item.name === 'manage users' && hasPermission('users-view')"
-                  :key="i"
-                  v-text="item.name"
-                />
-                <v-list-item-title
-                  v-else
-                  :key="i"
-                  v-text="item.name"
-                />
-              </v-list-item-content>
-            </v-list-item>
-          </v-list-item-group>
-        </v-list>
-      </div>
-      <div
-        v-if="currentUser !== undefined && currentUser.is_superadmin"
-        class="company__name"
-      >
-        <h3>{{ company.name }}</h3>
-      </div>
-      <img
-        src="@/assets/images/LogoDryPoweredBy.svg"
-        class="logo__dry_bottom"
-        alt=""
-      >
-    </v-navigation-drawer>
+              </v-list-item>
+            </v-list-group>
+            <v-list-item-group v-model="group">
+              <v-list-item
+                v-for="(item, i) in menuItems"
+                :key="i"
+                :to="item.path"
+              >
+                <v-list-item-icon>
+                  <v-icon v-text="item.icon" />
+                </v-list-item-icon>
+                <v-list-item-content>
+                  <v-list-item-title
+                    v-if="item.name === 'logout' "
+                    :key="i"
+                    @click="logoutBtn"
+                    v-text="item.name"
+                  />
+                  <v-list-item-title
+                    v-else-if="item.name === 'manage users' && hasPermission('users-view')"
+                    :key="i"
+                    @click="closeOnMobile"
+                    v-text="item.name"
+                  />
+                  <v-list-item-title
+                    v-else
+                    :key="i"
+                    @click="closeOnMobile"
+                    v-text="item.name"
+                  />
+                </v-list-item-content>
+              </v-list-item>
+            </v-list-item-group>
+          </v-list>
+        </div>
+        <div
+          v-if="currentUser !== undefined && currentUser.is_superadmin"
+          class="company__name"
+        >
+          <h3>{{ company.name }}</h3>
+        </div>
+        <img
+          src="@/assets/images/LogoDryPoweredBy.svg"
+          class="logo__dry_bottom"
+          alt=""
+        >
+      </v-navigation-drawer>
+    </div>
   </div>
 </template>
 <script>
@@ -116,17 +128,19 @@ export default {
     return {
       group: null,
       model: 1,
-      menuItems: [{ name: 'dashboard', path: '/dashboard' },
+      menuItems: [
+        { name: 'dashboard', path: '/dashboard' },
         { name: 'manage users', path: '/user/dashboard' },
         { name: 'my profile', path: '/user/edit-profile' },
         { name: 'logout', path: '#' }],
-      admins: [{ name: 'Check Horizon', path: '/horizon', role: ['superadmin'] },
-        { name: 'Roles and permissions', path: '/authorization', role: ['superadmin'] },
-        { name: 'Telescope', path: '/telescope', role: ['superadmin'] },
+      admins: [
         { name: 'Nova', path: '/nova', role: ['superadmin'] },
+        { name: 'Horizon', path: '/horizon', role: ['superadmin'] },
+        { name: 'Telescope', path: '/telescope', role: ['superadmin'] },
+        { name: 'Roles and permissions', path: '/authorization', role: ['superadmin'] },
         { name: 'Sentry', path: 'https://sentry.io/organizations/draymaster/issues/?project=5285677', role: ['superadmin'] },
         { name: 'Rules Editor', path: '/rules-editor', role: ['admin'] },
-        { name: 'usage stats', path: '' },
+        { name: 'Usage Stats', path: '#', role: ['admin'] },
         { name: 'RefsCustoms Mapping', path: '/companies/1/refs-custom-mapping', role: ['superadmin'] }
       ]
 
@@ -143,13 +157,15 @@ export default {
       }
     })
   },
-  watch: {
-
-  },
   async mounted () {
     await this[type.getTenantConfig]()
     if (this.currentUser !== undefined) {
       await this[types.getCompany]({ id: this.currentUser.t_company_id })
+    }
+  },
+  beforeMount () {
+    if (!this.isMobile) {
+      this.toogleSidebar()
     }
   },
   methods: {
@@ -162,14 +178,27 @@ export default {
     },
     toogleSidebar () {
       this[type.setSidebar]({ show: !this.showSidebar })
+    },
+    closeOnMobile () {
+      if (!this.isMobile) {
+        this.toogleSidebar()
+      }
+    },
+    onChangeSidebar (value) {
+      this[type.setSidebar]({ show: value })
     }
   }
 
 }
 </script>
 
-<style lang="scss" scoped>
+<style lang="scss">
 $sidebarbackground: url("../../assets/images/bg_sidebar.png");
+.theme--light.v-navigation-drawer:not(.v-navigation-drawer--floating) .v-navigation-drawer__border{
+    background: linear-gradient(90deg, rgba(0, 60, 113, 0.1) 0%, rgba(0, 60, 113, 0.05) 31.77%, rgba(0, 60, 113, 0) 100%);
+    box-shadow: inset -1px 0px 0px rgba(0, 60, 113, 0.03);
+    transform: rotate(180deg);
+  }
 .sidebar__nav{
   background: linear-gradient(90deg, rgba(0, 60, 113, 0) 97.95%, rgba(0, 60, 113, 0.1) 100%), linear-gradient(0deg, rgba(0, 60, 113, 0.05), rgba(0, 60, 113, 0.05)), #FFFFFF;
   box-shadow: inset rem(-1) 0px 0px rgba(0, 60, 113, 0.03);
@@ -180,6 +209,9 @@ $sidebarbackground: url("../../assets/images/bg_sidebar.png");
   background-image: $sidebarbackground;
   background-size: cover;
   max-width: rem(196);
+  .v-navigation-drawer__border{
+    width: 5px;
+  }
 
   .logo__dry{
     width: rem(140);
@@ -193,10 +225,25 @@ $sidebarbackground: url("../../assets/images/bg_sidebar.png");
     .v-list-item:not(:last-child){
       border-bottom: rem(2) solid map-get($colors, gray );
     }
+    .v-list-group__items a{
+      border-bottom: unset !important;
+    .v-list-item__title.admin__menu {
+      text-transform: capitalize;
+      font-size: rem(13);
+      font-weight: 500;
+      line-height: (13 / 16);
+      letter-spacing: rem(.75);
+    }
+    .v-list-group--sub-group{
+      .v-list-group__header{
+        text-transform: uppercase;
+      }
+    }
+    }
     .v-list-item__title{
       color: var(--v-primary-base) !important;
-      text-transform: uppercase;
       font-size: rem(12);
+      text-transform: uppercase;
       font-weight: 500;
       text-align: center;
       letter-spacing: rem(.75);
@@ -205,7 +252,6 @@ $sidebarbackground: url("../../assets/images/bg_sidebar.png");
         text-align: right;
         color: var(--v-primary-base) !important;
         }
-
     }
     & > div{
       background: transparent !important;
@@ -216,9 +262,11 @@ $sidebarbackground: url("../../assets/images/bg_sidebar.png");
          padding-left: 0px;
       }
     }
-    .v-list-group .v-list-item, .v-list-item--active, .v-item--active, .v-list-group--active{
+
+    .v-list-item--active, .v-item--active, .v-list-group--active{
       box-shadow: 0px -1px 0px 0px #003C71 15% inset;
       background: linear-gradient(90deg, rgba(0, 60, 113, 0) 97.95%, rgba(0, 60, 113, 0.1) 100%), linear-gradient(0deg, rgba(0, 60, 113, 0.05), rgba(0, 60, 113, 0.05)), #FFFFFF !important;
+
       &::before{
         background-color: unset !important;
       }

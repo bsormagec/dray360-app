@@ -1,11 +1,7 @@
 <template>
   <div class="header">
     <h5 class="header__title">
-      <v-app-bar-nav-icon
-        v-if="isMobile"
-        class=""
-        @click.stop="toogleSidebar()"
-      />Orders
+      Orders
     </h5>
 
     <div class="header__right">

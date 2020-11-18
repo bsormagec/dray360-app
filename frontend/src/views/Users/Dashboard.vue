@@ -47,7 +47,9 @@ export default {
     ]
   }),
   beforeMount () {
-    this.showSidebar()
+    if (!this.isMobile) {
+      this.showSidebar()
+    }
   },
   async mounted () {
     const vc = this

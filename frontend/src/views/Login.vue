@@ -161,6 +161,7 @@ export default {
       padding: rem(30);
       .text__error{
         color: map-get($colors, red );
+        font-size: rem(12);
       }
       .logo{
         width: rem(200);

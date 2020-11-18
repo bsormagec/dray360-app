@@ -109,7 +109,9 @@ export default {
       }
       this.statusQuery = this.statusQuery.split(',')
     }
-    this.showSidebar()
+    if (!this.isMobile) {
+      this.showSidebar()
+    }
   },
 
   mounted () {

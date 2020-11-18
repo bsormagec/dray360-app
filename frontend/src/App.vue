@@ -1,7 +1,7 @@
 <template>
   <v-app :style="cssVars">
     <v-container fluid>
-      <v-row>
+      <v-row no-gutters>
         <v-col class="sidebar">
           <SidebarNavigation />
         </v-col>
@@ -44,11 +44,8 @@ export default {
 <style lang="scss">
 @import "@/assets/styles/index.scss";
 
-.container {
-  padding: 0;
-}
 .app__content{
-  padding: rem(40);
+  padding: rem(10) !important;
 }
 
 .sidebar {

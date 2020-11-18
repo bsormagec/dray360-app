@@ -73,8 +73,8 @@
       </div>
     </template>
 
-    <div class="row">
-      <div class="col-4">
+    <v-row>
+      <v-col>
         <v-btn
           class="button"
           text
@@ -83,8 +83,8 @@
         >
           Change Password
         </v-btn>
-      </div>
-      <div class="col-2 d-flex justify-end">
+      </v-col>
+      <v-col>
         <v-btn
           class="button"
           color="primary"
@@ -101,8 +101,8 @@
         >
           Save
         </v-btn>
-      </div>
-    </div>
+      </v-col>
+    </v-row>
   </div>
 </template>
 
@@ -126,7 +126,9 @@ export default {
     ...mapState(auth.moduleName, { currentUser: state => state.currentUser })
   },
   beforeMount () {
-    this.showSidebar()
+    if (!this.isMobile) {
+      this.showSidebar()
+    }
   },
   mounted () {
     this.retrieveUser()
