@@ -222,7 +222,7 @@
           />
           <FormFieldInput
             references="customer_number"
-            label="Customer Number"
+            label="Customer number"
             :value="order.customer_number === null ? '---' : order.customer_number"
             :edit-mode="editMode"
             @change="value => handleChange('customer_number', value)"
@@ -236,17 +236,24 @@
           />
           <FormFieldInput
             references="purchase_order_number"
-            label="Purchase Order Number"
+            label="Purchase Order number"
             :value="order.purchase_order_number"
             :edit-mode="editMode"
             @change="value => handleChange('purchase_order_number', value)"
           />
           <FormFieldInput
             references="release_number"
-            label="Release Number"
+            label="Release number"
             :value="order.release_number"
             :edit-mode="editMode"
             @change="value => handleChange('release_number', value)"
+          />
+          <FormFieldInput
+            references="pickup_number"
+            label="Pickup number"
+            :value="order.pickup_number"
+            :edit-mode="editMode"
+            @change="value => handleChange('pickup_number', value)"
           />
           <FormFieldInput
             references="vessel"
@@ -264,7 +271,7 @@
           />
           <FormFieldInput
             references="booking_number"
-            label="Booking Number"
+            label="Booking number"
             :value="order.booking_number === null ? '---' : order.booking_number"
             :edit-mode="editMode"
             @change="value => handleChange('booking_number', value)"
