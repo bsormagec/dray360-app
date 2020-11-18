@@ -85,13 +85,13 @@
                   <v-list-item-title
                     v-else-if="item.name === 'manage users' && hasPermission('users-view')"
                     :key="i"
-                    @click="closeOnMobile"
+                    @input="onChangeSidebar"
                     v-text="item.name"
                   />
                   <v-list-item-title
                     v-else
                     :key="i"
-                    @click="closeOnMobile"
+                    @input="onChangeSidebar"
                     v-text="item.name"
                   />
                 </v-list-item-content>
@@ -180,11 +180,6 @@ export default {
     },
     toogleSidebar () {
       this[type.setSidebar]({ show: !this.showSidebar })
-    },
-    closeOnMobile () {
-      if (!this.isMobile) {
-        this.toogleSidebar()
-      }
     },
     onChangeSidebar (value) {
       this[type.setSidebar]({ show: value })
