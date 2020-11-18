@@ -2,7 +2,7 @@
   <div
     class="mapping__panel"
   >
-    <h1>Profit tools mapping admin panel</h1>
+    <h4>Profit tools mapping admin panel</h4>
     <div
       class="row"
     >
@@ -11,17 +11,17 @@
           <template v-slot:default>
             <thead>
               <tr>
-                <th class="text-left">
-                  <h2>&nbsp;</h2>
+                <th>
+                  <h5>&nbsp;</h5>
                 </th>
                 <th class="text-left">
-                  <h2>Dray360 Field</h2>
+                  <h5>Dray360 Field</h5>
                 </th>
-                <th class="text-left">
-                  <h2>Enter custom value</h2>
+                <th>
+                  <h5>Enter custom value</h5>
                 </th>
-                <th class="text-left">
-                  <h2>Ref Type</h2>
+                <th>
+                  <h5>Ref Type</h5>
                 </th>
               </tr>
             </thead>
@@ -218,6 +218,7 @@ export default {
         { field_name: 'vessel', value: 'vessel' },
         { field_name: 'voyage', value: 'voyage' },
         { field_name: 'yard_pre_pull', value: 'yard pre-pull' },
+        { field_name: 'interchange_count', value: 'interchange count' },
         { field_name: 'other_value', value: 'Other' }
       ]
     }
