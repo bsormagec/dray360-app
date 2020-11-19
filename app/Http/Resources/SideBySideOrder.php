@@ -92,7 +92,7 @@ class SideBySideOrder extends JsonResource
                 }
 
                 if (in_array($key, ['order_line_items', 'order_address_events'])) {
-                    $columnToCompare = $key == 'order_line_items' ? 'contents' : 't_address_id';
+                    $columnToCompare = $key == 'order_line_items' ? 'multiline_contents' : 't_address_id';  # can we have more than one key? 'multiline_contents' is not always used, also look at contents, others...
 
                     return $this->relatedItemsAreTheSame(
                         $this->resource->getRelationValue(Str::camel($key))->toArray(),

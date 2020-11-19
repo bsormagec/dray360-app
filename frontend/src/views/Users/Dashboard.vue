@@ -1,39 +1,34 @@
 <template>
-  <div class="row">
-    <div class="col-2 sidebar__navigation">
-      <SidebarNavigation />
-    </div>
-    <div class="user__list col-10">
-      <UserTable
-        class="general-table"
-        table-title="User list"
-        :customheaders="headers"
-        :active-page="1"
-        :custom-items="users()"
-        :has-search="true"
-        :has-column-filters="true"
-        :has-bulk-actions="true"
-        :bulk-actions="['Delete selected', 'Deactivate account', 'Reset password']"
-        :has-action-button="{showButton: false, action: '/'}"
-        injections="Orders"
-        :has-add-button="{showButton: true, action: '/'}"
-        :has-calendar="false"
-        @searchToParent="onChildSearchUpdate"
-        @deleteItem="deleteUser"
-      />
-    </div>
+  <div>
+    <UserTable
+      class="general-table"
+      table-title="User list"
+      :customheaders="headers"
+      :active-page="1"
+      :custom-items="users()"
+      :has-search="true"
+      :has-column-filters="true"
+      :has-bulk-actions="true"
+      :bulk-actions="['Delete selected', 'Deactivate account', 'Reset password']"
+      :has-action-button="{showButton: false, action: '/'}"
+      injections="Orders"
+      :has-add-button="{showButton: true, action: '/'}"
+      :has-calendar="false"
+      @searchToParent="onChildSearchUpdate"
+      @deleteItem="deleteUser"
+    />
   </div>
 </template>
 
 <script>
-import SidebarNavigation from '@/components/General/SidebarNavigation'
+
 import UserTable from '@/components/Users/UserTable'
 import { mapState, mapActions } from 'vuex'
 import { reqStatus } from '@/enums/req_status'
 import userDashboard, { types } from '@/store/modules/users'
+import utils, { type } from '@/store/modules/utils'
 export default {
   components: {
-    SidebarNavigation,
     UserTable
   },
   data: () => ({
@@ -51,7 +46,11 @@ export default {
       { text: 'Actions', value: 'actions', sortable: false }
     ]
   }),
-
+  beforeMount () {
+    if (!this.isMobile) {
+      this.showSidebar()
+    }
+  },
   async mounted () {
     const vc = this
     await vc.fetchUsers()
@@ -59,7 +58,13 @@ export default {
 
   methods: {
     ...mapActions(userDashboard.moduleName, [types.getUsers, types.deleteUser]),
+    ...mapActions(utils.moduleName, [type.setSidebar]),
 
+    async showSidebar () {
+      await this[type.setSidebar]({
+        show: true
+      })
+    },
     async fetchUsers () {
       const status = await this[types.getUsers]()
 
@@ -98,10 +103,5 @@ export default {
 }
 </script>
 <style lang="scss" scoped>
-  .user__list{
-    padding: rem(20) !important;
-  }
-  .sidebar__navigation{
-    max-width: rem(200) !important;
-  }
+
 </style>

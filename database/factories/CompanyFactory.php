@@ -17,5 +17,6 @@ $factory->define(Company::class, function (Faker $faker) {
         'refs_custom_mapping' => ["Peter" => 35, "Ben" => 37, "Joe" => 43],
         'automatic_address_verification_threshold' => $faker->randomDigit,
         't_domain_id' => factory(Domain::class),
+        'sync_addresses' => true,
     ];
 });

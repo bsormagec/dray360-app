@@ -14,9 +14,8 @@ class TMSProvider extends Model
 
     public $table = 't_tms_providers';
 
-    const CREATED_AT = 'created_at',
-        UPDATED_AT = 'updated_at',
-        PROFIT_TOOLS = 'Profit Tools';
+    const PROFIT_TOOLS = 'Profit Tools',
+        COMPCARE = 'Compcare';
 
     protected $dates = ['deleted_at'];
 
@@ -42,5 +41,13 @@ class TMSProvider extends Model
     public static function getProfitTools(): self
     {
         return static::where('name', static::PROFIT_TOOLS)->first();
+    }
+
+    /**
+     * Get TMS provider 'Compcare'.
+     */
+    public static function getCompcare(): self
+    {
+        return static::where('name', static::COMPCARE)->first();
     }
 }

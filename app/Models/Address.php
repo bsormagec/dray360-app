@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use Illuminate\Support\Arr;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
@@ -149,7 +150,19 @@ class Address extends Model
                     'is_billable' => strtoupper($data['co_allow_billing'] ?? '') == 'T',
                     'is_terminal' => strtoupper($data['terminationlocation'] ?? '') == 'T',
                 ];
-                break;
+            case 'compcare':
+                return [
+                    'address_line_1' => $data['AddressLine1'] ?? null,
+                    'address_line_2' => $data['AddressLine2'] ?? null,
+                    'city' => Arr::get($data, 'City.CityName') ?? $data['CityName'] ?? null,
+                    'state' => Arr::get($data, 'State.StateCode'),
+                    'postal_code' => Arr::get($data, 'PostalCodeNavigation.PostalCode') ?? $data['PostalCode'] ?? null,
+                    'country' => Arr::get($data, 'Country.CountryCode'),
+                    'location_name' => null,
+                    'location_phone' => null,
+                    'is_billable' => 0,
+                    'is_terminal' => 0,
+                ];
         }
     }
 
@@ -167,6 +180,17 @@ class Address extends Model
                 $this->location_phone == ($address['phone'] ?? null) &&
                 $this->is_billable == (strtoupper($address['co_allow_billing'] ?? '') == 'T') &&
                 $this->is_terminal == (strtoupper($address['co_allow_billing'] ?? '') == 'T');
+            case 'compcare':
+                return $this->address_line_1 == ($address['AddressLine1'] ?? null) &&
+                $this->address_line_2 == ($address['AddressLine2'] ?? null) &&
+                $this->city == (Arr::get($address, 'City.CityName') ?? $address['CityName'] ?? null) &&
+                $this->state == (Arr::get($address, 'State.StateCode')) &&
+                $this->postal_code == (Arr::get($address, 'PostalCodeNavigation.PostalCode') ?? $address['PostalCode'] ?? null) &&
+                $this->country == (Arr::get($address, 'Country.CountryCode')) &&
+                $this->location_name == null &&
+                $this->location_phone == null &&
+                $this->is_billable == 0 &&
+                $this->is_terminal == 0;
         }
 
         return false;

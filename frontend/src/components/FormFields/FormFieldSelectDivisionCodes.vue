@@ -58,7 +58,7 @@ export default {
     }
     this.loading = false
   },
- 
+
   methods: {
     handleChange (e) {
       this.currentValue = e

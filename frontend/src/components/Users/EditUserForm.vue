@@ -79,6 +79,7 @@
         <v-btn
           class="cancel-button button"
           outlined
+          @click="$router.push('/user/dashboard')"
         >
           Cancel
         </v-btn>
@@ -132,11 +133,18 @@ export default {
   mounted () {
     this.getUserInfo()
     this.fetchRoles()
+    this.showSideBar()
   },
 
   methods: {
     ...mapActions(userDashboard.moduleName, [types.getUsers, types.editUser, types.getRoles, types.changeUserStatus, types.deleteUser]),
-    ...mapActions(utils.moduleName, [type.setSnackbar]),
+    ...mapActions(utils.moduleName, [type.setSnackbar, type.setSidebar]),
+
+    async showSideBar () {
+      await this[type.setSidebar]({
+        show: true
+      })
+    },
 
     getActivationState () {
       if (this.editedUser) {

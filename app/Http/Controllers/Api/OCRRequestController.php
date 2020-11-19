@@ -3,7 +3,6 @@
 namespace App\Http\Controllers\Api;
 
 use Carbon\Carbon;
-use App\Models\Company;
 use App\Models\OCRRequest;
 use Illuminate\Support\Str;
 use Illuminate\Http\Request;
@@ -48,6 +47,12 @@ class OCRRequestController extends Controller
             ]);
         }
 
+        if (! currentCompany()) {
+            throw ValidationException::withMessages([
+                'company' => 'User not associated with a company can\'t upload files',
+            ]);
+        }
+
         try {
             $requestId = Str::uuid()->toString();
             $expiryTime = Carbon::now()->addMinutes(self::MINUTES_URI_REMAINS_VALID);
@@ -59,7 +64,7 @@ class OCRRequestController extends Controller
                 'uploading_filename' => $uploadingFilename,
                 'url_expiry_time' => $expiryTime,
                 'upload_uri' => $uploadRequestUri,
-                'company_id' => currentCompany()->id ?? Company::TCOMPANIES_DEMO,
+                'company_id' => currentCompany()->id ?? null,
                 'user_id' => auth()->user()->id,
                 'variant_name' => $request->get('variant_name'),
                 'datetime_utciso' => now()->toISOString(),

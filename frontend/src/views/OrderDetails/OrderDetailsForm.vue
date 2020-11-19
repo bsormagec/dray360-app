@@ -222,7 +222,7 @@
           />
           <FormFieldInput
             references="customer_number"
-            label="Customer Number"
+            label="Customer number"
             :value="order.customer_number === null ? '---' : order.customer_number"
             :edit-mode="editMode"
             @change="value => handleChange('customer_number', value)"
@@ -236,17 +236,24 @@
           />
           <FormFieldInput
             references="purchase_order_number"
-            label="Purchase Order Number"
+            label="Purchase Order number"
             :value="order.purchase_order_number"
             :edit-mode="editMode"
             @change="value => handleChange('purchase_order_number', value)"
           />
           <FormFieldInput
             references="release_number"
-            label="Release Number"
+            label="Release number"
             :value="order.release_number"
             :edit-mode="editMode"
             @change="value => handleChange('release_number', value)"
+          />
+          <FormFieldInput
+            references="pickup_number"
+            label="Pickup number"
+            :value="order.pickup_number"
+            :edit-mode="editMode"
+            @change="value => handleChange('pickup_number', value)"
           />
           <FormFieldInput
             references="vessel"
@@ -264,7 +271,7 @@
           />
           <FormFieldInput
             references="booking_number"
-            label="Booking Number"
+            label="Booking number"
             :value="order.booking_number === null ? '---' : order.booking_number"
             :edit-mode="editMode"
             @change="value => handleChange('booking_number', value)"
@@ -301,6 +308,7 @@
             :recognized-text="order.bill_to_address_raw_text"
             :verified="order.bill_to_address_verified"
             :matched-address="order.bill_to_address"
+            references="bill_to_address"
             billable
             @change="(e) => handleChange('bill_to_address', e)"
           />
@@ -357,6 +365,7 @@
             :recognized-text="orderAddressEvent.t_address_raw_text"
             :verified="orderAddressEvent.t_address_verified || false"
             :matched-address="orderAddressEvent.address"
+            :references="`order_address_events.${index}`"
             @change="(e) => handleChange(`order_address_events.${index}`, e)"
           />
         </Fragment>
@@ -417,6 +426,7 @@ import { reqStatus } from '@/enums/req_status'
 import get from 'lodash/get'
 
 import orderForm, { types as orderFormTypes } from '@/store/modules/order-form'
+import { postSendToTms } from '@/store/api_calls/orders'
 import utils, { type } from '@/store/modules/utils'
 import orders, { types } from '@/store/modules/orders'
 
@@ -430,7 +440,6 @@ import FormFieldAddressSwitchVerify from '@/components/FormFields/FormFieldAddre
 import FormFieldEquipmentType from '@/components/FormFields/FormFieldEquipmentType'
 import OutlinedButtonGroup from '@/components/General/OutlinedButtonGroup'
 import FormFieldSelectDivisionCodes from '@/components/FormFields/FormFieldSelectDivisionCodes'
-import { delDeleteOrder } from '@/store/api_calls/orders'
 
 export default {
   name: 'OrderDetailsForm',
@@ -477,7 +486,7 @@ export default {
         return true
       }
 
-      if (this.isSuperadmin()) {
+      if (this.hasPermission('tms-resubmit')) {
         return false
       }
 
@@ -512,7 +521,6 @@ export default {
       toggleEdit: orderFormTypes.toggleEdit
     }),
     ...mapActions(utils.moduleName, [type.setSnackbar, type.setConfirmationDialog]),
-    ...mapActions(orders.moduleName, [types.postSendToTms, types.getDownloadPDFURL]),
     ...mapActions(orders.moduleName, [types.getDownloadPDFURL]),
     ...mapActions(orderForm.moduleName, {
       updateOrder: orderFormTypes.updateOrder,
@@ -525,24 +533,27 @@ export default {
     },
 
     async postSendToTms () {
-      const status = await this[types.postSendToTms]({ order_id: this.order.id, status: 'sending-to-wint' })
-      if (status === reqStatus.success) {
-        this.sentToTms = true
-        await this[type.setSnackbar]({
-          show: true,
-          showSpinner: false,
-          message: 'Processing'
-        })
+      const [error] = await postSendToTms(this.order.id)
+      let message = ''
+
+      if (error !== undefined) {
+        switch (error.response.status) {
+          case 422:
+            message = 'Some addresses are not verified'
+            break
+          case 403:
+            message = 'You are not authorized'
+            break
+          default:
+            message = 'An error has occurred, please contact to technical support'
+            break
+        }
       } else {
-        this[type.setSnackbar]({
-          show: true,
-          showSpinner: false,
-          message: status.request.status === 422
-            ? 'Some addresses are not verified'
-            : status.request.status === 403
-              ? 'You are not authorized' : 'An error has occurred, please contact to technical support'
-        })
+        message = 'Sending the order to the TMS is in progress'
+        this.sentToTms = true
       }
+
+      this[type.setSnackbar]({ show: true, message })
     },
 
     async downloadPDF (orderId) {
@@ -641,7 +652,7 @@ export default {
     font-weight: 500;
     line-height: (23.4 / 20);
     letter-spacing: rem(.15);
-    
+
     & .v-btn {
       min-width: unset;
       margin-right: rem(8);

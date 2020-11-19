@@ -130,7 +130,7 @@
 import { mapState, mapActions } from 'vuex'
 import { reqStatus } from '@/enums/req_status'
 import address, { types } from '@/store/modules/address'
-import { formatAddress } from '@/views/Details/inner_utils/parse_document'
+import { formatAddress } from '@/utils/order_form_general_functions'
 
 export default {
   props: {

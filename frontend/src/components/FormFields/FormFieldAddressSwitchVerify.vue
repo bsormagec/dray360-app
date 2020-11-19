@@ -1,76 +1,85 @@
 <template>
   <!--  eslint-disable vue/no-v-html -->
-  <div class="form-field-element-modal-address">
-    <div class="address-book-modal">
-      <div
-        v-if="label !== ''"
-        class="address-book-modal__title"
-      >
-        <h3 v-html="label" />
-      </div>
-
-      <div class="address-book-modal__body">
+  <FormFieldPresentation
+    :references="references"
+    value=""
+    label=""
+    :edit-mode="false"
+    only-hover
+  >
+    <div class="form-field-element-modal-address">
+      <div class="address-book-modal">
         <div
-          v-if="!verified || !addressFound"
-          class="address-book-modal__body__status"
+          v-if="label !== ''"
+          class="address-book-modal__title"
         >
-          <v-icon :color="addressFound ? 'warning' : 'error'">
-            mdi-alert-outline
-          </v-icon>
-          <span :class="{'not-found': !addressFound}">
-            {{ addressFound ? 'Address Verification Needed': 'Address Not Found' }}
-          </span>
+          <h3 v-html="label" />
         </div>
 
-        <div class="address-book-modal__body__block">
-          <span class="block__left">Address as Recognized</span>
-          <span class="block__right">{{ recognizedText }}</span>
+        <div class="address-book-modal__body">
+          <div
+            v-if="!verified || !addressFound"
+            class="address-book-modal__body__status"
+          >
+            <v-icon :color="addressFound ? 'warning' : 'error'">
+              mdi-alert-outline
+            </v-icon>
+            <span :class="{'not-found': !addressFound}">
+              {{ addressFound ? 'Address Verification Needed': 'Address Not Found' }}
+            </span>
+          </div>
+
+          <div class="address-book-modal__body__block">
+            <span class="block__left">Address as Recognized</span>
+            <span class="block__right">{{ recognizedText }}</span>
+          </div>
+
+          <div class="address-book-modal__body__block">
+            <span class="block__left">{{ !verified ? 'Closest Match' : 'Verified Address' }}</span>
+            <span
+              class="block__right"
+              v-html="textAddressToShow"
+            />
+          </div>
         </div>
 
-        <div class="address-book-modal__body__block">
-          <span class="block__left">{{ !verified ? 'Closest Match' : 'Verified Address' }}</span>
-          <span
-            class="block__right"
-            v-html="textAddressToShow"
-          />
+        <div class="address-book-modal__footer">
+          <v-btn
+            v-if="!verified && addressFound"
+            color="primary"
+            outlined
+            small
+            class="mr-2"
+            @click="verifyMatch"
+          >
+            Verify Closest Match
+          </v-btn>
+
+          <v-btn
+            color="primary"
+            outlined
+            small
+            @click="toggleAddressModal"
+          >
+            Select Different
+          </v-btn>
         </div>
+
+        <AddressBookModalDialog
+          :is-open="addressModalOpen"
+          :filters="filters"
+          :recognized-text="recognizedText"
+          @change="handleChange"
+        />
       </div>
-
-      <div class="address-book-modal__footer">
-        <v-btn
-          v-if="!verified && addressFound"
-          color="primary"
-          outlined
-          small
-          class="mr-2"
-          @click="verifyMatch"
-        >
-          Verify Closest Match
-        </v-btn>
-
-        <v-btn
-          color="primary"
-          outlined
-          small
-          @click="toggleAddressModal"
-        >
-          Select Different
-        </v-btn>
-      </div>
-
-      <AddressBookModalDialog
-        :is-open="addressModalOpen"
-        :filters="filters"
-        :recognized-text="recognizedText"
-        @change="handleChange"
-      />
     </div>
-  </div>
+  </FormFieldPresentation>
 </template>
 
 <script>
 /* eslint-disable vue/no-v-html */
 import AddressBookModalDialog from '@/components/Orders/AddressBookModalDialog'
+import FormFieldPresentation from './FormFieldPresentation'
 
 import { mapState } from 'vuex'
 import orders from '@/store/modules/orders'
@@ -82,10 +91,12 @@ export default {
   name: 'FormFieldAddressSwitchVerify',
 
   components: {
-    AddressBookModalDialog
+    AddressBookModalDialog,
+    FormFieldPresentation
   },
 
   props: {
+    references: { type: String, default: null },
     label: { type: String, required: false, default: '' },
     verified: { type: Boolean, required: true },
     recognizedText: { type: String, default: '' },
@@ -192,7 +203,7 @@ export default {
       padding-left: rem(6);
       color: map-get($colors, yellow );
       font-weight: 700;
-      
+
       &.not-found {
         color: map-get($colors, red)
       }
