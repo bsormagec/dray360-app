@@ -5,6 +5,7 @@ namespace App\Nova;
 use Laravel\Nova\Fields\ID;
 use Illuminate\Http\Request;
 use Laravel\Nova\Fields\Text;
+use Laravel\Nova\Fields\Code;
 use Laravel\Nova\Fields\Select;
 use Laravel\Nova\Fields\BelongsTo;
 use App\Nova\Filters\BelongsTo as BelongsToFilter;
@@ -70,9 +71,9 @@ class EquipmentType extends Resource
                 ]),
             Text::make('Equipment id', 'tms_equipment_id')
                 ->sortable()
-                    ->rules([
-                        'required'
-                    ]),
+                ->rules([
+                    'required'
+                ]),
             Text::make('Equipment owner', 'equipment_owner')
                 ->sortable()
                 ->rules([
@@ -88,6 +89,7 @@ class EquipmentType extends Resource
             Text::make('Equipment type & size', 'equipment_type_and_size'),
             Text::make('Equipment type', 'equipment_type'),
             Text::make('Equipment size', 'equipment_size'),
+            Code::make('Prefix List', 'line_prefix_list')->json(),
         ];
     }
 
