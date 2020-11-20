@@ -128,6 +128,8 @@ class Order extends Resource
             Text::make('Division code', 'division_code')->hideFromIndex(),
             DateTime::make('Pickup by date', 'pickup_by_date')->hideFromIndex(),
             Text::make('Pickup by time', 'pickup_by_time')->hideFromIndex(),
+            DateTime::make('Cutoff date', 'cutoff_date')->hideFromIndex(),
+            Text::make('Cutoff time', 'cutoff_time')->hideFromIndex(),
             HasMany::make('Order Address Events', 'orderAddressEvents', OrderAddressEvent::class),
             HasMany::make('Order Line Items', 'orderLineItems', OrderLineItem::class),
 
