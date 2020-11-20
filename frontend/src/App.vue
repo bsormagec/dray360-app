@@ -1,11 +1,14 @@
 <template>
   <v-app :style="cssVars">
-    <v-container fluid>
+    <v-container
+      fluid
+      pa-0
+    >
       <v-row no-gutters>
         <v-col class="sidebar">
           <SidebarNavigation />
         </v-col>
-        <v-col class="app__content">
+        <v-col>
           <router-view />
         </v-col>
       </v-row>
@@ -44,11 +47,7 @@ export default {
 <style lang="scss">
 @import "@/assets/styles/index.scss";
 
-.app__content{
-  padding: rem(10) !important;
-}
-
 .sidebar {
-  max-width: map-get($sizes, sidebar-desktop-width);
+  max-width: rem(map-get($sizes, sidebar-desktop-width));
 }
 </style>

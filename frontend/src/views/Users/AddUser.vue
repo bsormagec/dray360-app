@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="pa-5">
     <AddUserForm />
   </div>
 </template>
