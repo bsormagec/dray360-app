@@ -45,6 +45,8 @@ use Illuminate\Database\Eloquent\SoftDeletes;
  * @property string $pickup_number
  * @property \Carbon\Carbon $pickup_by_date
  * @property \Carbon\Carbon $pickup_by_time
+ * @property \Carbon\Carbon $cutoff_date
+ * @property \Carbon\Carbon $cutofF_time
  * @property boolean $bill_to_address_verified
  * @property string $bill_to_address_raw_text
  * @property boolean $port_ramp_of_origin_address_verified
@@ -107,6 +109,8 @@ class Order extends Model
         'pickup_number',
         'pickup_by_date',
         'pickup_by_time',
+        'cutoff_date',
+        'cutoff_time',
         'bill_to_address_verified',
         'bill_to_address_raw_text',
         'port_ramp_of_origin_address_verified',
@@ -164,6 +168,7 @@ class Order extends Model
         'port_ramp_of_destination_address_verified' => 'boolean',
         'ocr_data' => 'json',
         'pickup_by_date' => 'datetime:Y-m-d',
+        'cutoff_date' => 'datetime:Y-m-d',
         'equipment_type_verified' => 'boolean',
     ];
 
@@ -205,6 +210,8 @@ class Order extends Model
         'pickup_number' => 'sometimes|nullable',
         'pickup_by_date' => 'sometimes|nullable',
         'pickup_by_time' => 'sometimes|nullable',
+        'cutoff_date' => 'sometimes|nullable',
+        'cutoff_time' => 'sometimes|nullable',
         'bill_to_address_verified' => 'sometimes|nullable',
         'port_ramp_of_origin_address_verified' => 'sometimes|nullable',
         'port_ramp_of_destination_address_verified' => 'sometimes|nullable',

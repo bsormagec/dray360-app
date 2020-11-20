@@ -37,6 +37,8 @@ $factory->define(Order::class, function (Faker $faker) {
         'pickup_number' => null,
         'pickup_by_date' => null,
         'pickup_by_time' => null,
+        'cutoff_date' => null,
+        'cutoff_time' => null,
         'bill_to_address_verified' => $faker->boolean,
         'bill_to_address_raw_text' => $faker->address,
         'port_ramp_of_origin_address_verified' => $faker->boolean,
