@@ -15,7 +15,8 @@ export const types = {
   getCompanyList: 'GET_COMPANY_LIST',
   setCompanyList: 'SET_COMPANY_LIST',
   getVariantList: 'GET_VARIANT_LIST',
-  setVariantList: 'SET_VARIANT_LIST'
+  setVariantList: 'SET_VARIANT_LIST',
+  setSidebar: 'SET_SIDEBAR'
 }
 
 const initialState = {
@@ -23,7 +24,9 @@ const initialState = {
   company_variant_rules: [],
   testing_output: null,
   company_list: [],
-  variant_list: []
+  variant_list: [],
+  sidebar: { show: false }
+
 }
 
 const mutations = {
@@ -31,7 +34,7 @@ const mutations = {
     state.rules_library = libraryData
   },
   [types.setCompanyVariantRules] (state, { companyVariantData }) {
-    console.log('seCompanyVariantRules')
+    console.log('setCompanyVariantRules')
     state.company_variant_rules = companyVariantData
   },
   [types.setRule] (state, { ruleData, i }) {
@@ -51,6 +54,9 @@ const mutations = {
   },
   [types.setVariantList] (state, { variantList }) {
     state.variant_list = variantList
+  },
+  [types.setSidebar] (state, sidebar) {
+    state.sidebar = sidebar
   }
 }
 
@@ -106,10 +112,9 @@ const actions = {
   },
   async [types.getTestingOutput] ({ commit }, dataObject) {
     const data = await getTestingOutput(dataObject.orderId, dataObject.ruleToTest)
-
     commit(types.setTestingOutput, { testingOutput: data })
+    return reqStatus.success
   },
-
   async [types.getCompanyList] ({ commit }) {
     const [error, data] = await getCompanyList()
     if (error) return error.message
@@ -117,13 +122,15 @@ const actions = {
     commit(types.setCompanyList, { companyList: data })
     return reqStatus.success
   },
-
   async [types.getVariantList] ({ commit }) {
     const [error, data] = await getVariantList()
     if (error) return error.message
 
     commit(types.setVariantList, { variantList: data })
     return reqStatus.success
+  },
+  [types.setSidebar] ({ commit }, { show }) {
+    commit(types.setSidebar, { show })
   }
 }
 
