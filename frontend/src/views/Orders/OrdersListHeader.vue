@@ -1,5 +1,15 @@
 <template>
   <div class="header">
+    <v-btn
+      outlined
+      color="primary"
+      small
+      class="mr-2"
+      @click.stop="showInput = false"
+      @click="e => $emit('refresh', e)"
+    >
+      Refresh
+    </v-btn>
     <h5 class="header__title">
       Orders
     </h5>
@@ -40,6 +50,7 @@ import DateRangeCalendar from '@/components/Orders/DateRangeCalendar'
 import utils, { type } from '@/store/modules/utils'
 import { mapActions } from 'vuex'
 import isMobile from '@/mixins/is_mobile'
+import orders, { types } from '@/store/modules/orders'
 
 export default {
   name: 'OrdersListHeader',
@@ -106,6 +117,7 @@ export default {
 
   methods: {
     ...mapActions(utils.moduleName, [type.getTenantConfig, type.setSidebar]),
+    ...mapActions(orders.moduleName, [types.getOrders]),
     handleCalendar (e) {
       if (e.length === 2) {
         const filters = {
@@ -153,6 +165,9 @@ export default {
     },
     toogleSidebar () {
       this[type.setSidebar]({ show: !this.showSidebar })
+    },
+    change (e) {
+      this.$emit('refresh')
     }
   }
 }

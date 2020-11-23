@@ -5,10 +5,13 @@
       :headers="headers"
       :set-headers="setHeaders"
       :selected-items="selectedItems"
+      @refresh="refresh"
     />
 
     <ContentLoading :loaded="loaded">
-      <OrdersListBody :headers="headers" />
+      <OrdersListBody
+        :headers="headers"
+      />
     </ContentLoading>
 
     <OrdersListFooter
@@ -117,6 +120,10 @@ export default {
 
     async requestPage (n) {
       await this[providerMethodsName].fetchOrdersList({ page: n })
+    },
+    async refresh () {
+      this.$emit('refresh', true)
+      await this[providerMethodsName].fetchOrdersList()
     }
   }
 }
