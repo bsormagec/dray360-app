@@ -6,7 +6,7 @@
       fluid
       px-0
     >
-      <v-row>
+      <v-row no-gutters>
         <v-col cols="2">
           <p class="pagination-info">
             {{ from || 0 }} &mdash; {{ to || 0 }} of {{ total }}

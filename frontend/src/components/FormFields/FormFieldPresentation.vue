@@ -1,5 +1,8 @@
 <template>
-  <div class="form-field-presentation">
+  <div
+    :id="`${cleanStrForId(references)}-formfield`"
+    class="form-field-presentation"
+  >
     <div
       v-if="!editMode"
       :class="{
@@ -12,7 +15,7 @@
       @click="startFieldEdit({ path: references })"
     >
       <div
-        v-show="!isEditing"
+        v-show="!isEditing && !onlyHover"
         class="field__group"
       >
         <span class="field__name">{{ label }}</span>
@@ -23,13 +26,14 @@
       <div
         :class="{
           'highlight__edit': true,
+          'only-hover': onlyHover,
           hover: isHovering,
           edit: isEditing
         }"
       >
-        <slot v-if="isEditing" />
+        <slot v-if="isEditing || onlyHover" />
         <FormFieldHighlightBtns
-          v-show="isEditing || highlight.hover"
+          v-show="(isEditing || highlight.hover) && !onlyHover"
           :edit-mode="isEditing"
           @accept="handleAccept"
           @cancel="handleCancel"
@@ -43,12 +47,13 @@
 </template>
 
 <script>
+import FormFieldHighlightBtns from './FormFieldHighlightBtns'
+
 import isMobile from '@/mixins/is_mobile'
 import { mapState, mapActions } from 'vuex'
 import orderForm, { types } from '@/store/modules/order-form'
 import get from 'lodash/get'
-
-import FormFieldHighlightBtns from './FormFieldHighlightBtns'
+import { cleanStrForId } from '@/utils/clean_str_for_id.js'
 
 export default {
   name: 'FormFieldPresentation',
@@ -61,7 +66,8 @@ export default {
     editMode: { type: Boolean, required: true },
     references: { type: String, required: true },
     label: { type: String, required: true },
-    value: { required: true, default: '' }
+    value: { required: true, default: '' },
+    onlyHover: { type: Boolean, required: false, default: false }
   },
 
   computed: {
@@ -90,6 +96,7 @@ export default {
       startFieldEdit: types.startFieldEdit,
       stopFieldEdit: types.stopFieldEdit
     }),
+    cleanStrForId,
     handleAccept () {
       this.stopFieldEdit({ path: this.references })
       this.$emit('accept')
@@ -155,6 +162,10 @@ export default {
     &.edit {
       min-height: unset;
     }
+  }
+
+  .only-hover {
+    width: 100%;
   }
 
   .highlight__edit {

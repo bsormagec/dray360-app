@@ -135,7 +135,7 @@
     </v-data-table>
     <v-snackbar
       v-model="changesDetected"
-      :timeout="0"
+      :timeout="-1"
     >
       <div class="refresh-msg d-flex align-center justify-space-between">
         <p>New orders available.</p>
@@ -221,6 +221,7 @@ export default {
       dialog: false,
       loading: false,
       page: 1,
+      requestID: this.requestId,
       options: {
       },
       minPause: 500, // 0.5 second minimum delay
@@ -285,7 +286,7 @@ export default {
     this.initFilters.dateRange = params.dateRange?.split(',')
     this.initFilters.status = params.status?.split(',')
     this.initFilters.updateType = params.updateType
-    this.initFilters.requestID = params.requestID
+    this.requestID = params.request_id
     this.initFilters.page = params.page
   },
 
@@ -503,7 +504,7 @@ export default {
         { type: 'sort', value: this.sortDesc ? this.sortColumn : `-${this.sortColumn}` },
         // this field is stubbed in, but the number is currently hard coded in the API as 25
         { type: 'items_per_page', value: this.itemsPerPage },
-        { type: 'requestID', value: this.requestID }
+        { type: 'request_id', value: this.requestID }
       ]
 
       return [...this.filters, ...metaParams.filter(param => param.value)]
@@ -511,7 +512,7 @@ export default {
     // format filters for endpoint interface
     getRequestFilters () {
       const filterKeyMap = {
-        requestID: 'filter[request_id]',
+        request_id: 'filter[request_id]',
         search: 'filter[query]',
         dateRange: 'filter[created_between]',
         updateStatus: 'filter[status]',

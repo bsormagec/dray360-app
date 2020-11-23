@@ -3,9 +3,8 @@
 namespace Tests\Feature\Commands;
 
 use Tests\TestCase;
-use App\Models\Company;
 use App\Services\Apis\RipCms;
-use ProfitToolsCompaniesSeeder;
+use Tests\Seeds\CompaniesSeeder;
 use Illuminate\Support\Facades\Http;
 use App\Models\CompanyAddressTMSCode;
 use Illuminate\Support\Facades\Cache;
@@ -21,7 +20,9 @@ class ImportProfitToolsAddressesTest extends TestCase
     public function setUp(): void
     {
         parent::setUp();
-        $this->seed(ProfitToolsCompaniesSeeder::class);
+        $this->seed(CompaniesSeeder::class);
+        CompaniesSeeder::getTestCushing()->update(['sync_addresses' => true]);
+        CompaniesSeeder::getTestTcompanies()->update(['sync_addresses' => true]);
     }
 
     /** @test */
@@ -40,11 +41,7 @@ class ImportProfitToolsAddressesTest extends TestCase
                 [ "id" => 23, "name" => "UPG3   Z 6"],
                 ["id" => 24, "name" => "WSI WAREHOUSE"],
             ])
-            // ->whenEmpty([]);  # this didn't work
-            ->push([])  # need to push one empty array for every company we address-sync,
-            ->push([])  # currently there are 8 total (10/30/20) so we have these four. TODO fix this hack!
-            ->push([])
-            ->push([]);
+            ->whenEmpty(Http::response([]));
 
         $this->artisan('import:profit-tools-addresses')->assertExitCode(0);
 
@@ -63,7 +60,7 @@ class ImportProfitToolsAddressesTest extends TestCase
     {
         $this->seed(ProfitToolsCushingAddressesSeeder::class);
         Queue::fake();
-        $cushing = Company::getCushing();
+        $cushing = CompaniesSeeder::getTestCushing();
         Cache::forget(RipCms::getTokenCacheKeyFor($cushing));
         Http::fake([
             'https://www.ripcms.com/token*' => Http::response(['access_token' => 'test']),
@@ -75,7 +72,7 @@ class ImportProfitToolsAddressesTest extends TestCase
 
         $this->artisan('import:profit-tools-addresses', [
             '--insert-only' => true,
-            '--company-name' => Company::getCushing()->name,
+            '--company-name' => CompaniesSeeder::getTestCushing()->name,
         ])->assertExitCode(0);
 
         Queue::assertPushed(ImportProfitToolsAddress::class, 1);
@@ -91,7 +88,7 @@ class ImportProfitToolsAddressesTest extends TestCase
     {
         $this->seed(ProfitToolsCushingAddressesSeeder::class);
         Queue::fake();
-        $cushing = Company::getCushing();
+        $cushing = CompaniesSeeder::getTestCushing();
         Cache::forget(RipCms::getTokenCacheKeyFor($cushing));
         Http::fake([
             'https://www.ripcms.com/token*' => Http::response(['access_token' => 'test']),
@@ -103,7 +100,7 @@ class ImportProfitToolsAddressesTest extends TestCase
         $anotherCompany = factory(CompanyAddressTMSCode::class)->create();
 
         $this->artisan('import:profit-tools-addresses', [
-            '--company-name' => Company::getCushing()->name,
+            '--company-name' => CompaniesSeeder::getTestCushing()->name,
         ])->assertExitCode(0);
 
         $this->assertSoftDeleted($companyAddress);
@@ -118,7 +115,7 @@ class ImportProfitToolsAddressesTest extends TestCase
     {
         $this->seed(ProfitToolsCushingAddressesSeeder::class);
         Queue::fake();
-        $cushing = Company::getCushing();
+        $cushing = CompaniesSeeder::getTestCushing();
         Cache::forget(RipCms::getTokenCacheKeyFor($cushing));
         Http::fake([
             'https://www.ripcms.com/token*' => Http::response(['access_token' => 'test']),
@@ -128,7 +125,7 @@ class ImportProfitToolsAddressesTest extends TestCase
         $anotherCompany = factory(CompanyAddressTMSCode::class)->create();
 
         $this->artisan('import:profit-tools-addresses', [
-            '--company-name' => Company::getCushing()->name,
+            '--company-name' => CompaniesSeeder::getTestCushing()->name,
         ])->assertExitCode(0);
 
         $this->assertDatabaseHas('t_company_address_tms_code', ['id' => $companyAddress->id, 'deleted_at' => null]);
@@ -140,7 +137,7 @@ class ImportProfitToolsAddressesTest extends TestCase
     {
         $this->seed(ProfitToolsCushingAddressesSeeder::class);
         Queue::fake();
-        $cushing = Company::getCushing();
+        $cushing = CompaniesSeeder::getTestCushing();
         Cache::forget(RipCms::getTokenCacheKeyFor($cushing));
         Http::fake([
             'https://www.ripcms.com/token*' => Http::response(['access_token' => 'test']),
@@ -150,7 +147,7 @@ class ImportProfitToolsAddressesTest extends TestCase
         $anotherCompany = factory(CompanyAddressTMSCode::class)->create();
 
         $this->artisan('import:profit-tools-addresses', [
-            '--company-name' => Company::getCushing()->name,
+            '--company-name' => CompaniesSeeder::getTestCushing()->name,
         ])->assertExitCode(0);
 
         $this->assertDatabaseHas('t_company_address_tms_code', ['id' => $companyAddress->id, 'deleted_at' => null]);
@@ -160,8 +157,8 @@ class ImportProfitToolsAddressesTest extends TestCase
     protected function clearTokenCache()
     {
         collect([
-            Company::getCushing(),
-            Company::getTCompaniesDemo(),
+            CompaniesSeeder::getTestCushing(),
+            CompaniesSeeder::getTestTcompanies(),
         ])->each(function ($company) {
             Cache::forget(RipCms::getTokenCacheKeyFor($company));
         });

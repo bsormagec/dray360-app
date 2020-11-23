@@ -1,21 +1,30 @@
 <template>
-  <div class="row">
-    <div class="col-2">
-      <SidebarNavigation />
-    </div>
-    <div class="col-10">
-      <AddUserForm />
-    </div>
+  <div class="pa-5">
+    <AddUserForm />
   </div>
 </template>
 
 <script>
-import SidebarNavigation from '@/components/General/SidebarNavigation'
+
 import AddUserForm from '@/components/Users/AddUserForm'
+import utils, { type } from '@/store/modules/utils'
+import { mapActions } from 'vuex'
+
 export default {
   components: {
-    SidebarNavigation,
     AddUserForm
+  },
+  beforeMount () {
+    this.showSidebar()
+  },
+  methods: {
+    ...mapActions(utils.moduleName, [type.setSidebar]),
+
+    async showSidebar () {
+      await this[type.setSidebar]({
+        show: true
+      })
+    }
   }
 }
 </script>

@@ -95,16 +95,18 @@ export default {
       fields_password: { name: 'Password', type: 'password', label: 'Password', placeholder: 'Password', el: { value: '' } }
     }
   },
-
   async created () {
     await this[type.getTenantConfig]()
+  },
+  beforeMount () {
+    this[type.setSidebar]({ show: false })
   },
   mounted () {
     if (this.loggedIn()) this.$router.push('/dashboard/')
   },
 
   methods: {
-    ...mapActions(utils.moduleName, [type.getTenantConfig]),
+    ...mapActions(utils.moduleName, [type.getTenantConfig, type.setSidebar]),
     async login () {
       this.loginError = false
       try {
@@ -159,6 +161,7 @@ export default {
       padding: rem(30);
       .text__error{
         color: map-get($colors, red );
+        font-size: rem(12);
       }
       .logo{
         width: rem(200);

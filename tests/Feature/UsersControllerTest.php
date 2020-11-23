@@ -96,7 +96,7 @@ class UsersControllerTest extends TestCase
     /** @test */
     public function it_should_allow_to_create_a_new_user()
     {
-        $role = Role::first();
+        $role = Role::where('name', '!=', 'superadmin')->first();
         $user = [
             'name' => $this->faker->name,
             'email' => $this->faker->email,
@@ -117,6 +117,24 @@ class UsersControllerTest extends TestCase
     }
 
     /** @test */
+    public function it_should_not_allow_to_create_a_superadmin()
+    {
+        $role = Role::where('name', 'superadmin')->first();
+        $user = [
+            'name' => $this->faker->name,
+            'email' => $this->faker->email,
+            'password' => 'testtest',
+            'role_id' => $role->id,
+        ];
+
+        $this->postJson(route('users.store'), $user)
+            ->assertStatus(Response::HTTP_UNPROCESSABLE_ENTITY)
+            ->assertJsonValidationErrors(['role_id']);
+
+        $this->assertDatabaseMissing('users', ['email' => $user['email']]);
+    }
+
+    /** @test */
     public function it_should_fail_if_not_authorized_to_create_users()
     {
         $this->loginNoAdmin();
@@ -133,7 +151,7 @@ class UsersControllerTest extends TestCase
     /** @test */
     public function it_should_allow_to_update_a_user()
     {
-        $role = Role::latest()->first();
+        $role = Role::where('name', '!=', 'superadmin')->first();
         $user = factory(User::class)->create();
         $user->setCompany($this->customerAdmin->company)->save();
         $user->attachRole($role);
@@ -154,6 +172,29 @@ class UsersControllerTest extends TestCase
         $this->assertEquals($this->customerAdmin->getCompanyId(), $user->getCompanyId());
         $this->assertTrue(Hash::check('password', $user->password));
         $this->assertTrue($user->hasRole($role->name));
+    }
+
+    /** @test */
+    public function it_should_not_let_update_to_a_superadmin()
+    {
+        $role = Role::where('name', 'superadmin')->first();
+        $user = factory(User::class)->create();
+        $user->setCompany($this->customerAdmin->company)->save();
+        $user->attachRole(Role::where('name', '!=', 'superadmin')->first());
+        $newData = [
+            'name' => $this->faker->name,
+            'email' => $this->faker->email,
+            'role_id' => $role->id,
+            'position' => $this->faker->jobTitle,
+            'org' => $this->faker->company
+        ];
+
+        $this->putJson(route('users.update', $user->id), $newData)
+            ->assertStatus(Response::HTTP_UNPROCESSABLE_ENTITY)
+            ->assertJsonValidationErrors(['role_id']);
+
+        $user->refresh();
+        $this->assertFalse($user->hasRole($role->name));
     }
 
     /** @test */

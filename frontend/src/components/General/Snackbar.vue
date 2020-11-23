@@ -8,7 +8,7 @@
 
         v-model="snackbar().show"
         :top="true"
-        :timeout="0"
+        :timeout="-1"
         @input="close"
       >
         <v-progress-circular

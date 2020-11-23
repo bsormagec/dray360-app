@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use Laravel\Nova\Fields\Code;
 use Laravel\Nova\Fields\Text;
 use Laravel\Nova\Fields\Number;
+use Laravel\Nova\Fields\Boolean;
 use Laravel\Nova\Fields\BelongsTo;
 
 class Company extends Resource
@@ -61,9 +62,11 @@ class Company extends Resource
             Text::make('Name'),
             Text::make('Intake Email', 'email_intake_address'),
             Text::make('Intake Email Alt', 'email_intake_address_alt'),
+            BelongsTo::make('Default TMS Provider', 'defaultTmsProvider', TmsProvider::class)->sortable(),
             Number::make('Automatic address verification threshold', 'automatic_address_verification_threshold'),
             Code::make('Ref Mapping', 'refs_custom_mapping')->json(),
             Code::make('Configuration', 'configuration')->json(),
+            Boolean::make('Sync Addresses', 'sync_addresses'),
             BelongsTo::make('Domain', 'domain', Domain::class)->sortable()->nullable(),
 
             Text::make('Blackfly token', 'blackfly_token')->hideFromIndex(),
@@ -74,7 +77,6 @@ class Company extends Resource
             Text::make('Compcare organization id', 'compcare_organization_id')->hideFromIndex(),
             Text::make('Compcare username', 'compcare_username')->hideFromIndex(),
             Text::make('Compcare password', 'compcare_password')->hideFromIndex(),
-            Text::make('Compcare token', 'compcare_token')->hideFromIndex(),
         ];
     }
 

@@ -2,26 +2,12 @@
   <div
     class="orders"
   >
-    <!-- <OrdersSidebar
-      class="orders__sidebar"
-      :active-mobile-tab="activeMobileTab"
-      :change-mobile-tab="changeMobileTab"
-      :toggle-mobile-sidebar="toggleMobileSidebar"
-      :is-open="mobileSidebarOpen"
-    /> -->
-    <SidebarNavigation />
-
-    <div
-      v-if="shouldShowTab(tabs.list)"
-      :style="{ width: '100%', minWidth: '65%', display: 'flex' }"
-    >
-      <OrdersList
-        :active-page="activePage"
-        :loaded="loaded"
-        :filter-query="filterQuery"
-        :selected-items="statusQuery"
-      />
-    </div>
+    <OrdersList
+      :active-page="activePage"
+      :loaded="loaded"
+      :filter-query="filterQuery"
+      :selected-items="statusQuery"
+    />
 
     <OrdersCreate
       v-if="shouldShowTab(tabs.create) && hasPermission('orders-create')"
@@ -36,21 +22,19 @@ import hasPermission from '@/mixins/permissions'
 import { mapState, mapActions } from 'vuex'
 import { reqStatus } from '@/enums/req_status'
 import orders, { types } from '@/store/modules/orders'
-import SidebarNavigation from '@/components/General/SidebarNavigation'
 import OrdersList from '@/views/Orders/OrdersList'
 import OrdersCreate from '@/views/Orders/OrdersCreate'
 import { listFormat } from '@/views/Orders/inner_utils'
 import { tabs } from '@/views/Orders/inner_enums'
 import { providerStateName, providerMethodsName } from '@/views/Orders/inner_types'
+import utils, { type } from '@/store/modules/utils'
 
 export default {
   name: 'Orders',
 
   components: {
-
     OrdersList,
-    OrdersCreate,
-    SidebarNavigation
+    OrdersCreate
   },
 
   mixins: [isMobile, hasPermission],
@@ -111,6 +95,7 @@ export default {
       if (!this.isMobile) return true
       return this.mobileSidebarOpen
     }
+
   },
 
   beforeMount () {
@@ -124,6 +109,9 @@ export default {
       }
       this.statusQuery = this.statusQuery.split(',')
     }
+    if (!this.isMobile) {
+      this.showSidebar()
+    }
   },
 
   mounted () {
@@ -133,7 +121,13 @@ export default {
 
   methods: {
     ...mapActions(orders.moduleName, [types.getOrders]),
+    ...mapActions(utils.moduleName, [type.setSidebar]),
 
+    async showSidebar () {
+      await this[type.setSidebar]({
+        show: true
+      })
+    },
     goToOrder (id) {
       localStorage.setItem('prevListUrl', this.$route.fullPath)
       this.$router.push(`/order/${id}`)

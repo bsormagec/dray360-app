@@ -2,18 +2,16 @@
 
 namespace App\Jobs;
 
-use App\Models\Address;
 use App\Models\Company;
 use App\Models\TMSProvider;
 use Illuminate\Support\Str;
 use App\Services\Apis\RipCms;
-use App\Models\CompanyAddressTMSCode;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
 use Spatie\RateLimitedMiddleware\RateLimited;
 
-class ImportProfitToolsAddress implements ShouldQueue
+class ImportProfitToolsAddress extends ImportAddressBase implements ShouldQueue
 {
     use Dispatchable;
     use InteractsWithQueue;
@@ -23,11 +21,6 @@ class ImportProfitToolsAddress implements ShouldQueue
     public $timeout = 15;
     public $maxExceptions = 3;
 
-    public int $companyId;
-    public string $companyName;
-    public int $tmsProviderId;
-    public $addressCode;
-
     public function __construct($companyAddress, Company $company, TMSProvider $tmsProvider)
     {
         $this->addressCode = $companyAddress['id'];
@@ -36,39 +29,17 @@ class ImportProfitToolsAddress implements ShouldQueue
         $this->tmsProviderId = $tmsProvider->id;
     }
 
-    public function handle()
+    protected function getAddressData()
     {
         $company = Company::find($this->companyId);
-        $address = (new RipCms($company))
+        return (new RipCms($company))
             ->getToken()
             ->getCompany($this->addressCode);
-
-        $companyAddressTmsProvider = CompanyAddressTMSCode::query()
-            ->forCompanyTmsProvider($this->companyId, $this->tmsProviderId)
-            ->where('company_address_tms_code', $this->addressCode)
-            ->with('address')
-            ->first();
-
-        if ($companyAddressTmsProvider) {
-            $this->updateAddress($companyAddressTmsProvider->address, $address);
-            return;
-        }
-
-        CompanyAddressTMSCode::createFrom(
-            $this->addressCode,
-            Address::createFrom($address, 'ripcms'),
-            $this->companyId,
-            $this->tmsProviderId
-        );
     }
 
-    protected function updateAddress(Address $oldAddress, $newData)
+    protected function getTmsProviderCode(): string
     {
-        if ($oldAddress->isTheSameAs($newData, 'ripcms')) {
-            return;
-        }
-
-        $oldAddress->updateFrom($newData, 'ripcms');
+        return 'ripcms';
     }
 
     /**
@@ -77,7 +48,7 @@ class ImportProfitToolsAddress implements ShouldQueue
     public function middleware(): array
     {
         $rateLimited = (new RateLimited())
-            ->allow(300)
+            ->allow(1000)
             ->everySeconds(60)
             ->releaseAfterOneMinute();
 

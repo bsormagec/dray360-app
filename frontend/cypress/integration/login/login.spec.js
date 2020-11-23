@@ -29,7 +29,7 @@ describe('The Login Page', function () {
     cy.visit('localhost:8080')
     cy.get('input[name=username]').type(this.credentials.email)
     cy.get('input[name=password]').type(this.credentials.password)
-    cy.get('[type=button]').click()
+    cy.get('[type=button]').click({ multiple: true, force: true })
 
     cy.route({ url: '**/api/user', response: this.user })
     cy.route({ url: '**/api/orders**', response: {} })

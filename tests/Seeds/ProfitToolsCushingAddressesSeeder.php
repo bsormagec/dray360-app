@@ -3,7 +3,6 @@
 namespace Tests\Seeds;
 
 use App\Models\Address;
-use App\Models\Company;
 use App\Models\TMSProvider;
 use Illuminate\Database\Seeder;
 use App\Models\CompanyAddressTMSCode;
@@ -17,7 +16,7 @@ class ProfitToolsCushingAddressesSeeder extends Seeder
      */
     public function run()
     {
-        $company = Company::getCushing();
+        $company = CompaniesSeeder::getTestCushing();
         $tmsProvider = TMSProvider::getProfitTools();
 
         $baseAddress = [

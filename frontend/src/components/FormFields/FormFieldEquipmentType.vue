@@ -281,7 +281,7 @@ export default {
   height: rem(60);
   display: flex;
   align-items: baseline;
-  
+
   span {
     color: var(--v-primary-base);
     display: flex;
@@ -312,7 +312,7 @@ export default {
   display: flex;
   padding: rem(10);
   align-items: center;
-  
+
   .equipment__section {
     margin-left: auto;
     text-align: right;

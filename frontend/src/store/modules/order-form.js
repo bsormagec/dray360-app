@@ -116,6 +116,9 @@ const actions = {
     commit(types.setHighlight, { path, highlight: { hover: false } })
   },
   [types.startFieldEdit] ({ commit, state }, { path }) {
+    if (path.includes('bill_to_address') || path.includes('order_address_events')) {
+      return
+    }
     commit(types.setHighlight, { path, highlight: { edit: true } })
   },
   [types.stopFieldEdit] ({ commit, state }, { path }) {

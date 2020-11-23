@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Api;
 
+use App\Models\Role;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
@@ -45,12 +46,16 @@ class UsersController extends Controller
     public function store(Request $request)
     {
         $this->authorize('create', User::class);
-
+        $superadminRole = Role::where('name', 'superadmin')->first();
         $data = $request->validate([
             'name' => 'required|string|min:3',
             'email' => 'required|email|unique:users,email',
             'password' => 'required|min:8',
-            'role_id' => 'required|exists:roles,id',
+            'role_id' => [
+                'required',
+                'not_in:'.$superadminRole->id,
+                'exists:roles,id',
+            ],
         ]);
         $roleId = $data['role_id'];
         $password = bcrypt($data['password']);
@@ -90,17 +95,22 @@ class UsersController extends Controller
     public function update(Request $request, User $user)
     {
         $this->authorize('update', $user);
+        $superadminRole = Role::where('name', 'superadmin')->first();
         $data = $request->validate([
             'name' => 'sometimes|string|min:3',
             'email' => ['sometimes', 'email', Rule::unique('users')->ignoreModel($user)],
             'position' => 'sometimes',
             'org' => 'sometimes',
-            'role_id' => 'sometimes|exists:roles,id',
+            'role_id' => [
+                'sometimes',
+                'not_in:'.$superadminRole->id,
+                'exists:roles,id',
+            ],
         ]);
         $roleId = $data['role_id'] ?? null;
         unset($data['role_id']);
         if ($roleId) {
-            $user->syncRolesWithoutDetaching([$roleId]);
+            $user->syncRoles([$roleId]);
         }
         $user->update($data);
         return response()->json($user);

@@ -37,17 +37,21 @@ import Select from '@/components/Select'
 import SearchBar from '@/components/SearchBar'
 import { providerStateName, providerMethodsName } from '@/views/Orders/inner_types'
 import DateRangeCalendar from '@/components/Orders/DateRangeCalendar'
+import utils, { type } from '@/store/modules/utils'
+import { mapActions } from 'vuex'
+import isMobile from '@/mixins/is_mobile'
 
 export default {
   name: 'OrdersListHeader',
-
-  inject: [providerStateName, providerMethodsName],
 
   components: {
     Select,
     SearchBar,
     DateRangeCalendar
   },
+  mixins: [isMobile],
+
+  inject: [providerStateName, providerMethodsName],
 
   props: {
     statuses: {
@@ -101,6 +105,7 @@ export default {
   },
 
   methods: {
+    ...mapActions(utils.moduleName, [type.getTenantConfig, type.setSidebar]),
     handleCalendar (e) {
       if (e.length === 2) {
         const filters = {
@@ -146,9 +151,8 @@ export default {
       const newHeaders = this.cachedHeaders.filter(({ text }) => items.find(selected => text === selected))
       this.setHeaders(newHeaders)
     },
-
-    toggleMobileSidebar () {
-      this[providerMethodsName].toggleMobileSidebar()
+    toogleSidebar () {
+      this[type.setSidebar]({ show: !this.showSidebar })
     }
   }
 }
@@ -176,6 +180,7 @@ export default {
   @media screen and (max-width: 580px) {
     position: absolute;
     bottom: 0;
+    top:rem(35)
   }
 
   @media screen and (max-width: 380px) {

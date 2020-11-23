@@ -1,6 +1,7 @@
 /* eslint-disable camelcase */
 export const has_permissions = (currentUser, ...requestedPermissions) => {
   let acceptedPerms = 0
+  if (currentUser === undefined) { return false }
   currentUser.permissions.forEach(perm => {
     requestedPermissions.forEach(reqPerm => {
       if (perm.name === reqPerm) {
@@ -18,6 +19,7 @@ export const has_permissions = (currentUser, ...requestedPermissions) => {
 
 export const has_permission = (currentUser, requestedPermission) => {
   let result = false
+  if (currentUser === undefined) { return false }
   currentUser.permissions.forEach(perm => {
     if (perm.name === requestedPermission) {
       result = true

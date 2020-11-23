@@ -21,17 +21,17 @@ describe('Add user', function () {
 
     cy.visit('localhost:8080/user/dashboard/add-user')
 
-    cy.get('[data-cy=name-input]').type('Bill Brasky')
+    cy.get('[data-cy=name-input]').type('Bill Brasky', { force: true })
 
-    cy.get('[data-cy=email-input]').type('bill@example.com')
+    cy.get('[data-cy=email-input]').type('bill@example.com', { force: true })
 
-    cy.get('[data-cy=password-input]').type('mockedpass')
+    cy.get('[data-cy=password-input]').type('mockedpass', { force: true })
 
     cy.route({ method: 'POST', url: '**/api/users', response: this.createdUser })
 
     cy.route({ method: 'GET', url: '**/api/users', response: this.users })
 
-    cy.get('[data-cy=add-user-button]').click()
+    cy.get('[data-cy=add-user-button]').click({ force: true })
 
     cy.url().should('include', 'user/dashboard')
   })

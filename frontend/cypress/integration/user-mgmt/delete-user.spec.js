@@ -27,7 +27,7 @@ describe('Delete user', function () {
 
     cy.route({ method: 'DELETE', url: '**/api/users/**', response: this.users })
 
-    cy.get('tbody>tr>td>button').eq(1).click()
+    cy.get('tbody>tr>td>button').eq(1).click({ force: true })
 
     cy.url().should('include', 'user/dashboard')
   })

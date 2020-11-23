@@ -45,7 +45,7 @@ const actions = {
     commit('currentUserLoading', false)
   },
   async logout ({ commit, state }) {
-    if (get(state.currentUser, 'user.is_impersonated')) {
+    if (get(state.currentUser, 'is_impersonated')) {
       const [error] = await postLeaveImpersonation()
 
       if (error) return

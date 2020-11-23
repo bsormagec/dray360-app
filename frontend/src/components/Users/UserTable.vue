@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="user__list">
     <v-data-table
       :key="items.id"
       v-model="selected"
@@ -246,7 +246,7 @@ export default {
 </script>
   <style lang="scss">
   .user__list {
-    margin: 0 auto;
+
     .search{
       max-width: rem(300);
        margin: 0 rem(5);

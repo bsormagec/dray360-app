@@ -19,6 +19,7 @@ $factory->define(OrderLineItem::class, function (Faker $faker) {
         'quantity' => $quantity,
         'unit_of_measure' => Arr::random(['BAG', 'BOX', 'LOT', 'CAS', 'CRT', 'TU', 'ROL', 'PAD', 'PAL', 'FT']),  // https://www.doa.la.gov/osp/Vendorcenter/publications/unitofmeasurecodes.pdf
         'contents' => $faker->productName,
+        'multiline_contents' => $faker->productName,
         'weight' => $weight,
         'total_weight' => $quantity * $weight,
         'weight_uom' => Arr::random(['TON', 'LBS', 'KGS']),
