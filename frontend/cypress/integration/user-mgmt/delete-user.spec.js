@@ -15,7 +15,7 @@ describe('Delete user', function () {
 
     cy.route({ url: '**/api/current-tenant', response: this.tenant })
 
-    cy.route({ url: '**/api/users', response: this.users })
+    cy.route({ url: '**/api/users**', response: this.users })
 
     cy.route({ url: '**/api/roles', response: this.roles })
 

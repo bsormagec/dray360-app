@@ -27,7 +27,7 @@ describe('Edit user', function () {
 
     cy.route({ method: 'PUT', url: '**/api/users/**', response: this.editedUser })
 
-    cy.route({ method: 'GET', url: '**/api/users', response: this.users })
+    cy.route({ method: 'GET', url: '**/api/users**', response: this.users })
 
     cy.get('[data-cy=save-button]').click({ force: true })
 
