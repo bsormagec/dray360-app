@@ -51,7 +51,7 @@ class OrdersPolicy
             return $hasUpdatePermissions && $user->belongsToSameCompanyAs($order);
         }
 
-        return $hasUpdatePermissions && ! request_is_from_nova();
+        return $hasUpdatePermissions;
     }
 
     /**
