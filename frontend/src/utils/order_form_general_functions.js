@@ -44,7 +44,8 @@ function baseHighlight (ocrData) {
     ...ocrData,
     hover: false,
     edit: false,
-    hoverTimeout: null
+    hoverTimeout: null,
+    loading: false
   }
 }
 

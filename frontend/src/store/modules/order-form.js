@@ -30,7 +30,6 @@ const initialState = {
     itinerary: { id: 'itinerary-section', label: 'Itinerary', subsection: false },
     notes: { id: 'notes-section', label: 'Notes', subsection: false },
     inventory: { id: 'inventory-section', label: 'Inventory', subsection: false }
-
   }
 }
 
@@ -64,6 +63,8 @@ const actions = {
   async [types.updateOrder] ({ commit, state }, { path, value, useOrder = false }) {
     let changes = {}
 
+    commit(types.setHighlight, { path, highlight: { loading: true } })
+
     if (useOrder) {
       changes = { ...state.order }
     } else {
@@ -80,6 +81,9 @@ const actions = {
     if (error !== undefined) return { status: reqStatus.error, data: error }
 
     commit(types.setFormOrder, data)
+
+    commit(types.setHighlight, { path, highlight: { loading: false } })
+
     return { status: reqStatus.success, data }
   },
   [types.toggleEdit] ({ commit, dispatch, state }) {
