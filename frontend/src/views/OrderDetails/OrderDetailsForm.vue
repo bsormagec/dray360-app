@@ -305,6 +305,7 @@
         </div>
         <div class="section__rootfields">
           <FormFieldAddressSwitchVerify
+            :is-loading="isLoading"
             :recognized-text="order.bill_to_address_raw_text"
             :verified="order.bill_to_address_verified"
             :matched-address="order.bill_to_address"
@@ -361,6 +362,7 @@
           :key="orderAddressEvent.id"
         >
           <FormFieldAddressSwitchVerify
+            :is-loading="isLoading"
             :label="`${orderAddressEvent.event_number}: ${orderAddressEvent.unparsed_event_type}`"
             :recognized-text="orderAddressEvent.t_address_raw_text"
             :verified="orderAddressEvent.t_address_verified || false"
@@ -460,7 +462,8 @@ export default {
     return {
       loading: false,
       divisionCodes: [],
-      sentToTms: false
+      sentToTms: false,
+      isLoading: false
     }
   },
 
@@ -471,6 +474,11 @@ export default {
       highlights: state => state.highlights,
       sections: state => state.sections
     }),
+
+    // isLoading () {
+
+    // },
+
     availableLineItems () {
       return this.order.order_line_items
         .map((item, index) => ({ ...item, real_index: index }))
@@ -529,7 +537,10 @@ export default {
     }),
 
     async handleChange (path, value) {
+      this.isLoading = true
       await this.updateOrder({ path, value })
+      // console.log('this.highlights[path].loading', this.highlights[path].loading)
+      this.isLoading = false
     },
 
     async postSendToTms () {

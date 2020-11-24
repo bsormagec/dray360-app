@@ -46,6 +46,7 @@
         <div class="address-book-modal__footer">
           <v-btn
             v-if="!verified && addressFound"
+            :loading="false"
             color="primary"
             outlined
             small
@@ -66,6 +67,7 @@
         </div>
 
         <AddressBookModalDialog
+          :is-loading="isLoading"
           :is-open="addressModalOpen"
           :filters="filters"
           :recognized-text="recognizedText"
@@ -102,7 +104,8 @@ export default {
     recognizedText: { type: String, default: '' },
     matchedAddress: { required: true },
     terminal: { type: Boolean, required: false, default: false },
-    billable: { type: Boolean, required: false, default: false }
+    billable: { type: Boolean, required: false, default: false },
+    isLoading: { type: Boolean, required: true, default: false }
   },
 
   data: (vm) => ({
