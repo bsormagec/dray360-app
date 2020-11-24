@@ -471,6 +471,7 @@ export default {
       highlights: state => state.highlights,
       sections: state => state.sections
     }),
+
     availableLineItems () {
       return this.order.order_line_items
         .map((item, index) => ({ ...item, real_index: index }))

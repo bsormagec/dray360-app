@@ -46,6 +46,7 @@
         <div class="address-book-modal__footer">
           <v-btn
             v-if="!verified && addressFound"
+            :loading="isLoading"
             color="primary"
             outlined
             small
@@ -83,6 +84,7 @@ import FormFieldPresentation from './FormFieldPresentation'
 
 import { mapState } from 'vuex'
 import orders from '@/store/modules/orders'
+import orderForm from '@/store/modules/order-form'
 
 import get from 'lodash/get'
 import { formatAddress } from '@/utils/order_form_general_functions'
@@ -106,9 +108,6 @@ export default {
   },
 
   data: (vm) => ({
-    ...mapState(orders.moduleName, {
-      currentOrder: state => state.currentOrder
-    }),
     currentAddress: vm.matchedAddress,
     addressModalOpen: false,
     filters: {
@@ -121,11 +120,20 @@ export default {
   }),
 
   computed: {
+    ...mapState(orders.moduleName, {
+      currentOrder: state => state.currentOrder
+    }),
+    ...mapState(orderForm.moduleName, {
+      allHighlights: state => state.highlights
+    }),
     addressFound () {
       return get(this.currentAddress, 'id') !== undefined
     },
     textAddressToShow () {
       return formatAddress(this.currentAddress)
+    },
+    isLoading () {
+      return this.allHighlights[this.references]?.loading || false
     }
   },
 
@@ -156,7 +164,7 @@ export default {
     },
     setFilters () {
       /* eslint camelcase: 0 */
-      const { t_company_id: company_id, t_tms_provider_id: tms_provider_id } = this.currentOrder()
+      const { t_company_id: company_id, t_tms_provider_id: tms_provider_id } = this.currentOrder
 
       this.filters = {
         ...(this.filters),
