@@ -101,8 +101,23 @@ At this point in time, the `name` must be unique, it must not change, and it mus
 
 If at some point in the future a "display name" is desired, different than "name", then add a new column for that purpose. 
 
+#### company_config
+
+Used for company-specific (i.e. never inherited and overridden by specific tenants/domains/users) configuration parameters. The idea is to not add a plethora of boolean columns to the `t_companies` table for every conceivable flag.
+
+JSON data structure: 
+```json
+[
+    { "profit_tools_send_quantity_and_weight": true },
+    { "profit_tools_set_container_to_unknown": true }
+]
+```
 
 
+
+
+
+#######################
 
 ### t_ocrvariants
 
