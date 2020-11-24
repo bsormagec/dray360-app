@@ -111,7 +111,6 @@
             </td>
             <td>
               <v-btn
-                :loading="isLoading"
                 outlined
                 color="primary"
                 class="float-right"
@@ -153,11 +152,6 @@ export default {
         is_terminal_address: false,
         is_billable_address: false
       })
-    },
-    isLoading: {
-      type: Boolean,
-      required: true,
-      default: false
     }
   },
 
@@ -196,10 +190,6 @@ export default {
 
   async mounted () {
     this.search = this.filters.rawtext
-  },
-
-  updated () {
-    console.log('addressbook modal is loading: ', this.isLoading)
   },
 
   methods: {

@@ -96,7 +96,7 @@ export default {
       return this.editMode || get(this.highlight, 'edit', false)
     },
     isLoading () {
-      return this.allHighlights[this.references].loading
+      return this.allHighlights[this.references]?.loading || false
     }
   },
 

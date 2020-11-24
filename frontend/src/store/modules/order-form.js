@@ -63,8 +63,6 @@ const actions = {
   async [types.updateOrder] ({ commit, state }, { path, value, useOrder = false }) {
     let changes = {}
 
-    console.log('path to set highlight: ', path)
-
     commit(types.setHighlight, { path, highlight: { loading: true } })
 
     if (useOrder) {
