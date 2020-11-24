@@ -44,6 +44,7 @@ class Company extends Model
         'default_tms_provider_id',
         'refs_custom_mapping',
         'configuration',
+        'company_config',
         'automatic_address_verification_threshold',
         't_domain_id',
         'blackfly_token',
@@ -73,6 +74,7 @@ class Company extends Model
         'name' => 'string',
         'refs_custom_mapping' => 'json',
         'configuration' => 'json',
+        'company_config' => 'json',
     ];
 
     /**
