@@ -185,6 +185,12 @@ export default {
       this.loading = false
       this.loaded = true
       this.addressObject = this.list()
+    },
+    filters: {
+      handler () {
+        this.search = this.filters.rawtext
+      },
+      deep: true
     }
   },
 

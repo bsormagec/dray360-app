@@ -1,6 +1,7 @@
 <template>
   <div
     id="order-form"
+    ref="orderForm"
     :class="`form ${isMobile && 'mobile'}`"
   >
     <div class="order__title">
@@ -43,7 +44,7 @@
           :outlined="!editMode && !isMobile"
           small
           text
-          @click="toggleEdit"
+          @click="cancelEdit"
         >
           Cancel
         </v-btn>
@@ -105,7 +106,7 @@
           1 Error
         </v-chip>
       </div>
-      <p>Last Updated <span v-html="lastChandedAt"/> by John Doe</p>
+      <p>Last Updated <span>{{ lastChandedAt }}</span> by John Doe</p>
       <a href="#">History</a>
     </div> -->
 
@@ -114,7 +115,7 @@
         :id="sections.shipment.id"
         class="form__section-title"
       >
-        <h3 v-html="sections.shipment.label" />
+        <h3>{{ sections.shipment.label }}</h3>
       </div>
 
       <div class="section__rootfields">
@@ -167,10 +168,9 @@
         <div
           class="form__section-title"
         >
-          <h3
-            :id="sections.equipment.id"
-            v-html="sections.equipment.label"
-          />
+          <h3 :id="sections.equipment.id">
+            {{ sections.equipment.label }}
+          </h3>
         </div>
         <div class="section__rootfields">
           <FormFieldEquipmentType
@@ -207,10 +207,9 @@
         <div
           class="form__section-title"
         >
-          <h3
-            :id="sections.origin.id"
-            v-html="sections.origin.label"
-          />
+          <h3 :id="sections.origin.id">
+            {{ sections.origin.label }}
+          </h3>
         </div>
         <div class="section__rootfields">
           <FormFieldInput
@@ -298,10 +297,9 @@
         <div
           class="form__section-title"
         >
-          <h3
-            :id="sections.bill_to.id"
-            v-html="sections.bill_to.label"
-          />
+          <h3 :id="sections.bill_to.id">
+            {{ sections.bill_to.label }}
+          </h3>
         </div>
         <div class="section__rootfields">
           <FormFieldAddressSwitchVerify
@@ -309,6 +307,7 @@
             :verified="order.bill_to_address_verified"
             :matched-address="order.bill_to_address"
             references="bill_to_address"
+            :edit-mode="false"
             billable
             @change="(e) => handleChange('bill_to_address', e)"
           />
@@ -323,10 +322,9 @@
         <div
           class="form__section-title"
         >
-          <h3
-            :id="sections.charges.id"
-            v-html="sections.charges.label"
-          />
+          <h3 :id="sections.charges.id">
+            {{ sections.charges.label }}
+          </h3>
         </div>
         <div class="section__rootfields">
           <FormFieldTextArea
@@ -350,30 +348,58 @@
     <div class="form__section">
       <div
         :id="sections.itinerary.id"
-        class="form__section-title"
+        ref="itineraryLabel"
+        class="form__section-title d-flex align-center"
       >
-        <h3 v-html="sections.itinerary.label" />
+        <h3>
+          {{ sections.itinerary.label }}
+        </h3>
+        <v-btn
+          v-if="!editMode"
+          class="ml-auto"
+          small
+          outlined
+          color="white"
+          @click="handleItinerayEdit"
+        >
+          Edit itinerary
+        </v-btn>
+        <v-btn
+          v-else
+          class="ml-auto"
+          small
+          outlined
+          color="white"
+          @click="handleNewEvent"
+        >
+          Add Event
+        </v-btn>
       </div>
 
       <div class="section__rootfields">
-        <Fragment
+        <div
           v-for="(orderAddressEvent, index) in order.order_address_events"
-          :key="orderAddressEvent.id"
+          :key="`${index}${orderAddressEvent.id}`"
         >
-          <FormFieldAddressSwitchVerify
-            :label="`${orderAddressEvent.event_number}: ${orderAddressEvent.unparsed_event_type}`"
-            :recognized-text="orderAddressEvent.t_address_raw_text"
-            :verified="orderAddressEvent.t_address_verified || false"
-            :matched-address="orderAddressEvent.address"
+          <FormFieldItineraryEdit
+            :order-address-event="orderAddressEvent"
+            :current-index="index+1"
             :references="`order_address_events.${index}`"
+            :edit-mode="editMode"
+            :is-first="index === 0"
+            :is-last="index == order.order_address_events.length - 1"
             @change="(e) => handleChange(`order_address_events.${index}`, e)"
+            @delete="(e) => handleDelete(index)"
+            @sort="(e) => moveObjectPositionInArray(order.order_address_events[index].id, e)"
           />
-        </Fragment>
+        </div>
       </div>
     </div>
     <div class="form__section">
       <div class="form__section-title">
-        <h3 v-html="sections.notes.label" />
+        <h3>
+          {{ sections.notes.label }}
+        </h3>
       </div>
 
       <div class="section__rootfields">
@@ -391,7 +417,9 @@
         :id="sections.inventory.id"
         class="form__section-title"
       >
-        <h3 v-html="sections.inventory.label" />
+        <h3>
+          {{ sections.inventory.label }}
+        </h3>
       </div>
 
       <div
@@ -430,13 +458,13 @@ import { postSendToTms } from '@/store/api_calls/orders'
 import utils, { type } from '@/store/modules/utils'
 import orders, { types } from '@/store/modules/orders'
 
-import { Fragment } from 'vue-fragment'
 // import FormFieldDate from '@/components/FormFields/FormFieldDate'
 // import FormFieldTime from '@/components/FormFields/FormFieldTime'
 import FormFieldInput from '@/components/FormFields/FormFieldInput'
 import FormFieldSwitch from '@/components/FormFields/FormFieldSwitch'
 import FormFieldTextArea from '@/components/FormFields/FormFieldTextArea'
 import FormFieldAddressSwitchVerify from '@/components/FormFields/FormFieldAddressSwitchVerify'
+import FormFieldItineraryEdit from '@/components/FormFields/FormFieldItineraryEdit'
 import FormFieldEquipmentType from '@/components/FormFields/FormFieldEquipmentType'
 import OutlinedButtonGroup from '@/components/General/OutlinedButtonGroup'
 import FormFieldSelectDivisionCodes from '@/components/FormFields/FormFieldSelectDivisionCodes'
@@ -444,13 +472,13 @@ import FormFieldSelectDivisionCodes from '@/components/FormFields/FormFieldSelec
 export default {
   name: 'OrderDetailsForm',
   components: {
-    Fragment,
     // FormFieldDate,
     // FormFieldTime,
     FormFieldInput,
     FormFieldSwitch,
     FormFieldTextArea,
     FormFieldAddressSwitchVerify,
+    FormFieldItineraryEdit,
     FormFieldEquipmentType,
     OutlinedButtonGroup,
     FormFieldSelectDivisionCodes
@@ -518,15 +546,15 @@ export default {
   },
 
   methods: {
-    ...mapActions(orderForm.moduleName, {
-      toggleEdit: orderFormTypes.toggleEdit
-    }),
     ...mapActions(utils.moduleName, [type.setSnackbar, type.setConfirmationDialog]),
     ...mapActions(orders.moduleName, [types.getDownloadPDFURL]),
     ...mapActions(orderForm.moduleName, {
       updateOrder: orderFormTypes.updateOrder,
       startHover: orderFormTypes.startHover,
-      stopHover: orderFormTypes.stopHover
+      stopHover: orderFormTypes.stopHover,
+      toggleEdit: orderFormTypes.toggleEdit,
+      cancelEdit: orderFormTypes.cancelEdit,
+      addHighlight: orderFormTypes.addHighlight
     }),
 
     async handleChange (path, value) {
@@ -601,11 +629,61 @@ export default {
         }
       })
     },
-    goToOrdersList () {
-      const prevListUrl = localStorage.getItem('prevListUrl')
 
-      if (prevListUrl) return this.$router.push(prevListUrl)
-      this.$router.push('/')
+    goToOrdersList () {
+      this.$router.push('/dashboard/')
+    },
+
+    handleItinerayEdit () {
+      this.toggleEdit()
+      setTimeout(() => {
+        this.$refs.orderForm.scrollTop = this.$refs.itineraryLabel.offsetTop
+      }, 50)
+    },
+
+    handleNewEvent () {
+      const newEvent = {
+        id: null,
+        t_address_id: null,
+        t_order_id: this.order.id,
+        t_address_verified: false,
+        address: null,
+        t_address_raw_text: '',
+        deleted_at: null
+      }
+      this.addHighlight(`order_address_events.${this.order.order_address_events.length}`)
+      this.handleChange('order_address_events',
+        [
+          ...this.order.order_address_events,
+          newEvent
+        ]
+      )
+    },
+
+    moveObjectPositionInArray (id, direction) {
+      const arr = this.order.order_address_events
+      if (direction === 'up') {
+        const index = arr.findIndex(e => e.id == id)
+        if (index > 0) {
+          const el = arr[index]
+          arr[index] = arr[index - 1]
+          arr[index - 1] = el
+        }
+      } else if (direction === 'down') {
+        const index = arr.findIndex(e => e.id == id)
+        if (index !== -1 && index < arr.length - 1) {
+          const el = arr[index]
+          arr[index] = arr[index + 1]
+          arr[index + 1] = el
+        }
+      }
+      this.handleChange('order_address_events', arr)
+    },
+
+    handleDelete (index) {
+      const arr = this.order.order_address_events
+      arr[index].deleted_at = true
+      this.handleChange('order_address_events', arr)
     }
   }
 }
@@ -698,7 +776,8 @@ export default {
 .section__rootfields {
   margin-bottom: rem(18);
 
-  .form-field:nth-child(even) {
+  .form-field:nth-child(even),
+  & > div:nth-child(even) .form-field-presentation {
     background-color: #F5F6F7;
   }
 }

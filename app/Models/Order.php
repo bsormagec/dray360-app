@@ -259,7 +259,8 @@ class Order extends Model
 
     public function orderAddressEvents()
     {
-        return $this->hasMany(OrderAddressEvent::class, 't_order_id');
+        return $this->hasMany(OrderAddressEvent::class, 't_order_id')
+            ->orderBy('event_number');
     }
 
     public function orderLineItems()
