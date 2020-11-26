@@ -47,19 +47,19 @@ export const getTestingOutput = async (orderId, singleCompanyVariantRule) => axi
       })
       .then(function (response) {
         // console.log('testingOutput response:', response.data)
-        const retval = { output: response.data, input: fetchedOcrData }
+        const retval = { output: response.data, input: fetchedOcrData, status: response.status, statusText: response.statusText }
         return retval
       })
       .catch(function (error) {
-        if (error.response) {
-          // The request was made and the server responded with a status code
-          // that falls out of the range of 2xx
-          console.log('error.response.data', error.response.data)
-          console.log('error.response.status', error.response.status)
-          console.log('error.response.headers', error.response.headers)
-        }
-        alert(error)
-        return error
+        // The request was made and the server responded with a status code
+        // that falls out of the range of 2xx
+        // console.log('error.response.data', error.response.data)
+        console.log('error.response.status', error.response.status)
+        // console.log('error.response.headers', error.response.headers)
+        const errval = { input: fetchedOcrData, output: error.response.data, status: error.response.status, statusText: error.response.statusText }
+        // console.log('errval: ', errval)
+        // alert(error)
+        return errval
       })
 
     return testingOutput

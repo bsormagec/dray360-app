@@ -15,8 +15,7 @@ export const types = {
   getCompanyList: 'GET_COMPANY_LIST',
   setCompanyList: 'SET_COMPANY_LIST',
   getVariantList: 'GET_VARIANT_LIST',
-  setVariantList: 'SET_VARIANT_LIST',
-  setSidebar: 'SET_SIDEBAR'
+  setVariantList: 'SET_VARIANT_LIST'
 }
 
 const initialState = {
@@ -24,9 +23,7 @@ const initialState = {
   company_variant_rules: [],
   testing_output: null,
   company_list: [],
-  variant_list: [],
-  sidebar: { show: false }
-
+  variant_list: []
 }
 
 const mutations = {
@@ -54,9 +51,6 @@ const mutations = {
   },
   [types.setVariantList] (state, { variantList }) {
     state.variant_list = variantList
-  },
-  [types.setSidebar] (state, sidebar) {
-    state.sidebar = sidebar
   }
 }
 
@@ -124,13 +118,11 @@ const actions = {
   },
   async [types.getVariantList] ({ commit }) {
     const [error, data] = await getVariantList()
+
     if (error) return error.message
 
-    commit(types.setVariantList, { variantList: data })
+    commit(types.setVariantList, { variantList: data.sort() })
     return reqStatus.success
-  },
-  [types.setSidebar] ({ commit }, { show }) {
-    commit(types.setSidebar, { show })
   }
 }
 
