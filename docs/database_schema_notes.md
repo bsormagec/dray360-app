@@ -74,6 +74,14 @@ All status_metadata object include the following properties:
 1. exception
 
 
+##### Status `success-imageuploding-to-blackfl`
+
+* created by `./wintupdater/imageuploader.py`
+
+1. imagetype: (blackfly image type, e.g. PRENOTE or DELIVERYORDER)
+1. jpg_file_list: all individual files aggregated into a multi-page TIFF and uploaded as a single image
+
+
 
 
 ##### status_metadata.order_id_list (ocr-post-processing-error and ocr-post-processing-complete)
