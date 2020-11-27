@@ -21,6 +21,37 @@ It is not intended to document every individual column and table, most of which 
 
 Every state change for a request/order combination (or request/null when orders don't exist yet) is logged here. 
 
+### status
+
+Each status is very carefully defined, here is a complete list (as of 11/27/2020):
+
+1. failure-imageuploding-to-blackfl
+1. failure-sending-to-wint
+1. intake-accepted
+1. intake-accepted-datafile
+1. intake-exception
+1. intake-rejected
+1. intake-started
+1. ocr-completed
+1. ocr-post-processing-complete
+1. ocr-post-processing-error
+1. ocr-waiting
+1. process-ocr-output-file-complete
+1. process-ocr-output-file-error
+1. sending-to-wint
+1. shipment-created-by-wint
+1. shipment-not-created-by-wint
+1. shipment-not-updated-by-wint
+1. shipment-updated-by-wint
+1. success-imageuploding-to-blackfl
+1. success-sending-to-wint
+1. success-updating-to-wint
+1. untried-imageuploding-to-blackfl
+1. updated-by-subsequent-order
+1. updates-prior-order
+1. upload-requested
+
+
 #### status_metadata
 
 This JSON type column records different information for each `status` type. I will be updating this document to record all possible states here. It is currently documented in a Draw.io diagram and not very accessible.
