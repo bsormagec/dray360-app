@@ -56,6 +56,26 @@ Each status is very carefully defined, here is a complete list (as of 11/27/2020
 
 This JSON type column records different information for each `status` type. I will be updating this document to record all possible states here. It is currently documented in a Draw.io diagram and not very accessible.
 
+Here follows a list of all status types and their associated metadata. If this list is found to be incompleted, inaccurate, out of date or in error... please correct it.
+
+All status_metadata object include the following properties:
+
+1. request_id
+1. datetime_utciso
+1. company_id
+1. order_id (if available)
+
+
+##### Status `failure-imageuploding-to-blackfl`
+
+* created by `./wintupdater/imageuploader.py`
+
+1. message
+1. exception
+
+
+
+
 ##### status_metadata.order_id_list (ocr-post-processing-error and ocr-post-processing-complete)
 
 This is an array property in `status_metadata` for both the `ocr-post-processing-error` and `ocr-post-processing-complete` states. Here is a sample query showing how to parse its value and its length.
