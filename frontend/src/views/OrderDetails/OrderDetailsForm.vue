@@ -127,6 +127,17 @@
           :edit-mode="editMode"
           @change="value => handleChange('shipment_designation', value)"
         /> -->
+        <FormFieldSelect
+          v-if="shouldSelectProfitToolsTemplateId"
+          references="tms_template_id"
+          label="TMS Template ID"
+          :value="order.tms_template_id"
+          :items="profitToolsTemplatesSelectItems"
+          item-text="tms_template_name"
+          item-value="tms_template_id"
+          :edit-mode="editMode"
+          @change="value => handleChange('tms_template_id', value)"
+        />
         <div class="divisionCodeSection">
           <FormFieldSelectDivisionCodes
             references="division_code"
@@ -469,6 +480,7 @@ import FormFieldItineraryEdit from '@/components/FormFields/FormFieldItineraryEd
 import FormFieldEquipmentType from '@/components/FormFields/FormFieldEquipmentType'
 import OutlinedButtonGroup from '@/components/General/OutlinedButtonGroup'
 import FormFieldSelectDivisionCodes from '@/components/FormFields/FormFieldSelectDivisionCodes'
+import FormFieldSelect from '@/components/FormFields/FormFieldSelect'
 
 export default {
   name: 'OrderDetailsForm',
@@ -482,6 +494,7 @@ export default {
     FormFieldItineraryEdit,
     FormFieldEquipmentType,
     OutlinedButtonGroup,
+    FormFieldSelect,
     FormFieldSelectDivisionCodes
   },
   mixins: [isMobile, permissions],
@@ -507,6 +520,16 @@ export default {
       highlights: state => state.highlights,
       sections: state => state.sections
     }),
+    ...mapState(utils.moduleName, {
+      tenantConfig: state => state.tenantConfig
+    }),
+
+    profitToolsTemplatesSelectItems () {
+      return get(this.tenantConfig, 'profit_tools_template_list', [])
+    },
+    shouldSelectProfitToolsTemplateId () {
+      return get(this.tenantConfig, 'profit_tools_enable_templates', false)
+    },
 
     availableLineItems () {
       return this.order.order_line_items

@@ -50,6 +50,12 @@ export function baseHighlight (ocrData) {
 }
 
 export function keyShouldBeParsed (key) {
+  const shouldNotBeIgnored = ['tms_template_id']
+
+  if (shouldNotBeIgnored.includes(key)) {
+    return true
+  }
+
   const invalidEndings = [
     'id',
     '_id',
