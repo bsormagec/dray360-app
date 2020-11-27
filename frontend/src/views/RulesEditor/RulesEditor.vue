@@ -215,8 +215,8 @@
                     sm="6"
                   >
                     <v-tabs
+                      v-if="testing_output()"
                       grow
-                      dark
                     >
                       <v-tab>
                         Original Fields
@@ -280,50 +280,45 @@
                       elevation="2"
                       class="px-2"
                     >
-                      <v-row>
+                      <v-row
+                        v-if="testing_output()"
+                      >
                         <v-col
                           cols="1"
                           sm="3"
                         >
-                          <h6>HTTP Response:</h6>
+                          <h6>HTTP Status:</h6>
                         </v-col>
                         <v-col
                           cols="1"
                           sm="2"
                         >
-                          <vue-json-pretty
-                            v-if="testing_output()"
-                            :data="testing_output().status"
-                            class="font-weight-black"
-                          />
+                          <h6> {{ testing_output().status }} </h6>
                         </v-col>
                         <v-col
                           cols="1"
                           sm="7"
                         >
-                          <vue-json-pretty
-                            v-if="testing_output()"
-                            :data="testing_output().statusText"
-                            class="font-weight-black"
-                          />
+                          <h6> {{ testing_output().statusText }} </h6>
                         </v-col>
                       </v-row>
                     </v-card>
 
                     <v-card
+                      v-if="testing_output()"
                       elevation="2"
                       class="pa-2 my-4"
                     >
-                      <h6>Rule Output:</h6>
+                      <h6>JSON Data:</h6>
                       <vue-json-pretty
                         v-if="testing_output()"
                         :data="testing_output().output"
                         :show-length="showLength"
                         :show-line="showLine"
                         :collapsed-on-click-brackets="collapsedOnClickBrackets"
+                        class="font-weight-black"
                         @click="handleClick(...arguments, 'complexTree')"
                         @change="handleChange"
-                        class="font-weight-black"
                       />
                     </v-card>
                   </v-col>
@@ -388,15 +383,9 @@ import 'codemirror/theme/monokai.css'
 import 'codemirror/mode/python/python.js'
 import 'codemirror/addon/selection/active-line.js'
 import 'codemirror/addon/edit/closebrackets.js'
-
 import VueJsonPretty from 'vue-json-pretty'
-
 import rulesLibrary, { types } from '@/store/modules/rules_editor'
 
-// TODO: v-json default collapsed to level 1
-// TODO: Better way to display variants - you know what you're looking for.
-// TODO: Better way... rules - encouraged to browse before viewing.
-//       Directory of rules, like events, multi, direction, division
 
 export default {
   name: 'RulesEditor',
@@ -467,6 +456,16 @@ export default {
       const status = await this[types.getLibrary]()
 
       if (status === reqStatus.success) {
+        this.variant_list().sort(function (a, b) {
+          if (a.description > b.description) {
+            return 1
+          }
+          if (a.description < b.description) {
+            return -1
+          }
+          // a must be equal to b
+          return 0
+        })
         console.log('fetchRulesLibrary')
       } else {
         console.log('fetchRulesLibrary error')
@@ -544,10 +543,11 @@ export default {
       console.log('ruleId' + this.company_variant_rules()[index].id)
       const ruleId = this.company_variant_rules()[index].id
       const ruleName = this.company_variant_rules()[index].name
+      const ruleDescription = this.company_variant_rules()[index].description
 
       const ruleData = {
         code: this.company_variant_rules()[index].code,
-        description: 'sample rule ' + ruleName,
+        description: ruleDescription,
         id: ruleId,
         name: ruleName
       }
@@ -590,6 +590,8 @@ export default {
 
     async addRuleToLibrary () {
       const newName = prompt('Please type the name of the new rule')
+      const newDescription = prompt('Rule description: events, direction, utility, etc.')
+
       let newCode = null
       if (newName !== null) {
         newCode = prompt('Please paste the code for the rule')
@@ -597,7 +599,7 @@ export default {
 
       const ruleData = {
         name: newName,
-        description: 'sample rule ' + newName,
+        description: newDescription,
         code: newCode,
         id: (this.rules_library().length + 1)
       }
@@ -665,7 +667,7 @@ export default {
       const dataObject = { orderId, ruleToTest }
       const status = await this[types.getTestingOutput](dataObject)
       if (status === reqStatus.success) {
-        console.log('testSingleRule success', reqStatus.success)
+        console.log('testSingleRule success')
       }
     },
 

@@ -1,6 +1,13 @@
 import axios from '@/store/api_calls/config/axios'
 
-export const getLibrary = async () => axios.get('/api/ocr/rules').then(data => [undefined, data.data]).catch(e => [e])
+export const getLibrary = async () => axios.get('/api/ocr/rules')
+  .then(function (data) {
+    // console.log('data.data: ', data.data)
+    data = [undefined, data.data]
+    return data
+  })
+//   .then(data => [undefined, data.data])
+  .catch(e => [e])
 
 export const getCompanyVariantRules = async (companyId, variantId) => axios.get('/api/ocr/rules-assignment?company_id=' + companyId + '&variant_id=' + variantId).then(data => [undefined, data.data]).catch(e => [e])
 
