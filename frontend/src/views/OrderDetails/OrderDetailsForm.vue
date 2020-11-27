@@ -7,6 +7,7 @@
     <div class="order__title">
       <h2>
         <v-btn
+          v-if="backButton"
           color="primary"
           outlined
           small
@@ -484,6 +485,13 @@ export default {
     FormFieldSelectDivisionCodes
   },
   mixins: [isMobile, permissions],
+  props: {
+    backButton: {
+      type: Boolean,
+      required: false,
+      default: true
+    }
+  },
   data () {
     return {
       loading: false,

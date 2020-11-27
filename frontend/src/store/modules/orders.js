@@ -7,14 +7,16 @@ export const types = {
   getOrders: 'GET_ORDERS',
   getOrderDetail: 'GET_ORDER_DETAIL',
   updateOrderDetail: 'UPDATE_ORDER_DETAIL',
-  getDownloadPDFURL: 'GET_DOWNLOAD_PDF'
+  getDownloadPDFURL: 'GET_DOWNLOAD_PDF',
+  setReloadRequests: 'SET_RELOAD_REQUESTS'
 }
 
 const initialState = {
   list: [],
   links: {},
   meta: {},
-  currentOrder: {}
+  currentOrder: {},
+  reloadRequests: false
 }
 
 const mutations = {
@@ -28,6 +30,9 @@ const mutations = {
   },
   [types.setCurrentOrder] (state, orderData) {
     state.currentOrder = orderData
+  },
+  [types.setReloadRequests] (state, reload) {
+    state.reloadRequests = reload
   }
 }
 
@@ -79,6 +84,9 @@ const actions = {
     if (error) return { status: reqStatus.error, data: error.response.data }
 
     return { status: reqStatus.success, data: data }
+  },
+  [types.setReloadRequests] ({ commit }, reload) {
+    commit(types.setReloadRequests, reload)
   }
 }
 
