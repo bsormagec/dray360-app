@@ -66,7 +66,42 @@ All status_metadata object include the following properties:
 1. order_id (if available)
 
 
-##### Status `failure-imageuploding-to-blackfl`
+#### `intake-started` status_metdata
+
+* created by `./intakefilter/intakefilter.py`
+* triggered by S3 bucket file creaation, from SES email receipt or manual upload
+
+1. source_summary:
+   - source_type: "email"
+   - source_email_subject
+   - source_email_to_address
+   - source_email_from_address
+   - source_email_body_prefixes
+   - source_email_string_length
+   - source_email_attachment_filenames
+   - source_email_recipient0  (i.e. aws "to" address)
+   
+   - source_type: "upload"
+   - source_upload_filename
+   - source_upload_api_request_id
+1. event_info:
+   - bucket_name
+   - recipient0
+   - object_key
+   - event_key
+   - event_time
+   - aws_request_id
+   - log_group_name
+   - log_stream_name
+   - event_time_epoch_ms
+1. read_log_commandline
+1. ocr_request_id
+1. sha256sum
+1. variant_name (if any)
+
+
+
+##### `failure-imageuploding-to-blackfl` status_metadata
 
 * created by `./wintupdater/imageuploader.py`
 
