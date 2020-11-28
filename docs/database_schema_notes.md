@@ -123,7 +123,7 @@ All status_metadata object include the following properties:
 1. 'message': 'no image files, blackfly credentials or tms_shipment_id found'
 
 
-##### status_metadata.order_id_list (ocr-post-processing-error and ocr-post-processing-complete)
+##### `status_metadata.order_id_list` (ocr-post-processing-error and ocr-post-processing-complete)
 
 This is an array property in `status_metadata` for both the `ocr-post-processing-error` and `ocr-post-processing-complete` states. Here is a sample query showing how to parse its value and its length.
 
