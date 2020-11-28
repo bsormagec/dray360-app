@@ -109,14 +109,14 @@ All status_metadata object include the following properties:
 1. exception: exception message
 
 
-##### Status `success-imageuploding-to-blackfl`
+##### `success-imageuploding-to-blackfl` status_metadata
 
 * created by `./wintupdater/imageuploader.py`
 
 1. imagetype: (blackfly image type, e.g. PRENOTE or DELIVERYORDER)
 1. jpg_file_list: all individual files aggregated into a multi-page TIFF and uploaded as a single image
 
-##### Status `untried-imageuploding-to-blackfl`
+##### `untried-imageuploding-to-blackfl` status_metadata
 
 * created by `./wintupdater/imageuploader.py`
 
