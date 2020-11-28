@@ -70,8 +70,8 @@ All status_metadata object include the following properties:
 
 * created by `./wintupdater/imageuploader.py`
 
-1. message
-1. exception
+1. message: 'exception sending image to profittools'
+1. exception: exception message
 
 
 ##### Status `success-imageuploding-to-blackfl`
@@ -81,7 +81,11 @@ All status_metadata object include the following properties:
 1. imagetype: (blackfly image type, e.g. PRENOTE or DELIVERYORDER)
 1. jpg_file_list: all individual files aggregated into a multi-page TIFF and uploaded as a single image
 
+##### Status `untried-imageuploding-to-blackfl`
 
+* created by `./wintupdater/imageuploader.py`
+
+1. 'message': 'no image files, blackfly credentials or tms_shipment_id found'
 
 
 ##### status_metadata.order_id_list (ocr-post-processing-error and ocr-post-processing-complete)
