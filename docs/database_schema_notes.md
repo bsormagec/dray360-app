@@ -128,18 +128,18 @@ All status_metadata object include the following properties:
 This is an array property in `status_metadata` for both the `ocr-post-processing-error` and `ocr-post-processing-complete` states. Here is a sample query showing how to parse its value and its length.
 
 ````sql
-    select 
-         id
-        ,request_id
-        ,status
-        ,json_extract(status_metadata,'$.order_id_list[0]') as first_order_id
-        ,json_extract(status_metadata,'$.order_id_list') as order_id_list
-        ,json_length(json_extract(status_metadata,'$.order_id_list')) as order_id_length
-    from t_job_state_changes 
-    where status in ('ocr-post-processing-error', 'ocr-post-processing-complete') 
-    having order_id_length > 2
-    order by id asc 
-    ;
+select 
+        id
+    ,request_id
+    ,status
+    ,json_extract(status_metadata,'$.order_id_list[0]') as first_order_id
+    ,json_extract(status_metadata,'$.order_id_list') as order_id_list
+    ,json_length(json_extract(status_metadata,'$.order_id_list')) as order_id_length
+from t_job_state_changes 
+where status in ('ocr-post-processing-error', 'ocr-post-processing-complete') 
+having order_id_length > 2
+order by id asc 
+;
 ````
 
 ##### status_metadata.file_list (ocr-post-processing-error and ocr-post-processing-complete)
