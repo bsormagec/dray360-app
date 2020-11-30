@@ -98,7 +98,7 @@ All status_metadata object include the following properties:
 1. ocr_request_id
 1. sha256sum
 1. variant_name
-   - if specified on upload
+   - if specified on upload by user-selected droplist
    - or in email subject header with keyword "variant", like "variant: mybestfreightbuyervariant"
 
 
