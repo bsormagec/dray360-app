@@ -97,7 +97,9 @@ All status_metadata object include the following properties:
 1. read_log_commandline
 1. ocr_request_id
 1. sha256sum
-1. variant_name (if any)
+1. variant_name
+   - if specified on upload
+   - or in email subject header with keyword "variant", like "variant: mybestfreightbuyervariant"
 
 
 
