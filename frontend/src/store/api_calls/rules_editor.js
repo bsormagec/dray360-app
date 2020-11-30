@@ -21,7 +21,9 @@ export const getRuleCode = async (index, companyId, variantId) => axios.get('/ap
 
 export const getCompanyList = async () => axios.get('/api/companies').then(data => [undefined, data.data.data]).catch(e => [e])
 
-export const getVariantList = async (params = {}) => axios.get('/api/ocr/variants', { params }).then(data => [undefined, data.data.data]).catch(e => [e])
+// sort in alphabetical order is temporary.
+// will need a better way to classify and display separately
+export const getVariantList = async (params = {}) => axios.get('/api/ocr/variants?sort=abbyy_variant_name', { params }).then(data => [undefined, data.data.data]).catch(e => [e])
 
 export const getTestingOutput = async (orderId, singleCompanyVariantRule) => axios.get('/api/orders/' + orderId)
   .then(function (response) {

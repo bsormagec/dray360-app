@@ -386,7 +386,6 @@ import 'codemirror/addon/edit/closebrackets.js'
 import VueJsonPretty from 'vue-json-pretty'
 import rulesLibrary, { types } from '@/store/modules/rules_editor'
 
-
 export default {
   name: 'RulesEditor',
   components: {
@@ -456,16 +455,6 @@ export default {
       const status = await this[types.getLibrary]()
 
       if (status === reqStatus.success) {
-        this.variant_list().sort(function (a, b) {
-          if (a.description > b.description) {
-            return 1
-          }
-          if (a.description < b.description) {
-            return -1
-          }
-          // a must be equal to b
-          return 0
-        })
         console.log('fetchRulesLibrary')
       } else {
         console.log('fetchRulesLibrary error')
@@ -484,19 +473,7 @@ export default {
 
     async fetchVariantList () {
       const status = await this[types.getVariantList]()
-
       if (status === reqStatus.success) {
-        this.variant_list().sort(function (a, b) {
-          if (a.abbyy_variant_name > b.abbyy_variant_name) {
-            return 1
-          }
-          if (a.abbyy_variant_name < b.abbyy_variant_name) {
-            return -1
-          }
-          // a must be equal to b
-          return 0
-        })
-        // console.log('fetchVariantList', this.variant_list())
         console.log('fetchVariantList')
       } else {
         console.log('fetchVariantList error')

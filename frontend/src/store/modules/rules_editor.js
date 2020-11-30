@@ -121,7 +121,7 @@ const actions = {
 
     if (error) return error.message
 
-    commit(types.setVariantList, { variantList: data.sort() })
+    commit(types.setVariantList, { variantList: data })
     return reqStatus.success
   }
 }
