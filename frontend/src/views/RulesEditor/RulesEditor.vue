@@ -215,7 +215,7 @@
                     sm="6"
                   >
                     <v-tabs
-                      v-if="testing_output()"
+                      v-if="testing_output"
                       grow
                     >
                       <v-tab>
@@ -230,7 +230,7 @@
                         :reverse-transition="false"
                       >
                         <v-btn
-                          v-if="testing_output()"
+                          v-if="testing_output"
                           v-clipboard:copy="pasteAbleInput"
                           v-clipboard:success="onCopy"
                           v-clipboard:error="onError"
@@ -241,9 +241,9 @@
                           Copy to Clipboard
                         </v-btn>
                         <vue-json-pretty
-                          v-if="testing_output()"
+                          v-if="testing_output"
                           :path="'res'"
-                          :data="testing_output().input.original_fields"
+                          :data="testing_output.input.original_fields"
                           class="font-weight-black"
                         />
                       </v-tab-item>
@@ -253,7 +253,7 @@
                         :reverse-transition="false"
                       >
                         <v-btn
-                          v-if="testing_output()"
+                          v-if="testing_output"
                           v-clipboard:copy="pasteAbleInput"
                           v-clipboard:success="onCopy"
                           v-clipboard:error="onError"
@@ -264,9 +264,9 @@
                           Copy to Clipboard
                         </v-btn>
                         <vue-json-pretty
-                          v-if="testing_output()"
+                          v-if="testing_output"
                           :path="'res'"
-                          :data="testing_output().input.fields"
+                          :data="testing_output.input.fields"
                           class="font-weight-black"
                         />
                       </v-tab-item>
@@ -281,7 +281,7 @@
                       class="px-2"
                     >
                       <v-row
-                        v-if="testing_output()"
+                        v-if="testing_output"
                       >
                         <v-col
                           cols="1"
@@ -293,26 +293,26 @@
                           cols="1"
                           sm="2"
                         >
-                          <h6> {{ testing_output().status }} </h6>
+                          <h6> {{ testing_output.status }} </h6>
                         </v-col>
                         <v-col
                           cols="1"
                           sm="7"
                         >
-                          <h6> {{ testing_output().statusText }} </h6>
+                          <h6> {{ testing_output.statusText }} </h6>
                         </v-col>
                       </v-row>
                     </v-card>
 
                     <v-card
-                      v-if="testing_output()"
+                      v-if="testing_output"
                       elevation="2"
                       class="pa-2 my-4"
                     >
                       <h6>JSON Data:</h6>
                       <vue-json-pretty
-                        v-if="testing_output()"
-                        :data="testing_output().output"
+                        v-if="testing_output"
+                        :data="testing_output.output"
                         :show-length="showLength"
                         :show-line="showLine"
                         :collapsed-on-click-brackets="collapsedOnClickBrackets"
@@ -385,6 +385,7 @@ import 'codemirror/addon/selection/active-line.js'
 import 'codemirror/addon/edit/closebrackets.js'
 import VueJsonPretty from 'vue-json-pretty'
 import rulesLibrary, { types } from '@/store/modules/rules_editor'
+import get from 'lodash/get'
 
 export default {
   name: 'RulesEditor',
@@ -403,7 +404,6 @@ export default {
     ...mapState(rulesLibrary.moduleName, {
       rules_library: state => state.rules_library,
       company_variant_rules: state => state.company_variant_rules,
-      testing_output: state => state.testing_output,
       company_list: state => state.company_list,
       variant_list: state => state.variant_list
     }),
@@ -427,11 +427,14 @@ export default {
     variant_name: ''
   }),
   computed: {
+    ...mapState(rulesLibrary.moduleName, {
+      testing_output: state => state.testing_output
+    }),
     companyVariantSelected () {
       return this.company_id !== null && this.variant_id !== null
     },
     pasteAbleInput: function () {
-      return this.testing_output() ? JSON.stringify(this.testing_output().input.original_fields).replace(/\n/g, '\\n') : ''
+      return this.testing_output ? JSON.stringify(get(this.testing_output, 'input.original_fields', {})).replace(/\n/g, '\\n') : ''
     },
     codemirror () {
       return this.$refs.cmEditor.codemirror

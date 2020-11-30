@@ -19,7 +19,7 @@ class OCRRulesController extends Controller
     {
         $this->authorize('viewAny', OCRRule::class);
 
-        return new ResourcesOCRRule(OCRRule::query()->get());
+        return new ResourcesOCRRule(OCRRule::query()->orderBy('name')->get());
     }
 
     /**
