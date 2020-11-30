@@ -464,9 +464,8 @@ import permissions from '@/mixins/permissions'
 import { mapState, mapActions } from 'vuex'
 import get from 'lodash/get'
 
-import { getSourceFileDownloadURL, postSendToTms } from '@/store/api_calls/orders'
+import { getSourceFileDownloadURL, postSendToTms, delDeleteOrder } from '@/store/api_calls/orders'
 import orderForm, { types as orderFormTypes } from '@/store/modules/order-form'
-
 import utils, { type } from '@/store/modules/utils'
 
 // import FormFieldDate from '@/components/FormFields/FormFieldDate'
@@ -653,8 +652,8 @@ export default {
               message: 'Error trying to delete the order'
             })
           }
-          this.loading = false
-        }
+        },
+        onCancel: () => { this.loading = false }
       })
     },
 

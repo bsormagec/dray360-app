@@ -110,7 +110,8 @@ export default {
               message: 'Error trying to delete the order'
             })
           }
-        }
+        },
+        onCancel: () => { this.loading = false }
       })
     }
   }
