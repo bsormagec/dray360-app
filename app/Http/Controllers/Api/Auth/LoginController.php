@@ -80,7 +80,7 @@ class LoginController extends Controller
         if (! is_object($user)) {
             return response()->json(['message' => 'Not authorized'], 401);
         } else {
-            $userData = $user
+            $userData = $user->load('company')
                 ->setRelation('permissions', $user->allPermissions())
                 ->toArray();
             $userData['is_superadmin'] = $user->isSuperadmin();

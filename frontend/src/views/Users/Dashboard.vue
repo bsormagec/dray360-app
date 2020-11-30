@@ -58,5 +58,8 @@ export default {
 }
 </script>
 <style lang="scss" scoped>
-
+.user__list{
+  @include media("min") {
+      padding: rem(15)
+    }}
 </style>

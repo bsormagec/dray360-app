@@ -2,6 +2,7 @@
   <div>
     <v-app-bar-nav-icon
       v-if="isMobile"
+      class="hamburger__icon"
       @click="toogleSidebar"
     />
     <div v-if="showSidebar">
@@ -14,10 +15,19 @@
         :permanent="showSidebar && !isMobile"
         @input="onChangeSidebar"
       >
-        <v-app-bar-nav-icon
+        <v-btn
           v-if="isMobile"
+          class="mx-2 my-1"
+          fab
+          dark
+          small
+          color="primary"
           @click.stop="toogleSidebar"
-        />
+        >
+          <v-icon dark>
+            mdi-close
+          </v-icon>
+        </v-btn>
         <img
           v-if="!tenantConfig.logo1"
           class="logo__dry"
@@ -103,7 +113,7 @@
           v-if="currentUser !== undefined && currentUser.is_superadmin"
           class="company__name"
         >
-          <h3>{{ company.name }}</h3>
+          <h3>{{ currentUser.company.name }}</h3>
         </div>
         <img
           src="@/assets/images/LogoDryPoweredBy.svg"
@@ -120,7 +130,6 @@ import { mapState, mapActions } from 'vuex'
 import hasPermission from '@/mixins/permissions'
 import utils, { type } from '@/store/modules/utils'
 import isMobile from '@/mixins/is_mobile'
-import companies, { types } from '@/store/modules/companies'
 
 export default {
 
@@ -150,7 +159,6 @@ export default {
   },
   computed: {
     ...mapState(auth.moduleName, { currentUser: state => state.currentUser }),
-    ...mapState(companies.moduleName, { company: state => state.company }),
     ...mapState(utils.moduleName, {
       tenantConfig: state => state.tenantConfig,
       showSidebar: state => state.sidebar.show,
@@ -161,9 +169,6 @@ export default {
   },
   async mounted () {
     await this[type.getTenantConfig]()
-    if (this.currentUser !== undefined) {
-      await this[types.getCompany]({ id: this.currentUser.t_company_id })
-    }
   },
   beforeMount () {
     if (!this.isMobile) {
@@ -173,7 +178,6 @@ export default {
   methods: {
     ...mapActions('AUTH', ['logout']),
     ...mapActions(utils.moduleName, [type.getTenantConfig, type.setSidebar]),
-    ...mapActions(companies.moduleName, [types.getCompany]),
     async logoutBtn () {
       await this.logout()
       this.$router.push('/login')
@@ -190,11 +194,18 @@ export default {
 </script>
 
 <style lang="scss">
-$sidebarbackground: url("../../assets/images/bg_sidebar.png");
+$sidebarbackground: url("../../assets/images/menuBackground.png");
 .theme--light.v-navigation-drawer:not(.v-navigation-drawer--floating) .v-navigation-drawer__border{
     background: linear-gradient(90deg, rgba(0, 60, 113, 0.1) 0%, rgba(0, 60, 113, 0.05) 31.77%, rgba(0, 60, 113, 0) 100%);
     box-shadow: inset -1px 0px 0px rgba(0, 60, 113, 0.03);
     transform: rotate(180deg);
+  }
+  .hamburger__icon{
+    color: white !important;
+    background: #003C71;
+    top: rem(3);
+    left: rem(3);
+    z-index: 5;
   }
 .sidebar__nav{
   background: linear-gradient(90deg, rgba(0, 60, 113, 0) 97.95%, rgba(0, 60, 113, 0.1) 100%), linear-gradient(0deg, rgba(0, 60, 113, 0.05), rgba(0, 60, 113, 0.05)), #FFFFFF;
@@ -206,6 +217,7 @@ $sidebarbackground: url("../../assets/images/bg_sidebar.png");
   background-image: $sidebarbackground;
   background-size: cover;
   max-width: rem(196);
+  position: fixed;
   .v-navigation-drawer__border{
     width: 5px;
   }
@@ -270,8 +282,8 @@ $sidebarbackground: url("../../assets/images/bg_sidebar.png");
     }
   }
   .company__name{
-    position: absolute;
-    bottom: rem(150);
+    position: fixed;
+    top: 80vh;
     @include center;
 
     h3{
