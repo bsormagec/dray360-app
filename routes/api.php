@@ -25,8 +25,8 @@ use App\Http\Controllers\Api\OrderStatusHistoryController;
 use App\Http\Controllers\Api\AccesorialCompaniesController;
 use App\Http\Controllers\Api\Auth\ForgotPasswordController;
 use App\Http\Controllers\Api\OcrRequestReprocessController;
-use App\Http\Controllers\Api\DownloadOriginalOrderPdfController;
 use App\Http\Controllers\Api\EquipmentTypesSelectValuesController;
+use App\Http\Controllers\Api\DownloadOriginalOrderSourceFileController;
 
 /*
 |--------------------------------------------------------------------------
@@ -85,8 +85,8 @@ Route::group(['middleware' => ['auth:sanctum', 'impersonate', 'tenant-aware']], 
     Route::post('orders/{order}/send-to-tms', SendToTmsController::class)
         ->name('orders.send-to-tms');
 
-    Route::get('orders/{order}/download-pdf', DownloadOriginalOrderPdfController::class)
-        ->name('orders.download-pdf');
+    Route::get('orders/{order}/download-source-file', DownloadOriginalOrderSourceFileController::class)
+        ->name('orders.download-source-file');
 
     Route::get('orders/{order}/status-history', OrderStatusHistoryController::class)
         ->name('orders.status-history');

@@ -90,7 +90,7 @@
           }"
           :options="[
             { title: 'View Details', action: () => item.action(item.id), hasPermission: hasPermission('orders-view') },
-            { title: 'Download PDF', action: () => downloadPDF(item.id) },
+            { title: 'Download Source File', action: () => downloadSourceFile(item.id) },
             { title: 'Reprocess Order', action: () => reprocessOrder(item.request_id) },
             { title: 'Delete Order', action: () => deleteOrder(item) }
           ]"
@@ -164,7 +164,7 @@ import Chip from '@/components/Chip'
 import hasPermission from '@/mixins/permissions'
 import { formatDate } from '@/utils/dates'
 import utils, { type as utilTypes } from '@/store/modules/utils'
-import { getOrders2, getDownloadPDFURL, reprocessOcrRequest, delDeleteOrder } from '@/store/api_calls/orders'
+import { getOrders2, getSourceFileDownloadURL, reprocessOcrRequest, delDeleteOrder } from '@/store/api_calls/orders'
 import { getRequestFilters } from '@/utils/filters_handling'
 
 import { mapState, mapActions } from 'vuex'
@@ -390,15 +390,13 @@ export default {
       window.location.reload()
     },
 
-    // download pdf
-    async downloadPDF (orderId) {
-      const [error, data] = await getDownloadPDFURL(orderId)
+    async downloadSourceFile (orderId) {
+      const [error, data] = await getSourceFileDownloadURL(orderId)
 
       if (!error) {
         // not entirely sure why this is necessary, but this is the logic for triggering a DL elsewhere in the app.
         const link = document.createElement('a')
         link.href = data.data
-        link.download = `order-${orderId}.pdf`
         link.click()
         link.remove()
       } else {

@@ -31,7 +31,7 @@
         }"
         :options="[
           { title: 'Edit Order' , action: toggleEdit, hasPermission: true },
-          { title: 'Download Order', action: () => downloadPDF(order.id), hasPermission: true },
+          { title: 'Download Source File', action: () => downloadSourceFile(order.id), hasPermission: true },
           { title: 'Delete Order', action: () => deleteOrder(order.id), hasPermission: hasPermission('orders-remove') }
         ]"
         :loading="loading"
@@ -462,13 +462,12 @@
 import isMobile from '@/mixins/is_mobile'
 import permissions from '@/mixins/permissions'
 import { mapState, mapActions } from 'vuex'
-import { reqStatus } from '@/enums/req_status'
 import get from 'lodash/get'
 
+import { getSourceFileDownloadURL, postSendToTms } from '@/store/api_calls/orders'
 import orderForm, { types as orderFormTypes } from '@/store/modules/order-form'
-import { postSendToTms } from '@/store/api_calls/orders'
+
 import utils, { type } from '@/store/modules/utils'
-import orders, { types } from '@/store/modules/orders'
 
 // import FormFieldDate from '@/components/FormFields/FormFieldDate'
 // import FormFieldTime from '@/components/FormFields/FormFieldTime'
@@ -578,7 +577,6 @@ export default {
 
   methods: {
     ...mapActions(utils.moduleName, [type.setSnackbar, type.setConfirmationDialog]),
-    ...mapActions(orders.moduleName, [types.getDownloadPDFURL]),
     ...mapActions(orderForm.moduleName, {
       updateOrder: orderFormTypes.updateOrder,
       startHover: orderFormTypes.startHover,
@@ -616,14 +614,13 @@ export default {
       this[type.setSnackbar]({ show: true, message })
     },
 
-    async downloadPDF (orderId) {
+    async downloadSourceFile (orderId) {
       this.loading = true
-      const request = await this[types.getDownloadPDFURL](orderId)
+      const [error, data] = await getSourceFileDownloadURL(orderId)
 
-      if (request.status === reqStatus.success) {
+      if (error === undefined) {
         const link = document.createElement('a')
-        link.href = request.data.data
-        link.download = `order-${orderId}.pdf`
+        link.href = data.data
         link.click()
         link.remove()
       } else {
