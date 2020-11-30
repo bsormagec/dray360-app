@@ -5,10 +5,16 @@
       pa-0
     >
       <v-row no-gutters>
-        <v-col class="sidebar">
+        <v-col
+          class="sidebar"
+        >
           <SidebarNavigation />
         </v-col>
-        <v-col>
+        <v-col
+          :md="isMobile ? 12 : false"
+          :sm="isMobile ? 12 : false"
+          class="content"
+        >
           <router-view />
         </v-col>
       </v-row>
@@ -23,6 +29,7 @@ import Snackbar from '@/components/General/Snackbar'
 import ConfirmationDialog from '@/components/General/ConfirmationDialog'
 import SidebarNavigation from '@/components/General/SidebarNavigation'
 import { hexToRgb } from '@/utils/hex_to_rgb'
+import isMobile from '@/mixins/is_mobile'
 
 export default {
   name: 'App',
@@ -31,6 +38,7 @@ export default {
     ConfirmationDialog,
     SidebarNavigation
   },
+  mixins: [isMobile],
   computed: {
     cssVars () {
       const primaryRgb = hexToRgb(this.$vuetify.theme.themes.light.primary)
@@ -48,6 +56,13 @@ export default {
 @import "@/assets/styles/index.scss";
 
 .sidebar {
-  max-width: rem(map-get($sizes, sidebar-desktop-width));
+  background-color: transparent;
+  @include media("min") {
+    max-width: rem(0);
+  }
+  @include media("med") {
+    max-width: rem(map-get($sizes, sidebar-desktop-width));
+  }
 }
+
 </style>
