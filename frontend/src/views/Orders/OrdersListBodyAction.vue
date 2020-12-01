@@ -21,7 +21,7 @@
 <script>
 import hasPermissions from '@/mixins/permissions'
 import { mapActions } from 'vuex'
-import { getSourceFileDownloadURL } from '@/store/api_calls/orders'
+import { getSourceFileDownloadURL, reprocessOcrRequest, delDeleteOrder } from '@/store/api_calls/orders'
 import utils, { type as utilTypes } from '@/store/modules/utils'
 import OutlinedButtonGroup from '@/components/General/OutlinedButtonGroup'
 
