@@ -224,6 +224,39 @@ class UsersControllerTest extends TestCase
     }
 
     /** @test */
+    public function it_should_allow_to_delete_a_user_and_add_a_new_one_with_the_same_email()
+    {
+        $user = factory(User::class)->create([
+            Company::FOREIGN_KEY => $this->customerAdmin->getCompanyId()
+        ]);
+
+        $this->deleteJson(route('users.destroy', $user->id))
+            ->assertStatus(Response::HTTP_NO_CONTENT);
+
+        $role = Role::where('name', '!=', 'superadmin')->first();
+        $newUser = [
+            'name' => $this->faker->name,
+            'email' => $user->email,
+            'password' => 'testtest',
+            'role_id' => $role->id,
+        ];
+
+        $this->postJson(route('users.store'), $newUser)
+            ->assertStatus(Response::HTTP_CREATED)
+            ->assertJsonStructure(['id'])
+            ->assertJsonFragment(['name' => $newUser['name']]);
+
+        $this->assertSoftDeleted('users', [
+            'original_email' => $user->email,
+            'email' => null,
+            ]);
+        $this->assertDatabaseHas('users', [
+            'email' => $user->email,
+            'original_email' => null,
+        ]);
+    }
+
+    /** @test */
     public function it_should_fail_if_not_authorized_to_delete_variants()
     {
         $this->loginNoAdmin();
