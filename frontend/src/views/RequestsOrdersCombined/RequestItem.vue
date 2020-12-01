@@ -47,8 +47,11 @@
         </div>
       </div>
     </div>
-    <div class="text-caption pb-1">
-      {{ request.orders_count }} orders
+    <div class="text-caption pb-1" v-if="!isSuperadmin()">
+      {{ request.orders_count }} {{ request.orders_count == 1 ? 'order' : 'orders' }}
+    </div>
+    <div class="text-caption pb-1" v-else>
+      {{ request.orders_count }} {{ request.orders_count == 1 ? 'order' : 'orders' }} for {{ request.company_name }}
     </div>
     <div class="d-flex justify-space-between mt-auto">
       <div />
@@ -67,10 +70,12 @@
 import RequestStatus from '@/components/RequestStatus'
 
 import { formatDate } from '@/utils/dates'
+import permissions from '@/mixins/permissions'
 
 export default {
   name: 'RequestItem',
   components: { RequestStatus },
+  mixins: [permissions],
   props: {
     request: {
       type: Object,
