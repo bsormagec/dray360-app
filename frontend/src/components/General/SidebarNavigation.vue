@@ -152,7 +152,7 @@ export default {
         { name: 'Sentry', path: 'https://sentry.io/organizations/draymaster/issues/?project=5285677', role: ['superadmin'] },
         { name: 'Rules Editor', path: '/rules-editor', role: ['admin'] },
         { name: 'Usage Stats', path: '#', role: ['admin'] },
-        { name: 'RefsCustoms Mapping', path: '/companies/1/refs-custom-mapping', role: ['superadmin'] }
+        { name: 'RefsCustoms Mapping', path: '/companies/refs-custom-mapping', role: ['superadmin'] }
       ]
 
     }

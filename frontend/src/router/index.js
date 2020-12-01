@@ -119,7 +119,7 @@ const routes = [
     component: RulesEditor
   },
   {
-    path: '/companies/:id/refs-custom-mapping',
+    path: '/companies/refs-custom-mapping',
     name: 'Mapping',
     component: MappingField,
     meta: {
