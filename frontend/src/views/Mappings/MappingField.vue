@@ -219,6 +219,8 @@ export default {
         { field_name: 'voyage', value: 'voyage' },
         { field_name: 'yard_pre_pull', value: 'yard pre-pull' },
         { field_name: 'interchange_count', value: 'interchange count' },
+        { field_name: 'total_quantity', value: 'total quantity' },
+        { field_name: 'total_weight', value: 'total weight' },
         { field_name: 'other_value', value: 'Other' }
       ]
     }
