@@ -49,7 +49,7 @@ const actions = {
 
     if (error) return reqStatus.error
 
-    commit(types.setUsers, { usersData: data.data })
+    commit(types.setUsers, { usersData: data })
     return reqStatus.success
   },
 

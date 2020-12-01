@@ -1,5 +1,5 @@
 import { reqStatus } from '@/enums/req_status'
-import { getOrders, getOrderDetail, updateOrderDetail, getDownloadPDFURL } from '@/store/api_calls/orders'
+import { getOrders, getOrderDetail, updateOrderDetail } from '@/store/api_calls/orders'
 
 export const types = {
   setOrders: 'SET_ORDERS',
@@ -7,14 +7,15 @@ export const types = {
   getOrders: 'GET_ORDERS',
   getOrderDetail: 'GET_ORDER_DETAIL',
   updateOrderDetail: 'UPDATE_ORDER_DETAIL',
-  getDownloadPDFURL: 'GET_DOWNLOAD_PDF'
+  setReloadRequests: 'SET_RELOAD_REQUESTS'
 }
 
 const initialState = {
   list: [],
   links: {},
   meta: {},
-  currentOrder: {}
+  currentOrder: {},
+  reloadRequests: false
 }
 
 const mutations = {
@@ -28,6 +29,9 @@ const mutations = {
   },
   [types.setCurrentOrder] (state, orderData) {
     state.currentOrder = orderData
+  },
+  [types.setReloadRequests] (state, reload) {
+    state.reloadRequests = reload
   }
 }
 
@@ -71,14 +75,6 @@ const actions = {
 
     if (error) return reqStatus.error
     return reqStatus.success
-  },
-
-  async [types.getDownloadPDFURL] ({ commit }, orderId) {
-    const [error, data] = await getDownloadPDFURL(orderId)
-
-    if (error) return { status: reqStatus.error, data: error.response.data }
-
-    return { status: reqStatus.success, data: data }
   }
 }
 

@@ -72,7 +72,6 @@ export default {
 
   methods: {
     onClose () {
-      console.log('closing')
       if (!this.handleClose) {
         this.visible = false
       }

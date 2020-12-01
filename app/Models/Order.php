@@ -45,6 +45,8 @@ use Illuminate\Database\Eloquent\SoftDeletes;
  * @property string $pickup_number
  * @property \Carbon\Carbon $pickup_by_date
  * @property \Carbon\Carbon $pickup_by_time
+ * @property \Carbon\Carbon $cutoff_date
+ * @property \Carbon\Carbon $cutofF_time
  * @property boolean $bill_to_address_verified
  * @property string $bill_to_address_raw_text
  * @property boolean $port_ramp_of_origin_address_verified
@@ -63,6 +65,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
  * @property \Carbon\Carbon $cancelled_datetime
  * @property integer $interchange_count
  * @property integer $interchange_err_count
+ * @property string $tms_template_id
  */
 class Order extends Model
 {
@@ -107,6 +110,8 @@ class Order extends Model
         'pickup_number',
         'pickup_by_date',
         'pickup_by_time',
+        'cutoff_date',
+        'cutoff_time',
         'bill_to_address_verified',
         'bill_to_address_raw_text',
         'port_ramp_of_origin_address_verified',
@@ -144,6 +149,7 @@ class Order extends Model
         'cancelled_datetime',
         'interchange_count',
         'interchange_err_count',
+        'tms_template_id',
     ];
 
     /**
@@ -164,6 +170,7 @@ class Order extends Model
         'port_ramp_of_destination_address_verified' => 'boolean',
         'ocr_data' => 'json',
         'pickup_by_date' => 'datetime:Y-m-d',
+        'cutoff_date' => 'datetime:Y-m-d',
         'equipment_type_verified' => 'boolean',
     ];
 
@@ -205,6 +212,8 @@ class Order extends Model
         'pickup_number' => 'sometimes|nullable',
         'pickup_by_date' => 'sometimes|nullable',
         'pickup_by_time' => 'sometimes|nullable',
+        'cutoff_date' => 'sometimes|nullable',
+        'cutoff_time' => 'sometimes|nullable',
         'bill_to_address_verified' => 'sometimes|nullable',
         'port_ramp_of_origin_address_verified' => 'sometimes|nullable',
         'port_ramp_of_destination_address_verified' => 'sometimes|nullable',
@@ -238,6 +247,7 @@ class Order extends Model
         'cancelled_datetime' => 'sometimes|nullable',
         'interchange_count' => 'sometimes|nullable',
         'interchange_err_count' => 'sometimes|nullable',
+        'tms_template_id' => 'sometimes|nullable',
     ];
 
     public function precededByOrder()
@@ -252,7 +262,8 @@ class Order extends Model
 
     public function orderAddressEvents()
     {
-        return $this->hasMany(OrderAddressEvent::class, 't_order_id');
+        return $this->hasMany(OrderAddressEvent::class, 't_order_id')
+            ->orderBy('event_number');
     }
 
     public function orderLineItems()

@@ -27,7 +27,7 @@ class AddIspickupeventToTOrderAddressEvents extends Migration
      */
     public function down()
     {
-        // Drop pickup_by_date column in t_orders
+        // Drop is_pickup_event column in t_orders
         if (Schema::hasColumn('t_order_address_events', 'is_pickup_event')) {
             Schema::table(
                 't_order_address_events',

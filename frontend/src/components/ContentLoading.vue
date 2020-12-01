@@ -60,8 +60,8 @@ export default {
   -webkit-transform: translateZ(0);
   -ms-transform: translateZ(0);
   transform: translateZ(0);
-  -webkit-animation: load8 1.1s infinite linear;
-  animation: load8 1.1s infinite linear;
+  -webkit-animation: load8 1s infinite linear;
+  animation: load8 1s infinite linear;
 }
 
 @-webkit-keyframes load8 {

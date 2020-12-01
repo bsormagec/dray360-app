@@ -31,6 +31,7 @@
           <li
             v-for="(filter, index) in displayFilters"
             :key="index"
+            class="pt-1"
           >
             <Chip
               v-if="filter.value.length > 0"
@@ -119,6 +120,31 @@
                 />
               </v-col>
             </v-row>
+            <v-row v-if="isSuperadmin()">
+              <v-col cols="4 d-flex align-center">
+                <label
+                  for="system_status"
+                  hide-details
+                  class="filter-label"
+                >
+                  System Status
+                </label>
+              </v-col>
+              <v-col cols="8">
+                <v-select
+                  v-model="filters.system_status"
+                  outlined
+                  hide-details
+                  multiple
+                  chips
+                  :items="system_statuses"
+                  name="system_status"
+                  prepend-icon="mdi-check-circle-outline"
+                  dense
+                  class="status-selector"
+                />
+              </v-col>
+            </v-row>
 
             <v-row v-if="currentUser !== undefined && currentUser.is_superadmin">
               <!--
@@ -172,6 +198,7 @@ import DateRangeCalendar from './DateRange'
 import Chip from '@/components/Chip'
 import auth from '@/store/modules/auth'
 import { mapState } from 'vuex'
+import permissions from '@/mixins/permissions'
 
 export default {
   name: 'Filters',
@@ -179,6 +206,7 @@ export default {
     DateRangeCalendar,
     Chip
   },
+  mixins: [permissions],
   props: {
     search: {
       type: String,
@@ -191,6 +219,11 @@ export default {
       default: () => []
     },
     status: {
+      type: Array,
+      required: false,
+      default: () => []
+    },
+    systemStatus: {
       type: Array,
       required: false,
       default: () => []
@@ -216,11 +249,41 @@ export default {
         { text: 'TMS Warning', value: 'TMS Warning' },
         { text: 'TMS Error', value: 'TMS Error' }
       ],
+      system_statuses: [
+        { text: 'intake-accepted', value: 'intake-accepted' },
+        { text: 'intake-accepted-datafile', value: 'intake-accepted-datafile' },
+        { text: 'intake-exception', value: 'intake-exception' },
+        { text: 'intake-rejected', value: 'intake-rejected' },
+        { text: 'intake-started', value: 'intake-started' },
+        { text: 'ocr-completed', value: 'ocr-completed' },
+        { text: 'ocr-post-processing-complete', value: 'ocr-post-processing-complete' },
+        { text: 'ocr-post-processing-error', value: 'ocr-post-processing-error' },
+        { text: 'ocr-waiting', value: 'ocr-waiting' },
+        { text: 'process-ocr-output-file-complete', value: 'process-ocr-output-file-complete' },
+        { text: 'process-ocr-output-file-error', value: 'process-ocr-output-file-error' },
+        { text: 'upload-requested', value: 'upload-requested' },
+        { text: 'sending-to-wint', value: 'sending-to-wint' },
+        { text: 'failure-sending-to-wint', value: 'failure-sending-to-wint' },
+        { text: 'success-sending-to-wint', value: 'success-sending-to-wint' },
+        { text: 'shipment-created-by-wint', value: 'shipment-created-by-wint' },
+        { text: 'shipment-not-created-by-wint', value: 'shipment-not-created-by-wint' },
+        { text: 'updating-to-wint', value: 'updating-to-wint' },
+        { text: 'failure-updating-to-wint', value: 'failure-updating-to-wint' },
+        { text: 'success-updating-to-wint', value: 'success-updating-to-wint' },
+        { text: 'shipment-updated-by-wint', value: 'shipment-updated-by-wint' },
+        { text: 'shipment-not-updated-by-wint', value: 'shipment-not-updated-by-wint' },
+        { text: 'updates-prior-order', value: 'updates-prior-order' },
+        { text: 'updated-by-subsequent-order', value: 'updated-by-subsequent-order' },
+        { text: 'success-imageuploding-to-blackfl', value: 'success-imageuploding-to-blackfl' },
+        { text: 'failure-imageuploding-to-blackfl', value: 'failure-imageuploding-to-blackfl' },
+        { text: 'untried-imageuploding-to-blackfl', value: 'untried-imageuploding-to-blackfl' }
+      ],
       // these are the models for the form fields
       filters: {
         search: this.search,
         dateRange: this.dateRange,
         status: this.status,
+        system_status: this.systemStatus,
         updateType: this.updateType
       },
       // these are the filters that get rendered as chips and emitted to the parent
@@ -229,12 +292,14 @@ export default {
         search: 'Search',
         dateRange: 'Date Range',
         status: 'Status',
+        system_status: 'System Status',
         updateType: 'Update Type'
       },
       chipColors: {
         search: '#41B6E6',
         dateRange: '#FDAA63',
         status: '#77C19A',
+        system_status: '#77C19A',
         updateType: '#41B6E6',
         default: '#41B6E6'
       }
@@ -252,6 +317,10 @@ export default {
         if (filter.type === 'status') {
           filter.value.forEach(statusFilter => {
             dFilters.push({ type: 'status', value: statusFilter })
+          })
+        } else if (filter.type === 'system_status') {
+          filter.value.forEach(statusFilter => {
+            dFilters.push({ type: 'system_status', value: statusFilter })
           })
         } else {
           dFilters.push(filter)
@@ -286,7 +355,7 @@ export default {
     },
     removeFilter (filter) {
       // remove from model
-      if (filter.type === 'status') {
+      if (filter.type === 'status' || filter.type === 'system_status') {
         this.filters[filter.type] = this.filters[filter.type].filter(element => element !== filter.value)
       } else if (Array.isArray(filter.value)) {
         this.filters[filter.type] = []

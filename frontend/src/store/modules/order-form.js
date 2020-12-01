@@ -1,6 +1,7 @@
 import { reqStatus } from '@/enums/req_status'
 import { updateOrderDetail } from '@/store/api_calls/orders'
-import { getHighlights, parseChanges } from '@/utils/order_form_general_functions'
+import { getHighlights, parseChanges, baseHighlight } from '@/utils/order_form_general_functions'
+import cloneDeep from 'lodash/cloneDeep'
 
 export const types = {
   setFormOrder: 'SET_FORM_ORDER',
@@ -12,11 +13,15 @@ export const types = {
   startHover: 'START_HOVER',
   stopHover: 'STOP_HOVER',
   startFieldEdit: 'START_FIELD_EDIT',
-  stopFieldEdit: 'STOP_FIELD_EDIT'
+  stopFieldEdit: 'STOP_FIELD_EDIT',
+  addHighlight: 'ADD_HIGHLIGHT',
+  setBackupOrder: 'SET_BACKUP_ORDER',
+  cancelEdit: 'CANCEL_EDIT'
 }
 
 const initialState = {
   order: {},
+  backupOrder: {},
   editMode: false,
   highlights: {},
   pages: [],
@@ -30,7 +35,6 @@ const initialState = {
     itinerary: { id: 'itinerary-section', label: 'Itinerary', subsection: false },
     notes: { id: 'notes-section', label: 'Notes', subsection: false },
     inventory: { id: 'inventory-section', label: 'Inventory', subsection: false }
-
   }
 }
 
@@ -53,16 +57,24 @@ const mutations = {
   },
   [types.setHighlight] (state, { path, highlight }) {
     state.highlights[path] = { ...state.highlights[path], ...highlight }
+  },
+  [types.setBackupOrder] (state, order) {
+    state.backupOrder = { ...order }
   }
 }
 
 const actions = {
+  [types.addHighlight] ({ commit }, path) {
+    commit(types.setHighlight, { path, highlight: baseHighlight({}) })
+  },
   [types.setFormOrder] ({ commit, dispatch }, order) {
     commit(types.setFormOrder, order)
     dispatch(types.loadHighlights, order)
   },
   async [types.updateOrder] ({ commit, state }, { path, value, useOrder = false }) {
     let changes = {}
+
+    commit(types.setHighlight, { path, highlight: { loading: true } })
 
     if (useOrder) {
       changes = { ...state.order }
@@ -80,6 +92,9 @@ const actions = {
     if (error !== undefined) return { status: reqStatus.error, data: error }
 
     commit(types.setFormOrder, data)
+
+    commit(types.setHighlight, { path, highlight: { loading: false } })
+
     return { status: reqStatus.success, data }
   },
   [types.toggleEdit] ({ commit, dispatch, state }) {
@@ -88,8 +103,16 @@ const actions = {
     const newEditMode = !editMode
 
     if (editMode === true && newEditMode === false) {
+      commit(types.setBackupOrder, {})
       dispatch(types.updateOrder, { useOrder: true })
+    } else {
+      commit(types.setBackupOrder, { ...cloneDeep(state.order) })
     }
+  },
+  [types.cancelEdit] ({ state, commit, dispatch }) {
+    commit(types.toggleEdit)
+    commit(types.setFormOrder, { ...cloneDeep(state.backupOrder) })
+    commit(types.setBackupOrder, {})
   },
   [types.loadHighlights] ({ commit, state }, order) {
     const pages = []

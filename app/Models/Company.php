@@ -12,7 +12,24 @@ use Illuminate\Database\Eloquent\Relations\BelongsToMany;
  * @property \Illuminate\Database\Eloquent\Collection $companyAddressTmsCodes
  * @property \Illuminate\Database\Eloquent\Collection $contacts
  * @property \App\Models\Domain $domain
- * @property integer $t_address_id
+ * @property int $t_address_id
+ * @property array $configuration
+ * @property string email_intake_address
+ * @property string email_intake_address_alt
+ * @property int default_tms_provider_id
+ * @property array refs_custom_mapping
+ * @property array configuration
+ * @property array company_config
+ * @property int automatic_address_verification_threshold
+ * @property int t_domain_id
+ * @property string blackfly_token
+ * @property string blackfly_imagetype
+ * @property string ripcms_username
+ * @property string ripcms_password
+ * @property string compcare_organization_id
+ * @property string compcare_username
+ * @property string compcare_password
+ * @property boolean sync_addresses
  * @property string $name
  */
 class Company extends Model
@@ -44,6 +61,7 @@ class Company extends Model
         'default_tms_provider_id',
         'refs_custom_mapping',
         'configuration',
+        'company_config',
         'automatic_address_verification_threshold',
         't_domain_id',
         'blackfly_token',
@@ -73,6 +91,7 @@ class Company extends Model
         'name' => 'string',
         'refs_custom_mapping' => 'json',
         'configuration' => 'json',
+        'company_config' => 'json',
     ];
 
     /**

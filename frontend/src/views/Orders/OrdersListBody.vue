@@ -60,7 +60,8 @@ export default {
 .listbody {
   width: 100%;
 }
-.order-table::v-deep td {
+
+.order-table::v-deep td.text-start {
   font-size: rem(12);
 }
 </style>

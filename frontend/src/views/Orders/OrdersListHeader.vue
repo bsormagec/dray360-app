@@ -1,9 +1,20 @@
 <template>
   <div class="header">
-    <h5 class="header__title">
-      Orders
-    </h5>
-
+    <div class="header__title_button">
+      <v-btn
+        outlined
+        color="primary"
+        small
+        class="mr-2"
+        @click.stop="showInput = false"
+        @click="e => $emit('refresh', e)"
+      >
+        Refresh
+      </v-btn>
+      <h5 class="header__title">
+        Orders
+      </h5>
+    </div>
     <div class="header__right">
       <DateRangeCalendar
         @change="handleCalendar"
@@ -40,6 +51,7 @@ import DateRangeCalendar from '@/components/Orders/DateRangeCalendar'
 import utils, { type } from '@/store/modules/utils'
 import { mapActions } from 'vuex'
 import isMobile from '@/mixins/is_mobile'
+import orders, { types } from '@/store/modules/orders'
 
 export default {
   name: 'OrdersListHeader',
@@ -106,6 +118,7 @@ export default {
 
   methods: {
     ...mapActions(utils.moduleName, [type.getTenantConfig, type.setSidebar]),
+    ...mapActions(orders.moduleName, [types.getOrders]),
     handleCalendar (e) {
       if (e.length === 2) {
         const filters = {
@@ -153,6 +166,9 @@ export default {
     },
     toogleSidebar () {
       this[type.setSidebar]({ show: !this.showSidebar })
+    },
+    change (e) {
+      this.$emit('refresh')
     }
   }
 }
@@ -173,7 +189,14 @@ export default {
     height: rem(175);
   }
 }
-
+.header__title_button {
+    display: flex;
+    width: 100%;
+    align-items: center;
+     @include media('max-min'){
+      margin-left: rem(35);
+    }
+}
 .header__right {
   display: flex;
   align-items: center;

@@ -14,7 +14,7 @@ export default {
 
   methods: {
     setIsMobile () {
-      this.isMobile = window.innerWidth < 1024
+      this.isMobile = window.innerWidth <= 1024
     }
   }
 }

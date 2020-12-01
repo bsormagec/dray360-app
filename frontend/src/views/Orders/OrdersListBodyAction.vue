@@ -7,7 +7,7 @@
       hasPermission: hasPermission('orders-view')
     }"
     :options="[
-      { title: 'Download PDF', action: () => downloadPDF(item.order.id) },
+      { title: 'Download Source File', action: () => downloadSourceFile(item.order.id) },
       { title: 'Reprocess Request', action: () => reprocessRequest(item), hasPermission: hasPermission('ocr-request-statuses-create') },
       { title: 'View Details', action: () => item.action(item.order.id), hasPermission: hasPermission('orders-view') },
       { title: 'View Order History', action: () => viewOrderHistory() },
@@ -20,12 +20,10 @@
 
 <script>
 import hasPermissions from '@/mixins/permissions'
-import { reqStatus } from '@/enums/req_status'
 import { mapActions } from 'vuex'
-import orders, { types } from '@/store/modules/orders'
+import { getSourceFileDownloadURL, reprocessOcrRequest, delDeleteOrder } from '@/store/api_calls/orders'
 import utils, { type as utilTypes } from '@/store/modules/utils'
 import OutlinedButtonGroup from '@/components/General/OutlinedButtonGroup'
-import { reprocessOcrRequest, delDeleteOrder } from '@/store/api_calls/orders'
 
 export default {
   name: 'OrdersListBodyAction',
@@ -43,19 +41,17 @@ export default {
     }
   },
   methods: {
-    ...mapActions(orders.moduleName, [types.getDownloadPDFURL]),
     ...mapActions(utils.moduleName, {
       setSnackbar: utilTypes.setSnackbar,
       setConfirmDialog: utilTypes.setConfirmationDialog
     }),
-    async downloadPDF (orderId) {
+    async downloadSourceFile (orderId) {
       this.loading = true
-      const request = await this[types.getDownloadPDFURL](orderId)
+      const [error, data] = await getSourceFileDownloadURL(orderId)
 
-      if (request.status === reqStatus.success) {
+      if (error === undefined) {
         const link = document.createElement('a')
-        link.href = request.data.data
-        link.download = `order-${orderId}.pdf`
+        link.href = data.data
         link.click()
         link.remove()
       } else {
@@ -114,7 +110,8 @@ export default {
               message: 'Error trying to delete the order'
             })
           }
-        }
+        },
+        onCancel: () => { this.loading = false }
       })
     }
   }

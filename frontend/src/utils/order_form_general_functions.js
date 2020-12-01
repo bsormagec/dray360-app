@@ -39,16 +39,23 @@ export function getHighlights (order) {
   return highlights
 }
 
-function baseHighlight (ocrData) {
+export function baseHighlight (ocrData) {
   return {
     ...ocrData,
     hover: false,
     edit: false,
-    hoverTimeout: null
+    hoverTimeout: null,
+    loading: false
   }
 }
 
 export function keyShouldBeParsed (key) {
+  const shouldNotBeIgnored = ['tms_template_id']
+
+  if (shouldNotBeIgnored.includes(key)) {
+    return true
+  }
+
   const invalidEndings = [
     'id',
     '_id',
@@ -112,8 +119,7 @@ export function parseChanges ({ path, value, originalOrder }) {
 
     order_address_events[index] = {
       ...order_address_events[index],
-      t_address_id: value.t_address_id,
-      t_address_verified: true
+      ...value
     }
 
     changes = {
@@ -138,4 +144,3 @@ export function parseChanges ({ path, value, originalOrder }) {
 
   return changes
 }
-''

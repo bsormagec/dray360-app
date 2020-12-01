@@ -51,9 +51,15 @@ export default {
   name: 'NotAuthorized',
   async created () {
     await this[type.getTenantConfig]()
+    this.showSidebar()
   },
   methods: {
-    ...mapActions(utils.moduleName, [type.getTenantConfig])
+    ...mapActions(utils.moduleName, [type.getTenantConfig, type.setSidebar]),
+    showSidebar () {
+      this[type.setSidebar]({
+        show: false
+      })
+    }
   }
 }
 </script>

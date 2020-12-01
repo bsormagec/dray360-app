@@ -24,7 +24,7 @@ export const postUploadPDF = async (file, variantName) => axios.post('/api/ocr/r
   })
   .catch(e => [e])
 
-export const getDownloadPDFURL = async (orderId) => axios.get(`/api/orders/${orderId}/download-pdf`).then(data => [undefined, data.data]).catch(e => [e])
+export const getSourceFileDownloadURL = async (orderId) => axios.get(`/api/orders/${orderId}/download-source-file`).then(data => [undefined, data.data]).catch(e => [e])
 
 export const reprocessOcrRequest = async (requestId) => axios.post(`/api/ocr/requests/${requestId}/reprocess`).then(data => [undefined, data.data]).catch(e => [e])
 
