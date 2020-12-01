@@ -67,7 +67,7 @@ export default {
   data: () => ({
     accept: '.pdf,.xlsx,.csv,.edi',
     rules: [
-      files => files.length <= 2 || 'File limit exceeded. Please upload less than 20 files.'
+      files => files.length <= 20 || 'File limit exceeded. Please upload less than 20 files.'
     ]
   }),
 
