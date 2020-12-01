@@ -5,6 +5,7 @@ describe('Sorts columns', function () {
     cy.fixture('user-mgmt/roles.json').as('roles')
     cy.fixture('user-mgmt/company.json').as('company')
     cy.fixture('user-mgmt/user-list.json').as('users')
+    cy.fixture('user-mgmt/single-user-response.json').as('singleUser')
     cy.fixture('user-mgmt/edited-user.json').as('editedUser')
   })
 
@@ -15,7 +16,7 @@ describe('Sorts columns', function () {
 
     cy.route({ url: '**/api/current-tenant', response: this.tenant })
 
-    cy.route({ url: '**/api/users', response: this.users })
+    cy.route({ url: '**/api/users**', response: this.users })
 
     cy.route({ url: '**/api/roles', response: this.roles })
 
@@ -39,7 +40,7 @@ describe('Sorts columns', function () {
 
     cy.route({ url: '**/api/current-tenant', response: this.tenant })
 
-    cy.route({ url: '**/api/users', response: this.users })
+    cy.route({ url: '**/api/users**', response: this.users })
 
     cy.route({ url: '**/api/roles', response: this.roles })
 
@@ -48,6 +49,8 @@ describe('Sorts columns', function () {
     cy.visit('http://localhost:8080/user/dashboard')
 
     cy.wait(1000)
+
+    cy.route({ url: '**/api/users**', response: this.singleUser })
 
     cy.get('[data-cy=dashboard-search]').type('Doe', { force: true })
 
@@ -61,7 +64,7 @@ describe('Sorts columns', function () {
 
     cy.route({ url: '**/api/current-tenant', response: this.tenant })
 
-    cy.route({ url: '**/api/users', response: this.users })
+    cy.route({ url: '**/api/users**', response: this.users })
 
     cy.route({ url: '**/api/roles', response: this.roles })
 

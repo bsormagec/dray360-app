@@ -21,7 +21,15 @@
         <span class="field__name">{{ label }}</span>
         <span
           class="field__value"
-        >{{ value === null || value === '' ? '--' : value }}</span>
+        >
+          <v-progress-circular
+            v-if="isLoading"
+            :size="20"
+            indeterminate
+            color="primary"
+          />
+          {{ value === null || value === '' ? '--' : value }}
+        </span>
       </div>
       <div
         :class="{
@@ -86,6 +94,9 @@ export default {
     },
     isEditing () {
       return this.editMode || get(this.highlight, 'edit', false)
+    },
+    isLoading () {
+      return this.allHighlights[this.references]?.loading || false
     }
   },
 

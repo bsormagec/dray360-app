@@ -21,27 +21,127 @@ It is not intended to document every individual column and table, most of which 
 
 Every state change for a request/order combination (or request/null when orders don't exist yet) is logged here. 
 
+### status
+
+Each status is very carefully defined, here is a complete list (as of 11/27/2020):
+
+1. failure-imageuploding-to-blackfl
+1. failure-sending-to-wint
+1. intake-accepted
+1. intake-accepted-datafile
+1. intake-exception
+1. intake-rejected
+1. intake-started
+1. ocr-completed
+1. ocr-post-processing-complete
+1. ocr-post-processing-error
+1. ocr-waiting
+1. process-ocr-output-file-complete
+1. process-ocr-output-file-error
+1. sending-to-wint
+1. shipment-created-by-wint
+1. shipment-not-created-by-wint
+1. shipment-not-updated-by-wint
+1. shipment-updated-by-wint
+1. success-imageuploding-to-blackfl
+1. success-sending-to-wint
+1. success-updating-to-wint
+1. untried-imageuploding-to-blackfl
+1. updated-by-subsequent-order
+1. updates-prior-order
+1. upload-requested
+
+
 #### status_metadata
 
 This JSON type column records different information for each `status` type. I will be updating this document to record all possible states here. It is currently documented in a Draw.io diagram and not very accessible.
 
-##### status_metadata.order_id_list (ocr-post-processing-error and ocr-post-processing-complete)
+Here follows a list of all status types and their associated metadata. If this list is found to be incompleted, inaccurate, out of date or in error... please correct it.
+
+All status_metadata object include the following properties:
+
+1. request_id
+1. datetime_utciso
+1. company_id
+1. order_id (if available)
+
+
+#### `intake-started` status_metdata
+
+* created by `./intakefilter/intakefilter.py`
+* triggered by S3 bucket file creaation, from SES email receipt or manual upload
+
+1. source_summary:
+   - source_type: "email"
+   - source_email_subject
+   - source_email_to_address
+   - source_email_from_address
+   - source_email_body_prefixes
+   - source_email_string_length
+   - source_email_attachment_filenames
+   - source_email_recipient0  (i.e. aws "to" address)
+   
+   - source_type: "upload"
+   - source_upload_filename
+   - source_upload_api_request_id
+1. event_info:
+   - bucket_name
+   - recipient0
+   - object_key
+   - event_key
+   - event_time
+   - aws_request_id
+   - log_group_name
+   - log_stream_name
+   - event_time_epoch_ms
+1. read_log_commandline
+1. ocr_request_id
+1. sha256sum
+1. variant_name
+   - if specified on upload by user-selected droplist
+   - or in email subject header with keyword "variant", like "variant: mybestfreightbuyervariant"
+
+
+
+##### `failure-imageuploding-to-blackfl` status_metadata
+
+* created by `./wintupdater/imageuploader.py`
+
+1. message: 'exception sending image to profittools'
+1. exception: exception message
+
+
+##### `success-imageuploding-to-blackfl` status_metadata
+
+* created by `./wintupdater/imageuploader.py`
+
+1. imagetype: (blackfly image type, e.g. PRENOTE or DELIVERYORDER)
+1. jpg_file_list: all individual files aggregated into a multi-page TIFF and uploaded as a single image
+
+##### `untried-imageuploding-to-blackfl` status_metadata
+
+* created by `./wintupdater/imageuploader.py`
+
+1. 'message': 'no image files, blackfly credentials or tms_shipment_id found'
+
+
+##### `status_metadata.order_id_list` (ocr-post-processing-error and ocr-post-processing-complete)
 
 This is an array property in `status_metadata` for both the `ocr-post-processing-error` and `ocr-post-processing-complete` states. Here is a sample query showing how to parse its value and its length.
 
 ````sql
-    select 
-         id
-        ,request_id
-        ,status
-        ,json_extract(status_metadata,'$.order_id_list[0]') as first_order_id
-        ,json_extract(status_metadata,'$.order_id_list') as order_id_list
-        ,json_length(json_extract(status_metadata,'$.order_id_list')) as order_id_length
-    from t_job_state_changes 
-    where status in ('ocr-post-processing-error', 'ocr-post-processing-complete') 
-    having order_id_length > 2
-    order by id asc 
-    ;
+select 
+        id
+    ,request_id
+    ,status
+    ,json_extract(status_metadata,'$.order_id_list[0]') as first_order_id
+    ,json_extract(status_metadata,'$.order_id_list') as order_id_list
+    ,json_length(json_extract(status_metadata,'$.order_id_list')) as order_id_length
+from t_job_state_changes 
+where status in ('ocr-post-processing-error', 'ocr-post-processing-complete') 
+having order_id_length > 2
+order by id asc 
+;
 ````
 
 ##### status_metadata.file_list (ocr-post-processing-error and ocr-post-processing-complete)
@@ -70,6 +170,8 @@ These columns are nullable and _not_ foreign key references to the t_companies/t
 
 
 #######################
+
+
 
 ### t_orders
 
@@ -100,6 +202,31 @@ These are hardcoded in `app/Models/Company.php` and reference by constant in `ap
 At this point in time, the `name` must be unique, it must not change, and it must not be assigned to a different `id` than first assigned. The `name/id` combination must be identical between prod/dev/staging environments. 
 
 If at some point in the future a "display name" is desired, different than "name", then add a new column for that purpose. 
+
+#### company_config:json
+
+Used for company-specific (i.e. never inherited and overridden by specific tenants/domains/users) configuration parameters. The idea is to not add a plethora of boolean columns to the `t_companies` table for every conceivable flag.
+
+JSON data structure: 
+```json
+{
+    "profit_tools_send_quantity_and_weight": true,
+    "profit_tools_set_container_to_unknown": true,
+    "profit_tools_enable_templates": true
+}
+```
+
+
+#### configuration:json
+
+Used for inheritable UI-specific configurations. This field is made available to the frontend. It overrides the default `tenants.configuation:json` configuration with any identical properties, and can itself be overridden by `users.configuration:json`. 
+
+JSON data structure: 
+```json
+{
+    "profit_tools_enable_templates": true
+}
+````
 
 
 

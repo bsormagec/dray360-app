@@ -62,13 +62,4 @@ class OCRRequest extends Model
                 ]);
             });
     }
-
-    /**
-     * This is only used in the OcrRequestsListQuery class, to take advantage of the eager loading.
-     * AKA dynamic relationship.
-     */
-    public function firstOrderBillToAddress()
-    {
-        return $this->belongsTo(Address::class, 'first_order_bill_to_address_id');
-    }
 }

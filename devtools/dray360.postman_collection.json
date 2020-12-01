@@ -1161,7 +1161,7 @@
 					"response": []
 				},
 				{
-					"name": "/api/orders/:id/download-pdf",
+					"name": "/api/orders/:id/download-source-file",
 					"event": [
 						{
 							"listen": "test",
@@ -1201,7 +1201,7 @@
 							}
 						],
 						"url": {
-							"raw": "{{server}}/api/orders/:id/download-pdf",
+							"raw": "{{server}}/api/orders/:id/download-source-file",
 							"host": [
 								"{{server}}"
 							],
@@ -1209,7 +1209,7 @@
 								"api",
 								"orders",
 								":id",
-								"download-pdf"
+								"download-source-file"
 							],
 							"variable": [
 								{

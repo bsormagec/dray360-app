@@ -64,5 +64,6 @@ $breakpoints: (
   ("med", "(min-width: 1024px)"),
   ("lg", "(min-width: 1280px)"),
   ("max", "(min-width: 1624px)"),
+  ("max-min", "(max-width: 375px)"),
 );
 

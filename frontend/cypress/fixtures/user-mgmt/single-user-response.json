@@ -1,0 +1,48 @@
+{
+    "data": [
+        {
+            "id": 2,
+            "name": "John Doe",
+            "email": "john@example.com",
+            "email_verified_at": "2020-04-29T17:14:43.000000Z",
+            "created_at": "2020-04-29T17:14:43.000000Z",
+            "updated_at": "2020-04-29T17:14:43.000000Z",
+            "t_company_id": 2,
+            "deactivated_at": null,
+            "deleted_at": null,
+            "configuration": null,
+            "position": null,
+            "org": null,
+            "company": {
+                "id": 2,
+                "name": "TCompaniesDemo"
+            },
+            "roles": [
+                {
+                    "id": 3,
+                    "name": "customer-user",
+                    "pivot": {
+                        "user_id": 2,
+                        "role_id": 3,
+                        "user_type": "users"
+                    }
+                }
+            ]
+        }
+    ],
+    "links": {
+        "first": "http://local.ordermaster.com/api/users?page=1",
+        "last": "http://local.ordermaster.com/api/users?page=1",
+        "prev": null,
+        "next": null
+    },
+    "meta": {
+        "current_page": 1,
+        "from": 1,
+        "last_page": 1,
+        "path": "http://local.ordermaster.com/api/users",
+        "per_page": 10,
+        "to": 1,
+        "total": 1
+    }
+}

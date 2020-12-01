@@ -1,10 +1,10 @@
 <template>
   <div class="user__list">
     <v-data-table
-      :key="items.id"
       v-model="selected"
       :headers="showHeaders"
-      :items="customItems"
+      :items="userList"
+      :server-items-length="total"
       :search="search"
       show-select
       hide-default-footer
@@ -17,7 +17,7 @@
         >
           <v-toolbar-title>
             <h1 class="user-table-title">
-              {{ tableTitle }} ({{ customItems.length }})
+              {{ tableTitle }} ({{ userList.length }})
             </h1>
           </v-toolbar-title>
 
@@ -31,13 +31,13 @@
             v-model="search"
             prepend-icon="mdi-magnify"
             data-cy="dashboard-search"
-            label="Search by..."
+            label="Search by name..."
             single-line
             hide-details
             outlined
             dense
             class="search"
-            @input="emitSearchToParent"
+            @input="handleSearch"
           />
 
           <v-select
@@ -109,40 +109,39 @@
       <template v-slot:no-data>
         <v-btn
           color="primary"
-          @click="initialize"
+          @click="fetchUsers"
         >
           Reset
         </v-btn>
       </template>
-      <template v-slot:footer />
+      <template v-slot:footer>
+        <Pagination
+          :loading="loading"
+          :page-data="meta"
+          :links="links"
+          @pageIndexChange="onPageIndexChange"
+        />
+      </template>
     </v-data-table>
   </div>
 </template>
 <script>
 import DateRangeCalendar from '@/components/Orders/DateRangeCalendar'
 import hasPermission from '@/mixins/permissions'
+import Pagination from '@/components/OrderTable/components/Pagination'
+import { getUsers } from '@/store/api_calls/users'
+
 export default {
   name: 'UserTable',
 
   components: {
-    DateRangeCalendar
+    DateRangeCalendar,
+    Pagination
   },
 
   mixins: [hasPermission],
 
   props: {
-    activePage: {
-      type: Number,
-      required: true
-    },
-    customheaders: {
-      type: Array,
-      required: true
-    },
-    customItems: {
-      type: Array,
-      required: true
-    },
     hasColumnFilters: {
       type: Boolean,
       required: true
@@ -182,15 +181,25 @@ export default {
     return {
       dialog: false,
       page: 1,
-      headers: [],
       search: '',
+      searchQuery: '',
       dateRange: [],
+      userList: [],
       selected: [],
+      headers: [
+        { text: 'Name', value: 'name' },
+        { text: 'Email', value: 'email' },
+        { text: 'Org', value: 'company.name' },
+        { text: 'Permission', value: 'roles[0].name' },
+        { text: 'Status', value: 'deactivated_at' },
+        { text: 'Actions', value: 'actions', sortable: false }
+      ],
       selectedHeaders: [],
-      itemsPerPageArray: [4, 8, 12],
-      itemsPerPage: 4,
-      filter: {},
-      sortDesc: false
+      loading: false,
+      // pagination links
+      total: 1,
+      meta: null,
+      links: null
     }
   },
 
@@ -199,30 +208,31 @@ export default {
       return this.headers.filter(s => this.selectedHeaders.includes(s))
     }
   },
-
   created () {
-    this.headers = Object.values(this.customheaders)
     this.selectedHeaders = this.headers
-    this.initialize()
-
-    if (window.location.search.includes('searchQuery')) {
-      const urlSearchQuery = new URLSearchParams(window.location.search).get('searchQuery')
-      this.search = urlSearchQuery
-    }
-
-    if (window.location.search.includes('createdBetween')) {
-      const urlDateRange = new URLSearchParams(window.location.search).get('createdBetween')
-      this.dateRange = urlDateRange
-    }
+    const params = this.$route.query
+    this.page = params.page
+    this.fetchUsers()
   },
 
   methods: {
-    initialize () {
-      this.items = this.customItems
-    },
 
-    emitSearchToParent (e) {
-      this.$emit('searchToParent', this.search)
+    handleSearch (e) {
+      this.searchQuery = this.search || e
+      // cancel pending call
+      clearTimeout(this._timerId)
+
+      // delay new call 500ms
+      this._timerId = setTimeout(() => {
+        this.fetchUsers()
+      }, 500)
+    },
+    handleLocationUrl () {
+      const newUrl = `?searchQuery=${this.searchQuery}`
+
+      if (location.search !== newUrl) {
+        this.$router.replace(newUrl).catch(err => { console.log(err) })
+      }
     },
 
     handleCalendar (e) {
@@ -239,6 +249,20 @@ export default {
 
     editItem (item) {
       this.$router.push(`/user/dashboard/edit-user/${item.id}`)
+    },
+    onPageIndexChange (pageIndex) {
+      this.page = pageIndex
+      this.fetchUsers()
+    },
+    async fetchUsers () {
+      const [error, data] = await getUsers({ page: this.page || 1, 'filter[name]': this.search })
+      if (error === undefined) {
+        this.userList = data.data
+        this.links = data.links
+        this.meta = data.meta
+        this.total = data.meta.total
+        console.log('success')
+      }
     }
 
   }
@@ -246,7 +270,7 @@ export default {
 </script>
   <style lang="scss">
   .user__list {
-
+    padding: rem(10);
     .search{
       max-width: rem(300);
        margin: 0 rem(5);

@@ -29,6 +29,8 @@ describe('Add user', function () {
 
     cy.route({ method: 'POST', url: '**/api/users', response: this.createdUser })
 
+    cy.route({ method: 'GET', url: '**/api/users**', response: this.users })
+
     cy.route({ method: 'GET', url: '**/api/users', response: this.users })
 
     cy.get('[data-cy=add-user-button]').click({ force: true })

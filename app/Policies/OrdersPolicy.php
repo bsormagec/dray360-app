@@ -51,7 +51,7 @@ class OrdersPolicy
             return $hasUpdatePermissions && $user->belongsToSameCompanyAs($order);
         }
 
-        return $hasUpdatePermissions && ! request_is_from_nova();
+        return $hasUpdatePermissions;
     }
 
     /**
@@ -85,7 +85,7 @@ class OrdersPolicy
     /**
      * Determine if the user can download an order pdf.
      */
-    public function downloadPdf(User $user, Order $order): bool
+    public function downloadSourceFile(User $user, Order $order): bool
     {
         if (! $user->isSuperadmin()) {
             return $user->belongsToSameCompanyAs($order);

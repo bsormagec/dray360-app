@@ -1,6 +1,13 @@
 import axios from '@/store/api_calls/config/axios'
 
-export const getLibrary = async () => axios.get('/api/ocr/rules').then(data => [undefined, data.data]).catch(e => [e])
+export const getLibrary = async () => axios.get('/api/ocr/rules')
+  .then(function (data) {
+    // console.log('data.data: ', data.data)
+    data = [undefined, data.data]
+    return data
+  })
+//   .then(data => [undefined, data.data])
+  .catch(e => [e])
 
 export const getCompanyVariantRules = async (companyId, variantId) => axios.get('/api/ocr/rules-assignment?company_id=' + companyId + '&variant_id=' + variantId).then(data => [undefined, data.data]).catch(e => [e])
 
@@ -14,7 +21,9 @@ export const getRuleCode = async (index, companyId, variantId) => axios.get('/ap
 
 export const getCompanyList = async () => axios.get('/api/companies').then(data => [undefined, data.data.data]).catch(e => [e])
 
-export const getVariantList = async (params = {}) => axios.get('/api/ocr/variants', { params }).then(data => [undefined, data.data.data]).catch(e => [e])
+// sort in alphabetical order is temporary.
+// will need a better way to classify and display separately
+export const getVariantList = async (params = {}) => axios.get('/api/ocr/variants?sort=abbyy_variant_name', { params }).then(data => [undefined, data.data.data]).catch(e => [e])
 
 export const getTestingOutput = async (orderId, singleCompanyVariantRule) => axios.get('/api/orders/' + orderId)
   .then(function (response) {
@@ -46,12 +55,20 @@ export const getTestingOutput = async (orderId, singleCompanyVariantRule) => axi
         headers: headers
       })
       .then(function (response) {
-        console.log('response:', response.data)
-        const retval = { output: response.data, input: fetchedOcrData }
+        // console.log('testingOutput response:', response.data)
+        const retval = { output: response.data, input: fetchedOcrData, status: response.status, statusText: response.statusText }
         return retval
       })
       .catch(function (error) {
-        alert(error)
+        // The request was made and the server responded with a status code
+        // that falls out of the range of 2xx
+        // console.log('error.response.data', error.response.data)
+        console.log('error.response.status', error.response.status)
+        // console.log('error.response.headers', error.response.headers)
+        const errval = { input: fetchedOcrData, output: error.response.data, status: error.response.status, statusText: error.response.statusText }
+        // console.log('errval: ', errval)
+        // alert(error)
+        return errval
       })
 
     return testingOutput
