@@ -20,6 +20,7 @@ class OcrRequestsListQuery extends QueryBuilder
         $query = OCRRequest::query()
                 ->select([
                     't_job_latest_state.*',
+                    'c.name as company_name',
                     DB::raw("{$firstOrderIdJsonExtract} as first_order_id"),
                 ])
                 ->addSelect(['email_from_address' => DB::table('t_job_state_changes', 's_is')
@@ -45,6 +46,7 @@ class OcrRequestsListQuery extends QueryBuilder
                     ->limit(1)
                 ])
                 ->join('t_job_state_changes as s', 't_job_latest_state.t_job_state_changes_id', '=', 's.id')
+                ->join('t_companies as c', 's.company_id', '=', 'c.id')
                 ->when(! is_superadmin() && currentCompany(), function ($query) {
                     return $query->where('s.company_id', '=', currentCompany()->id);
                 })
