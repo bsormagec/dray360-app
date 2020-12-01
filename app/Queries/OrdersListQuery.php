@@ -51,10 +51,10 @@ class OrdersListQuery extends QueryBuilder
                         ->orWhere('t_orders.equipment_type', 'like', "{$value}%")
                         ->orWhere('t_orders.shipment_designation', 'like', "{$value}%")
                         ->orWhere('t_orders.shipment_direction', 'like', "{$value}%")
-                        ->orWhere('t_orders.tms_shipment_id', 'like', "{$value}%")
-                        ->orWhere('t_orders.unit_number', 'like', "{$value}%")
-                        ->orWhere('t_orders.reference_number', 'like', "{$value}%")
-                        ->orWhere('bill_to.location_name', 'like', "{$value}%");
+                        ->orWhere('t_orders.tms_shipment_id', 'like', "%{$value}%")
+                        ->orWhere('t_orders.unit_number', 'like', "%{$value}%")
+                        ->orWhere('t_orders.reference_number', 'like', "%{$value}%")
+                        ->orWhere('bill_to.location_name', 'like', "%{$value}%");
                 });
             }),
         ])

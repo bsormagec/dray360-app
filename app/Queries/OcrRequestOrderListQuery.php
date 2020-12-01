@@ -60,6 +60,8 @@ class OcrRequestOrderListQuery extends QueryBuilder
                     ->orWhere('t_job_latest_state.request_id', 'like', "%{$value}%")
                     ->orWhere('t_orders.port_ramp_of_origin_address_raw_text', 'like', "%{$value}%")
                     ->orWhere('t_orders.port_ramp_of_destination_address_raw_text', 'like', "%{$value}%")
+                    ->orWhere('t_orders.unit_number', 'like', "%{$value}%")
+                    ->orWhere('t_orders.tms_shipment_id', 'like', "%{$value}%")
                     ->orWhere('t_orders.equipment_type', 'like', "%{$value}%")
                     ->orWhere('t_orders.shipment_designation', 'like', "%{$value}%")
                     ->orWhere('t_orders.shipment_direction', 'like', "%{$value}%");
