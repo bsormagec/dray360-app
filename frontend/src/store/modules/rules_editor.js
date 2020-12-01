@@ -31,7 +31,7 @@ const mutations = {
     state.rules_library = libraryData
   },
   [types.setCompanyVariantRules] (state, { companyVariantData }) {
-    console.log('seCompanyVariantRules')
+    console.log('setCompanyVariantRules')
     state.company_variant_rules = companyVariantData
   },
   [types.setRule] (state, { ruleData, i }) {
@@ -106,10 +106,9 @@ const actions = {
   },
   async [types.getTestingOutput] ({ commit }, dataObject) {
     const data = await getTestingOutput(dataObject.orderId, dataObject.ruleToTest)
-
     commit(types.setTestingOutput, { testingOutput: data })
+    return reqStatus.success
   },
-
   async [types.getCompanyList] ({ commit }) {
     const [error, data] = await getCompanyList()
     if (error) return error.message
@@ -117,9 +116,9 @@ const actions = {
     commit(types.setCompanyList, { companyList: data })
     return reqStatus.success
   },
-
   async [types.getVariantList] ({ commit }) {
     const [error, data] = await getVariantList()
+
     if (error) return error.message
 
     commit(types.setVariantList, { variantList: data })
