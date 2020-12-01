@@ -78,12 +78,12 @@ class OCRRequestStatus extends Model
 
         self::SHIPMENT_CREATED_BY_WINT           => 'Accepted by TMS',
         self::SHIPMENT_UPDATED_BY_WINT           => 'Accepted by TMS',
-        self::SUCCESS_IMAGEUPLOADING_TO_BLACKFLY >= 'Accepted by TMS',
-        self::UNTRIED_IMAGEUPLOADING_TO_BLACKFLY >= 'Accepted by TMS',
+        self::SUCCESS_IMAGEUPLOADING_TO_BLACKFLY => 'Accepted by TMS',
+        self::UNTRIED_IMAGEUPLOADING_TO_BLACKFLY => 'Accepted by TMS',
 
         self::SHIPMENT_NOT_UPDATED_BY_WINT       => 'TMS Warning',
         self::FAILURE_UPDATING_TO_WINT           => 'TMS Warning',
-        self::FAILURE_IMAGEUPLOADING_TO_BLACKFLY >= 'TMS Warning',
+        self::FAILURE_IMAGEUPLOADING_TO_BLACKFLY => 'TMS Warning',
 
         self::SHIPMENT_NOT_CREATED_BY_WINT       => 'TMS Error',
         self::FAILURE_SENDING_TO_WINT            => 'TMS Error',
