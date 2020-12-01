@@ -25,10 +25,12 @@ export function getHighlights (order) {
         getOcrKey = 'order_line_items'
 
         if (i === 0) {
-          highlights[highlightKey] = baseHighlight(getOcrData(getOcrKey, order.ocr_data))
+          highlights[`${highlightKey}.contents`] = baseHighlight(getOcrData(getOcrKey, order.ocr_data))
         } else {
-          highlights[highlightKey] = baseHighlight({ recognizedText: '' })
+          highlights[`${highlightKey}.contents`] = baseHighlight({ recognizedText: '' })
         }
+        highlights[`${highlightKey}.weight`] = baseHighlight({ recognizedText: '' })
+        highlights[`${highlightKey}.quantity`] = baseHighlight({ recognizedText: '' })
       })
       continue
     }
@@ -121,11 +123,14 @@ export function parseChanges ({ path, value, originalOrder }) {
       order_address_events: order_address_events
     }
   } else if (path.includes('order_line_items.')) {
-    const index = path.split('.')[1]
+    const [key, index, field] = path.split('.')
+    if (field === undefined || field === null) {
+      throw new Error('For order line items the field definition is required')
+    }
     // eslint-disable-next-line camelcase
     const { order_line_items } = originalOrder
 
-    order_line_items[index].contents = value
+    order_line_items[index][field] = value
 
     changes = { order_line_items }
   } else if (path === 't_equipment_type_id') {

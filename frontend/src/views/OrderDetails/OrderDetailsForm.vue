@@ -269,6 +269,20 @@
             :edit-mode="editMode"
             @change="value => handleChange('voyage', value)"
           />
+          <FormFieldDate
+            references="cutoff_date"
+            label="Cutoff Date"
+            :value="order.cutoff_date"
+            :edit-mode="editMode"
+            @change="value => handleChange('cutoff_date', value)"
+          />
+          <FormFieldTime
+            references="cutoff_time"
+            label="Cutoff Time"
+            :value="order.cutoff_time"
+            :edit-mode="editMode"
+            @change="value => handleChange('cutoff_time', value)"
+          />
           <FormFieldInput
             references="booking_number"
             label="Booking number"
@@ -406,11 +420,27 @@
         </div>
         <div class="section__rootfields">
           <FormFieldTextArea
-            :references="`order_line_items.${item.real_index}`"
-            label="Description"
+            :references="`order_line_items.${item.real_index}.contents`"
+            label="Contents"
             :value="item.contents"
             :edit-mode="editMode"
-            @change="value => handleChange(`order_line_items.${item.real_index}`, value)"
+            @change="value => handleChange(`order_line_items.${item.real_index}.contents`, value)"
+          />
+          <FormFieldInput
+            :references="`order_line_items.${item.real_index}.quantity`"
+            label="Quantity"
+            type="number"
+            :value="item.quantity"
+            :edit-mode="editMode"
+            @change="value => handleChange(`order_line_items.${item.real_index}.quantity`, value)"
+          />
+          <FormFieldInput
+            :references="`order_line_items.${item.real_index}.weight`"
+            label="Weight"
+            type="number"
+            :value="item.weight"
+            :edit-mode="editMode"
+            @change="value => handleChange(`order_line_items.${item.real_index}.weight`, value)"
           />
         </div>
       </div>
@@ -431,8 +461,8 @@ import utils, { type } from '@/store/modules/utils'
 import orders, { types } from '@/store/modules/orders'
 
 import { Fragment } from 'vue-fragment'
-// import FormFieldDate from '@/components/FormFields/FormFieldDate'
-// import FormFieldTime from '@/components/FormFields/FormFieldTime'
+import FormFieldDate from '@/components/FormFields/FormFieldDate'
+import FormFieldTime from '@/components/FormFields/FormFieldTime'
 import FormFieldInput from '@/components/FormFields/FormFieldInput'
 import FormFieldSwitch from '@/components/FormFields/FormFieldSwitch'
 import FormFieldTextArea from '@/components/FormFields/FormFieldTextArea'
@@ -445,8 +475,8 @@ export default {
   name: 'OrderDetailsForm',
   components: {
     Fragment,
-    // FormFieldDate,
-    // FormFieldTime,
+    FormFieldDate,
+    FormFieldTime,
     FormFieldInput,
     FormFieldSwitch,
     FormFieldTextArea,
