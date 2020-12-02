@@ -20,9 +20,9 @@ class ImportCompcareAddresses implements ShouldQueue
     use InteractsWithQueue;
 
     public $queue = 'imports';
-    public $tries = 5;
-    public $timeout = 120;
-    public $maxExceptions = 3;
+    public $tries = 1;
+    public $timeout = 600;
+    public $maxExceptions = 1;
 
     public bool $insertOnly;
     public int $companyId;
@@ -40,6 +40,7 @@ class ImportCompcareAddresses implements ShouldQueue
 
     public function handle()
     {
+        set_time_limit($this->timeout);
         $company = Company::find($this->companyId);
         $compcareApi = (new Compcare($company))->getToken();
         $addresses = collect($compcareApi->getAllAddresses());
