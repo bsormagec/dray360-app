@@ -6,7 +6,7 @@
           :class="`details__form ${isMobile && 'mobile'}`"
           :style="{ minWidth: `${resizeDiff}%` }"
         >
-          <OrderDetailsForm />
+          <OrderDetailsForm :back-button="backButton" />
 
           <div
             class="form__resize"
@@ -45,11 +45,24 @@ export default {
 
   mixins: [isMobile],
 
-  data: () => ({
+  props: {
+    orderId: {
+      type: String,
+      required: false,
+      default: null
+    },
+    backButton: {
+      type: Boolean,
+      required: false,
+      default: true
+    }
+  },
+
+  data: (vm) => ({
     resizeDiff: 50,
     startPos: 0,
     loaded: false,
-    types
+    orderIdToLoad: vm.orderId || vm.$route.params.id
   }),
 
   computed: {
@@ -57,10 +70,19 @@ export default {
       currentOrder: state => state.currentOrder
     })
   },
+  watch: {
+    async orderId (newOrderId) {
+      if (newOrderId == this.orderIdToLoad) {
+        return
+      }
+      this.loaded = false
+      this.orderIdToLoad = this.orderId
+      await this.requestOrderDetail()
+    }
+  },
 
   async beforeMount () {
     await this.requestOrderDetail()
-    this.loaded = true
     this.showSidebar()
   },
 
@@ -77,10 +99,11 @@ export default {
       })
     },
     async requestOrderDetail () {
-      const status = await this[types.getOrderDetail](this.$route.params.id)
+      const status = await this[types.getOrderDetail](this.orderIdToLoad)
 
       if (status === reqStatus.success) {
         this.setFormOrder(this.currentOrder)
+        this.loaded = true
         return
       }
       console.log('error')

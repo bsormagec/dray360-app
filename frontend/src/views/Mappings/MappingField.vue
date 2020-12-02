@@ -2,11 +2,24 @@
   <div
     class="mapping__panel"
   >
-    <h4>Profit tools mapping admin panel</h4>
+    <h5><b>Profit tools mapping admin panel</b></h5>
+    <div class="row">
+      <div class="col-3">
+        <v-select
+          :v-model="companyId"
+          :items="companyList"
+          item-text="name"
+          item-value="id"
+          label="Select Company"
+          :clearable="true"
+          @change="companySelect"
+        />
+      </div>
+    </div>
     <div
       class="row"
     >
-      <div class="col-6">
+      <div class="col-8">
         <v-simple-table>
           <template v-slot:default>
             <thead>
@@ -15,13 +28,13 @@
                   <h5>&nbsp;</h5>
                 </th>
                 <th class="text-left">
-                  <h5>Dray360 Field</h5>
+                  <h6>Dray360 Field</h6>
                 </th>
                 <th>
-                  <h5>Enter custom value</h5>
+                  <h6>Custom value</h6>
                 </th>
                 <th>
-                  <h5>Ref Type</h5>
+                  <h6>Ref Type</h6>
                 </th>
               </tr>
             </thead>
@@ -155,6 +168,7 @@ import { mapActions, mapState } from 'vuex'
 import companies, { types } from '@/store/modules/companies'
 import { reqStatus } from '@/enums/req_status'
 import utils, { type } from '@/store/modules/utils'
+import { getCompanies } from '@/store/api_calls/companies'
 
 export default {
   data () {
@@ -219,18 +233,21 @@ export default {
         { field_name: 'voyage', value: 'voyage' },
         { field_name: 'yard_pre_pull', value: 'yard pre-pull' },
         { field_name: 'interchange_count', value: 'interchange count' },
+        { field_name: 'total_quantity', value: 'total quantity' },
+        { field_name: 'total_weight', value: 'total weight' },
         { field_name: 'other_value', value: 'Other' }
-      ]
+      ],
+      companyList: [],
+      companyId: undefined
     }
   },
   created () {
-    this.custom = new Array(10).fill(null)
-    this.customValue = new Array(10).fill(null)
+    this.clearFields()
   },
   mounted () {
     this.getNames()
-    this.getCompanybyId()
     this.showSidebar()
+    this.getCompanyList()
   },
   methods: {
     ...mapActions(companies.moduleName, [types.updateCompaniesMappingField, types.getCompany]),
@@ -255,6 +272,22 @@ export default {
         this.customRef1 = false
         this.objectNameRef1 = 'source'
       }
+    },
+    companySelect (value) {
+      if (value !== undefined) {
+        this.companyId = value
+        this.getCompanybyId()
+      } else {
+        this.clearFields()
+      }
+    },
+    clearFields () {
+      this.custom = new Array(10).fill(null)
+      this.customValue = new Array(10).fill(null)
+      this.ds_ref2_text = ''
+      this.ds_ref2_type = ''
+      this.ds_ref3_text = ''
+      this.ds_ref3_type = ''
     },
     changeRef2 (value) {
       if (value === 'other_value') {
@@ -292,7 +325,7 @@ export default {
           jsondata[`custom${i + 1}`] = { source: value }
         }
       })
-      const status = await this[types.updateCompaniesMappingField]({ id: this.$route.params.id, changes: { refs_custom_mapping: jsondata } })
+      const status = await this[types.updateCompaniesMappingField]({ id: this.companyId, changes: { refs_custom_mapping: jsondata } })
       if (status === reqStatus.success) {
         await this[type.setSnackbar]({
           show: true,
@@ -307,12 +340,13 @@ export default {
         })
       }
     },
-
     async getCompanybyId () {
-      const status = await this[types.getCompany]({ id: this.$route.params.id })
+      const status = await this[types.getCompany]({ id: this.companyId })
       if (status === reqStatus.success) {
         if (this.company().refs_custom_mapping !== null) {
           this.getJsonValues(this.company().refs_custom_mapping)
+        } else {
+          this.clearFields()
         }
       }
     },
@@ -367,15 +401,24 @@ export default {
     },
     isCustomValue (val) {
       if (this.fieldNames.find(element => element.field_name === val) === undefined) { return true } else { return false }
+    },
+    async getCompanyList () {
+      const [error, response] = await getCompanies()
+      if (error === undefined) {
+        this.clearFields()
+        this.companyList = response.data
+      }
+      this.clearFields()
     }
   }
 }
 </script>
 <style lang="scss" scoped>
     .mapping__panel{
-        h1{
-            text-transform: uppercase;
-            text-align: center;
+      padding: rem(20);
+        h6{
+
+            text-align: left;
         }
     }
 </style>

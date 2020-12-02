@@ -67,6 +67,10 @@ class User extends Resource
                 ->creationRules('unique:users,email')
                 ->updateRules('unique:users,email,{{resourceId}}'),
 
+            Text::make('Original Email')
+                ->sortable()
+                ->rules('nullable', 'email', 'max:254'),
+
             BelongsTo::make('Company')->nullable(),
             Code::make('Configuration', 'configuration')->json(),
 

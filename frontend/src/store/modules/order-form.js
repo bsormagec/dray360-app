@@ -1,6 +1,7 @@
 import { reqStatus } from '@/enums/req_status'
 import { updateOrderDetail } from '@/store/api_calls/orders'
-import { getHighlights, parseChanges } from '@/utils/order_form_general_functions'
+import { getHighlights, parseChanges, baseHighlight } from '@/utils/order_form_general_functions'
+import cloneDeep from 'lodash/cloneDeep'
 
 export const types = {
   setFormOrder: 'SET_FORM_ORDER',
@@ -12,11 +13,15 @@ export const types = {
   startHover: 'START_HOVER',
   stopHover: 'STOP_HOVER',
   startFieldEdit: 'START_FIELD_EDIT',
-  stopFieldEdit: 'STOP_FIELD_EDIT'
+  stopFieldEdit: 'STOP_FIELD_EDIT',
+  addHighlight: 'ADD_HIGHLIGHT',
+  setBackupOrder: 'SET_BACKUP_ORDER',
+  cancelEdit: 'CANCEL_EDIT'
 }
 
 const initialState = {
   order: {},
+  backupOrder: {},
   editMode: false,
   highlights: {},
   pages: [],
@@ -52,10 +57,16 @@ const mutations = {
   },
   [types.setHighlight] (state, { path, highlight }) {
     state.highlights[path] = { ...state.highlights[path], ...highlight }
+  },
+  [types.setBackupOrder] (state, order) {
+    state.backupOrder = { ...order }
   }
 }
 
 const actions = {
+  [types.addHighlight] ({ commit }, path) {
+    commit(types.setHighlight, { path, highlight: baseHighlight({}) })
+  },
   [types.setFormOrder] ({ commit, dispatch }, order) {
     commit(types.setFormOrder, order)
     dispatch(types.loadHighlights, order)
@@ -92,8 +103,16 @@ const actions = {
     const newEditMode = !editMode
 
     if (editMode === true && newEditMode === false) {
+      commit(types.setBackupOrder, {})
       dispatch(types.updateOrder, { useOrder: true })
+    } else {
+      commit(types.setBackupOrder, { ...cloneDeep(state.order) })
     }
+  },
+  [types.cancelEdit] ({ state, commit, dispatch }) {
+    commit(types.toggleEdit)
+    commit(types.setFormOrder, { ...cloneDeep(state.backupOrder) })
+    commit(types.setBackupOrder, {})
   },
   [types.loadHighlights] ({ commit, state }, order) {
     const pages = []

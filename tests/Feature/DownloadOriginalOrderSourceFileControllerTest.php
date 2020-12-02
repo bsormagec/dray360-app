@@ -12,7 +12,7 @@ use Tests\Seeds\OrdersTableSeeder;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
 
-class DownloadOriginalOrderPdfControllerTest extends TestCase
+class DownloadOriginalOrderSourceFileControllerTest extends TestCase
 {
     use DatabaseTransactions;
 
@@ -28,7 +28,7 @@ class DownloadOriginalOrderPdfControllerTest extends TestCase
         Storage::shouldReceive('temporaryUrl')->andReturn($signedUrl);
         $order = Order::first(['id']);
 
-        $this->get(route('orders.download-pdf', $order->id))
+        $this->get(route('orders.download-source-file', $order->id))
             ->assertJsonFragment([
                 'data' => $signedUrl
             ])
@@ -48,7 +48,7 @@ class DownloadOriginalOrderPdfControllerTest extends TestCase
         Sanctum::actingAs($user);
         Storage::fake('s3');
 
-        $this->get(route('orders.download-pdf', $order->id))
+        $this->get(route('orders.download-source-file', $order->id))
             ->assertStatus(Response::HTTP_FORBIDDEN);
     }
 }

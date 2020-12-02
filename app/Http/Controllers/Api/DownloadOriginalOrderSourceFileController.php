@@ -8,13 +8,13 @@ use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Storage;
 use Symfony\Component\HttpFoundation\HeaderUtils;
 
-class DownloadOriginalOrderPdfController extends Controller
+class DownloadOriginalOrderSourceFileController extends Controller
 {
     const MINUTES_URI_REMAINS_VALID = 15;
 
     public function __invoke(Order $order)
     {
-        $this->authorize('downloadPdf', $order);
+        $this->authorize('downloadSourceFile', $order);
         $status = OCRRequestStatus::where([
             'request_id' => $order->request_id,
             'status' => OCRRequestStatus::INTAKE_ACCEPTED,

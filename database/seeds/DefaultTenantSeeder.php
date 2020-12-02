@@ -30,6 +30,10 @@ class DefaultTenantSeeder extends Seeder
             'primary_color' => null,
             'secondary_color' => null,
             'accent_color' => null,
+
+            // Profittools templates
+            'profit_tools_enable_templates' => false,
+            'profit_tools_template_list' => [],
         ];
         $tenant->save();
     }

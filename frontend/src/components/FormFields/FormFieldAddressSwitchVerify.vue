@@ -4,7 +4,7 @@
     :references="references"
     value=""
     label=""
-    :edit-mode="false"
+    :edit-mode="editMode"
     only-hover
   >
     <div class="form-field-element-modal-address">
@@ -57,6 +57,7 @@
           </v-btn>
 
           <v-btn
+            class="mr-2"
             color="primary"
             outlined
             small
@@ -104,7 +105,8 @@ export default {
     recognizedText: { type: String, default: '' },
     matchedAddress: { required: true },
     terminal: { type: Boolean, required: false, default: false },
-    billable: { type: Boolean, required: false, default: false }
+    billable: { type: Boolean, required: false, default: false },
+    editMode: { required: true, type: Boolean }
   },
 
   data: (vm) => ({

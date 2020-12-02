@@ -63,20 +63,22 @@ class Company extends Resource
             Text::make('Intake Email', 'email_intake_address'),
             Text::make('Intake Email Alt', 'email_intake_address_alt'),
             BelongsTo::make('Default TMS Provider', 'defaultTmsProvider', TmsProvider::class)->sortable(),
-            Number::make('Automatic address verification threshold', 'automatic_address_verification_threshold'),
-            Code::make('Ref Mapping', 'refs_custom_mapping')->json(),
-            Code::make('Configuration', 'configuration')->json(),
-            Boolean::make('Sync Addresses', 'sync_addresses'),
             BelongsTo::make('Domain', 'domain', Domain::class)->sortable()->nullable(),
+            Number::make('Automatic address verification threshold', 'automatic_address_verification_threshold'),
+            Boolean::make('Sync Addresses', 'sync_addresses'),
 
-            Text::make('Blackfly token', 'blackfly_token')->hideFromIndex(),
-            Text::make('Blackfly imagetype', 'blackfly_imagetype')->hideFromIndex(),
-            Text::make('Ripcms username', 'ripcms_username')->hideFromIndex(),
-            Text::make('Ripcms password', 'ripcms_password')->hideFromIndex(),
+            Code::make('Ref Mapping', 'refs_custom_mapping')->json()->hideFromIndex(),
+            Code::make('Configuration', 'configuration')->json()->hideFromIndex(),
+            Code::make('Company Configuration', 'company_config')->json()->hideFromIndex()->nullable(),
 
-            Text::make('Compcare organization id', 'compcare_organization_id')->hideFromIndex(),
-            Text::make('Compcare username', 'compcare_username')->hideFromIndex(),
-            Text::make('Compcare password', 'compcare_password')->hideFromIndex(),
+            Text::make('Blackfly token', 'blackfly_token')->hideFromIndex()->nullable(),
+            Text::make('Blackfly imagetype', 'blackfly_imagetype')->hideFromIndex()->nullable(),
+            Text::make('Ripcms username', 'ripcms_username')->hideFromIndex()->nullable(),
+            Text::make('Ripcms password', 'ripcms_password')->hideFromIndex()->nullable(),
+
+            Text::make('Compcare organization id', 'compcare_organization_id')->hideFromIndex()->nullable(),
+            Text::make('Compcare username', 'compcare_username')->hideFromIndex()->nullable(),
+            Text::make('Compcare password', 'compcare_password')->hideFromIndex()->nullable(),
         ];
     }
 

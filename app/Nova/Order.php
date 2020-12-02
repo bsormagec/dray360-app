@@ -152,6 +152,7 @@ class Order extends Resource
             Text::make('Cutoff time', 'cutoff_time')->hideFromIndex()->nullable(),
             HasMany::make('Order Address Events', 'orderAddressEvents', OrderAddressEvent::class),
             HasMany::make('Order Line Items', 'orderLineItems', OrderLineItem::class),
+            Text::make('TMS Template ID', 'tms_template_id')->hideFromIndex()->nullable(),
 
             BelongsTo::make('Preceded by Order', 'precededByOrder', Order::class)->nullable(),
             BelongsTo::make('Succeded by Order', 'succededByOrder', Order::class)->nullable(),

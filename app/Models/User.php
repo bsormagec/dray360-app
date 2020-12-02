@@ -13,6 +13,7 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
 /**
  * @property string $name
  * @property string $email
+ * @property string $original_email
  * @property \Carbon\Carbon $deactivated_at
  * @property array $configuration
  */
@@ -38,6 +39,7 @@ class User extends Authenticatable
         't_company_id',
         'deactivated_at',
         'configuration',
+        'original_email',
     ];
 
     /**

@@ -46,7 +46,7 @@ export default {
     border-color: green !important;
   }
 
-  &.verified {
+  &.processed {
     background: green;
     border-color: green !important;
   }

@@ -25,6 +25,7 @@
             :search="initFilters.search"
             :date-range="initFilters.dateRange"
             :status="initFilters.status"
+            :system-status="initFilters.systemStatus"
             :update-type="initFilters.updateType"
             @change="updateFilters"
           />
@@ -57,11 +58,17 @@
       <template v-slot:[`item.id`]="{ item }">
         <a :href="`/order/${item.id}`">{{ item.id }}</a>
       </template>
+      <template v-slot:[`item.created_at`]="{ item }">
+        {{ formatDate(item.created_at) }}
+      </template>
+      <template v-slot:[`item.updated_at`]="{ item }">
+        {{ formatDate(item.updated_at || item.created_at) }}
+      </template>
 
       <template v-slot:[`item.latest_ocr_request_status.display_status`]="{ item }">
         <span
-          v-if="item.latest_ocr_request_status.display_status.toLowerCase() === 'verified'"
-          class="verified-status"
+          v-if="item.latest_ocr_request_status.display_status.toLowerCase() === 'processed'"
+          class="processed-status"
         >
           {{ item.latest_ocr_request_status.display_status }}
         </span>
@@ -83,7 +90,7 @@
           }"
           :options="[
             { title: 'View Details', action: () => item.action(item.id), hasPermission: hasPermission('orders-view') },
-            { title: 'Download PDF', action: () => downloadPDF(item.id) },
+            { title: 'Download Source File', action: () => downloadSourceFile(item.id) },
             { title: 'Reprocess Order', action: () => reprocessOrder(item.request_id) },
             { title: 'Delete Order', action: () => deleteOrder(item) }
           ]"
@@ -155,8 +162,10 @@ import Filters from './components/filters'
 import Pagination from './components/Pagination'
 import Chip from '@/components/Chip'
 import hasPermission from '@/mixins/permissions'
+import { formatDate } from '@/utils/dates'
 import utils, { type as utilTypes } from '@/store/modules/utils'
-import { getOrders2, getDownloadPDFURL, reprocessOcrRequest, delDeleteOrder } from '@/store/api_calls/orders'
+import { getOrders2, getSourceFileDownloadURL, reprocessOcrRequest, delDeleteOrder } from '@/store/api_calls/orders'
+import { getRequestFilters } from '@/utils/filters_handling'
 
 import { mapState, mapActions } from 'vuex'
 import OutlinedButtonGroup from '@/components/General/OutlinedButtonGroup'
@@ -193,7 +202,7 @@ export default {
         { text: 'Actions', value: 'actions', sortable: false, align: 'center' }
       ]
     },
-    customItems: {
+    extraUrlParams: {
       type: Array,
       required: false,
       default: () => []
@@ -202,6 +211,16 @@ export default {
       type: String,
       required: false,
       default: null
+    },
+    urlFilters: {
+      type: Boolean,
+      required: false,
+      default: true
+    },
+    waitForRequestId: {
+      type: Boolean,
+      required: false,
+      default: false
     },
     tableTitle: {
       type: String,
@@ -233,6 +252,7 @@ export default {
         search: '',
         dateRange: [],
         status: [],
+        systemStatus: [],
         updateType: '',
         page: 1
       },
@@ -250,20 +270,26 @@ export default {
     }
   },
   computed: {
+    ...mapState(auth.moduleName, { currentUser: state => state.currentUser }),
     showHeaders () {
       return this.headers.filter(s => this.selectedHeaders.includes(s))
-    },
-    ...mapState(auth.moduleName, { currentUser: state => state.currentUser })
+    }
   },
   watch: {
     options: {
       handler () {
+        if (this.waitForRequestId && this.requestId === null) {
+          return
+        }
+
         const sortColumnMap = {
           shipment_direction: 'order.shipment_direction',
           'bill_to_address.location_name': 'order.bill_to_address',
           'latest_ocr_request_status.display_status': 'status'
         }
-        const sortCol = sortColumnMap.hasOwnProperty(this.options.sortBy.join()) ? sortColumnMap[this.options.sortBy.join()] : 'created_at'
+        const sortCol = sortColumnMap.hasOwnProperty(this.options.sortBy.join())
+          ? sortColumnMap[this.options.sortBy.join()]
+          : this.sortColumn
 
         this.sortColumn = sortCol
         this.sortDesc = this.options.sortDesc.join() == 'true'
@@ -271,37 +297,59 @@ export default {
         this.getOrderData()
       },
       deep: true
+    },
+    requestId () {
+      this.getOrderData()
     }
   },
 
   created () {
     this.selectedHeaders = Object.values(this.headers)
 
+    if (this.waitForRequestId || !this.urlFilters) {
+      return
+    }
     // set get params if there are any
 
     const params = this.$route.query
+    const sortValue = params.sort ? params.sort : this.sortColumn
 
     this.page = params.page
+    this.sortColumn = sortValue.replace('-', '')
+    this.sortDesc = !sortValue.includes('-')
     this.initFilters.search = params.search
     this.initFilters.dateRange = params.dateRange?.split(',')
     this.initFilters.status = params.status?.split(',')
+    this.initFilters.systemStatus = params.system_status?.split(',')
     this.initFilters.updateType = params.updateType
     this.requestID = params.request_id
     this.initFilters.page = params.page
   },
 
   mounted () {
+    if (this.waitForRequestId) {
+      return
+    }
+
     this.initialize()
-    window.onpopstate = this.onHistoryChange.bind(this)
+    if (this.urlFilters) {
+      window.onpopstate = this.onHistoryChange.bind(this)
+    }
   },
 
   unmounted () {
+    if (this.waitForRequestId) {
+      return
+    }
     // remove popstate event handling
-    window.onpopstate = null
+    if (this.urlFilters) {
+      window.onpopstate = null
+    }
     this.stopPolling()
   },
 
   methods: {
+    formatDate,
     initialize () {
       // if there are init filters set from get params grab the active filters from the filters component before querying the DB
       if (Object.keys(this.initFilters).some(key => this.initFilters[key] && this.initFilters[key].length > 0)) {
@@ -309,7 +357,7 @@ export default {
       }
 
       // get all orders
-      this.getOrderData()
+      // this.getOrderData()
 
       this.startPolling()
     },
@@ -342,15 +390,13 @@ export default {
       window.location.reload()
     },
 
-    // download pdf
-    async downloadPDF (orderId) {
-      const [error, data] = await getDownloadPDFURL(orderId)
+    async downloadSourceFile (orderId) {
+      const [error, data] = await getSourceFileDownloadURL(orderId)
 
       if (!error) {
         // not entirely sure why this is necessary, but this is the logic for triggering a DL elsewhere in the app.
         const link = document.createElement('a')
         link.href = data.data
-        link.download = `order-${orderId}.pdf`
         link.click()
         link.remove()
       } else {
@@ -450,12 +496,13 @@ export default {
     },
 
     onHistoryChange (e) {
-      const { search, status, dateRange, updateType, page } = e.state
+      const { search, status, system_status, dateRange, updateType, page } = e.state
 
       const f = {
         search: search || '',
         dateRange: dateRange ? dateRange.split(',') : [],
         status: status ? status.split(',') : [],
+        systemStatus: system_status ? system_status.split(',') : [],
         updateType: updateType || '',
         page: page || 1
       }
@@ -471,21 +518,14 @@ export default {
 
     // sets url get params from current filter set.
     setURLParams () {
-      const filters = this.getFilters()
+      if (!this.urlFilters) {
+        return
+      }
+      const filters = [...this.getFilters(), ...this.extraUrlParams]
       const filterState = filters.reduce((o, element) => ({ ...o, [element.type]: Array.isArray(element.value) ? element.value.join(',') : element.value }), {})
-      const params = filters.map(element => `${element.type}=${element.value}`).join('&')
-      history.pushState(filterState, document.title, `${window.location.pathname}?${params}`)
-    },
-
-    // sets filter set from URL params
-    setFiltersFromURL () {
-      const params = this.$route.query
-      this.initFilters.search = params.search || ''
-      this.initFilters.dateRange = params.dateRange?.split(',') || []
-      this.initFilters.status = params.status?.split(',') || []
-      this.initFilters.updateType = params.updateType || ''
-      this.initFilters.page = params.page || 1
-      this.$refs.orderFilters.reset()
+      // const params = filters.map(element => `${element.type}=${element.value}`).join('&')
+      this.$router.replace({ path: 'dashboard2', query: filterState }).catch(() => {})
+      // history.pushState(filterState, document.title, `${window.location.pathname}?${params}`)
     },
 
     // this is just for UX aesthetics. A brief pause provides feedback to the user that something is happening. Randomizing it slightly makes it feel even more natural
@@ -504,7 +544,7 @@ export default {
         { type: 'sort', value: this.sortDesc ? this.sortColumn : `-${this.sortColumn}` },
         // this field is stubbed in, but the number is currently hard coded in the API as 25
         { type: 'items_per_page', value: this.itemsPerPage },
-        { type: 'request_id', value: this.requestID }
+        { type: 'request_id', value: this.waitForRequestId ? this.requestId : this.requestID }
       ]
 
       return [...this.filters, ...metaParams.filter(param => param.value)]
@@ -515,15 +555,14 @@ export default {
         request_id: 'filter[request_id]',
         search: 'filter[query]',
         dateRange: 'filter[created_between]',
-        updateStatus: 'filter[status]',
-        status: 'filter[display_status]', // Processing, Exception, Rejected, Intake, Verified, Sending to TMS, Sent to TMS, Accepted by TMS
+        system_status: 'filter[status]',
+        status: 'filter[display_status]', // Processing, Exception, Rejected, Intake, Processed, Sending to TMS, Sent to TMS, Accepted by TMS
         page: 'page',
         sort: 'sort',
         items_per_page: 'items_per_page'
       }
-      const filters = this.getFilters()
 
-      return filters.reduce((o, element) => ({ ...o, [filterKeyMap[element.type]]: Array.isArray(element.value) ? element.value.join(',') : element.value }), {})
+      return getRequestFilters(this.getFilters(), filterKeyMap)
     },
 
     getStatusChip (item) {
@@ -564,7 +603,7 @@ export default {
 
 <style lang="scss" scoped>
     .table-root {
-      .verified-status {
+      .processed-status {
         &:before {
           content: '';
           display: inline-block;

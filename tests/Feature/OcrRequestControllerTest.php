@@ -42,8 +42,8 @@ class OcrRequestControllerTest extends TestCase
                             'display_status',
                             'display_message',
                         ],
-                        'first_order_bill_to_address_id',
-                        'first_order_bill_to_address',
+                        // 'first_order_bill_to_address_id',
+                        'first_order_bill_to_address_location_name',
                         'first_order_id',
                     ]
                 ]
