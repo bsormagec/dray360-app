@@ -7,12 +7,17 @@
       :value="value"
       @accept="handleAccept"
     >
-      <div class="form-field-element-input-select">
-        <div>{{ label }}</div>
+      <div class="form-field__group">
+        <div class="form-field__label">
+          {{ label }}
+        </div>
         <v-select
           dense
           outlined
           clearable
+          flat
+          solo
+          hide-details="true"
           :items="items"
           :value="value"
           :item-text="itemText"

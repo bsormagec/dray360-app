@@ -138,18 +138,16 @@
           :edit-mode="editMode"
           @change="value => handleChange('tms_template_id', value)"
         />
-        <div class="divisionCodeSection">
-          <FormFieldSelectDivisionCodes
-            references="division_code"
-            label="Division"
-            :value="order.division_code"
-            :edit-mode="editMode"
-            :t-company-id="order.t_company_id"
-            :t-tms-provider-id="order.t_tms_provider_id"
-            :division-code="order.division_code"
-            @change="value => handleChange('division_code', value)"
-          />
-        </div>
+        <FormFieldSelectDivisionCodes
+          references="division_code"
+          label="Division"
+          :value="order.division_code"
+          :edit-mode="editMode"
+          :t-company-id="order.t_company_id"
+          :t-tms-provider-id="order.t_tms_provider_id"
+          :division-code="order.division_code"
+          @change="value => handleChange('division_code', value)"
+        />
         <FormFieldInput
           references="shipment_direction"
           label="Shipment direction"
@@ -157,7 +155,6 @@
           :edit-mode="editMode"
           @change="value => handleChange('shipment_direction', value)"
         />
-
         <FormFieldSwitch
           references="expedite"
           label="Expedite"
@@ -839,33 +836,21 @@ export default {
   }
 }
 
-.section__rootfields {
-  &::v-deep .field__name,
-  &::v-deep .block__left,
-  .field__children .field__name {
-    font-size: rem(13);
-    font-weight: 700;
-    line-height: (20 / 13);
+.section__rootfields::v-deep {
+  .equipment__section,
+  .selected__equipment,
+  .field__value,
+  .block__right,
+  .address-book-modal__body__status {
+    font-size: rem(14);
+    font-weight: 400;
+    line-height: (20 / 14);
     letter-spacing: rem(.25);
-    color: map-get($colors, slate-gray);
+    text-transform: capitalize;
   }
 
-  &::v-deep {
-    .equipment__section,
-    .selected__equipment,
-    .field__value,
-    .block__right,
-    .address-book-modal__body__status {
-      font-size: rem(14);
-      font-weight: 400;
-      line-height: (20 / 14);
-      letter-spacing: rem(.25);
-      text-transform: capitalize;
-    }
-
-    .equipment__section {
-      font-weight: 700;
-    }
+  .equipment__section {
+    font-weight: 700;
   }
 }
 

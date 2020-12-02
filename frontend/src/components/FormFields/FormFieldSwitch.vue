@@ -7,11 +7,17 @@
       :value="displayValue"
       @accept="handleAccept"
     >
-      <div class="form-field-element-switch">
+      <div class="form-field__group">
+        <div class="form-field__label">
+          {{ label }}
+        </div>
         <v-switch
           :value="value"
-          :label="label"
+          color="primary"
           inset
+          dense
+          flat
+          hide-details="true"
           @input="handleChange"
           @change="handleChange"
         />
@@ -61,8 +67,10 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.form-field-element-switch {
-  margin-left: rem(20);
-  width: 100%;
+.v-input--switch::v-deep {
+  .v-input__slot {
+    background-color: transparent;
+    width: auto;
+  }
 }
 </style>
