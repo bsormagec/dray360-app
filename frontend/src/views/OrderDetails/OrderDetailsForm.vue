@@ -4,22 +4,34 @@
     ref="orderForm"
     :class="`form ${isMobile && 'mobile'}`"
   >
-    <div class="order__title">
+    <div class="order__title-group">
+      <v-btn
+        v-if="backButton"
+        color="primary"
+        outlined
+        small
+        class="px-0"
+        title="Go back to Orders List"
+        @click="goToOrdersList()"
+      >
+        <v-icon>
+          mdi-chevron-left
+        </v-icon>
+      </v-btn>
       <h2>
-        <v-btn
-          v-if="backButton"
-          color="primary"
-          outlined
-          small
-          class="px-0"
-          title="Go back to Orders List"
-          @click="goToOrdersList()"
+        <div
+          class="order__title"
+          v-text="`Order #${order.id}`"
+        />
+        <div
+          v-show="order.tms_shipment_id"
+          class="order__tms"
         >
+          <strong>TMS ID: </strong> {{ order.tms_shipment_id }}
           <v-icon>
-            mdi-chevron-left
+            mdi-content-paste
           </v-icon>
-        </v-btn>
-        Order #{{ order.id }}
+        </div>
       </h2>
       <OutlinedButtonGroup
         v-if="!editMode"
@@ -748,22 +760,25 @@ export default {
   width: 100%;
   height: 100vh;
   overflow-y: auto;
-  padding: rem(15);
+  padding: 0 rem(15) rem(15) rem(15);
   scroll-behavior: smooth;
 
   &.mobile {
     height: 50vh;
     padding-bottom: rem(70);
-    padding: rem(16);
+    padding: 0 rem(16) rem(16) rem(16);
   }
 }
 
-.order__title {
-  position: relative;
+.order__title-group {
+  position: sticky;
+  top: 0;
   display: flex;
-  align-items: center;
-  padding: 0 0 rem(15);
-  margin-bottom: rem(15);
+  align-items: flex-start;
+  padding: rem(15);
+  margin: rem(-15) rem(-15) rem(15);
+  background-color: white;
+  z-index: 1;
 
   &::after {
     content: "";
@@ -773,23 +788,40 @@ export default {
     bottom: rem(-15);
     display: block;
     height: rem(15);
-    margin: 0 rem(-15);
     background: linear-gradient(180deg, rgba(0, 60, 113, 0.1) 0%, rgba(0, 60, 113, 0.05) 31.77%, rgba(0, 60, 113, 0) 100%);
   }
 
-  h2 {
-    display: flex;
-    align-items: center;
+  .order__title {
     font-size: rem(20);
-    color: var(--v-primary-base);
     font-weight: 500;
     line-height: (23.4 / 20);
     letter-spacing: rem(.15);
+    color: map-get($colors, slate-gray);
+  }
 
-    & .v-btn {
-      min-width: unset;
-      margin-right: rem(8);
+  .order__tms {
+    display: flex;
+    align-items: center;
+    font-size: rem(12);
+    line-height: (18 /12);
+    letter-spacing: rem(.25);
+    color: map-get($colors, slate-gray);
+
+    strong {
+      font-weight: 700;
+      margin-right: rem(4);
     }
+
+    i {
+      font-size: rem(14);
+      color: map-get($colors, slate-gray);
+      margin-left: rem(4);
+    }
+  }
+
+  .v-btn {
+    min-width: unset;
+    margin-right: rem(8);
   }
 
   &::v-deep .split-btn {
