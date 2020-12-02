@@ -43,7 +43,7 @@ export default {
     -webkit-border-radius: rem(5);
     border-radius: rem(5);
   }
-  &.verified,
+  &.processed,
   &.sending-to-tms,
   &.accepted-by-tms,
   &.sent-to-tms {
