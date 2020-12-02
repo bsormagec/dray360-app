@@ -242,7 +242,7 @@ export default {
         { text: 'Exception', value: 'Exception' },
         { text: 'Rejected', value: 'Rejected' },
         { text: 'Intake', value: 'Intake' },
-        { text: 'Verified', value: 'Verified' },
+        { text: 'Processed', value: 'Processed' },
         { text: 'Sending to TMS', value: 'Sending to TMS' },
         { text: 'Sent to TMS', value: 'Sent to TMS' },
         { text: 'Accepted by TMS', value: 'Accepted by TMS' },

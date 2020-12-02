@@ -172,7 +172,7 @@ export default {
         search: 'filter[query]',
         dateRange: 'filter[created_between]',
         system_status: 'filter[status]',
-        status: 'filter[display_status]', // Processing, Exception, Rejected, Intake, Verified, Sending to TMS, Sent to TMS, Accepted by TMS
+        status: 'filter[display_status]', // Processing, Exception, Rejected, Intake, Processed, Sending to TMS, Sent to TMS, Accepted by TMS
         page: 'page',
         sort: 'sort'
       }
