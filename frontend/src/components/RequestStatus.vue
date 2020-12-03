@@ -44,9 +44,9 @@ export default {
     border-radius: rem(5);
   }
   &.processed,
-  &.sending-to-tms,
-  &.accepted-by-tms,
-  &.sent-to-tms {
+  &.sendingtotms,
+  &.acceptedbytms,
+  &.senttotms {
     &::after{
       background-color: #77C19A;
     }
@@ -62,12 +62,13 @@ export default {
   }
   &.exception,
   &.rejected,
-  &.tms-error {
+  &.tmserror {
     &::after {
       background-color: #FB7660;
     }
   }
-  &.tms-warning {
+  &.tmswarning,
+  &.replaced {
     &::after {
       background-color: #FDAA63;
     }

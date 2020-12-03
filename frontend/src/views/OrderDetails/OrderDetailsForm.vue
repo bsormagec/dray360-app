@@ -18,11 +18,17 @@
           mdi-chevron-left
         </v-icon>
       </v-btn>
-      <h2>
+      <div>
+        <div class="order__title mr-4">
+          Order #{{ order.id }}
+        </div>
         <div
-          class="order__title"
-          v-text="`Order #${order.id}`"
-        />
+          class="secondary--text caption"
+        >
+          <RequestStatus
+            :status="order.ocr_request.latest_ocr_request_status"
+          />
+        </div>
         <div
           v-show="order.tms_shipment_id"
           class="order__tms"
@@ -45,7 +51,7 @@
             <span>Copy TMS ID</span>
           </v-tooltip>
         </div>
-      </h2>
+      </div>
       <OutlinedButtonGroup
         v-if="!editMode"
         :main-action="{
@@ -530,6 +536,7 @@ import FormFieldEquipmentType from '@/components/FormFields/FormFieldEquipmentTy
 import OutlinedButtonGroup from '@/components/General/OutlinedButtonGroup'
 import FormFieldSelectDivisionCodes from '@/components/FormFields/FormFieldSelectDivisionCodes'
 import FormFieldSelect from '@/components/FormFields/FormFieldSelect'
+import RequestStatus from '@/components/RequestStatus'
 
 export default {
   name: 'OrderDetailsForm',
@@ -544,7 +551,8 @@ export default {
     FormFieldEquipmentType,
     OutlinedButtonGroup,
     FormFieldSelect,
-    FormFieldSelectDivisionCodes
+    FormFieldSelectDivisionCodes,
+    RequestStatus
   },
   mixins: [isMobile, permissions],
   props: {
