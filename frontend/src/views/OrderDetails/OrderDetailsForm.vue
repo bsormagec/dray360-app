@@ -959,6 +959,7 @@ export default {
 }
 
   .v-icon {
+    margin-left: rem(4);
     vertical-align: baseline;
     color: #61788A !important;
   }
