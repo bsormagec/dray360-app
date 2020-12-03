@@ -272,7 +272,11 @@ export default {
   computed: {
     ...mapState(auth.moduleName, { currentUser: state => state.currentUser }),
     showHeaders () {
-      return this.headers.filter(s => this.selectedHeaders.includes(s))
+      return this.headers.filter(s => {
+        return this.selectedHeaders.reduce((exists, current) => {
+          return exists || current.value === s.value
+        }, false)
+      })
     }
   },
   watch: {

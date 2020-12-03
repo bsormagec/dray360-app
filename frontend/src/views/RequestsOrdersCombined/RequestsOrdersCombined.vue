@@ -77,7 +77,7 @@
             class="pa-5"
           >
             <header class="mb-5">
-              <span
+              <div
                 v-if="request.request_id !== null"
                 class="d-flex"
               >
@@ -108,7 +108,7 @@
                     </v-list-item>
                   </v-list>
                 </v-menu>
-              </span>
+              </div>
               <h5 v-else>
                 No request selected
               </h5>

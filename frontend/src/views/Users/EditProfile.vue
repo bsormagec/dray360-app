@@ -89,7 +89,7 @@
           class="button"
           color="primary"
           text
-          @click="$router.push({ path: '/dashboard/' })"
+          @click="$router.push({ path: '/dashboard' })"
         >
           Cancel
         </v-btn>
