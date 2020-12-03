@@ -64,6 +64,25 @@
       <template v-slot:[`item.updated_at`]="{ item }">
         {{ formatDate(item.updated_at || item.created_at) }}
       </template>
+      <template v-slot:[`item.tms_shipment_id`]="{ item }">
+        {{ item.tms_shipment_id }}
+        <v-tooltip
+          v-if="item.tms_shipment_id !== null"
+          top
+        >
+          <template v-slot:activator="{ on }">
+            <v-icon
+              v-clipboard:copy="item.tms_shipment_id"
+              dark
+              v-on="on"
+              @click.stop="() =>{}"
+            >
+              mdi-content-paste
+            </v-icon>
+          </template>
+          <span>Copy TMS ID</span>
+        </v-tooltip>
+      </template>
 
       <template v-slot:[`item.latest_ocr_request_status.display_status`]="{ item }">
         <span
@@ -684,4 +703,10 @@ export default {
       width: 100%;
       p { margin: 0; }
     }
+  .v-icon {
+    color: #6cb2eb !important;
+  }
+  .v-icon:hover {
+    color: #3490dc !important;
+  }
 </style>
