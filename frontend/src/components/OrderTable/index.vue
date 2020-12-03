@@ -73,6 +73,7 @@
           <template v-slot:activator="{ on }">
             <v-icon
               v-clipboard:copy="item.tms_shipment_id"
+              small
               dark
               v-on="on"
               @click.stop="() =>{}"
@@ -704,9 +705,9 @@ export default {
       p { margin: 0; }
     }
   .v-icon {
-    color: #6cb2eb !important;
+    color: #7BAFD4 !important;
   }
   .v-icon:hover {
-    color: #3490dc !important;
+    color: #326295 !important;
   }
 </style>
