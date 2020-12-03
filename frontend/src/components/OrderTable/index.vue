@@ -67,7 +67,7 @@
       <template v-slot:[`item.tms_shipment_id`]="{ item }">
         {{ item.tms_shipment_id }}
         <v-tooltip
-          v-if="!item.tms_shipment_id !== null"
+          v-if="item.tms_shipment_id !== null"
           top
         >
           <template v-slot:activator="{ on }">
