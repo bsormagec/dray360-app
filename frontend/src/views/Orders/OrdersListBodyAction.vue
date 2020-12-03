@@ -2,8 +2,7 @@
   <OutlinedButtonGroup
     :main-action="{
       title: 'View',
-      path: `/order/${item.order.id}`,
-      action: false,
+      to: `/order/${item.order.id}`,
       hasPermission: hasPermission('orders-view')
     }"
     :options="[

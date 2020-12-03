@@ -1,225 +1,81 @@
+/** Input Resets will aply only inside the formfield class **/
 .form-field {
-  .form-field-element-input {
-    fieldset {
-      legend {
-        font-size: rem(12) !important;
-      }
-
-      transition: border-color 200ms ease-in-out !important;
-      border: rem(1) solid map-get($colors , grey-10) !important;
-    }
-    .v-input--is-focused fieldset {
-      border-color: var(--v-primary-base) !important;
-    }
-    .v-input__slot, .v-input__control {
-      border-top-left-radius: rem(2) !important;
-      border-top-right-radius: rem(2) !important;
-      border-bottom-left-radius: rem(2) !important;
-      border-bottom-right-radius: rem(2) !important;
-    }
-    .v-label {
-      font-size: rem(12) !important;
-      text-transform: capitalize;
-      padding-right: rem(2) !important;
-      background: white !important;
-    }
-    input {
-      font-size: rem(14) !important;
-      &::placeholder {
-
-        text-transform: capitalize;
-      }
-    }
-    .v-label--active {
-      transform: translateY(-18px) scale(1) !important;
-    }
+  .v-input__slot,
+  .v-input__control {
+    min-height: auto !important;
   }
 
-  .form-field-element-textarea {
-    fieldset {
-      legend {
-        font-size: rem(12) !important;
-      }
+  .v-input {
+    margin-left: auto;
+    flex: 0;
 
-      transition: border-color 200ms ease-in-out !important;
-      border: rem(1) solid map-get($colors , grey-10) !important;
+    &.v-input--is-focused {
+      color: map-get($colors, black) !important;
     }
-    .v-input--is-focused fieldset {
-      border-color: var(--v-primary-base) !important;
+    &.v-input--selection-controls,
+    .v-textarea {
+      margin: 0;
+      padding: 0;
     }
-    .v-input__slot, .v-input__control {
-      border-top-left-radius: rem(2) !important;
-      border-top-right-radius: rem(2) !important;
-      border-bottom-left-radius: rem(2) !important;
-      border-bottom-right-radius: rem(2) !important;
-    }
-    .v-label {
-      font-size: rem(12) !important;
-      text-transform: capitalize;
-      padding-right: rem(2) !important;
-      background: white !important;
-      transform: translateY(-26px) scale(1);
-    }
+
+    input,
     textarea {
-      font-size: rem(14) !important;
+      font-size: inherit;
+      color: inherit;
       &::placeholder {
-
         text-transform: capitalize;
       }
     }
   }
+}
 
-  .form-field-element-select {
-    div[role="button"] {
-      border-top-left-radius: rem(2) !important;
-      border-top-right-radius: rem(2) !important;
-      border-bottom-left-radius: rem(2) !important;
-      border-bottom-right-radius: rem(2) !important;
-    }
-    .v-input--is-focused fieldset {
-      border-color: var(--v-primary-base) !important;
-    }
-    fieldset {
-      legend {
-        font-size: rem(12) !important;
-      }
+/** Formfield styles **/
+.form-field {
+  flex-grow: 1;
+}
 
-      transition: border-color 200ms ease-in-out !important;
-      border: rem(1) solid map-get($colors , grey-10) !important;
-    }
-    i {
-      color:map-get($colors , grey-9) !important;
-    }
-    .v-label {
-      font-size: rem(12) !important;
-      text-transform: capitalize;
-      padding-right: rem(2) !important;
-      background: white !important;
-    }
-    .v-label--active {
-      transform: translateY(-18px) scale(1) !important;
-    }
-    .v-select__selections {
-      padding: unset !important;
-      align-items: baseline;
-    }
-    .v-select__selection--comma {
-      font-size: rem(14) !important;
-    }
+.form-field__group {
+  display: flex;
+  padding: rem(7) rem(10);
+  width: 100%;
+  height: 100%;
+  justify-content: space-between;
+  align-items: center;
+  .edit & {
+    padding: 0;
+    flex: 1;
+    align-items: center;
+    justify-content: space-between;
+  }
+}
+
+.form-field__label {
+  font-size: rem(13);
+  font-weight: 700;
+  line-height: (20 / 13);
+  letter-spacing: rem(.25);
+  color: map-get($colors, slate-gray);
+  font-size: rem(13)rem(.25);
+  .edit & {
+    color: white;
+  }
+}
+
+.form-field .v-input {
+  font-size: rem(14);
+  color: map-get($colors, grey-4);
+  font-weight: 400;
+  line-height: (20 / 14);
+  letter-spacing: rem(.25);
+
+  .edit fieldset {
+    border: none;
   }
 
-  .form-field-element-switch {
-    .v-input--switch .v-label {
-      color: map-get($colors , black-2) !important;
-      font-size: rem(14) !important;
-      text-transform: capitalize;
-    }
-  }
-
-  .form-field-element-date {
-    i {
-      color: map-get($colors , grey-9);
-    }
-
-    .v-label {
-      text-transform: capitalize;
-    }
-
-    .v-label--active {
-      transform: translateY(-18px) scale(1) !important;
-      color: rgba(0, 0, 0, 0.6) !important;
-    }
-
-    .v-input--is-focused {
-      .v-input__slot:after {
-        display: none;
-      }
-    }
-
-    .v-input__slot::before {
-      border-color: map-get($colors , grey-10) !important;
-    }
-  }
-
-  .form-field-element-radio {
-    .v-label {
-      font-size: rem(14) !important;
-      text-transform: capitalize;
-    }
-  }
-
-  .form-field-element-input-select {
-    .form-field-element-input {
-      fieldset {
-        border-right: unset !important;
-      }
-      .v-input__slot, .v-input__control {
-        border-top-right-radius: unset !important;
-        border-bottom-right-radius: unset !important;
-      }
-    }
-
-    .form-field-element-select {
-      i {
-        color: var(--v-primary-base) !important;
-      }
-      fieldset {
-        border-color: var(--v-primary-base) !important;
-      }
-      legend {
-        width: unset !important;
-      }
-      .v-label {
-        display: none;
-      }
-      div[role="button"] {
-        border-top-left-radius: unset !important;
-        border-bottom-left-radius: unset !important;
-      }
-    }
-  }
-
-  .form-field-highlight.edit {
-    .highlight__edit.edit {
-      height: 100%;
-    }
-      .form-field-element-input, .form-field-element-textarea {
-        height: 100%;
-        .v-text-field__details {
-          display: none;
-        }
-        fieldset {
-          border: unset !important;
-        }
-      }
-
-    .children__child {
-      .form-field-element-input, .form-field-element-textarea {
-        height: 100%;
-        .v-text-field__details {
-          display: block;
-        }
-        fieldset {
-          border: rem(1) solid !important;
-          border-color: map-get($colors , grey-10) !important;
-        }
-      }
-    }
-
-    .v-input {
-      height: 100%;
-    }
-    .v-input__control {
-      height: 100%;
-    }
-    .v-input__slot {
-      height: 100% !important;
-      margin-bottom: unset !important;
-    }
-  }
-
-  input {
-    font-size: rem(14);
-    color: map-get($colors , black) !important;
+  .v-input__slot {
+    height: rem(22);
+    width: rem(220);
+    padding: 0 rem(0) rem(0) rem(11) !important;
+    background-color: white;
   }
 }

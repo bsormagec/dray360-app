@@ -10,6 +10,19 @@
         :update-type="initFilters.updateType"
         @change="filtersUpdated"
       />
+      <v-btn
+        v-if="isSuperadmin()"
+        outlined
+        dense
+        small
+        icon
+        color="primary"
+        class="refresh__button"
+        :loading="loading"
+        @click="refreshRequests"
+      >
+        <v-icon>mdi-refresh</v-icon>
+      </v-btn>
     </div>
     <v-divider />
     <v-virtual-scroll
@@ -50,6 +63,7 @@ import orders, { types as ordersTypes } from '@/store/modules/orders'
 import { getRequests } from '@/store/api_calls/requests'
 import { getRequestFilters } from '@/utils/filters_handling'
 import { formatDate } from '@/utils/dates'
+import permissions from '@/mixins/permissions'
 
 export default {
   name: 'RequestList',
@@ -57,6 +71,7 @@ export default {
     Filters,
     RequestItem
   },
+  mixins: [permissions],
   props: {
     extraUrlParams: {
       type: Array,
@@ -112,6 +127,7 @@ export default {
     this.initFilters.status = params.status?.split(',')
     this.initFilters.systemStatus = params.system_status?.split(',')
     this.initFilters.updateType = params.updateType
+    this.requestSelected = params.selected || null
   },
   beforeMount () {
     this[type.setSidebar]({ show: true })
@@ -132,6 +148,13 @@ export default {
     formatDate,
     async filtersUpdated (filters) {
       this.filters = [...filters]
+      this.startLoading()
+      this.resetPagination()
+      this.setURLParams()
+      await this.fetchRequests()
+      this.selectFirstRequestWithOrders()
+    },
+    async refreshRequests () {
       this.startLoading()
       this.resetPagination()
       this.setURLParams()
@@ -172,7 +195,8 @@ export default {
         search: 'filter[query]',
         dateRange: 'filter[created_between]',
         system_status: 'filter[status]',
-        status: 'filter[display_status]', // Processing, Exception, Rejected, Intake, Verified, Sending to TMS, Sent to TMS, Accepted by TMS
+        status: 'filter[display_status]', // Processing, Exception, Rejected, Intake, Processed, Sending to TMS, Sent to TMS, Accepted by TMS
+        selected: 'selected',
         page: 'page',
         sort: 'sort'
       }
@@ -180,13 +204,17 @@ export default {
       return getRequestFilters(this.getFilters(), filterKeyMap)
     },
     getFilters () {
-      return [...this.filters, { type: 'page', value: this.page }]
+      return [
+        ...this.filters,
+        { type: 'page', value: this.page },
+        { type: 'selected', value: this.requestSelected }
+      ]
     },
     setURLParams () {
       const filters = [...this.getFilters(), ...this.extraUrlParams].filter(item => item.type !== 'page')
       const filterState = filters.reduce((o, element) => ({ ...o, [element.type]: Array.isArray(element.value) ? element.value.join(',') : element.value }), {})
 
-      this.$router.replace({ path: 'dashboard2', query: filterState }).catch(() => {})
+      this.$router.replace({ path: 'dashboard', query: filterState }).catch(() => {})
     },
     selectFirstRequestWithOrders () {
       const filteredRequests = this.items.filter(request => request.orders_count !== 0)
@@ -201,6 +229,7 @@ export default {
     handleChange (request) {
       this.requestSelected = request.request_id
       this.$emit('change', request)
+      this.setURLParams()
     },
     startLoading () {
       this.loading = true
@@ -213,15 +242,19 @@ export default {
 }
 </script>
 <style lang="scss" scoped>
-
 .requests__list__wrapper {
   position: relative;
   height: 100%;
   display: flex;
   flex-direction: column;
   .request__filters {
+    display: flex;
     flex-grow: 0;
     padding: rem(6) 0 rem(6);
+    .refresh__button {
+      margin-left: auto;
+      margin-right: rem(16);
+    }
   }
 }
 </style>

@@ -1,6 +1,6 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
-import Orders from '@/views/Orders/Orders'
+// import Orders from '@/views/Orders/Orders'
 import OrderDetails from '@/views/OrderDetails/OrderDetails'
 import Login from '@/views/Login'
 import RequestsOrdersCombined from '@/views/RequestsOrdersCombined/RequestsOrdersCombined'
@@ -30,12 +30,12 @@ Vue.use(VueRouter)
 
 const routes = [
   {
-    path: '/dashboard/',
-    name: 'Orders',
+    path: '/dashboard',
+    name: 'RequestsOrdersCombined',
     meta: {
       middleware: [auth, permission('orders-view')]
     },
-    component: Orders
+    component: RequestsOrdersCombined
   },
   {
     path: '/user/dashboard',
@@ -84,14 +84,6 @@ const routes = [
       middleware: [auth, dev]
     },
     component: StyleGuide
-  },
-  {
-    path: '/dashboard2',
-    name: 'RequestsOrdersCombined',
-    meta: {
-      middleware: [auth]
-    },
-    component: RequestsOrdersCombined
   },
   {
     path: '/order/:id',

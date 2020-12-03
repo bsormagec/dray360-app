@@ -108,16 +108,27 @@
               <v-col cols="8">
                 <v-select
                   v-model="filters.status"
+                  :items="statuses"
                   outlined
                   hide-details
                   multiple
-                  chips
-                  :items="statuses"
                   name="update_status"
                   prepend-icon="mdi-check-circle-outline"
                   dense
                   class="status-selector"
-                />
+                >
+                  <template v-slot:selection="{ item, index }">
+                    <v-chip v-if="index === 0">
+                      <span>{{ item.text }}</span>
+                    </v-chip>
+                    <span
+                      v-if="index === 1"
+                      class="grey--text caption"
+                    >
+                      (+{{ filters.status.length - 1 }} others)
+                    </span>
+                  </template>
+                </v-select>
               </v-col>
             </v-row>
             <v-row v-if="isSuperadmin()">
@@ -133,16 +144,27 @@
               <v-col cols="8">
                 <v-select
                   v-model="filters.system_status"
+                  :items="system_statuses"
                   outlined
                   hide-details
                   multiple
-                  chips
-                  :items="system_statuses"
                   name="system_status"
                   prepend-icon="mdi-check-circle-outline"
                   dense
                   class="status-selector"
-                />
+                >
+                  <template v-slot:selection="{ item, index }">
+                    <v-chip v-if="index === 0">
+                      <span>{{ item.text }}</span>
+                    </v-chip>
+                    <span
+                      v-if="index === 1"
+                      class="grey--text caption"
+                    >
+                      (+{{ filters.system_status.length - 1 }} others)
+                    </span>
+                  </template>
+                </v-select>
               </v-col>
             </v-row>
 
@@ -242,7 +264,7 @@ export default {
         { text: 'Exception', value: 'Exception' },
         { text: 'Rejected', value: 'Rejected' },
         { text: 'Intake', value: 'Intake' },
-        { text: 'Verified', value: 'Verified' },
+        { text: 'Processed', value: 'Processed' },
         { text: 'Sending to TMS', value: 'Sending to TMS' },
         { text: 'Sent to TMS', value: 'Sent to TMS' },
         { text: 'Accepted by TMS', value: 'Accepted by TMS' },

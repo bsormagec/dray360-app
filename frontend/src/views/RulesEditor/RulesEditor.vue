@@ -266,7 +266,7 @@
                         <vue-json-pretty
                           v-if="testing_output"
                           :path="'res'"
-                          :data="testing_output.input.fields"
+                          :data="testing_output.input.original_output"
                           class="font-weight-black"
                         />
                       </v-tab-item>

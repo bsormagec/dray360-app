@@ -32,6 +32,11 @@ export const getTestingOutput = async (orderId, singleCompanyVariantRule) => axi
     const fetchedOcrData = response.data.ocr_data
     delete fetchedOcrData.fields_overwritten
 
+    fetchedOcrData.original_output = fetchedOcrData.fields
+
+    // send the rules engine the original fields
+    fetchedOcrData.fields = fetchedOcrData.original_fields
+
     // fetchedOcrData.rules = vc.company_variant_rules[index] -=> singleCompanyVariantRule
     fetchedOcrData.rules = singleCompanyVariantRule
 

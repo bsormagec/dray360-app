@@ -74,8 +74,6 @@ const actions = {
   async [types.updateOrder] ({ commit, state }, { path, value, useOrder = false }) {
     let changes = {}
 
-    commit(types.setHighlight, { path, highlight: { loading: true } })
-
     if (useOrder) {
       changes = { ...state.order }
     } else {
@@ -86,6 +84,8 @@ const actions = {
       commit(types.updateOrder, { changes })
       return
     }
+
+    commit(types.setHighlight, { path, highlight: { loading: true } })
 
     const [error, data] = await updateOrderDetail({ id: state.order.id, changes })
 

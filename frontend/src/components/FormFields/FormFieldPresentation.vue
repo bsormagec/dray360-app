@@ -16,18 +16,23 @@
     >
       <div
         v-show="!isEditing && !onlyHover"
-        class="field__group"
+        class="form-field__group"
       >
-        <span class="field__name">{{ label }}</span>
+        <span class="form-field__label">{{ label }}</span>
         <span
+          v-if="isLoading"
           class="field__value"
         >
           <v-progress-circular
-            v-if="isLoading"
             :size="20"
             indeterminate
             color="primary"
           />
+        </span>
+        <span
+          v-else
+          class="field__value"
+        >
           {{ value === null || value === '' ? '--' : value }}
         </span>
       </div>
@@ -122,56 +127,16 @@ export default {
 
 <style lang="scss">
 .form-field-presentation {
-  .field__group {
-    display: flex;
-    padding: rem(7) rem(10) rem(5);
-    width: 100%;
-    height: 100%;
-    justify-content: space-between;
-    align-items: center;
-  }
-
-  .field__name {
-    width: 60%;
-  }
-
-  .field__value {
-    cursor: pointer;
-    text-align: right;
-    word-break: break-word;
-    width: 40%;
-    transition: opacity 200ms ease-in-out;
-  }
-
-  .field__children {
-    display: flex;
-    justify-content: space-between;
-    padding-left: rem(10);
-  }
-
   .form-field-highlight {
     position: relative;
-    cursor: pointer;
     display: flex;
     align-items: center;
-    width: 100%;
-    min-height: rem(30);
-    border: rem(1) solid map-get($colors, white);
-    border-radius: rem(2);
     transition: all 200ms ease-in-out;
-
-    &.hover, &.edit {
-      border-color: var(--v-primary-base);
-    }
+    cursor: pointer;
 
     &.hover {
-      background: rgba(var(--v-primary-base-rgb), 0.15);
-      padding-left: rem(10);
-      padding-right: rem(30);
-    }
-
-    &.edit {
-      min-height: unset;
+      background-color: rgba($blue--lt, 0.4);
+      padding-right: rem(12);
     }
   }
 
@@ -179,12 +144,19 @@ export default {
     width: 100%;
   }
 
-  .highlight__edit {
-    &.edit {
-      width: 100%;
-      display: flex;
-      align-items: center;
-      padding: unset;
+  .highlight__edit.edit {
+    width: 100%;
+    display: flex;
+    padding: rem(7) rem(5.5) rem(7) rem(10);
+    background-color: $blue--lt;
+    color: white;
+
+    fieldset {
+      border: none;
+    }
+
+    .v-input__slot {
+      border-radius: rem(4) 0 rem(0) rem(4);
     }
   }
 }

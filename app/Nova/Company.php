@@ -76,9 +76,7 @@ class Company extends Resource
             Text::make('Ripcms username', 'ripcms_username')->hideFromIndex()->nullable(),
             Text::make('Ripcms password', 'ripcms_password')->hideFromIndex()->nullable(),
 
-            Text::make('Compcare organization id', 'compcare_organization_id')->hideFromIndex()->nullable(),
-            Text::make('Compcare username', 'compcare_username')->hideFromIndex()->nullable(),
-            Text::make('Compcare password', 'compcare_password')->hideFromIndex()->nullable(),
+            Text::make('Compcare API Key', 'compcare_api_key')->hideFromIndex()->nullable(),
         ];
     }
 

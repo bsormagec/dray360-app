@@ -152,7 +152,7 @@ return [
     |
     */
 
-    'memory_limit' => 64,
+    'memory_limit' => 128,
 
     /*
     |--------------------------------------------------------------------------
@@ -175,6 +175,7 @@ return [
                 'minProcesses' => 1,
                 'maxProcesses' => 4,
                 'tries' => 1,
+                'timeout' => 600,
             ],
         ],
 
@@ -187,6 +188,7 @@ return [
                 'minProcesses' => 1,
                 'maxProcesses' => 4,
                 'tries' => 1,
+                'timeout' => 600,
             ],
         ],
 
@@ -199,6 +201,7 @@ return [
                 'minProcesses' => 1,
                 'maxProcesses' => 4,
                 'tries' => 1,
+                'timeout' => 600,
             ],
         ],
     ],

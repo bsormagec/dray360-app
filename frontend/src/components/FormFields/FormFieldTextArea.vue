@@ -7,12 +7,19 @@
       :value="value"
       @accept="handleAccept"
     >
-      <div class="form-field-element-textarea">
+      <div class="form-field__group">
+        <div class="form-field__label">
+          {{ label }}
+        </div>
         <v-textarea
           outlined
+          auto-grow
           :placeholder="placeholder"
-          :label="label"
           :value="value"
+          hide-details="true"
+          flat
+          dense
+          solo
           @input="handleChange"
         />
       </div>
@@ -57,40 +64,18 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.form-field-element-textarea {
-  width: 100%;
-  fieldset {
-    legend {
-      font-size: rem(12) !important;
-    }
-
-    transition: border-color 200ms ease-in-out !important;
-    border: rem(1) solid map-get($colors , grey-10) !important;
-  }
-  .v-input--is-focused fieldset {
-    border-color: var(--v-primary-base) !important;
-  }
-  .v-input__slot, .v-input__control {
-    border-top-left-radius: rem(2) !important;
-    border-top-right-radius: rem(2) !important;
-    border-bottom-left-radius: rem(2) !important;
-    border-bottom-right-radius: rem(2) !important;
-  }
-  .v-label {
-    font-size: rem(12) !important;
-    text-transform: capitalize;
-    padding-right: rem(2) !important;
-    background: white !important;
-  }
-  input {
-    font-size: rem(14) !important;
-    &::placeholder {
-
-      text-transform: capitalize;
+.v-textarea::v-deep {
+  .v-input__slot {
+    height: auto;
+    .v-text-field__slot {
+      margin-right: 0;
     }
   }
-  .v-label--active {
-    transform: translateY(#{rem(-18)}) scale(1) !important;
+}
+.form-field::v-deep {
+  .form-field__group,
+  .form-field__group + .action-btns {
+    align-items: flex-start;
   }
 }
 </style>

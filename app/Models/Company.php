@@ -26,9 +26,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsToMany;
  * @property string blackfly_imagetype
  * @property string ripcms_username
  * @property string ripcms_password
- * @property string compcare_organization_id
- * @property string compcare_username
- * @property string compcare_password
+ * @property string compcare_api_key
  * @property boolean sync_addresses
  * @property string $name
  */
@@ -68,16 +66,14 @@ class Company extends Model
         'blackfly_imagetype',
         'ripcms_username',
         'ripcms_password',
-        'compcare_organization_id',
-        'compcare_username',
-        'compcare_password',
+        'compcare_api_key',
         'sync_addresses',
     ];
 
     protected $encryptable = [
         'blackfly_token',
         'ripcms_password',
-        'compcare_password',
+        'compcare_api_key',
     ];
 
     /**

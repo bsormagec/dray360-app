@@ -1,29 +1,27 @@
 <template>
-  <div class="action-btns">
+  <div
+    v-if="editMode"
+    class="action-btns"
+  >
     <div
-      v-if="editMode"
-      class="btns__edit"
+      class="btn btn--accept"
+      @click.stop="$emit('accept')"
     >
-      <div
-        class="btns__close"
-        @click.stop="$emit('cancel')"
-      >
-        <v-icon>mdi-close</v-icon>
-      </div>
-
-      <div
-        class="btns__accept"
-        @click.stop="$emit('accept')"
-      >
-        <v-icon>mdi-check</v-icon>
-      </div>
+      <v-icon>mdi-check</v-icon>
     </div>
-
     <div
-      v-if="!editMode"
-      class="btns__accept"
+      class="btn btn--close"
+      @click.stop="$emit('cancel')"
     >
-      <v-icon>mdi-pencil</v-icon>
+      <v-icon>mdi-close</v-icon>
+    </div>
+  </div>
+  <div
+    v-else
+    class="action-btns"
+  >
+    <div class="btn">
+      <v-icon>mdi-pencil-outline</v-icon>
     </div>
   </div>
 </template>
@@ -43,42 +41,42 @@ export default {
 
 <style lang="scss" scoped>
 .action-btns {
-  position: absolute;
-  bottom: 0;
-  right: 0;
   display: flex;
-  background: map-get($colors , white);
-  border-top: rem(1) solid var(--v-primary-base);
-  border-left: rem(1) solid var(--v-primary-base);
-  border-top-left-radius: rem(2);
+  align-items: center;
+  flex: 0 0 rem(46);
 
-  &:not(:last-child) {
-    border-right: rem(1) solid var(--v-primary-base);
+  .btn:last-child {
+    border-radius: 0 rem(4) rem(4) 0;
   }
 }
 
-.btns__edit {
-  display: flex;
-}
-
-i {
-  font-size: rem(16) !important;
-}
-
-.btns__close, .btns__accept {
-  margin-top: rem(-1);
+.btn {
+  position: relative;
+  height: rem(22);
+  width: rem(22);
+  margin-left: rem(1);
+  color: map-get($colors, slate-gray);
   cursor: pointer;
-}
-
-.btns__close i {
-  color: var(--v-primary-base);
-}
-
-.btns__accept {
-  background: var(--v-primary-base);
 
   i {
-    color: map-get($colors , white)
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    font-size: rem(20);
+    color: inherit;
+    transform: translate(-50%, -50%);
+  }
+
+  .edit & {
+    background-color: white;
+  }
+
+  &.btn--accept {
+    color: map-get($colors, mainblue);
+  }
+
+  &.btn--close {
+    color: map-get($colors, red);
   }
 }
 </style>

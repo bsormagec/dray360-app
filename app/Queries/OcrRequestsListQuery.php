@@ -14,7 +14,7 @@ use App\Queries\Filters\OcrRequestStatusFilter;
 
 class OcrRequestsListQuery extends QueryBuilder
 {
-    public function __construct()
+    public function __construct($requestId = null)
     {
         $firstOrderIdJsonExtract = "json_extract(s.status_metadata, '$.order_id_list[0]')";
         $query = OCRRequest::query()
@@ -54,7 +54,10 @@ class OcrRequestsListQuery extends QueryBuilder
                 ->withCount('orders')
                 ->with([
                     'latestOcrRequestStatus:id,status,status_date,status_metadata',
-                ]);
+                ])
+                ->when($requestId, function ($query) use ($requestId) {
+                    return $query->orderByDesc(DB::raw("\"{$requestId}\" = t_job_latest_state.request_id"));
+                });
 
         parent::__construct($query);
 
@@ -64,8 +67,13 @@ class OcrRequestsListQuery extends QueryBuilder
             AllowedFilter::custom('status', new OcrRequestStatusFilter()),
             AllowedFilter::custom('display_status', new OcrRequestStatusFilter()),
             AllowedFilter::callback('query', function ($query, $value) {
-                $query->orWhere('t_job_latest_state.request_id', 'like', "%{$value}%")
-                    ->orHaving('first_order_bill_to_address_location_name', 'like', "%{$value}%");
+                $query
+                // ->where(function ($query) use ($value) {
+                //     $query->orWhere('t_job_latest_state.request_id', 'like', "%{$value}%")
+                //         ->orWhereRaw('1=1');
+                // })
+                ->orHaving('first_order_bill_to_address_location_name', 'like', "%{$value}%")
+                ->orHaving('t_job_latest_state.request_id', 'like', "%{$value}%");
             }),
         ])
         ->defaultSort('-t_job_latest_state.created_at')

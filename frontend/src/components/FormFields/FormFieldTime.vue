@@ -8,7 +8,10 @@
       @accept="handleAccept"
       @cancel="handleCancel"
     >
-      <div class="form-field-element-date">
+      <div class="form-field__group">
+        <div class="form-field__label">
+          {{ label }}
+        </div>
         <v-dialog
           v-model="isOpen"
           :close-on-content-click="false"
@@ -19,8 +22,12 @@
         >
           <template v-slot:activator="{ on }">
             <v-text-field
+              dense
+              flat
+              outlined
+              solo
+              hide-details="true"
               :value="currentValue"
-              :label="label"
               prepend-icon="mdi-calendar"
               readonly
               v-on="on"
@@ -85,3 +92,12 @@ export default {
   }
 }
 </script>
+
+<style lang="scss" scoped>
+.v-text-field::v-deep {
+  align-items: center;
+  .v-input__prepend-outer {
+    margin: 0 rem(6) 0 0 !important;
+  }
+}
+</style>
