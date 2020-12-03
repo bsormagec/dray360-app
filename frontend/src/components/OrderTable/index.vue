@@ -67,7 +67,7 @@
       <template v-slot:[`item.tms_shipment_id`]="{ item }">
         {{ item.tms_shipment_id }}
         <v-tooltip
-          v-if="item.tms_shipment_id !== null"
+          v-if="!item.tms_shipment_id !== null"
           top
         >
           <template v-slot:activator="{ on }">
@@ -705,6 +705,7 @@ export default {
       p { margin: 0; }
     }
   .v-icon {
+    vertical-align: baseline;
     color: #7BAFD4 !important;
   }
   .v-icon:hover {
