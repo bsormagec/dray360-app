@@ -1,23 +1,13 @@
 <template>
   <div class="add__request">
-    <v-menu offset-y>
-      <template v-slot:activator="{ on, attrs }">
-        <v-btn
-          outlined
-          dense
-          small
-          v-bind="attrs"
-          v-on="on"
-        >
-          ADD
-        </v-btn>
-      </template>
-      <v-list>
-        <v-list-item @click="openUploadOrdersDialog = true">
-          <v-list-item-title>Upload Order(s)</v-list-item-title>
-        </v-list-item>
-      </v-list>
-    </v-menu>
+    <v-btn
+      outlined
+      dense
+      small
+      @click="openUploadOrdersDialog = true"
+    >
+      ADD
+    </v-btn>
     <UploadOrdersDialog
       :open="openUploadOrdersDialog"
       @close="openUploadOrdersDialog = false"

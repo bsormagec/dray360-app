@@ -10,7 +10,10 @@
     <div class="d-flex justify-space-between">
       <div class="d-flex align-center">
         <span class="text-body-1 font-weight-bold secondary--text text-uppercase">#{{ request.request_id.substring(0,8) }}</span>
-        <v-tooltip bottom>
+        <v-tooltip
+          v-if="isSuperadmin()"
+          bottom
+        >
           <template v-slot:activator="{ on, attrs }">
             <v-btn
               v-clipboard:copy="request.request_id"
@@ -47,10 +50,16 @@
         </div>
       </div>
     </div>
-    <div class="text-caption pb-1" v-if="!isSuperadmin()">
+    <div
+      v-if="!isSuperadmin()"
+      class="text-caption pb-1"
+    >
       {{ request.orders_count }} {{ request.orders_count == 1 ? 'order' : 'orders' }}
     </div>
-    <div class="text-caption pb-1" v-else>
+    <div
+      v-else
+      class="text-caption pb-1"
+    >
       {{ request.orders_count }} {{ request.orders_count == 1 ? 'order' : 'orders' }} for {{ request.company_name }}
     </div>
     <div class="d-flex justify-space-between mt-auto">

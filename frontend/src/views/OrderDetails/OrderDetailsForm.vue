@@ -4,29 +4,59 @@
     ref="orderForm"
     :class="`form ${isMobile && 'mobile'}`"
   >
-    <div class="order__title">
-      <h2>
-        <v-btn
-          v-if="backButton"
-          color="primary"
-          outlined
-          small
-          class="px-0"
-          title="Go back to Orders List"
-          @click="goToOrdersList()"
+    <div class="order__title-group">
+      <v-btn
+        v-if="backButton"
+        color="primary"
+        outlined
+        small
+        class="px-0"
+        title="Go back to Orders List"
+        @click="goToOrdersList()"
+      >
+        <v-icon>
+          mdi-chevron-left
+        </v-icon>
+      </v-btn>
+      <div>
+        <div class="order__title mr-4">
+          Order #{{ order.id }}
+        </div>
+        <div
+          class="secondary--text caption"
         >
-          <v-icon>
-            mdi-chevron-left
-          </v-icon>
-        </v-btn>
-        Order #{{ order.id }}
-      </h2>
+          <RequestStatus
+            :status="order.ocr_request.latest_ocr_request_status"
+          />
+        </div>
+        <div
+          v-show="order.tms_shipment_id"
+          class="order__tms"
+        >
+          <strong>TMS ID: </strong> {{ order.tms_shipment_id }}
+          <v-tooltip
+            top
+          >
+            <template v-slot:activator="{ on }">
+              <v-icon
+                v-clipboard:copy="order.tms_shipment_id"
+                small
+                color="secondary"
+                v-on="on"
+                @click.stop="() =>{}"
+              >
+                mdi-content-paste
+              </v-icon>
+            </template>
+            <span>Copy TMS ID</span>
+          </v-tooltip>
+        </div>
+      </div>
       <OutlinedButtonGroup
         v-if="!editMode"
         :main-action="{
           title: 'Send to TMS',
           action: postSendToTms,
-          path:'',
           disabled: sendToTmsDisabled
         }"
         :options="[
@@ -138,18 +168,16 @@
           :edit-mode="editMode"
           @change="value => handleChange('tms_template_id', value)"
         />
-        <div class="divisionCodeSection">
-          <FormFieldSelectDivisionCodes
-            references="division_code"
-            label="Division"
-            :value="order.division_code"
-            :edit-mode="editMode"
-            :t-company-id="order.t_company_id"
-            :t-tms-provider-id="order.t_tms_provider_id"
-            :division-code="order.division_code"
-            @change="value => handleChange('division_code', value)"
-          />
-        </div>
+        <FormFieldSelectDivisionCodes
+          references="division_code"
+          label="Division"
+          :value="order.division_code"
+          :edit-mode="editMode"
+          :t-company-id="order.t_company_id"
+          :t-tms-provider-id="order.t_tms_provider_id"
+          :division-code="order.division_code"
+          @change="value => handleChange('division_code', value)"
+        />
         <FormFieldInput
           references="shipment_direction"
           label="Shipment direction"
@@ -157,7 +185,6 @@
           :edit-mode="editMode"
           @change="value => handleChange('shipment_direction', value)"
         />
-
         <FormFieldSwitch
           references="expedite"
           label="Expedite"
@@ -279,6 +306,20 @@
             :value="order.voyage"
             :edit-mode="editMode"
             @change="value => handleChange('voyage', value)"
+          />
+          <FormFieldDate
+            references="cutoff_date"
+            label="Cutoff Date"
+            :value="order.cutoff_date"
+            :edit-mode="editMode"
+            @change="value => handleChange('cutoff_date', value)"
+          />
+          <FormFieldTime
+            references="cutoff_time"
+            label="Cutoff Time"
+            :value="order.cutoff_time"
+            :edit-mode="editMode"
+            @change="value => handleChange('cutoff_time', value)"
           />
           <FormFieldInput
             references="booking_number"
@@ -446,11 +487,27 @@
         </div>
         <div class="section__rootfields">
           <FormFieldTextArea
-            :references="`order_line_items.${item.real_index}`"
-            label="Description"
+            :references="`order_line_items.${item.real_index}.contents`"
+            label="Contents"
             :value="item.contents"
             :edit-mode="editMode"
-            @change="value => handleChange(`order_line_items.${item.real_index}`, value)"
+            @change="value => handleChange(`order_line_items.${item.real_index}.contents`, value)"
+          />
+          <FormFieldInput
+            :references="`order_line_items.${item.real_index}.quantity`"
+            label="Quantity"
+            type="number"
+            :value="item.quantity"
+            :edit-mode="editMode"
+            @change="value => handleChange(`order_line_items.${item.real_index}.quantity`, value)"
+          />
+          <FormFieldInput
+            :references="`order_line_items.${item.real_index}.weight`"
+            label="Weight"
+            type="number"
+            :value="item.weight"
+            :edit-mode="editMode"
+            @change="value => handleChange(`order_line_items.${item.real_index}.weight`, value)"
           />
         </div>
       </div>
@@ -468,8 +525,8 @@ import { getSourceFileDownloadURL, postSendToTms, delDeleteOrder } from '@/store
 import orderForm, { types as orderFormTypes } from '@/store/modules/order-form'
 import utils, { type } from '@/store/modules/utils'
 
-// import FormFieldDate from '@/components/FormFields/FormFieldDate'
-// import FormFieldTime from '@/components/FormFields/FormFieldTime'
+import FormFieldDate from '@/components/FormFields/FormFieldDate'
+import FormFieldTime from '@/components/FormFields/FormFieldTime'
 import FormFieldInput from '@/components/FormFields/FormFieldInput'
 import FormFieldSwitch from '@/components/FormFields/FormFieldSwitch'
 import FormFieldTextArea from '@/components/FormFields/FormFieldTextArea'
@@ -479,12 +536,13 @@ import FormFieldEquipmentType from '@/components/FormFields/FormFieldEquipmentTy
 import OutlinedButtonGroup from '@/components/General/OutlinedButtonGroup'
 import FormFieldSelectDivisionCodes from '@/components/FormFields/FormFieldSelectDivisionCodes'
 import FormFieldSelect from '@/components/FormFields/FormFieldSelect'
+import RequestStatus from '@/components/RequestStatus'
 
 export default {
   name: 'OrderDetailsForm',
   components: {
-    // FormFieldDate,
-    // FormFieldTime,
+    FormFieldDate,
+    FormFieldTime,
     FormFieldInput,
     FormFieldSwitch,
     FormFieldTextArea,
@@ -493,7 +551,8 @@ export default {
     FormFieldEquipmentType,
     OutlinedButtonGroup,
     FormFieldSelect,
-    FormFieldSelectDivisionCodes
+    FormFieldSelectDivisionCodes,
+    RequestStatus
   },
   mixins: [isMobile, permissions],
   props: {
@@ -501,6 +560,11 @@ export default {
       type: Boolean,
       required: false,
       default: true
+    },
+    redirectBack: {
+      type: Boolean,
+      required: false,
+      default: false
     }
   },
   data () {
@@ -658,7 +722,7 @@ export default {
     },
 
     goToOrdersList () {
-      this.$router.push('/dashboard/')
+      this.redirectBack ? this.$router.back() : this.$router.push('/dashboard')
     },
 
     handleItinerayEdit () {
@@ -721,22 +785,25 @@ export default {
   width: 100%;
   height: 100vh;
   overflow-y: auto;
-  padding: rem(15);
+  padding: 0 rem(15) rem(15) rem(15);
   scroll-behavior: smooth;
 
   &.mobile {
     height: 50vh;
     padding-bottom: rem(70);
-    padding: rem(16);
+    padding: 0 rem(16) rem(16) rem(16);
   }
 }
 
-.order__title {
-  position: relative;
+.order__title-group {
+  position: sticky;
+  top: 0;
   display: flex;
-  align-items: center;
-  padding: 0 0 rem(15);
-  margin-bottom: rem(15);
+  align-items: flex-start;
+  padding: rem(15);
+  margin: 0 rem(-15) rem(15) rem(-15);
+  background-color: white;
+  z-index: 1;
 
   &::after {
     content: "";
@@ -746,23 +813,40 @@ export default {
     bottom: rem(-15);
     display: block;
     height: rem(15);
-    margin: 0 rem(-15);
     background: linear-gradient(180deg, rgba(0, 60, 113, 0.1) 0%, rgba(0, 60, 113, 0.05) 31.77%, rgba(0, 60, 113, 0) 100%);
   }
 
-  h2 {
-    display: flex;
-    align-items: center;
+  .order__title {
     font-size: rem(20);
-    color: var(--v-primary-base);
     font-weight: 500;
     line-height: (23.4 / 20);
     letter-spacing: rem(.15);
+    color: map-get($colors, slate-gray);
+  }
 
-    & .v-btn {
-      min-width: unset;
-      margin-right: rem(8);
+  .order__tms {
+    display: flex;
+    align-items: center;
+    font-size: rem(12);
+    line-height: (18 /12);
+    letter-spacing: rem(.25);
+    color: map-get($colors, slate-gray);
+
+    strong {
+      font-weight: 700;
+      margin-right: rem(4);
     }
+
+    i {
+      font-size: rem(14);
+      color: map-get($colors, slate-gray);
+      margin-left: rem(4);
+    }
+  }
+
+  .v-btn {
+    min-width: unset;
+    margin-right: rem(8);
   }
 
   &::v-deep .split-btn {
@@ -809,33 +893,21 @@ export default {
   }
 }
 
-.section__rootfields {
-  &::v-deep .field__name,
-  &::v-deep .block__left,
-  .field__children .field__name {
-    font-size: rem(13);
-    font-weight: 700;
-    line-height: (20 / 13);
+.section__rootfields::v-deep {
+  .equipment__section,
+  .selected__equipment,
+  .field__value,
+  .block__right,
+  .address-book-modal__body__status {
+    font-size: rem(14);
+    font-weight: 400;
+    line-height: (20 / 14);
     letter-spacing: rem(.25);
-    color: map-get($colors, slate-gray);
+    text-transform: capitalize;
   }
 
-  &::v-deep {
-    .equipment__section,
-    .selected__equipment,
-    .field__value,
-    .block__right,
-    .address-book-modal__body__status {
-      font-size: rem(14);
-      font-weight: 400;
-      line-height: (20 / 14);
-      letter-spacing: rem(.25);
-      text-transform: capitalize;
-    }
-
-    .equipment__section {
-      font-weight: 700;
-    }
+  .equipment__section {
+    font-weight: 700;
   }
 }
 
@@ -896,5 +968,10 @@ export default {
       margin-right: rem(3);
     }
   }
+}
+
+.order__tms .v-icon {
+  margin-left: rem(4);
+  vertical-align: baseline;
 }
 </style>

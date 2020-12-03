@@ -77,7 +77,7 @@
             class="pa-5"
           >
             <header class="mb-5">
-              <span
+              <div
                 v-if="request.request_id !== null"
                 class="d-flex"
               >
@@ -108,7 +108,7 @@
                     </v-list-item>
                   </v-list>
                 </v-menu>
-              </span>
+              </div>
               <h5 v-else>
                 No request selected
               </h5>
@@ -118,6 +118,16 @@
               :request-id="request.request_id"
               :url-filters="false"
               wait-for-request-id
+              :headers="[
+                { text: 'Date', sortable: false, value: 'created_at' },
+                { text: 'Order ID', sortable: false, value: 'id' },
+                { text: 'Update Status', value: 'latest_ocr_request_status.display_status', align: 'center' },
+                { text: 'TMS ID', sortable: false, value: 'tms_shipment_id', align: 'center' },
+                { text: 'Container', sortable: false, value: 'unit_number' },
+                { text: 'Bill To', value: 'bill_to_address.location_name' },
+                { text: 'Direction', value: 'shipment_direction', align: 'center' },
+                { text: 'Actions', value: 'actions', sortable: false, align: 'center' }
+              ]"
             />
           </div>
           <OrderDetails
@@ -191,7 +201,7 @@ export default {
       this.request = request
     },
     tabsChanged (value) {
-      this.$router.replace({ path: 'dashboard2', query: { tab: value } }).catch(() => {})
+      this.$router.replace({ path: 'dashboard', query: { tab: value } }).catch(() => {})
       this.tab = value
     },
     async deleteRequest () {

@@ -53,6 +53,8 @@
 </template>
 
 <script>
+import get from 'lodash/get'
+
 export default {
   name: 'OutlinedButtonGroup',
   props: {
@@ -100,8 +102,9 @@ export default {
       const mainActionDisabled = this.mainAction.disabled !== undefined ? this.mainAction.disabled : false
 
       return {
-        href: this.mainAction.path !== '' ? this.mainAction.path : null,
-        title: this.mainAction.title !== '' ? this.mainAction.title : false,
+        to: get(this.mainAction, 'to', '') !== '' ? this.mainAction.to : undefined,
+        href: get(this.mainAction, 'href', '') !== '' ? this.mainAction.href : undefined,
+        title: get(this.mainAction, 'title', '') ? this.mainAction.title : false,
         action: typeof this.mainAction.action === 'function' ? this.mainAction.action : '',
         disabled: this.buttonAttributes.disabled ? true : mainActionDisabled
       }

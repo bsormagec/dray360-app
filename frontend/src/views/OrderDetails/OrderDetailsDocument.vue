@@ -148,13 +148,11 @@ export default {
 .page__highlight {
   cursor: pointer;
   position: absolute;
-  background: rgba(yellow, 0.3);
-  border: rem(1) solid rgba(yellow, 0.3);
-  transition: all 200ms ease-in-out;
+  background: rgba($sandy, .4);
+  transition: background-color 200ms ease-in-out;
 
   &.hover, &.edit {
-    border-color: var(--v-primary-base);
-    background: rgba(var(--v-primary-base-rgb), 0.3);
+    background: rgba($blue--lt, .4);
   }
 }
 </style>

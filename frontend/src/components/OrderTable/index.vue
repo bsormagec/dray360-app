@@ -64,11 +64,31 @@
       <template v-slot:[`item.updated_at`]="{ item }">
         {{ formatDate(item.updated_at || item.created_at) }}
       </template>
+      <template v-slot:[`item.tms_shipment_id`]="{ item }">
+        {{ item.tms_shipment_id }}
+        <v-tooltip
+          v-if="item.tms_shipment_id !== null"
+          top
+        >
+          <template v-slot:activator="{ on }">
+            <v-icon
+              v-clipboard:copy="item.tms_shipment_id"
+              small
+              dark
+              v-on="on"
+              @click.stop="() =>{}"
+            >
+              mdi-content-paste
+            </v-icon>
+          </template>
+          <span>Copy TMS ID</span>
+        </v-tooltip>
+      </template>
 
       <template v-slot:[`item.latest_ocr_request_status.display_status`]="{ item }">
         <span
-          v-if="item.latest_ocr_request_status.display_status.toLowerCase() === 'verified'"
-          class="verified-status"
+          v-if="item.latest_ocr_request_status.display_status.toLowerCase() === 'processed'"
+          class="processed-status"
         >
           {{ item.latest_ocr_request_status.display_status }}
         </span>
@@ -85,7 +105,7 @@
           v-if="currentUser !== undefined && currentUser.is_superadmin"
           :main-action="{
             title: 'DETAILS',
-            path: `/order/${item.id}`,
+            to: `/order/${item.id}`,
             hasPermission: hasPermission('orders-view')
           }"
           :options="[
@@ -272,7 +292,11 @@ export default {
   computed: {
     ...mapState(auth.moduleName, { currentUser: state => state.currentUser }),
     showHeaders () {
-      return this.headers.filter(s => this.selectedHeaders.includes(s))
+      return this.headers.filter(s => {
+        return this.selectedHeaders.reduce((exists, current) => {
+          return exists || current.value === s.value
+        }, false)
+      })
     }
   },
   watch: {
@@ -524,7 +548,7 @@ export default {
       const filters = [...this.getFilters(), ...this.extraUrlParams]
       const filterState = filters.reduce((o, element) => ({ ...o, [element.type]: Array.isArray(element.value) ? element.value.join(',') : element.value }), {})
       // const params = filters.map(element => `${element.type}=${element.value}`).join('&')
-      this.$router.replace({ path: 'dashboard2', query: filterState }).catch(() => {})
+      this.$router.replace({ path: 'dashboard', query: filterState }).catch(() => {})
       // history.pushState(filterState, document.title, `${window.location.pathname}?${params}`)
     },
 
@@ -556,7 +580,7 @@ export default {
         search: 'filter[query]',
         dateRange: 'filter[created_between]',
         system_status: 'filter[status]',
-        status: 'filter[display_status]', // Processing, Exception, Rejected, Intake, Verified, Sending to TMS, Sent to TMS, Accepted by TMS
+        status: 'filter[display_status]', // Processing, Exception, Rejected, Intake, Processed, Sending to TMS, Sent to TMS, Accepted by TMS
         page: 'page',
         sort: 'sort',
         items_per_page: 'items_per_page'
@@ -603,7 +627,7 @@ export default {
 
 <style lang="scss" scoped>
     .table-root {
-      .verified-status {
+      .processed-status {
         &:before {
           content: '';
           display: inline-block;
@@ -684,4 +708,11 @@ export default {
       width: 100%;
       p { margin: 0; }
     }
+  .v-icon {
+    vertical-align: baseline;
+    color: #7BAFD4 !important;
+  }
+  .v-icon:hover {
+    color: #326295 !important;
+  }
 </style>

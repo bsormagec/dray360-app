@@ -44,6 +44,7 @@
     />
 
     <v-btn
+      :disabled="orderCreationDisabled"
       color="primary"
       class="submit-order-btn"
       :style="{ marginLeft: 'auto', marginTop: '11px' }"
@@ -98,6 +99,14 @@ export default {
         }
       }
       return false
+    },
+
+    orderCreationDisabled () {
+      if (this.files.length > 20) {
+        return true
+      } else {
+        return false
+      }
     }
   },
 

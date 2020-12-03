@@ -14,9 +14,7 @@ class Compcare
     protected string $identityUrl;
     protected string $entitiesUrl;
 
-    protected $organizationId;
-    protected $username;
-    protected $password;
+    protected $apiKey;
     protected $token;
     protected Company $company;
 
@@ -28,9 +26,7 @@ class Compcare
         $this->company = $company;
         $this->token = Cache::get(self::getTokenCacheKeyFor($this->company));
 
-        $this->organizationId = $company->compcare_organization_id;
-        $this->username = $company->compcare_username;
-        $this->password = $company->compcare_password;
+        $this->apiKey = $company->compcare_api_key;
     }
 
     public function getToken(): self
@@ -40,14 +36,10 @@ class Compcare
             return $this;
         }
 
-        $response = Http::asJson()
-            ->post("{$this->identityUrl}Auth/login/{$this->organizationId}", [
-                'UserName' => $this->username,
-                'Password' => $this->password,
-            ]);
+        $response = Http::asJson()->get("{$this->identityUrl}Auth/apikey/{$this->apiKey}");
 
         if ($response->failed() || ! $response->json()) {
-            throw new CompcareException('Auth/login', $response->body(), $response->status());
+            throw new CompcareException('Auth/apikey', $response->body(), $response->status());
         }
 
         $this->token = Arr::get($response, 'data.token');

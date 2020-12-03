@@ -7,8 +7,10 @@
       :value="division_name"
       @accept="handleAccept"
     >
-      <div class="divisionCodeSection">
-        <span>Division Name</span>
+      <div class="form-field__group">
+        <div class="form-field__label">
+          {{ label }}
+        </div>
         <v-select
           :items="divisionCodes"
           item-text="division_name"
@@ -17,7 +19,8 @@
           clearable
           outlined
           dense
-          class="divisionSelect"
+          flat
+          hide-details="true"
           @change="handleChange"
         />
       </div>
@@ -78,32 +81,20 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.divisionCodeSection{
-  display: flex;
-  justify-content: space-evenly;
-  align-items: baseline;
-  width: 100%;
-  .divisionSelect, span{
-    width: 25rem;
-  }
-  .check_button{
-    border-radius: 0px;
-    height: 40px !important;
-    width: 40px !important;
-    border: 1px solid rgba(0, 0, 0, 0.38);
-    margin: 0 2px;
-
-  }
-  .close_button{
-    border-top-right-radius: 5px;
-    border-bottom-right-radius: 5px;
-    height: 40px !important;
-    width: 40px !important;
-    border: 1px solid rgba(0, 0, 0, 0.38);
-    border-top-left-radius: 0px;
-    border-bottom-left-radius: 0px;
-    .v-icon.notranslate.mdi.mdi-close.theme--light {
-      color: red;
+.v-select::v-deep {
+  .v-input__slot {
+    .v-input__append-inner {
+      margin-top: 0 !important;
+      padding-left: 0;
+      .v-icon {
+        font-size: rem(20);
+      }
+    }
+    .v-select__selections input {
+      display: none;
+    }
+    .v-select__selection {
+      color: map-get($colors, grey-4);
     }
   }
 }

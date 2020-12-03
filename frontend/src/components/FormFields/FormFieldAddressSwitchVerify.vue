@@ -30,12 +30,12 @@
           </div>
 
           <div class="address-book-modal__body__block">
-            <span class="block__left">Address as Recognized</span>
+            <span class="form-field__label block__left">Address as Recognized</span>
             <span class="block__right">{{ recognizedText }}</span>
           </div>
 
           <div class="address-book-modal__body__block">
-            <span class="block__left">{{ !verified ? 'Closest Match' : 'Verified Address' }}</span>
+            <span class="form-field__label block__left">{{ !verified ? 'Closest Match' : 'Verified Address' }}</span>
             <span
               class="block__right"
               v-html="textAddressToShow"

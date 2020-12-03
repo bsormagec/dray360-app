@@ -63,8 +63,8 @@ class OCRRequestStatus extends Model
         self::OCR_POST_PROCESSING_ERROR          => 'Rejected',
         self::PROCESS_OCR_OUTPUT_FILE_ERROR      => 'Rejected',
 
-        self::OCR_POST_PROCESSING_COMPLETE       => 'Verified',
-        self::PROCESS_OCR_OUTPUT_FILE_COMPLETE   => 'Verified',
+        self::OCR_POST_PROCESSING_COMPLETE       => 'Processed',
+        self::PROCESS_OCR_OUTPUT_FILE_COMPLETE   => 'Processed',
 
         self::UPDATES_PRIOR_ORDER                => 'Update',
 

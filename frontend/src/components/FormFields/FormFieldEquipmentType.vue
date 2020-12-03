@@ -3,7 +3,7 @@
   <div>
     <div>
       <div class="EquipmentType">
-        <div class="field__name">
+        <div class="form-field__label">
           SSL Container Type
         </div>
 

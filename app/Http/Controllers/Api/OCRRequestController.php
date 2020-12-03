@@ -24,11 +24,11 @@ class OCRRequestController extends Controller
     // expire upload URI after this many minutes
     const MINUTES_URI_REMAINS_VALID = 15;
 
-    public function index()
+    public function index(Request $request)
     {
         $this->authorize('viewAny', OCRRequest::class);
 
-        $ocrRequests = (new OcrRequestsListQuery())->paginate(25);
+        $ocrRequests = (new OcrRequestsListQuery($request->get('selected')))->paginate(25);
 
         return OcrRequestJson::collection($ocrRequests);
     }

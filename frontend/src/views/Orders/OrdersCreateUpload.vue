@@ -9,10 +9,10 @@
 
     <div class="upload__input">
       <v-file-input
+        :rules="rules"
         multiple
         solo
         dense
-        hide-details
         append
         label="File input"
         :value="files"
@@ -35,6 +35,7 @@
     >
       <span class="area__legend">... or drag documents here to upload</span>
       <v-file-input
+        :rules="rules"
         multiple
         :accept="accept"
         :value="files"
@@ -64,7 +65,10 @@ export default {
   },
 
   data: () => ({
-    accept: '.pdf,.xlsx,.csv,.edi'
+    accept: '.pdf,.xlsx,.csv,.edi',
+    rules: [
+      files => files.length <= 20 || 'File limit exceeded. Please upload less than 20 files.'
+    ]
   }),
 
   methods: {
