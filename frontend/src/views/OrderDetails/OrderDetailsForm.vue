@@ -35,7 +35,7 @@
               <v-icon
                 v-clipboard:copy="order.tms_shipment_id"
                 small
-                dark
+                color="secondary"
                 v-on="on"
                 @click.stop="() =>{}"
               >
@@ -958,9 +958,8 @@ export default {
   }
 }
 
-  .v-icon {
-    margin-left: rem(4);
-    vertical-align: baseline;
-    color: #61788A !important;
-  }
+.order__tms .v-icon {
+  margin-left: rem(4);
+  vertical-align: baseline;
+}
 </style>
