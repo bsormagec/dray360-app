@@ -12,13 +12,15 @@
           {{ label }}
         </div>
         <v-switch
-          :value="value"
+          :value="currentValue"
           color="primary"
           inset
           dense
           flat
           hide-details="true"
-          @input="handleChange"
+          :input-value="currentValue"
+          :true-value="true"
+          :false-value="false"
           @change="handleChange"
         />
       </div>
@@ -49,6 +51,12 @@ export default {
   computed: {
     displayValue () {
       return this.value === true || this.value === 1 ? 'Yes' : 'No'
+    }
+  },
+
+  watch: {
+    value () {
+      this.currentValue = this.value
     }
   },
 
