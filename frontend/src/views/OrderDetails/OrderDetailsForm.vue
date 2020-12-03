@@ -28,9 +28,22 @@
           class="order__tms"
         >
           <strong>TMS ID: </strong> {{ order.tms_shipment_id }}
-          <v-icon>
-            mdi-content-paste
-          </v-icon>
+          <v-tooltip
+            top
+          >
+            <template v-slot:activator="{ on }">
+              <v-icon
+                v-clipboard:copy="order.tms_shipment_id"
+                small
+                color="secondary"
+                v-on="on"
+                @click.stop="() =>{}"
+              >
+                mdi-content-paste
+              </v-icon>
+            </template>
+            <span>Copy TMS ID</span>
+          </v-tooltip>
         </div>
       </h2>
       <OutlinedButtonGroup
@@ -947,5 +960,10 @@ export default {
       margin-right: rem(3);
     }
   }
+}
+
+.order__tms .v-icon {
+  margin-left: rem(4);
+  vertical-align: baseline;
 }
 </style>
