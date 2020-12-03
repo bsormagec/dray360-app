@@ -127,6 +127,7 @@ export default {
     this.initFilters.status = params.status?.split(',')
     this.initFilters.systemStatus = params.system_status?.split(',')
     this.initFilters.updateType = params.updateType
+    this.requestSelected = params.selected || null
   },
   beforeMount () {
     this[type.setSidebar]({ show: true })
@@ -195,6 +196,7 @@ export default {
         dateRange: 'filter[created_between]',
         system_status: 'filter[status]',
         status: 'filter[display_status]', // Processing, Exception, Rejected, Intake, Processed, Sending to TMS, Sent to TMS, Accepted by TMS
+        selected: 'selected',
         page: 'page',
         sort: 'sort'
       }
@@ -202,13 +204,17 @@ export default {
       return getRequestFilters(this.getFilters(), filterKeyMap)
     },
     getFilters () {
-      return [...this.filters, { type: 'page', value: this.page }]
+      return [
+        ...this.filters,
+        { type: 'page', value: this.page },
+        { type: 'selected', value: this.requestSelected }
+      ]
     },
     setURLParams () {
       const filters = [...this.getFilters(), ...this.extraUrlParams].filter(item => item.type !== 'page')
       const filterState = filters.reduce((o, element) => ({ ...o, [element.type]: Array.isArray(element.value) ? element.value.join(',') : element.value }), {})
 
-      this.$router.replace({ path: 'dashboard2', query: filterState }).catch(() => { })
+      this.$router.replace({ path: 'dashboard', query: filterState }).catch(() => {})
     },
     selectFirstRequestWithOrders () {
       const filteredRequests = this.items.filter(request => request.orders_count !== 0)
@@ -223,6 +229,7 @@ export default {
     handleChange (request) {
       this.requestSelected = request.request_id
       this.$emit('change', request)
+      this.setURLParams()
     },
     startLoading () {
       this.loading = true

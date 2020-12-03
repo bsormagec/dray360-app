@@ -328,7 +328,7 @@
               <OutlinedButtonGroup
                 :main-action="{
                   title: 'View',
-                  path: '#',
+                  href: '#',
                   hasPermission: true
                 }"
                 :options="[
@@ -343,7 +343,7 @@
                 <OutlinedButtonGroup
                   :main-action="{
                     title: 'Longer Action Title',
-                    path: '#',
+                    href: '#',
                     hasPermission: true
                   }"
                   :options="[

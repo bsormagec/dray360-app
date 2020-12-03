@@ -85,7 +85,7 @@
           v-if="currentUser !== undefined && currentUser.is_superadmin"
           :main-action="{
             title: 'DETAILS',
-            path: `/order/${item.id}`,
+            to: `/order/${item.id}`,
             hasPermission: hasPermission('orders-view')
           }"
           :options="[
@@ -524,7 +524,7 @@ export default {
       const filters = [...this.getFilters(), ...this.extraUrlParams]
       const filterState = filters.reduce((o, element) => ({ ...o, [element.type]: Array.isArray(element.value) ? element.value.join(',') : element.value }), {})
       // const params = filters.map(element => `${element.type}=${element.value}`).join('&')
-      this.$router.replace({ path: 'dashboard2', query: filterState }).catch(() => {})
+      this.$router.replace({ path: 'dashboard', query: filterState }).catch(() => {})
       // history.pushState(filterState, document.title, `${window.location.pathname}?${params}`)
     },
 

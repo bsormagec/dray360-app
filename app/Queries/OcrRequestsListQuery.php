@@ -14,7 +14,7 @@ use App\Queries\Filters\OcrRequestStatusFilter;
 
 class OcrRequestsListQuery extends QueryBuilder
 {
-    public function __construct()
+    public function __construct($requestId = null)
     {
         $firstOrderIdJsonExtract = "json_extract(s.status_metadata, '$.order_id_list[0]')";
         $query = OCRRequest::query()
@@ -54,7 +54,10 @@ class OcrRequestsListQuery extends QueryBuilder
                 ->withCount('orders')
                 ->with([
                     'latestOcrRequestStatus:id,status,status_date,status_metadata',
-                ]);
+                ])
+                ->when($requestId, function ($query) use ($requestId) {
+                    return $query->orderByDesc(DB::raw("\"{$requestId}\" = t_job_latest_state.request_id"));
+                });
 
         parent::__construct($query);
 

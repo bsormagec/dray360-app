@@ -6,7 +6,10 @@
           :class="`details__form ${isMobile && 'mobile'}`"
           :style="{ minWidth: `${resizeDiff}%` }"
         >
-          <OrderDetailsForm :back-button="backButton" />
+          <OrderDetailsForm
+            :back-button="backButton"
+            :redirect-back="redirectBack"
+          />
 
           <div
             class="form__resize"
@@ -62,8 +65,16 @@ export default {
     resizeDiff: 50,
     startPos: 0,
     loaded: false,
+    redirectBack: false,
     orderIdToLoad: vm.orderId || vm.$route.params.id
   }),
+
+  beforeRouteEnter (to, from, next) {
+    next(vm => {
+      vm.redirectBack = from.path.includes('/dashboard')
+      next()
+    })
+  },
 
   computed: {
     ...mapState(orders.moduleName, {

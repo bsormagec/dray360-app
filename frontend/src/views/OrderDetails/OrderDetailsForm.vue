@@ -38,7 +38,6 @@
         :main-action="{
           title: 'Send to TMS',
           action: postSendToTms,
-          path:'',
           disabled: sendToTmsDisabled
         }"
         :options="[
@@ -540,6 +539,11 @@ export default {
       type: Boolean,
       required: false,
       default: true
+    },
+    redirectBack: {
+      type: Boolean,
+      required: false,
+      default: false
     }
   },
   data () {
@@ -697,7 +701,7 @@ export default {
     },
 
     goToOrdersList () {
-      this.$router.push('/dashboard/')
+      this.redirectBack ? this.$router.back() : this.$router.push('/dashboard')
     },
 
     handleItinerayEdit () {
@@ -776,7 +780,7 @@ export default {
   display: flex;
   align-items: flex-start;
   padding: rem(15);
-  margin: rem(-15) rem(-15) rem(15);
+  margin: 0 rem(-15) rem(15) rem(-15);
   background-color: white;
   z-index: 1;
 
