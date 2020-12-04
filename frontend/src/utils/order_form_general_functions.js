@@ -1,4 +1,5 @@
 import { defaultsTo } from '@/utils/defaults_to'
+import get from 'lodash/get'
 
 export function getHighlights (order) {
   const highlights = {}
@@ -73,11 +74,18 @@ export function keyShouldBeParsed (key) {
 
 export function getOcrData (key, ocrData) {
   if (key.includes('order_address_events')) {
+
     const found = Object.values(
-      defaultsTo(() => ocrData.fields, {})
+      get(ocrData, 'fields', {})
     ).find(field => {
-      return defaultsTo(() => field.d360_name, '').includes(`${key.split('.')[1]}`) && !field.name.includes('_type')
+      return get(field, 'd360_name', '').includes(`${key.split('.')[1]}`) && !get(field, 'name', '').includes('_type')
     })
+
+    // const found = Object.values(
+    //   defaultsTo(() => ocrData.fields, {})
+    // ).find(field => {
+    //   return defaultsTo(() => field.d360_name, '').includes(`${key.split('.')[1]}`) && field.name && !field.name.includes('_type')
+    // })
 
     return defaultsTo(() => found.ocr_region, {})
   } else if (key.includes('order_line_items')) {
