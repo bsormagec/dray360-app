@@ -113,7 +113,7 @@ export default {
     maxFiles: {
       type: Number,
       required: false,
-      default: 10
+      default: 20
     }
   },
   data: (vm) => ({
@@ -179,7 +179,7 @@ export default {
       const filtered = [...this.files, ...newFiles].filter(f => acceptedMimeTypes.includes(f.type))
       if (filtered.length > this.maxFiles) {
         this.setSnackbar({
-          message: 'Up to 10 files are allowed for upload',
+          message: 'Up to 20 files are allowed for upload',
           show: true
         })
         this.files = []
