@@ -50,6 +50,20 @@
         size="64"
       />
     </v-overlay>
+    <v-snackbar
+      v-model="changesDetected"
+      :timeout="-1"
+    >
+      <div class="refresh-msg d-flex align-center justify-space-between">
+        <p>New requests available.</p>
+        <v-btn
+          text
+          @click="reloadPage"
+        >
+          REFRESH
+        </v-btn>
+      </div>
+    </v-snackbar>
   </div>
 </template>
 <script>
@@ -94,7 +108,13 @@ export default {
         status: [],
         systemStatus: [],
         updateType: ''
-      }
+      },
+      // polling stuff
+      pollingInterval: 10000,
+      pollingTimer: null,
+      payload: '',
+      changesDetected: false,
+      initialTotalMeta: 0
     }
   },
   computed: {
@@ -139,7 +159,15 @@ export default {
     this.setURLParams()
     await this.fetchRequests()
     this.selectFirstRequestWithOrders()
+
+    this.initialTotalMeta = this.meta.total
+    this.startPolling()
   },
+
+  updated () {
+    this.meta.total++
+  },
+
   methods: {
     ...mapActions(utils.moduleName, [type.setSidebar]),
     ...mapActions(orders.moduleName, {
@@ -237,7 +265,29 @@ export default {
     resetPagination () {
       this.page = 1
       this.items = []
+    },
+
+    async startPolling () {
+      const initPayload = await getRequests([])
+      this.payload = JSON.stringify(initPayload)
+      this.pollingTimer = window.setInterval(this.checkForChanges.bind(this), this.pollingInterval)
+    },
+
+    async checkForChanges () {
+      if (this.initialTotalMeta < this.meta.total) {
+        this.changesDetected = true
+      }
+    },
+
+    stopPolling () {
+      window.clearInterval(this.pollingTimer)
+    },
+
+    reloadPage () {
+      this.changesDetected = false
+      window.location.reload()
     }
+
   }
 }
 </script>
