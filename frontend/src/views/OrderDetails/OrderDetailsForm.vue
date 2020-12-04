@@ -582,15 +582,12 @@ export default {
       highlights: state => state.highlights,
       sections: state => state.sections
     }),
-    ...mapState(utils.moduleName, {
-      tenantConfig: state => state.tenantConfig
-    }),
 
     profitToolsTemplatesSelectItems () {
-      return get(this.tenantConfig, 'profit_tools_template_list', [])
+      return get(this.order, 'company.configuration.profit_tools_template_list', [])
     },
     shouldSelectProfitToolsTemplateId () {
-      return get(this.tenantConfig, 'profit_tools_enable_templates', false)
+      return get(this.order, 'company.configuration.profit_tools_enable_templates', false)
     },
 
     availableLineItems () {
