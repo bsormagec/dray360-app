@@ -81,12 +81,6 @@ export function getOcrData (key, ocrData) {
       return get(field, 'd360_name', '').includes(`${key.split('.')[1]}`) && !get(field, 'name', '').includes('_type')
     })
 
-    // const found = Object.values(
-    //   defaultsTo(() => ocrData.fields, {})
-    // ).find(field => {
-    //   return defaultsTo(() => field.d360_name, '').includes(`${key.split('.')[1]}`) && field.name && !field.name.includes('_type')
-    // })
-
     return defaultsTo(() => found.ocr_region, {})
   } else if (key.includes('order_line_items')) {
     return defaultsTo(() => ocrData.fields.contents.ocr_region, {})
