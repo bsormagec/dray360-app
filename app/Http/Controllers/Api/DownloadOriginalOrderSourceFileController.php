@@ -15,10 +15,13 @@ class DownloadOriginalOrderSourceFileController extends Controller
     public function __invoke(Order $order)
     {
         $this->authorize('downloadSourceFile', $order);
-        $status = OCRRequestStatus::where([
-            'request_id' => $order->request_id,
-            'status' => OCRRequestStatus::INTAKE_ACCEPTED,
-        ])->first();
+        $status = OCRRequestStatus::query()
+            ->where('request_id', $order->request_id)
+            ->whereIn('status', [
+                OCRRequestStatus::INTAKE_ACCEPTED,
+                OCRRequestStatus::INTAKE_ACCEPTED_DATAFILE
+            ])
+            ->first();
 
         if (! $status || ! isset($status->status_metadata['document_archive_location'])) {
             abort(404, 'No file was found for the given order.');
