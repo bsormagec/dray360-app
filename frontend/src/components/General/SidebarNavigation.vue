@@ -1,7 +1,7 @@
 <template>
   <div>
     <v-app-bar-nav-icon
-      v-if="isMobile"
+      v-if="isMobile && currentUser !== undefined"
       class="hamburger__icon"
       @click="toogleSidebar"
     />
