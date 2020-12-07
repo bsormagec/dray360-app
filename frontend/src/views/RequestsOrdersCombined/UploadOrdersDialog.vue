@@ -4,6 +4,7 @@
       :value="open"
       width="500"
       @click:outside="handleClose"
+      @keydown.esc="handleClose"
     >
       <v-card>
         <v-card-title>
