@@ -73,7 +73,7 @@ const routes = [
     path: '/user/dashboard/change-password',
     name: 'ChangePassword',
     meta: {
-      middleware: [auth, permission('users-view')]
+      middleware: [auth]
     },
     component: ChangePassword
   },
