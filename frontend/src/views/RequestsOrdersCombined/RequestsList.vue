@@ -164,10 +164,6 @@ export default {
     this.startPolling()
   },
 
-  updated () {
-    this.meta.total++
-  },
-
   methods: {
     ...mapActions(utils.moduleName, [type.setSidebar]),
     ...mapActions(orders.moduleName, {
@@ -285,7 +281,8 @@ export default {
 
     reloadPage () {
       this.changesDetected = false
-      window.location.reload()
+      // window.location.reload()
+      this.refreshRequests()
     }
 
   }
