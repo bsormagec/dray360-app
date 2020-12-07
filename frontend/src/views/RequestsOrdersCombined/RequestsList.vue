@@ -281,7 +281,6 @@ export default {
 
     reloadPage () {
       this.changesDetected = false
-      // window.location.reload()
       this.refreshRequests()
     }
 
