@@ -356,7 +356,7 @@
         </div>
         <div class="section__rootfields">
           <FormFieldAddressSwitchVerify
-            :recognized-text="order.bill_to_address_raw_text"
+            :recognized-text="order.bill_to_address_raw_text || 'Addres not recognized'"
             :verified="order.bill_to_address_verified"
             :matched-address="order.bill_to_address"
             references="bill_to_address"
@@ -634,7 +634,9 @@ export default {
       return `${date} ${time}`
     }
   },
-
+  mounted () {
+    if (this.editMode) this.toggleEdit()
+  },
   methods: {
     ...mapActions(utils.moduleName, [type.setSnackbar, type.setConfirmationDialog]),
     ...mapActions(orderForm.moduleName, {
