@@ -16,12 +16,11 @@ class OcrRequestsListQuery extends QueryBuilder
 {
     public function __construct($requestId = null)
     {
-        $firstOrderIdJsonExtract = "json_extract(s.status_metadata, '$.order_id_list[0]')";
         $query = OCRRequest::query()
                 ->select([
                     't_job_latest_state.*',
                     'c.name as company_name',
-                    DB::raw("{$firstOrderIdJsonExtract} as first_order_id"),
+                    DB::raw('(select min(o2.id) from t_orders as o2 where o2.request_id = s.request_id and o2.deleted_at is null) as first_order_id')
                 ])
                 ->addSelect(['email_from_address' => DB::table('t_job_state_changes', 's_is')
                     ->selectRaw("json_extract(s_is.status_metadata, '$.source_summary.source_email_from_address') as email_from_address")
