@@ -15,9 +15,6 @@ export default function ({ store, router }) {
         store.dispatch('AUTH/simpleLogout')
         router.push('/login')
         return
-      } else if (status === 404) {
-        router.push('/pagenotfound')
-        return
       } else if (status === 503) {
         router.push('/application-downtime')
       }
