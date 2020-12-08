@@ -33,6 +33,7 @@ class OcrRequestJson extends JsonResource
                     break;
                 case OCRRequestStatus::SHIPMENT_NOT_CREATED_BY_WINT:
                 case OCRRequestStatus::SHIPMENT_NOT_UPDATED_BY_WINT:
+                case OCRRequestStatus::OCR_TIMEDOUT:
                     $message = $metaData['message'] ?? null;
                     break;
                 case OCRRequestStatus::SUCCESS_SENDING_TO_WINT:

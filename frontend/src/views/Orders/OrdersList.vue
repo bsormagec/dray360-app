@@ -88,6 +88,7 @@ export default {
       { text: 'ocr-post-processing-complete', value: 'ocr-post-processing-complete' },
       { text: 'ocr-post-processing-error', value: 'ocr-post-processing-error' },
       { text: 'ocr-waiting', value: 'ocr-waiting' },
+      { text: 'ocr-timedout', value: 'ocr-timedout' },
       { text: 'process-ocr-output-file-complete', value: 'process-ocr-output-file-complete' },
       { text: 'process-ocr-output-file-error', value: 'process-ocr-output-file-error' },
       { text: 'upload-requested', value: 'upload-requested' },
