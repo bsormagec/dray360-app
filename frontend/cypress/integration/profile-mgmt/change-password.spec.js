@@ -21,7 +21,7 @@ describe('Edit profile', function () {
 
     cy.visit('http://localhost:8080/user/dashboard/change-password/')
 
-    cy.get('[data-cy=old-password-field]').type('mongomongo', { force: true })
+    cy.get('[data-cy=old-password-field]').type('mocked', { force: true })
 
     cy.get('[data-cy=password-field]').type('mockednewpass', { force: true })
 
