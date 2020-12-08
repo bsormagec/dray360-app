@@ -707,7 +707,8 @@ export default {
               showSpinner: false,
               message: 'Order deleted'
             })
-            this.$router.push('/dashboard')
+            this.loading = false
+            location.reload()
           } else {
             await this[type.setSnackbar]({
               show: true,
