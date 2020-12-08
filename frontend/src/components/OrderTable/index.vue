@@ -109,7 +109,6 @@
             hasPermission: hasPermission('orders-view')
           }"
           :options="[
-            { title: 'View Details', action: () => item.action(item.id), hasPermission: hasPermission('orders-view') },
             { title: 'Download Source File', action: () => downloadSourceFile(item.id) },
             { title: 'Reprocess Order', action: () => reprocessOrder(item.request_id) },
             { title: 'Delete Order', action: () => deleteOrder(item) }

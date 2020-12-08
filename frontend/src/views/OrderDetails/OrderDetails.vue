@@ -50,7 +50,7 @@ export default {
 
   props: {
     orderId: {
-      type: String,
+      type: Number,
       required: false,
       default: null
     },
