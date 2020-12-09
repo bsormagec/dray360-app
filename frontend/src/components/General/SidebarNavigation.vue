@@ -82,7 +82,7 @@
                 :to="item.path"
                 dense
               >
-                <v-list-item-icon>
+                <v-list-item-icon v-if="item.icon">
                   <v-icon v-text="item.icon" />
                 </v-list-item-icon>
                 <v-list-item-content>
@@ -93,15 +93,9 @@
                     v-text="item.name"
                   />
                   <v-list-item-title
-                    v-else-if="item.name === 'manage users' && hasPermission('users-view')"
-                    :key="i"
-                    @input="onChangeSidebar"
-                    v-text="item.name"
-                  />
-                  <v-list-item-title
                     v-else
                     :key="i"
-                    @input="onChangeSidebar"
+                    @click="onChangeSidebar"
                     v-text="item.name"
                   />
                 </v-list-item-content>
@@ -139,22 +133,16 @@ export default {
     return {
       group: null,
       model: 1,
-      menuItems: [
-        { name: 'dashboard', path: '/dashboard' },
-        { name: 'manage users', path: '/user/dashboard' },
-        { name: 'my profile', path: '/user/edit-profile' },
-        { name: 'logout', path: '#' }],
       admins: [
-        { name: 'Nova', path: '/nova', role: ['superadmin'] },
-        { name: 'Horizon', path: '/horizon', role: ['superadmin'] },
-        { name: 'Telescope', path: '/telescope', role: ['superadmin'] },
-        { name: 'Roles and permissions', path: '/authorization', role: ['superadmin'] },
-        { name: 'Sentry', path: 'https://sentry.io/organizations/draymaster/issues/?project=5285677', role: ['superadmin'] },
-        { name: 'Rules Editor', path: '/rules-editor', role: ['admin'] },
-        { name: 'Usage Stats', path: '#', role: ['admin'] },
-        { name: 'RefsCustoms Mapping', path: '/companies/refs-custom-mapping', role: ['superadmin'] }
+        { name: 'Nova', path: '/nova' },
+        { name: 'Horizon', path: '/horizon' },
+        { name: 'Telescope', path: '/telescope' },
+        { name: 'Roles and permissions', path: '/authorization' },
+        { name: 'Sentry', path: 'https://sentry.io/organizations/draymaster/issues/?project=5285677' },
+        { name: 'Rules Editor', path: '/rules-editor' },
+        { name: 'Usage Stats', path: '#' },
+        { name: 'RefsCustoms Mapping', path: '/companies/refs-custom-mapping' }
       ]
-
     }
   },
   computed: {
@@ -162,8 +150,13 @@ export default {
     ...mapState(utils.moduleName, {
       tenantConfig: state => state.tenantConfig,
       showSidebar: state => state.sidebar.show,
-      showAdminMenu () {
-        return this.currentUser.is_superadmin
+      menuItems () {
+        return [
+          { name: 'dashboard', path: '/dashboard', hasPermission: this.hasPermission('orders-view') },
+          { name: 'manage users', path: '/user/dashboard', hasPermission: this.hasPermission('users-view') },
+          { name: 'my profile', path: '/user/edit-profile', hasPermission: true },
+          { name: 'logout', path: '#', hasPermission: true }
+        ].filter((item) => item.hasPermission)
       }
     })
   },
