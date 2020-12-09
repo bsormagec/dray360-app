@@ -212,6 +212,12 @@ All status_metadata object include the following properties:
 1. user_id
 
 
+    SUCCESS_SENDING_TO_CHAINIO = 'success-sending-to-chainio',
+    FAILURE_SENDING_TO_CHAINIO = 'failure-sending-to-chainio',
+    SHIPMENT_CREATED_BY_CHAINIO = 'shipment-created-by-chainio',
+    SHIPMENT_NOT_CREATED_BY_CHAINIO = 'shipment-not-created-by-chainio',
+
+
 
 
 
