@@ -1,7 +1,7 @@
 describe('Edit profile', function () {
   beforeEach(() => {
     cy.fixture('auth/tenant.json').as('tenant')
-    cy.fixture('auth/user.json').as('user')
+    cy.fixture('auth/customerUser.json').as('user')
     cy.fixture('user-mgmt/roles.json').as('roles')
     cy.fixture('user-mgmt/company.json').as('company')
     cy.fixture('user-mgmt/user-list.json').as('users')
@@ -23,6 +23,7 @@ describe('Edit profile', function () {
 
     cy.get('[data-cy=change-password-button]').click()
 
+    // Old part
     cy.route({ url: '**/api/user', response: this.user })
 
     cy.route({ url: '**/api/current-tenant', response: this.tenant })
