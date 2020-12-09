@@ -167,7 +167,7 @@ export default {
       company_id: null,
       tms_provider_id: null,
       rawtext: '',
-      is_terminal_address: true,
+      is_terminal_address: false,
       is_billable_address: false
     },
     eventTypes: ['Hook', 'Mount', 'Pick Up', 'Deliver', 'Dismount', 'Drop']
