@@ -1,6 +1,8 @@
 import axios from '@/store/api_calls/config/axios'
 import toParams from '@/utils/to_params'
 
+export const getUser = async (id) => axios.get(`/api/users/${id}`).then(data => [undefined, data.data]).catch(e => [e])
+
 export const getUsers = async (filters, query) => axios.get(`/api/users?${toParams(filters)}`).then(data => [undefined, data.data]).catch(e => [e])
 
 export const deleteUser = async (id) => axios.delete(`/api/users/${id}`).then(data => [undefined, data.data]).catch(e => [e])
