@@ -65,6 +65,7 @@ export default {
         'ocr-post-processing-complete',
         'ocr-post-processing-error',
         'ocr-waiting',
+        'ocr-timedout',
         'process-ocr-output-file-complete',
         'process-ocr-output-file-error',
         'upload-requested',
