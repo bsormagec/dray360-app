@@ -38,6 +38,9 @@ class UserPolicy
      */
     public function update(User $user, User $model): bool
     {
+        if ($user->id == $model->id) {
+            return true;
+        }
         return $user->isAbleTo('users-edit') && $this->belongToSameCompany($user, $model);
     }
 

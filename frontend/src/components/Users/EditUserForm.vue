@@ -110,9 +110,9 @@ export default {
     name: '',
     email: '',
     company: '',
-    role_selected: 1,
-    activated: true,
-    editedUser: ''
+    role_selected: 2,
+    activated: true
+
   }),
 
   computed: {
