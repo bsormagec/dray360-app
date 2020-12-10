@@ -134,6 +134,7 @@
             v-else-if="request.orders_count === 1"
             :back-button="false"
             :order-id="request.first_order_id"
+            @order-deleted="() => setReloadRequests(true)"
           />
         </div>
       </div>

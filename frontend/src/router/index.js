@@ -1,6 +1,5 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
-// import Orders from '@/views/Orders/Orders'
 import OrderDetails from '@/views/OrderDetails/OrderDetails'
 import Login from '@/views/Login'
 import RequestsOrdersCombined from '@/views/RequestsOrdersCombined/RequestsOrdersCombined'
@@ -73,7 +72,7 @@ const routes = [
     path: '/user/dashboard/change-password',
     name: 'ChangePassword',
     meta: {
-      middleware: [auth, permission('users-view')]
+      middleware: [auth]
     },
     component: ChangePassword
   },

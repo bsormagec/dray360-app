@@ -109,7 +109,6 @@
             hasPermission: hasPermission('orders-view')
           }"
           :options="[
-            { title: 'View Details', action: () => item.action(item.id), hasPermission: hasPermission('orders-view') },
             { title: 'Download Source File', action: () => downloadSourceFile(item.id) },
             { title: 'Reprocess Order', action: () => reprocessOrder(item.request_id) },
             { title: 'Delete Order', action: () => deleteOrder(item) }
@@ -153,6 +152,7 @@
       </template>
       <template v-slot:footer>
         <Pagination
+          v-if="!waitForRequestId"
           :loading="loading"
           :page-data="meta"
           :links="links"
@@ -184,7 +184,7 @@ import Chip from '@/components/Chip'
 import hasPermission from '@/mixins/permissions'
 import { formatDate } from '@/utils/dates'
 import utils, { type as utilTypes } from '@/store/modules/utils'
-import { getOrders2, getSourceFileDownloadURL, reprocessOcrRequest, delDeleteOrder } from '@/store/api_calls/orders'
+import { getOrders, getSourceFileDownloadURL, reprocessOcrRequest, delDeleteOrder } from '@/store/api_calls/orders'
 import { getRequestFilters } from '@/utils/filters_handling'
 
 import { mapState, mapActions } from 'vuex'
@@ -393,13 +393,13 @@ export default {
 
     // polling
     async startPolling () {
-      const initPayload = await getOrders2([])
+      const initPayload = await getOrders([])
       this.payload = JSON.stringify(initPayload)
       this.pollingTimer = window.setInterval(this.checkForChanges.bind(this), this.pollingInterval)
     },
 
     async checkForChanges () {
-      const newPayload = await getOrders2([])
+      const newPayload = await getOrders([])
       if (this.payload !== JSON.stringify(newPayload)) {
         this.changesDetected = true
       }
@@ -456,22 +456,16 @@ export default {
         onConfirm: async () => {
           this.loading = true
           const [error] = await delDeleteOrder(item.id)
+          let message = ''
 
           if (!error) {
-            await this.setSnackbar({
-              show: true,
-              showSpinner: false,
-              message: 'Order deleted'
-            })
-            location.reload()
             this.loading = false
+            message = 'Order deleted'
+            this.resetFilters()
           } else {
-            await this.setSnackbar({
-              show: true,
-              showSpinner: false,
-              message: 'Error trying to delete the order'
-            })
+            message = 'Error trying to delete the order'
           }
+          await this.setSnackbar({ show: true, message })
         },
         onCancel: () => {
           this.loading = false
@@ -483,7 +477,7 @@ export default {
       const startTime = new Date().getTime()
       this.loading = true
 
-      const { data, links, meta } = await getOrders2(this.getRequestFilters())
+      const { data, links, meta } = await getOrders(this.getRequestFilters())
 
       const now = new Date().getTime()
 
@@ -545,7 +539,7 @@ export default {
       if (!this.urlFilters) {
         return
       }
-      const filters = [...this.getFilters(), ...this.extraUrlParams]
+      const filters = [...this.getFilters(), ...this.extraUrlParams].filter(item => item.type !== 'items_per_page')
       const filterState = filters.reduce((o, element) => ({ ...o, [element.type]: Array.isArray(element.value) ? element.value.join(',') : element.value }), {})
       // const params = filters.map(element => `${element.type}=${element.value}`).join('&')
       this.$router.replace({ path: 'dashboard', query: filterState }).catch(() => {})
@@ -567,7 +561,7 @@ export default {
         { type: 'page', value: this.page },
         { type: 'sort', value: this.sortDesc ? this.sortColumn : `-${this.sortColumn}` },
         // this field is stubbed in, but the number is currently hard coded in the API as 25
-        { type: 'items_per_page', value: this.itemsPerPage },
+        { type: 'items_per_page', value: this.waitForRequestId ? 1000 : this.itemsPerPage },
         { type: 'request_id', value: this.waitForRequestId ? this.requestId : this.requestID }
       ]
 
@@ -583,7 +577,7 @@ export default {
         status: 'filter[display_status]', // Processing, Exception, Rejected, Intake, Processed, Sending to TMS, Sent to TMS, Accepted by TMS
         page: 'page',
         sort: 'sort',
-        items_per_page: 'items_per_page'
+        items_per_page: 'perPage'
       }
 
       return getRequestFilters(this.getFilters(), filterKeyMap)

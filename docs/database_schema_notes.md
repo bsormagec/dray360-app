@@ -35,6 +35,7 @@ Each status is very carefully defined, here is a complete list (as of 11/27/2020
 1. ocr-completed
 1. ocr-post-processing-complete
 1. ocr-post-processing-error
+1. ocr-timedout
 1. ocr-waiting
 1. process-ocr-output-file-complete
 1. process-ocr-output-file-error
@@ -52,6 +53,7 @@ Each status is very carefully defined, here is a complete list (as of 11/27/2020
 1. upload-requested
 
 
+
 #### status_metadata
 
 This JSON type column records different information for each `status` type. I will be updating this document to record all possible states here. It is currently documented in a Draw.io diagram and not very accessible.
@@ -66,7 +68,46 @@ All status_metadata object include the following properties:
 1. order_id (if available)
 
 
-#### `intake-started` status_metdata
+
+
+#### `ocr-waiting` status_metadata
+
+* created by `./processingqueuemonitor/processingqueuemonitor.py`
+* triggered by retry of `intake-accepted`
+
+1. wait_reason
+1. exception_message
+
+
+
+
+#### `ocr-completed` status_metadata
+
+* created by `./processingqueuemonitor/processingqueuemonitor.py`
+* triggered by retry of `intake-accepted`
+
+1. s3_bucket: where output files are stored
+1. s3_folder: folder in that bucket
+1. s3_region: where output files are stored
+1. file_list: array of files matching `<requestid>_<sha256>_*`
+
+
+
+
+#### `ocr-timedout` status_metadata
+
+* created by `./processingqueuemonitor/processingqueuemonitor.py`
+* triggered by retry of `intake-accepted` message after <N> times, see:
+  - dray360-deploy:/cloudformation/templates/microservices.yml SQSOCRProcessingMonitorQueue.maxReceiveCount
+
+1. message
+1. receive_count, should be set to visibilitytimeout + 1
+1. resurrection_count, should be set to max_resurrection_count
+
+
+
+
+#### `intake-started` status_metadata
 
 * created by `./intakefilter/intakefilter.py`
 * triggered by S3 bucket file creaation, from SES email receipt or manual upload
@@ -103,12 +144,30 @@ All status_metadata object include the following properties:
 
 
 
+
+#### `intake-accepted` status_metadata
+
+* created by `./intakefilter/intakefilter.py`
+* triggered by successful parsing of the intake message, the culmination of the intake-started process.
+
+1. document_type: pdf | image | datafile
+1. document_filename
+1. archive_location
+1. original_filename
+1. variant_name (if specified)
+1. resurrection_count, when original visibilitytimeout has expired (currrenty 1000), system will set this property (or increment it) and resubmit the event for another visibilitytimeout retries, up to MAX_RESURRECTION_COUNT (currently 5).
+
+
+
+
 ##### `failure-imageuploding-to-blackfl` status_metadata
 
 * created by `./wintupdater/imageuploader.py`
 
 1. message: 'exception sending image to profittools'
 1. exception: exception message
+
+
 
 
 ##### `success-imageuploding-to-blackfl` status_metadata
@@ -118,11 +177,15 @@ All status_metadata object include the following properties:
 1. imagetype: (blackfly image type, e.g. PRENOTE or DELIVERYORDER)
 1. jpg_file_list: all individual files aggregated into a multi-page TIFF and uploaded as a single image
 
+
+
 ##### `untried-imageuploding-to-blackfl` status_metadata
 
 * created by `./wintupdater/imageuploader.py`
 
 1. 'message': 'no image files, blackfly credentials or tms_shipment_id found'
+
+
 
 
 ##### `status_metadata.order_id_list` (ocr-post-processing-error and ocr-post-processing-complete)

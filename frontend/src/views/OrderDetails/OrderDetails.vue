@@ -9,6 +9,7 @@
           <OrderDetailsForm
             :back-button="backButton"
             :redirect-back="redirectBack"
+            @order-deleted="$emit('order-deleted')"
           />
 
           <div
@@ -50,7 +51,7 @@ export default {
 
   props: {
     orderId: {
-      type: String,
+      type: Number,
       required: false,
       default: null
     },

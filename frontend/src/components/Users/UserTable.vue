@@ -82,6 +82,9 @@
       <template v-slot:[`item.email`]="{ item }">
         <a href="">{{ item.email }}</a>
       </template>
+      <template v-slot:[`item.deactivated_at`]="{ item }">
+        <span>{{ item.deactivated_at === null ? 'Active' : 'Inactive' }}</span>
+      </template>
       <template v-slot:[`item.actions`]="{ item }">
         <v-icon
           v-if="hasPermission('users-edit')"
@@ -104,14 +107,6 @@
           @click="hasActionButton.action"
         >
           View
-        </v-btn>
-      </template>
-      <template v-slot:no-data>
-        <v-btn
-          color="primary"
-          @click="fetchUsers"
-        >
-          Reset
         </v-btn>
       </template>
       <template v-slot:footer>
@@ -210,8 +205,6 @@ export default {
   },
   created () {
     this.selectedHeaders = this.headers
-    const params = this.$route.query
-    this.page = params.page
     this.fetchUsers()
   },
 
@@ -255,7 +248,7 @@ export default {
       this.fetchUsers()
     },
     async fetchUsers () {
-      const [error, data] = await getUsers({ page: this.page || 1, 'filter[name]': this.search })
+      const [error, data] = await getUsers({ page: this.page, 'filter[name]': this.search })
       if (error === undefined) {
         this.userList = data.data
         this.links = data.links

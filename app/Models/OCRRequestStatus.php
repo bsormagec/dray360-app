@@ -21,13 +21,16 @@ class OCRRequestStatus extends Model
     INTAKE_EXCEPTION = 'intake-exception',
     INTAKE_REJECTED = 'intake-rejected',
     INTAKE_STARTED = 'intake-started',
+    UPLOAD_REQUESTED = 'upload-requested',
+
     OCR_COMPLETED = 'ocr-completed',
     OCR_POST_PROCESSING_COMPLETE = 'ocr-post-processing-complete',
     OCR_POST_PROCESSING_ERROR = 'ocr-post-processing-error',
+    OCR_TIMEDOUT = 'ocr-timedout',
     OCR_WAITING = 'ocr-waiting',
+
     PROCESS_OCR_OUTPUT_FILE_COMPLETE = 'process-ocr-output-file-complete',
     PROCESS_OCR_OUTPUT_FILE_ERROR = 'process-ocr-output-file-error',
-    UPLOAD_REQUESTED = 'upload-requested',
 
     SENDING_TO_WINT = 'sending-to-wint',
     FAILURE_SENDING_TO_WINT = 'failure-sending-to-wint',
@@ -61,6 +64,7 @@ class OCRRequestStatus extends Model
 
         self::INTAKE_REJECTED                    => 'Rejected',
         self::OCR_POST_PROCESSING_ERROR          => 'Rejected',
+        self::OCR_TIMEDOUT                       => 'Rejected',
         self::PROCESS_OCR_OUTPUT_FILE_ERROR      => 'Rejected',
 
         self::OCR_POST_PROCESSING_COMPLETE       => 'Processed',

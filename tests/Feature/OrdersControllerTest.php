@@ -6,7 +6,6 @@ use Tests\TestCase;
 use App\Models\User;
 use App\Models\Order;
 use App\Models\Company;
-use App\Models\OCRRequest;
 use Laravel\Sanctum\Sanctum;
 use App\Models\OrderLineItem;
 use Illuminate\Http\Response;
@@ -38,27 +37,34 @@ class OrdersControllerTest extends TestCase
     /** @test */
     public function it_should_list_all_the_ocr_request_with_the_orders_and_return_ocr_requests_one_per_order()
     {
+        (new OrdersTableSeeder())->seedOrderWithIntakeRejected();
+        (new OrdersTableSeeder())->seedOrderWithPostProcessingComplete();
+
         $this->withoutExceptionHandling();
         $this->getJson(route('orders.index'))
-            ->assertJsonStructure([
-                'data' => [
-                    '*' => [
-                        'id',
-                        'display_id',
-                        'request_id',
-                        't_job_state_changes_id',
-                        't_order_id',
-                        'created_at',
-                        'updated_at',
-                        'order' => [],
-                        'latest_ocr_request_status' => [
-                            'display_status',
+                ->assertJsonStructure([
+                    'data' => [
+                        '*' => [
+                            'id',
+                            'request_id',
+                            'created_at',
+                            'equipment_type',
+                            'shipment_designation',
+                            'shipment_direction',
+                            'tms_shipment_id',
+                            'bill_to_address_id',
+                            'unit_number',
+                            'reference_number',
+                            'bill_to_address',
+                            'latest_ocr_request_status' => [
+                                'display_status',
+                                'display_message',
+                            ],
                         ],
                     ],
-                ],
-                'links',
-                'meta',
-            ]);
+                    'links',
+                    'meta',
+                ]);
     }
 
     /** @test */
@@ -67,62 +73,58 @@ class OrdersControllerTest extends TestCase
         $this->withoutExceptionHandling();
         $this->seed(OrdersTableSeeder::class);
         $this->seed(OrdersTableSeeder::class);
-        factory(OCRRequestStatus::class, 2)->create(['status' => OCRRequestStatus::OCR_WAITING]);
+        (new OrdersTableSeeder())->seedOrderWithOcrWaiting();
+        (new OrdersTableSeeder())->seedOrderWithOcrWaiting();
         $order = Order::latest()->first();
-        $ocrRequest = OCRRequest::latest()->first();
-        $ocrRequest->created_at = now()->subDays(5);
-        $ocrRequest->save();
+        $order->created_at = now()->subDays(5);
+        $order->save();
 
-        $this->getJson(route('orders.index', ['filter[status]' => OCRRequestStatus::OCR_WAITING]))
-            ->assertJsonCount(2, 'data');
         $this->getJson(route('orders.index', [
-                'filter[display_status]' => OCRRequestStatus::STATUS_MAP[OCRRequestStatus::OCR_WAITING]
-            ]))
-            ->assertJsonCount(2, 'data');
-        $this->getJson(route('orders.index', ['filter[request_id]' => $order->request_id]))
-            ->assertJsonCount(1, 'data');
+                    'filter[status]' => OCRRequestStatus::OCR_WAITING
+                ]))
+                ->assertJsonCount(2, 'data');
         $this->getJson(route('orders.index', [
-                'filter[order.bill_to_address_raw_text]' => substr($order->bill_to_address_raw_text, 0, 15)
-            ]))
-            ->assertJsonCount(1, 'data');
+                    'filter[display_status]' => OCRRequestStatus::STATUS_MAP[OCRRequestStatus::OCR_WAITING]
+                ]))
+                ->assertJsonCount(2, 'data');
         $this->getJson(route('orders.index', [
-                'filter[order.equipment_type]' => substr($order->equipment_type, 0, 5)
-            ]))
-            ->assertJsonCount(Order::where('equipment_type', $order->equipment_type)->count(), 'data');
+                    'filter[request_id]' => $order->request_id
+                ]))
+                ->assertJsonCount(1, 'data');
         $this->getJson(route('orders.index', [
-                'filter[order.shipment_designation]' => substr($order->shipment_designation, 0, 5)
-            ]))
-            ->assertJsonCount(Order::where('shipment_designation', $order->shipment_designation)->count(), 'data');
+                    'filter[query]' => substr($order->request_id, 0, 10)
+                ]))
+                ->assertJsonCount(1, 'data');
         $this->getJson(route('orders.index', [
-                'filter[order.shipment_direction]' => substr($order->shipment_direction, 0, 5)
-            ]))
-            ->assertJsonCount(Order::where('shipment_direction', $order->shipment_direction)->count(), 'data');
+                    'filter[query]' => $order->reference_number
+                ]))
+                ->assertJsonCount(1, 'data');
+
         $dateRange = now()->subDays(6)->toDateString() . ','. now()->subDays(3)->toDateString();
-        $this->getJson(route('orders.index', ['filter[created_between]' => $dateRange]))
-            ->assertJsonCount(1, 'data');
+        $this->getJson(route('orders.index', [
+                    'filter[created_between]' => $dateRange
+                ]))
+                ->assertJsonCount(1, 'data');
+
         $this->getJson(route('orders.index', ['sort' => '-status']))
-            ->assertJsonCount(5, 'data');
+                ->assertJsonCount(5, 'data');
     }
 
     /** @test */
-    public function it_filters_by_the_raw_addresses_from_a_single_query_filter()
+    public function it_should_allow_passing_the_perpage_count()
     {
         $this->withoutExceptionHandling();
-        $this->seed(OrdersTableSeeder::class);
-        $this->seed(OrdersTableSeeder::class);
-        factory(OCRRequestStatus::class, 2)->create(['status' => OCRRequestStatus::OCR_WAITING]);
+        for ($i = 0; $i < 30; $i++) {
+            $this->seed(OrdersTableSeeder::class);
+        }
         $order = Order::latest()->first();
+        $order->created_at = now()->subDays(5);
+        $order->save();
 
-        $this->getJson(route('orders.index', ['filter[query]' => $order->request_id]))
-            ->assertJsonCount(1, 'data');
         $this->getJson(route('orders.index', [
-                'filter[query]' => substr($order->bill_to_address_raw_text, 0, 15)
-            ]))
-            ->assertJsonCount(1, 'data');
-        $this->getJson(route('orders.index', [
-                'filter[query]' => substr($order->equipment_type, 0, 5)
-            ]))
-            ->assertJsonCount(Order::where('equipment_type', $order->equipment_type)->count(), 'data');
+                    'perPage' => 1000
+                ]))
+                ->assertJsonCount(31, 'data');
     }
 
     /** @test */

@@ -35,7 +35,7 @@
           label="User Role"
           item-text="display_name"
           item-value="id"
-          :items="roles()"
+          :items="roles"
           solo
           dense
           persistent-hint
@@ -100,45 +100,49 @@ import { mapState, mapActions } from 'vuex'
 import { reqStatus } from '@/enums/req_status'
 import hasPermission from '@/mixins/permissions'
 import utils, { type } from '@/store/modules/utils'
+import { getUser } from '@/store/api_calls/users'
 
 export default {
 
   mixins: [hasPermission],
 
   data: () => ({
-    ...mapState(userDashboard.moduleName, {
-      users: state => state.users,
-      roles: state => state.roles
-    }),
-
     name: '',
     email: '',
     company: '',
-    role_selected: 1,
+    role_selected: 2,
     activated: true
 
   }),
 
   computed: {
-    editedUser () {
-      const routeParam = this.$route.params.id
-      const editedUser = this.users().filter(user =>
-        // eslint-disable-next-line eqeqeq
-        (user.id == routeParam)
-      )
-      return editedUser[0]
-    }
+    ...mapState(userDashboard.moduleName, {
+      roles: state => state.roles
+    })
   },
 
   mounted () {
-    this.getUserInfo()
+    this.getUserByID(this.$route.params.id)
     this.fetchRoles()
     this.showSideBar()
   },
 
   methods: {
-    ...mapActions(userDashboard.moduleName, [types.getUsers, types.editUser, types.getRoles, types.changeUserStatus, types.deleteUser]),
+    ...mapActions(userDashboard.moduleName, [types.editUser, types.getRoles, types.changeUserStatus, types.deleteUser]),
     ...mapActions(utils.moduleName, [type.setSnackbar, type.setSidebar]),
+
+    async getUserByID (userId) {
+      const [error, data] = await getUser(userId)
+
+      if (error !== undefined) {
+        console.log(error)
+      } else {
+        this.editedUser = data
+        this.name = this.editedUser.name
+        this.email = this.editedUser.email
+        this.role_selected = this.editedUser.roles[0].id
+      }
+    },
 
     async showSideBar () {
       await this[type.setSidebar]({
@@ -156,12 +160,6 @@ export default {
       }
     },
 
-    async getUserInfo () {
-      this.name = this.editedUser.name
-      this.email = this.editedUser.email
-      this.role_selected = this.editedUser.roles[0].id
-    },
-
     async editUser () {
       const userId = this.$route.params.id
 
@@ -172,23 +170,18 @@ export default {
         user_id: userId
       }
 
+      let message = ''
+
       const status = await this[types.editUser](userData)
 
       if (status === reqStatus.success) {
-        await this[type.setSnackbar]({
-          show: true,
-          showSpinner: false,
-          message: 'User updated'
-        })
+        message = 'User updated'
+        this.$router.push('/user/dashboard')
       } else {
-        await this[type.setSnackbar]({
-          show: true,
-          showSpinner: false,
-          message: 'An error has ocurred'
-        })
+        message = 'An error has ocurred'
       }
 
-      this.$router.push('/user/dashboard')
+      await this[type.setSnackbar]({ show: true, message })
     },
 
     async fetchRoles () {

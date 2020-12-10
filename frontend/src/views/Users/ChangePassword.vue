@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="pa-4">
     <template>
       <v-toolbar
         flat

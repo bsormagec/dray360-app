@@ -80,7 +80,7 @@ class UsersController extends Controller
     {
         $this->authorize('view', $user);
 
-        $user->load('company:id,name');
+        $user->load('company:id,name', 'roles:id,name');
 
         return response()->json($user);
     }

@@ -33,6 +33,7 @@ class OrdersJson extends JsonResource
                 case OCRRequestStatus::FAILURE_UPDATING_TO_WINT:
                     $message = $metaData['exception_message'] ?? null;
                     break;
+                case OCRRequestStatus::OCR_TIMEDOUT:
                 case OCRRequestStatus::SHIPMENT_NOT_CREATED_BY_WINT:
                 case OCRRequestStatus::SHIPMENT_NOT_UPDATED_BY_WINT:
                     $message = $metaData['message'] ?? null;
