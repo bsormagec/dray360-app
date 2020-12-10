@@ -1,6 +1,5 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
-// import Orders from '@/views/Orders/Orders'
 import OrderDetails from '@/views/OrderDetails/OrderDetails'
 import Login from '@/views/Login'
 import RequestsOrdersCombined from '@/views/RequestsOrdersCombined/RequestsOrdersCombined'
