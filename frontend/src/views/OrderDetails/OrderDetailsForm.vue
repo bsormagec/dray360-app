@@ -356,7 +356,7 @@
         </div>
         <div class="section__rootfields">
           <FormFieldAddressSwitchVerify
-            :recognized-text="order.bill_to_address_raw_text"
+            :recognized-text="order.bill_to_address_raw_text || 'Addres not recognized'"
             :verified="order.bill_to_address_verified"
             :matched-address="order.bill_to_address"
             references="bill_to_address"
@@ -634,7 +634,9 @@ export default {
       return `${date} ${time}`
     }
   },
-
+  mounted () {
+    if (this.editMode) this.toggleEdit()
+  },
   methods: {
     ...mapActions(utils.moduleName, [type.setSnackbar, type.setConfirmationDialog]),
     ...mapActions(orderForm.moduleName, {
@@ -698,22 +700,20 @@ export default {
           this.loading = true
 
           const [error] = await delDeleteOrder(this.order.id)
+          let message = ''
 
           if (!error) {
-            await this[type.setSnackbar]({
-              show: true,
-              showSpinner: false,
-              message: 'Order deleted'
-            })
+            message = 'Order deleted'
             this.loading = false
-            location.reload()
+            if (!this.backButton) {
+              this.$emit('order-deleted')
+            } else {
+              this.goToOrdersList()
+            }
           } else {
-            await this[type.setSnackbar]({
-              show: true,
-              showSpinner: false,
-              message: 'Error trying to delete the order'
-            })
+            message = 'Error trying to delete the order'
           }
+          await this[type.setSnackbar]({ show: true, message })
         },
         onCancel: () => { this.loading = false }
       })

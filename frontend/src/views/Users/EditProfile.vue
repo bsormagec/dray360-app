@@ -109,6 +109,7 @@
 <script>
 
 import { mapActions, mapState } from 'vuex'
+import { reqStatus } from '@/enums/req_status'
 import utils, { type } from '@/store/modules/utils'
 import users, { types } from '@/store/modules/users'
 import auth from '@/store/modules/auth'
@@ -131,17 +132,19 @@ export default {
     }
   },
   mounted () {
-    this.retrieveUser()
+    this.getUserData()
   },
   methods: {
     ...mapActions(users.moduleName, [types.editUser]),
     ...mapActions(utils.moduleName, [type.setSnackbar, type.setSidebar]),
-
-    retrieveUser () {
-      this.name = this.currentUser.name
-      this.email = this.currentUser.email
-      this.position = this.currentUser.position
-      this.org = this.currentUser.org
+    ...mapActions(auth.moduleName, ['getCurrentUser']),
+    getUserData () {
+      if (this.currentUser) {
+        this.name = this.currentUser.name
+        this.email = this.currentUser.email
+        this.position = this.currentUser.position
+        this.org = this.currentUser.org
+      }
     },
     async showSidebar () {
       await this[type.setSidebar]({
@@ -158,19 +161,15 @@ export default {
         user_id: this.currentUser.id
       }
       const status = await this[types.editUser](userData)
-      if ('errors' in status) {
-        await this[type.setSnackbar]({
-          show: true,
-          showSpinner: false,
-          message: status.message
-        })
+      let message = ''
+
+      if (status === reqStatus.success) {
+        message = 'Profile updated'
+        await this.getCurrentUser(true)
       } else {
-        await this[type.setSnackbar]({
-          show: true,
-          showSpinner: false,
-          message: 'Profile updated'
-        })
+        message = 'An error has occurred, please contact to technical support'
       }
+      this[type.setSnackbar]({ show: true, message })
     }
 
   }
@@ -185,12 +184,6 @@ export default {
   }
   .profile-field::v-deep label, input[type="text"] {
     font-size: rem(12);
-    // label {
-    //   font-size: rem(12);
-    // }
-    // input {
-    //   font-size: rem(12);
-    // }
   }
   .button::v-deep span {
     font-size: rem(12);

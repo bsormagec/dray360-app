@@ -4,24 +4,25 @@ namespace App\Http\Controllers\Api;
 
 use App\Models\Order;
 use Illuminate\Http\Request;
+use App\Queries\OrdersListQuery;
+use App\Http\Resources\OrdersJson;
 use App\Http\Controllers\Controller;
 use App\Http\Resources\SideBySideOrder;
 use Illuminate\Support\Facades\Storage;
-use App\Queries\OcrRequestOrderListQuery;
-use App\Http\Resources\Orders as OrdersResource;
 
 class OrdersController extends Controller
 {
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
         $this->authorize('viewAny', Order::class);
+        $perPage = $request->get('perPage', 25);
 
-        $ocrRequestsOrders = (new OcrRequestOrderListQuery())->paginate(25);
+        $orders = (new OrdersListQuery())->paginate($perPage);
 
-        return OrdersResource::collection($ocrRequestsOrders);
+        return OrdersJson::collection($orders);
     }
 
     /**
