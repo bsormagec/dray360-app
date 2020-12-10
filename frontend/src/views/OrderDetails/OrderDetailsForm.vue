@@ -700,22 +700,20 @@ export default {
           this.loading = true
 
           const [error] = await delDeleteOrder(this.order.id)
+          let message = ''
 
           if (!error) {
-            await this[type.setSnackbar]({
-              show: true,
-              showSpinner: false,
-              message: 'Order deleted'
-            })
+            message = 'Order deleted'
             this.loading = false
-            location.reload()
+            if (!this.backButton) {
+              this.$emit('order-deleted')
+            } else {
+              this.goToOrdersList()
+            }
           } else {
-            await this[type.setSnackbar]({
-              show: true,
-              showSpinner: false,
-              message: 'Error trying to delete the order'
-            })
+            message = 'Error trying to delete the order'
           }
+          await this[type.setSnackbar]({ show: true, message })
         },
         onCancel: () => { this.loading = false }
       })

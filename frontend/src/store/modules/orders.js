@@ -75,6 +75,10 @@ const actions = {
 
     if (error) return reqStatus.error
     return reqStatus.success
+  },
+
+  [types.setReloadRequests] ({ commit }, reload) {
+    commit(types.setReloadRequests, reload)
   }
 }
 

@@ -9,6 +9,7 @@
           <OrderDetailsForm
             :back-button="backButton"
             :redirect-back="redirectBack"
+            @order-deleted="$emit('order-deleted')"
           />
 
           <div
