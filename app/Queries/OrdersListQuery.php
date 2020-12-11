@@ -22,6 +22,8 @@ class OrdersListQuery extends QueryBuilder
                 't_orders.shipment_designation',
                 't_orders.shipment_direction',
                 't_orders.tms_shipment_id',
+                't_orders.t_company_id',
+                't_orders.tms_template_id',
                 't_orders.bill_to_address_id',
                 't_orders.unit_number',
                 't_orders.reference_number',

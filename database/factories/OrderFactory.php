@@ -74,5 +74,6 @@ $factory->define(Order::class, function (Faker $faker) {
         'cancelled_datetime' => null,
         'interchange_count' => null,
         'interchange_err_count' => null,
+        'tms_template_id' => 123,
     ];
 });

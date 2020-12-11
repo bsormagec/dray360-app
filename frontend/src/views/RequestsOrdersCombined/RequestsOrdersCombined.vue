@@ -61,6 +61,7 @@
                 { text: 'Last Update', sortable: false, value: 'updated_at', align: 'center' },
                 { text: 'Container', sortable: false, value: 'unit_number' },
                 { text: 'Bill To', value: 'bill_to_address.location_name' },
+                { text: 'Template', value: 'tms_template_name' },
                 { text: 'Direction', value: 'shipment_direction', align: 'center' },
                 { text: 'Actions', value: 'actions', sortable: false, align: 'center' }
               ]"
@@ -118,16 +119,7 @@
               :request-id="request.request_id"
               :url-filters="false"
               wait-for-request-id
-              :headers="[
-                { text: 'Date', sortable: false, value: 'created_at' },
-                { text: 'Order ID', sortable: false, value: 'id' },
-                { text: 'Update Status', value: 'latest_ocr_request_status.display_status', align: 'center' },
-                { text: 'TMS ID', sortable: false, value: 'tms_shipment_id', align: 'center' },
-                { text: 'Container', sortable: false, value: 'unit_number' },
-                { text: 'Bill To', value: 'bill_to_address.location_name' },
-                { text: 'Direction', value: 'shipment_direction', align: 'center' },
-                { text: 'Actions', value: 'actions', sortable: false, align: 'center' }
-              ]"
+              :headers="requestOrdersTableHeaders"
             />
           </div>
           <OrderDetails
@@ -170,7 +162,8 @@ export default {
       request: {
         first_order_id: null,
         request_id: null,
-        orders_count: 0
+        orders_count: 0,
+        tms_template_name: null
       },
       filters: {
         search: '',
@@ -178,6 +171,23 @@ export default {
         status: [],
         updateType: ''
       }
+    }
+  },
+  computed: {
+    requestOrdersTableHeaders () {
+      return [
+        { text: 'Date', sortable: false, value: 'created_at' },
+        { text: 'Order ID', sortable: false, value: 'id' },
+        { text: 'Update Status', value: 'latest_ocr_request_status.display_status', align: 'center' },
+        { text: 'TMS ID', sortable: false, value: 'tms_shipment_id', align: 'center' },
+        { text: 'Container', sortable: false, value: 'unit_number' },
+        {
+          text: this.request.tms_template_name === null ? 'Bill To' : 'Template',
+          value: this.request.tms_template_name === null ? 'bill_to_address.location_name' : 'tms_template_name'
+        },
+        { text: 'Direction', value: 'shipment_direction', align: 'center' },
+        { text: 'Actions', value: 'actions', sortable: false, align: 'center' }
+      ]
     }
   },
   created () {

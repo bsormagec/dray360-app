@@ -41,7 +41,7 @@
       >
         <div
           v-if="detailsTitle !== null"
-          class="secondary--text .details__title"
+          class="secondary--text details__title"
         >
           {{ detailsTitle }}
         </div>
@@ -102,7 +102,9 @@ export default {
       return this.request.orders_count === 0
     },
     detailsTitle () {
-      if (this.request.first_order_bill_to_address_location_name !== null) {
+      if (this.request.tms_template_name !== null) {
+        return 'Template:'
+      } else if (this.request.first_order_bill_to_address_location_name !== null) {
         return null
       } else if (this.request.upload_user_name !== null) {
         return 'Uploaded by:'
@@ -113,7 +115,9 @@ export default {
       return null
     },
     detailsText () {
-      if (this.request.first_order_bill_to_address_location_name !== null) {
+      if (this.request.tms_template_name !== null) {
+        return this.request.tms_template_name
+      } else if (this.request.first_order_bill_to_address_location_name !== null) {
         return this.request.first_order_bill_to_address_location_name
       } else if (this.request.upload_user_name !== null) {
         return this.request.upload_user_name
@@ -157,6 +161,7 @@ export default {
   }
   .details__title {
     width: fit-content;
+    margin-right: rem(4);
   }
   .details__text {
     text-overflow: ellipsis;
