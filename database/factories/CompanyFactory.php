@@ -18,5 +18,8 @@ $factory->define(Company::class, function (Faker $faker) {
         'automatic_address_verification_threshold' => $faker->randomDigit,
         't_domain_id' => factory(Domain::class),
         'sync_addresses' => true,
+        'configuration' => ['profit_tools_enable_templates' => true, 'profit_tools_template_list' => [
+            ['tms_template_name' => 'some_name', 'tms_template_id' => '123'],
+        ]],
     ];
 });

@@ -56,6 +56,8 @@ class OrdersControllerTest extends TestCase
                             'unit_number',
                             'reference_number',
                             'bill_to_address',
+                            'tms_template_id',
+                            'tms_template_name',
                             'latest_ocr_request_status' => [
                                 'display_status',
                                 'display_message',
