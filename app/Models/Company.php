@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use Illuminate\Support\Facades\DB;
 use Illuminate\Database\Eloquent\Model;
 use App\Models\Traits\EncryptsAttributes;
 use Illuminate\Database\Eloquent\SoftDeletes;
@@ -121,6 +122,17 @@ class Company extends Model
     public function defaultTmsProvider()
     {
         return $this->belongsTo(TMSProvider::class, 'default_tms_provider_id');
+    }
+
+    public static function withTemplates()
+    {
+        return static::query()
+            ->select([
+                'id',
+                DB::raw("json_extract(configuration, '$.profit_tools_template_list') as profit_tools_template_list")
+            ])
+            ->where('configuration->profit_tools_enable_templates', true)
+            ->get();
     }
 
     public function variantsAccessorials(): BelongsToMany
