@@ -3,6 +3,7 @@
 namespace Tests\Feature;
 
 use Tests\TestCase;
+use App\Models\Order;
 use App\Models\OCRRequest;
 use Illuminate\Http\Response;
 use App\Models\OCRRequestStatus;
@@ -24,7 +25,13 @@ class OcrRequestControllerTest extends TestCase
     /** @test */
     public function it_should_return_the_right_information_about_the_request()
     {
-        (new OcrRequestSeeder())->seedOcrJob_ocrPostProcessingComplete();
+        $requestId = (new OcrRequestSeeder())->seedOcrJob_ocrPostProcessingComplete();
+        $request = OCRRequest::where('request_id', $requestId)->first();
+
+        factory(Order::class)->create([
+            't_company_id' => $request->latestOcrRequestStatus->company_id,
+            'request_id' => $request->request_id,
+        ]);
 
         $this->getJson(route('ocr.requests.index'))
             ->assertStatus(200)
@@ -45,6 +52,7 @@ class OcrRequestControllerTest extends TestCase
                         // 'first_order_bill_to_address_id',
                         'first_order_bill_to_address_location_name',
                         'first_order_id',
+                        'tms_template_name',
                     ]
                 ]
             ]);

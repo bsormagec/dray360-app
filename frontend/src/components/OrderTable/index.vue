@@ -300,6 +300,9 @@ export default {
     }
   },
   watch: {
+    headers () {
+      this.selectedHeaders = Object.values(this.headers)
+    },
     options: {
       handler () {
         if (this.waitForRequestId && this.requestId === null) {

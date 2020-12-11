@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Api;
 
 use Carbon\Carbon;
+use App\Models\Company;
 use App\Models\OCRRequest;
 use Illuminate\Support\Str;
 use Illuminate\Http\Request;
@@ -29,8 +30,9 @@ class OCRRequestController extends Controller
         $this->authorize('viewAny', OCRRequest::class);
 
         $ocrRequests = (new OcrRequestsListQuery($request->get('selected')))->paginate(25);
+        $companiesWithTemplates = Company::withTemplates();
 
-        return OcrRequestJson::collection($ocrRequests);
+        return new OcrRequestJson($ocrRequests, $companiesWithTemplates);
     }
 
     public function store(Request $request)

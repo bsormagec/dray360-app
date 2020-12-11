@@ -20,6 +20,7 @@ class OcrRequestsListQuery extends QueryBuilder
                 ->select([
                     't_job_latest_state.*',
                     'c.name as company_name',
+                    'c.id as company_id',
                     DB::raw('(select min(o2.id) from t_orders as o2 where o2.request_id = s.request_id and o2.deleted_at is null) as first_order_id')
                 ])
                 ->addSelect(['email_from_address' => DB::table('t_job_state_changes', 's_is')
@@ -41,6 +42,13 @@ class OcrRequestsListQuery extends QueryBuilder
                         $join->on('o.bill_to_address_id', '=', 'a.id');
                     })
                     ->whereColumn('o.request_id', 't_job_latest_state.request_id')
+                    ->orderBy('o.id')
+                    ->limit(1)
+                ])
+                ->addSelect(['tms_template_id' => DB::table('t_orders', 'o')
+                    ->select('o.tms_template_id')
+                    ->whereColumn('o.request_id', 't_job_latest_state.request_id')
+                    ->whereNotNull('tms_template_id')
                     ->orderBy('o.id')
                     ->limit(1)
                 ])

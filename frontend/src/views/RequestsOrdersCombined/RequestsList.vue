@@ -112,9 +112,8 @@ export default {
       // polling stuff
       pollingInterval: 10000,
       pollingTimer: null,
-      payload: '',
       changesDetected: false,
-      initialTotalMeta: 0
+      initialTotalItems: 0
     }
   },
   computed: {
@@ -162,6 +161,9 @@ export default {
 
     this.initialTotalMeta = this.meta.total
     this.startPolling()
+  },
+  beforeDestroy () {
+    this.stopPolling()
   },
 
   methods: {
@@ -264,15 +266,26 @@ export default {
     },
 
     async startPolling () {
-      const initPayload = await getRequests([])
-      this.payload = JSON.stringify(initPayload)
+      this.initialTotalItems = await this.getTotalRequests()
       this.pollingTimer = window.setInterval(this.checkForChanges.bind(this), this.pollingInterval)
     },
 
     async checkForChanges () {
-      if (this.initialTotalMeta < this.meta.total) {
+      const totalItems = await this.getTotalRequests()
+      if (this.initialTotalItems !== totalItems) {
         this.changesDetected = true
+        this.initialTotalItems = totalItems
       }
+    },
+
+    async getTotalRequests () {
+      const [error, { meta }] = await getRequests([])
+
+      if (error !== undefined) {
+        return this.initialTotalItems
+      }
+
+      return meta.total
     },
 
     stopPolling () {
