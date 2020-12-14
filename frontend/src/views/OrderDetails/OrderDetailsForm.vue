@@ -901,7 +901,7 @@ export default {
     font-weight: 400;
     line-height: (20 / 14);
     letter-spacing: rem(.25);
-    text-transform: capitalize;
+    // text-transform: capitalize;
   }
 
   .equipment__section {

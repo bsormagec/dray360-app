@@ -124,6 +124,33 @@
           :recognized-text="orderAddressEvent.t_address_raw_text || 'No recognized address'"
           @change="handleAddressChange"
         />
+        <div class="form-field">
+          <div
+            class="form-field__group"
+          >
+            <div class="form-field__label">
+              Notes
+            </div>
+            <v-textarea
+              v-if="editMode"
+              outlined
+              auto-grow
+              placeholder="Notes"
+              :value="orderAddressEvent.note"
+              hide-details="true"
+              flat
+              dense
+              solo
+              @input="handleNoteChange"
+            />
+            <div
+              v-else
+              class="field__value"
+            >
+              {{ orderAddressEvent.note !== '' && orderAddressEvent.note !== null ? orderAddressEvent.note : '--' }}
+            </div>
+          </div>
+        </div>
       </div>
     </div>
   </FormFieldPresentation>
@@ -250,6 +277,12 @@ export default {
         ...eventBooleanMap
       })
     },
+    handleNoteChange (value) {
+      this.$emit('change', {
+        ...(this.orderAddressEvent),
+        note: value
+      })
+    },
     verifyMatch () {
       this.$emit('change', { ...(this.orderAddressEvent), t_address_verified: true })
     },
@@ -334,6 +367,21 @@ export default {
     display: flex;
     justify-content: flex-end;
     margin-bottom: rem(20);
+  }
+}
+
+.v-textarea::v-deep {
+  .v-input__slot {
+    height: auto;
+    .v-text-field__slot {
+      margin-right: 0;
+    }
+  }
+}
+.form-field::v-deep {
+  .form-field__group,
+  .form-field__group + .action-btns {
+    align-items: flex-start;
   }
 }
 

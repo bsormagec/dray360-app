@@ -6,6 +6,7 @@ use Laravel\Nova\Fields\ID;
 use Illuminate\Http\Request;
 use Laravel\Nova\Fields\Text;
 use Laravel\Nova\Fields\Boolean;
+use Laravel\Nova\Fields\Textarea;
 use Laravel\Nova\Fields\BelongsTo;
 
 class OrderAddressEvent extends Resource
@@ -78,6 +79,7 @@ class OrderAddressEvent extends Resource
             Text::make('Unparsed event type', 'unparsed_event_type'),
             Boolean::make('Address verified', 't_address_verified'),
             Text::make('Address raw text', 't_address_raw_text'),
+            Textarea::make('Notes', 'note'),
         ];
     }
 
