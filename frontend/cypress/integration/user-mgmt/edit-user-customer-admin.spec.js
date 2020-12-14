@@ -15,6 +15,8 @@ describe('Edit user', function () {
 
     cy.route({ url: '**/api/current-tenant', response: this.tenant })
 
+    cy.route({ method: 'GET', url: '**/api/users/**', response: this.users })
+
     cy.route({ url: '**/api/roles', response: this.roles })
 
     cy.route({ url: '**/api/companies/2', response: this.company })

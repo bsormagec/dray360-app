@@ -21,9 +21,8 @@ describe('Edit profile', function () {
 
     cy.visit('localhost:8080/user/edit-profile')
 
-    cy.get('[data-cy=change-password-button]').click()
+    cy.get('[data-cy=change-password-button]').click({ force: true })
 
-    // Old part
     cy.route({ url: '**/api/user', response: this.user })
 
     cy.route({ url: '**/api/current-tenant', response: this.tenant })
