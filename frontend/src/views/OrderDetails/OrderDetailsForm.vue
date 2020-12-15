@@ -634,11 +634,16 @@ export default {
       return `${date} ${time}`
     }
   },
+  beforeMount () {
+    if (!this.isMobile) {
+      return this[type.setSidebar]({ show: true })
+    }
+  },
   mounted () {
     if (this.editMode) this.toggleEdit()
   },
   methods: {
-    ...mapActions(utils.moduleName, [type.setSnackbar, type.setConfirmationDialog]),
+    ...mapActions(utils.moduleName, [type.setSnackbar, type.setConfirmationDialog, type.setSidebar]),
     ...mapActions(orderForm.moduleName, {
       updateOrder: orderFormTypes.updateOrder,
       startHover: orderFormTypes.startHover,

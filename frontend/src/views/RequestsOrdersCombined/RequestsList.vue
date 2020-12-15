@@ -72,7 +72,6 @@ import Filters from '@/components/OrderTable/components/filters'
 import RequestItem from './RequestItem'
 
 import { mapActions, mapState } from 'vuex'
-import utils, { type } from '@/store/modules/utils'
 import orders, { types as ordersTypes } from '@/store/modules/orders'
 import { getRequests } from '@/store/api_calls/requests'
 import { getRequestFilters } from '@/utils/filters_handling'
@@ -148,9 +147,6 @@ export default {
     this.initFilters.updateType = params.updateType
     this.requestSelected = params.selected || null
   },
-  beforeMount () {
-    this[type.setSidebar]({ show: true })
-  },
   async mounted () {
     this.addScrollEventToFetchMoreRequests()
     this.startLoading()
@@ -167,7 +163,6 @@ export default {
   },
 
   methods: {
-    ...mapActions(utils.moduleName, [type.setSidebar]),
     ...mapActions(orders.moduleName, {
       setReloadRequests: ordersTypes.setReloadRequests
     }),

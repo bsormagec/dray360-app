@@ -36,7 +36,6 @@ import ContentLoading from '@/components/ContentLoading'
 import orders, { types } from '@/store/modules/orders'
 import orderForm, { types as orderFormTypes } from '@/store/modules/order-form'
 import { mapState, mapActions } from 'vuex'
-import utils, { type } from '@/store/modules/utils'
 
 export default {
   name: 'OrderDetails',
@@ -59,11 +58,16 @@ export default {
       type: Boolean,
       required: false,
       default: true
+    },
+    minSize: {
+      type: Number,
+      required: false,
+      default: 50
     }
   },
 
   data: (vm) => ({
-    resizeDiff: 50,
+    resizeDiff: vm.minSize,
     startPos: 0,
     loaded: false,
     redirectBack: false,
@@ -90,12 +94,15 @@ export default {
       this.loaded = false
       this.orderIdToLoad = this.orderId
       await this.requestOrderDetail()
+    },
+    minSize: function (newVal, oldVal) {
+      this.resizeDiff = newVal
     }
+
   },
 
   async beforeMount () {
     await this.requestOrderDetail()
-    this.showSidebar()
   },
 
   methods: {
@@ -103,13 +110,7 @@ export default {
     ...mapActions(orderForm.moduleName, {
       setFormOrder: orderFormTypes.setFormOrder
     }),
-    ...mapActions(utils.moduleName, [type.setSidebar]),
 
-    async showSidebar () {
-      await this[type.setSidebar]({
-        show: true
-      })
-    },
     async requestOrderDetail () {
       const status = await this[types.getOrderDetail](this.orderIdToLoad)
 
@@ -131,7 +132,7 @@ export default {
       e.preventDefault()
       const newDiff = this.resizeDiff * e.clientX / this.startPos
 
-      if (newDiff >= 70 || newDiff <= 35) {
+      if (newDiff >= 70 || newDiff <= this.minSize) {
         return
       }
 
