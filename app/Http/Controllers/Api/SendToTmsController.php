@@ -3,9 +3,9 @@
 namespace App\Http\Controllers\Api;
 
 use App\Models\Order;
+use App\Models\TMSProvider;
 use Illuminate\Http\Response;
 use App\Models\OCRRequestStatus;
-use App\Models\TMSProvider;
 use App\Http\Controllers\Controller;
 use App\Actions\PublishSnsMessageToSendToTms;
 use Illuminate\Validation\ValidationException;
@@ -58,12 +58,7 @@ class SendToTmsController extends Controller
 
     protected function getTmsProvider($tmsProviderId): TMSProvider
     {
-        return TMSProvider::query()
-            ->select([
-                'id',
-                'name'
-            ])
-            ->find($tmsProviderId);
+        return TMSProvider::firstWhere('id', $tmsProviderId);
     }
 
     protected function getOrder($orderId): Order
