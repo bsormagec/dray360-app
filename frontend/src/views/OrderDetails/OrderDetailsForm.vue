@@ -901,7 +901,10 @@ export default {
     font-weight: 400;
     line-height: (20 / 14);
     letter-spacing: rem(.25);
-    // text-transform: capitalize;
+  }
+
+  .field__value {
+    max-width: 50%;
   }
 
   .equipment__section {
@@ -947,7 +950,6 @@ export default {
     text-decoration: underline;
     color: map-get($colors, mainblue );
   }
-
 }
 
 .order__changelog a {

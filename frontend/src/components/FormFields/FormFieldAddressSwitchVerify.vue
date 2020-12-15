@@ -204,10 +204,7 @@ export default {
   }
 
   .address-book-modal__body__status {
-    display: flex;
-    align-items: center;
-    justify-content: flex-end;
-    width: 100%;
+    margin-left: auto;
 
     span {
       padding-left: rem(6);
@@ -230,10 +227,10 @@ export default {
     }
 
     span {
-      width: 50%;
 
       &:last-child {
         text-align: right;
+        width: 60%;
       }
     }
   }

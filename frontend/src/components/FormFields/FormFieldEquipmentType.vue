@@ -290,9 +290,6 @@ export default {
 }
 
 .selected__equipment {
-  display: flex;
-  justify-content: flex-end;
-  font-size: rem(14);
   margin-bottom: rem(8);
 }
 

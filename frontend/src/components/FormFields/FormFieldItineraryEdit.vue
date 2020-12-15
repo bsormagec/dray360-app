@@ -329,10 +329,7 @@ export default {
   }
 
   .address-book-modal__body__status {
-    display: flex;
-    align-items: center;
-    justify-content: flex-end;
-    width: 100%;
+    margin-left: auto;
 
     span {
       padding-left: rem(6);
@@ -355,10 +352,11 @@ export default {
     }
 
     span {
-      width: 50%;
+      width: auto;
 
       &:last-child {
         text-align: right;
+        max-width: 60%;
       }
     }
   }
@@ -378,6 +376,7 @@ export default {
     }
   }
 }
+
 .form-field::v-deep {
   .form-field__group,
   .form-field__group + .action-btns {

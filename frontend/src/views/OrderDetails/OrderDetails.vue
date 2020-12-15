@@ -143,11 +143,6 @@ export default {
       e.preventDefault()
       window.onmousemove = undefined
       window.onmouseup = undefined
-    },
-    async showSidebar () {
-      await this[type.setSidebar]({
-        show: true
-      })
     }
   }
 }
@@ -176,6 +171,7 @@ export default {
 
 .details__form {
   position: relative;
+  flex: 1;
   transition: width 300ms ease;
 
   &::after {
