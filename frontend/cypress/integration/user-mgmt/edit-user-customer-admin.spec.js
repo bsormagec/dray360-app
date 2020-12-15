@@ -1,7 +1,7 @@
 describe('Edit user', function () {
   beforeEach(() => {
     cy.fixture('auth/tenant.json').as('tenant')
-    cy.fixture('auth/user.json').as('user')
+    cy.fixture('auth/customerAdmin.json').as('user')
     cy.fixture('user-mgmt/roles.json').as('roles')
     cy.fixture('user-mgmt/company.json').as('company')
     cy.fixture('user-mgmt/user-list.json').as('users')
