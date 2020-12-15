@@ -287,14 +287,7 @@ export default {
   computed: {
     ...mapState(utils.moduleName, {
       showingSidebar: state => state.sidebar.show
-    })
-  },
-  watch: {
-    isMedium: function (newVal, oldVal) {
-      if (!newVal) {
-        this.setSidebar({ show: true })
-      }
-    },
+    }),
     requestOrdersTableHeaders () {
       return [
         { text: 'Date', sortable: false, value: 'created_at' },
@@ -309,6 +302,13 @@ export default {
         { text: 'Direction', value: 'shipment_direction', align: 'center' },
         { text: 'Actions', value: 'actions', sortable: false, align: 'center' }
       ]
+    }
+  },
+  watch: {
+    isMedium: function (newVal, oldVal) {
+      if (!newVal) {
+        this.setSidebar({ show: true })
+      }
     }
   },
   created () {
