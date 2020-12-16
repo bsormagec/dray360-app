@@ -172,6 +172,9 @@ class Order extends Model
         'pickup_by_date' => 'datetime:Y-m-d',
         'cutoff_date' => 'datetime:Y-m-d',
         'equipment_type_verified' => 'boolean',
+        'tms_submission_datetime' => 'datetime',
+        'tms_cancelled_datetime' => 'datetime',
+        'cancelled_datetime' => 'datetime',
     ];
 
     /**
