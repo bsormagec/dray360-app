@@ -9,6 +9,7 @@ use App\Models\User;
 use Aws\MockHandler;
 use App\Models\Order;
 use App\Models\Company;
+use App\Models\TMSProvider;
 use Illuminate\Support\Str;
 use Laravel\Sanctum\Sanctum;
 use Illuminate\Http\Response;
@@ -35,6 +36,8 @@ class SendToTmsControllerTest extends TestCase
     {
         (new OrdersTableSeeder())->seedOrderWithValidatedAddresses();
         $order = Order::first();
+        // asdf        dd(TMSProvider::all());
+        $order->update(['t_tms_provider_id' => TMSProvider::getProfitTools()->id]);
         $messageId = Str::random(5);
 
         $mockHandler = tap(new MockHandler())
@@ -58,6 +61,7 @@ class SendToTmsControllerTest extends TestCase
     {
         (new OrdersTableSeeder())->seedOrderWithValidatedAddresses();
         $order = Order::first();
+        $order->update(['t_tms_provider_id' => TMSProvider::getProfitTools()->id]);
         $this->withoutExceptionHandling();
         $mockHandler = tap(new MockHandler())
             ->append(function ($cmd) {

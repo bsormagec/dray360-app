@@ -58,7 +58,7 @@ class SendToTmsController extends Controller
 
     protected function getTmsProvider($tmsProviderId): TMSProvider
     {
-        return TMSProvider::firstWhere('id', $tmsProviderId);
+        return TMSProvider::find($tmsProviderId);
     }
 
     protected function getOrder($orderId): Order
