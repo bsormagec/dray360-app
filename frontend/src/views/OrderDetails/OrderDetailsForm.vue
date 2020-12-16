@@ -219,6 +219,7 @@
             :carrier="order.carrier"
             :equipment-size="order.equipment_size"
             :equipment-type="order.equipment_type"
+            :recognized-text="order.equipment_type_raw_text || '--'"
             :unit-number="order.unit_number"
             :verified="order.equipment_type_verified"
             @change="(e) => handleChange('t_equipment_type_id', e)"

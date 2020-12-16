@@ -105,7 +105,7 @@ class Order extends Resource
                 ->searchable()
                 ->nullable(),
             Text::make('Shipment designation', 'shipment_designation')->hideFromIndex()->nullable(),
-            Text::make('Equipment type', 'equipment_type')->hideFromIndex()->nullable(),
+            Text::make('Equipment type raw text', 'equipment_type_raw_text')->hideFromIndex()->nullable(),
             Text::make('Shipment direction', 'shipment_direction')->nullable(),
             Boolean::make('One way', 'one_way')->hideFromIndex()->nullable(),
             Boolean::make('Yard pre pull', 'yard_pre_pull')->hideFromIndex()->nullable(),

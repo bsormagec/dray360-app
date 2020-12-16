@@ -66,7 +66,7 @@
               class="center py-0 mt-5 mb-0 header__filters"
             >
               <v-col cols="2">
-                <span>
+                <span class="subtitle-1">
                   Filter by
                 </span>
               </v-col>
@@ -113,6 +113,10 @@
           </v-card-title>
           <v-divider />
           <v-card-text style="height: 40rem;">
+            <div class="recognized-equipment">
+              <span class="d-flex align-center secondary--text font-weight-bold body-2 mr-16">Equipment as recognized</span>
+              <span class="d-flex align-center secondary--text ml-16">{{ recognizedText }}</span>
+            </div>
             <v-data-table
               :loading="loading"
               :headers="headers"
@@ -166,11 +170,12 @@ export default {
   props: {
     companyId: { type: Number, required: true },
     tmsProviderId: { type: Number, required: true },
-    carrier: { type: String, required: false },
-    equipmentSize: { type: String, required: false },
-    equipmentType: { type: Object, required: false },
-    unitNumber: { type: String, required: false },
-    verified: { type: Boolean, required: false }
+    carrier: { type: String, required: false, default: '' },
+    equipmentSize: { type: String, required: false, default: '' },
+    equipmentType: { type: Object, required: false, default: () => ({}) },
+    unitNumber: { type: String, required: false, default: '' },
+    recognizedText: { type: String, required: false, default: '--' },
+    verified: { type: Boolean, required: false, default: false }
   },
 
   data: (vm) => ({
@@ -313,6 +318,21 @@ export default {
   .equipment__section {
     margin-left: auto;
     text-align: right;
+  }
+}
+
+.recognized-equipment {
+  display: flex;
+  padding: rem(16) rem(32);
+  margin: 0;
+  background-color: rgba(var(--v-primary-base-rgb), 0.05);
+  &::before{
+    content: '';
+    display: block;
+    height: rem(48);
+    width: rem(5);
+    margin-right: rem(8);
+    background-color: rgba(var(--v-secondary-base-rgb), 0.35);
   }
 }
 </style>

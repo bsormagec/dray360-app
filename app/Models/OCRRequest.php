@@ -42,24 +42,4 @@ class OCRRequest extends Model
     {
         return $this->belongsTo(OCRRequestStatus::class, 't_job_state_changes_id');
     }
-
-    /**
-     * Dynamic relationship used in the OcrRequestOrderListQuery, to take advantage of the eager loading.
-     * AKA dynamic relationship.
-     */
-    public function order()
-    {
-        return $this->belongsTo(Order::class, 't_order_id')
-            ->withDefault(function (Order $order) {
-                $order->fillWithNulls([
-                    'request_id',
-                    'bill_to_address_raw_text',
-                    'created_at',
-                    'equipment_type',
-                    'shipment_designation',
-                    'shipment_direction',
-                    'tms_shipment_id',
-                ]);
-            });
-    }
 }

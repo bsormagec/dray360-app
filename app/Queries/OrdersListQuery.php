@@ -18,7 +18,7 @@ class OrdersListQuery extends QueryBuilder
                 't_orders.id',
                 't_orders.request_id',
                 't_orders.created_at',
-                't_orders.equipment_type',
+                't_orders.equipment_type_raw_text',
                 't_orders.shipment_designation',
                 't_orders.shipment_direction',
                 't_orders.tms_shipment_id',
@@ -50,7 +50,7 @@ class OrdersListQuery extends QueryBuilder
             AllowedFilter::callback('query', function ($query, $value) {
                 $query->where(function ($query) use ($value) {
                     $query->orWhere('t_orders.request_id', 'like', "{$value}%")
-                        ->orWhere('t_orders.equipment_type', 'like', "{$value}%")
+                        ->orWhere('t_orders.equipment_type_raw_text', 'like', "{$value}%")
                         ->orWhere('t_orders.shipment_designation', 'like', "{$value}%")
                         ->orWhere('t_orders.shipment_direction', 'like', "{$value}%")
                         ->orWhere('t_orders.tms_shipment_id', 'like', "%{$value}%")
@@ -65,7 +65,7 @@ class OrdersListQuery extends QueryBuilder
             AllowedSort::field('request_id', 't_orders.request_id'),
             AllowedSort::field('created_at', 't_orders.created_at'),
             AllowedSort::field('status', 's_sort.status'),
-            AllowedSort::field('order.equipment_type', 't_orders.equipment_type'),
+            AllowedSort::field('order.equipment_type_raw_text', 't_orders.equipment_type_raw_text'),
             AllowedSort::field('order.shipment_designation', 't_orders.shipment_designation'),
             AllowedSort::field('order.shipment_direction', 't_orders.shipment_direction'),
             AllowedSort::field('order.bill_to_address', 'bill_to.location_name'),
