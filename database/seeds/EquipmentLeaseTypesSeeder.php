@@ -144,7 +144,7 @@ class EquipmentLeaseTypesSeeder extends Seeder
         $type = trim(str_replace($size, '', $sizeAndType));
 
         // scac can be alphanumeric only (sigh, there was one set to "FEDU,")
-        $scac = preg_replace("/[^A-Za-z0-9 ]/", '', $csvRow['scac']);
+        $scac = preg_replace("/[^A-Za-z0-9]/", '', $csvRow['scac']);
 
         // prefixes is an array (stored as json in d/b)
         $lineprefix = $csvRow['lineprefix'];
