@@ -160,11 +160,12 @@
         <FormFieldSelect
           v-if="shouldSelectProfitToolsTemplateId"
           references="tms_template_id"
-          label="TMS Template ID"
+          label="TMS Template Name"
           :value="order.tms_template_id"
           :items="profitToolsTemplatesSelectItems"
           item-text="tms_template_name"
           item-value="tms_template_id"
+          :display-value="displayName"
           :edit-mode="editMode"
           @change="value => handleChange('tms_template_id', value)"
         />
@@ -779,6 +780,10 @@ export default {
       const arr = this.order.order_address_events
       arr[index].deleted_at = true
       this.handleChange('order_address_events', arr)
+    },
+    displayName (value) {
+      const result = this.profitToolsTemplatesSelectItems.filter(el => el.tms_template_id === value)
+      return result.length > 0 ? result[0].tms_template_name : value
     }
   }
 }
