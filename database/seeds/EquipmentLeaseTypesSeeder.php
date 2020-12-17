@@ -142,6 +142,11 @@ class EquipmentLeaseTypesSeeder extends Seeder
         $sizeAndType = trim($csvRow['type']);
         $size = trim($csvRow['equipmentlength']);
         $type = trim(str_replace($size, '', $sizeAndType));
+
+        // scac can be alphanumeric only (sigh, there was one set to "FEDU,")
+        $scac = preg_replace("/[^A-Za-z0-9 ]/", '', $csvRow['scac']);
+
+        // prefixes is an array (stored as json in d/b)
         $lineprefix = $csvRow['lineprefix'];
         $prefixes = [];
         if (strlen(trim($lineprefix)) > 0) {
@@ -174,7 +179,7 @@ class EquipmentLeaseTypesSeeder extends Seeder
             'equipment_type_and_size' => $sizeAndType,
             'equipment_type' => $type,
             'equipment_size' => $size,
-            'scac' => trim($csvRow['scac']),
+            'scac' => $scac,
             'created_at' => Carbon::now(),
             'updated_at' => Carbon::now(),
             'rownum' => $csvRow['rownum'],
@@ -185,7 +190,7 @@ class EquipmentLeaseTypesSeeder extends Seeder
     /**
      * Return id for company of given name
      *
-     * @param $companyId      t_company_id
+     * @param $companyId t_company_id
      *
      * @return int company_id
      */
