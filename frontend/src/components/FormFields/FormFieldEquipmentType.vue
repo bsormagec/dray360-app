@@ -207,7 +207,8 @@ export default {
 
   computed: {
     concatenatedRecognizedText () {
-      const string = `${this.carrier || ''} ${this.equipmentSize || ''} ${this.recognizedText || ''} ${this.unitNumber || ''}`
+      const scac = (this.unitNumber || '').substring(0, 4)
+      const string = `${this.carrier || ''} ${this.equipmentSize || ''} ${this.recognizedText || ''} ${scac}`
 
       return string.trim() === '' ? '--' : string.trim()
     }
