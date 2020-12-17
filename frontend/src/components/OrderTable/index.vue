@@ -465,6 +465,9 @@ export default {
             this.loading = false
             message = 'Order deleted'
             this.resetFilters()
+            if (this.orders.length <= 2) {
+              this.$emit('order-deleted')
+            }
           } else {
             message = 'Error trying to delete the order'
           }

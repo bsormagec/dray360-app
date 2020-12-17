@@ -220,6 +220,7 @@
               :url-filters="false"
               wait-for-request-id
               :headers="requestOrdersTableHeaders"
+              @order-deleted="() => setReloadRequests(true)"
             />
           </div>
           <OrderDetails
