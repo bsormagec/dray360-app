@@ -115,7 +115,7 @@
           <v-card-text style="height: 40rem;">
             <div class="recognized-equipment">
               <span class="d-flex align-center secondary--text font-weight-bold body-2 mr-16">Equipment as recognized</span>
-              <span class="d-flex align-center secondary--text ml-16">{{ recognizedText }}</span>
+              <span class="d-flex align-center secondary--text ml-16">{{ concatenatedRecognizedText }}</span>
             </div>
             <v-data-table
               :loading="loading"
@@ -206,7 +206,11 @@ export default {
   }),
 
   computed: {
+    concatenatedRecognizedText () {
+      const string = `${this.carrier || ''} ${this.equipmentSize || ''} ${this.recognizedText || ''} ${this.unitNumber || ''}`
 
+      return string.trim() === '' ? '--' : string.trim()
+    }
   },
   watch: {
     filters: {
