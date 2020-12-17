@@ -110,7 +110,7 @@
           }"
           :options="[
             { title: 'Download Source File', action: () => downloadSourceFile(item.id) },
-            { title: 'Reprocess Order', action: () => reprocessOrder(item.request_id) },
+            { title: 'Reprocess Order', action: () => reprocessRequest(item.request_id) },
             { title: 'Delete Order', action: () => deleteOrder(item) }
           ]"
         />
