@@ -41,12 +41,12 @@ class EquipmentLeaseTypesSeeder extends Seeder
         ],
         [
             "COMPANY_NAME" => 'IXTOnboarding',
-            "T_TMS_PROVIDER_ID" => 1,
+            "T_TMS_PROVIDER_ID" => 2,
             "FILENAME" => 'database/seeds/ixt_equipment_lease_types_20201028.csv'
         ],
         [
             "COMPANY_NAME" => 'IXT',
-            "T_TMS_PROVIDER_ID" => 1,
+            "T_TMS_PROVIDER_ID" => 2,
             "FILENAME" => 'database/seeds/ixt_equipment_lease_types_20201028.csv'
         ],
         [
