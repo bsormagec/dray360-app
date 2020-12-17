@@ -69,7 +69,6 @@ class EquipmentLeaseTypesSeeder extends Seeder
     public function run()
     {
         foreach (self::INPUT_FILES as $inputfile) {
-            // $companyId = $inputfile['COMPANY_ID'];
             $companyId = $this->getCompanyIdForName($inputfile['COMPANY_NAME']);
             $tmsProviderId = $inputfile['T_TMS_PROVIDER_ID'];
             $filename = $inputfile['FILENAME'];
