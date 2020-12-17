@@ -29,33 +29,33 @@ use Illuminate\Database\Seeder;
 class EquipmentLeaseTypesSeeder extends Seeder
 {
     const INPUT_FILES = [
-#        [
-#            "COMPANY_ID" => 1,  # Cushing
-#            "T_TMS_PROVIDER_ID" => 1,
-#            "FILENAME" => 'database/seeds/cushing_equipment_lease_types_20201028.csv'
-#        ],
-#        [
-#            "COMPANY_ID" => 2,  # TCompaniesDemo, doing double duty as CushingOnboarding
-#            "T_TMS_PROVIDER_ID" => 1,
-#            "FILENAME" => 'database/seeds/cushing_equipment_lease_types_20201028.csv'
-#        ],
-#        [
-#            "COMPANY_ID" => 4,  # IXTOnboarding
-#            "T_TMS_PROVIDER_ID" => 1,
-#            "FILENAME" => 'database/seeds/ixt_equipment_lease_types_20201028.csv'
-#        ],
-#        [
-#            "COMPANY_ID" => 5,  # IXT
-#            "T_TMS_PROVIDER_ID" => 1,
-#            "FILENAME" => 'database/seeds/ixt_equipment_lease_types_20201028.csv'
-#        ],
         [
-            "COMPANY_ID" => 6,  # PortCityLogisticsOnboarding
+            "COMPANY_NAME" => 'Cushing',
+            "T_TMS_PROVIDER_ID" => 1,
+            "FILENAME" => 'database/seeds/cushing_equipment_lease_types_20201217.csv'
+        ],
+        [
+            "COMPANY_NAME" => 'TCompaniesDemo',
+            "T_TMS_PROVIDER_ID" => 1,
+            "FILENAME" => 'database/seeds/cushing_equipment_lease_types_20201217.csv'
+        ],
+        [
+            "COMPANY_NAME" => 'IXTOnboarding',
+            "T_TMS_PROVIDER_ID" => 2,
+            "FILENAME" => 'database/seeds/ixt_equipment_lease_types_20201028.csv'
+        ],
+        [
+            "COMPANY_NAME" => 'IXT',
+            "T_TMS_PROVIDER_ID" => 2,
+            "FILENAME" => 'database/seeds/ixt_equipment_lease_types_20201028.csv'
+        ],
+        [
+            "COMPANY_NAME" => 'PortCityLogisticsOnboarding',
             "T_TMS_PROVIDER_ID" => 1,
             "FILENAME" => 'database/seeds/pcl_equipment_lease_types_20201028.csv'
         ],
         [
-            "COMPANY_ID" => 7,  # PortCityLogistics
+            "COMPANY_NAME" => 'PortCityLogistics',
             "T_TMS_PROVIDER_ID" => 1,
             "FILENAME" => 'database/seeds/pcl_equipment_lease_types_20201028.csv'
         ],
@@ -69,7 +69,7 @@ class EquipmentLeaseTypesSeeder extends Seeder
     public function run()
     {
         foreach (self::INPUT_FILES as $inputfile) {
-            $companyId = $inputfile['COMPANY_ID'];
+            $companyId = $this->getCompanyIdForName($inputfile['COMPANY_NAME']);
             $tmsProviderId = $inputfile['T_TMS_PROVIDER_ID'];
             $filename = $inputfile['FILENAME'];
             $equipmentData = $this->getCsvData($filename);
@@ -90,7 +90,9 @@ class EquipmentLeaseTypesSeeder extends Seeder
 
     /**
      * Load the CSV file, return array
+     *
      * @param string $filename name of csv file
+     *
      * @return array
      */
     public function getCsvData($filename)
@@ -140,11 +142,24 @@ class EquipmentLeaseTypesSeeder extends Seeder
         $sizeAndType = trim($csvRow['type']);
         $size = trim($csvRow['equipmentlength']);
         $type = trim(str_replace($size, '', $sizeAndType));
+
+        // scac can be alphanumeric only (sigh, there was one set to "FEDU,")
+        $scac = preg_replace("/[^A-Za-z0-9]/", '', $csvRow['scac']);
+
+        // prefixes is an array (stored as json in d/b)
         $lineprefix = $csvRow['lineprefix'];
-        if (strlen($lineprefix) == 0) {
-            $prefixes = [];
-        } else {
-            $prefixes = explode(',', $lineprefix);
+        $prefixes = [];
+        if (strlen(trim($lineprefix)) > 0) {
+            $comma_prefixes = explode(',', $lineprefix);
+            foreach ($comma_prefixes as $comma_prefix) {
+                $space_prefixes = explode(' ', $comma_prefix);
+                foreach ($space_prefixes as $space_prefix) {
+                    $trimmed_prefix = str_replace('\t', '', trim($space_prefix)); // and remove '\t' which is a tab
+                    if ($trimmed_prefix != '') {
+                        array_push($prefixes, $trimmed_prefix);
+                    }
+                }
+            }
         }
 
         // if the "size" isn't found within "sizeandtype" then neither size nor type can be trusted
@@ -164,12 +179,36 @@ class EquipmentLeaseTypesSeeder extends Seeder
             'equipment_type_and_size' => $sizeAndType,
             'equipment_type' => $type,
             'equipment_size' => $size,
-            'scac' => trim($csvRow['scac']),
+            'scac' => $scac,
             'created_at' => Carbon::now(),
             'updated_at' => Carbon::now(),
             'rownum' => $csvRow['rownum'],
             'line_prefix_list' => $prefixes,
         ]);
+    }
+
+    /**
+     * Return id for company of given name
+     *
+     * @param $companyId t_company_id
+     *
+     * @return int company_id
+     */
+    public function getCompanyIdForName($companyName)
+    {
+        $rows = DB::table('t_companies')
+            ->where(
+                [
+                    ['name', '=', $companyName],
+                ]
+            )
+            ->whereNull('deleted_at')  // don't delete a row that is already soft-deleted
+            ->get();
+        if (count($rows) == 0) {
+            return -1;
+        } else {
+            return $rows[0]->id;
+        }
     }
 
     /**
@@ -191,7 +230,7 @@ class EquipmentLeaseTypesSeeder extends Seeder
                     ['tms_equipment_id', '=', $tmsEquipmentId],
                 ]
             )
-            ->whereNull('deleted_at')  # don't delete a row that is already soft-deleted
+            ->whereNull('deleted_at')  // don't delete a row that is already soft-deleted
             ->get();
         $exists = (count($rows) > 0);
         return $exists;
@@ -206,7 +245,7 @@ class EquipmentLeaseTypesSeeder extends Seeder
      *
      * @return void
      */
-    public function deleteRow_DEPRECATED($companyId, $tmsProviderId, $tmsEquipmentId)
+    public function deleteRowDeprecated($companyId, $tmsProviderId, $tmsEquipmentId)
     {
         DB::table('t_equipment_types')
             ->where(
@@ -216,13 +255,14 @@ class EquipmentLeaseTypesSeeder extends Seeder
                     ['tms_equipment_id', '=', $tmsEquipmentId],
                 ]
             )
-            ->whereNull('deleted_at')  # don't delete a row that is already soft-deleted
+            ->whereNull('deleted_at')  // don't delete a row that is already soft-deleted
             ->delete();
     }
 
     /**
      * Insert row into t_equipment_types database
      *
+     * @param $rowCount         row number being inserted
      * @param $equipmentTypeRow a single row of data
      *
      * @return int new row id
@@ -258,7 +298,11 @@ class EquipmentLeaseTypesSeeder extends Seeder
     /**
      * Update existing row for company/tms/equipid
      *
+     * @param $rowCount         row number being inserted
      * @param $equipmentTypeRow a single row of data
+     * @param $companyId        company
+     * @param $tmsProviderId    dray360 tms provider id
+     * @param $tmsEquipmentId   tms system's equipment id
      *
      * @return void
      */
