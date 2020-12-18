@@ -109,6 +109,7 @@ class OCRVariantsSeeder extends Seeder
             'abbyy_variant_name' => $csvRow['abbyy_variant_name'],
             'created_at' => Carbon::now(),
             'updated_at' => Carbon::now(),
+            'rownum' => $csvRow['rownum'],
         ]);
     }
 
@@ -146,12 +147,16 @@ class OCRVariantsSeeder extends Seeder
     public function insertRow($rowCount, $variantRow)
     {
         $v = $variantRow;
+        $abbyyVariantId = $v['abbyy_variant_id'];
+        $abbyyVariantName = $v['abbyy_variant_name'];
+
         // insert the address
         $variantId = DB::table('t_ocrvariants')
         ->insertGetId(
             [
-                'abbyy_variant_id' => $v['abbyy_variant_id'],
-                'abbyy_variant_name' => $v['abbyy_variant_name'],
+                'abbyy_variant_id' => $abbyyVariantId,
+                'abbyy_variant_name' => $abbyyVariantName,
+                'description' => 'imported from Abbyy',
                 'created_at' => $v['created_at'],
                 'updated_at' => $v['updated_at'],
             ]
@@ -175,26 +180,35 @@ class OCRVariantsSeeder extends Seeder
     {
         $v = $variantRow;
         $abbyyVariantId = $v['abbyy_variant_id'];
-        $abbyyVariantId = $v['abbyy_variant_name'];
-        // insert the address
-        $updatedRows = DB::table('t_ocrvariants')
-            ->where(
-                [
-                    ['abbyy_variant_id', '=', $abbyyVariantId],
-                    ['abbyy_variant_name', '=', $abbyyVariantName],
-                ]
-            )
-            ->whereNull('deleted_at')
-            ->update(
-                [
-                    'abbyy_variant_id' => $v['abbyy_variant_id'],
-                    'abbyy_variant_name' => $v['abbyy_variant_name'],
-                    'updated_at' => $e['updated_at'],
-                ]
-            );
+        $abbyyVariantName = $v['abbyy_variant_name'];
+
+        // update the address
+
+        // This isn't really needed as the only thing actually getting updated
+        // is the "updated_at" timestamp. why bother? the point is that the variant
+        // already exists, so no need to update it. If we ever get to the point where
+        // the variant id/name combination changes, then we can use this code as
+        // a starting point.
+        if (false) {
+            $updatedRows = DB::table('t_ocrvariants')
+                ->where(
+                    [
+                        ['abbyy_variant_id', '=', $abbyyVariantId],
+                        ['abbyy_variant_name', '=', $abbyyVariantName],
+                    ]
+                )
+                ->whereNull('deleted_at')
+                ->update(
+                    [
+                        'abbyy_variant_id' => $v['abbyy_variant_id'],
+                        'abbyy_variant_name' => $v['abbyy_variant_name'],
+                        'updated_at' => $v['updated_at'],
+                    ]
+                );
+        }
 
         // happy message, return
-        $msg = 'updated csvfile row:'.$v['rownum'].'/'.$rowCount.' for variant: "'.$v['abbyy_variant_name'].'\n';
+        $msg = 'updated csvfile row:'.$v['rownum'].'/'.$rowCount.' for variant: "'.$v['abbyy_variant_name']."\n";
         print($msg);
     }
 }
