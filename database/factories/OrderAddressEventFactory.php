@@ -26,5 +26,6 @@ $factory->define(OrderAddressEvent::class, function (Faker $faker) {
         'unparsed_event_type' => $faker->paragraph,
         't_address_verified' => $faker->boolean,
         't_address_raw_text' => $faker->address,
+        'note' => $faker->paragraph,
     ];
 });

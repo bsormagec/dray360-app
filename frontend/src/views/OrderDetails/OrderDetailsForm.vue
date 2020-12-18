@@ -160,15 +160,22 @@
         <FormFieldSelect
           v-if="shouldSelectProfitToolsTemplateId"
           references="tms_template_id"
-          label="TMS Template ID"
+          label="TMS Template Name"
           :value="order.tms_template_id"
           :items="profitToolsTemplatesSelectItems"
           item-text="tms_template_name"
           item-value="tms_template_id"
+          :display-value="displayName"
           :edit-mode="editMode"
           @change="value => handleChange('tms_template_id', value)"
         />
+        <FormFieldManaged
+          v-if="order.tms_template_id"
+          references="division_code"
+          label="Division"
+        />
         <FormFieldSelectDivisionCodes
+          v-else
           references="division_code"
           label="Division"
           :value="order.division_code"
@@ -219,6 +226,7 @@
             :carrier="order.carrier"
             :equipment-size="order.equipment_size"
             :equipment-type="order.equipment_type"
+            :recognized-text="order.equipment_type_raw_text"
             :unit-number="order.unit_number"
             :verified="order.equipment_type_verified"
             @change="(e) => handleChange('t_equipment_type_id', e)"
@@ -345,6 +353,7 @@
         </div>
       </div>
       <div
+        v-if="!order.tms_template_id"
         class="form__sub-section"
       >
         <div
@@ -396,119 +405,163 @@
           />
         </div>
       </div>
-    </div>
-
-    <div class="form__section">
       <div
-        :id="sections.itinerary.id"
-        ref="itineraryLabel"
-        class="form__section-title d-flex align-center"
-      >
-        <h3>
-          {{ sections.itinerary.label }}
-        </h3>
-        <v-btn
-          v-if="!editMode"
-          class="ml-auto"
-          small
-          outlined
-          color="white"
-          @click="handleItinerayEdit"
-        >
-          Edit itinerary
-        </v-btn>
-        <v-btn
-          v-else
-          class="ml-auto"
-          small
-          outlined
-          color="white"
-          @click="handleNewEvent"
-        >
-          Add Event
-        </v-btn>
-      </div>
-
-      <div class="section__rootfields">
-        <div
-          v-for="(orderAddressEvent, index) in order.order_address_events"
-          :key="`${index}${orderAddressEvent.id}`"
-        >
-          <FormFieldItineraryEdit
-            :order-address-event="orderAddressEvent"
-            :current-index="index+1"
-            :references="`order_address_events.${index}`"
-            :edit-mode="editMode"
-            :is-first="index === 0"
-            :is-last="index == order.order_address_events.length - 1"
-            @change="(e) => handleChange(`order_address_events.${index}`, e)"
-            @delete="(e) => handleDelete(index)"
-            @sort="(e) => moveObjectPositionInArray(order.order_address_events[index].id, e)"
-          />
-        </div>
-      </div>
-    </div>
-    <div class="form__section">
-      <div class="form__section-title">
-        <h3>
-          {{ sections.notes.label }}
-        </h3>
-      </div>
-
-      <div class="section__rootfields">
-        <FormFieldTextArea
-          references="ship_comment"
-          label="Shipment comments"
-          :value="order.ship_comment"
-          :edit-mode="editMode"
-          @change="value => handleChange('ship_comment', value)"
-        />
-      </div>
-    </div>
-    <div class="form__section">
-      <div
-        :id="sections.inventory.id"
-        class="form__section-title"
-      >
-        <h3>
-          {{ sections.inventory.label }}
-        </h3>
-      </div>
-
-      <div
-        v-for="(item, index) in availableLineItems"
-        :key="index"
-        class="form__sub-section"
+        v-else
       >
         <div
-          class="form__section-title"
+          :id="sections.bill_to.id"
+          ref="itineraryLabel"
+          class="form__section-title form__section-title--managed d-flex align-center justify-center mb-2"
         >
-          <h3>Item {{ index + 1 }}</h3>
+          <h3>
+            {{ sections.bill_to.label }} managed by template
+          </h3>
         </div>
+      </div>
+
+      <div
+        v-if="!order.tms_template_id"
+        class="form__section"
+      >
+        <div
+          :id="sections.itinerary.id"
+          ref="itineraryLabel"
+          class="form__section-title d-flex align-center"
+        >
+          <h3>
+            {{ sections.itinerary.label }}
+          </h3>
+          <v-btn
+            v-if="!editMode"
+            class="ml-auto"
+            small
+            outlined
+            color="white"
+            @click="handleItinerayEdit"
+          >
+            Edit itinerary
+          </v-btn>
+          <v-btn
+            v-else
+            class="ml-auto"
+            small
+            outlined
+            color="white"
+            @click="handleNewEvent"
+          >
+            Add Event
+          </v-btn>
+        </div>
+
+        <div class="section__rootfields">
+          <div
+            v-for="(orderAddressEvent, index) in order.order_address_events"
+            :key="`${index}${orderAddressEvent.id}`"
+          >
+            <FormFieldItineraryEdit
+              :order-address-event="orderAddressEvent"
+              :current-index="index+1"
+              :references="`order_address_events.${index}`"
+              :edit-mode="editMode"
+              :is-first="index === 0"
+              :is-last="index == order.order_address_events.length - 1"
+              @change="(e) => handleChange(`order_address_events.${index}`, e)"
+              @delete="(e) => handleDelete(index)"
+              @sort="(e) => moveObjectPositionInArray(order.order_address_events[index].id, e)"
+            />
+          </div>
+        </div>
+      </div>
+      <div
+        v-else
+      >
+        <div
+          :id="sections.itinerary.id"
+          ref="itineraryLabel"
+          class="form__section-title form__section-title--managed d-flex align-center justify-center mb-2"
+        >
+          <h3>
+            {{ sections.itinerary.label }} managed by template
+          </h3>
+        </div>
+      </div>
+      <div class="form__section">
+        <div class="form__section-title">
+          <h3>
+            {{ sections.notes.label }}
+          </h3>
+        </div>
+
         <div class="section__rootfields">
           <FormFieldTextArea
-            :references="`order_line_items.${item.real_index}.contents`"
-            label="Contents"
-            :value="item.contents"
+            references="ship_comment"
+            label="Shipment comments"
+            :value="order.ship_comment"
             :edit-mode="editMode"
-            @change="value => handleChange(`order_line_items.${item.real_index}.contents`, value)"
+            @change="value => handleChange('ship_comment', value)"
           />
-          <FormFieldInput
-            :references="`order_line_items.${item.real_index}.quantity`"
-            label="Quantity"
-            type="number"
-            :value="item.quantity"
-            :edit-mode="editMode"
-            @change="value => handleChange(`order_line_items.${item.real_index}.quantity`, value)"
-          />
-          <FormFieldInput
-            :references="`order_line_items.${item.real_index}.weight`"
-            label="Weight"
-            type="number"
-            :value="item.weight"
-            :edit-mode="editMode"
-            @change="value => handleChange(`order_line_items.${item.real_index}.weight`, value)"
-          />
+        </div>
+      </div>
+      <div
+        v-if="!order.tms_template_id"
+        class="form__section"
+      >
+        <div
+          :id="sections.inventory.id"
+          class="form__section-title"
+        >
+          <h3>
+            {{ sections.inventory.label }}
+          </h3>
+        </div>
+
+        <div
+          v-for="(item, index) in availableLineItems"
+          :key="index"
+          class="form__sub-section"
+        >
+          <div
+            class="form__section-title"
+          >
+            <h3>Item {{ index + 1 }}</h3>
+          </div>
+          <div class="section__rootfields">
+            <FormFieldTextArea
+              :references="`order_line_items.${item.real_index}.contents`"
+              label="Contents"
+              :value="item.contents"
+              :edit-mode="editMode"
+              @change="value => handleChange(`order_line_items.${item.real_index}.contents`, value)"
+            />
+            <FormFieldInput
+              :references="`order_line_items.${item.real_index}.quantity`"
+              label="Quantity"
+              type="number"
+              :value="item.quantity"
+              :edit-mode="editMode"
+              @change="value => handleChange(`order_line_items.${item.real_index}.quantity`, value)"
+            />
+            <FormFieldInput
+              :references="`order_line_items.${item.real_index}.weight`"
+              label="Weight"
+              type="number"
+              :value="item.weight"
+              :edit-mode="editMode"
+              @change="value => handleChange(`order_line_items.${item.real_index}.weight`, value)"
+            />
+          </div>
+        </div>
+      </div>
+      <div
+        v-else
+      >
+        <div
+          :id="sections.inventory.id"
+          class="form__section-title form__section-title--managed d-flex align-center justify-center"
+        >
+          <h3>
+            {{ sections.inventory.label }} managed by template
+          </h3>
         </div>
       </div>
     </div>
@@ -536,6 +589,7 @@ import FormFieldEquipmentType from '@/components/FormFields/FormFieldEquipmentTy
 import OutlinedButtonGroup from '@/components/General/OutlinedButtonGroup'
 import FormFieldSelectDivisionCodes from '@/components/FormFields/FormFieldSelectDivisionCodes'
 import FormFieldSelect from '@/components/FormFields/FormFieldSelect'
+import FormFieldManaged from '@/components/FormFields/FormFieldManaged'
 import RequestStatus from '@/components/RequestStatus'
 
 export default {
@@ -552,6 +606,7 @@ export default {
     OutlinedButtonGroup,
     FormFieldSelect,
     FormFieldSelectDivisionCodes,
+    FormFieldManaged,
     RequestStatus
   },
   mixins: [isMobile, permissions],
@@ -634,11 +689,16 @@ export default {
       return `${date} ${time}`
     }
   },
+  beforeMount () {
+    if (!this.isMobile) {
+      return this[type.setSidebar]({ show: true })
+    }
+  },
   mounted () {
     if (this.editMode) this.toggleEdit()
   },
   methods: {
-    ...mapActions(utils.moduleName, [type.setSnackbar, type.setConfirmationDialog]),
+    ...mapActions(utils.moduleName, [type.setSnackbar, type.setConfirmationDialog, type.setSidebar]),
     ...mapActions(orderForm.moduleName, {
       updateOrder: orderFormTypes.updateOrder,
       startHover: orderFormTypes.startHover,
@@ -773,6 +833,10 @@ export default {
       const arr = this.order.order_address_events
       arr[index].deleted_at = true
       this.handleChange('order_address_events', arr)
+    },
+    displayName (value) {
+      const result = this.profitToolsTemplatesSelectItems.filter(el => el.tms_template_id === value)
+      return result.length > 0 ? result[0].tms_template_name : value
     }
   }
 }
@@ -859,15 +923,20 @@ export default {
 .form__section-title {
   padding: rem(4) rem(10) rem(3);
   background-color: map-get($colors, slate-gray);
-}
-
-.form__section-title h3 {
-  text-transform: uppercase;
-  font-size: rem(13);
-  font-weight: 700;
-  line-height: (24 / 13);
-  letter-spacing: rem(.75);
-  color: map-get($colors, white);
+  h3 {
+    text-transform: uppercase;
+    font-size: rem(13);
+    font-weight: 700;
+    line-height: (24 / 13);
+    letter-spacing: rem(.75);
+    color: map-get($colors, white);
+  }
+  &.form__section-title--managed h3 {
+    font-weight: 500;
+    font-size: rem(10);
+    line-height: (15 / 10);
+    letter-spacing: rem(1.5);
+  }
 }
 
 .form__sub-section {
@@ -901,7 +970,10 @@ export default {
     font-weight: 400;
     line-height: (20 / 14);
     letter-spacing: rem(.25);
-    text-transform: capitalize;
+  }
+
+  .field__value {
+    max-width: 50%;
   }
 
   .equipment__section {
@@ -947,7 +1019,6 @@ export default {
     text-decoration: underline;
     color: map-get($colors, mainblue );
   }
-
 }
 
 .order__changelog a {

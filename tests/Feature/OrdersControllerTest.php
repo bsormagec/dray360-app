@@ -48,7 +48,7 @@ class OrdersControllerTest extends TestCase
                             'id',
                             'request_id',
                             'created_at',
-                            'equipment_type',
+                            'equipment_type_raw_text',
                             'shipment_designation',
                             'shipment_direction',
                             'tms_shipment_id',
@@ -153,7 +153,7 @@ class OrdersControllerTest extends TestCase
                         'updated_at',
                         'deleted_at',
                         'ocr_data',
-                        'equipment_type',
+                        'equipment_type_raw_text',
                     ]);
                 })
                 ->toArray()

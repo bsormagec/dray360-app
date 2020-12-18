@@ -4,7 +4,7 @@
       :edit-mode="editMode"
       :references="references"
       :label="label"
-      :value="value"
+      :value="displayName"
       @accept="handleAccept"
     >
       <div class="form-field__group">
@@ -69,13 +69,22 @@ export default {
     editMode: {
       type: Boolean,
       required: true
+    },
+    displayValue: {
+      type: Function,
+      required: false,
+      default: undefined
     }
   },
 
   data: (vm) => ({
     currentValue: vm.value
   }),
-
+  computed: {
+    displayName: function () {
+      return this.displayValue !== undefined ? this.displayValue(this.value) : this.value
+    }
+  },
   methods: {
     handleChange (e) {
       this.currentValue = e === undefined ? null : e

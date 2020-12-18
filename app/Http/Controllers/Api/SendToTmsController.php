@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Api;
 
 use App\Models\Order;
+use App\Models\TMSProvider;
 use Illuminate\Http\Response;
 use App\Models\OCRRequestStatus;
 use App\Http\Controllers\Controller;
@@ -13,12 +14,13 @@ class SendToTmsController extends Controller
 {
     public function __invoke($orderId)
     {
-        $data = [
-            'order_id' => $orderId,
-            'status' => OCRRequestStatus::SENDING_TO_WINT,
-        ];
         $order = $this->getOrder($orderId);
         $this->authorize('sendToTms', $order);
+        $tmsProvider = $this->getTmsProvider($order->t_tms_provider_id);
+        $data = [
+            'order_id' => $orderId,
+            'status' => $this->getSubmitToTmsStatus($tmsProvider),
+        ];
 
         // Do not validate that addresses are all verified=true, for now (July 7th, 2020, PBN)
         // $this->checkIfOrderIsValidated($order);
@@ -35,6 +37,16 @@ class SendToTmsController extends Controller
         return response()->json(['data' => $response['message']]);
     }
 
+    protected function getSubmitToTmsStatus($tmsProvider)
+    {
+        switch ($tmsProvider->name) {
+            case TMSProvider::PROFIT_TOOLS:
+                return OCRRequestStatus::SENDING_TO_WINT;
+            case TMSProvider::COMPCARE:
+                return OCRRequestStatus::SENDING_TO_CHAINIO;
+        }
+    }
+
     protected function checkIfOrderIsValidated(Order $order)
     {
         throw_if(! $order->isValidated(), ValidationException::withMessages(
@@ -42,6 +54,11 @@ class SendToTmsController extends Controller
                 return [$attribute => 'The address is not validated'];
             })->toArray()
         ));
+    }
+
+    protected function getTmsProvider($tmsProviderId): TMSProvider
+    {
+        return TMSProvider::find($tmsProviderId);
     }
 
     protected function getOrder($orderId): Order

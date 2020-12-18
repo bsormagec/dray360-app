@@ -118,6 +118,7 @@
     </div>
   </div>
 </template>
+
 <script>
 import auth from '@/store/modules/auth'
 import { mapState, mapActions } from 'vuex'
@@ -162,11 +163,6 @@ export default {
   },
   async mounted () {
     await this[type.getTenantConfig]()
-  },
-  beforeMount () {
-    if (!this.isMobile) {
-      this.toogleSidebar()
-    }
   },
   methods: {
     ...mapActions('AUTH', ['logout']),

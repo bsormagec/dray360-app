@@ -8,27 +8,48 @@
         <div
           :class="{
             'requests__section': true,
-            'col-3': tab === 0,
+            'col-2': compressed && tab === 0,
+            'col-3': !compressed && tab === 0,
             'col-12': tab === 1,
           }"
         >
           <v-tabs
+            v-if="!compressed && !isMedium || tab === 1"
             :value="tab"
             background-color="primary"
             height="2.5rem"
             :show-arrows="false"
+            :mobile-breakpoint="1405"
             dark
             @change="tabsChanged"
           >
             <v-btn
-              v-show="false"
-              outlined
+              v-if="tab===0"
+              icon
+              dense
+              small
+              class="requests__section_collapse"
+              @click="togglePanels"
+            >
+              <v-icon
+                medium
+                white
+              >
+                mdi-unfold-less-vertical
+              </v-icon>
+            </v-btn>
+            <v-btn
+              v-else-if="isMedium"
+              icon
               dense
               small
               class="requests__section_collapse"
             >
-              <v-icon medium>
-                mdi-arrow-collapse-horizontal
+              <v-icon
+                medium
+                white
+              >
+                hamburger-menu
               </v-icon>
             </v-btn>
             <v-tab
@@ -37,8 +58,83 @@
             >
               {{ item.toUpperCase() }}
             </v-tab>
-            <AddRequestButton @change="handleFilesUploaded" />
+            <div class="add__request">
+              <v-btn
+                outlined
+                dense
+                small
+                @click="openUploadOrdersDialog = true"
+              >
+                ADD
+              </v-btn>
+            </div>
           </v-tabs>
+          <div
+            v-else
+            class="menu__compressed"
+          >
+            <v-btn
+              icon
+              dense
+              small
+              class="requests__section_collapse"
+              white
+              @click="togglePanels"
+            >
+              <v-icon
+                medium
+                class="text-white"
+              >
+                mdi-unfold-more-vertical
+              </v-icon>
+            </v-btn>
+            <v-menu
+              absolute
+              right
+            >
+              <template v-slot:activator="{ on, attrs }">
+                <v-btn
+                  text
+                  class="align-self-center mr-4"
+                  v-bind="attrs"
+                  white
+                  v-on="on"
+                >
+                  {{ tabs[tab] }}
+                  <v-icon right>
+                    mdi-menu-down
+                  </v-icon>
+                </v-btn>
+              </template>
+
+              <v-list class="grey lighten-3">
+                <v-list-item-group
+                  v-model="tab"
+                >
+                  <v-list-item
+                    v-for="item in tabs"
+                    :key="item"
+                    :disabled="item === 'orders' ? false : true"
+                    @click="item === 'orders' ? tab = 1 : tab = 0"
+                  >
+                    {{ item.toUpperCase() }}
+                  </v-list-item>
+
+                  <div class="ml-3">
+                    <v-btn
+                      outlined
+                      dense
+                      small
+                      @click="openUploadOrdersDialog = true"
+                    >
+                      ADD
+                    </v-btn>
+                  </div>
+                </v-list-item-group>
+              </v-list>
+            </v-menu>
+          </div>
+
           <div
             v-if="tab === 0"
             class="requests__list"
@@ -71,7 +167,11 @@
         </div>
         <div
           v-if="tab === 0"
-          class="col-9 request__orders"
+          :class="{
+            'request__orders':true,
+            'col-9': !compressed,
+            'col-10': compressed,
+          }"
         >
           <div
             v-if="request.orders_count > 1 || request.first_order_id === null"
@@ -120,16 +220,23 @@
               :url-filters="false"
               wait-for-request-id
               :headers="requestOrdersTableHeaders"
+              @order-deleted="() => setReloadRequests(true)"
             />
           </div>
           <OrderDetails
             v-else-if="request.orders_count === 1"
             :back-button="false"
             :order-id="request.first_order_id"
+            :min-size="compressed ? 30 : 50"
             @order-deleted="() => setReloadRequests(true)"
           />
         </div>
       </div>
+      <UploadOrdersDialog
+        :open="openUploadOrdersDialog"
+        @close="openUploadOrdersDialog = false"
+        @uploaded="handleFilesUploaded"
+      />
     </v-container>
   </div>
 </template>
@@ -137,14 +244,16 @@
 
 import OrderTable from '@/components/OrderTable'
 import RequestsList from './RequestsList'
-import AddRequestButton from './AddRequestButton'
 import OrderDetails from '@/views/OrderDetails/OrderDetails'
+import UploadOrdersDialog from './UploadOrdersDialog'
 
-import { mapActions } from 'vuex'
+import { mapActions, mapState } from 'vuex'
 import permissions from '@/mixins/permissions'
 import utils, { type } from '@/store/modules/utils'
 import orders, { types as ordersTypes } from '@/store/modules/orders'
 import { deleteRequest as delRequest } from '@/store/api_calls/requests'
+import isMobile from '@/mixins/is_mobile'
+import isMedium from '@/mixins/is_medium'
 
 export default {
   name: 'RequestsOrdersCombined',
@@ -152,13 +261,16 @@ export default {
     OrderTable,
     OrderDetails,
     RequestsList,
-    AddRequestButton
+    UploadOrdersDialog
   },
-  mixins: [permissions],
+  mixins: [permissions, isMobile, isMedium],
   data () {
     return {
       tab: 0,
       tabs: ['requests', 'orders'],
+      compressed: false,
+      selectedItem: 0,
+      openUploadOrdersDialog: false,
       request: {
         first_order_id: null,
         request_id: null,
@@ -174,6 +286,9 @@ export default {
     }
   },
   computed: {
+    ...mapState(utils.moduleName, {
+      showingSidebar: state => state.sidebar.show
+    }),
     requestOrdersTableHeaders () {
       return [
         { text: 'Date', sortable: false, value: 'created_at' },
@@ -190,12 +305,23 @@ export default {
       ]
     }
   },
+  watch: {
+    isMedium: function (newVal, oldVal) {
+      if (!newVal) {
+        this.setSidebar({ show: true })
+      }
+    }
+  },
   created () {
     this.tab = parseInt(this.$route.query.tab) || 0
   },
   beforeMount () {
-    this.setSidebar({ show: true })
+    if (!this.isMobile) {
+      return this.setSidebar({ show: true })
+    }
+    return this.setSidebar({ show: false })
   },
+
   methods: {
     ...mapActions(utils.moduleName, {
       setSidebar: type.setSidebar,
@@ -207,6 +333,7 @@ export default {
     }),
     handleFilesUploaded () {
       this.setReloadRequests(true)
+      this.openUploadOrdersDialog = false
     },
     requestChanged (request) {
       this.request = request
@@ -243,14 +370,44 @@ export default {
           this.loading = false
         }
       })
+    },
+    togglePanels () {
+      this.compressed = !this.compressed
     }
   }
 }
 </script>
 <style lang="scss" scoped>
-.requests__section {
+.requests__section::v-deep {
   border-right: 1px solid rgba(map-get($colors, slate-gray), 15%);
   height: 100vh;
+  .v-item-group .v-slide-group__next, .v-item-group .v-slide-group__prev{
+      display: none !important;
+  }
+  .add__request{
+      align-self: center;
+      margin-left: auto;
+      margin-right: rem(16);
+    }
+
+  .menu__compressed{
+    display: flex;
+    justify-content: space-between;
+    background-color:var(--v-primary-base);
+    height:rem(40);
+    .requests__section_collapse, button{
+      color: white;
+      font-size: rem(14);
+      font-weight: 500;
+      font-style: normal;
+      line-height: rem(16);
+      letter-spacing: rem(0.75);
+    }
+    .add__request{
+      margin-left: rem(15);
+    }
+
+  }
   .orders__list {
     overflow-y: auto;
     padding: rem(14) rem(24) 0 rem(24);

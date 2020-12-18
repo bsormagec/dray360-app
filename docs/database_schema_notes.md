@@ -39,6 +39,7 @@ Each status is very carefully defined, here is a complete list (as of 11/27/2020
 1. ocr-waiting
 1. process-ocr-output-file-complete
 1. process-ocr-output-file-error
+1. sending-to-chainio
 1. sending-to-wint
 1. shipment-created-by-wint
 1. shipment-not-created-by-wint
@@ -81,18 +82,6 @@ All status_metadata object include the following properties:
 
 
 
-#### `ocr-completed` status_metadata
-
-* created by `./processingqueuemonitor/processingqueuemonitor.py`
-* triggered by retry of `intake-accepted`
-
-1. s3_bucket: where output files are stored
-1. s3_folder: folder in that bucket
-1. s3_region: where output files are stored
-1. file_list: array of files matching `<requestid>_<sha256>_*`
-
-
-
 
 #### `ocr-timedout` status_metadata
 
@@ -103,6 +92,19 @@ All status_metadata object include the following properties:
 1. message
 1. receive_count, should be set to visibilitytimeout + 1
 1. resurrection_count, should be set to max_resurrection_count
+
+
+
+
+#### `ocr-completed` status_metadata
+
+* created by `./processingqueuemonitor/processingqueuemonitor.py`
+* triggered by retry of `intake-accepted`
+
+1. s3_bucket: where output files are stored
+1. s3_folder: folder in that bucket
+1. s3_region: where output files are stored
+1. file_list: array of files matching `<requestid>_<sha256>_*`
 
 
 
@@ -184,6 +186,37 @@ All status_metadata object include the following properties:
 * created by `./wintupdater/imageuploader.py`
 
 1. 'message': 'no image files, blackfly credentials or tms_shipment_id found'
+
+
+
+#### `sending-to-wint` status_metadata
+
+* created by `./Http/Controllers/Api/SendToTmsController.php` when user selects [Send to TMS] option for Profit Tools orders
+
+1. order_id
+1. company_id
+1. tms_provider_id (must be 1, i.e. Profit Tools)
+1. user_id
+
+
+
+
+
+#### `sending-to-chainio` status_metadata
+
+* created by `./Http/Controllers/Api/SendToTmsController.php` when user selects [Send to TMS] option for Compcare orders
+
+1. order_id
+1. company_id
+1. tms_provider_id (must be 2, i.e. Compcare)
+1. user_id
+
+
+    SUCCESS_SENDING_TO_CHAINIO = 'success-sending-to-chainio',
+    FAILURE_SENDING_TO_CHAINIO = 'failure-sending-to-chainio',
+    SHIPMENT_CREATED_BY_CHAINIO = 'shipment-created-by-chainio',
+    SHIPMENT_NOT_CREATED_BY_CHAINIO = 'shipment-not-created-by-chainio',
+
 
 
 
