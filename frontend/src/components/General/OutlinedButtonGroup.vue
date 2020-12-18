@@ -105,7 +105,7 @@ export default {
         to: get(this.mainAction, 'to', '') !== '' ? this.mainAction.to : undefined,
         href: get(this.mainAction, 'href', '') !== '' ? this.mainAction.href : undefined,
         title: get(this.mainAction, 'title', '') ? this.mainAction.title : false,
-        action: typeof this.mainAction.action === 'function' ? this.mainAction.action : '',
+        action: typeof this.mainAction.action === 'function' ? this.mainAction.action : () => {},
         disabled: this.buttonAttributes.disabled ? true : mainActionDisabled
       }
     }

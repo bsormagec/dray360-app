@@ -50,12 +50,12 @@
 }
 
 .form-field__label {
-  font-size: rem(13);
   font-weight: 700;
   line-height: (20 / 13);
   letter-spacing: rem(.25);
   color: map-get($colors, slate-gray);
-  font-size: rem(13)rem(.25);
+  font-size: rem(13);
+  margin-right: rem(8);
   .edit & {
     color: white;
   }

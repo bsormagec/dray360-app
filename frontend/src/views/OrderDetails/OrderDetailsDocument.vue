@@ -1,5 +1,8 @@
 <template>
-  <div :class="`document ${dimensions.width && dimensions.height ? 'loaded' : ''}`">
+  <div
+    v-if="hasFile"
+    :class="`document ${dimensions.width && dimensions.height ? 'loaded' : ''}`"
+  >
     <div
       v-for="(page) in pages"
       :key="page.name"
@@ -29,6 +32,32 @@
       </div>
     </div>
   </div>
+  <div
+    v-else
+    class="document"
+  >
+    <v-simple-table class="table">
+      <template v-slot:default>
+        <tbody>
+          <tr
+            v-for="row in tableData"
+            :key="row.field_key"
+            :class="{
+              'table-highlight': true,
+              edit: safeGet(row, 'highlight.edit', false),
+              hover: safeGet(row, 'highlight.hover', false)
+            }"
+            @click="() => scrollToAndStartFieldEdit(row.field_key)"
+            @mouseover="isMobile || row.highlight === undefined ? () => {} : startHover({ path: row.field_key })"
+            @mouseleave="isMobile || row.highlight === undefined ? () => {} : stopHover({ path: row.field_key })"
+          >
+            <th v-text="row.name" />
+            <td v-text="row.value" />
+          </tr>
+        </tbody>
+      </template>
+    </v-simple-table>
+  </div>
 </template>
 
 <script>
@@ -37,6 +66,8 @@ import { cleanStrForId } from '@/utils/clean_str_for_id.js'
 import { mapState, mapActions } from 'vuex'
 import isMobile from '@/mixins/is_mobile'
 import { scrollTo } from '@/utils/scroll_to'
+import { getNonPDFHighlightsParsedFieldName } from '@/utils/order_form_general_functions.js'
+import safeGet from 'lodash/get'
 
 export default {
   name: 'OrderDetailsDocument',
@@ -53,8 +84,25 @@ export default {
   computed: {
     ...mapState(orderForm.moduleName, {
       highlights: state => state.highlights,
-      pages: state => state.pages
-    })
+      pages: state => state.pages,
+      currentOrder: state => state.order
+    }),
+    tableData () {
+      const fields = this.currentOrder.ocr_data.original_fields
+      return Object.keys(fields)
+        .map(field => {
+          const fieldKey = getNonPDFHighlightsParsedFieldName(field)
+          return {
+            name: fields[field].name,
+            value: fields[field].value,
+            field_key: fieldKey,
+            highlight: this.highlights[fieldKey]
+          }
+        })
+    },
+    hasFile () {
+      return !!this.currentOrder.ocr_data.ocr_data_filename.value
+    }
   },
 
   methods: {
@@ -63,6 +111,7 @@ export default {
       stopHover: types.stopHover,
       startFieldEdit: types.startFieldEdit
     }),
+    safeGet,
     cleanStrForId,
     getHighlightsForPage (pageNumber) {
       const pageHighlights = {}
@@ -153,6 +202,55 @@ export default {
 
   &.hover, &.edit {
     background: rgba($blue--lt, .4);
+  }
+
+}
+
+.v-data-table.table {
+  .v-data-table__wrapper {
+    table {
+      tbody {
+        box-shadow: -1px -1px 0px 0px #E6ECF1 inset;
+
+        tr {
+          &.table-highlight {
+            cursor: pointer;
+            transition: background-color 200ms ease-in-out;
+          }
+          &:hover,
+          &.hover,
+          &.edit {
+            background-color: #eaf3ee !important;
+          }
+          &:last-child th,
+          &:last-child td {
+            border-bottom: none;
+          }
+          td, th {
+            padding: rem(6) rem(12);
+            font-size: rem(12);
+            line-height: (24 / 12);
+            letter-spacing: rem(.15);
+            font-weight: 500;
+            border-top: 1px solid #FFF;
+            border-bottom: 1px solid #FFF;
+          }
+          th {
+            width: rem(120);
+            text-align: right;
+            color: white;
+            background-color: #478854;
+            border-color: #FFF;
+          }
+          td {
+            font-weight: 400;
+            letter-spacing: rem(.25);
+            line-height: (20 / 12);
+            border-color: map-get($colors, gray-4);
+          }
+        }
+      }
+    }
   }
 }
 </style>

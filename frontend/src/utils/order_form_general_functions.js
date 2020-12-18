@@ -74,7 +74,6 @@ export function keyShouldBeParsed (key) {
 
 export function getOcrData (key, ocrData) {
   if (key.includes('order_address_events')) {
-
     const found = Object.values(
       get(ocrData, 'fields', {})
     ).find(field => {
@@ -89,6 +88,15 @@ export function getOcrData (key, ocrData) {
   }
 
   return defaultsTo(() => ocrData.fields[key].ocr_region, {})
+}
+
+export function getNonPDFHighlightsParsedFieldName (originalFieldKey) {
+  const eventRgx = /event([0-9]).*/
+  if (originalFieldKey.match(eventRgx)) {
+    const matchIndex = originalFieldKey.match(eventRgx)[1]
+    return `order_address_events.${Number(matchIndex) - 1}`
+  }
+  return originalFieldKey
 }
 
 export function formatAddress (address) {

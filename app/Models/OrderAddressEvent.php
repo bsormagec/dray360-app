@@ -56,18 +56,15 @@ class OrderAddressEvent extends Model
         't_address_verified',
         't_order_id',
         'unparsed_event_type',
+        'note',
     ];
 
     /**
      * The attributes that should be casted to native types.
      */
     protected $casts = [
-        'id' => 'integer',
         'address_schedule_description' => 'string',
-        't_order_id' => 'integer',
-        't_address_id' => 'integer',
         't_address_verified' => 'boolean',
-        't_address_raw_text' => 'string',
         'event_number' => 'integer',
         'is_hook_event' => 'boolean',
         'is_mount_event' => 'boolean',
@@ -76,8 +73,6 @@ class OrderAddressEvent extends Model
         'is_drop_event' => 'boolean',
         'is_pickup_event' => 'boolean',
         'call_for_appointment' => 'boolean',
-        'delivery_instructions' => 'string',
-        'unparsed_event_type' => 'string'
     ];
 
     /**

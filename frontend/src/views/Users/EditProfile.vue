@@ -76,6 +76,7 @@
     <v-row>
       <v-col>
         <v-btn
+          data-cy="change-password-button"
           class="button"
           text
           color="primary"

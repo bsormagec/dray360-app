@@ -110,7 +110,7 @@
           }"
           :options="[
             { title: 'Download Source File', action: () => downloadSourceFile(item.id) },
-            { title: 'Reprocess Order', action: () => reprocessOrder(item.request_id) },
+            { title: 'Reprocess Order', action: () => reprocessRequest(item.request_id) },
             { title: 'Delete Order', action: () => deleteOrder(item) }
           ]"
         />
@@ -465,6 +465,9 @@ export default {
             this.loading = false
             message = 'Order deleted'
             this.resetFilters()
+            if (this.orders.length <= 2) {
+              this.$emit('order-deleted')
+            }
           } else {
             message = 'Error trying to delete the order'
           }

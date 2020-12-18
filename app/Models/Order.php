@@ -18,7 +18,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
  * @property string $id
  * @property string $request_id
  * @property string $shipment_designation
- * @property string $equipment_type
+ * @property string $equipment_type_raw_text
  * @property string $shipment_direction
  * @property boolean $one_way
  * @property boolean $yard_pre_pull
@@ -84,7 +84,7 @@ class Order extends Model
     public $fillable = [
         'request_id',
         'shipment_designation',
-        'equipment_type',
+        'equipment_type_raw_text',
         'shipment_direction',
         'one_way',
         'yard_pre_pull',
@@ -172,6 +172,9 @@ class Order extends Model
         'pickup_by_date' => 'datetime:Y-m-d',
         'cutoff_date' => 'datetime:Y-m-d',
         'equipment_type_verified' => 'boolean',
+        'tms_submission_datetime' => 'datetime',
+        'tms_cancelled_datetime' => 'datetime',
+        'cancelled_datetime' => 'datetime',
     ];
 
     /**
@@ -187,7 +190,6 @@ class Order extends Model
      */
     public static $rules = [
         'shipment_designation' => 'sometimes|nullable',
-        //'equipment_type' => 'sometimes|nullable', comented due to has the same key in relation equipmentType and is throwing an error at save
         'shipment_direction' => 'sometimes|nullable',
         'one_way' => 'sometimes|nullable',
         'yard_pre_pull' => 'sometimes|nullable',

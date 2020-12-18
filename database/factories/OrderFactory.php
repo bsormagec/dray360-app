@@ -11,7 +11,7 @@ $factory->define(Order::class, function (Faker $faker) {
     return [
         'request_id' => null, // We should not create ocr requests, since it's handled by the trigger inside the t_job_state_changes table
         'shipment_designation' => Arr::random(['Export', 'Import', 'Domestic']),
-        'equipment_type' => Arr::random(['Container', 'Trailer']),
+        'equipment_type_raw_text' => Arr::random(['Container', 'Trailer']),
         'shipment_direction' => Arr::random(['Export', 'Import', 'Domestic']),
         'one_way' => $faker->boolean,
         'yard_pre_pull' => $faker->boolean,

@@ -14,21 +14,8 @@ use Illuminate\Support\Facades\DB;
 
 class OrdersTableSeeder extends Seeder
 {
-    // class constants
-
     // define how many to seed
-    const NUM_ORDERS_TO_CREATE = 1;
     const PCT_ORDERS_INTAKE_REJECTED = 15;
-
-    // lists of sample data values
-    const UOM_PACKAGE_LIST = ['BAG', 'BOX', 'LOT', 'CAS', 'CRT', 'TU', 'ROL', 'PAD', 'PAL', 'FT']; // https://www.doa.la.gov/osp/Vendorcenter/publications/unitofmeasurecodes.pdf
-    const UOM_WEIGHT_LIST = ['TON', 'LBS', 'KGS'];
-    const DIRECTION_LIST = ['Export', 'Import', 'Domestic'];
-    const EQUIPMENT_LIST = ['GP-General Purpose', 'HQ-High Cube', 'CC-Car Carrier', 'DD-Double Door'];
-    const DESTINATION_LIST = ['International', 'Domestic'];
-    const EQUIPMENT_TYPE_LIST = ['Container', 'Trailer'];
-    const UNIT_NUMBER_LIST = ['ACMU8009943', 'HJCU8281988', 'CSQU3054383', 'TOLU4734787', 'LSCU1077379', 'MSKU2666542', 'NYKU3086856', 'BICU1234565'];
-    const EQUIPMENT_SIZE_LIST = ['20 ft', '40 ft', '45 ft', '48ft'];
 
     /**
      * Make an order having a related OCR request, and order line items, etc.

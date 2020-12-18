@@ -3,7 +3,7 @@ export default (objParams) => {
 
   Object.keys(objParams).forEach((key) => {
     if (!objParams[key]) return
-    params.push(`${key}=${objParams[key]}`)
+    params.push(`${key}=${encodeURIComponent(objParams[key])}`)
   })
 
   return params.join('&')

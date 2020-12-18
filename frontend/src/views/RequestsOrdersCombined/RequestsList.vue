@@ -72,7 +72,6 @@ import Filters from '@/components/OrderTable/components/filters'
 import RequestItem from './RequestItem'
 
 import { mapActions, mapState } from 'vuex'
-import utils, { type } from '@/store/modules/utils'
 import orders, { types as ordersTypes } from '@/store/modules/orders'
 import { getRequests } from '@/store/api_calls/requests'
 import { getRequestFilters } from '@/utils/filters_handling'
@@ -148,9 +147,6 @@ export default {
     this.initFilters.updateType = params.updateType
     this.requestSelected = params.selected || null
   },
-  beforeMount () {
-    this[type.setSidebar]({ show: true })
-  },
   async mounted () {
     this.addScrollEventToFetchMoreRequests()
     this.startLoading()
@@ -167,7 +163,6 @@ export default {
   },
 
   methods: {
-    ...mapActions(utils.moduleName, [type.setSidebar]),
     ...mapActions(orders.moduleName, {
       setReloadRequests: ordersTypes.setReloadRequests
     }),
@@ -205,14 +200,14 @@ export default {
       return bottomOfPage || pageHeight < visible
     },
     async fetchRequests () {
-      const [error, { data, meta }] = await getRequests(this.getRequestFilters())
+      const [error, data] = await getRequests(this.getRequestFilters())
 
       if (error !== undefined) {
         return
       }
 
-      this.items = this.items.concat(data)
-      this.meta = meta
+      this.items = this.items.concat(data.data)
+      this.meta = data.meta
       this.loading = false
     },
     getRequestFilters () {
@@ -279,13 +274,13 @@ export default {
     },
 
     async getTotalRequests () {
-      const [error, { meta }] = await getRequests([])
+      const [error, data] = await getRequests([])
 
       if (error !== undefined) {
         return this.initialTotalItems
       }
 
-      return meta.total
+      return data.meta.total
     },
 
     stopPolling () {
