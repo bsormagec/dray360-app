@@ -200,14 +200,14 @@ export default {
       return bottomOfPage || pageHeight < visible
     },
     async fetchRequests () {
-      const [error, { data, meta }] = await getRequests(this.getRequestFilters())
+      const [error, data] = await getRequests(this.getRequestFilters())
 
       if (error !== undefined) {
         return
       }
 
-      this.items = this.items.concat(data)
-      this.meta = meta
+      this.items = this.items.concat(data.data)
+      this.meta = data.meta
       this.loading = false
     },
     getRequestFilters () {
@@ -274,13 +274,13 @@ export default {
     },
 
     async getTotalRequests () {
-      const [error, { meta }] = await getRequests([])
+      const [error, data] = await getRequests([])
 
       if (error !== undefined) {
         return this.initialTotalItems
       }
 
-      return meta.total
+      return data.meta.total
     },
 
     stopPolling () {
