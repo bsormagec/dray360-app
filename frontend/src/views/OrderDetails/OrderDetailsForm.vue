@@ -62,7 +62,8 @@
         :options="[
           { title: 'Edit Order' , action: toggleEdit, hasPermission: true },
           { title: 'Download Source File', action: () => downloadSourceFile(order.id), hasPermission: true },
-          { title: 'Delete Order', action: () => deleteOrder(order.id), hasPermission: hasPermission('orders-remove') }
+          { title: 'Delete Order', action: () => deleteOrder(order.id), hasPermission: hasPermission('orders-remove') },
+          { title: 'Add TMS ID', action: () => addTMSId(order.id), hasPermission: hasPermission('ocr-requests-edit') && isInProcessedState}
         ]"
         :loading="loading"
       />
@@ -687,6 +688,10 @@ export default {
       ].join(':')
 
       return `${date} ${time}`
+    },
+
+    isInProcessedState () {
+      return (this.order.ocr_request.latest_ocr_request_status.status === 'process-ocr-output-file-complete')
     }
   },
   beforeMount () {
@@ -834,10 +839,25 @@ export default {
       arr[index].deleted_at = true
       this.handleChange('order_address_events', arr)
     },
+    
+    async addTMSId () {
+      await this[type.setConfirmationDialog]({
+        title: 'Please type the desired TMS ID',
+        hasInputValue: true,
+        onConfirm: async (value) => {
+          this.handleChange('tms_shipment_id', value)
+
+          await this[type.setSnackbar]({ show: true, message: 'TMS ID added' })
+        },
+        onCancel: () => { this.loading = false }
+      })
+    },
+
     displayName (value) {
       const result = this.profitToolsTemplatesSelectItems.filter(el => el.tms_template_id === value)
       return result.length > 0 ? result[0].tms_template_name : value
     }
+    
   }
 }
 </script>
