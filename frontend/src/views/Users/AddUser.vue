@@ -1,30 +1,25 @@
 <template>
   <div class="pa-5">
-    <AddUserForm />
+    <UserForm add />
   </div>
 </template>
 
 <script>
+import UserForm from './UserForm'
 
-import AddUserForm from '@/components/Users/AddUserForm'
 import utils, { type } from '@/store/modules/utils'
 import { mapActions } from 'vuex'
 
 export default {
+  name: 'AddUser',
   components: {
-    AddUserForm
+    UserForm
   },
-  beforeMount () {
-    this.showSidebar()
+  async beforeMount () {
+    await this.setSidebar({ show: true })
   },
   methods: {
-    ...mapActions(utils.moduleName, [type.setSidebar]),
-
-    async showSidebar () {
-      await this[type.setSidebar]({
-        show: true
-      })
-    }
+    ...mapActions(utils.moduleName, { setSidebar: type.setSidebar })
   }
 }
 </script>

@@ -7,7 +7,7 @@ export const getUsers = async (filters, query) => axios.get(`/api/users?${toPara
 
 export const deleteUser = async (id) => axios.delete(`/api/users/${id}`).then(data => [undefined, data.data]).catch(e => [e])
 
-export const editUser = async (userData, id) => axios.put(`/api/users/${id}`, userData).then(data => [undefined, data.data]).catch(e => [e])
+export const editUser = async (id, userData) => axios.put(`/api/users/${id}`, userData).then(data => [undefined, data.data]).catch(e => [e])
 
 export const addUser = async (userData) => axios.post('/api/users', userData).then(data => [undefined, data.data]).catch(e => [e])
 

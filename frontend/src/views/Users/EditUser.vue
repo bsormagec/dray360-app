@@ -1,14 +1,26 @@
 <template>
   <div class="pa-5">
-    <EditUserForm />
+    <UserForm edit />
   </div>
 </template>
 
 <script>
-import EditUserForm from '@/components/Users/EditUserForm'
+import UserForm from './UserForm'
+
+import utils, { type } from '@/store/modules/utils'
+import { mapActions } from 'vuex'
+
 export default {
+  name: 'EditUser',
+
   components: {
-    EditUserForm
+    UserForm
+  },
+  async beforeMount () {
+    await this.setSidebar({ show: true })
+  },
+  methods: {
+    ...mapActions(utils.moduleName, { setSidebar: type.setSidebar })
   }
 }
 </script>

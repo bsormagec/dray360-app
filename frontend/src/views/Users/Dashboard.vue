@@ -10,7 +10,7 @@
       :has-action-button="{showButton: false, action: '/'}"
       :has-add-button="{showButton: true, action: '/'}"
       :has-calendar="false"
-      @deleteItem="deleteUser"
+      @delete-item="deleteUser"
     />
   </div>
 </template>
@@ -19,9 +19,10 @@
 
 import UserTable from '@/components/Users/UserTable'
 import { mapState, mapActions } from 'vuex'
-import { reqStatus } from '@/enums/req_status'
 import userDashboard, { types } from '@/store/modules/users'
 import utils, { type } from '@/store/modules/utils'
+import { deleteUser } from '@/store/api_calls/users'
+
 export default {
   components: {
     UserTable
@@ -33,26 +34,41 @@ export default {
     })
   },
 
+  beforeMount () {
+    this.showSidebar()
+  },
+
   methods: {
-    ...mapActions(userDashboard.moduleName, [types.getUsers, types.deleteUser]),
-    ...mapActions(utils.moduleName, [type.setSidebar]),
+    ...mapActions(userDashboard.moduleName, [types.getUsers]),
+    ...mapActions(utils.moduleName, {
+      setSidebar: type.setSidebar,
+      setConfirmationDialog: type.setConfirmationDialog,
+      setSnackbar: type.setSnackbar
+    }),
 
     async showSidebar () {
-      await this[type.setSidebar]({
-        show: true
-      })
+      await this.setSidebar({ show: true })
     },
 
-    async deleteUser (id) {
-      const status = await this[types.deleteUser](id)
+    deleteUser (id) {
+      this.setConfirmationDialog({
+        title: 'Are you sure you want to delete this user?',
+        onConfirm: async () => {
+          this.loading = true
 
-      if (status === reqStatus.success) {
-        console.log('delete user success')
-      } else {
-        console.log('error')
-      }
+          const [error] = await deleteUser(id)
 
-      location.reload()
+          let message = ''
+          if (error === undefined) {
+            message = 'User deleted'
+            location.reload()
+          } else {
+            message = 'An error has ocurred'
+          }
+
+          await this.setSnackbar({ show: true, message })
+        }
+      })
     }
   }
 }

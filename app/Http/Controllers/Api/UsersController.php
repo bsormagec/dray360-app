@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Api;
 
 use App\Models\Role;
 use App\Models\User;
+use App\Models\Company;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Validation\Rule;
@@ -24,7 +25,9 @@ class UsersController extends Controller
         $this->authorize('viewAny', User::class);
 
         $query = User::query()
-            ->forCurrentCompany()
+            ->when(! is_superadmin(), function ($query) {
+                return $query->forCurrentCompany();
+            })
             ->with([
                 'company:id,name',
                 'roles:id,name'
@@ -53,16 +56,19 @@ class UsersController extends Controller
             'password' => 'required|min:8',
             'role_id' => [
                 'required',
-                'not_in:'.$superadminRole->id,
+                'not_in:'. (! is_superadmin() ? $superadminRole->id : null),
                 'exists:roles,id',
             ],
+            'company_id' => 'nullable|exists:t_companies,id'
         ]);
         $roleId = $data['role_id'];
+        $companyId = Company::find($data['company_id'] ?? null);
         $password = bcrypt($data['password']);
         unset($data['password']);
         unset($data['role_id']);
+        unset($data['company_id']);
 
-        $user = (new User($data))->setCompany(currentCompany());
+        $user = (new User($data))->setCompany($companyId ?: currentCompany());
         $user->password = $password;
         $user->save();
         $user->attachRole($roleId);
@@ -103,12 +109,17 @@ class UsersController extends Controller
             'org' => 'sometimes',
             'role_id' => [
                 'sometimes',
-                'not_in:'.$superadminRole->id,
+                'not_in:'.(! is_superadmin() ? $superadminRole->id : null),
                 'exists:roles,id',
             ],
+            'company_id' => 'nullable|exists:t_companies,id'
         ]);
         $roleId = $data['role_id'] ?? null;
+        $companyId = $data['company_id'] ?? null;
         unset($data['role_id']);
+        unset($data['company_id']);
+        $data['t_company_id'] = $companyId ?: $user->getCompanyId();
+
         if ($roleId) {
             $user->syncRoles([$roleId]);
         }
