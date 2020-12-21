@@ -48,7 +48,6 @@
 
 import utils, { type } from '@/store/modules/utils'
 import { mapActions, mapState } from 'vuex'
-import orderForm, { types as orderFormTypes } from '@/store/modules/order-form'
 export default {
   name: 'ConfirmationDialog',
   data () {
@@ -57,20 +56,12 @@ export default {
     }
   },
   computed: {
-    ...mapState(utils.moduleName, { confirmationDialog: state => state.confirmationDialog }),
-    ...mapState(orderForm.moduleName, {
-      order: state => state.order
-    })
+    ...mapState(utils.moduleName, { confirmationDialog: state => state.confirmationDialog })
   },
   methods: {
     ...mapActions(utils.moduleName, {
       accept: type.acceptConfirmationDialog,
-      cancel: type.cancelConfirmationDialog,
-      setConfirmationDialog: type.setConfirmationDialog
-    }),
-
-    ...mapActions(orderForm.moduleName, {
-      updateOrder: orderFormTypes.updateOrder
+      cancel: type.cancelConfirmationDialog
     }),
 
     acceptDialog () {
