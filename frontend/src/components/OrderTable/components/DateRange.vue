@@ -4,14 +4,14 @@
       ref="menu"
       v-model="menu"
       :close-on-content-click="false"
-      :return-value.sync="date"
+      :return-value.sync="dates"
       transition="scale-transition"
       offset-y
       min-width="290px"
     >
       <template v-slot:activator="{ on, attrs }">
         <v-text-field
-          :value="dateRangeText"
+          :value="dates.join(' - ')"
           prepend-icon="mdi-calendar-blank"
           class="calendar__input"
           clearable
@@ -21,7 +21,7 @@
           dense
           v-bind="attrs"
           v-on="on"
-          @click:clear="click"
+          @click:clear="clear"
         />
       </template>
       <v-date-picker
@@ -45,7 +45,7 @@
         <v-btn
           text
           color="primary"
-          @click="$refs.menu.save(date)"
+          @click="finishDateSelection"
         >
           OK
         </v-btn>
@@ -56,76 +56,44 @@
 <script>
 export default {
 
-  props: ['value'],
+  props: {
+    value: {
+      type: Array,
+      required: true,
+      default: () => []
+    }
+  },
   data () {
     return {
-      // dates: [],
-      date: new Date().toISOString().substr(0, 10),
+      dates: this.value,
       menu: false
     }
   },
-  computed: {
-    // dates () {
-    //   return this.value
-    // },
-    dates: {
-      get () {
-        return this.value
-      },
-      set (newRange) {
-        this.$emit('input', newRange)
-      }
-
-    },
-    dateRangeText () {
-      return this.value.join(' - ')
+  watch: {
+    value (newValue) {
+      this.dates = newValue
     }
   },
   methods: {
+    finishDateSelection () {
+      if (this.dates.length === 1) {
+        this.dates.push(this.dates[0])
+      }
+      this.dates = this.dates.sort((a, b) => Date.parse(a) - Date.parse(b))
+
+      this.$refs.menu.save(this.dates)
+      this.$emit('input', this.dates)
+    },
     change (event) {
       this.$emit('change', event)
     },
-    click (event) {
-      this.$emit('click:clear', event)
+    clear (event) {
+      this.dates = []
+      this.$emit('input', this.dates)
     }
   }
 
 }
 </script>
 <style lang="scss" scoped>
-.range__calendar {
-    //   max-width: rem(300);
-    //   width: rem(300);
-    //   margin-right: rem(10);
-    //   height: 0;
-    //   margin-bottom: rem(25);
-    //   .calendar__input {
-    //     max-height: rem(30) !important;
-    //      .v-input__prepend-outer{
-    //           margin-top: 0 !important;
-    //         }
-    //       .v-input__slot{
-    //         min-height: rem(20) !important;
-    //         .v-input__append-inner{
-    //           margin-top: 0 !important;
-    //           .v-input__icon > .v-icon{
-    //             margin-top: rem(3);
-    //           }
-    //         }
-    //         label{
-    //           top: rem(9);
-    //           height: rem(10);
-    //           line-height: rem(10);
-    //           font-size: rem(10);
-    //           text-transform: lowercase !important;
-    //         }
-    //         fieldset{
-    //           color: map-get($colors, grey-8 ) !important;
-    //         }
-    //       }
-    //       .v-input__control{
-    //         height: rem(30);
-    //       }
-    //   }
-    }
 </style>
