@@ -3,7 +3,7 @@ describe('Add user', function () {
     cy.fixture('auth/tenant.json').as('tenant')
     cy.fixture('auth/user.json').as('user')
     cy.fixture('user-mgmt/roles.json').as('roles')
-    cy.fixture('user-mgmt/company.json').as('company')
+    cy.fixture('user-mgmt/companies.json').as('companies')
     cy.fixture('user-mgmt/user-list.json').as('users')
     cy.fixture('user-mgmt/created-user.json').as('createdUser')
   })
@@ -17,7 +17,7 @@ describe('Add user', function () {
 
     cy.route({ url: '**/api/roles', response: this.roles })
 
-    cy.route({ url: '**/api/companies/2', response: this.company })
+    cy.route({ url: '**/api/companies', response: this.companies })
 
     cy.visit('localhost:8080/user/dashboard/add-user')
 
@@ -33,7 +33,7 @@ describe('Add user', function () {
 
     cy.route({ method: 'GET', url: '**/api/users', response: this.users })
 
-    cy.get('[data-cy=add-user-button]').click({ force: true })
+    cy.get('[data-cy=save-button]').click({ force: true })
 
     cy.url().should('include', 'user/dashboard')
   })

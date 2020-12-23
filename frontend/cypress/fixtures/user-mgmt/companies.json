@@ -1,0 +1,253 @@
+{
+    "data": [
+        {
+            "id": 1,
+            "t_address_id": 667,
+            "name": "Cushing",
+            "created_at": "2020-06-15T15:30:40.000000Z",
+            "updated_at": "2020-12-04T17:12:51.000000Z",
+            "deleted_at": null,
+            "email_intake_address": "cushing-dev@in.dray360.com",
+            "email_intake_address_alt": null,
+            "default_tms_provider_id": 1,
+            "refs_custom_mapping": {
+                "custom1": {
+                    "value": "L"
+                },
+                "custom3": {
+                    "value": "No"
+                },
+                "ds_ref2_text": {
+                    "source": "reference_number"
+                },
+                "ds_ref2_type": {
+                    "value": 2
+                },
+                "ds_ref3_type": {
+                    "value": 3
+                }
+            },
+            "configuration": {
+                "logo2": "https://dray360-site-assets.s3.us-east-2.amazonaws.com/company_1/cushing_logo.png"
+            },
+            "t_domain_id": null,
+            "automatic_address_verification_threshold": 2,
+            "blackfly_imagetype": "PRE-NOTE",
+            "ripcms_username": "draymaster@cushingtrans.com",
+            "sync_addresses": false,
+            "company_config": null,
+            "compcare_api_key": "eyJpdiI6IlBWR2k2RjZURHgwNVM2QTZvNlhWb1E9PSIsInZhbHVlIjoiMkV1bStUSWI1U245VGZsRDhOVWJyUT09IiwibWFjIjoiMzE2NjZjMTA1YTAyYWZmMDdkOTk4YjkzN2M0YjBiN2VlZDFlNWQzMTg5MGRjZTdkZTBjMmYxMTllNzRmZWUxZiJ9"
+        },
+        {
+            "id": 2,
+            "t_address_id": 7319,
+            "name": "TCompaniesDemo",
+            "created_at": "2020-06-19T17:08:35.000000Z",
+            "updated_at": "2020-12-04T17:13:23.000000Z",
+            "deleted_at": null,
+            "email_intake_address": "demo-dev@in.dray360.com",
+            "email_intake_address_alt": "tcompanies-dev@in.dray360.com",
+            "default_tms_provider_id": 1,
+            "refs_custom_mapping": {
+                "custom1": {
+                    "value": "L"
+                },
+                "custom3": {
+                    "value": "No"
+                },
+                "ds_ref2_text": {
+                    "source": "reference_number"
+                },
+                "ds_ref2_type": {
+                    "value": 2
+                },
+                "ds_ref3_type": {
+                    "value": 3
+                }
+            },
+            "configuration": null,
+            "t_domain_id": null,
+            "automatic_address_verification_threshold": null,
+            "blackfly_imagetype": "PRE-NOTE",
+            "ripcms_username": "abryden@photector.com",
+            "sync_addresses": false,
+            "company_config": null,
+            "compcare_api_key": "eyJpdiI6InpoRlZ3azQ2WmZWb3B1QUltOFJJbUE9PSIsInZhbHVlIjoiYXFtcjU5KzZTQi9jNlkyVnlvbDVnUT09IiwibWFjIjoiMzZkN2E1NGRmMTI4YmM5OTcwZTY1MDE1MTA1YmUwOTY4MWYxYTc5YzE4NjJmMWFjNzkzMzFiZDEwZWE4ODE5YSJ9"
+        },
+        {
+            "id": 3,
+            "t_address_id": 14817,
+            "name": "Polaris",
+            "created_at": "2020-07-02T11:34:05.000000Z",
+            "updated_at": "2020-07-02T11:34:05.000000Z",
+            "deleted_at": null,
+            "email_intake_address": null,
+            "email_intake_address_alt": null,
+            "default_tms_provider_id": 1,
+            "refs_custom_mapping": null,
+            "configuration": null,
+            "t_domain_id": null,
+            "automatic_address_verification_threshold": null,
+            "blackfly_imagetype": null,
+            "ripcms_username": null,
+            "sync_addresses": false,
+            "company_config": null,
+            "compcare_api_key": null
+        },
+        {
+            "id": 4,
+            "t_address_id": 46203,
+            "name": "IXTOnboarding",
+            "created_at": "2020-09-16T13:17:57.000000Z",
+            "updated_at": "2020-12-04T17:13:43.000000Z",
+            "deleted_at": null,
+            "email_intake_address": "ixtonboarding-dev@in.dray360.com",
+            "email_intake_address_alt": null,
+            "default_tms_provider_id": 1,
+            "refs_custom_mapping": {
+                "custom1": {
+                    "source": "purchase_order_number"
+                },
+                "custom5": {
+                    "source": "total_quantity"
+                },
+                "custom6": {
+                    "source": "total_weight"
+                },
+                "custom8": {
+                    "source": "interchange_count"
+                },
+                "ds_ref3_text": {
+                    "source": "reference_number"
+                },
+                "ds_ref3_type": {
+                    "value": 2
+                }
+            },
+            "configuration": {
+                "logo2": "https://secureservercdn.net/198.71.233.68/abq.0ce.myftpupload.com/wp-content/uploads/2019/11/ixtkc_logo_512x232.png"
+            },
+            "t_domain_id": null,
+            "automatic_address_verification_threshold": null,
+            "blackfly_imagetype": "DELIVERYORDER",
+            "ripcms_username": "hmaynard@draymaster.com",
+            "sync_addresses": false,
+            "company_config": {
+                "send_unknown_chassis": true
+            },
+            "compcare_api_key": "eyJpdiI6IlhsYzN0eGhnWGhlMFZuUHFjbDAyZkE9PSIsInZhbHVlIjoiK09mRHdUeWZFUjlJdkhLTWdkUkhjUT09IiwibWFjIjoiNzZlNjQ1NDFhNDEzNDVhNmVjNzhkZWVlY2ExZWY1YjI0MTY1ZGYyYWI5YmJjNjg4NjY0NzVmMTA1YTMxOGMwOCJ9"
+        },
+        {
+            "id": 5,
+            "t_address_id": 46210,
+            "name": "IXT",
+            "created_at": "2020-09-18T11:25:11.000000Z",
+            "updated_at": "2020-12-04T17:12:17.000000Z",
+            "deleted_at": null,
+            "email_intake_address": "ixt-dev@in.dray360.com",
+            "email_intake_address_alt": null,
+            "default_tms_provider_id": 1,
+            "refs_custom_mapping": {
+                "custom1": {
+                    "source": "purchase_order_number"
+                },
+                "custom5": {
+                    "source": "total_quantity"
+                },
+                "custom6": {
+                    "source": "total_weight"
+                },
+                "custom8": {
+                    "source": "interchange_count"
+                },
+                "ds_ref3_text": {
+                    "source": "reference_number"
+                },
+                "ds_ref3_type": {
+                    "value": 2
+                }
+            },
+            "configuration": {
+                "logo2": "https://dray360-site-assets.s3.us-east-2.amazonaws.com/company_5/ixtkc_logo.png"
+            },
+            "t_domain_id": null,
+            "automatic_address_verification_threshold": null,
+            "blackfly_imagetype": "DELIVERYORDER",
+            "ripcms_username": "draymaster@ixt.com",
+            "sync_addresses": false,
+            "company_config": {
+                "send_unknown_chassis": true
+            },
+            "compcare_api_key": "eyJpdiI6IlNvNkJnVmlhNzloWE8xUEZham1JMXc9PSIsInZhbHVlIjoiVm5GZ0tBQzlSc0tuOXA4cFR1VGtBQT09IiwibWFjIjoiZDYxNjI5NmU3MjdhODhhNGYzMjZlZTg5NTllMWU3Njc1NDA1MGNmMDRkZmZhNjA1MDRjMzkxZDQ3NzQ3Yzk2NyJ9"
+        },
+        {
+            "id": 6,
+            "t_address_id": 60298,
+            "name": "PortCityLogisticsOnboarding",
+            "created_at": "2020-10-30T14:30:42.000000Z",
+            "updated_at": "2020-12-04T17:14:16.000000Z",
+            "deleted_at": null,
+            "email_intake_address": "portcitylogisticsonboarding-dev@in.dray360.com",
+            "email_intake_address_alt": null,
+            "default_tms_provider_id": 1,
+            "refs_custom_mapping": {
+                "ds_ref3_text": {
+                    "source": "reference_number"
+                },
+                "ds_ref3_type": {
+                    "value": 2
+                }
+            },
+            "configuration": {
+                "logo2": "https://dray360-site-assets.s3.us-east-2.amazonaws.com/company_6/ONBOARDING-Port-City-Logo-New-small-1.png",
+                "profit_tools_template_list": [
+                    {
+                        "tms_template_id": "123453",
+                        "tms_template_name": "some_name"
+                    }
+                ],
+                "profit_tools_enable_templates": true
+            },
+            "t_domain_id": null,
+            "automatic_address_verification_threshold": null,
+            "blackfly_imagetype": "DELIVERY ORDER",
+            "ripcms_username": "draymasterdev@portcitylogistics.com",
+            "sync_addresses": false,
+            "company_config": {
+                "send_unknown_chassis": true
+            },
+            "compcare_api_key": "eyJpdiI6IkRNK0MrSDJ2S012LzVleU40dWhDQkE9PSIsInZhbHVlIjoibGNjdzc5S3hpRzN6emtxNFkrQmZPdz09IiwibWFjIjoiMDBjMzE5YTljZTdiYWJkYWE4NjliODNkMGM2MmFlYjQyNThhODQ1MDRjMTU2Yzk3ZDk0N2Q4OWQ5ZjJlOGQ4MSJ9"
+        },
+        {
+            "id": 7,
+            "t_address_id": 60299,
+            "name": "PortCityLogistics",
+            "created_at": "2020-10-30T14:30:42.000000Z",
+            "updated_at": "2020-12-04T17:12:04.000000Z",
+            "deleted_at": null,
+            "email_intake_address": "portcitylogistics-dev@in.dray360.com",
+            "email_intake_address_alt": null,
+            "default_tms_provider_id": 1,
+            "refs_custom_mapping": null,
+            "configuration": {
+                "logo2": "https://dray360-site-assets.s3.us-east-2.amazonaws.com/company_7/Port-City-Logo-New-small-1.png",
+                "profit_tools_template_list": [
+                    {
+                        "tms_template_id": "123453",
+                        "tms_template_name": "some_name"
+                    }
+                ],
+                "profit_tools_enable_templates": true
+            },
+            "t_domain_id": null,
+            "automatic_address_verification_threshold": null,
+            "blackfly_imagetype": "DELIVERY ORDER",
+            "ripcms_username": "draymaster@portcitylogistics.com",
+            "sync_addresses": false,
+            "company_config": {
+                "send_unknown_chassis": true
+            },
+            "compcare_api_key": "eyJpdiI6ImRzU1hnenRLV1drZXpxWi9XVEthWmc9PSIsInZhbHVlIjoiSDUwQUF4SndFZ0ZWdXhBU29jVUtoZz09IiwibWFjIjoiMzFlOWJhMWE5Nzc2ZjRiMGEwNDQzMTZiYmFkZDhjZTM0ZjZkYjk1ZDY3ZGFiMjc4OWVjZmRlOTMyYTVkNjA5NyJ9"
+        }
+    ]
+}
