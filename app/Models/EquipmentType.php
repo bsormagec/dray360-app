@@ -38,8 +38,14 @@ class EquipmentType extends Model
         'equipment_type_and_size',
         'equipment_type',
         'equipment_size',
+        'line_prefix_list',
         'scac',
     ];
+
+    protected $casts = [
+        'line_prefix_list' => 'array',
+    ];
+
 
     public function tmsProvider()
     {

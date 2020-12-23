@@ -48,7 +48,7 @@
       </div>
       <v-dialog
         :value="isOpen"
-        width="49rem"
+        width="55rem"
         scrollable
         class="equipment__dialog"
         @click:outside="toggledialg"
@@ -70,7 +70,7 @@
                   Filter by
                 </span>
               </v-col>
-              <v-col cols="3">
+              <v-col cols="2">
                 <v-autocomplete
                   v-model="filters.owner"
                   :items="equipmentTypeOptions.equipment_owners"
@@ -88,6 +88,16 @@
                   clearable
                   outlined
                   label="Scac"
+                />
+              </v-col>
+              <v-col cols="2">
+                <v-autocomplete
+                  v-model="filters.prefix"
+                  :items="equipmentTypeOptions.prefix_list"
+                  dense
+                  clearable
+                  outlined
+                  label="Prefix"
                 />
               </v-col>
               <v-col cols="3">
@@ -193,7 +203,8 @@ export default {
       type: null,
       size: null,
       owner: null,
-      scac: null
+      scac: null,
+      prefix: null
     },
     isOpen: false,
     loading: true,
@@ -244,10 +255,12 @@ export default {
         type: null,
         size: null,
         owner: null,
-        scac: null
+        scac: null,
+        prefix: null
       }
     },
     async getMatchingEquipment () {
+      this.loading = true
       const apiFilters = {}
 
       for (const key in this.filters) {
@@ -260,6 +273,7 @@ export default {
       const [error, response] = await getEquipmentTypes(this.companyId, this.tmsProviderId, apiFilters)
       if (!error) {
         this.equipment_matches = response.data?.data
+        this.loading = false
       }
     },
     selectEquipmentType (e) {
