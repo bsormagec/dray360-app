@@ -73,10 +73,14 @@ class Company extends Resource
 
             Text::make('Blackfly token', 'blackfly_token')->hideFromIndex()->nullable(),
             Text::make('Blackfly imagetype', 'blackfly_imagetype')->hideFromIndex()->nullable(),
+
             Text::make('Ripcms username', 'ripcms_username')->hideFromIndex()->nullable(),
             Text::make('Ripcms password', 'ripcms_password')->hideFromIndex()->nullable(),
 
             Text::make('Compcare API Key', 'compcare_api_key')->hideFromIndex()->nullable(),
+
+            Text::make('ChainIO URL', 'chainio_url')->hideFromIndex()->nullable(),
+            Text::make('ChainIO API Key', 'chainio_api_key')->hideFromIndex()->nullable(),
         ];
     }
 
