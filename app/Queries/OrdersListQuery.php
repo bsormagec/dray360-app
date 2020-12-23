@@ -44,6 +44,7 @@ class OrdersListQuery extends QueryBuilder
 
         $this->allowedFilters([
             AllowedFilter::partial('request_id', 't_orders.request_id'),
+            AllowedFilter::exact('company_id', 't_orders.t_company_id', false),
             AllowedFilter::custom('created_between', new CreatedBetweenFilter(), 't_orders.created_at'),
             AllowedFilter::custom('status', new OrderStatusFilter()),
             AllowedFilter::custom('display_status', new OrderStatusFilter()),

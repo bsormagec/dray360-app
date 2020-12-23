@@ -167,6 +167,44 @@
                 </v-select>
               </v-col>
             </v-row>
+            <v-row v-if="isSuperadmin()">
+              <v-col cols="4 d-flex align-center">
+                <label
+                  for="company_id"
+                  hide-details
+                  class="filter-label"
+                >
+                  Company
+                </label>
+              </v-col>
+              <v-col cols="8">
+                <v-select
+                  v-model="filters.company_id"
+                  :items="companies"
+                  item-value="id"
+                  item-text="name"
+                  outlined
+                  hide-details
+                  multiple
+                  name="company_id"
+                  prepend-icon="mdi-office-building-outline"
+                  dense
+                  class="status-selector"
+                >
+                  <template v-slot:selection="{ item, index }">
+                    <v-chip v-if="index === 0">
+                      <span>{{ item.name }}</span>
+                    </v-chip>
+                    <span
+                      v-if="index === 1"
+                      class="grey--text caption"
+                    >
+                      (+{{ filters.company_id.length - 1 }} others)
+                    </span>
+                  </template>
+                </v-select>
+              </v-col>
+            </v-row>
 
             <v-row v-if="currentUser !== undefined && currentUser.is_superadmin">
               <!--
@@ -221,6 +259,7 @@ import Chip from '@/components/Chip'
 import auth from '@/store/modules/auth'
 import { mapState } from 'vuex'
 import permissions from '@/mixins/permissions'
+import { getCompanies } from '@/store/api_calls/companies'
 
 export default {
   name: 'Filters',
@@ -246,6 +285,11 @@ export default {
       default: () => []
     },
     systemStatus: {
+      type: Array,
+      required: false,
+      default: () => []
+    },
+    companyId: {
       type: Array,
       required: false,
       default: () => []
@@ -301,12 +345,15 @@ export default {
         { text: 'failure-imageuploding-to-blackfl', value: 'failure-imageuploding-to-blackfl' },
         { text: 'untried-imageuploding-to-blackfl', value: 'untried-imageuploding-to-blackfl' }
       ],
+      // list of companies for the filters
+      companies: [],
       // these are the models for the form fields
       filters: {
         search: this.search,
         dateRange: this.dateRange,
         status: this.status,
         system_status: this.systemStatus,
+        company_id: this.companyId,
         updateType: this.updateType
       },
       // these are the filters that get rendered as chips and emitted to the parent
@@ -316,6 +363,7 @@ export default {
         dateRange: 'Date Range',
         status: 'Status',
         system_status: 'System Status',
+        company_id: 'Company',
         updateType: 'Update Type'
       },
       chipColors: {
@@ -323,6 +371,7 @@ export default {
         dateRange: '#FDAA63',
         status: '#77C19A',
         system_status: '#77C19A',
+        company_id: '#41B6E6',
         updateType: '#41B6E6',
         default: '#41B6E6'
       }
@@ -345,6 +394,10 @@ export default {
           filter.value.forEach(statusFilter => {
             dFilters.push({ type: 'system_status', value: statusFilter })
           })
+        } else if (filter.type === 'company_id') {
+          filter.value.forEach(companyId => {
+            dFilters.push({ type: 'company_id', value: this.findCompanyById(companyId).name })
+          })
         } else {
           dFilters.push(filter)
         }
@@ -355,7 +408,10 @@ export default {
     ...mapState(auth.moduleName, { currentUser: state => state.currentUser })
   },
 
-  created () {
+  async beforeMount () {
+    if (this.isSuperadmin()) {
+      await this.fetchCompanies()
+    }
     this.setActiveFilters()
   },
 
@@ -376,10 +432,15 @@ export default {
     setActiveFilters () {
       this.activeFilters = Object.keys(this.filters).map(k => ({ type: k, value: this.filters[k] })).filter(element => !!element.value.length)
     },
+    findCompanyById (id) {
+      return this.companies.filter(company => company.id === id)[0] || {}
+    },
     removeFilter (filter) {
       // remove from model
       if (filter.type === 'status' || filter.type === 'system_status') {
         this.filters[filter.type] = this.filters[filter.type].filter(element => element !== filter.value)
+      } else if (filter.type === 'company_id') {
+        this.filters[filter.type] = this.filters[filter.type].filter(element => this.findCompanyById(element).name !== filter.value)
       } else if (Array.isArray(filter.value)) {
         this.filters[filter.type] = []
       } else {
@@ -434,6 +495,15 @@ export default {
       })
       this.setActiveFilters()
       this.onFiltersChange()
+    },
+    async fetchCompanies () {
+      const [error, data] = await getCompanies()
+
+      if (error !== undefined) {
+        return
+      }
+
+      this.companies = data.data
     }
   }
 }

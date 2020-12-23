@@ -842,6 +842,11 @@
 									"disabled": true
 								},
 								{
+									"key": "filter[company_id]",
+									"value": "1",
+									"disabled": true
+								},
+								{
 									"key": "filter[order.bill_to_address_raw_text]",
 									"value": "",
 									"disabled": true
@@ -1535,6 +1540,11 @@
 								{
 									"key": "filter[request_id]",
 									"value": "06cf759c-182e-4672-bd3d-8fb0deda0a4a",
+									"disabled": true
+								},
+								{
+									"key": "filter[company_id]",
+									"value": "1",
 									"disabled": true
 								},
 								{

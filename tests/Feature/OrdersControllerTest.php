@@ -90,6 +90,10 @@ class OrdersControllerTest extends TestCase
                 ]))
                 ->assertJsonCount(2, 'data');
         $this->getJson(route('orders.index', [
+                    'filter[company_id]' => $order->t_company_id
+                ]))
+                ->assertJsonCount(Order::forCurrentCompany($order->company)->count(), 'data');
+        $this->getJson(route('orders.index', [
                     'filter[request_id]' => $order->request_id
                 ]))
                 ->assertJsonCount(1, 'data');
