@@ -4,7 +4,10 @@
     ref="orderForm"
     :class="`form ${isMobile && 'mobile'}`"
   >
-    <div class="order__title-group">
+    <div
+      ref="orderHeading"
+      class="order__title-group"
+    >
       <v-btn
         v-if="backButton"
         color="primary"
