@@ -189,10 +189,13 @@
           :division-code="order.division_code"
           @change="value => handleChange('division_code', value)"
         />
-        <FormFieldInput
+        <FormFieldSelect
           references="shipment_direction"
           label="Shipment direction"
           :value="order.shipment_direction"
+          :items="shipmentDirection"
+          item-text="name"
+          item-value="id"
           :edit-mode="editMode"
           @change="value => handleChange('shipment_direction', value)"
         />
@@ -630,7 +633,13 @@ export default {
     return {
       loading: false,
       divisionCodes: [],
-      sentToTms: false
+      sentToTms: false,
+      shipmentDirection: [
+        { id: 'import', name: 'Import' },
+        { id: 'export', name: 'Export' },
+        { id: 'oneway', name: 'One way' },
+        { id: 'crosstown', name: 'Crosstown' }
+      ]
     }
   },
 
