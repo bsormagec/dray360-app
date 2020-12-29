@@ -1,116 +1,157 @@
 <template>
   <!--  eslint-disable vue/no-v-html -->
   <div>
-    <div>
-      <div class="EquipmentType">
-        <div class="form-field__label">
-          SSL Container Type
-        </div>
-
-        <div class="equipment__section">
-          <div
-            v-if="!verified && equipmentType === null"
-          >
-            <v-icon color="error">
-              mdi-alert-outline
-            </v-icon>
-            <span
-              class="not__found"
-            >
-              Not Found
-            </span>
-          </div>
-          <div
-            v-if="!verified && equipmentType !== null"
-          >
-            <v-icon color="warning">
-              mdi-alert-outline
-            </v-icon>
-            <span
-              class="not__verify"
-            >
-              Verification Needed
-            </span>
-          </div>
-
-          <div class="selected__equipment">
-            {{ equipmentType ? equipmentType.equipment_display : '---' }}
-          </div>
-          <v-btn
-            color="primary"
-            outlined
-            small
-            @click="toggledialg"
-          >
-            {{ equipmentType === null ? 'Select' : 'Select Different' }}
-          </v-btn>
-        </div>
+    <div class="EquipmentType">
+      <div class="form-field__label">
+        SSL Container Type
       </div>
-      <v-dialog
-        :value="isOpen"
-        width="55rem"
-        scrollable
-        class="equipment__dialog"
-        @click:outside="toggledialg"
-      >
-        <v-card
-          height="49rem"
+
+      <div class="equipment__section">
+        <div
+          v-if="!verified && equipmentType === null"
         >
-          <v-card-title>
-            <v-row>
-              <h1 class="title__dialog">
-                Select SSL Container Type
-              </h1><br>
-            </v-row> <p>&nbsp;</p>
+          <v-icon color="error">
+            mdi-alert-outline
+          </v-icon>
+          <span
+            class="not__found"
+          >
+            Not Found
+          </span>
+        </div>
+        <div
+          v-if="!verified && equipmentType !== null"
+        >
+          <v-icon color="warning">
+            mdi-alert-outline
+          </v-icon>
+          <span
+            class="not__verify"
+          >
+            Verification Needed
+          </span>
+        </div>
+
+        <div class="selected__equipment">
+          {{ equipmentType ? equipmentType.equipment_display : '---' }}
+        </div>
+        <v-btn
+          color="primary"
+          outlined
+          small
+          @click="toggledialg"
+        >
+          {{ equipmentType === null ? 'Select' : 'Select Different' }}
+        </v-btn>
+      </div>
+    </div>
+    <v-dialog
+      :value="isOpen"
+      max-width="56rem"
+      scrollable
+      @click:outside="toggledialg"
+    >
+      <v-card>
+        <v-card-title class="pa-0">
+          <div class="d-flex flex-column">
             <v-row
-              class="center py-0 mt-5 mb-0 header__filters"
+              align="center"
+              no-gutters
+              class="px-8 py-4"
             >
-              <v-col cols="2">
-                <span class="subtitle-1">
-                  Filter by
-                </span>
+              <h5 class="secondary--text">
+                Select SSL Container Type
+              </h5>
+              <v-spacer />
+              <v-btn
+                text
+                icon
+                color="primary"
+                @click="toggledialg"
+              >
+                <v-icon>mdi-close</v-icon>
+              </v-btn>
+            </v-row>
+            <v-divider />
+            <v-row
+              align="center"
+              no-gutters
+              class="px-8 py-4"
+            >
+              <v-col
+                class="subtitle-1"
+                cols="1"
+              >
+                Filter by
               </v-col>
-              <v-col cols="2">
-                <v-autocomplete
-                  v-model="filters.owner"
-                  :items="equipmentTypeOptions.equipment_owners"
-                  outlined
-                  dense
-                  clearable
-                  label="Steamship Line"
-                />
+              <v-col cols="8">
+                <v-row dense>
+                  <v-col cols="4">
+                    <v-autocomplete
+                      v-model="filters.owner"
+                      :items="equipmentTypeOptions.equipment_owners"
+                      outlined
+                      dense
+                      clearable
+                      hide-details
+                      placeholder=" "
+                      label="Steamship Line"
+                    />
+                  </v-col>
+                  <v-col cols="4">
+                    <v-autocomplete
+                      v-model="filters.scac"
+                      :items="equipmentTypeOptions.scacs"
+                      dense
+                      clearable
+                      outlined
+                      hide-details
+                      placeholder=" "
+                      label="Scac"
+                    />
+                  </v-col>
+                  <v-col cols="4">
+                    <v-autocomplete
+                      v-model="filters.prefix"
+                      :items="equipmentTypeOptions.prefix_list"
+                      dense
+                      clearable
+                      outlined
+                      hide-details
+                      placeholder=" "
+                      label="Prefix"
+                    />
+                  </v-col>
+                  <v-col cols="4">
+                    <v-autocomplete
+                      v-model="filters.type"
+                      :items="equipmentTypeOptions.equipment_types"
+                      dense
+                      clearable
+                      hide-details
+                      outlined
+                      placeholder=" "
+                      label="Type"
+                    />
+                  </v-col>
+                  <v-col cols="4">
+                    <v-autocomplete
+                      v-model="filters.size"
+                      :items="equipmentTypeOptions.equipment_sizes"
+                      dense
+                      clearable
+                      outlined
+                      hide-details
+                      placeholder=" "
+                      label="Size"
+                    />
+                  </v-col>
+                </v-row>
               </v-col>
-              <v-col cols="2">
-                <v-autocomplete
-                  v-model="filters.scac"
-                  :items="equipmentTypeOptions.scacs"
-                  dense
-                  clearable
-                  outlined
-                  label="Scac"
-                />
-              </v-col>
-              <v-col cols="2">
-                <v-autocomplete
-                  v-model="filters.prefix"
-                  :items="equipmentTypeOptions.prefix_list"
-                  dense
-                  clearable
-                  outlined
-                  label="Prefix"
-                />
-              </v-col>
-              <v-col cols="3">
-                <v-autocomplete
-                  v-model="filters.type_and_size"
-                  :items="equipmentTypeOptions.equipment_types_and_sizes"
-                  dense
-                  clearable
-                  outlined
-                  label="Type and Length"
-                />
-              </v-col>
-              <v-col cols="1">
+              <v-col
+                cols="2"
+                class="ml-auto"
+              >
                 <v-btn
                   text
                   color="primary"
@@ -120,48 +161,50 @@
                 </v-btn>
               </v-col>
             </v-row>
-          </v-card-title>
-          <v-divider />
-          <v-card-text style="height: 40rem;">
-            <div class="recognized-equipment">
-              <span class="d-flex align-center secondary--text font-weight-bold body-2 mr-16">Equipment as recognized</span>
-              <span class="d-flex align-center secondary--text ml-16">{{ concatenatedRecognizedText }}</span>
-            </div>
-            <v-data-table
-              :loading="loading"
-              :headers="headers"
-              fixed-header
-              :items="equipment_matches"
-              item-key:item.id
-              :hide-default-header="false"
-              :hide-default-footer="false"
-              scrollable
+          </div>
+        </v-card-title>
+        <v-divider />
+        <v-card-text
+          style="height: 50vh;"
+          class="pa-0"
+        >
+          <div class="recognized-equipment">
+            <span class="d-flex align-center secondary--text font-weight-bold body-2 mr-16">Equipment as recognized</span>
+            <span class="d-flex align-center secondary--text ml-16">{{ concatenatedRecognizedText }}</span>
+          </div>
+          <v-data-table
+            :loading="loading"
+            :headers="headers"
+            fixed-header
+            :items="equipment_matches"
+            item-key:item.id
+            :hide-default-header="false"
+            :hide-default-footer="false"
+            scrollable
+          >
+            <template
+              slot="item"
+              slot-scope="props"
             >
-              <template
-                slot="item"
-                slot-scope="props"
-              >
-                <tr>
-                  <td>{{ props.item.equipment_owner }}</td>
-                  <td>{{ props.item.equipment_type_and_size }}</td>
-                  <td>
-                    <v-btn
-                      class="ma-2"
-                      outlined
-                      color="indigo"
-                      @click="() => selectEquipmentType(props.item)"
-                    >
-                      Select
-                    </v-btn>
-                  </td>
-                </tr>
-              </template>
-            </v-data-table>
-          </v-card-text>
-          <v-divider />
-        </v-card>
-      </v-dialog>
-    </div>
+              <tr>
+                <td>{{ props.item.equipment_owner }}</td>
+                <td>{{ props.item.equipment_type_and_size }}</td>
+                <td>
+                  <v-btn
+                    class="ma-2"
+                    outlined
+                    color="primary"
+                    @click="() => selectEquipmentType(props.item)"
+                  >
+                    Select
+                  </v-btn>
+                </td>
+              </tr>
+            </template>
+          </v-data-table>
+        </v-card-text>
+      </v-card>
+    </v-dialog>
   </div>
 </template>
 
@@ -209,9 +252,9 @@ export default {
     isOpen: false,
     loading: true,
     headers: [
-      { text: 'Steamship Line', value: 'equipment_owner', class: 'table__background' },
-      { text: 'Length/Type', value: 'equipment_type_and_size', class: 'table__background' },
-      { text: ' ', value: ' ', class: 'table__background' }
+      { text: 'Steamship Line', value: 'equipment_owner' },
+      { text: 'Length/Type', value: 'equipment_type_and_size' },
+      { text: ' ', value: ' ' }
     ],
     timerId: null
   }),
@@ -285,14 +328,6 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.title__dialog {
-  color: map-get($colors, slate-gray );
-  font-size: rem(20);
-  line-height: rem(23.44);
-  letter-spacing: rem(0.15);
-  font-weight: 500;
-}
-
 .not__found {
   color: map-get($colors, red);
 }
@@ -301,32 +336,8 @@ export default {
   color: map-get($colors, yellow);
 }
 
-.header__filters {
-  height: rem(60);
-  display: flex;
-  align-items: baseline;
-
-  span {
-    color: var(--v-primary-base);
-    display: flex;
-    justify-content: center;
-  }
-}
-
 .selected__equipment {
   margin-bottom: rem(8);
-}
-
-.table__background {
-  background-color: map-get($colors, modal-header-bg) !important;
-}
-
-.v-dialog > .v-card > .v-card__text {
-  padding: 0 0 rem(20) !important;
-}
-
-.v-data-table-header th {
-  background-color: #E5E5E5 !important;
 }
 
 .EquipmentType {
