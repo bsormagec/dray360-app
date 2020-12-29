@@ -161,12 +161,12 @@
           :edit-mode="editMode"
           @change="value => handleChange('shipment_designation', value)"
         /> -->
-        <FormFieldSelect
+        <FormFieldInputAutocomplete
           v-if="shouldSelectProfitToolsTemplateId"
           references="tms_template_id"
           label="TMS Template Name"
           :value="order.tms_template_id"
-          :items="profitToolsTemplatesSelectItems"
+          :autocomplete-items="profitToolsTemplatesSelectItems"
           item-text="tms_template_name"
           item-value="tms_template_id"
           :display-value="displayName"
@@ -596,6 +596,7 @@ import FormFieldEquipmentType from '@/components/FormFields/FormFieldEquipmentTy
 import OutlinedButtonGroup from '@/components/General/OutlinedButtonGroup'
 import FormFieldSelectDivisionCodes from '@/components/FormFields/FormFieldSelectDivisionCodes'
 import FormFieldSelect from '@/components/FormFields/FormFieldSelect'
+import FormFieldInputAutocomplete from '@/components/FormFields/FormFieldInputAutocomplete'
 import FormFieldManaged from '@/components/FormFields/FormFieldManaged'
 import RequestStatus from '@/components/RequestStatus'
 
@@ -612,6 +613,7 @@ export default {
     FormFieldEquipmentType,
     OutlinedButtonGroup,
     FormFieldSelect,
+    FormFieldInputAutocomplete,
     FormFieldSelectDivisionCodes,
     FormFieldManaged,
     RequestStatus
