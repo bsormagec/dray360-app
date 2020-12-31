@@ -252,6 +252,7 @@
         <div class="section__rootfields">
           <FormFieldEquipmentType
             label="Equipment Type"
+            references="t_equipment_type_id"
             :company-id="order.t_company_id"
             :tms-provider-id="order.t_tms_provider_id"
             :carrier="order.carrier"
@@ -262,6 +263,7 @@
             :verified="order.equipment_type_verified"
             @change="(e) => handleChange('t_equipment_type_id', e)"
           />
+
           <FormFieldInput
             references="unit_number"
             label="Unit number"

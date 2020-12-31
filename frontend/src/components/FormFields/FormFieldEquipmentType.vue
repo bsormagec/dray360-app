@@ -36,6 +36,17 @@
           {{ equipmentType ? equipmentType.equipment_display : '---' }}
         </div>
         <v-btn
+          v-if="!verified && equipmentType !== null"
+          color="primary"
+          class="mx-5"
+          outlined
+          small
+          :loading="isLoading"
+          @click="() => selectEquipmentType(equipmentType)"
+        >
+          Verify Closest Match
+        </v-btn>
+        <v-btn
           color="primary"
           outlined
           small
@@ -212,6 +223,8 @@
 /* eslint-disable vue/no-v-html */
 
 import { getEquipmentTypeOptions, getEquipmentTypes } from '@/store/api_calls/equipment'
+import { mapState } from 'vuex'
+import orderForm from '@/store/modules/order-form'
 
 export default {
   name: 'FormFieldEquipmentType',
@@ -228,7 +241,8 @@ export default {
     equipmentType: { type: Object, required: false, default: () => ({}) },
     unitNumber: { type: String, required: false, default: '' },
     recognizedText: { type: String, required: false, default: '--' },
-    verified: { type: Boolean, required: false, default: false }
+    verified: { type: Boolean, required: false, default: false },
+    references: { type: String, default: null }
   },
 
   data: (vm) => ({
@@ -265,6 +279,12 @@ export default {
       const string = `${this.carrier || ''} ${this.equipmentSize || ''} ${this.recognizedText || ''} ${scac}`
 
       return string.trim() === '' ? '--' : string.trim()
+    },
+    ...mapState(orderForm.moduleName, {
+      allHighlights: state => state.highlights
+    }),
+    isLoading () {
+      return this.allHighlights[this.references]?.loading || false
     }
   },
   watch: {
