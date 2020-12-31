@@ -15,7 +15,9 @@ export default new Vuetify({
         primary: '#003C71',
         secondary: '#61788A',
         warning: '#cc904c',
-        error: '#FF5252'
+        error: '#FF5252',
+        black: '#303435',
+        'slate-gray': '#61788A'
       }
     },
     options: {

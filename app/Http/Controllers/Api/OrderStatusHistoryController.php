@@ -24,10 +24,13 @@ class OrderStatusHistoryController extends Controller
             ->orderBy('id')
             ->get()
             ->groupBy($request->get('system_status') ? 'status' : 'display_status')
-            ->map(function ($groupedStatuses, $status) {
+            ->map(function ($groupedStatuses, $status) use ($request) {
                 $groupedStatuses = $groupedStatuses->sortBy('id');
                 return [
                     'status' => $status,
+                    'display_status' => $request->get('system_status')
+                        ? $groupedStatuses->first()->display_status
+                        : $status,
                     'start_date' => $groupedStatuses->first()->created_at,
                 ];
             })
@@ -39,6 +42,7 @@ class OrderStatusHistoryController extends Controller
 
             $statuses[$i] = [
                 'status' => $statuses[$i]['status'],
+                'display_status' => $statuses[$i]['display_status'],
                 'start_date' => $statuses[$i]['start_date']->toDateTimeString(),
                 'end_date' => $endDate->toDateTimeString(),
                 'diff_for_humans' => CarbonInterval::instance($statuses[$i]['start_date']->diff($endDate))->forHumans([

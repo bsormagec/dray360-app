@@ -310,7 +310,7 @@ export default {
     padding: rem(4) rem(10) rem(3);
     margin-bottom: rem(5);
     background-color: transparent;
-    border-bottom: 1px solid rgba(map-get($colors, slate-gray), 50%);
+    border-bottom: rem(1) solid rgba(var(--v-slate-gray-base-rgb), 50%);
 
     h3 {
       text-transform: uppercase;

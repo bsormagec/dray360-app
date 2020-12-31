@@ -58,7 +58,9 @@
       </template>
 
       <template v-slot:[`item.id`]="{ item }">
-        <a :href="`/order/${item.id}`">{{ item.id }}</a>
+        <router-link :to="`/order/${item.id}`">
+          {{ item.id }}
+        </router-link>
       </template>
       <template v-slot:[`item.created_at`]="{ item }">
         {{ formatDate(item.created_at) }}

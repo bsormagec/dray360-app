@@ -379,7 +379,7 @@ export default {
 </script>
 <style lang="scss" scoped>
 .requests__section::v-deep {
-  border-right: 1px solid rgba(map-get($colors, slate-gray), 15%);
+  border-right: rem(1) solid rgba(var(--v-slate-gray-base-rgb), 15%);
   height: 100vh;
   .v-item-group .v-slide-group__next, .v-item-group .v-slide-group__prev{
       display: none !important;

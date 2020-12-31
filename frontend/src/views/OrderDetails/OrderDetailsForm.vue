@@ -94,8 +94,8 @@
       </div>
     </div>
 
-    <!-- <div class="order__changelog">
-      <div class="order__chip-container">
+    <div class="order__changelog">
+      <!-- <div class="order__chip-container">
         <v-chip
           class="mr-1 mb-3"
           outlined
@@ -122,7 +122,8 @@
         >
           <v-avatar
             left
-            small>
+            small
+          >
             <v-icon>mdi-alert-outline</v-icon>
           </v-avatar>
           13 Warning
@@ -140,10 +141,33 @@
           </v-avatar>
           1 Error
         </v-chip>
-      </div>
-      <p>Last Updated <span>{{ lastChandedAt }}</span> by John Doe</p>
-      <a href="#">History</a>
-    </div> -->
+      </div> -->
+      <p class="mb-2 body-2">
+        Submitted <span
+          class="order__changelog_date"
+          @click="openStatusHistoryDialog = true"
+        >{{ formatDate(order.submitted_date, true) }}</span>
+        <br>
+        {{ `by ${userWhoUploadedTheRequest ? userWhoUploadedTheRequest :''}` }}
+      </p>
+      <p class="mb-2 body-2">
+        Last Updated <span
+          class="order__changelog_date"
+          @click="openStatusHistoryDialog = true"
+        >{{ formatDate(order.updated_at, true) }}</span>
+      </p>
+      <a
+        class="caption text-uppercase text-decoration-underline slate-gray--text"
+        @click.prevent="openStatusHistoryDialog = true"
+      >
+        History
+      </a>
+      <StatusHistoryDialog
+        :order="order"
+        :open="openStatusHistoryDialog"
+        @close="openStatusHistoryDialog = false"
+      />
+    </div>
 
     <div class="form__section">
       <div
@@ -599,6 +623,8 @@ import FormFieldSelect from '@/components/FormFields/FormFieldSelect'
 import FormFieldInputAutocomplete from '@/components/FormFields/FormFieldInputAutocomplete'
 import FormFieldManaged from '@/components/FormFields/FormFieldManaged'
 import RequestStatus from '@/components/RequestStatus'
+import StatusHistoryDialog from './StatusHistoryDialog'
+import { formatDate } from '@/utils/dates'
 
 export default {
   name: 'OrderDetailsForm',
@@ -616,7 +642,8 @@ export default {
     FormFieldInputAutocomplete,
     FormFieldSelectDivisionCodes,
     FormFieldManaged,
-    RequestStatus
+    RequestStatus,
+    StatusHistoryDialog
   },
   mixins: [isMobile, permissions],
   props: {
@@ -636,6 +663,7 @@ export default {
       loading: false,
       divisionCodes: [],
       sentToTms: false,
+      openStatusHistoryDialog: false,
       shipmentDirection: [
         { id: 'import', name: 'Import' },
         { id: 'export', name: 'Export' },
@@ -682,30 +710,12 @@ export default {
       return (this.order.tms_shipment_id !== null && this.order.tms_shipment_id !== undefined) ||
         (get(this.order, 'ocr_request.latest_ocr_request_status.status') === 'sending-to-wint')
     },
-    lastChandedAt () {
-      Number.prototype.padLeft = function (base, chr) {
-        const len = (String(base || 10).length - String(this).length) + 1
-        return len > 0 ? new Array(len).join(chr || '0') + this : this
-      }
-
-      const lastUpdatedAt = new Date(this.order.updated_at)
-
-      const date = [
-        (lastUpdatedAt.getMonth() + 1).padLeft(),
-        lastUpdatedAt.getDate().padLeft(),
-        lastUpdatedAt.getFullYear()
-      ].join('-')
-
-      const time = [
-        lastUpdatedAt.getHours().padLeft(),
-        lastUpdatedAt.getMinutes().padLeft()
-      ].join(':')
-
-      return `${date} ${time}`
-    },
 
     isInProcessedState () {
       return (this.order.ocr_request.latest_ocr_request_status.status === 'process-ocr-output-file-complete')
+    },
+    userWhoUploadedTheRequest () {
+      return this.order.upload_user_name ? this.order.upload_user_name : this.order.email_from_address
     }
   },
   beforeMount () {
@@ -726,6 +736,8 @@ export default {
       cancelEdit: orderFormTypes.cancelEdit,
       addHighlight: orderFormTypes.addHighlight
     }),
+
+    formatDate,
 
     async handleChange (path, value) {
       await this.updateOrder({ path, value })
@@ -917,7 +929,7 @@ export default {
     font-weight: 500;
     line-height: (23.4 / 20);
     letter-spacing: rem(.15);
-    color: map-get($colors, slate-gray);
+    color: var(--v-slate-gray-base);
   }
 
   .order__tms {
@@ -926,7 +938,7 @@ export default {
     font-size: rem(12);
     line-height: (18 /12);
     letter-spacing: rem(.25);
-    color: map-get($colors, slate-gray);
+    color: var(--v-slate-gray-base);
 
     strong {
       font-weight: 700;
@@ -935,7 +947,7 @@ export default {
 
     i {
       font-size: rem(14);
-      color: map-get($colors, slate-gray);
+      color: var(--v-slate-gray-base);
       margin-left: rem(4);
     }
   }
@@ -956,7 +968,7 @@ export default {
 
 .form__section-title {
   padding: rem(4) rem(10) rem(3);
-  background-color: map-get($colors, slate-gray);
+  background-color: var(--v-slate-gray-base);
   h3 {
     text-transform: uppercase;
     font-size: rem(13);
@@ -977,7 +989,7 @@ export default {
   .form__section-title {
     margin-bottom: rem(5);
     background-color: transparent;
-    border-bottom: 1px solid rgba(map-get($colors, slate-gray), 50%);
+    border-bottom: 1px solid rgba(var(--v-slate-gray-base-rgb), 50%);
 
     h3 {
       color: map-get($colors, mainblue);
@@ -1026,7 +1038,7 @@ export default {
     position: absolute;
     left: 0;
     top: 0;
-    background-color: map-get($colors, slate-gray);
+    background-color: var(--v-slate-gray-base);
   }
 
   &::after {
@@ -1040,28 +1052,11 @@ export default {
     width: rem(2);
     left: rem(7);
   }
-}
-
-.order__changelog p {
-  margin-bottom: rem(6);
-  font-size: rem(14);
-  line-height: (18 / 14);
-  letter-spacing: rem(.25);
-
-  span {
-    font-weight: 700;
+  .order__changelog_date {
+    color: var(--v-primary-base);
     text-decoration: underline;
-    color: map-get($colors, mainblue );
+    cursor: pointer;
   }
-}
-
-.order__changelog a {
-  font-size: rem(10);
-  line-height: (16 / 10);
-  letter-spacing: rem(1.5);
-  font-weight: 500;
-  text-transform: uppercase;
-  color: map-get($colors, slate-gray);
 }
 
 .order__chip-container {
