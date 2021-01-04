@@ -59,7 +59,7 @@ export default {
       required: false,
       default: true
     },
-    minSize: {
+    startingSize: {
       type: Number,
       required: false,
       default: 50
@@ -67,7 +67,8 @@ export default {
   },
 
   data: (vm) => ({
-    resizeDiff: vm.minSize,
+    resizeDiff: vm.startingSize,
+    minSize: 30,
     startPos: 0,
     loaded: false,
     redirectBack: false,
@@ -95,7 +96,7 @@ export default {
       this.orderIdToLoad = this.orderId
       await this.requestOrderDetail()
     },
-    minSize: function (newVal, oldVal) {
+    startingSize: function (newVal, oldVal) {
       this.resizeDiff = newVal
     }
 
@@ -131,11 +132,9 @@ export default {
     startDragging (e) {
       e.preventDefault()
       const newDiff = this.resizeDiff * e.clientX / this.startPos
-
       if (newDiff >= 70 || newDiff <= this.minSize) {
         return
       }
-
       this.resizeDiff = newDiff
       this.startPos = e.clientX
     },

@@ -227,7 +227,7 @@
             v-else-if="request.orders_count === 1"
             :back-button="false"
             :order-id="request.first_order_id"
-            :min-size="compressed ? 30 : 50"
+            :starting-size="compressed ? 30 : 50"
             @order-deleted="() => setReloadRequests(true)"
           />
         </div>
