@@ -43,7 +43,8 @@ If this fails, do not! go any further, stop and get this working.
 
 ````bash
 source ~/tcvars.sh
-cd ${GIT_FOLDER} # this should take you to the place where you want to clone the dray360-app repo
+cd ${GIT_FOLDER}
+echo ${?}  # this should output "0" and if not, stop and fix your tcvars.sh and/or directory structure
 echo ${D3_REPO} # this should output "dray360-app" to the console
 
 ````
@@ -85,17 +86,18 @@ https://help.github.com/en/github/authenticating-to-github/adding-a-new-ssh-key-
 
 ### Install Node & NPM (using NVM)
 
-We want version 10.19 of node, and 6.13 of NPM.
+We want version 10.23 of node, and 6.13 of NPM.
 
 Follow directions on github to install, here: https://github.com/nvm-sh/nvm#installing-and-updating
 
 ````bash
-# current directions, as of May 2020, this installs NVM
-# curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.35.3/install.sh | bash
+# current directions, as of Jan 2021, this installs NVM
+# curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.37.2/install.sh | bash
 ````
 
 ````bash
 nvm install v10
+nvm use v10
 node -v # confirm version 10x
 npm -v # confirm version 6x
 ````
@@ -111,10 +113,13 @@ sudo apt install php-fpm
 sudo apt install php-mbstring php-xml php-bcmath php-gd php-zip
 sudo apt install php-imagick php-curl php-xdebug php-mysql
 sudo apt install php-sqlite3 php-bcmath
-sudo apt install php7.4-mysql
+sudo apt install php-mysql # ubuntu?: sudo apt install php7.4-mysql
 
 sudo systemctl enable php7.4-fpm.service
 sudo systemctl restart php7.4-fpm.service
+
+sudo a2enmod proxy_fcgi setenvif
+sudo a2enconf php7.4-fpm
 
 ````
 
@@ -130,19 +135,31 @@ Inspect fpm's www.conf file and verify it is correct:
 less /etc/php/7.4/fpm/pool.d/www.conf
 ````
 
-#### Note
-The PHP extension `pcntl` is required to run Laravel Horizon, by default in Ubuntu it's installed together with the php installation. But if you are using other system, please search how to install it in your machine.
+
+
+#### Confirm `pcntl` is installed
+
+The PHP extension `pcntl` is required to run _Laravel Horizon_. It's installed by default in Ubuntu and Mint. But if you are using another system, please search how to install it in your machine.
+
+To confirm whether `pcntl` is installed, use this command.
+
+````bash
+php -i | grep pcntl  # should output: pcntl support => enabled
+
+
+````
+
 
 
 ### Install Composer
 
-Go to https://getcomposer.org/download and follow directions.
+Go to https://getcomposer.org/download and follow directions to install latest version.
 
 To make this work everywhere on your computer, do this:
 
 ````bash
 sudo mv ./composer.phar /usr/local/bin/composer
-composer --version # should be 1.10.1
+composer --version # as of Jan 2021, this is at v2.0.8. We had been running v1.10.1
 
 ````
 
@@ -154,9 +171,10 @@ composer --version # should be 1.10.1
 
 ````bash
 sudo apt install pv  # a helpful utility for monitoring status of long d/b restores
-sudo apt install mysql-server-8.0
+sudo apt install mysql-server-8.0  # as of Jan 2021 this is version 8.0.22 (but 8.0.17 is running on our hosted AWS/RDS d/b server)
 sudo systemctl enable mysql
 sudo systemctl restart mysql
+
 ````
 
 ##### Create a database
@@ -204,19 +222,22 @@ Next, open up the Redis configuration file with your preferred text editor:
 sudo nano /etc/redis/redis.conf
 ```
 
-Inside the file, find the `supervised` directive which allows you to declare an init system to manage Redis as a service. Since you are running Ubuntu, which uses the systemd init system, change its value from `no` to `systemd`
+Inside the file, find the `supervised no` directive which allows you to declare an init system to manage Redis as a service. Since you are running Ubuntu, which uses the systemd init system, change its value to `supervised systemd`
 
 Then, restart the Redis service to reflect the changes you made to the configuration file:
 
 ```bash
-sudo systemctl restart redis.service
+sudo systemctl enable redis-server.service
+sudo systemctl restart redis-server.service
+sudo systemctl status redis-server.service
+
 ```
 
 Then run:
 ```bash
-redis-cli ping
-# It should echo out PONG
+redis-cli ping # It should echo output "PONG"
 ```
+
 
 ### Clone Github repository, install dependencies and build site
 
@@ -291,11 +312,12 @@ composer install
 
 ````
 
-###### Note
+###### Troubleshooting
+
 If for some reason you get the error `laravel/horizon dev-master requires ext-pcntl * -> the requested PHP extension pcntl is missing from your system.`. Try running this instead:
 
 ```bash
-composer install --ignore-platform-reqs ext-pcntl ext-posix
+composer install --ignore-platform-reqs ext-pcntl ext-posix  # ONLY IF PCNTL IS MISSING
 ```
 
 
@@ -305,6 +327,7 @@ composer install --ignore-platform-reqs ext-pcntl ext-posix
 ````bash
 source ~/tcvars.sh
 cd $D3_ROOT/frontend
+nvm use v10
 npm install
 npm run build
 
@@ -348,7 +371,7 @@ Link the new project folder to the apache folder
 source ~/tcvars.sh
 
 sudo ln -sf ${D3_ROOT}/public /var/www/html/${D3_VHOST}
-ll /var/www/html/${D3_VHOST}/ # confirm this looks good
+ll /var/www/html/${D3_VHOST}/ # confirm this looks good, should list index.php, favicon.ico, etc.
 
 ````
 
@@ -380,13 +403,15 @@ add_vhost_config() {
     </Directory>
 </VirtualHost>
 
-" | sudo tee -a /etc/apache2/apache2.conf
+" | sudo tee /etc/apache2/sites-available/${VHOST}.conf
+sudo ln -s /etc/apache2/sites-available/${VHOST}.conf /etc/apache2/sites-enabled
 }
 
 source ~/tcvars.sh
 sudo systemctl stop apache2
 add_vhost_config ${D3_VHOST} ${D3_VHOST_IP}
 sudo systemctl restart apache2
+sudo systemctl status apache2.service
 
 ````
 
@@ -412,6 +437,7 @@ touch ${D3_ROOT}/storage/logs/laravel.log # make a default log file
 sudo chmod g+w -R ${D3_ROOT}/storage # give everything in storage folder group-write permissions
 
 sudo systemctl restart apache2
+sudo systemctl status apache2.service
 
 ````
 
@@ -429,7 +455,7 @@ npm run serve
 
 Now navigate to http://localhost:8080/
 * email: peter+test13@peternelson.com
-* Password: mongomongo
+* Password: <ask Peter Nelson for help>
 
 
 
@@ -601,3 +627,21 @@ Run the unit test from the command line, like this
 
 
 
+#### Troubleshooting: Apache Error `Symbolic link not allowed or link target not accessible`
+
+The `www-data` user must be able to read the directory where your repo is stored.
+
+````bash
+source ~/tcvars.sh
+sudo chown www-data:www-data /var/www/html
+sudo chmod g+r /home/${USER}
+sudo chmod g+x /home/${USER}
+sudo chmod -R g+w ${D3_ROOT}/storage
+
+````
+
+
+
+#### Troubleshooting: App Exception, `SQLSTATE[HY000] [2002] Connection refused (SQL: select * from users where email = peter+test13@peternelson.com and users.deleted_at is null limit 1)`
+
+Double check that your `.env` file has the right username and password for the database
