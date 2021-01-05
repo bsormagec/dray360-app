@@ -43,6 +43,8 @@ class SendToTmsController extends Controller
             case TMSProvider::PROFIT_TOOLS:
                 return OCRRequestStatus::SENDING_TO_WINT;
             case TMSProvider::COMPCARE:
+                return OCRRequestStatus::SENDING_TO_COMPCARE;
+            case TMSProvider::CARGOWISE:
                 return OCRRequestStatus::SENDING_TO_CHAINIO;
         }
     }

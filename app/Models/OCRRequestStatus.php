@@ -55,7 +55,9 @@ class OCRRequestStatus extends Model
 
     SUCCESS_IMAGEUPLOADING_TO_BLACKFLY = 'success-imageuploding-to-blackfl',
     FAILURE_IMAGEUPLOADING_TO_BLACKFLY = 'failure-imageuploding-to-blackfl',
-    UNTRIED_IMAGEUPLOADING_TO_BLACKFLY = 'untried-imageuploding-to-blackfl'
+    UNTRIED_IMAGEUPLOADING_TO_BLACKFLY = 'untried-imageuploding-to-blackfl',
+
+    SENDING_TO_COMPCARE = 'sending-to-compcare'
     ;
 
     const STATUS_MAP = [

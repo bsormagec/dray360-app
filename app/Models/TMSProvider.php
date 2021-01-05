@@ -15,7 +15,8 @@ class TMSProvider extends Model
     public $table = 't_tms_providers';
 
     const PROFIT_TOOLS = 'Profit Tools',
-        COMPCARE = 'Compcare';
+        COMPCARE = 'Compcare',
+        CARGOWISE = 'CargoWise';
 
     protected $dates = ['deleted_at'];
 

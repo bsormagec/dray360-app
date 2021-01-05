@@ -120,6 +120,7 @@ sudo systemctl restart php7.4-fpm.service
 
 sudo a2enmod proxy_fcgi setenvif
 sudo a2enconf php7.4-fpm
+sudo phpenmod xdebug
 
 ````
 
@@ -356,6 +357,7 @@ sudo a2enconf php7.4-fpm
 
 sudo systemctl enable apache2.service
 sudo systemctl restart apache2.service
+sudo systemctl status apache2.service
 
 # confirm the above modules are listed by this command
 apachectl -M | egrep -i "proxy|write|php|set"
@@ -513,7 +515,7 @@ sudo apt remove --purge 'php*'
 
 Install newer version of PHP
 
-````bash
+```bash
 sudo apt-get update
 sudo apt-get -y install software-properties-common
 sudo add-apt-repository ppa:ondrej/php
@@ -527,14 +529,14 @@ sudo apt-get install -y php7.4-imagick php7.4-curl php7.4-xdebug php7.4-mysql
 sudo apt-get install -y php7.4-sqlite3 php7.4-bcmath
 sudo apt-get install -y php7.4-mysql
 
-````
+```
 
 Restart apache and php-fpm
 
-````bash
+```bash
 sudo systemctl restart apache2.service php7.4-fpm.service
 sudo systemctl status apache2.service php7.4-fpm.service
-````
+```
 
 
 
@@ -580,6 +582,9 @@ sudo apt-get install code
 ````bash
 grep remote_autostart /etc/php/7.4/mods-available/xdebug.ini || echo "xdebug.remote_autostart=true
 xdebug.remote_enable = 1" | sudo tee -a /etc/php/7.4/mods-available/xdebug.ini
+sudo phpenmod xdebug
+sudo systemctl restart apache2.service php7.4-fpm.service
+sudo systemctl status apache2.service php7.4-fpm.service
 
 ````
 
@@ -593,7 +598,7 @@ To run all tests:
 
 ````bash
 composer run migrate-test  # usually only need to run this command once
-./vendor/bin/phpunit
+./vendor/bin/phpunit  # runs all tests
 
 ````
 
@@ -645,3 +650,20 @@ sudo chmod -R g+w ${D3_ROOT}/storage
 #### Troubleshooting: App Exception, `SQLSTATE[HY000] [2002] Connection refused (SQL: select * from users where email = peter+test13@peternelson.com and users.deleted_at is null limit 1)`
 
 Double check that your `.env` file has the right username and password for the database
+
+
+
+
+#### Troubleshooting: Local MySQL Database Error `SQLSTATE[HY000]: General error: 1419 You do not have the SUPER privilege and binary logging is enabled (you *might* want to use the less safe log_bin_trust_function_creators variable)`
+
+This can be encountered when creating local test database for phpunit.
+
+To enable "log_bin_trust_function_creators" and solve the above error, run this code:
+
+````bash
+grep log_bin_trust_function_creators /etc/mysql/my.cnf || echo "[mysqld]
+log_bin_trust_function_creators = 1" | sudo tee -a /etc/mysql/my.cnf
+sudo systemctl restart mysql.service; sudo systemctl status mysql.service
+sudo mysql --execute "show variables like 'log_bin_trust_function_creators'"
+
+````
