@@ -1,5 +1,8 @@
 <template>
-  <v-container fluid>
+  <v-container
+    v-if="!has404"
+    fluid
+  >
     <v-row
       no-gutters
     >
@@ -115,6 +118,10 @@
       </v-col>
     </v-row>
   </v-container>
+  <ContainerNotFound
+    v-else
+    container-type="USER"
+  />
 </template>
 <script>
 import { mapActions } from 'vuex'
@@ -122,11 +129,16 @@ import permissions from '@/mixins/permissions'
 import utils, { type } from '@/store/modules/utils'
 import { getCompanies } from '@/store/api_calls/companies'
 import { getUser, getRoles, changeUserStatus, editUser, deleteUser, addUser } from '@/store/api_calls/users'
+import ContainerNotFound from '@/views/ContainerNotFound'
 
 import get from 'lodash/get'
 
 export default {
   name: 'UserForm',
+
+  components: {
+    ContainerNotFound
+  },
 
   mixins: [permissions],
 
@@ -158,7 +170,8 @@ export default {
       t_company_id: null,
       deactivated_at: null
     },
-    loading: false
+    loading: false,
+    has404: false
   }),
 
   computed: {
@@ -185,6 +198,7 @@ export default {
       const [error, data] = await getUser(userId)
 
       if (error !== undefined) {
+        this.has404 = true
         console.log(error)
         return
       }

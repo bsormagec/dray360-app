@@ -1,5 +1,8 @@
 <template>
-  <div :class="`details ${loaded && 'loaded'} ${isMobile && 'mobile'}`">
+  <div
+    v-if="!has404"
+    :class="`details ${loaded && 'loaded'} ${isMobile && 'mobile'}`"
+  >
     <ContentLoading :loaded="loaded">
       <div :class="`details__content ${isMobile && 'mobile'}`">
         <div
@@ -20,16 +23,25 @@
           </div>
         </div>
 
-        <OrderDetailsDocument :class="`${isMobile && 'mobile'}`" />
+        <OrderDetailsDocument
+          v-if="!has404"
+          :class="`${isMobile && 'mobile'}`"
+        />
       </div>
     </ContentLoading>
   </div>
+  <ContainerNotFound
+    v-else
+    class="container-not-found"
+    container-type="ORDER"
+  />
 </template>
 
 <script>
 import isMobile from '@/mixins/is_mobile'
 import OrderDetailsForm from '@/views/OrderDetails/OrderDetailsForm'
 import OrderDetailsDocument from '@/views/OrderDetails/OrderDetailsDocument'
+import ContainerNotFound from '@/views/ContainerNotFound'
 import { reqStatus } from '@/enums/req_status'
 
 import ContentLoading from '@/components/ContentLoading'
@@ -37,13 +49,16 @@ import orders, { types } from '@/store/modules/orders'
 import orderForm, { types as orderFormTypes } from '@/store/modules/order-form'
 import { mapState, mapActions } from 'vuex'
 
+import utils, { type } from '@/store/modules/utils'
+
 export default {
   name: 'OrderDetails',
 
   components: {
     OrderDetailsDocument,
     ContentLoading,
-    OrderDetailsForm
+    OrderDetailsForm,
+    ContainerNotFound
   },
 
   mixins: [isMobile],
@@ -72,7 +87,8 @@ export default {
     startPos: 0,
     loaded: false,
     redirectBack: false,
-    orderIdToLoad: vm.orderId || vm.$route.params.id
+    orderIdToLoad: vm.orderId || vm.$route.params.id,
+    has404: false
   }),
 
   beforeRouteEnter (to, from, next) {
@@ -103,10 +119,14 @@ export default {
   },
 
   async beforeMount () {
+    if (!this.isMobile) {
+      this[type.setSidebar]({ show: true })
+    }
     await this.requestOrderDetail()
   },
 
   methods: {
+    ...mapActions(utils.moduleName, [type.setSnackbar, type.setConfirmationDialog, type.setSidebar]),
     ...mapActions(orders.moduleName, [types.getOrderDetail]),
     ...mapActions(orderForm.moduleName, {
       setFormOrder: orderFormTypes.setFormOrder
@@ -120,6 +140,8 @@ export default {
         this.loaded = true
         return
       }
+      this.has404 = true
+      this.loaded = true
       console.log('error')
     },
 
