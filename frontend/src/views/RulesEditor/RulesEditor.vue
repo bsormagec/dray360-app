@@ -626,6 +626,7 @@ export default {
     },
 
     updateSelectedVariant (variant) {
+      this.selected_rule_index = 0
       this.variant_name = variant.abbyy_variant_name
       this.variant_id = variant.id
       this.fetchRules()
