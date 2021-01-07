@@ -28,6 +28,8 @@ use Illuminate\Database\Eloquent\Relations\BelongsToMany;
  * @property string ripcms_username
  * @property string ripcms_password
  * @property string compcare_api_key
+ * @property string chainio_url
+ * @property string chainio_api_key
  * @property boolean sync_addresses
  * @property string $name
  */
@@ -68,6 +70,8 @@ class Company extends Model
         'ripcms_username',
         'ripcms_password',
         'compcare_api_key',
+        'chainio_url',
+        'chainio_api_key',
         'sync_addresses',
     ];
 
@@ -75,6 +79,7 @@ class Company extends Model
         'blackfly_token',
         'ripcms_password',
         'compcare_api_key',
+        'chainio_api_key',
     ];
 
     /**

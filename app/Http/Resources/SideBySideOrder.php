@@ -145,6 +145,7 @@ class SideBySideOrder extends JsonResource
             'deleted_at',
             'ocr_data',
             'bill_to_address',
+            'tms_template',
             'port_ramp_of_destination_address',
             'port_ramp_of_origin_address',
             'equipment_type',

@@ -66,10 +66,10 @@
       <div />
       <div class="text-caption">
         <span class="secondary--text">
-          {{ request.updated_at === null ? 'Created at: ' : 'Updated at: ' }}
+          {{ request.updated_at === null ? 'Created: ' : 'Updated: ' }}
         </span>
-        <span class="secundary">
-          {{ formatDate(request.updated_at || request.created_at) }}
+        <span class="updated-at">
+          {{ formatDate(request.updated_at || request.created_at, true) }}
         </span>
       </div>
     </div>
@@ -128,6 +128,7 @@ export default {
       return null
     }
   },
+
   methods: {
     formatDate,
     handleClick () {
@@ -172,6 +173,11 @@ export default {
 
   .request__item--footer{
     display: flex;
+  }
+
+  .updated-at{
+    text-decoration: underline;
+    color: #003C71;
   }
 }
 </style>

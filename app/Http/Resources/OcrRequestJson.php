@@ -3,18 +3,13 @@
 namespace App\Http\Resources;
 
 use App\Models\OCRRequestStatus;
-use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Http\Resources\Json\ResourceCollection;
 
 class OcrRequestJson extends ResourceCollection
 {
-    protected Collection $companies;
-
-    public function __construct($resource, Collection $companies)
+    public function __construct($resource)
     {
         parent::__construct($resource);
-
-        $this->companies = $companies;
     }
 
     /**
@@ -27,8 +22,6 @@ class OcrRequestJson extends ResourceCollection
     {
         return $this->resource->map(function ($item) {
             $ocrRequest = $item->toArray();
-
-            $ocrRequest['tms_template_name'] = $this->getTemplateName($item);
 
             if ($ocrRequest['latest_ocr_request_status']) {
                 $message = null;
@@ -65,18 +58,5 @@ class OcrRequestJson extends ResourceCollection
             return $ocrRequest;
         })
         ->toArray();
-    }
-
-    protected function getTemplateName($ocrRequest)
-    {
-        $company = $this->companies->where('id', $ocrRequest->company_id)->first();
-
-        if (! $company) {
-            return null;
-        }
-        $templateList = collect(json_decode($company->profit_tools_template_list, true) ?? []);
-        $template = $templateList->where('tms_template_id', $ocrRequest->tms_template_id)->first();
-
-        return $template['tms_template_name'] ?? null;
     }
 }

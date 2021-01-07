@@ -57,7 +57,9 @@ abstract class TestCase extends BaseTestCase
         $this->seedTestUsers();
 
         $user = User::whereRoleIs('customer-admin')->first();
-        $user->setCompany(factory(Company::class)->create())->save();
+        if (! $user->hasCompany()) {
+            $user->setCompany(factory(Company::class)->create())->save();
+        }
         Sanctum::actingAs($user);
     }
 }

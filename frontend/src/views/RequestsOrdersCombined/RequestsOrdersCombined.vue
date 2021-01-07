@@ -157,7 +157,7 @@
                 { text: 'Last Update', sortable: false, value: 'updated_at', align: 'center' },
                 { text: 'Container', sortable: false, value: 'unit_number' },
                 { text: 'Bill To', value: 'bill_to_address.location_name' },
-                { text: 'Template', value: 'tms_template_name' },
+                { text: 'Template', value: 'tms_template.item_display_name' },
                 { text: 'Direction', value: 'shipment_direction', align: 'center' },
                 { text: 'Actions', value: 'actions', sortable: false, align: 'center' }
               ]"
@@ -227,7 +227,7 @@
             v-else-if="request.orders_count === 1"
             :back-button="false"
             :order-id="request.first_order_id"
-            :min-size="compressed ? 30 : 50"
+            :starting-size="compressed ? 30 : 50"
             @order-deleted="() => setReloadRequests(true)"
           />
         </div>
@@ -298,7 +298,7 @@ export default {
         { text: 'Container', sortable: false, value: 'unit_number' },
         {
           text: this.request.tms_template_name === null ? 'Bill To' : 'Template',
-          value: this.request.tms_template_name === null ? 'bill_to_address.location_name' : 'tms_template_name'
+          value: this.request.tms_template_name === null ? 'bill_to_address.location_name' : 'tms_template.item_display_name'
         },
         { text: 'Direction', value: 'shipment_direction', align: 'center' },
         { text: 'Actions', value: 'actions', sortable: false, align: 'center' }
@@ -379,7 +379,7 @@ export default {
 </script>
 <style lang="scss" scoped>
 .requests__section::v-deep {
-  border-right: 1px solid rgba(map-get($colors, slate-gray), 15%);
+  border-right: rem(1) solid rgba(var(--v-slate-gray-base-rgb), 15%);
   height: 100vh;
   .v-item-group .v-slide-group__next, .v-item-group .v-slide-group__prev{
       display: none !important;

@@ -11,7 +11,11 @@ class RolesController extends Controller
     public function __invoke()
     {
         return JsonResource::collection(
-            Role::where('name', '!=', 'superadmin')->get(['id', 'display_name'])
+            Role::query()
+                ->when(! is_superadmin(), function ($query) {
+                    return $query->where('name', '!=', 'superadmin');
+                })
+                ->get(['id', 'display_name'])
         );
     }
 }

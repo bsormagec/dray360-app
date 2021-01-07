@@ -80,6 +80,8 @@ class OcrRequestControllerTest extends TestCase
         $dateRange = now()->subDays(6)->toDateString() . ','. now()->subDays(3)->toDateString();
         $this->getJson(route('ocr.requests.index', ['filter[created_between]' => $dateRange]))
             ->assertJsonCount(1, 'data');
+        $this->getJson(route('ocr.requests.index', ['filter[company_id]' => $ocrRequest->latestOcrRequestStatus->company_id]))
+            ->assertJsonCount(1, 'data');
         $this->getJson(route('ocr.requests.index', ['sort' => '-status']))
             ->assertJsonCount(4, 'data');
     }

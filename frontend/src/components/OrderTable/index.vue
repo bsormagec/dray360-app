@@ -19,6 +19,7 @@
           flat
           color="white"
           class="table-tools"
+          height="auto"
         >
           <Filters
             ref="orderFilters"
@@ -26,6 +27,7 @@
             :date-range="initFilters.dateRange"
             :status="initFilters.status"
             :system-status="initFilters.systemStatus"
+            :company-id="initFilters.companyId"
             :update-type="initFilters.updateType"
             @change="updateFilters"
           />
@@ -56,7 +58,9 @@
       </template>
 
       <template v-slot:[`item.id`]="{ item }">
-        <a :href="`/order/${item.id}`">{{ item.id }}</a>
+        <router-link :to="`/order/${item.id}`">
+          {{ item.id }}
+        </router-link>
       </template>
       <template v-slot:[`item.created_at`]="{ item }">
         {{ formatDate(item.created_at) }}
@@ -273,6 +277,7 @@ export default {
         dateRange: [],
         status: [],
         systemStatus: [],
+        companyId: [],
         updateType: '',
         page: 1
       },
@@ -348,6 +353,9 @@ export default {
     this.initFilters.dateRange = params.dateRange?.split(',')
     this.initFilters.status = params.status?.split(',')
     this.initFilters.systemStatus = params.system_status?.split(',')
+    this.initFilters.companyId = params.company_id?.split(',')
+      .map(item => parseInt(item))
+      .filter(item => !isNaN(item))
     this.initFilters.updateType = params.updateType
     this.requestID = params.request_id
     this.initFilters.page = params.page
@@ -581,6 +589,7 @@ export default {
         dateRange: 'filter[created_between]',
         system_status: 'filter[status]',
         status: 'filter[display_status]', // Processing, Exception, Rejected, Intake, Processed, Sending to TMS, Sent to TMS, Accepted by TMS
+        company_id: 'filter[company_id]',
         page: 'page',
         sort: 'sort',
         items_per_page: 'perPage'

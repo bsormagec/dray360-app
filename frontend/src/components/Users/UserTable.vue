@@ -233,7 +233,7 @@ export default {
     },
 
     deleteItem (e) {
-      this.$emit('deleteItem', e.id)
+      this.$emit('delete-item', e.id)
     },
 
     addUser () {

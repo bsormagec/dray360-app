@@ -63,6 +63,18 @@ class UsersControllerTest extends TestCase
     }
 
     /** @test */
+    public function it_should_display_all_users_if_super_admin()
+    {
+        $this->loginAdmin();
+        auth()->user()->setCompany(factory(Company::class)->create(), true);
+        factory(User::class, 2)->create([Company::FOREIGN_KEY => $this->customerAdmin->getCompanyId()]);
+        factory(User::class, 2)->create([Company::FOREIGN_KEY => auth()->user()->getCompanyId()]);
+
+        $this->getJson(route('users.index'))
+            ->assertJsonCount(7, 'data');
+    }
+
+    /** @test */
     public function it_should_fail_if_not_authorized()
     {
         $this->loginNoAdmin();

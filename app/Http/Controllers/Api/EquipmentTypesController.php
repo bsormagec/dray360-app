@@ -25,6 +25,7 @@ class EquipmentTypesController extends Controller
                 AllowedFilter::partial('size', 'equipment_size'),
                 AllowedFilter::partial('owner', 'equipment_owner'),
                 AllowedFilter::partial('scac', 'scac'),
+                AllowedFilter::partial('prefix', 'line_prefix_list'),
             ])
             ->defaultSort('equipment_display')
             ->allowedSorts([    
@@ -35,6 +36,7 @@ class EquipmentTypesController extends Controller
                 AllowedSort::field('size', 'equipment_size'),
                 AllowedSort::field('owner', 'equipment_owner'),
                 AllowedSort::field('scac', 'scac'),
+                AllowedSort::field('prefix', 'line_prefix_list'),
             ])
             ->get();
 
