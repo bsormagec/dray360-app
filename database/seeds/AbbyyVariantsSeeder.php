@@ -4,7 +4,7 @@
  * Usage: php artisan db:seed --class=OCRVariantsSeeder
  */
 
-use Carbon\Carbon;
+use App\Models\OCRVariant;
 use Illuminate\Database\Seeder;
 
 /**
@@ -40,14 +40,21 @@ class OCRVariantsSeeder extends Seeder
 
             foreach ($variantsData as $csvRow) {
                 $variantRow = $this->getVariantRowFromCsvRow($csvRow);
-                $abbyyVariantId = $variantRow['abbyy_variant_id'];
-                $abbyyVariantName = $variantRow['abbyy_variant_name'];
-                $exists = $this->variantExists($abbyyVariantId, $abbyyVariantName);
-                if (! $exists) {
-                    $this->insertRow($rowCount, $variantRow);
-                } else {
-                    $this->updateRow($rowCount, $variantRow);
+                $variantLookup = [
+                    'abbyy_variant_id' => $variantRow['abbyy_variant_id'],
+                    'abbyy_variant_name' => $variantRow['abbyy_variant_name'],
+                ];
+                $rownum = $variantRow['rownum'];
+                unset($variantRow['rownum']);
+
+                $x = OCRVariant::firstOrCreate($variantLookup, $variantRow);  // if we wanted to update, we could use updateOrCreate()
+                $status = 'already existed ';
+                if ($x->wasRecentlyCreated) {
+                    $status = 'created ';
                 }
+                // happy message, return
+                $msg = $status.'csvfile row:'.$rownum.'/'.$rowCount.' for variant: "'.$variantRow['abbyy_variant_name'].'" as t_ocrvariants.id: '.$variantRow['abbyy_variant_id'];
+                $this->command->info($msg);
             }
         }
     }
@@ -64,11 +71,11 @@ class OCRVariantsSeeder extends Seeder
      */
     public function getCsvData($filename)
     {
-        print("\n");
-        print("\n");
-        print("\n");
-        print('reading: '.$filename."\n");
-        print("\n");
+        $this->command->info('');
+        $this->command->info('');
+        $this->command->info('');
+        $this->command->info('reading: '.$filename);
+        $this->command->info('');
 
         $alldata = [];
         if (($handle = fopen($filename, "r")) !== false) {
@@ -107,108 +114,9 @@ class OCRVariantsSeeder extends Seeder
         return ([
             'abbyy_variant_id' => $csvRow['abbyy_variant_id'],
             'abbyy_variant_name' => $csvRow['abbyy_variant_name'],
-            'created_at' => Carbon::now(),
-            'updated_at' => Carbon::now(),
+            'variant_type' => 'ocr',  // abbyy variants are always type 'ocr'
+            'description' => 'imported from Abbyy',
             'rownum' => $csvRow['rownum'],
         ]);
-    }
-
-    /**
-     * Return true if row already exists for company/tms/equipid (and is not soft-deleted)
-     *
-     * @param $abbyyVariantId   id
-     * @param $abbyyVariantName name
-     *
-     * @return boolean exists
-     */
-    public function variantExists($abbyyVariantId, $abbyyVariantName)
-    {
-        $rows = DB::table('t_ocrvariants')
-            ->where(
-                [
-                    ['abbyy_variant_id', '=', $abbyyVariantId],
-                    ['abbyy_variant_name', '=', $abbyyVariantName],
-                ]
-            )
-            ->whereNull('deleted_at')  // don't delete a row that is already soft-deleted
-            ->get();
-        $exists = (count($rows) > 0);
-        return $exists;
-    }
-
-    /**
-     * Insert row into t_equipment_types database
-     *
-     * @param $rowCount         row number being inserted
-     * @param $equipmentTypeRow a single row of data
-     *
-     * @return int new row id
-     */
-    public function insertRow($rowCount, $variantRow)
-    {
-        $v = $variantRow;
-        $abbyyVariantId = $v['abbyy_variant_id'];
-        $abbyyVariantName = $v['abbyy_variant_name'];
-
-        // insert the address
-        $variantId = DB::table('t_ocrvariants')
-        ->insertGetId(
-            [
-                'abbyy_variant_id' => $abbyyVariantId,
-                'abbyy_variant_name' => $abbyyVariantName,
-                'description' => 'imported from Abbyy',
-                'created_at' => $v['created_at'],
-                'updated_at' => $v['updated_at'],
-            ]
-        );
-
-        // happy message, return
-        $msg = 'inserted csvfile row:'.$v['rownum'].'/'.$rowCount.' for variant: "'.$v['abbyy_variant_name'].'" as t_ocrvariants.id: '.$variantId."\n";
-        print($msg);
-        return ($variantId);
-    }
-
-    /**
-     * Update existing row for company/tms/equipid
-     *
-     * @param $rowCount   row number being inserted
-     * @param $variantRow a single row of data
-     *
-     * @return void
-     */
-    public function updateRow($rowCount, $variantRow)
-    {
-        $v = $variantRow;
-        $abbyyVariantId = $v['abbyy_variant_id'];
-        $abbyyVariantName = $v['abbyy_variant_name'];
-
-        // update the address
-
-        // This isn't really needed as the only thing actually getting updated
-        // is the "updated_at" timestamp. why bother? the point is that the variant
-        // already exists, so no need to update it. If we ever get to the point where
-        // the variant id/name combination changes, then we can use this code as
-        // a starting point.
-        if (false) {
-            $updatedRows = DB::table('t_ocrvariants')
-                ->where(
-                    [
-                        ['abbyy_variant_id', '=', $abbyyVariantId],
-                        ['abbyy_variant_name', '=', $abbyyVariantName],
-                    ]
-                )
-                ->whereNull('deleted_at')
-                ->update(
-                    [
-                        'abbyy_variant_id' => $v['abbyy_variant_id'],
-                        'abbyy_variant_name' => $v['abbyy_variant_name'],
-                        'updated_at' => $v['updated_at'],
-                    ]
-                );
-        }
-
-        // happy message, return
-        $msg = 'updated csvfile row:'.$v['rownum'].'/'.$rowCount.' for variant: "'.$v['abbyy_variant_name']."\n";
-        print($msg);
     }
 }
