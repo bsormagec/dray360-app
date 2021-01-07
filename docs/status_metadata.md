@@ -3,10 +3,27 @@
 
 
 
+
 Not that full detalI will be updating this document to record all possible states here. It is currently documented in a Draw.io diagram and not very accessible.
 
 
 Each status is very carefully defined, here is a complete list (as of 11/27/2020):
+
+
+| Code module | Triggered by status | Issues status |
+| ----------- | ------------------- | ------------- |
+| Http/Controllers/Api/SendToTmsController.php <br> (laravel-api controller) | trigger: user click [Send to TMS] button | sending-to-wint <br> sending-to-chainio |
+| abc | efg | xyz |
+| abc | efg | xyz |
+| abc | efg | xyz |
+| abc | efg | xyz |
+| abc | efg | xyz |
+| abc | efg | xyz |
+
+
+
+
+
 
 1. failure-imageuploding-to-blackfl
 1. failure-sending-to-wint
