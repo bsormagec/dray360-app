@@ -52,6 +52,7 @@ class OrdersListQuery extends QueryBuilder
             AllowedFilter::callback('query', function ($query, $value) {
                 $query->where(function ($query) use ($value) {
                     $query->orWhere('t_orders.request_id', 'like', "{$value}%")
+                        ->orWhere('t_orders.id', '=', $value)
                         ->orWhere('t_orders.equipment_type_raw_text', 'like', "{$value}%")
                         ->orWhere('t_orders.shipment_designation', 'like', "{$value}%")
                         ->orWhere('t_orders.shipment_direction', 'like', "{$value}%")

@@ -77,12 +77,16 @@ class OcrRequestsListQuery extends QueryBuilder
             AllowedFilter::custom('display_status', new OcrRequestStatusFilter()),
             AllowedFilter::callback('query', function ($query, $value) {
                 $query
-                // ->where(function ($query) use ($value) {
-                //     $query->orWhere('t_job_latest_state.request_id', 'like', "%{$value}%")
-                //         ->orWhereRaw('1=1');
-                // })
-                ->orHaving('first_order_bill_to_address_location_name', 'like', "%{$value}%")
-                ->orHaving('t_job_latest_state.request_id', 'like', "%{$value}%");
+                    ->where(function ($query) use ($value) {
+                        $query->orWhereHas('orders', function ($query) use ($value) {
+                            $query->where('unit_number', 'like', "%{$value}%")
+                                ->orWhere('id', $value);
+                        })
+                        ->orWhereHas('orders.billToAddress', function ($query) use ($value) {
+                            $query->where('location_name', 'like', "%{$value}%");
+                        })
+                        ->orWhere('t_job_latest_state.request_id', 'like', "%{$value}%");
+                    });
             }),
         ])
         ->defaultSort('-t_job_latest_state.created_at')

@@ -408,11 +408,14 @@ export default {
     ...mapState(auth.moduleName, { currentUser: state => state.currentUser })
   },
 
+  created () {
+    this.setActiveFilters()
+  },
+
   async beforeMount () {
     if (this.isSuperadmin()) {
       await this.fetchCompanies()
     }
-    this.setActiveFilters()
   },
 
   methods: {
@@ -433,7 +436,7 @@ export default {
       this.activeFilters = Object.keys(this.filters).map(k => ({ type: k, value: this.filters[k] })).filter(element => !!element.value.length)
     },
     findCompanyById (id) {
-      return this.companies.filter(company => company.id === id)[0] || {}
+      return this.companies.filter(company => company.id === id)[0] || { name: '' }
     },
     removeFilter (filter) {
       // remove from model
