@@ -12,6 +12,7 @@
           <OrderDetailsForm
             :back-button="backButton"
             :redirect-back="redirectBack"
+            :tms-templates="tmsTemplates"
             @order-deleted="$emit('order-deleted')"
           />
 
@@ -43,6 +44,8 @@ import OrderDetailsForm from '@/views/OrderDetails/OrderDetailsForm'
 import OrderDetailsDocument from '@/views/OrderDetails/OrderDetailsDocument'
 import ContainerNotFound from '@/views/ContainerNotFound'
 import { reqStatus } from '@/enums/req_status'
+
+import { getDictionaryItems } from '@/store/api_calls/utils'
 
 import ContentLoading from '@/components/ContentLoading'
 import orders, { types } from '@/store/modules/orders'
@@ -87,6 +90,7 @@ export default {
     startPos: 0,
     loaded: false,
     redirectBack: false,
+    tmsTemplates: [],
     orderIdToLoad: vm.orderId || vm.$route.params.id,
     has404: false
   }),
@@ -123,6 +127,7 @@ export default {
       this[type.setSidebar]({ show: true })
     }
     await this.requestOrderDetail()
+    await this.fetchTmsTemplates(this.currentOrder.company.id)
   },
 
   methods: {
@@ -131,6 +136,18 @@ export default {
     ...mapActions(orderForm.moduleName, {
       setFormOrder: orderFormTypes.setFormOrder
     }),
+
+    async fetchTmsTemplates (companyId) {
+      const [error, data] = await getDictionaryItems({
+        'filter[company_id]': companyId
+      })
+
+      if (error !== undefined) {
+        this.tmsTemplates = []
+      }
+
+      this.tmsTemplates = data.data
+    },
 
     async requestOrderDetail () {
       const status = await this[types.getOrderDetail](this.orderIdToLoad)

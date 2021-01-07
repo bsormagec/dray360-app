@@ -27,6 +27,7 @@ class AuthServiceProvider extends ServiceProvider
         \App\Models\OCRRequestStatus::class => \App\Policies\OcrRequestStatusPolicy::class,
         \App\Models\Address::class => \App\Policies\AddressPolicy::class,
         \App\Models\CompanyAddressTMSCode::class => \App\Policies\CompanyAddressTmsCodePolicy::class,
+        \App\Models\DictionaryItem::class => \App\Policies\DictionaryItemPolicy::class,
     ];
 
     /**

@@ -87,12 +87,18 @@ export default {
     }
   },
 
+  watch: {
+    value () {
+      this.currentValue = this.value
+    }
+  },
+
   methods: {
     handleChange (e) {
       this.currentValue = e === undefined ? null : e
 
       if (this.editMode && this.references) {
-        this.$emit('change', this.currentValue.tms_template_id)
+        this.$emit('change', this.currentValue)
       }
     },
     handleAccept () {

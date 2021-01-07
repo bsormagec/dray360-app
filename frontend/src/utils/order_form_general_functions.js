@@ -53,7 +53,7 @@ export function baseHighlight (ocrData) {
 }
 
 export function keyShouldBeParsed (key) {
-  const shouldNotBeIgnored = ['tms_template_id', 't_equipment_type_id']
+  const shouldNotBeIgnored = ['t_equipment_type_id', 'tms_template_dictid']
 
   if (shouldNotBeIgnored.includes(key)) {
     return true
@@ -69,7 +69,8 @@ export function keyShouldBeParsed (key) {
     '_at'
   ]
 
-  return invalidEndings.reduce((acc, crr) => acc && !key.includes(crr), true)
+  return invalidEndings.reduce((acc, crr) => acc && !key.endsWith(crr), true)
+  // return invalidEndings.reduce((acc, crr) => acc && !key.includes(crr), true)
 }
 
 export function getOcrData (key, ocrData) {

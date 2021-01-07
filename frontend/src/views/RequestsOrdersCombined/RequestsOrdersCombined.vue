@@ -157,7 +157,7 @@
                 { text: 'Last Update', sortable: false, value: 'updated_at', align: 'center' },
                 { text: 'Container', sortable: false, value: 'unit_number' },
                 { text: 'Bill To', value: 'bill_to_address.location_name' },
-                { text: 'Template', value: 'tms_template_name' },
+                { text: 'Template', value: 'tms_template.item_display_name' },
                 { text: 'Direction', value: 'shipment_direction', align: 'center' },
                 { text: 'Actions', value: 'actions', sortable: false, align: 'center' }
               ]"
@@ -298,7 +298,7 @@ export default {
         { text: 'Container', sortable: false, value: 'unit_number' },
         {
           text: this.request.tms_template_name === null ? 'Bill To' : 'Template',
-          value: this.request.tms_template_name === null ? 'bill_to_address.location_name' : 'tms_template_name'
+          value: this.request.tms_template_name === null ? 'bill_to_address.location_name' : 'tms_template.item_display_name'
         },
         { text: 'Direction', value: 'shipment_direction', align: 'center' },
         { text: 'Actions', value: 'actions', sortable: false, align: 'center' }

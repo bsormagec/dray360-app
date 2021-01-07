@@ -187,18 +187,18 @@
         /> -->
         <FormFieldInputAutocomplete
           v-if="shouldSelectProfitToolsTemplateId"
-          references="tms_template_id"
-          label="TMS Template Name"
-          :value="order.tms_template_id"
-          :autocomplete-items="profitToolsTemplatesSelectItems"
-          item-text="tms_template_name"
-          item-value="tms_template_id"
-          :display-value="displayName"
+          references="tms_template_dictid"
+          label="TMS Template"
+          :value="order.tms_template_dictid"
+          :autocomplete-items="tmsTemplates"
+          item-text="item_display_name"
+          item-value="id"
+          :display-value="tmsTemplateDisplayName"
           :edit-mode="editMode"
-          @change="value => handleChange('tms_template_id', value)"
+          @change="value => handleChange('tms_template_dictid', value)"
         />
         <FormFieldManaged
-          v-if="order.tms_template_id"
+          v-if="isManagedByTemplate"
           references="division_code"
           label="Division"
         />
@@ -386,7 +386,7 @@
         </div>
       </div>
       <div
-        v-if="!order.tms_template_id"
+        v-if="!isManagedByTemplate"
         class="form__sub-section"
       >
         <div
@@ -453,7 +453,7 @@
       </div>
 
       <div
-        v-if="!order.tms_template_id"
+        v-if="!isManagedByTemplate"
         class="form__section"
       >
         <div
@@ -536,7 +536,7 @@
         </div>
       </div>
       <div
-        v-if="!order.tms_template_id"
+        v-if="!isManagedByTemplate"
         class="form__section"
       >
         <div
@@ -608,6 +608,7 @@ import { mapState, mapActions } from 'vuex'
 import get from 'lodash/get'
 
 import { getSourceFileDownloadURL, postSendToTms, delDeleteOrder } from '@/store/api_calls/orders'
+import { getDictionaryItems } from '@/store/api_calls/utils'
 import orderForm, { types as orderFormTypes } from '@/store/modules/order-form'
 import utils, { type } from '@/store/modules/utils'
 
@@ -658,6 +659,11 @@ export default {
       type: Boolean,
       required: false,
       default: false
+    },
+    tmsTemplates: {
+      type: Array,
+      required: false,
+      default: () => []
     }
   },
   data () {
@@ -683,9 +689,10 @@ export default {
       sections: state => state.sections
     }),
 
-    profitToolsTemplatesSelectItems () {
-      return get(this.order, 'company.configuration.profit_tools_template_list', [])
+    isManagedByTemplate () {
+      return this.order.tms_template_dictid !== null
     },
+
     shouldSelectProfitToolsTemplateId () {
       return get(this.order, 'company.configuration.profit_tools_enable_templates', false)
     },
@@ -720,6 +727,7 @@ export default {
       return this.order.upload_user_name ? this.order.upload_user_name : this.order.email_from_address
     }
   },
+
   beforeMount () {
     if (!this.isMobile) {
       return this[type.setSidebar]({ show: true })
@@ -881,9 +889,9 @@ export default {
       })
     },
 
-    displayName (value) {
-      const result = this.profitToolsTemplatesSelectItems.filter(el => el.tms_template_id === value)
-      return result.length > 0 ? result[0].tms_template_name : value
+    tmsTemplateDisplayName (value) {
+      const result = this.tmsTemplates.filter(el => el.id === value)
+      return result.length > 0 ? result[0].item_display_name : value
     }
 
   }

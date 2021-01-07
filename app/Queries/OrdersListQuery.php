@@ -23,7 +23,7 @@ class OrdersListQuery extends QueryBuilder
                 't_orders.shipment_direction',
                 't_orders.tms_shipment_id',
                 't_orders.t_company_id',
-                't_orders.tms_template_id',
+                't_orders.tms_template_dictid',
                 't_orders.bill_to_address_id',
                 't_orders.unit_number',
                 't_orders.reference_number',
@@ -38,6 +38,7 @@ class OrdersListQuery extends QueryBuilder
                 'ocrRequest:order_id,created_at,updated_at,t_job_state_changes_id',
                 'ocrRequest.latestOcrRequestStatus:id,status,status_metadata',
                 'billToAddress:id,location_name',
+                'tmsTemplate:id,item_key,item_display_name',
             ]);
 
         parent::__construct($query);

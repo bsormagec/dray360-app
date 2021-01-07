@@ -29,7 +29,6 @@ class OrdersJson extends ResourceCollection
         return $this->resource->map(function ($item) {
             $order = $item->toArray();
             $order['latest_ocr_request_status'] = Arr::get($order, 'ocr_request.latest_ocr_request_status', null);
-            $order['tms_template_name'] = $this->getTemplateName($item);
 
             if ($order['latest_ocr_request_status']) {
                 $message = null;
@@ -69,18 +68,5 @@ class OrdersJson extends ResourceCollection
             return $order;
         })
         ->toArray();
-    }
-
-    protected function getTemplateName($order)
-    {
-        $company = $this->companies->where('id', $order->t_company_id)->first();
-
-        if (! $company) {
-            return null;
-        }
-        $templateList = collect(json_decode($company->profit_tools_template_list, true) ?? []);
-        $template = $templateList->where('tms_template_id', $order->tms_template_id)->first();
-
-        return $template['tms_template_name'] ?? null;
     }
 }

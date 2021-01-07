@@ -1,9 +1,14 @@
 import format from 'date-fns/format'
 
 export const formatDate = (stringDate, timeZone) => {
-  if (timeZone) return `${format(new Date(stringDate), 'MM/dd/yyyy HH:mm')} ${getTimeZoneName()}`
+  try {
+    if (timeZone) return `${format(new Date(stringDate), 'MM/dd/yyyy HH:mm')} ${getTimeZoneName()}`
 
-  return format(new Date(stringDate), 'MM/dd/yyyy HH:mm')
+    return format(new Date(stringDate), 'MM/dd/yyyy HH:mm')
+  } catch (e) {
+    console.error(`Cannot format date: ${stringDate}`)
+    return '--'
+  }
 }
 
 const getTimeZoneName = () => {
