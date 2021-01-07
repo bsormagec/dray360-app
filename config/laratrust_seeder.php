@@ -33,6 +33,7 @@ return [
             'equipment-types' => 'c,v,e,r',
             'addresses' => 'c,v,e,r',
             'company-address-tms-code' => 'c,v,e,r',
+            'dictionary-items' => 'c,v,e,r',
         ],
         'customer-admin' => [
             'orders' => 'e,v,c,r',
@@ -41,11 +42,13 @@ return [
             'users' => 'v,c,e,r',
             'roles' => 'u',
             'ocr-variants' => 'v',
+            'dictionary-items' => 'v',
         ],
         'customer-user' => [
             'ocr-requests' => 'c,v',
             'orders' => 'v,c,e',
             'ocr-variants' => 'v',
+            'dictionary-items' => 'v',
         ],
     ],
 

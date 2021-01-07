@@ -4,7 +4,10 @@
     ref="orderForm"
     :class="`form ${isMobile && 'mobile'}`"
   >
-    <div class="order__title-group">
+    <div
+      ref="orderHeading"
+      class="order__title-group"
+    >
       <v-btn
         v-if="backButton"
         color="primary"
@@ -62,7 +65,8 @@
         :options="[
           { title: 'Edit Order' , action: toggleEdit, hasPermission: true },
           { title: 'Download Source File', action: () => downloadSourceFile(order.id), hasPermission: true },
-          { title: 'Delete Order', action: () => deleteOrder(order.id), hasPermission: hasPermission('orders-remove') }
+          { title: 'Delete Order', action: () => deleteOrder(order.id), hasPermission: hasPermission('orders-remove') },
+          { title: 'Add TMS ID', action: () => addTMSId(order.id), hasPermission: hasPermission('ocr-requests-edit') && !isInProcessedState}
         ]"
         :loading="loading"
       />
@@ -90,8 +94,8 @@
       </div>
     </div>
 
-    <!-- <div class="order__changelog">
-      <div class="order__chip-container">
+    <div class="order__changelog">
+      <!-- <div class="order__chip-container">
         <v-chip
           class="mr-1 mb-3"
           outlined
@@ -118,7 +122,8 @@
         >
           <v-avatar
             left
-            small>
+            small
+          >
             <v-icon>mdi-alert-outline</v-icon>
           </v-avatar>
           13 Warning
@@ -136,10 +141,33 @@
           </v-avatar>
           1 Error
         </v-chip>
-      </div>
-      <p>Last Updated <span>{{ lastChandedAt }}</span> by John Doe</p>
-      <a href="#">History</a>
-    </div> -->
+      </div> -->
+      <p class="mb-2 body-2">
+        Submitted <span
+          class="order__changelog_date"
+          @click="openStatusHistoryDialog = true"
+        >{{ formatDate(order.submitted_date, true) }}</span>
+        <br>
+        {{ `by ${userWhoUploadedTheRequest ? userWhoUploadedTheRequest :''}` }}
+      </p>
+      <p class="mb-2 body-2">
+        Last Updated <span
+          class="order__changelog_date"
+          @click="openStatusHistoryDialog = true"
+        >{{ formatDate(order.updated_at, true) }}</span>
+      </p>
+      <a
+        class="caption text-uppercase text-decoration-underline slate-gray--text"
+        @click.prevent="openStatusHistoryDialog = true"
+      >
+        History
+      </a>
+      <StatusHistoryDialog
+        :order="order"
+        :open="openStatusHistoryDialog"
+        @close="openStatusHistoryDialog = false"
+      />
+    </div>
 
     <div class="form__section">
       <div
@@ -157,20 +185,20 @@
           :edit-mode="editMode"
           @change="value => handleChange('shipment_designation', value)"
         /> -->
-        <FormFieldSelect
+        <FormFieldInputAutocomplete
           v-if="shouldSelectProfitToolsTemplateId"
-          references="tms_template_id"
-          label="TMS Template Name"
-          :value="order.tms_template_id"
-          :items="profitToolsTemplatesSelectItems"
-          item-text="tms_template_name"
-          item-value="tms_template_id"
-          :display-value="displayName"
+          references="tms_template_dictid"
+          label="TMS Template"
+          :value="order.tms_template_dictid"
+          :autocomplete-items="tmsTemplates"
+          item-text="item_display_name"
+          item-value="id"
+          :display-value="tmsTemplateDisplayName"
           :edit-mode="editMode"
-          @change="value => handleChange('tms_template_id', value)"
+          @change="value => handleChange('tms_template_dictid', value)"
         />
         <FormFieldManaged
-          v-if="order.tms_template_id"
+          v-if="isManagedByTemplate"
           references="division_code"
           label="Division"
         />
@@ -185,10 +213,13 @@
           :division-code="order.division_code"
           @change="value => handleChange('division_code', value)"
         />
-        <FormFieldInput
+        <FormFieldSelect
           references="shipment_direction"
           label="Shipment direction"
           :value="order.shipment_direction"
+          :items="shipmentDirection"
+          item-text="name"
+          item-value="id"
           :edit-mode="editMode"
           @change="value => handleChange('shipment_direction', value)"
         />
@@ -221,6 +252,7 @@
         <div class="section__rootfields">
           <FormFieldEquipmentType
             label="Equipment Type"
+            references="t_equipment_type_id"
             :company-id="order.t_company_id"
             :tms-provider-id="order.t_tms_provider_id"
             :carrier="order.carrier"
@@ -231,6 +263,7 @@
             :verified="order.equipment_type_verified"
             @change="(e) => handleChange('t_equipment_type_id', e)"
           />
+
           <FormFieldInput
             references="unit_number"
             label="Unit number"
@@ -353,7 +386,7 @@
         </div>
       </div>
       <div
-        v-if="!order.tms_template_id"
+        v-if="!isManagedByTemplate"
         class="form__sub-section"
       >
         <div
@@ -420,7 +453,7 @@
       </div>
 
       <div
-        v-if="!order.tms_template_id"
+        v-if="!isManagedByTemplate"
         class="form__section"
       >
         <div
@@ -503,7 +536,7 @@
         </div>
       </div>
       <div
-        v-if="!order.tms_template_id"
+        v-if="!isManagedByTemplate"
         class="form__section"
       >
         <div
@@ -575,6 +608,7 @@ import { mapState, mapActions } from 'vuex'
 import get from 'lodash/get'
 
 import { getSourceFileDownloadURL, postSendToTms, delDeleteOrder } from '@/store/api_calls/orders'
+import { getDictionaryItems } from '@/store/api_calls/utils'
 import orderForm, { types as orderFormTypes } from '@/store/modules/order-form'
 import utils, { type } from '@/store/modules/utils'
 
@@ -589,8 +623,11 @@ import FormFieldEquipmentType from '@/components/FormFields/FormFieldEquipmentTy
 import OutlinedButtonGroup from '@/components/General/OutlinedButtonGroup'
 import FormFieldSelectDivisionCodes from '@/components/FormFields/FormFieldSelectDivisionCodes'
 import FormFieldSelect from '@/components/FormFields/FormFieldSelect'
+import FormFieldInputAutocomplete from '@/components/FormFields/FormFieldInputAutocomplete'
 import FormFieldManaged from '@/components/FormFields/FormFieldManaged'
 import RequestStatus from '@/components/RequestStatus'
+import StatusHistoryDialog from './StatusHistoryDialog'
+import { formatDate } from '@/utils/dates'
 
 export default {
   name: 'OrderDetailsForm',
@@ -605,9 +642,11 @@ export default {
     FormFieldEquipmentType,
     OutlinedButtonGroup,
     FormFieldSelect,
+    FormFieldInputAutocomplete,
     FormFieldSelectDivisionCodes,
     FormFieldManaged,
-    RequestStatus
+    RequestStatus,
+    StatusHistoryDialog
   },
   mixins: [isMobile, permissions],
   props: {
@@ -620,13 +659,25 @@ export default {
       type: Boolean,
       required: false,
       default: false
+    },
+    tmsTemplates: {
+      type: Array,
+      required: false,
+      default: () => []
     }
   },
   data () {
     return {
       loading: false,
       divisionCodes: [],
-      sentToTms: false
+      sentToTms: false,
+      openStatusHistoryDialog: false,
+      shipmentDirection: [
+        { id: 'import', name: 'Import' },
+        { id: 'export', name: 'Export' },
+        { id: 'oneway', name: 'One way' },
+        { id: 'crosstown', name: 'Crosstown' }
+      ]
     }
   },
 
@@ -638,9 +689,10 @@ export default {
       sections: state => state.sections
     }),
 
-    profitToolsTemplatesSelectItems () {
-      return get(this.order, 'company.configuration.profit_tools_template_list', [])
+    isManagedByTemplate () {
+      return this.order.tms_template_dictid !== null
     },
+
     shouldSelectProfitToolsTemplateId () {
       return get(this.order, 'company.configuration.profit_tools_enable_templates', false)
     },
@@ -667,28 +719,15 @@ export default {
       return (this.order.tms_shipment_id !== null && this.order.tms_shipment_id !== undefined) ||
         (get(this.order, 'ocr_request.latest_ocr_request_status.status') === 'sending-to-wint')
     },
-    lastChandedAt () {
-      Number.prototype.padLeft = function (base, chr) {
-        const len = (String(base || 10).length - String(this).length) + 1
-        return len > 0 ? new Array(len).join(chr || '0') + this : this
-      }
 
-      const lastUpdatedAt = new Date(this.order.updated_at)
-
-      const date = [
-        (lastUpdatedAt.getMonth() + 1).padLeft(),
-        lastUpdatedAt.getDate().padLeft(),
-        lastUpdatedAt.getFullYear()
-      ].join('-')
-
-      const time = [
-        lastUpdatedAt.getHours().padLeft(),
-        lastUpdatedAt.getMinutes().padLeft()
-      ].join(':')
-
-      return `${date} ${time}`
+    isInProcessedState () {
+      return (this.order.ocr_request.latest_ocr_request_status.status === 'process-ocr-output-file-complete')
+    },
+    userWhoUploadedTheRequest () {
+      return this.order.upload_user_name ? this.order.upload_user_name : this.order.email_from_address
     }
   },
+
   beforeMount () {
     if (!this.isMobile) {
       return this[type.setSidebar]({ show: true })
@@ -707,6 +746,8 @@ export default {
       cancelEdit: orderFormTypes.cancelEdit,
       addHighlight: orderFormTypes.addHighlight
     }),
+
+    formatDate,
 
     async handleChange (path, value) {
       await this.updateOrder({ path, value })
@@ -834,10 +875,25 @@ export default {
       arr[index].deleted_at = true
       this.handleChange('order_address_events', arr)
     },
-    displayName (value) {
-      const result = this.profitToolsTemplatesSelectItems.filter(el => el.tms_template_id === value)
-      return result.length > 0 ? result[0].tms_template_name : value
+
+    async addTMSId () {
+      await this[type.setConfirmationDialog]({
+        title: 'Please type the desired TMS ID',
+        hasInputValue: true,
+        onConfirm: async (value) => {
+          this.handleChange('tms_shipment_id', value)
+
+          await this[type.setSnackbar]({ show: true, message: 'TMS ID added' })
+        },
+        onCancel: () => { this.loading = false }
+      })
+    },
+
+    tmsTemplateDisplayName (value) {
+      const result = this.tmsTemplates.filter(el => el.id === value)
+      return result.length > 0 ? result[0].item_display_name : value
     }
+
   }
 }
 </script>
@@ -883,7 +939,7 @@ export default {
     font-weight: 500;
     line-height: (23.4 / 20);
     letter-spacing: rem(.15);
-    color: map-get($colors, slate-gray);
+    color: var(--v-slate-gray-base);
   }
 
   .order__tms {
@@ -892,7 +948,7 @@ export default {
     font-size: rem(12);
     line-height: (18 /12);
     letter-spacing: rem(.25);
-    color: map-get($colors, slate-gray);
+    color: var(--v-slate-gray-base);
 
     strong {
       font-weight: 700;
@@ -901,7 +957,7 @@ export default {
 
     i {
       font-size: rem(14);
-      color: map-get($colors, slate-gray);
+      color: var(--v-slate-gray-base);
       margin-left: rem(4);
     }
   }
@@ -922,7 +978,7 @@ export default {
 
 .form__section-title {
   padding: rem(4) rem(10) rem(3);
-  background-color: map-get($colors, slate-gray);
+  background-color: var(--v-slate-gray-base);
   h3 {
     text-transform: uppercase;
     font-size: rem(13);
@@ -943,7 +999,7 @@ export default {
   .form__section-title {
     margin-bottom: rem(5);
     background-color: transparent;
-    border-bottom: 1px solid rgba(map-get($colors, slate-gray), 50%);
+    border-bottom: 1px solid rgba(var(--v-slate-gray-base-rgb), 50%);
 
     h3 {
       color: map-get($colors, mainblue);
@@ -992,7 +1048,7 @@ export default {
     position: absolute;
     left: 0;
     top: 0;
-    background-color: map-get($colors, slate-gray);
+    background-color: var(--v-slate-gray-base);
   }
 
   &::after {
@@ -1006,28 +1062,11 @@ export default {
     width: rem(2);
     left: rem(7);
   }
-}
-
-.order__changelog p {
-  margin-bottom: rem(6);
-  font-size: rem(14);
-  line-height: (18 / 14);
-  letter-spacing: rem(.25);
-
-  span {
-    font-weight: 700;
+  .order__changelog_date {
+    color: var(--v-primary-base);
     text-decoration: underline;
-    color: map-get($colors, mainblue );
+    cursor: pointer;
   }
-}
-
-.order__changelog a {
-  font-size: rem(10);
-  line-height: (16 / 10);
-  letter-spacing: rem(1.5);
-  font-weight: 500;
-  text-transform: uppercase;
-  color: map-get($colors, slate-gray);
 }
 
 .order__chip-container {

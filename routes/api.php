@@ -18,6 +18,7 @@ use App\Http\Controllers\Api\ImpersonationController;
 use App\Http\Controllers\Api\SearchAddressController;
 use App\Http\Controllers\Api\ChangePasswordController;
 use App\Http\Controllers\Api\EquipmentTypesController;
+use App\Http\Controllers\Api\DictionaryItemsController;
 use App\Http\Controllers\Api\Auth\ResetPasswordController;
 use App\Http\Controllers\Api\OCRRulesAssignmentController;
 use App\Http\Controllers\Api\OrderStatusHistoryController;
@@ -93,6 +94,10 @@ Route::group(['middleware' => ['auth:sanctum', 'impersonate', 'tenant-aware']], 
     // Orders management
     Route::apiResource('orders', OrdersController::class)
         ->only(['index', 'update', 'show', 'destroy']);
+
+    // Orders management
+    Route::apiResource('dictionary-items', DictionaryItemsController::class)
+        ->only(['index']);
 
     // Companies management
     Route::resource('companies', CompaniesController::class)

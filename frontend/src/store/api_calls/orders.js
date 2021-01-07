@@ -5,6 +5,8 @@ export const getOrders = async (filters, query) => axios.get(`/api/orders?${toPa
 
 export const getOrderDetail = async (order) => axios.get(`/api/orders/${order}`).then(data => [undefined, data.data]).catch(e => [e])
 
+export const getOrderStatusHistory = async (order, system_status = false) => axios.get(`/api/orders/${order}/status-history?${toParams({ system_status })}`).then(data => [undefined, data.data]).catch(e => [e])
+
 export const updateOrderDetail = async ({ id, changes }) => axios.put(`/api/orders/${id}`, changes).then(data => [undefined, data.data]).catch(e => [e])
 
 export const postUploadPDF = async (file, variantName) => axios.post('/api/ocr/requests', { filename: file.name, withCredentials: false, variant_name: variantName })

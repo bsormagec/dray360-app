@@ -150,6 +150,7 @@ class Order extends Model
         'interchange_count',
         'interchange_err_count',
         'tms_template_id',
+        'tms_template_dictid',
     ];
 
     /**
@@ -242,14 +243,15 @@ class Order extends Model
         'division_code' => 'sometimes|nullable',
         't_equipment_type_id' => 'sometimes|nullable|exists:t_equipment_types,id',
         'equipment_type_verified' => 'sometimes|nullable',
-        'preceded_by_order_id' => 'sometimes|nullable',
-        'succeded_by_order_id' => 'sometimes|nullable',
+        // 'preceded_by_order_id' => 'sometimes|nullable',
+        // 'succeded_by_order_id' => 'sometimes|nullable',
         'tms_submission_datetime' => 'sometimes|nullable',
         'tms_cancelled_datetime' => 'sometimes|nullable',
         'cancelled_datetime' => 'sometimes|nullable',
         'interchange_count' => 'sometimes|nullable',
         'interchange_err_count' => 'sometimes|nullable',
         'tms_template_id' => 'sometimes|nullable',
+        'tms_template_dictid' => 'sometimes|nullable',
     ];
 
     public function precededByOrder()
@@ -301,6 +303,11 @@ class Order extends Model
     public function tmsProvider()
     {
         return $this->belongsTo(TMSProvider::class, 't_tms_provider_id');
+    }
+
+    public function tmsTemplate()
+    {
+        return $this->belongsTo(DictionaryItem::class, 'tms_template_dictid');
     }
 
     public function updateRelatedModels($relatedModels): void
@@ -368,7 +375,8 @@ class Order extends Model
             'orderAddressEvents',
             'orderAddressEvents.address',
             'equipmentType',
-            'company:id,configuration,name'
+            'company:id,configuration,name',
+            'tmsTemplate:id,item_key,item_display_name',
         ]);
     }
 }

@@ -494,6 +494,7 @@ export default {
     },
 
     async fetchCompanyVariantRules () {
+      this.updateSelectedIndex(0)
       if (
         this.company_id === null ||
         this.variant_id === null ||

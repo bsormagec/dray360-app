@@ -1,6 +1,6 @@
 {
 	"info": {
-		"_postman_id": "de3bb7fb-4e5d-4928-ae9f-6a6978a4fe5e",
+		"_postman_id": "74ae4816-aa9e-4a7d-8ecd-0279d1708166",
 		"name": "Dray360 API",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
 	},
@@ -14,7 +14,6 @@
 						{
 							"listen": "test",
 							"script": {
-								"id": "78b74aaf-904d-4261-87b9-c223364b7b5a",
 								"exec": [
 									"var token1=postman.getResponseCookie('XSRF-TOKEN').value;",
 									"var token2=token1.replace(/%3D/g, '=');",
@@ -72,7 +71,6 @@
 						{
 							"listen": "test",
 							"script": {
-								"id": "b6351651-d23a-4e41-aa3b-8c656965df56",
 								"exec": [
 									"var token1=postman.getResponseCookie('XSRF-TOKEN').value;",
 									"var token2=token1.replace(/%3D/g, '=');",
@@ -145,7 +143,6 @@
 						{
 							"listen": "test",
 							"script": {
-								"id": "d26df749-5b37-40a5-a92e-9d9d3623e582",
 								"exec": [
 									"var token1=postman.getResponseCookie('XSRF-TOKEN').value;",
 									"var token2=token1.replace(/%3D/g, '=');",
@@ -205,7 +202,6 @@
 						{
 							"listen": "test",
 							"script": {
-								"id": "0e3eedbe-981f-4841-8827-a4b9292ae9c9",
 								"exec": [
 									"var token1=postman.getResponseCookie('XSRF-TOKEN').value;",
 									"var token2=token1.replace(/%3D/g, '=');",
@@ -273,7 +269,6 @@
 						{
 							"listen": "test",
 							"script": {
-								"id": "e66866ea-5196-4c4f-9a90-a155b3293b16",
 								"exec": [
 									"var token1=postman.getResponseCookie('XSRF-TOKEN').value;",
 									"var token2=token1.replace(/%3D/g, '=');",
@@ -340,8 +335,7 @@
 					},
 					"response": []
 				}
-			],
-			"protocolProfileBehavior": {}
+			]
 		},
 		{
 			"name": "Password Reset",
@@ -352,7 +346,6 @@
 						{
 							"listen": "test",
 							"script": {
-								"id": "f14a77f8-2a2d-47c2-81d8-a53cd39e1df7",
 								"exec": [
 									"var token1=postman.getResponseCookie('XSRF-TOKEN').value;",
 									"var token2=token1.replace(/%3D/g, '=');",
@@ -421,7 +414,6 @@
 						{
 							"listen": "test",
 							"script": {
-								"id": "2836e582-1c66-4e5a-847d-b5dc88241063",
 								"exec": [
 									"var token1=postman.getResponseCookie('XSRF-TOKEN').value;",
 									"var token2=token1.replace(/%3D/g, '=');",
@@ -503,7 +495,6 @@
 						{
 							"listen": "test",
 							"script": {
-								"id": "03b6f4a5-29e3-43b2-b3fc-e506ebd8379b",
 								"exec": [
 									"var token1=postman.getResponseCookie('XSRF-TOKEN').value;",
 									"var token2=token1.replace(/%3D/g, '=');",
@@ -585,8 +576,7 @@
 					},
 					"response": []
 				}
-			],
-			"protocolProfileBehavior": {}
+			]
 		},
 		{
 			"name": "Companies",
@@ -597,7 +587,6 @@
 						{
 							"listen": "test",
 							"script": {
-								"id": "51d9a62c-ed8b-489a-ac13-5c257fb0f32d",
 								"exec": [
 									"var token1=postman.getResponseCookie('XSRF-TOKEN').value;",
 									"var token2=token1.replace(/%3D/g, '=');",
@@ -658,7 +647,6 @@
 						{
 							"listen": "test",
 							"script": {
-								"id": "94217381-68fb-4737-8f53-f3802ca70ebf",
 								"exec": [
 									"var token1=postman.getResponseCookie('XSRF-TOKEN').value;",
 									"var token2=token1.replace(/%3D/g, '=');",
@@ -719,7 +707,6 @@
 						{
 							"listen": "test",
 							"script": {
-								"id": "329b167c-3b29-4b03-9bf1-0eca295dc877",
 								"exec": [
 									"var token1=postman.getResponseCookie('XSRF-TOKEN').value;",
 									"var token2=token1.replace(/%3D/g, '=');",
@@ -779,8 +766,7 @@
 					},
 					"response": []
 				}
-			],
-			"protocolProfileBehavior": {}
+			]
 		},
 		{
 			"name": "Orders",
@@ -791,7 +777,6 @@
 						{
 							"listen": "test",
 							"script": {
-								"id": "ebd99ecc-fb37-4780-8038-168af0298b04",
 								"exec": [
 									"var token1=postman.getResponseCookie('XSRF-TOKEN').value;",
 									"var token2=token1.replace(/%3D/g, '=');",
@@ -839,6 +824,11 @@
 									"key": "filter[request_id]",
 									"value": "",
 									"description": "The ocr request id",
+									"disabled": true
+								},
+								{
+									"key": "filter[company_id]",
+									"value": "1",
 									"disabled": true
 								},
 								{
@@ -943,7 +933,6 @@
 						{
 							"listen": "test",
 							"script": {
-								"id": "04a1f067-1f61-4760-938d-0e973ad1147a",
 								"exec": [
 									"var token1=postman.getResponseCookie('XSRF-TOKEN').value;",
 									"var token2=token1.replace(/%3D/g, '=');",
@@ -1040,7 +1029,6 @@
 						{
 							"listen": "test",
 							"script": {
-								"id": "4f9db37b-19e0-4703-92b1-90bbbbe85591",
 								"exec": [
 									"var token1=postman.getResponseCookie('XSRF-TOKEN').value;",
 									"var token2=token1.replace(/%3D/g, '=');",
@@ -1100,7 +1088,6 @@
 						{
 							"listen": "test",
 							"script": {
-								"id": "0fad833b-f149-427d-8b48-7f5f30f85935",
 								"exec": [
 									"var token1=postman.getResponseCookie('XSRF-TOKEN').value;",
 									"var token2=token1.replace(/%3D/g, '=');",
@@ -1166,7 +1153,6 @@
 						{
 							"listen": "test",
 							"script": {
-								"id": "2dee908c-e34d-48fd-ab87-7d4d46743015",
 								"exec": [
 									"var token1=postman.getResponseCookie('XSRF-TOKEN').value;",
 									"var token2=token1.replace(/%3D/g, '=');",
@@ -1227,7 +1213,6 @@
 						{
 							"listen": "test",
 							"script": {
-								"id": "9fa61a49-2694-4b87-9b4a-6ae66e4b1985",
 								"exec": [
 									"var token1=postman.getResponseCookie('XSRF-TOKEN').value;",
 									"var token2=token1.replace(/%3D/g, '=');",
@@ -1296,7 +1281,6 @@
 						{
 							"listen": "test",
 							"script": {
-								"id": "5a95ded3-5af9-484e-921d-c307d75d00e1",
 								"exec": [
 									"var token1=postman.getResponseCookie('XSRF-TOKEN').value;",
 									"var token2=token1.replace(/%3D/g, '=');",
@@ -1357,7 +1341,6 @@
 						{
 							"listen": "test",
 							"script": {
-								"id": "045215aa-26b5-4f78-bad4-db4478ab50aa",
 								"exec": [
 									"var token1=postman.getResponseCookie('XSRF-TOKEN').value;",
 									"var token2=token1.replace(/%3D/g, '=');",
@@ -1413,7 +1396,6 @@
 						{
 							"listen": "test",
 							"script": {
-								"id": "00417710-3943-4061-b690-487bc59d079d",
 								"exec": [
 									"var token1=postman.getResponseCookie('XSRF-TOKEN').value;",
 									"var token2=token1.replace(/%3D/g, '=');",
@@ -1474,8 +1456,7 @@
 					},
 					"response": []
 				}
-			],
-			"protocolProfileBehavior": {}
+			]
 		},
 		{
 			"name": "OCR Requests",
@@ -1486,7 +1467,6 @@
 						{
 							"listen": "test",
 							"script": {
-								"id": "5ec15c97-74d4-4c53-ac04-f2bc34257046",
 								"exec": [
 									"var token1=postman.getResponseCookie('XSRF-TOKEN').value;",
 									"var token2=token1.replace(/%3D/g, '=');",
@@ -1538,6 +1518,11 @@
 									"disabled": true
 								},
 								{
+									"key": "filter[company_id]",
+									"value": "1",
+									"disabled": true
+								},
+								{
 									"key": "filter[created_between]",
 									"value": "2020-09-28,2020-10-01",
 									"disabled": true
@@ -1581,7 +1566,6 @@
 						{
 							"listen": "test",
 							"script": {
-								"id": "6b329b34-6d52-4676-a833-c7e5782ede71",
 								"exec": [
 									"var token1=postman.getResponseCookie('XSRF-TOKEN').value;",
 									"var token2=token1.replace(/%3D/g, '=');",
@@ -1645,7 +1629,6 @@
 						{
 							"listen": "test",
 							"script": {
-								"id": "9c4fcc39-1bc7-4bd1-aaed-0b7d55a357fe",
 								"exec": [
 									"var token1=postman.getResponseCookie('XSRF-TOKEN').value;",
 									"var token2=token1.replace(/%3D/g, '=');",
@@ -1708,7 +1691,6 @@
 						{
 							"listen": "test",
 							"script": {
-								"id": "92bc7035-ef55-45fc-9a27-6c19461b7ede",
 								"exec": [
 									"var token1=postman.getResponseCookie('XSRF-TOKEN').value;",
 									"var token2=token1.replace(/%3D/g, '=');",
@@ -1766,8 +1748,7 @@
 					},
 					"response": []
 				}
-			],
-			"protocolProfileBehavior": {}
+			]
 		},
 		{
 			"name": "OCR Rules",
@@ -1778,7 +1759,6 @@
 						{
 							"listen": "test",
 							"script": {
-								"id": "662445a0-b2d1-40c1-8ee5-d288e694f617",
 								"exec": [
 									"var token1=postman.getResponseCookie('XSRF-TOKEN').value;",
 									"var token2=token1.replace(/%3D/g, '=');",
@@ -1833,7 +1813,6 @@
 						{
 							"listen": "test",
 							"script": {
-								"id": "35e25481-cf4e-4080-b71c-7a8b3c00d59a",
 								"exec": [
 									"var token1=postman.getResponseCookie('XSRF-TOKEN').value;",
 									"var token2=token1.replace(/%3D/g, '=');",
@@ -1892,7 +1871,6 @@
 						{
 							"listen": "test",
 							"script": {
-								"id": "0eb1d50c-788c-4806-b288-fa6fbcca5f2c",
 								"exec": [
 									"var token1=postman.getResponseCookie('XSRF-TOKEN').value;",
 									"var token2=token1.replace(/%3D/g, '=');",
@@ -1964,7 +1942,6 @@
 						{
 							"listen": "test",
 							"script": {
-								"id": "2c429a8d-d4ed-473f-8dba-f60df8896e31",
 								"exec": [
 									"var token1=postman.getResponseCookie('XSRF-TOKEN').value;",
 									"var token2=token1.replace(/%3D/g, '=');",
@@ -2031,7 +2008,6 @@
 						{
 							"listen": "test",
 							"script": {
-								"id": "e244855e-2dd6-4e5a-92b0-ffba0c667aa5",
 								"exec": [
 									"var token1=postman.getResponseCookie('XSRF-TOKEN').value;",
 									"var token2=token1.replace(/%3D/g, '=');",
@@ -2089,8 +2065,7 @@
 					},
 					"response": []
 				}
-			],
-			"protocolProfileBehavior": {}
+			]
 		},
 		{
 			"name": "OCR Variants",
@@ -2101,7 +2076,6 @@
 						{
 							"listen": "test",
 							"script": {
-								"id": "9b1faca1-f982-4af9-a29e-68870f853365",
 								"exec": [
 									"var token1=postman.getResponseCookie('XSRF-TOKEN').value;",
 									"var token2=token1.replace(/%3D/g, '=');",
@@ -2186,7 +2160,6 @@
 						{
 							"listen": "test",
 							"script": {
-								"id": "6ee4c623-96c8-4d6d-ab4a-08f282323cd4",
 								"exec": [
 									"var token1=postman.getResponseCookie('XSRF-TOKEN').value;",
 									"var token2=token1.replace(/%3D/g, '=');",
@@ -2245,7 +2218,6 @@
 						{
 							"listen": "test",
 							"script": {
-								"id": "9c273ef2-7085-42b3-a60c-2ea2ced6977f",
 								"exec": [
 									"var token1=postman.getResponseCookie('XSRF-TOKEN').value;",
 									"var token2=token1.replace(/%3D/g, '=');",
@@ -2316,7 +2288,6 @@
 						{
 							"listen": "test",
 							"script": {
-								"id": "02aa2bf0-23c5-4b7c-bddf-3e7f8232243d",
 								"exec": [
 									"var token1=postman.getResponseCookie('XSRF-TOKEN').value;",
 									"var token2=token1.replace(/%3D/g, '=');",
@@ -2372,8 +2343,7 @@
 					},
 					"response": []
 				}
-			],
-			"protocolProfileBehavior": {}
+			]
 		},
 		{
 			"name": "Users",
@@ -2384,7 +2354,6 @@
 						{
 							"listen": "test",
 							"script": {
-								"id": "9f84454b-30a5-4d2c-a3e9-22826c9fc5a8",
 								"exec": [
 									"var token1=postman.getResponseCookie('XSRF-TOKEN').value;",
 									"var token2=token1.replace(/%3D/g, '=');",
@@ -2464,7 +2433,6 @@
 						{
 							"listen": "test",
 							"script": {
-								"id": "8dbbd97c-4230-4c9c-858b-71a947098966",
 								"exec": [
 									"var token1=postman.getResponseCookie('XSRF-TOKEN').value;",
 									"var token2=token1.replace(/%3D/g, '=');",
@@ -2525,7 +2493,6 @@
 						{
 							"listen": "test",
 							"script": {
-								"id": "3d4f53c3-9afa-412d-977d-299cb00088b1",
 								"exec": [
 									"var token1=postman.getResponseCookie('XSRF-TOKEN').value;",
 									"var token2=token1.replace(/%3D/g, '=');",
@@ -2586,7 +2553,6 @@
 						{
 							"listen": "test",
 							"script": {
-								"id": "d2b199b4-f73d-4585-980e-a1c0e4d7c828",
 								"exec": [
 									"var token1=postman.getResponseCookie('XSRF-TOKEN').value;",
 									"var token2=token1.replace(/%3D/g, '=');",
@@ -2654,7 +2620,6 @@
 						{
 							"listen": "test",
 							"script": {
-								"id": "09aef510-35c6-4d3f-8e01-1c38dd07eae9",
 								"exec": [
 									"var token1=postman.getResponseCookie('XSRF-TOKEN').value;",
 									"var token2=token1.replace(/%3D/g, '=');",
@@ -2723,7 +2688,6 @@
 						{
 							"listen": "test",
 							"script": {
-								"id": "06e645d0-7e12-4044-9529-1680db3357c2",
 								"exec": [
 									"var token1=postman.getResponseCookie('XSRF-TOKEN').value;",
 									"var token2=token1.replace(/%3D/g, '=');",
@@ -2782,7 +2746,6 @@
 						{
 							"listen": "test",
 							"script": {
-								"id": "3d5b31f2-6994-4d37-8230-db1a3dd49850",
 								"exec": [
 									"var token1=postman.getResponseCookie('XSRF-TOKEN').value;",
 									"var token2=token1.replace(/%3D/g, '=');",
@@ -2830,8 +2793,7 @@
 					},
 					"response": []
 				}
-			],
-			"protocolProfileBehavior": {}
+			]
 		},
 		{
 			"name": "Impersonation",
@@ -2842,7 +2804,6 @@
 						{
 							"listen": "test",
 							"script": {
-								"id": "ae103b36-9bd0-4dcf-a901-7119f38bd190",
 								"exec": [
 									"var token1=postman.getResponseCookie('XSRF-TOKEN').value;",
 									"var token2=token1.replace(/%3D/g, '=');",
@@ -2902,7 +2863,6 @@
 						{
 							"listen": "test",
 							"script": {
-								"id": "049b7690-cb01-4848-b139-974152fd0ec9",
 								"exec": [
 									"var token1=postman.getResponseCookie('XSRF-TOKEN').value;",
 									"var token2=token1.replace(/%3D/g, '=');",
@@ -2949,8 +2909,86 @@
 					},
 					"response": []
 				}
-			],
-			"protocolProfileBehavior": {}
+			]
+		},
+		{
+			"name": "Dictionary Items",
+			"item": [
+				{
+					"name": "/api/dictionary-items",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"var token1=postman.getResponseCookie('XSRF-TOKEN').value;",
+									"var token2=token1.replace(/%3D/g, '=');",
+									"postman.setEnvironmentVariable('X-XSRF-TOKEN', token2);",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Content-Type",
+								"type": "text",
+								"value": "application/x-www-form-urlencoded"
+							},
+							{
+								"key": "Referer",
+								"type": "text",
+								"value": "{{server}}"
+							},
+							{
+								"key": "Accept",
+								"type": "text",
+								"value": "application/json, text/plain, */*"
+							},
+							{
+								"key": "X-XSRF-TOKEN",
+								"type": "text",
+								"value": "{{X-XSRF-TOKEN}}"
+							}
+						],
+						"url": {
+							"raw": "{{server}}/api/dictionary-items?filter[company_id]=1",
+							"host": [
+								"{{server}}"
+							],
+							"path": [
+								"api",
+								"dictionary-items"
+							],
+							"query": [
+								{
+									"key": "filter[company_id]",
+									"value": "1"
+								},
+								{
+									"key": "filter[tms_provider_id]",
+									"value": "",
+									"disabled": true
+								},
+								{
+									"key": "filter[user_id]",
+									"value": "",
+									"disabled": true
+								},
+								{
+									"key": "filter[item_type]",
+									"value": "",
+									"disabled": true
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			]
 		},
 		{
 			"name": "/api/search-address",
@@ -2958,7 +2996,6 @@
 				{
 					"listen": "test",
 					"script": {
-						"id": "dc01ad77-c947-4794-9143-5b7bd0127917",
 						"exec": [
 							"var token1=postman.getResponseCookie('XSRF-TOKEN').value;",
 							"var token2=token1.replace(/%3D/g, '=');",
@@ -3070,7 +3107,6 @@
 				{
 					"listen": "test",
 					"script": {
-						"id": "57a77d3b-a3ce-4af3-9dc9-7b6666c90c9d",
 						"exec": [
 							"var token1=postman.getResponseCookie('XSRF-TOKEN').value;",
 							"var token2=token1.replace(/%3D/g, '=');",
@@ -3131,7 +3167,6 @@
 		{
 			"listen": "prerequest",
 			"script": {
-				"id": "d1408436-d1ca-4fce-a066-a87c12b3a968",
 				"type": "text/javascript",
 				"exec": [
 					""
@@ -3141,13 +3176,11 @@
 		{
 			"listen": "test",
 			"script": {
-				"id": "a13cbd2c-cb2d-46f0-b321-dd8c1d6ff7f6",
 				"type": "text/javascript",
 				"exec": [
 					""
 				]
 			}
 		}
-	],
-	"protocolProfileBehavior": {}
+	]
 }

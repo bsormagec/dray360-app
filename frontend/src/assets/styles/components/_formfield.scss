@@ -53,7 +53,7 @@
   font-weight: 700;
   line-height: (20 / 13);
   letter-spacing: rem(.25);
-  color: map-get($colors, slate-gray);
+  color: var(--v-slate-gray-base);
   font-size: rem(13);
   margin-right: rem(8);
   .edit & {

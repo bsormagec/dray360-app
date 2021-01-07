@@ -30,6 +30,6 @@ export default {
   line-height: (15 / 10);
   letter-spacing: rem(1.5);
   text-transform: uppercase;
-  color: map-get($colors, slate-gray);
+  color: var(--v-slate-gray-base);
 }
 </style>

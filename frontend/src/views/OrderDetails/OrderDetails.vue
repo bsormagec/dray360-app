@@ -1,5 +1,8 @@
 <template>
-  <div :class="`details ${loaded && 'loaded'} ${isMobile && 'mobile'}`">
+  <div
+    v-if="!has404"
+    :class="`details ${loaded && 'loaded'} ${isMobile && 'mobile'}`"
+  >
     <ContentLoading :loaded="loaded">
       <div :class="`details__content ${isMobile && 'mobile'}`">
         <div
@@ -9,6 +12,7 @@
           <OrderDetailsForm
             :back-button="backButton"
             :redirect-back="redirectBack"
+            :tms-templates="tmsTemplates"
             @order-deleted="$emit('order-deleted')"
           />
 
@@ -20,22 +24,35 @@
           </div>
         </div>
 
-        <OrderDetailsDocument :class="`${isMobile && 'mobile'}`" />
+        <OrderDetailsDocument
+          v-if="!has404"
+          :class="`${isMobile && 'mobile'}`"
+        />
       </div>
     </ContentLoading>
   </div>
+  <ContainerNotFound
+    v-else
+    class="container-not-found"
+    container-type="ORDER"
+  />
 </template>
 
 <script>
 import isMobile from '@/mixins/is_mobile'
 import OrderDetailsForm from '@/views/OrderDetails/OrderDetailsForm'
 import OrderDetailsDocument from '@/views/OrderDetails/OrderDetailsDocument'
+import ContainerNotFound from '@/views/ContainerNotFound'
 import { reqStatus } from '@/enums/req_status'
+
+import { getDictionaryItems } from '@/store/api_calls/utils'
 
 import ContentLoading from '@/components/ContentLoading'
 import orders, { types } from '@/store/modules/orders'
 import orderForm, { types as orderFormTypes } from '@/store/modules/order-form'
 import { mapState, mapActions } from 'vuex'
+
+import utils, { type } from '@/store/modules/utils'
 
 export default {
   name: 'OrderDetails',
@@ -43,7 +60,8 @@ export default {
   components: {
     OrderDetailsDocument,
     ContentLoading,
-    OrderDetailsForm
+    OrderDetailsForm,
+    ContainerNotFound
   },
 
   mixins: [isMobile],
@@ -59,7 +77,7 @@ export default {
       required: false,
       default: true
     },
-    minSize: {
+    startingSize: {
       type: Number,
       required: false,
       default: 50
@@ -67,11 +85,14 @@ export default {
   },
 
   data: (vm) => ({
-    resizeDiff: vm.minSize,
+    resizeDiff: vm.startingSize,
+    minSize: 30,
     startPos: 0,
     loaded: false,
     redirectBack: false,
-    orderIdToLoad: vm.orderId || vm.$route.params.id
+    tmsTemplates: [],
+    orderIdToLoad: vm.orderId || vm.$route.params.id,
+    has404: false
   }),
 
   beforeRouteEnter (to, from, next) {
@@ -95,21 +116,38 @@ export default {
       this.orderIdToLoad = this.orderId
       await this.requestOrderDetail()
     },
-    minSize: function (newVal, oldVal) {
+    startingSize: function (newVal, oldVal) {
       this.resizeDiff = newVal
     }
 
   },
 
   async beforeMount () {
+    if (!this.isMobile) {
+      this[type.setSidebar]({ show: true })
+    }
     await this.requestOrderDetail()
+    await this.fetchTmsTemplates(this.currentOrder.company.id)
   },
 
   methods: {
+    ...mapActions(utils.moduleName, [type.setSnackbar, type.setConfirmationDialog, type.setSidebar]),
     ...mapActions(orders.moduleName, [types.getOrderDetail]),
     ...mapActions(orderForm.moduleName, {
       setFormOrder: orderFormTypes.setFormOrder
     }),
+
+    async fetchTmsTemplates (companyId) {
+      const [error, data] = await getDictionaryItems({
+        'filter[company_id]': companyId
+      })
+
+      if (error !== undefined) {
+        this.tmsTemplates = []
+      }
+
+      this.tmsTemplates = data.data
+    },
 
     async requestOrderDetail () {
       const status = await this[types.getOrderDetail](this.orderIdToLoad)
@@ -119,6 +157,8 @@ export default {
         this.loaded = true
         return
       }
+      this.has404 = true
+      this.loaded = true
       console.log('error')
     },
 
@@ -131,11 +171,9 @@ export default {
     startDragging (e) {
       e.preventDefault()
       const newDiff = this.resizeDiff * e.clientX / this.startPos
-
       if (newDiff >= 70 || newDiff <= this.minSize) {
         return
       }
-
       this.resizeDiff = newDiff
       this.startPos = e.clientX
     },

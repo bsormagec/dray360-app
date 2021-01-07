@@ -46,12 +46,12 @@ export default {
       Sidebar: state => state.sidebar.show
     }),
     cssVars () {
-      const primaryRgb = hexToRgb(this.$vuetify.theme.themes.light.primary)
-      const secondaryRgb = hexToRgb(this.$vuetify.theme.themes.light.secondary)
-      return {
-        '--v-primary-base-rgb': `${primaryRgb.r}, ${primaryRgb.g}, ${primaryRgb.b}`,
-        '--v-secondary-base-rgb': `${secondaryRgb.r}, ${secondaryRgb.g}, ${secondaryRgb.b}`
+      const cssVars = {}
+      for (const key in this.$vuetify.theme.themes.light) {
+        const rgbColor = hexToRgb(this.$vuetify.theme.themes.light[key])
+        cssVars[`--v-${key}-base-rgb`] = `${rgbColor.r}, ${rgbColor.g}, ${rgbColor.b}`
       }
+      return cssVars
     }
   }
 

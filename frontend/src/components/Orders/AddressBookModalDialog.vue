@@ -280,7 +280,7 @@ export default {
 .address-as-recognized {
   background-color: #F5F6F7;
   span {
-    color: map-get($colors, slate-gray);
+    color: var(--v-slate-gray-base);
     font-family: Roboto;
     font-style: normal;
     font-weight: bold;
@@ -288,7 +288,7 @@ export default {
     margin-left: rem(-20)
   }
   p {
-    color: map-get($colors, slate-gray);
+    color: var(--v-slate-gray-base);
     font-family: Roboto;
     font-style: normal;
     font-weight: normal;

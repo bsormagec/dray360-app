@@ -56,8 +56,8 @@ class OrdersControllerTest extends TestCase
                             'unit_number',
                             'reference_number',
                             'bill_to_address',
-                            'tms_template_id',
-                            'tms_template_name',
+                            'tms_template_dictid',
+                            'tms_template',
                             'latest_ocr_request_status' => [
                                 'display_status',
                                 'display_message',
@@ -89,6 +89,10 @@ class OrdersControllerTest extends TestCase
                     'filter[display_status]' => OCRRequestStatus::STATUS_MAP[OCRRequestStatus::OCR_WAITING]
                 ]))
                 ->assertJsonCount(2, 'data');
+        $this->getJson(route('orders.index', [
+                    'filter[company_id]' => $order->t_company_id
+                ]))
+                ->assertJsonCount(Order::forCurrentCompany($order->company)->count(), 'data');
         $this->getJson(route('orders.index', [
                     'filter[request_id]' => $order->request_id
                 ]))
@@ -274,6 +278,7 @@ class OrdersControllerTest extends TestCase
                 'port_ramp_of_destination_address',
                 'port_ramp_of_origin_address',
                 'order_address_events',
+                'tms_template',
                 'preceding_order_changes' => collect([
                     $order->bill_to_address_id ? 'bill_to_address' : '',
                     $order->port_ramp_of_destination_address_id ? 'port_ramp_of_destination_address' : '',

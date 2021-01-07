@@ -125,6 +125,7 @@ import { mapState, mapActions } from 'vuex'
 import hasPermission from '@/mixins/permissions'
 import utils, { type } from '@/store/modules/utils'
 import isMobile from '@/mixins/is_mobile'
+import { reqStatus } from '@/enums/req_status'
 
 export default {
 
@@ -168,8 +169,10 @@ export default {
     ...mapActions('AUTH', ['logout']),
     ...mapActions(utils.moduleName, [type.getTenantConfig, type.setSidebar]),
     async logoutBtn () {
-      await this.logout()
-      this.$router.push('/login')
+      const result = await this.logout()
+      if (result === reqStatus.success) {
+        return this.$router.push('/login').catch(() => {})
+      }
     },
     toogleSidebar () {
       this[type.setSidebar]({ show: !this.showSidebar })

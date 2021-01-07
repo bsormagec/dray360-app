@@ -45,10 +45,11 @@ class OcrRequestsListQuery extends QueryBuilder
                     ->orderBy('o.id')
                     ->limit(1)
                 ])
-                ->addSelect(['tms_template_id' => DB::table('t_orders', 'o')
-                    ->select('o.tms_template_id')
+                ->addSelect(['tms_template_name' => DB::table('t_orders', 'o')
+                    ->select('di.item_display_name')
+                    ->join('t_dictionary_items as di', 'di.id', '=', 'o.tms_template_dictid')
                     ->whereColumn('o.request_id', 't_job_latest_state.request_id')
-                    ->whereNotNull('tms_template_id')
+                    ->whereNotNull('tms_template_dictid')
                     ->orderBy('o.id')
                     ->limit(1)
                 ])
@@ -70,17 +71,22 @@ class OcrRequestsListQuery extends QueryBuilder
 
         $this->allowedFilters([
             AllowedFilter::partial('request_id', 't_job_latest_state.request_id'),
+            AllowedFilter::partial('company_id', 's.company_id', false),
             AllowedFilter::custom('created_between', new CreatedBetweenFilter(), 't_job_latest_state.created_at'),
             AllowedFilter::custom('status', new OcrRequestStatusFilter()),
             AllowedFilter::custom('display_status', new OcrRequestStatusFilter()),
             AllowedFilter::callback('query', function ($query, $value) {
                 $query
-                // ->where(function ($query) use ($value) {
-                //     $query->orWhere('t_job_latest_state.request_id', 'like', "%{$value}%")
-                //         ->orWhereRaw('1=1');
-                // })
-                ->orHaving('first_order_bill_to_address_location_name', 'like', "%{$value}%")
-                ->orHaving('t_job_latest_state.request_id', 'like', "%{$value}%");
+                    ->where(function ($query) use ($value) {
+                        $query->orWhereHas('orders', function ($query) use ($value) {
+                            $query->where('unit_number', 'like', "%{$value}%")
+                                ->orWhere('id', $value);
+                        })
+                        ->orWhereHas('orders.billToAddress', function ($query) use ($value) {
+                            $query->where('location_name', 'like', "%{$value}%");
+                        })
+                        ->orWhere('t_job_latest_state.request_id', 'like', "%{$value}%");
+                    });
             }),
         ])
         ->defaultSort('-t_job_latest_state.created_at')

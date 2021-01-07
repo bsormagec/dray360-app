@@ -47,7 +47,7 @@
               edit: safeGet(row, 'highlight.edit', false),
               hover: safeGet(row, 'highlight.hover', false)
             }"
-            @click="() => scrollToAndStartFieldEdit(row.field_key)"
+            @click.prevent="() => scrollToAndStartFieldEdit(row.field_key)"
             @mouseover="isMobile || row.highlight === undefined ? () => {} : startHover({ path: row.field_key })"
             @mouseleave="isMobile || row.highlight === undefined ? () => {} : stopHover({ path: row.field_key })"
           >
@@ -124,7 +124,8 @@ export default {
     },
 
     scrollToAndStartFieldEdit (highlightKey) {
-      scrollTo(`${cleanStrForId(highlightKey)}-formfield`)
+      const offsetElement = this.$parent.$children[0].$refs.orderHeading
+      scrollTo(`${cleanStrForId(highlightKey)}-formfield`, '.form', offsetElement.scrollHeight)
       this.startFieldEdit({ path: highlightKey })
     },
 

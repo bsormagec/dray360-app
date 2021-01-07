@@ -55,7 +55,7 @@ export default {
   height: rem(22);
   width: rem(22);
   margin-left: rem(1);
-  color: map-get($colors, slate-gray);
+  color: var(--v-slate-gray-base);
   cursor: pointer;
 
   i {

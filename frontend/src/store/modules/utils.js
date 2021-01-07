@@ -60,6 +60,7 @@ const actions = {
   [type.setConfirmationDialog] ({ commit }, {
     title = '',
     text = '',
+    hasInputValue = '',
     confirmText = 'Accept',
     cancelText = 'Cancel',
     onConfirm,
@@ -69,15 +70,16 @@ const actions = {
       open: true,
       title,
       text,
+      hasInputValue,
       confirmText,
       cancelText,
       onConfirm,
       onCancel
     })
   },
-  [type.acceptConfirmationDialog] ({ commit, state }) {
+  [type.acceptConfirmationDialog] ({ commit, state }, value) {
     if (state.confirmationDialog.onConfirm) {
-      state.confirmationDialog.onConfirm()
+      state.confirmationDialog.onConfirm(value)
     }
 
     commit(type.setConfirmationDialog, getBaseConfirmationDialog())
@@ -99,6 +101,7 @@ function getBaseConfirmationDialog () {
     open: false,
     title: '',
     text: '',
+    hasInputValue: true,
     confirmText: 'Confirm',
     cancelText: 'Cancel',
     onConfirm: () => {},
