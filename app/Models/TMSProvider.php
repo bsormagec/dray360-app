@@ -23,20 +23,6 @@ class TMSProvider extends Model
     public $fillable = ['name'];
 
     /**
-     * The attributes that should be casted to native types.
-     */
-    protected $casts = [
-        'id' => 'integer',
-        'name' => 'string'
-    ];
-
-    /**
-     * Validation rules
-     */
-    public static $rules = [
-    ];
-
-    /**
      * Get TMS provider 'Profit Tools'.
      */
     public static function getProfitTools(): self
@@ -50,5 +36,13 @@ class TMSProvider extends Model
     public static function getCompcare(): self
     {
         return static::where('name', static::COMPCARE)->first();
+    }
+
+    /**
+     * Get TMS provider 'CargoWise'.
+     */
+    public static function getCargoWise(): self
+    {
+        return static::where('name', static::CARGOWISE)->first();
     }
 }

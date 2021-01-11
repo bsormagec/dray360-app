@@ -14,7 +14,9 @@ class CompaniesSeeder extends Seeder
         TEST_CUSHING = 'Test Cushing',
         TEST_TCOMPANIES = 'Test Tcompanies',
         TEST_TRADELINK = 'Test Tradelink',
-        TEST_TRADELINK_ONBOARD = 'Test Tradelink Onboard';
+        TEST_TRADELINK_ONBOARD = 'Test Tradelink Onboard',
+        TEST_ITG = 'Test ITG',
+        TEST_ITG_ONBOARD = 'Test ITG Onboard';
 
     /**
      * Run the database seeds.
@@ -39,6 +41,13 @@ class CompaniesSeeder extends Seeder
                     'Test Tradelink Onboard',
                 ],
             ],
+            [
+                'tms_provider' => TMSProvider::getCargoWise(),
+                'companies' => [
+                    self::TEST_ITG,
+                    self::TEST_ITG_ONBOARD,
+                ],
+            ],
         ];
 
         collect($tmsProviderCompanies)->each(function ($item) {
@@ -61,21 +70,31 @@ class CompaniesSeeder extends Seeder
 
     public static function getTestCushing(): Company
     {
-        return Company::where('name', 'Test Cushing')->first();
+        return Company::where('name', self::TEST_CUSHING)->first();
     }
 
     public static function getTestTcompanies(): Company
     {
-        return Company::where('name', 'Test Tcompanies')->first();
+        return Company::where('name', self::TEST_TCOMPANIES)->first();
     }
 
     public static function getTestTradelink(): Company
     {
-        return Company::where('name', 'Test Tradelink')->first();
+        return Company::where('name', self::TEST_TRADELINK)->first();
     }
 
     public static function getTestTradelinkOnboard(): Company
     {
-        return Company::where('name', 'Test Tradelink Onboard')->first();
+        return Company::where('name', self::TEST_TRADELINK_ONBOARD)->first();
+    }
+
+    public static function getTestItg(): Company
+    {
+        return Company::where('name', self::TEST_ITG)->first();
+    }
+
+    public static function getTestItgOnboarding(): Company
+    {
+        return Company::where('name', self::TEST_ITG_ONBOARD)->first();
     }
 }

@@ -163,6 +163,19 @@ class Address extends Model
                     'is_billable' => 0,
                     'is_terminal' => 0,
                 ];
+            case 'itg-cargowise':
+                return [
+                    'address_line_1' => $data['address'] ?? null,
+                    'address_line_2' => $data['address_2'] ?? null,
+                    'city' => $data['city'] ?? null,
+                    'state' => $data['state'] ?? null,
+                    'postal_code' => $data['post_code'] ?? null,
+                    'country' => null,
+                    'location_name' => $data['full_name'] ?? null,
+                    'location_phone' => null,
+                    'is_billable' => $data['is_billable'] ?? 0,
+                    'is_terminal' => 0,
+                ];
         }
     }
 
@@ -190,6 +203,17 @@ class Address extends Model
                 $this->location_name == null &&
                 $this->location_phone == null &&
                 $this->is_billable == 0 &&
+                $this->is_terminal == 0;
+            case 'itg-cargowise':
+                return $this->address_line_1 == ($data['address'] ?? null) &&
+                $this->address_line_2 == ($data['address_2'] ?? null) &&
+                $this->city == ($data['city'] ?? null) &&
+                $this->state == ($data['state'] ?? null) &&
+                $this->postal_code == ($data['post_code'] ?? null) &&
+                $this->country == null &&
+                $this->location_name == ($data['full_name'] ?? null) &&
+                $this->location_phone == null &&
+                $this->is_billable == ($data['is_billable'] ?? 0) &&
                 $this->is_terminal == 0;
         }
 

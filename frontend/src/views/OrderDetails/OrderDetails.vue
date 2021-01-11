@@ -115,6 +115,7 @@ export default {
       this.loaded = false
       this.orderIdToLoad = this.orderId
       await this.requestOrderDetail()
+      await this.fetchTmsTemplates(this.currentOrder.company.id)
     },
     startingSize: function (newVal, oldVal) {
       this.resizeDiff = newVal
