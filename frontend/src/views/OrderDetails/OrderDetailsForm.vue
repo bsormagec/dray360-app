@@ -66,7 +66,7 @@
           { title: 'Edit Order' , action: toggleEdit, hasPermission: true },
           { title: 'Download Source File', action: () => downloadSourceFile(order.id), hasPermission: true },
           { title: 'Delete Order', action: () => deleteOrder(order.id), hasPermission: hasPermission('orders-remove') },
-          { title: 'Add TMS ID', action: () => addTMSId(order.id), hasPermission: hasPermission('ocr-requests-edit') && !isInProcessedState}
+          { title: 'Add TMS ID', action: () => addTMSId(order.id), hasPermission: hasPermission('ocr-requests-edit') && isInProcessedState}
         ]"
         :loading="loading"
       />
@@ -721,7 +721,8 @@ export default {
     },
 
     isInProcessedState () {
-      return (this.order.ocr_request.latest_ocr_request_status.status === 'process-ocr-output-file-complete')
+      const validStatuses = ['process-ocr-output-file-complete', 'ocr-post-processing-complete']
+      return validStatuses.includes(this.order.ocr_request.latest_ocr_request_status.status)
     },
     userWhoUploadedTheRequest () {
       return this.order.upload_user_name ? this.order.upload_user_name : this.order.email_from_address
