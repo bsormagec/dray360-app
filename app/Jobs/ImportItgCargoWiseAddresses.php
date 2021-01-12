@@ -48,7 +48,6 @@ class ImportItgCargoWiseAddresses
                 return $addresses->whereNotIn('code', $existingCodes->toArray());
             })
             ->each(function ($address) {
-                $address = $address->toArray();
                 $address['is_billable'] = $this->billToCodes->contains($address['code']);
 
                 ImportItgCargoWiseAddress::dispatch($address, $this->tmsProvider->id, $this->company);

@@ -10,7 +10,7 @@ use App\Jobs\ImportItgCargoWiseAddress;
 use Tests\Seeds\CargoWiseItgAddressesSeeder;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
 
-class ImportItgCargoWiseAddresses extends TestCase
+class ImportItgCargoWiseAddressTest extends TestCase
 {
     use DatabaseTransactions;
 
