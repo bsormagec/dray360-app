@@ -176,6 +176,7 @@ class Order extends Model
         'tms_submission_datetime' => 'datetime',
         'tms_cancelled_datetime' => 'datetime',
         'cancelled_datetime' => 'datetime',
+        'submitted_date' => 'datetime',
     ];
 
     /**
