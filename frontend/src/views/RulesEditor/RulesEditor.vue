@@ -335,7 +335,7 @@
                 max-width="500"
               >
                 <v-sheet class="pa-4 primary lighten-2">
-                  <v-text-field
+                  <!-- <v-text-field
                     v-model="search"
                     label="Search Rule"
                     dark
@@ -344,19 +344,11 @@
                     hide-details
                     clearable
                     clear-icon="mdi-close-circle-outline"
-                  />
-                  <v-checkbox
-                    v-model="caseSensitive"
-                    dark
-                    hide-details
-                    label="Case sensitive search"
-                  />
+                  /> -->
                 </v-sheet>
                 <v-card-text>
                   <v-treeview
                     :items="rulesList"
-                    :search="search"
-                    :filter="searchFunction"
                     activatable
                     :open-on-click="true"
                   >
@@ -369,7 +361,7 @@
                         v-else
                         @click="addToCompanyVariant(item.id)"
                         v-text="'mdi-chevron-left'"
-                      />{{ item.index }}
+                      />
                     </template>
                   </v-treeview>
                 </v-card-text>
@@ -396,7 +388,6 @@ import VueJsonPretty from 'vue-json-pretty'
 import rulesLibrary, { types } from '@/store/modules/rules_editor'
 import get from 'lodash/get'
 import groupBy from 'lodash/groupBy'
-import chunk from 'lodash/chunk'
 
 export default {
   name: 'RulesEditor',
@@ -407,8 +398,6 @@ export default {
   },
   data: () => ({
     deep: 3,
-    search: null,
-    caseSensitive: false,
     collapsedOnClickBrackets: true,
     selectableType: 'single',
     showSelectController: true,
@@ -456,10 +445,8 @@ export default {
       const grouped = groupBy(this.rules_library, 'description')
       const mappedRules = []
       Object.entries(grouped).forEach(([index, value]) => {
-        console.log('value.nameee ', value)
-        mappedRules.push({ index, children: value, name: value })
+        mappedRules.push({ index, children: value, name: index })
       })
-      console.log('mappedRules ', mappedRules)
       return mappedRules
     }
   },
@@ -477,10 +464,6 @@ export default {
       ]),
     onCopy: function (e) {
       console.log('copied')
-    },
-    searchFunction (item, search, textKey) {
-      console.log(item)
-      return item[textKey].indexOf(search) > -1
     },
 
     onError: function (e) {
