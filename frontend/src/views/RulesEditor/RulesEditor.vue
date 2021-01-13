@@ -15,50 +15,28 @@
                 cols="1"
                 sm="3"
               >
-                <v-menu offset-y>
-                  <template v-slot:activator="{ on }">
-                    <v-btn
-                      color="primary"
-                      dark
-                      :ripple="false"
-                      class="ma-4"
-                      v-on="on"
-                    >
-                      Select Company
-                    </v-btn>
-                  </template>
-                  <v-list>
-                    <v-list-item
-                      v-for="(company, index) in company_list()"
-                      :key="index"
-                      @click="updateSelectedCompany(company)"
-                    >
-                      <v-list-item-title>{{ company.name }}</v-list-item-title>
-                    </v-list-item>
-                  </v-list>
-                </v-menu>
-                <v-menu offset-y>
-                  <template v-slot:activator="{ on }">
-                    <v-btn
-                      color="primary"
-                      dark
-                      :ripple="false"
-                      class="ma-4"
-                      v-on="on"
-                    >
-                      Select Variant
-                    </v-btn>
-                  </template>
-                  <v-list>
-                    <v-list-item
-                      v-for="(variant, index) in variant_list()"
-                      :key="index"
-                      @click="updateSelectedVariant(variant)"
-                    >
-                      <v-list-item-title>{{ variant.abbyy_variant_name }}</v-list-item-title>
-                    </v-list-item>
-                  </v-list>
-                </v-menu>
+                <v-autocomplete
+                  auto-select-first
+                  :items="company_list()"
+                  item-text="name"
+                  item-value="id"
+                  label="Select Company"
+                  solo
+                  clearable
+                  return-object
+                  @change="(name)=> updateSelectedCompany(name)"
+                />
+                <v-autocomplete
+                  auto-select-first
+                  :items="variant_list()"
+                  item-text="abbyy_variant_name"
+                  item-value="id"
+                  label="Select Variant"
+                  solo
+                  clearable
+                  return-object
+                  @change="(abbyy_variant_name)=> updateSelectedVariant(abbyy_variant_name)"
+                />
                 <v-card
                   class="ma-auto"
                   tile
@@ -113,7 +91,6 @@
                   </div>
                 </div>
               </v-col>
-
               <v-col
                 cols="1"
                 sm="9"
@@ -207,6 +184,12 @@
             <v-row>
               <v-col
                 cols="1"
+                sm="3"
+              />
+            </v-row>
+            <v-row>
+              <v-col
+                cols="1"
                 sm="12"
               >
                 <v-row>
@@ -242,6 +225,7 @@
                         </v-btn>
                         <vue-json-pretty
                           v-if="testing_output"
+                          :depth="0"
                           :path="'res'"
                           :data="testing_output.input.original_fields"
                           class="font-weight-black"
@@ -265,6 +249,7 @@
                         </v-btn>
                         <vue-json-pretty
                           v-if="testing_output"
+                          :depth="0"
                           :path="'res'"
                           :data="testing_output.input.original_output"
                           class="font-weight-black"
@@ -345,27 +330,50 @@
                   New Rule
                 </v-btn>
               </v-card-title>
-
-              <v-list>
-                <v-list-item-group color="primary">
-                  <v-list-item
-                    v-for="rule in rules_library()"
-                    :key="rule.id"
+              <v-card
+                class="mx-auto"
+                max-width="500"
+              >
+                <v-sheet class="pa-4 primary lighten-2">
+                  <v-text-field
+                    v-model="search"
+                    label="Search Rule"
+                    dark
+                    flat
+                    solo-inverted
+                    hide-details
+                    clearable
+                    clear-icon="mdi-close-circle-outline"
+                  />
+                  <v-checkbox
+                    v-model="caseSensitive"
+                    dark
+                    hide-details
+                    label="Case sensitive search"
+                  />
+                </v-sheet>
+                <v-card-text>
+                  <v-treeview
+                    :items="rulesList"
+                    :search="search"
+                    :filter="searchFunction"
+                    activatable
+                    :open-on-click="true"
                   >
-                    <v-btn
-                      icon
-                      color="primary"
-                      :ripple="false"
-                      @click="addToCompanyVariant(rule.id)"
-                    >
-                      <v-icon>mdi-chevron-left</v-icon>
-                    </v-btn>
-                    <v-list-item-content>
-                      <v-list-item-title v-text="rule.name" />
-                    </v-list-item-content>
-                  </v-list-item>
-                </v-list-item-group>
-              </v-list>
+                    <template v-slot:prepend="{ item }">
+                      <v-icon
+                        v-if="item.index"
+                        v-text="'mdi-folder-network'"
+                      />
+                      <v-icon
+                        v-else
+                        @click="addToCompanyVariant(item.id)"
+                        v-text="'mdi-chevron-left'"
+                      />{{ item.index }}
+                    </template>
+                  </v-treeview>
+                </v-card-text>
+              </v-card>
             </v-card>
           </v-col>
         </div>
@@ -383,9 +391,12 @@ import 'codemirror/theme/monokai.css'
 import 'codemirror/mode/python/python.js'
 import 'codemirror/addon/selection/active-line.js'
 import 'codemirror/addon/edit/closebrackets.js'
+import 'vue-json-pretty/lib/styles.css'
 import VueJsonPretty from 'vue-json-pretty'
 import rulesLibrary, { types } from '@/store/modules/rules_editor'
 import get from 'lodash/get'
+import groupBy from 'lodash/groupBy'
+import chunk from 'lodash/chunk'
 
 export default {
   name: 'RulesEditor',
@@ -396,13 +407,14 @@ export default {
   },
   data: () => ({
     deep: 3,
+    search: null,
+    caseSensitive: false,
     collapsedOnClickBrackets: true,
     selectableType: 'single',
     showSelectController: true,
     showLength: false,
     showLine: true,
     ...mapState(rulesLibrary.moduleName, {
-      rules_library: state => state.rules_library,
       company_variant_rules: state => state.company_variant_rules,
       company_list: state => state.company_list,
       variant_list: state => state.variant_list
@@ -428,7 +440,8 @@ export default {
   }),
   computed: {
     ...mapState(rulesLibrary.moduleName, {
-      testing_output: state => state.testing_output
+      testing_output: state => state.testing_output,
+      rules_library: state => state.rules_library
     }),
     companyVariantSelected () {
       return this.company_id !== null && this.variant_id !== null
@@ -438,16 +451,36 @@ export default {
     },
     codemirror () {
       return this.$refs.cmEditor.codemirror
+    },
+    rulesList () {
+      const grouped = groupBy(this.rules_library, 'description')
+      const mappedRules = []
+      Object.entries(grouped).forEach(([index, value]) => {
+        console.log('value.nameee ', value)
+        mappedRules.push({ index, children: value, name: value })
+      })
+      console.log('mappedRules ', mappedRules)
+      return mappedRules
     }
   },
 
-  async mounted () {
+  async beforeMount () {
     await this.fetchRules()
   },
   methods: {
-    ...mapActions(rulesLibrary.moduleName, [types.getLibrary, types.getCompanyVariantRules, types.setSequence, types.setRule, types.addRule, types.setRuleCode, types.getTestingOutput, types.getCompanyList, types.getVariantList]),
+    ...mapActions(rulesLibrary.moduleName,
+      [
+        types.getLibrary, types.getCompanyVariantRules,
+        types.setSequence, types.setRule, types.addRule,
+        types.setRuleCode, types.getTestingOutput,
+        types.getCompanyList, types.getVariantList
+      ]),
     onCopy: function (e) {
       console.log('copied')
+    },
+    searchFunction (item, search, textKey) {
+      console.log(item)
+      return item[textKey].indexOf(search) > -1
     },
 
     onError: function (e) {
@@ -582,7 +615,7 @@ export default {
         name: newName,
         description: newDescription,
         code: newCode,
-        id: (this.rules_library().length + 1)
+        id: (this.rules_library.length + 1)
       }
 
       const status = await this[types.addRule](ruleData)
@@ -599,7 +632,7 @@ export default {
         alert('Please select a company/variant pair first.')
         return
       }
-      const rule = this.rules_library().find(rule => rule.id === ruleId)
+      const rule = this.rules_library.find(rule => rule.id === ruleId)
 
       if (confirm('Add ' + rule.name + ' to company variant')) {
         this.draggable_rules.push(rule)
@@ -621,15 +654,19 @@ export default {
     },
 
     updateSelectedCompany (company) {
-      this.company_name = company.name
-      this.company_id = company.id
-      this.fetchRules()
+      if (company !== undefined) {
+        this.company_name = company.name
+        this.company_id = company.id
+        this.fetchRules()
+      }
     },
 
     updateSelectedVariant (variant) {
-      this.variant_name = variant.abbyy_variant_name
-      this.variant_id = variant.id
-      this.fetchRules()
+      if (variant !== undefined) {
+        this.variant_name = variant.abbyy_variant_name
+        this.variant_id = variant.id
+        this.fetchRules()
+      }
     },
 
     fetchRules () {
