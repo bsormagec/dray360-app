@@ -36,7 +36,6 @@
     <v-list>
       <v-list-item
         v-for="(option, index) in options"
-        v-show="!needPermission(option.hasPermission)"
         :key="index"
         :disabled="needPermission(option.hasPermission)"
         @click="option.action"
