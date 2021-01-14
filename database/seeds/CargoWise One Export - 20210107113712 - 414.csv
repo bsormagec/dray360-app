@@ -1,0 +1,59 @@
+Code,Description,Mode,Container Type,Times Used
+40HC,Forty foot high cube,SEA,DRY,69268
+20GP,Twenty foot general purpose,SEA,DRY,36244
+40GP,Forty foot general purpose,SEA,DRY,22457
+40OT,Forty foot open top,SEA,TOP,1541
+40FLEX,Forty Foot Flex,SEA,DRY,1535
+45HC,Forty Five foot high cube,SEA,DRY,1142
+40RE,Forty foot reefer,SEA,RFG,1073
+40REHC,Forty foot high cube reefer,SEA,RFG,916
+20RE,Twenty foot reefer,SEA,RFG,300
+53VAN,53' DRY VAN,ROA,,284
+40HCOT,Forty Foot High Cube Open Top,SEA,TOP,261
+20OT,Twenty foot open top,SEA,TOP,256
+40FR,Forty foot flatrack,SEA,FLT,77
+40HC_OT,Forty foot high cube Open Top,SEA,TOP,77
+FLAT,FLATBED,ROA,,66
+20DC,Twenty Foot General Purpose,SEA,DRY,54
+53 FLAT,53' FLATBED,ROA,,50
+STEP,Stepdeck,ROA,,42
+40HC_FG,Forty Foot HC Food Grade Container,SEA,DRY,37
+20GP_SO,Shippers own container,SEA,DRY,36
+20HC,Twenty foot high cube,SEA,DRY,35
+40HC_SO,Shippers own container,SEA,DRY,34
+20FR,Twenty foot flatrack,SEA,FLT,27
+48 FLAT,48' FLATBED,ROA,,25
+40GP_FG,Forty Foot Food Grade Container,SEA,DRY,18
+STRAIGHT,STRAIGHT TRUCK,ROA,,18
+20GP_FG,Twenty Foot Food Grade,SEA,DRY,17
+DODR,Double Drop,ROA,,16
+53 STEP,53' STEP DECK,ROA,,14
+40DC,Forty foot general purpose,SEA,DRY,14
+40HCHT,FORTY FOOT HIGH CUBE HARD TOP,SEA,OTH,13
+40GP_SO,Shippers own container,SEA,DRY,12
+40RE_HC,Forty foot HC non-operation reefer,SEA,RFG,11
+SPRINTER,SPRINTER VAN,ROA,,11
+40GN,40' CONTAINER,SEA,DRY,8
+40NOR,Forty foot non-operating reefer,SEA,DRY,8
+40HC_FR,Forty foot high cube flat rack,SEA,FLT,6
+53HC,53' High Cube,SEA,DRY,4
+FLATCAR,FLATCAR,SEA,OTH,4
+45REHC,Fortyfive foot High Cube Reefer,SEA,RFG,3
+LOWB,LOWBOY 50X102,ROA,,3
+SHOC,Shipper Owned Container,ROA,,3
+48DRYVAN,48' DRY VAN,SEA,DRY,2
+48 STEP,48' STEP DECK,ROA,,2
+20DC_HT,Hardtop Container,SEA,TOP,2
+40HC_HT,Hardtop Container,SEA,TOP,2
+20OT_SO,Shippers own container,SEA,TOP,2
+40OT_SO,Shippers own container,SEA,TOP,2
+SPEQ,Special Equipment,ROA,,2
+20HCRE,Twenty foot high cube Reefer,SEA,RFG,2
+20TANK,Twenty Foot ISO Tank,SEA,TNK,2
+40SRACK,40 ft Adjustable Flat Rack Containe,SEA,FLT,1
+48 DOUBLE,48' DOUBLE DROP,ROA,,1
+40FLEX_FG,Forty Foot Flex Food Grade,SEA,DRY,1
+FTRL,Full Truck Load,ROA,,1
+R-STRAIGHT,Refigerated Straight Truck,ROA,,1
+RGNT,removable goose neck,ROA,OTH,1
+
