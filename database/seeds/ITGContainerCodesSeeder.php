@@ -26,8 +26,8 @@ class ITGContainerCodeSeeder extends Seeder
     ];
 
     const COMPANY_NAMES = [
-        'IXTOnboarding',
-        'IXT'
+        'ITGOnboarding',
+        'ITG'
     ];
 
     /**
@@ -61,7 +61,7 @@ class ITGContainerCodeSeeder extends Seeder
                         $status = 'created ';
                     }
                     // happy message, return
-                    $msg = $status.'csvfile row:'.$rownum.'/'.$rowCount.' for item_key: "'.$dictItem['item_key'].'" with item_display_name: '.$dictItem['item_display_name'];
+                    $msg = $status.'csvfile row:'.$rownum.'/'.$rowCount.' for company_name: "'.$company_name.'", item_key: "'.$dictItem['item_key'].'",      item_display_name: "'.$dictItem['item_display_name'].'"';
                     $this->command->info($msg);
                 }
             }
