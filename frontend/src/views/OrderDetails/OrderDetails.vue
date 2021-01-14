@@ -15,7 +15,6 @@
             :tms-templates="tmsTemplates"
             @order-deleted="$emit('order-deleted')"
           />
-
           <div
             class="form__resize"
             @mousedown.prevent="handleResize"
