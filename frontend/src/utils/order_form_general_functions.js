@@ -53,7 +53,7 @@ export function baseHighlight (ocrData) {
 }
 
 export function keyShouldBeParsed (key) {
-  const shouldNotBeIgnored = ['t_equipment_type_id', 'tms_template_dictid']
+  const shouldNotBeIgnored = ['t_equipment_type_id', 'tms_template_dictid', 'container_dictid']
 
   if (shouldNotBeIgnored.includes(key)) {
     return true

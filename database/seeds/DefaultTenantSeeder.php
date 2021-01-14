@@ -33,7 +33,8 @@ class DefaultTenantSeeder extends Seeder
 
             // Profittools templates
             'profit_tools_enable_templates' => false,
-            'profit_tools_template_list' => [],
+            // Profittools templates
+            'itg_enable_containers' => false,
         ];
         $tenant->save();
     }

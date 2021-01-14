@@ -34,7 +34,10 @@ class ItgAddressesFileRead
 
         Storage::disk('local')->delete($fileName);
 
-        $this->job->setBillToAddresses($this->mapHeadersToSnakeCase($billToSheet));
+
+        $this->job->setBillToAddresses(
+            $this->mapHeadersToSnakeCase($billToSheet)->pluck('code')
+        );
         $this->job->setAddresses($this->mapHeadersToSnakeCase($allAddressesSheet));
     }
 

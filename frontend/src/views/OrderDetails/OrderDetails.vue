@@ -13,9 +13,11 @@
             :back-button="backButton"
             :redirect-back="redirectBack"
             :tms-templates="tmsTemplates"
+            :tms-templates-enabled="profitToolsTemplatesEnabled"
+            :itg-containers="itgContainers"
+            :itg-containers-enabled="itgContainersEnabled"
             @order-deleted="$emit('order-deleted')"
           />
-
           <div
             class="form__resize"
             @mousedown.prevent="handleResize"
@@ -44,6 +46,7 @@ import OrderDetailsForm from '@/views/OrderDetails/OrderDetailsForm'
 import OrderDetailsDocument from '@/views/OrderDetails/OrderDetailsDocument'
 import ContainerNotFound from '@/views/ContainerNotFound'
 import { reqStatus } from '@/enums/req_status'
+import { dictionaryItemsTypes } from '@/enums/app_objects_types'
 
 import { getDictionaryItems } from '@/store/api_calls/utils'
 
@@ -53,6 +56,7 @@ import orderForm, { types as orderFormTypes } from '@/store/modules/order-form'
 import { mapState, mapActions } from 'vuex'
 
 import utils, { type } from '@/store/modules/utils'
+import get from 'lodash/get'
 
 export default {
   name: 'OrderDetails',
@@ -91,6 +95,7 @@ export default {
     loaded: false,
     redirectBack: false,
     tmsTemplates: [],
+    itgContainers: [],
     orderIdToLoad: vm.orderId || vm.$route.params.id,
     has404: false
   }),
@@ -105,7 +110,14 @@ export default {
   computed: {
     ...mapState(orders.moduleName, {
       currentOrder: state => state.currentOrder
-    })
+    }),
+    profitToolsTemplatesEnabled () {
+      return get(this.currentOrder, 'company.configuration.profit_tools_enable_templates', false)
+    },
+
+    itgContainersEnabled () {
+      return get(this.currentOrder, 'company.configuration.itg_enable_containers', false)
+    }
   },
   watch: {
     async orderId (newOrderId) {
@@ -114,8 +126,8 @@ export default {
       }
       this.loaded = false
       this.orderIdToLoad = this.orderId
-      await this.requestOrderDetail()
-      await this.fetchTmsTemplates(this.currentOrder.company.id)
+
+      await this.fetchFormData()
     },
     startingSize: function (newVal, oldVal) {
       this.resizeDiff = newVal
@@ -127,8 +139,8 @@ export default {
     if (!this.isMobile) {
       this[type.setSidebar]({ show: true })
     }
-    await this.requestOrderDetail()
-    await this.fetchTmsTemplates(this.currentOrder.company.id)
+
+    await this.fetchFormData()
   },
 
   methods: {
@@ -138,9 +150,21 @@ export default {
       setFormOrder: orderFormTypes.setFormOrder
     }),
 
+    async fetchFormData () {
+      await this.requestOrderDetail()
+
+      if (this.profitToolsTemplatesEnabled) {
+        await this.fetchTmsTemplates(this.currentOrder.company.id)
+      }
+      if (this.itgContainersEnabled) {
+        await this.fetchItgContainers(this.currentOrder.company.id)
+      }
+    },
+
     async fetchTmsTemplates (companyId) {
       const [error, data] = await getDictionaryItems({
-        'filter[company_id]': companyId
+        'filter[company_id]': companyId,
+        'filter[item_type]': dictionaryItemsTypes.template
       })
 
       if (error !== undefined) {
@@ -148,6 +172,19 @@ export default {
       }
 
       this.tmsTemplates = data.data
+    },
+
+    async fetchItgContainers (companyId) {
+      const [error, data] = await getDictionaryItems({
+        'filter[company_id]': companyId,
+        'filter[item_type]': dictionaryItemsTypes.itgContainer
+      })
+
+      if (error !== undefined) {
+        this.itgContainers = []
+      }
+
+      this.itgContainers = data.data
     },
 
     async requestOrderDetail () {

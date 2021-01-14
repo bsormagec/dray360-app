@@ -38,11 +38,21 @@ class ImportCargoWiseAddressesTest extends TestCase
         $this->artisan('import:cargowise-addresses')->assertExitCode(0);
 
         Queue::assertPushed(ImportItgCargoWiseAddress::class, 2);
+        $lastReturn = false;
+        $count = 0;
         Queue::assertPushedOn(
             'imports',
             ImportItgCargoWiseAddress::class,
-            function (ImportItgCargoWiseAddress $job) {
-                return in_array($job->addressCode, ['ANNPUBARB', 'SEASHITOA']);
+            function (ImportItgCargoWiseAddress $job) use (&$lastReturn, &$count) {
+                $lastReturn = $job->addressCode == 'SEASHITOA'
+                    ?$job->address['is_billable'] === true
+                    :$job->addressCode === 'ANNPUBARB';
+
+                $count++;
+                if ($count == 2) {
+                    return $lastReturn;
+                }
+                return false;
             }
         );
     }
