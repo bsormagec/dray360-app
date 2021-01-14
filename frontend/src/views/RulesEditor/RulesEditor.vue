@@ -334,18 +334,6 @@
                 class="rulesLibrary mx-auto"
                 max-width="500"
               >
-                <v-sheet class="pa-4 primary lighten-2">
-                  <!-- <v-text-field
-                    v-model="search"
-                    label="Search Rule"
-                    dark
-                    flat
-                    solo-inverted
-                    hide-details
-                    clearable
-                    clear-icon="mdi-close-circle-outline"
-                  /> -->
-                </v-sheet>
                 <v-card-text>
                   <v-treeview
                     :items="rulesList"
