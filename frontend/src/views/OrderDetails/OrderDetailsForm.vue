@@ -186,7 +186,7 @@
           @change="value => handleChange('shipment_designation', value)"
         /> -->
         <FormFieldInputAutocomplete
-          v-if="shouldSelectProfitToolsTemplateId"
+          v-if="tmsTemplatesEnabled"
           references="tms_template_dictid"
           label="TMS Template"
           :value="order.tms_template_dictid"
@@ -250,7 +250,20 @@
           </h3>
         </div>
         <div class="section__rootfields">
+          <FormFieldInputAutocomplete
+            v-if="itgContainersEnabled"
+            references="container_dictid"
+            label="ITG Container"
+            :value="order.container_dictid"
+            :autocomplete-items="itgContainers"
+            :item-text="item => `${item.item_display_name} (${item.item_key})`"
+            item-value="id"
+            :display-value="itgContainerDisplayName"
+            :edit-mode="editMode"
+            @change="value => handleChange('container_dictid', value)"
+          />
           <FormFieldEquipmentType
+            v-else
             label="Equipment Type"
             references="t_equipment_type_id"
             :company-id="order.t_company_id"
@@ -606,9 +619,9 @@ import isMobile from '@/mixins/is_mobile'
 import permissions from '@/mixins/permissions'
 import { mapState, mapActions } from 'vuex'
 import get from 'lodash/get'
+import { statuses } from '@/enums/app_objects_types'
 
 import { getSourceFileDownloadURL, postSendToTms, delDeleteOrder } from '@/store/api_calls/orders'
-import { getDictionaryItems } from '@/store/api_calls/utils'
 import orderForm, { types as orderFormTypes } from '@/store/modules/order-form'
 import utils, { type } from '@/store/modules/utils'
 
@@ -664,6 +677,21 @@ export default {
       type: Array,
       required: false,
       default: () => []
+    },
+    tmsTemplatesEnabled: {
+      type: Boolean,
+      required: false,
+      default: false
+    },
+    itgContainers: {
+      type: Array,
+      required: false,
+      default: () => []
+    },
+    itgContainersEnabled: {
+      type: Boolean,
+      required: false,
+      default: false
     }
   },
   data () {
@@ -693,10 +721,6 @@ export default {
       return this.order.tms_template_dictid !== null
     },
 
-    shouldSelectProfitToolsTemplateId () {
-      return get(this.order, 'company.configuration.profit_tools_enable_templates', false)
-    },
-
     availableLineItems () {
       return this.order.order_line_items
         .map((item, index) => ({ ...item, real_index: index }))
@@ -717,11 +741,14 @@ export default {
       }
 
       return (this.order.tms_shipment_id !== null && this.order.tms_shipment_id !== undefined) ||
-        (get(this.order, 'ocr_request.latest_ocr_request_status.status') === 'sending-to-wint')
+        (get(this.order, 'ocr_request.latest_ocr_request_status.status') === statuses.sendingToWint)
     },
 
     isInProcessedState () {
-      const validStatuses = ['process-ocr-output-file-complete', 'ocr-post-processing-complete']
+      const validStatuses = [
+        statuses.processOcrOutputFileComplete,
+        statuses.ocrPostProcessingComplete
+      ]
       return validStatuses.includes(this.order.ocr_request.latest_ocr_request_status.status)
     },
     userWhoUploadedTheRequest () {
@@ -893,6 +920,10 @@ export default {
     tmsTemplateDisplayName (value) {
       const result = this.tmsTemplates.filter(el => el.id === value)
       return result.length > 0 ? result[0].item_display_name : value
+    },
+    itgContainerDisplayName (value) {
+      const result = this.itgContainers.filter(el => el.id === value)
+      return result.length > 0 ? `${result[0].item_display_name} (${result[0].item_key})` : value
     }
 
   }

@@ -10,6 +10,7 @@ class DictionaryItem extends Model
     use SoftDeletes;
 
     const TEMPLATE_TYPE = 'template';
+    const ITGCONTAINER_TYPE = 'itgcontainer';
 
     public $table = 't_dictionary_items';
 

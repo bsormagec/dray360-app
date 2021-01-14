@@ -151,6 +151,7 @@ class Order extends Model
         'interchange_err_count',
         'tms_template_id',
         'tms_template_dictid',
+        'container_dictid',
     ];
 
     /**
@@ -253,6 +254,7 @@ class Order extends Model
         'interchange_err_count' => 'sometimes|nullable',
         'tms_template_id' => 'sometimes|nullable',
         'tms_template_dictid' => 'sometimes|nullable',
+        'container_dictid' => 'sometimes|nullable',
     ];
 
     public function precededByOrder()
@@ -309,6 +311,11 @@ class Order extends Model
     public function tmsTemplate()
     {
         return $this->belongsTo(DictionaryItem::class, 'tms_template_dictid');
+    }
+
+    public function container()
+    {
+        return $this->belongsTo(DictionaryItem::class, 'container_dictid');
     }
 
     public function updateRelatedModels($relatedModels): void
