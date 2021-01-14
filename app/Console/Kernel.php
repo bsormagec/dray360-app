@@ -29,6 +29,10 @@ class Kernel extends ConsoleKernel
             ->weeklyOn(7)
             ->onOneServer();
         $schedule
+            ->command('import:cargowise-addresses')
+            ->dailyAt('03:00')
+            ->onOneServer();
+        $schedule
             ->command('import:profit-tools-addresses', ['--insert-only'])
             ->hourly()
             ->onOneServer();

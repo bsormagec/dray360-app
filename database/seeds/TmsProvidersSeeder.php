@@ -15,6 +15,7 @@ class TmsProvidersSeeder extends Seeder
         collect([
             TMSProvider::PROFIT_TOOLS,
             TMSProvider::COMPCARE,
+            TMSProvider::CARGOWISE,
         ])->each(function ($tmsProviderName) {
             $tmsProvider = TMSProvider::firstOrCreate(['name' => $tmsProviderName]);
             $this->command->info("TMSProvider {$tmsProviderName}: ".$tmsProvider->id);
