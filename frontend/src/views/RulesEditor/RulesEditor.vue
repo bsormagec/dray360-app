@@ -331,7 +331,7 @@
                 </v-btn>
               </v-card-title>
               <v-card
-                class="mx-auto"
+                class="rulesLibrary mx-auto"
                 max-width="500"
               >
                 <v-sheet class="pa-4 primary lighten-2">
@@ -351,17 +351,32 @@
                     :items="rulesList"
                     activatable
                     :open-on-click="true"
+                    transition
                   >
                     <template v-slot:prepend="{ item }">
                       <v-icon
                         v-if="item.index"
-                        v-text="'mdi-folder-network'"
-                      />
+                      >
+                        mdi-folder-network
+                      </v-icon>
                       <v-icon
                         v-else
                         @click="addToCompanyVariant(item.id)"
-                        v-text="'mdi-chevron-left'"
-                      />
+                      >
+                        mdi-chevron-left
+                      </v-icon>
+                    </template>
+
+                    <template v-slot:label="{ item }">
+                      <v-tooltip bottom>
+                        <template v-slot:activator="{ on, attrs }">
+                          <span
+                            v-bind="attrs"
+                            v-on="on"
+                          >{{ item.name }}</span>
+                        </template>
+                        <span>{{ item.name }}</span>
+                      </v-tooltip>
                     </template>
                   </v-treeview>
                 </v-card-text>
@@ -398,6 +413,7 @@ export default {
   },
   data: () => ({
     deep: 3,
+    open: [1],
     collapsedOnClickBrackets: true,
     selectableType: 'single',
     showSelectController: true,
@@ -699,11 +715,23 @@ export default {
 .container {
   padding: 0px;
 }
+.rulesLibrary{
+  max-height: 600px;
+  max-width: 500px;
+  height: auto;
+  overflow-y: auto;
+  overflow-x: hidden;
+}
 </style>
 <style lang="scss">
 .CodeMirror {
   border: 1px solid #eee;
   height: 600px !important;
   font-size: 18px;
+}
+.rulesLibrary{
+  .v-treeview-node__level{
+    display: none;
+  }
 }
 </style>
