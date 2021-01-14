@@ -62,7 +62,6 @@ export default {
       default: 'id'
     },
     itemText: {
-      type: String,
       required: false,
       default: 'name'
     },

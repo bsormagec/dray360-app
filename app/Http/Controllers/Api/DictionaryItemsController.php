@@ -15,6 +15,8 @@ class DictionaryItemsController extends Controller
     {
         $this->authorize('viewAny', DictionaryItem::class);
         $dictionaryItems = QueryBuilder::for(DictionaryItem::class)
+            ->allowedSorts(['item_display_name', 'item_key'])
+            ->defaultSort('item_display_name')
             ->allowedFilters([
                 AllowedFilter::exact('company_id', 't_company_id'),
                 AllowedFilter::exact('tms_provider_id', 't_tms_provider_id'),

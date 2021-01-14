@@ -60,7 +60,8 @@ class DictionaryItem extends Resource
             Code::make('Item Value', 'item_value')->json()->nullable(),
             Select::make('Item Type', 'item_type')
                 ->options([
-                    \App\Models\DictionaryItem::TEMPLATE_TYPE => 'Template'
+                    \App\Models\DictionaryItem::TEMPLATE_TYPE => 'Template',
+                    \App\Models\DictionaryItem::ITGCONTAINER_TYPE => 'ITG Container',
                 ])
                 ->rules([
                     'required',
