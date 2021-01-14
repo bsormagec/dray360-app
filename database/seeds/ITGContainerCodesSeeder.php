@@ -91,8 +91,8 @@ class ITGContainerCodeSeeder extends Seeder
                 'code' => $csvRow['Code'],
                 'description' => $csvRow['Description'],
                 'mode' => $csvRow['Mode'],
-                'container_type' => 'Container Type',
-                'times_used' => 'Times Used',
+                'container_type' => $csvRow['Container Type'],
+                'times_used' => $csvRow['Times Used'],
             ],
             # deleted_at
             'rownum' => $csvRow['rownum'],
