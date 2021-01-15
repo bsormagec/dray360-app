@@ -12,7 +12,10 @@ const initialState = {
 
 const mutations = {
   auth_success: (state) => (state.loggedIn = true),
-  logout: (state) => (state.loggedIn = false),
+  logout: (state) => {
+    state.loggedIn = false
+    state.currentUser = undefined
+  },
   currentUser: (state, { user }) => (state.currentUser = user),
   currentUserLoading: (state, isPending) => (state.currentUserLoading = !!isPending),
   intendedUrl: (state, url) => (state.intendedUrl = url)

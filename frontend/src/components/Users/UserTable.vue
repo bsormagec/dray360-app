@@ -79,8 +79,10 @@
           </v-btn>
         </v-toolbar>
       </template>
-      <template v-slot:[`item.email`]="{ item }">
-        <a href="">{{ item.email }}</a>
+      <template
+        v-slot:[`item.email`]="{ item }"
+      >
+        <span class="text-decoration-underline primary--text">{{ item.email }}</span>
       </template>
       <template v-slot:[`item.deactivated_at`]="{ item }">
         <span>{{ item.deactivated_at === null ? 'Active' : 'Inactive' }}</span>
@@ -123,6 +125,7 @@
 <script>
 import DateRangeCalendar from '@/components/Orders/DateRangeCalendar'
 import hasPermission from '@/mixins/permissions'
+import isSuperadmin from '@/mixins/permissions'
 import Pagination from '@/components/OrderTable/components/Pagination'
 import { getUsers } from '@/store/api_calls/users'
 
@@ -134,7 +137,7 @@ export default {
     Pagination
   },
 
-  mixins: [hasPermission],
+  mixins: [hasPermission, isSuperadmin],
 
   props: {
     hasColumnFilters: {
@@ -204,6 +207,9 @@ export default {
     }
   },
   created () {
+    if (!this.isSuperadmin()) {
+      this.headers.splice(2, 1)
+    }
     this.selectedHeaders = this.headers
     this.fetchUsers()
   },
