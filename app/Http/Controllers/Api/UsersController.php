@@ -26,7 +26,13 @@ class UsersController extends Controller
 
         $query = User::query()
             ->when(! is_superadmin(), function ($query) {
-                return $query->forCurrentCompany();
+                return $query->forCurrentCompany()
+                    ->where(function ($query) {
+                        $query->whereDoesntHave('roles')
+                            ->orWhereHas('roles', function ($query) {
+                                $query->where('name', '!=', 'superadmin');
+                            });
+                    });
             })
             ->with([
                 'company:id,name',
