@@ -31,12 +31,12 @@ class AddIndicesToTAddresses extends Migration
     public function down()
     {
         Schema::table('t_addresses', function (Blueprint $table) {
-            $table->dropIndex('t_addresses_location_name_index');
-            $table->dropIndex('t_addresses_city_index');
-            $table->dropIndex('t_addresses_postal_code_index');
-            $table->dropIndex('t_addresses_address_line_1_index');
-            $table->dropIndex('t_addresses_address_line_2_index');
-            $table->dropIndex('t_addresses_state_index');
+            $table->dropIndex(['location_name']);
+            $table->dropIndex(['city']);
+            $table->dropIndex(['postal_code']);
+            $table->dropIndex(['address_line_1']);
+            $table->dropIndex(['address_line_2']);
+            $table->dropIndex(['state']);
         });
     }
 }
