@@ -44,30 +44,7 @@
               <v-text-field
                 v-if="enableLocationName"
                 v-model="locationName"
-                append-icon="mdi-magnify"
                 label="Location Name"
-                outlined
-                dense
-                class="mb-4"
-                :hide-details="true"
-                @keypress.enter.stop="searchApi"
-              />
-              <v-text-field
-                v-if="enableCity"
-                v-model="city"
-                append-icon="mdi-magnify"
-                label="City"
-                outlined
-                dense
-                class="mb-4"
-                :hide-details="true"
-                @keypress.enter.stop="searchApi"
-              />
-              <v-text-field
-                v-if="enablePostalCode"
-                v-model="postalCode"
-                append-icon="mdi-magnify"
-                label="Postal Code"
                 outlined
                 dense
                 class="mb-4"
@@ -77,25 +54,57 @@
               <v-text-field
                 v-if="enableAddress"
                 v-model="address"
-                append-icon="mdi-magnify"
                 label="Address"
                 outlined
                 dense
-                class="mb-4"
                 :hide-details="true"
                 @keypress.enter.stop="searchApi"
               />
-              <v-text-field
-                v-if="enableState"
-                v-model="state"
-                append-icon="mdi-magnify"
-                label="State"
-                outlined
-                dense
-                class="mb-4"
-                :hide-details="true"
-                @keypress.enter.stop="searchApi"
-              />
+              <v-row>
+                <v-col
+                  v-if="enableCity"
+                  cols="5"
+                >
+                  <v-text-field
+                    v-model="city"
+                    label="City"
+                    outlined
+                    dense
+                    class="mb-4"
+                    :hide-details="true"
+                    @keypress.enter.stop="searchApi"
+                  />
+                </v-col>
+                <v-col
+                  v-if="enablePostalCode"
+                  cols="4"
+                >
+                  <v-text-field
+
+                    v-model="postalCode"
+                    label="Postal Code"
+                    outlined
+                    dense
+                    class="mb-4"
+                    :hide-details="true"
+                    @keypress.enter.stop="searchApi"
+                  />
+                </v-col>
+                <v-col
+                  v-if="enableState"
+                  cols="3"
+                >
+                  <v-text-field
+                    v-model="state"
+                    label="State"
+                    outlined
+                    dense
+                    class="mb-4"
+                    :hide-details="true"
+                    @keypress.enter.stop="searchApi"
+                  />
+                </v-col>
+              </v-row>
             </v-col>
             <v-col cols="2">
               <v-btn
@@ -261,6 +270,16 @@ export default {
     }
   },
 
+  computed: {
+    extraSearchFieldsEnabled () {
+      return this.enableLocationName ||
+        this.enableCity ||
+        this.enablePostalCode ||
+        this.enableAddress ||
+        this.enableState
+    }
+  },
+
   watch: {
     async isOpen (newVal) {
       if (!newVal || this.loaded) {
@@ -268,7 +287,9 @@ export default {
       }
 
       this.loading = true
-      await this.fetchAddressList(this.filters)
+      if (!this.extraSearchFieldsEnabled) {
+        await this.fetchAddressList(this.filters)
+      }
 
       this.loading = false
       this.loaded = true
