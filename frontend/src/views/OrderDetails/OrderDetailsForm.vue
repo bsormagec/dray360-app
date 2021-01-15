@@ -417,6 +417,7 @@
             references="bill_to_address"
             :edit-mode="false"
             billable
+            v-bind="{...addressSearchProps}"
             @change="(e) => handleChange('bill_to_address', e)"
           />
           <FormFieldTextArea
@@ -511,6 +512,7 @@
               :edit-mode="editMode"
               :is-first="index === 0"
               :is-last="index == order.order_address_events.length - 1"
+              v-bind="{...addressSearchProps}"
               @change="(e) => handleChange(`order_address_events.${index}`, e)"
               @delete="(e) => handleDelete(index)"
               @sort="(e) => moveObjectPositionInArray(order.order_address_events[index].id, e)"
@@ -719,6 +721,16 @@ export default {
 
     isManagedByTemplate () {
       return this.order.tms_template_dictid !== null
+    },
+
+    addressSearchProps () {
+      return {
+        'enable-location-name': get(this.order.company, 'configuration.address_search_location_name', false),
+        'enable-city': get(this.order.company, 'configuration.address_search_city', false),
+        'enable-postal-code': get(this.order.company, 'configuration.address_search_postal_code', false),
+        'enable-address': get(this.order.company, 'configuration.address_search_address', false),
+        'enable-state': get(this.order.company, 'configuration.address_search_state', false)
+      }
     },
 
     availableLineItems () {
