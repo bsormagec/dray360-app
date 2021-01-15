@@ -35,6 +35,13 @@ class DefaultTenantSeeder extends Seeder
             'profit_tools_enable_templates' => false,
             // Profittools templates
             'itg_enable_containers' => false,
+
+            // Address Search Booleans
+            'address_search_location_name' => false,
+            'address_search_city' => false,
+            'address_search_postal_code' => false,
+            'address_search_address' => false,
+            'address_search_state' => false,
         ];
         $tenant->save();
     }

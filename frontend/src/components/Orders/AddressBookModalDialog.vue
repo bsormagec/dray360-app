@@ -7,28 +7,106 @@
   >
     <v-card>
       <v-card-title>
-        <h1>Addresses</h1>
-        <v-spacer />
-        <v-text-field
-          v-model="search"
-          append-icon="mdi-magnify"
-          label="Search"
-          outlined
-          dense
-          class="address__search"
-        />
-        <v-btn
-          class="primary mx-2"
-          @click="searchApi"
+        <div
+          class="d-flex flex-column"
+          style="width:100%;"
         >
-          Search
-        </v-btn>
-        <v-btn
-          icon
-          @click="() => change(undefined)"
-        >
-          <v-icon>mdi-close</v-icon>
-        </v-btn>
+          <v-row
+            align="center"
+            no-gutters
+          >
+            <h5 class="secondary--text">
+              Addresses
+            </h5>
+            <v-spacer />
+            <v-btn
+              icon
+              @click="() => change(undefined)"
+            >
+              <v-icon>mdi-close</v-icon>
+            </v-btn>
+          </v-row>
+          <v-row
+            align="center"
+            no-gutters
+          >
+            <v-col cols="10">
+              <v-text-field
+                v-model="search"
+                append-icon="mdi-magnify"
+                label="Search"
+                outlined
+                dense
+                :class="{'mb-4': enableLocationName||enableCity||enablePostalCode||enableAddress||enableState}"
+                :hide-details="true"
+                @keypress.enter.stop="searchApi"
+              />
+              <v-text-field
+                v-if="enableLocationName"
+                v-model="locationName"
+                append-icon="mdi-magnify"
+                label="Location Name"
+                outlined
+                dense
+                class="mb-4"
+                :hide-details="true"
+                @keypress.enter.stop="searchApi"
+              />
+              <v-text-field
+                v-if="enableCity"
+                v-model="city"
+                append-icon="mdi-magnify"
+                label="City"
+                outlined
+                dense
+                class="mb-4"
+                :hide-details="true"
+                @keypress.enter.stop="searchApi"
+              />
+              <v-text-field
+                v-if="enablePostalCode"
+                v-model="postalCode"
+                append-icon="mdi-magnify"
+                label="Postal Code"
+                outlined
+                dense
+                class="mb-4"
+                :hide-details="true"
+                @keypress.enter.stop="searchApi"
+              />
+              <v-text-field
+                v-if="enableAddress"
+                v-model="address"
+                append-icon="mdi-magnify"
+                label="Address"
+                outlined
+                dense
+                class="mb-4"
+                :hide-details="true"
+                @keypress.enter.stop="searchApi"
+              />
+              <v-text-field
+                v-if="enableState"
+                v-model="state"
+                append-icon="mdi-magnify"
+                label="State"
+                outlined
+                dense
+                class="mb-4"
+                :hide-details="true"
+                @keypress.enter.stop="searchApi"
+              />
+            </v-col>
+            <v-col cols="2">
+              <v-btn
+                class="primary mx-2"
+                @click="searchApi"
+              >
+                Search
+              </v-btn>
+            </v-col>
+          </v-row>
+        </div>
       </v-card-title>
       <div
         v-if="recognizedText"
@@ -152,7 +230,12 @@ export default {
         is_terminal_address: false,
         is_billable_address: false
       })
-    }
+    },
+    enableLocationName: { type: Boolean, required: false, default: false },
+    enableCity: { type: Boolean, required: false, default: false },
+    enablePostalCode: { type: Boolean, required: false, default: false },
+    enableAddress: { type: Boolean, required: false, default: false },
+    enableState: { type: Boolean, required: false, default: false }
   },
 
   data () {
@@ -163,6 +246,11 @@ export default {
       loading: false,
       loaded: false,
       search: '',
+      locationName: '',
+      city: '',
+      postalCode: '',
+      address: '',
+      state: '',
       addressObject: [],
       headers: [
         { text: 'addressObject', value: 'city' },
@@ -189,6 +277,11 @@ export default {
     filters: {
       handler () {
         this.search = this.filters.rawtext
+        this.locationName = ''
+        this.city = ''
+        this.postalCode = ''
+        this.address = ''
+        this.state = ''
       },
       deep: true
     }
@@ -210,10 +303,22 @@ export default {
 
       this.loaded = false
       this.loading = true
-      await this.fetchAddressList({
-        ...this.filters,
-        rawtext: this.search
-      })
+      const extraFilters = {
+        locationName: { enabled: this.enableLocationName, filterParam: 'location_name' },
+        city: { enabled: this.enableCity, filterParam: 'city' },
+        postalCode: { enabled: this.enablePostalCode, filterParam: 'postal_code' },
+        address: { enabled: this.enableAddress, filterParam: 'address' },
+        state: { enabled: this.enableState, filterParam: 'state' }
+      }
+      const filters = { ...this.filters, rawtext: this.search }
+
+      for (const key in extraFilters) {
+        if (extraFilters[key].enabled && this[key] !== '') {
+          filters[extraFilters[key].filterParam] = this[key]
+        }
+      }
+
+      await this.fetchAddressList(filters)
 
       this.loading = false
       this.loaded = true
@@ -239,21 +344,6 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.address__search fieldset {
-  height: rem(55);
-}
-.v-card__title {
-  display: flex;
-  align-items: baseline;
-  border-bottom: rem(1) solid map-get($colors, grey-11);
-  height: rem(80);
-  h1 {
-    font-size: rem(26);
-    font-weight: 700;
-    letter-spacing: rem(.15);
-    line-height: (20 / 26);
-  }
-}
 .v-data-table {
   td {
     height: rem(100);
