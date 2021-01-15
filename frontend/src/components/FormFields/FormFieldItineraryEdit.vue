@@ -122,6 +122,11 @@
           :is-open="addressModalOpen"
           :filters="filters"
           :recognized-text="orderAddressEvent.t_address_raw_text || 'No recognized address'"
+          :enable-location-name="enableLocationName"
+          :enable-city="enableCity"
+          :enable-postal-code="enablePostalCode"
+          :enable-address="enableAddress"
+          :enable-state="enableState"
           @change="handleAddressChange"
         />
         <div class="form-field">
@@ -181,7 +186,12 @@ export default {
     references: { type: String, default: null },
     editMode: { type: Boolean, required: true },
     isFirst: { type: Boolean, required: true },
-    isLast: { type: Boolean, required: true }
+    isLast: { type: Boolean, required: true },
+    enableLocationName: { type: Boolean, required: false, default: false },
+    enableCity: { type: Boolean, required: false, default: false },
+    enablePostalCode: { type: Boolean, required: false, default: false },
+    enableAddress: { type: Boolean, required: false, default: false },
+    enableState: { type: Boolean, required: false, default: false }
   },
 
   data: (vm) => ({
