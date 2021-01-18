@@ -140,7 +140,6 @@ export default {
     variantName: null,
     variants: [],
     companies: [],
-    params: {},
     company_id: null
   }),
   computed: {
@@ -229,6 +228,14 @@ export default {
         return
       }
 
+      if (this.company_id === null) {
+        this.setSnackbar({
+          message: 'Please select a company first',
+          show: true
+        })
+        return
+      }
+
       let error = false
       this.files.forEach(file => (this.uploadFile(file) ? null : (error = true)))
 
@@ -241,11 +248,14 @@ export default {
       this.$emit('uploaded')
     },
     async uploadFile (file) {
-      const [error] = await postUploadPDF(file, this.isSuperadmin()
-        ? this.params = { variantName: this.variantName, companyId: this.company_id }
-        : this.variantName)
+      const params = { variant_name: this.variantName }
+      if (this.isSuperadmin()) {
+        params.company_id = this.company_id
+      }
+      const [error] = await postUploadPDF(file, params)
       return error === undefined
     },
+
     async getCompanies () {
       const [error, data] = await getCompanies()
       if (error) return
