@@ -16,8 +16,23 @@
 
         <v-card-text class="mb-1 pb-0">
           <v-container class="mb-0 pb-0">
+            <v-row
+              v-if="isSuperadmin()"
+            >
+              <v-col class="py-0">
+                <v-autocomplete
+                  v-model="t_company_id"
+                  :items="companies"
+                  label="Select Company"
+                  item-value="id"
+                  item-text="name"
+                  dense
+                  outlined
+                />
+              </v-col>
+            </v-row>
             <v-row>
-              <v-col>
+              <v-col class="py-0">
                 <UploadOrdersFileFields
                   accept=".pdf,.xlsx,.csv,.edi"
                   :files="files"
@@ -98,6 +113,8 @@ import { getVariantList } from '@/store/api_calls/rules_editor'
 import utils, { type } from '@/store/modules/utils'
 import auth from '@/store/modules/auth'
 import { mapActions, mapState } from 'vuex'
+import { getCompanies } from '@/store/api_calls/companies'
+import permissions from '@/mixins/permissions'
 
 import { getVariantTypeFromFile, isPdf } from '@/utils/files_uploads'
 import uniq from 'lodash/uniq'
@@ -106,6 +123,7 @@ import uniqBy from 'lodash/uniqBy'
 export default {
   name: 'UploadOrdersDialog',
   components: { UploadOrdersFileFields },
+  mixins: [permissions],
   props: {
     open: {
       type: Boolean,
@@ -120,7 +138,10 @@ export default {
   data: (vm) => ({
     files: [],
     variantName: null,
-    variants: []
+    variants: [],
+    companies: [],
+    params: {},
+    t_company_id: null
   }),
   computed: {
     ...mapState(auth.moduleName, { currentUser: state => state.currentUser }),
@@ -150,6 +171,9 @@ export default {
       })
       this.variants = data
     }
+  },
+  created () {
+    this.getCompanies()
   },
   methods: {
     ...mapActions(utils.moduleName, { setSnackbar: type.setSnackbar }),
@@ -217,9 +241,15 @@ export default {
       this.$emit('uploaded')
     },
     async uploadFile (file) {
-      const [error] = await postUploadPDF(file, this.variantName)
-
+      const [error] = await postUploadPDF(file, this.isSuperadmin()
+        ? this.params = { variantName: this.variantName, companyId: this.t_company_id }
+        : this.variantName)
       return error === undefined
+    },
+    async getCompanies () {
+      const [error, data] = await getCompanies()
+      if (error) return
+      this.companies = data.data
     }
   }
 }
