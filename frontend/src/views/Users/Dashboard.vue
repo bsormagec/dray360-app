@@ -5,7 +5,7 @@
       table-title="User list"
       :has-search="true"
       :has-column-filters="true"
-      :has-bulk-actions="true"
+      :has-bulk-actions="false"
       :bulk-actions="['Delete selected', 'Deactivate account', 'Reset password']"
       :has-action-button="{showButton: false, action: '/'}"
       :has-add-button="{showButton: true, action: '/'}"
