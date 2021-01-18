@@ -228,7 +228,7 @@ export default {
         return
       }
 
-      if (this.company_id === null) {
+      if (this.isSuperadmin && this.company_id === null) {
         this.setSnackbar({
           message: 'Please select a company first',
           show: true
