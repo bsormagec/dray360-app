@@ -203,7 +203,7 @@
           label="Division"
         />
         <FormFieldSelectDivisionCodes
-          v-else
+          v-else-if="divisionsEnabled"
           references="division_code"
           label="Division"
           :value="order.division_code"
@@ -253,7 +253,7 @@
           <FormFieldInputAutocomplete
             v-if="itgContainersEnabled"
             references="container_dictid"
-            label="ITG Container"
+            label="ITG Container Size/Type"
             :value="order.container_dictid"
             :autocomplete-items="itgContainers"
             :item-text="item => `${item.item_display_name} (${item.item_key})`"
@@ -694,6 +694,11 @@ export default {
       type: Boolean,
       required: false,
       default: false
+    },
+    divisionsEnabled: {
+      type: Boolean,
+      required: false,
+      default: true
     }
   },
   data () {

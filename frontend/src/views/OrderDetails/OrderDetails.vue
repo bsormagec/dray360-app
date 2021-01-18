@@ -16,6 +16,7 @@
             :tms-templates-enabled="profitToolsTemplatesEnabled"
             :itg-containers="itgContainers"
             :itg-containers-enabled="itgContainersEnabled"
+            :divisions-enabled="divisionsEnabled"
             @order-deleted="$emit('order-deleted')"
           />
           <div
@@ -117,6 +118,9 @@ export default {
 
     itgContainersEnabled () {
       return get(this.currentOrder, 'company.configuration.itg_enable_containers', false)
+    },
+    divisionsEnabled () {
+      return get(this.currentOrder, 'company.configuration.enable_divisions', true)
     }
   },
   watch: {

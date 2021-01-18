@@ -124,8 +124,7 @@
 </template>
 <script>
 import DateRangeCalendar from '@/components/Orders/DateRangeCalendar'
-import hasPermission from '@/mixins/permissions'
-import isSuperadmin from '@/mixins/permissions'
+import permissions from '@/mixins/permissions'
 import Pagination from '@/components/OrderTable/components/Pagination'
 import { getUsers } from '@/store/api_calls/users'
 
@@ -137,7 +136,7 @@ export default {
     Pagination
   },
 
-  mixins: [hasPermission, isSuperadmin],
+  mixins: [permissions],
 
   props: {
     hasColumnFilters: {
