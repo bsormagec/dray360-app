@@ -21,7 +21,7 @@
             >
               <v-col class="py-0">
                 <v-autocomplete
-                  v-model="t_company_id"
+                  v-model="company_id"
                   :items="companies"
                   label="Select Company"
                   item-value="id"
@@ -141,7 +141,7 @@ export default {
     variants: [],
     companies: [],
     params: {},
-    t_company_id: null
+    company_id: null
   }),
   computed: {
     ...mapState(auth.moduleName, { currentUser: state => state.currentUser }),
@@ -242,7 +242,7 @@ export default {
     },
     async uploadFile (file) {
       const [error] = await postUploadPDF(file, this.isSuperadmin()
-        ? this.params = { variantName: this.variantName, companyId: this.t_company_id }
+        ? this.params = { variantName: this.variantName, companyId: this.company_id }
         : this.variantName)
       return error === undefined
     },
