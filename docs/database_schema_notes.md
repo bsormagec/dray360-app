@@ -15,7 +15,22 @@ It is not intended to document every individual column and table, most of which 
 
 
 
-#######################
+
+
+
+### t_chainio_requestid_submissions
+
+This table is used to compute the submission sequence of an order within a request in a threadsafe (no race condition) way. To see how this is implemented, refer to the source code in `dray360-microservices:/lambdas/submitchainio/getsubmissionsequence.py`.
+
+#### request_id
+
+In fact this is a concatenated key containing `request_id` + `:` + `reference_number` because that is how the ITG/Chainio submission sequence is to be tracked. Note that the ordinary request_id value is only 36 characters, and this column is defined as varchar(512) to there is no reason to worry that the concatenation will run out of space.
+
+
+
+
+
+
 
 ### t_job_state_changes
 
