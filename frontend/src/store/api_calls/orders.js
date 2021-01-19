@@ -9,7 +9,7 @@ export const getOrderStatusHistory = async (order, system_status = false) => axi
 
 export const updateOrderDetail = async ({ id, changes }) => axios.put(`/api/orders/${id}`, changes).then(data => [undefined, data.data]).catch(e => [e])
 
-export const postUploadPDF = async (file, variantName) => axios.post('/api/ocr/requests', { filename: file.name, withCredentials: false, variant_name: variantName })
+export const postUploadPDF = async (file, params) => axios.post('/api/ocr/requests', { filename: file.name, withCredentials: false, ...params })
   .then(response => {
     const config = {
       withCredentials: false,
