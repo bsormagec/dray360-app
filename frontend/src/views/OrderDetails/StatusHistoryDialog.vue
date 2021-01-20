@@ -77,7 +77,7 @@
                 </template>
                 <span>
                   <vue-json-pretty
-                    :data="status"
+                    :data="status.status_metadata || {}"
                     class="font-weight-black"
                   />
                 </span>
