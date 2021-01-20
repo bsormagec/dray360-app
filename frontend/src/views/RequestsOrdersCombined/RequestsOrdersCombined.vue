@@ -251,9 +251,12 @@ import { mapActions, mapState } from 'vuex'
 import permissions from '@/mixins/permissions'
 import utils, { type } from '@/store/modules/utils'
 import orders, { types as ordersTypes } from '@/store/modules/orders'
+import auth from '@/store/modules/auth'
 import { deleteRequest as delRequest } from '@/store/api_calls/requests'
 import isMobile from '@/mixins/is_mobile'
 import isMedium from '@/mixins/is_medium'
+
+import get from 'lodash/get'
 
 export default {
   name: 'RequestsOrdersCombined',
@@ -289,6 +292,12 @@ export default {
     ...mapState(utils.moduleName, {
       showingSidebar: state => state.sidebar.show
     }),
+    ...mapState(auth.moduleName, {
+      currentUser: state => state.currentUser
+    }),
+    ordersTabFirst () {
+      return get(this.currentUser, 'configuration.show_orders_tab_first', false)
+    },
     requestOrdersTableHeaders () {
       return [
         { text: 'Date', sortable: false, value: 'created_at' },
@@ -313,7 +322,9 @@ export default {
     }
   },
   created () {
-    this.tab = parseInt(this.$route.query.tab) || 0
+    const paramsTab = parseInt(this.$route.query.tab)
+
+    this.tab = !isNaN(paramsTab) ? paramsTab : (this.ordersTabFirst ? 1 : 0)
   },
   beforeMount () {
     if (!this.isMobile) {

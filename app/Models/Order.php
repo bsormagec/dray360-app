@@ -157,6 +157,7 @@ class Order extends Model
         'tms_template_dictid',
         'container_dictid',
         'tms_template_dictid_verified',
+        'is_hidden',
     ];
 
     /**
@@ -184,6 +185,7 @@ class Order extends Model
         'cancelled_datetime' => 'datetime',
         'submitted_date' => 'datetime',
         'tms_template_dictid_verified' => 'boolean',
+        'is_hidden' => 'boolean',
     ];
 
     /**
@@ -260,6 +262,7 @@ class Order extends Model
         'tms_template_dictid' => 'sometimes|nullable',
         'container_dictid' => 'sometimes|nullable',
         'tms_template_dictid_verified' => 'sometimes|nullable',
+        'is_hidden' => 'sometimes|nullable',
     ];
 
     /**

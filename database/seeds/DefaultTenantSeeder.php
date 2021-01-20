@@ -42,6 +42,7 @@ class DefaultTenantSeeder extends Seeder
             'address_search_postal_code' => false,
             'address_search_address' => false,
             'address_search_state' => false,
+            'show_orders_tab_first' => false,
         ];
         $tenant->save();
     }

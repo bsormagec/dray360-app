@@ -174,6 +174,7 @@ class Order extends Resource
                 ->nullable(),
             BelongsTo::make('Tms Template', 'tmsTemplate', DictionaryItem::class)->nullable(),
             BelongsTo::make('ITG Container', 'container', DictionaryItem::class)->nullable(),
+            Boolean::make('Is Hidden', 'is_hidden')->hideFromIndex()->nullable(),
         ];
     }
 
