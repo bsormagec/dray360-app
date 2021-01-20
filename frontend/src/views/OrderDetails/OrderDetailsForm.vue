@@ -195,6 +195,7 @@
           item-value="id"
           :display-value="tmsTemplateDisplayName"
           :edit-mode="editMode"
+          :verifiable="order.tms_template_dictid !== null && !order.tms_template_dictid_verified"
           @change="value => handleChange('tms_template_dictid', value)"
         />
         <FormFieldManaged
@@ -1079,6 +1080,8 @@ export default {
 
   .field__value {
     max-width: 50%;
+    align-items: center;
+    display: flex;
   }
 
   .equipment__section {

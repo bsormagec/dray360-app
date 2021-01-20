@@ -5,6 +5,7 @@ namespace App\Models;
 use App\Events\AddressVerified;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use App\Models\Traits\VerifiesUserSelectedAttributes;
 
 /**
  * @property \App\Models\Address $address
@@ -30,6 +31,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 class OrderAddressEvent extends Model
 {
     use SoftDeletes;
+    use VerifiesUserSelectedAttributes;
 
     public $table = 't_order_address_events';
 
@@ -84,25 +86,20 @@ class OrderAddressEvent extends Model
         'event_number' => 'required'
     ];
 
-    public static function booted()
-    {
-        static::updated(function ($orderAddressEvent) {
-            if (
-                $orderAddressEvent->getOriginal('t_address_verified') == false
-                && $orderAddressEvent->t_address_verified == true
-            ) {
-                AddressVerified::dispatch($orderAddressEvent);
-            }
-        });
-    }
+    /**
+     * Attributes that will be checked when they change from `false` to `true`.
+     */
+    public static $verifiableAttributes = [
+        't_address_verified' => AddressVerified::class,
+    ];
 
     public function address()
     {
-        return $this->belongsTo(\App\Models\Address::class, 't_address_id');
+        return $this->belongsTo(Address::class, 't_address_id');
     }
 
     public function order()
     {
-        return $this->belongsTo(\App\Models\Order::class, 't_order_id');
+        return $this->belongsTo(Order::class, 't_order_id');
     }
 }

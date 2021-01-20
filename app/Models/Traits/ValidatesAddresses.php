@@ -2,22 +2,8 @@
 
 namespace App\Models\Traits;
 
-use App\Events\AddressVerified;
-
 trait ValidatesAddresses
 {
-    public static function bootValidatesAddresses()
-    {
-        static::updated(function ($order) {
-            if (
-                    $order->getOriginal('bill_to_address_verified') == false
-                    && $order->bill_to_address_verified == true
-                ) {
-                AddressVerified::dispatch($order);
-            }
-        });
-    }
-
     public function isValidated(): bool
     {
         return $this->port_ramp_of_destination_address_verified

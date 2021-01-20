@@ -8,16 +8,13 @@ use App\Models\Address;
 use App\Models\Company;
 use App\Models\TMSProvider;
 use Illuminate\Http\Response;
-use App\Events\AddressVerified;
 use App\Models\VerifiedAddress;
 use App\Models\OrderAddressEvent;
 use Tests\Seeds\OrdersTableSeeder;
 use App\Models\CompanyAddressTMSCode;
-use Illuminate\Support\Facades\Event;
-use Illuminate\Support\Testing\Fakes\EventFake;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
 
-class OrderControllerVerifiesAddressesTest extends TestCase
+class CreateOrUpdateVerifiedAddressEntryTest extends TestCase
 {
     use DatabaseTransactions;
 
@@ -27,36 +24,6 @@ class OrderControllerVerifiesAddressesTest extends TestCase
 
         $this->loginAdmin();
         $this->seed(OrdersTableSeeder::class);
-    }
-
-    /** @test */
-    public function it_should_dispatch_the_event_that_an_address_was_verified()
-    {
-        Event::swap(new EventFake(Event::getFacadeRoot()));
-        $order = Order::orderByDesc('id')->first();
-        $address = factory(Address::class)->create();
-        $company = factory(Company::class)->create();
-        $tmsProvider = factory(TMSProvider::class)->create();
-        $orderAddressEvent = factory(OrderAddressEvent::class)->create([
-            't_address_verified' => false,
-            't_order_id' => $order->id,
-        ]);
-        $order->update([
-            'bill_to_address_verified' => false,
-            'bill_to_address_id' => $address->id,
-            't_company_id' => $company->id,
-            't_tms_provider_id' => $tmsProvider->id,
-        ]);
-
-        $this->putJson(route('orders.update', $order->id), [
-                'bill_to_address_verified' => true,
-                'order_address_events' => [
-                    $orderAddressEvent->setAttribute('t_address_verified', true)->toArray()
-                ],
-            ])
-            ->assertStatus(Response::HTTP_OK);
-
-        Event::assertDispatchedTimes(AddressVerified::class, 2);
     }
 
     /** @test */

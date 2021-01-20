@@ -5,6 +5,7 @@
       :references="references"
       :label="label"
       :value="displayName"
+      :verifiable="verifiable"
       @accept="handleAccept"
     >
       <div class="form-field__group">
@@ -73,6 +74,11 @@ export default {
       type: Function,
       required: false,
       default: undefined
+    },
+    verifiable: {
+      type: Boolean,
+      required: false,
+      default: false
     }
   },
 
