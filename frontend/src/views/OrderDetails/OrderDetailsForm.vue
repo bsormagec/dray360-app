@@ -21,6 +21,19 @@
           mdi-chevron-left
         </v-icon>
       </v-btn>
+      <v-btn
+        v-if="virtualBackButton"
+        color="primary"
+        outlined
+        small
+        class="px-0"
+        title="Go back to Orders List"
+        @click="$emit('go-back')"
+      >
+        <v-icon>
+          mdi-chevron-left
+        </v-icon>
+      </v-btn>
       <div>
         <div class="order__title mr-4">
           Order #{{ order.id }}
@@ -458,7 +471,6 @@
       >
         <div
           :id="sections.bill_to.id"
-          ref="itineraryLabel"
           class="form__section-title form__section-title--managed d-flex align-center justify-center mb-2"
         >
           <h3>
@@ -473,7 +485,6 @@
       >
         <div
           :id="sections.itinerary.id"
-          ref="itineraryLabel"
           class="form__section-title d-flex align-center"
         >
           <h3>
@@ -485,7 +496,7 @@
             small
             outlined
             color="white"
-            @click="handleItinerayEdit"
+            @click="handleItinerayEdit(sections.itinerary.id)"
           >
             Edit itinerary
           </v-btn>
@@ -526,7 +537,6 @@
       >
         <div
           :id="sections.itinerary.id"
-          ref="itineraryLabel"
           class="form__section-title form__section-title--managed d-flex align-center justify-center mb-2"
         >
           <h3>
@@ -619,6 +629,7 @@
 
 <script>
 import isMobile from '@/mixins/is_mobile'
+import { scrollTo } from '@/utils/scroll_to'
 import permissions from '@/mixins/permissions'
 import { mapState, mapActions } from 'vuex'
 import get from 'lodash/get'
@@ -667,6 +678,11 @@ export default {
   mixins: [isMobile, permissions],
   props: {
     backButton: {
+      type: Boolean,
+      required: false,
+      default: true
+    },
+    virtualBackButton: {
       type: Boolean,
       required: false,
       default: true
@@ -870,10 +886,10 @@ export default {
       this.redirectBack ? this.$router.back() : this.$router.push('/dashboard')
     },
 
-    handleItinerayEdit () {
+    handleItinerayEdit (elemetToScrollID) {
       this.toggleEdit()
       setTimeout(() => {
-        this.$refs.orderForm.scrollTop = this.$refs.itineraryLabel.offsetTop
+        scrollTo(elemetToScrollID, '#order-form', this.$refs.orderHeading.scrollHeight)
       }, 50)
     },
 

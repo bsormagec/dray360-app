@@ -231,7 +231,7 @@ export default {
   }
 }
 </script>
-  <style lang="scss">
+  <style lang="scss" scoped>
   .user__list{
     margin: 0 auto;
     .search{
