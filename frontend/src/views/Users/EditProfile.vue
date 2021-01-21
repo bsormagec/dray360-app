@@ -1,22 +1,14 @@
 <template>
   <div class="pa-5">
     <template>
-      <v-toolbar
-        flat
-        color="white"
-      >
-        <v-toolbar-title>
-          <h1 class="edit-profile-headline">
-            Edit Profile
-          </h1>
-        </v-toolbar-title>
-
-        <v-spacer />
-      </v-toolbar>
+      <h6 class="edit-profile-headline">
+        <SidebarNavigationButton :dark="false" />
+        Edit Profile
+      </h6>
     </template>
     <template>
-      <div class="row">
-        <div class="col-6">
+      <v-row>
+        <v-col md="6">
           <v-text-field
             v-model="name"
             data-cy="name-field"
@@ -27,10 +19,10 @@
             outlined
             dense
           />
-        </div>
-      </div>
-      <div class="row">
-        <div class="col-6">
+        </v-col>
+      </v-row>
+      <v-row>
+        <v-col md="6">
           <v-text-field
             v-model="email"
             data-cy="email-field"
@@ -41,10 +33,10 @@
             outlined
             dense
           />
-        </div>
-      </div>
-      <div class="row">
-        <div class="col-6">
+        </v-col>
+      </v-row>
+      <v-row>
+        <v-col md="6">
           <v-text-field
             v-model="position"
             data-cy="position-field"
@@ -55,10 +47,10 @@
             outlined
             dense
           />
-        </div>
-      </div>
-      <div class="row">
-        <div class="col-6">
+        </v-col>
+      </v-row>
+      <v-row>
+        <v-col md="6">
           <v-text-field
             v-model="org"
             data-cy="org-field"
@@ -69,12 +61,12 @@
             outlined
             dense
           />
-        </div>
-      </div>
+        </v-col>
+      </v-row>
     </template>
 
     <v-row>
-      <v-col>
+      <v-col md="3">
         <v-btn
           data-cy="change-password-button"
           class="button"
@@ -85,7 +77,10 @@
           Change Password
         </v-btn>
       </v-col>
-      <v-col>
+      <v-col
+        md="3"
+        class="d-flex justify-end"
+      >
         <v-btn
           class="button"
           color="primary"
@@ -114,8 +109,13 @@ import { reqStatus } from '@/enums/req_status'
 import utils, { type } from '@/store/modules/utils'
 import users, { types } from '@/store/modules/users'
 import auth from '@/store/modules/auth'
+import isMobile from '@/mixins/is_mobile'
+import isMedium from '@/mixins/is_medium'
+import SidebarNavigationButton from '@/components/General/SidebarNavigationButton'
 
 export default {
+  components: { SidebarNavigationButton },
+  mixins: [isMobile, isMedium],
   data () {
     return {
       name: '',
@@ -127,17 +127,25 @@ export default {
   computed: {
     ...mapState(auth.moduleName, { currentUser: state => state.currentUser })
   },
-  beforeMount () {
-    if (!this.isMobile) {
-      this.showSidebar()
+  watch: {
+    isMedium: function (newVal, oldVal) {
+      if (!newVal) this.setSidebar({ show: true })
+    },
+    isMobile: function (newVal, oldVal) {
+      if (newVal) this.setSidebar({ show: false })
+      else this.setSidebar({ show: true })
     }
+  },
+  beforeMount () {
+    if (!this.isMobile) return this.setSidebar({ show: true })
+    return this.setSidebar({ show: false })
   },
   mounted () {
     this.getUserData()
   },
   methods: {
     ...mapActions(users.moduleName, [types.editUser]),
-    ...mapActions(utils.moduleName, [type.setSnackbar, type.setSidebar]),
+    ...mapActions(utils.moduleName, { setSidebar: type.setSidebar }),
     ...mapActions(auth.moduleName, ['getCurrentUser']),
     getUserData () {
       if (this.currentUser) {
@@ -146,11 +154,6 @@ export default {
         this.position = this.currentUser.position
         this.org = this.currentUser.org
       }
-    },
-    async showSidebar () {
-      await this[type.setSidebar]({
-        show: true
-      })
     },
 
     async save () {
@@ -172,21 +175,24 @@ export default {
       }
       this[type.setSnackbar]({ show: true, message })
     }
-
   }
 
 }
 </script>
 <style lang="scss" scoped>
-  .edit-profile-headline {
-    font-size: rem(26);
-    font-weight: 700;
-    letter-spacing: 0;
+.edit-profile-headline {
+  display: flex;
+  align-items: center;
+  margin-bottom: rem(8);
+  .v-btn {
+    min-width: unset;
+    margin-right: rem(8);
   }
-  .profile-field::v-deep label, input[type="text"] {
-    font-size: rem(12);
-  }
-  .button::v-deep span {
-    font-size: rem(12);
-  }
+}
+.profile-field::v-deep label, input[type="text"] {
+  font-size: rem(12);
+}
+.button::v-deep span {
+  font-size: rem(12);
+}
 </style>

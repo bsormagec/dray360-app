@@ -1,7 +1,7 @@
 import axios from '@/store/api_calls/config/axios'
 import toParams from '@/utils/to_params'
 
-export const getOrders = async (filters, query) => axios.get(`/api/orders?${toParams(filters)}`).then(data => data.data).catch(e => [e])
+export const getOrders = async (filters, query) => axios.get(`/api/orders?${toParams(filters)}`).then(data => [undefined, data.data]).catch(e => [e])
 
 export const getOrderDetail = async (order) => axios.get(`/api/orders/${order}`).then(data => [undefined, data.data]).catch(e => [e])
 
@@ -9,7 +9,7 @@ export const getOrderStatusHistory = async (order, system_status = false) => axi
 
 export const updateOrderDetail = async ({ id, changes }) => axios.put(`/api/orders/${id}`, changes).then(data => [undefined, data.data]).catch(e => [e])
 
-export const postUploadPDF = async (file, variantName) => axios.post('/api/ocr/requests', { filename: file.name, withCredentials: false, variant_name: variantName })
+export const postUploadPDF = async (file, params) => axios.post('/api/ocr/requests', { filename: file.name, withCredentials: false, ...params })
   .then(response => {
     const config = {
       withCredentials: false,

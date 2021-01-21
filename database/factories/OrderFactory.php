@@ -46,7 +46,7 @@ $factory->define(Order::class, function (Faker $faker) {
         'port_ramp_of_destination_address_verified' => $faker->boolean,
         'port_ramp_of_destination_address_raw_text' => $faker->address,
         'variant_id' => null,
-        'variant_name' => null,
+        'variant_name' => $faker->word,
         't_tms_provider_id' => null,
         'tms_shipment_id' => null,
         'carrier' => $faker->company,
@@ -75,5 +75,7 @@ $factory->define(Order::class, function (Faker $faker) {
         'interchange_count' => null,
         'interchange_err_count' => null,
         'tms_template_id' => 123,
+        'tms_template_dictid' => null,
+        'tms_template_dictid_verified' => false,
     ];
 });

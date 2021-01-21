@@ -66,10 +66,10 @@
       <div />
       <div class="text-caption">
         <span class="secondary--text">
-          {{ request.updated_at === null ? 'Created: ' : 'Updated: ' }}
+          Received
         </span>
         <span class="updated-at">
-          {{ formatDate(request.updated_at || request.created_at, true) }}
+          {{ formatDate(request.created_at, true) }}
         </span>
       </div>
     </div>

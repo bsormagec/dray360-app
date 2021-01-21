@@ -34,7 +34,7 @@
             class="pt-1"
           >
             <Chip
-              v-if="filter.value.length > 0"
+              v-if="hasValidValue(filter.value)"
               small
               closeable
               handle-close
@@ -205,9 +205,31 @@
                 </v-select>
               </v-col>
             </v-row>
-
-            <v-row v-if="currentUser !== undefined && currentUser.is_superadmin">
-              <!--
+            <v-row v-if="hiddenItemsFilter">
+              <v-col cols="4 d-flex align-center">
+                <label
+                  for="company_id"
+                  hide-details
+                  class="filter-label"
+                >
+                  Show Hidden Items
+                </label>
+              </v-col>
+              <v-col cols="8">
+                <v-switch
+                  v-model="filters.displayHidden"
+                  color="primary"
+                  dense
+                  inset
+                  flat
+                  hide-details="true"
+                  :prepend-icon="!filters.displayHidden ? 'mdi-eye-off-outline' : 'mdi-eye-outline'"
+                  :true-value="true"
+                  :false-value="false"
+                />
+              </v-col>
+            </v-row>
+            <!-- <v-row v-if="currentUser !== undefined && currentUser.is_superadmin">
 
                 FUTURE STATE:
 
@@ -228,8 +250,8 @@
                   prepend-icon="mdi-restore"
                   dense
                 />
-              </v-col> -->
-            </v-row>
+              </v-col>
+            </v-row> -->
           </v-container>
         </v-card-text>
         <v-card-actions class="mr-4">
@@ -299,6 +321,16 @@ export default {
       type: String,
       required: false,
       default: ''
+    },
+    displayHidden: {
+      type: Boolean,
+      required: false,
+      default: false
+    },
+    hiddenItemsFilter: {
+      type: Boolean,
+      required: false,
+      default: false
     }
   },
   data () {
@@ -355,7 +387,8 @@ export default {
         status: this.status,
         system_status: this.systemStatus,
         company_id: this.companyId,
-        updateType: this.updateType
+        updateType: this.updateType,
+        displayHidden: this.displayHidden
       },
       // these are the filters that get rendered as chips and emitted to the parent
       activeFilters: [],
@@ -365,11 +398,13 @@ export default {
         status: 'Status',
         system_status: 'System Status',
         company_id: 'Company',
-        updateType: 'Update Type'
+        updateType: 'Update Type',
+        displayHidden: 'Hidden Items Shown'
       },
       chipColors: {
         search: '#41B6E6',
         dateRange: '#FDAA63',
+        displayHidden: '#8293A0',
         status: '#77C19A',
         system_status: '#77C19A',
         company_id: '#41B6E6',
@@ -381,7 +416,8 @@ export default {
   computed: {
     hasActiveFilters () {
       // if any filter value has a length greater than zero return true
-      return this.activeFilters.some(element => element.value.length > 0)
+      return this.activeFilters.some(element => this.hasValidValue(element.value))
+      // return this.activeFilters.some(element => element.value.length > 0)
     },
     // necessary because of rendering multiple chips for different statuses
     displayFilters () {
@@ -404,7 +440,7 @@ export default {
         }
       })
 
-      return dFilters.filter(element => !!element.value.length)
+      return dFilters.filter(element => this.hasValidValue(element.value))
     },
     ...mapState(auth.moduleName, { currentUser: state => state.currentUser })
   },
@@ -420,6 +456,10 @@ export default {
   },
 
   methods: {
+    hasValidValue (value) {
+      if (typeof value === 'boolean') return value
+      return !!value.length
+    },
     // closes filters modal
     closeDialog () {
       this.open = false
@@ -434,7 +474,7 @@ export default {
       return this.chipColors.hasOwnProperty(filter.type) ? this.chipColors[filter.type] : this.chipColors.default
     },
     setActiveFilters () {
-      this.activeFilters = Object.keys(this.filters).map(k => ({ type: k, value: this.filters[k] })).filter(element => !!element.value.length)
+      this.activeFilters = Object.keys(this.filters).map(k => ({ type: k, value: this.filters[k] })).filter(element => this.hasValidValue(element.value))
     },
     findCompanyById (id) {
       return this.companies.filter(company => company.id === id)[0] || { name: '' }
@@ -467,6 +507,8 @@ export default {
       let labelValue
       if (Array.isArray(filter.value)) {
         labelValue = filter.value.join(' - ')
+      } else if (typeof filter.value === 'boolean') {
+        return this.labels[filter.type]
       } else {
         labelValue = filter.value
       }

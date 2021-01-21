@@ -2,11 +2,14 @@
 
 namespace App\Models;
 
+use App\Events\AddressVerified;
+use App\Events\TmsTemplateVerified;
 use App\Models\Traits\FillWithNulls;
 use App\Models\Traits\BelongsToCompany;
 use Illuminate\Database\Eloquent\Model;
 use App\Models\Traits\ValidatesAddresses;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use App\Models\Traits\VerifiesUserSelectedAttributes;
 
 /**
  * @property \Illuminate\Database\Eloquent\Collection $orderAddressEvents
@@ -73,6 +76,7 @@ class Order extends Model
     use FillWithNulls;
     use BelongsToCompany;
     use ValidatesAddresses;
+    use VerifiesUserSelectedAttributes;
 
     public $table = 't_orders';
 
@@ -152,6 +156,8 @@ class Order extends Model
         'tms_template_id',
         'tms_template_dictid',
         'container_dictid',
+        'tms_template_dictid_verified',
+        'is_hidden',
     ];
 
     /**
@@ -178,6 +184,8 @@ class Order extends Model
         'tms_cancelled_datetime' => 'datetime',
         'cancelled_datetime' => 'datetime',
         'submitted_date' => 'datetime',
+        'tms_template_dictid_verified' => 'boolean',
+        'is_hidden' => 'boolean',
     ];
 
     /**
@@ -245,8 +253,6 @@ class Order extends Model
         'division_code' => 'sometimes|nullable',
         't_equipment_type_id' => 'sometimes|nullable|exists:t_equipment_types,id',
         'equipment_type_verified' => 'sometimes|nullable',
-        // 'preceded_by_order_id' => 'sometimes|nullable',
-        // 'succeded_by_order_id' => 'sometimes|nullable',
         'tms_submission_datetime' => 'sometimes|nullable',
         'tms_cancelled_datetime' => 'sometimes|nullable',
         'cancelled_datetime' => 'sometimes|nullable',
@@ -255,6 +261,16 @@ class Order extends Model
         'tms_template_id' => 'sometimes|nullable',
         'tms_template_dictid' => 'sometimes|nullable',
         'container_dictid' => 'sometimes|nullable',
+        'tms_template_dictid_verified' => 'sometimes|nullable',
+        'is_hidden' => 'sometimes|nullable',
+    ];
+
+    /**
+     * Attributes that will be checked when they change from `false` to `true`.
+     */
+    public static $verifiableAttributes = [
+        'bill_to_address_verified' => AddressVerified::class,
+        'tms_template_dictid_verified' => TmsTemplateVerified::class,
     ];
 
     public function precededByOrder()

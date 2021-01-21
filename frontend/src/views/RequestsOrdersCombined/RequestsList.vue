@@ -28,17 +28,28 @@
     <v-divider />
     <v-virtual-scroll
       ref="virtualScroll"
-      :items="items"
+      :items="items.length ? items : [ 'empty' ]"
       :item-height="105"
       max-height="100%"
     >
       <template v-slot="{ item: request }">
-        <RequestItem
-          :request="request"
-          :active="requestSelected === request.request_id"
-          @change="handleChange"
-        />
-        <v-divider />
+        <div
+          v-if="request !== 'empty'"
+        >
+          <RequestItem
+            :request="request"
+            :active="requestSelected === request.request_id"
+            @change="handleChange"
+          />
+          <v-divider />
+        </div>
+        <div v-else-if="!loading">
+          <div class="d-flex justify-center px-2 py-4">
+            <h5>
+              Search terms not found
+            </h5>
+          </div>
+        </div>
       </template>
     </v-virtual-scroll>
     <v-overlay
@@ -78,6 +89,7 @@ import { getRequests } from '@/store/api_calls/requests'
 import { getRequestFilters } from '@/utils/filters_handling'
 import { formatDate } from '@/utils/dates'
 import permissions from '@/mixins/permissions'
+import isMobile from '@/mixins/is_mobile'
 
 export default {
   name: 'RequestList',
@@ -85,7 +97,7 @@ export default {
     Filters,
     RequestItem
   },
-  mixins: [permissions],
+  mixins: [permissions, isMobile],
   props: {
     extraUrlParams: {
       type: Array,
@@ -178,14 +190,18 @@ export default {
       this.resetPagination()
       this.setURLParams()
       await this.fetchRequests()
-      this.selectFirstRequestWithOrders()
+      if (!this.isMobile) {
+        this.selectFirstRequestWithOrders()
+      }
     },
     async refreshRequests () {
       this.startLoading()
       this.resetPagination()
       this.setURLParams()
       await this.fetchRequests()
-      this.selectFirstRequestWithOrders()
+      if (!this.isMobile) {
+        this.selectFirstRequestWithOrders()
+      }
     },
     initializeFilters () {
       if (Object.keys(this.initFilters).some(key => this.initFilters[key] && this.initFilters[key].length > 0)) {

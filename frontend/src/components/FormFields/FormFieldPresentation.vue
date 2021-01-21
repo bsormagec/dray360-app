@@ -34,6 +34,17 @@
           class="field__value"
         >
           {{ value === null || value === '' ? '--' : value }}
+          <!-- <v-btn
+            v-if="verifiable"
+            dense
+            color="primary"
+            outlined
+            x-small
+            class="ml-4"
+            @click.stop="verify"
+          >
+            Verify Match
+          </v-btn> -->
         </span>
       </div>
       <div
@@ -77,6 +88,7 @@ export default {
 
   props: {
     editMode: { type: Boolean, required: true },
+    verifiable: { type: Boolean, required: false, default: false },
     references: { type: String, required: true },
     label: { type: String, required: true },
     value: { required: true, default: '' },
@@ -113,6 +125,9 @@ export default {
       stopFieldEdit: types.stopFieldEdit
     }),
     cleanStrForId,
+    verify () {
+      this.$emit('accept')
+    },
     handleAccept () {
       this.stopFieldEdit({ path: this.references })
       this.$emit('accept')

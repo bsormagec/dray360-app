@@ -27,6 +27,7 @@ class OrdersListQuery extends QueryBuilder
                 't_orders.bill_to_address_id',
                 't_orders.unit_number',
                 't_orders.reference_number',
+                't_orders.is_hidden',
             ])
             ->leftJoin('t_addresses as bill_to', 'bill_to.id', '=', 't_orders.bill_to_address_id')
             ->join('t_job_latest_state as ls_sort', 'ls_sort.order_id', '=', 't_orders.id')
@@ -62,6 +63,11 @@ class OrdersListQuery extends QueryBuilder
                         ->orWhere('bill_to.location_name', 'like', "%{$value}%");
                 });
             }),
+            AllowedFilter::callback('hidden', function ($query, $value) {
+                if (! $value) {
+                    $query->where('is_hidden', false);
+                }
+            })->default(false)
         ])
         ->defaultSort('-t_orders.created_at', '-t_orders.id')
         ->allowedSorts([

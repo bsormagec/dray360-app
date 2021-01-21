@@ -6,15 +6,16 @@
     >
       <div class="row no-gutters">
         <div
+          v-if="displayStatus.requestList"
           :class="{
             'requests__section': true,
             'col-2': compressed && tab === 0,
             'col-3': !compressed && tab === 0,
-            'col-12': tab === 1,
+            'col-12': tab === 1 || isMobile,
           }"
         >
           <v-tabs
-            v-if="!compressed && !isMedium || tab === 1"
+            v-if="!compressed || tab === 1"
             :value="tab"
             background-color="primary"
             height="2.5rem"
@@ -24,7 +25,7 @@
             @change="tabsChanged"
           >
             <v-btn
-              v-if="tab===0"
+              v-if="tab===0 && !isMobile"
               icon
               dense
               small
@@ -39,7 +40,7 @@
               </v-icon>
             </v-btn>
             <v-btn
-              v-else-if="isMedium"
+              v-else-if="isMedium && !isMobile"
               icon
               dense
               small
@@ -52,6 +53,7 @@
                 hamburger-menu
               </v-icon>
             </v-btn>
+            <SidebarNavigationButton />
             <v-tab
               v-for="item in tabs"
               :key="item"
@@ -166,11 +168,12 @@
           </div>
         </div>
         <div
-          v-if="tab === 0"
+          v-if="tab === 0 && displayStatus.orderDetail"
           :class="{
             'request__orders':true,
             'col-9': !compressed,
             'col-10': compressed,
+            'col-12': isMobile,
           }"
         >
           <div
@@ -182,6 +185,21 @@
                 v-if="request.request_id !== null"
                 class="d-flex"
               >
+                <v-btn
+                  v-if="isMobile"
+                  color="primary"
+                  outlined
+                  x-small
+                  width="32"
+                  height="32"
+                  class="px-0 mr-4"
+                  title="Go back to Orders List"
+                  @click="toggleMobileView"
+                >
+                  <v-icon>
+                    mdi-chevron-left
+                  </v-icon>
+                </v-btn>
                 <h5>
                   Request # {{ request.request_id.substring(0,8).toUpperCase() }} ({{ request.orders_count }} orders)
                 </h5>
@@ -229,6 +247,7 @@
             :order-id="request.first_order_id"
             :starting-size="compressed ? 30 : 50"
             @order-deleted="() => setReloadRequests(true)"
+            @go-back="toggleMobileView"
           />
         </div>
       </div>
@@ -246,8 +265,9 @@ import OrderTable from '@/components/OrderTable'
 import RequestsList from './RequestsList'
 import OrderDetails from '@/views/OrderDetails/OrderDetails'
 import UploadOrdersDialog from './UploadOrdersDialog'
+import SidebarNavigationButton from '@/components/General/SidebarNavigationButton'
 
-import { mapActions, mapState } from 'vuex'
+import { mapState, mapActions } from 'vuex'
 import permissions from '@/mixins/permissions'
 import utils, { type } from '@/store/modules/utils'
 import orders, { types as ordersTypes } from '@/store/modules/orders'
@@ -255,13 +275,16 @@ import { deleteRequest as delRequest } from '@/store/api_calls/requests'
 import isMobile from '@/mixins/is_mobile'
 import isMedium from '@/mixins/is_medium'
 
+import get from 'lodash/get'
+
 export default {
   name: 'RequestsOrdersCombined',
   components: {
     OrderTable,
     OrderDetails,
     RequestsList,
-    UploadOrdersDialog
+    UploadOrdersDialog,
+    SidebarNavigationButton
   },
   mixins: [permissions, isMobile, isMedium],
   data () {
@@ -282,13 +305,22 @@ export default {
         dateRange: [],
         status: [],
         updateType: ''
+      },
+      firstLoad: true,
+      displayStatus: {
+        requestList: true,
+        orderDetail: true
       }
     }
   },
   computed: {
     ...mapState(utils.moduleName, {
-      showingSidebar: state => state.sidebar.show
+      showingSidebar: state => state.sidebar.show,
+      currentUser: state => state.currentUser
     }),
+    ordersTabFirst () {
+      return get(this.currentUser, 'configuration.show_orders_tab_first', false)
+    },
     requestOrdersTableHeaders () {
       return [
         { text: 'Date', sortable: false, value: 'created_at' },
@@ -310,15 +342,30 @@ export default {
       if (!newVal) {
         this.setSidebar({ show: true })
       }
+    },
+    isMobile: function (newVal, oldVal) {
+      if (newVal) {
+        this.setSidebar({ show: false })
+        this.displayStatus.requestList = true
+        this.displayStatus.orderDetail = false
+        this.compressed = false
+      } else {
+        this.setSidebar({ show: true })
+        this.displayStatus.requestList = true
+        this.displayStatus.orderDetail = true
+      }
     }
   },
   created () {
-    this.tab = parseInt(this.$route.query.tab) || 0
+    const paramsTab = parseInt(this.$route.query.tab)
+
+    this.tab = !isNaN(paramsTab) ? paramsTab : (this.ordersTabFirst ? 1 : 0)
   },
   beforeMount () {
     if (!this.isMobile) {
       return this.setSidebar({ show: true })
     }
+    this.displayStatus.orderDetail = false
     return this.setSidebar({ show: false })
   },
 
@@ -337,8 +384,21 @@ export default {
     },
     requestChanged (request) {
       this.request = request
+      if (!this.firstLoad && this.isMobile) {
+        this.displayStatus.orderDetail = true
+        this.displayStatus.requestList = false
+      }
+      this.firstLoad = false
+    },
+    toggleMobileView () {
+      this.firstLoad = true
+      this.displayStatus.orderDetail = false
+      this.displayStatus.requestList = true
     },
     tabsChanged (value) {
+      if (this.isMobile) {
+        this.toggleMobileView()
+      }
       this.$router.replace({ path: 'dashboard', query: { tab: value } }).catch(() => {})
       this.tab = value
     },
