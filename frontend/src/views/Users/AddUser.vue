@@ -6,6 +6,8 @@
 
 <script>
 import UserForm from './UserForm'
+import isMobile from '@/mixins/is_mobile'
+import isMedium from '@/mixins/is_medium'
 
 import utils, { type } from '@/store/modules/utils'
 import { mapActions } from 'vuex'
@@ -15,8 +17,19 @@ export default {
   components: {
     UserForm
   },
-  async beforeMount () {
-    await this.setSidebar({ show: true })
+  mixins: [isMobile, isMedium],
+  watch: {
+    isMedium: function (newVal, oldVal) {
+      if (!newVal) this.setSidebar({ show: true })
+    },
+    isMobile: function (newVal, oldVal) {
+      if (newVal) this.setSidebar({ show: false })
+      else this.setSidebar({ show: true })
+    }
+  },
+  beforeMount () {
+    if (!this.isMobile) return this.setSidebar({ show: true })
+    return this.setSidebar({ show: false })
   },
   methods: {
     ...mapActions(utils.moduleName, { setSidebar: type.setSidebar })

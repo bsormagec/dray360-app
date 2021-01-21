@@ -29,6 +29,8 @@
             :system-status="initFilters.systemStatus"
             :company-id="initFilters.companyId"
             :update-type="initFilters.updateType"
+            :display-hidden="initFilters.displayHidden"
+            :hidden-items-filter="true"
             @change="updateFilters"
           />
 
@@ -61,6 +63,20 @@
         <router-link :to="`/order/${item.id}`">
           {{ item.id }}
         </router-link>
+        <v-tooltip top>
+          <template v-slot:activator="{on}">
+            <v-icon
+              v-if="item.is_hidden"
+              small
+              color="secondary"
+              class="ml-1"
+              v-on="on"
+            >
+              mdi-eye-off-outline
+            </v-icon>
+          </template>
+          <span>This order is hidden</span>
+        </v-tooltip>
       </template>
       <template v-slot:[`item.created_at`]="{ item }">
         {{ formatDate(item.created_at) }}
@@ -115,7 +131,8 @@
           :options="[
             { title: 'Download Source File', action: () => downloadSourceFile(item.id) },
             { title: 'Reprocess Order', action: () => reprocessRequest(item.request_id) },
-            { title: 'Delete Order', action: () => deleteOrder(item) }
+            { title: 'Delete Order', action: () => deleteOrder(item) },
+            { title: item.is_hidden ? 'Unhide Order' : 'Hide Order', action: () => changeOrderDisplayStatus(item) }
           ]"
         />
 
@@ -188,7 +205,7 @@ import Chip from '@/components/Chip'
 import hasPermission from '@/mixins/permissions'
 import { formatDate } from '@/utils/dates'
 import utils, { type as utilTypes } from '@/store/modules/utils'
-import { getOrders, getSourceFileDownloadURL, reprocessOcrRequest, delDeleteOrder } from '@/store/api_calls/orders'
+import { getOrders, getSourceFileDownloadURL, reprocessOcrRequest, delDeleteOrder, updateOrderDetail } from '@/store/api_calls/orders'
 import { getRequestFilters } from '@/utils/filters_handling'
 
 import { mapState, mapActions } from 'vuex'
@@ -275,6 +292,7 @@ export default {
       initFilters: {
         search: '',
         dateRange: [],
+        displayHidden: false,
         status: [],
         systemStatus: [],
         companyId: [],
@@ -351,6 +369,7 @@ export default {
     this.sortDesc = !sortValue.includes('-')
     this.initFilters.search = params.search
     this.initFilters.dateRange = params.dateRange?.split(',')
+    this.initFilters.displayHidden = !!params.displayHidden
     this.initFilters.status = params.status?.split(',')
     this.initFilters.systemStatus = params.system_status?.split(',')
     this.initFilters.companyId = params.company_id?.split(',')
@@ -404,16 +423,23 @@ export default {
 
     // polling
     async startPolling () {
-      const initPayload = await getOrders([])
-      this.payload = JSON.stringify(initPayload)
+      this.total = await this.getOrdersTotal()
       this.pollingTimer = window.setInterval(this.checkForChanges.bind(this), this.pollingInterval)
     },
 
     async checkForChanges () {
-      const newPayload = await getOrders([])
-      if (this.payload !== JSON.stringify(newPayload)) {
+      const totalOrders = await this.getOrdersTotal()
+      if (this.total < totalOrders) {
         this.changesDetected = true
+        this.total = totalOrders
       }
+      this.total = totalOrders
+    },
+
+    async getOrdersTotal () {
+      const [error, data] = await getOrders([])
+      if (error !== undefined) return this.total
+      return data.meta.total
     },
 
     stopPolling () {
@@ -487,11 +513,32 @@ export default {
       })
     },
 
+    async changeOrderDisplayStatus (item) {
+      this.loading = true
+      const isHidden = item.is_hidden
+      const [error] = await updateOrderDetail({ id: item.id, changes: { is_hidden: !isHidden } })
+      let message = ''
+      if (error === undefined) {
+        this.loading = false
+        message = !isHidden ? 'The order is now hidden' : 'The order is now visible'
+        this.getOrderData()
+      } else {
+        this.loading = false
+        message = 'An error has ocurred'
+      }
+
+      await this.setSnackbar({ show: true, message })
+    },
+
     async getOrderData () {
       const startTime = new Date().getTime()
       this.loading = true
 
-      const { data, links, meta } = await getOrders(this.getRequestFilters())
+      const [error, responseData] = await getOrders(this.getRequestFilters())
+
+      if (error !== undefined) return
+
+      const { data, links, meta } = responseData
 
       const now = new Date().getTime()
 
@@ -587,6 +634,7 @@ export default {
         request_id: 'filter[request_id]',
         search: 'filter[query]',
         dateRange: 'filter[created_between]',
+        displayHidden: 'filter[hidden]',
         system_status: 'filter[status]',
         status: 'filter[display_status]', // Processing, Exception, Rejected, Intake, Processed, Sending to TMS, Sent to TMS, Accepted by TMS
         company_id: 'filter[company_id]',

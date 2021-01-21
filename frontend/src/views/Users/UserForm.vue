@@ -3,11 +3,10 @@
     v-if="!has404"
     fluid
   >
-    <v-row
-      no-gutters
-    >
-      <v-col cols="4">
-        <div class="text-h4 mb-4">
+    <v-row no-gutters>
+      <v-col md="4">
+        <div class="text-h6 mb-4 user-edit__heading">
+          <SidebarNavigationButton :dark="false" />
           {{ edit ? 'Edit User' : 'Add User' }}
         </div>
         <v-text-field
@@ -68,17 +67,15 @@
       </v-col>
     </v-row>
     <v-row no-gutters>
-      <v-col
-        cols="4"
-      >
+      <v-col md="4">
         <v-row no-gutters>
           <v-col
             v-if="edit"
-            cols="6"
+            md="6"
           >
             <v-btn
               color="error"
-              class="mr-4"
+              class="mr-4 mb-2"
               outlined
               @click="deleteUser"
             >
@@ -88,6 +85,7 @@
               :loading="loading"
               outlined
               color="primary"
+              class="mb-2"
               @click="toggleUserStatus"
             >
               {{ userIsActive ? 'Deactivate' : 'Activate' }}
@@ -130,6 +128,7 @@ import utils, { type } from '@/store/modules/utils'
 import { getCompanies } from '@/store/api_calls/companies'
 import { getUser, getRoles, changeUserStatus, editUser, deleteUser, addUser } from '@/store/api_calls/users'
 import ContainerNotFound from '@/views/ContainerNotFound'
+import SidebarNavigationButton from '@/components/General/SidebarNavigationButton'
 
 import get from 'lodash/get'
 
@@ -137,7 +136,8 @@ export default {
   name: 'UserForm',
 
   components: {
-    ContainerNotFound
+    ContainerNotFound,
+    SidebarNavigationButton
   },
 
   mixins: [permissions],
@@ -319,4 +319,13 @@ export default {
 }
 </script>
 <style lang="scss" scoped>
+.user-edit__heading {
+    display: flex;
+    align-items: center;
+    margin-bottom: rem(8);
+    .v-btn {
+      min-width: unset;
+      margin-right: rem(8);
+    }
+  }
 </style>

@@ -827,6 +827,12 @@
 									"disabled": true
 								},
 								{
+									"key": "filter[hidden]",
+									"value": "1",
+									"description": "Show also hidden orders",
+									"disabled": true
+								},
+								{
 									"key": "filter[company_id]",
 									"value": "1",
 									"disabled": true

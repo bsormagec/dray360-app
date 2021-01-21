@@ -1,10 +1,11 @@
 <template>
-  <div
-    class="mapping__panel"
-  >
-    <h5><b>Profit tools mapping admin panel</b></h5>
-    <div class="row">
-      <div class="col-3">
+  <div class="mapping__panel">
+    <h6 class="mapping__heading">
+      <SidebarNavigationButton :dark="false" />
+      Profit tools mapping admin panel
+    </h6>
+    <v-row>
+      <v-col md="3">
         <v-select
           :v-model="companyId"
           :items="companyList"
@@ -14,12 +15,10 @@
           :clearable="true"
           @change="companySelect"
         />
-      </div>
-    </div>
-    <div
-      class="row"
-    >
-      <div class="col-8">
+      </v-col>
+    </v-row>
+    <v-row>
+      <v-col md="8">
         <v-simple-table>
           <template v-slot:default>
             <thead>
@@ -148,32 +147,39 @@
             </tbody>
           </template>
         </v-simple-table>
-      </div>
-    </div>
-    <div class="row">
-      <div class="col-6 right">
+      </v-col>
+    </v-row>
+    <v-row>
+      <v-col
+        md="6"
+        right
+      >
         <v-btn
           class="btn large primary d-block "
           @click="save"
         >
           save
         </v-btn>
-      </div>
-    </div>
+      </v-col>
+    </v-row>
   </div>
 </template>
 
 <script>
+import SidebarNavigationButton from '@/components/General/SidebarNavigationButton'
 import { mapActions, mapState } from 'vuex'
 import companies, { types } from '@/store/modules/companies'
 import { reqStatus } from '@/enums/req_status'
 import utils, { type } from '@/store/modules/utils'
 import { getCompanies } from '@/store/api_calls/companies'
+import isMobile from '@/mixins/is_mobile'
+import isMedium from '@/mixins/is_medium'
 
 export default {
+  components: { SidebarNavigationButton },
+  mixins: [isMobile, isMedium],
   data () {
     return {
-      ...mapState(companies.moduleName, { company: state => state.company }),
       items: [
         {
           text: 'Mapping Fields',
@@ -241,23 +247,32 @@ export default {
       companyId: undefined
     }
   },
+  computed: {
+    ...mapState(companies.moduleName, { company: state => state.company })
+  },
+  watch: {
+    isMedium: function (newVal, oldVal) {
+      if (!newVal) this.setSidebar({ show: true })
+    },
+    isMobile: function (newVal, oldVal) {
+      if (newVal) this.setSidebar({ show: false })
+      else this.setSidebar({ show: true })
+    }
+  },
   created () {
     this.clearFields()
   },
+  beforeMount () {
+    if (!this.isMobile) return this.setSidebar({ show: true })
+    return this.setSidebar({ show: false })
+  },
   mounted () {
     this.getNames()
-    this.showSidebar()
     this.getCompanyList()
   },
   methods: {
     ...mapActions(companies.moduleName, [types.updateCompaniesMappingField, types.getCompany]),
-    ...mapActions(utils.moduleName, [type.setSnackbar, type.setSidebar]),
-
-    async showSidebar () {
-      await this[type.setSidebar]({
-        show: true
-      })
-    },
+    ...mapActions(utils.moduleName, { setSidebar: type.setSidebar }),
     getNames () {
       Object.values(this.mappings).forEach(key => {
         this.reftypes.push(key)
@@ -414,11 +429,19 @@ export default {
 }
 </script>
 <style lang="scss" scoped>
-    .mapping__panel{
-      padding: rem(20);
-        h6{
-
-            text-align: left;
-        }
-    }
+.mapping__panel {
+  padding: rem(20);
+  h6 {
+    text-align: left;
+  }
+}
+.mapping__heading {
+  display: flex;
+  align-items: center;
+  margin-bottom: rem(8);
+  .v-btn {
+    min-width: unset;
+    margin-right: rem(8);
+  }
+}
 </style>

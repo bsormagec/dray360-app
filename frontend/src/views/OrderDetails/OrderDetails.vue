@@ -11,6 +11,7 @@
         >
           <OrderDetailsForm
             :back-button="backButton"
+            :virtual-back-button="isMobile && !backButton"
             :redirect-back="redirectBack"
             :tms-templates="tmsTemplates"
             :tms-templates-enabled="profitToolsTemplatesEnabled"
@@ -18,6 +19,7 @@
             :itg-containers-enabled="itgContainersEnabled"
             :divisions-enabled="divisionsEnabled"
             @order-deleted="$emit('order-deleted')"
+            @go-back="$emit('go-back')"
           />
           <div
             class="form__resize"
