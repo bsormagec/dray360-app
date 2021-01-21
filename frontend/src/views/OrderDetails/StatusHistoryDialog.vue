@@ -55,9 +55,46 @@
                 'connected': index !== statusHistory.length - 1
               }"
             >
-              <div class="body-2 black--text">
-                {{ status.status }}
-              </div>
+              <v-tooltip
+                top
+                allow-overflow
+                :open-on-click="true"
+              >
+                <template v-slot:activator="{ on, content, attrs }">
+                  <div class="body-2 black--text">
+                    <v-icon
+                      v-if="status.status.includes('-')"
+                      v-clipboard:copy="JSON.stringify(status.status_metadata)"
+                      small
+                      color="secondary"
+                      icon
+                      v-on="content"
+                      @click.stop="() =>{}"
+                    >
+                      mdi-content-paste
+                    </v-icon>
+
+                    <span
+                      v-if="status.status.includes('-')"
+                      v-bind="attrs"
+                      v-on="on"
+                    >
+                      {{ status.status }}
+                    </span>
+                    <span
+                      v-else
+                    >
+                      {{ status.status }}
+                    </span>
+                  </div>
+                </template>
+                <span>
+                  <vue-json-pretty
+                    :data="status.status_metadata || {}"
+                    class="font-weight-black"
+                  />
+                </span>
+              </v-tooltip>
               <div class="body-2 font-weight-bold black--text">
                 {{ index === 0 || index === statusHistory.length - 1 ? formatDate(status.start_date, true) : status.diff_for_humans }}
               </div>
@@ -73,9 +110,14 @@ import { getOrderStatusHistory } from '@/store/api_calls/orders'
 import { formatDate } from '@/utils/dates'
 import { cleanStrForId } from '@/utils/clean_str_for_id'
 import permissions from '@/mixins/permissions'
+import 'vue-json-pretty/lib/styles.css'
+import VueJsonPretty from 'vue-json-pretty'
 
 export default {
   name: 'StatusHistoryDialog',
+  components: {
+    VueJsonPretty
+  },
   mixins: [permissions],
   props: {
     open: {
