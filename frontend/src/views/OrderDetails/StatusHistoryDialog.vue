@@ -56,11 +56,24 @@
               }"
             >
               <v-tooltip
-                right
+                top
+                allow-overflow
                 :open-on-click="true"
               >
-                <template v-slot:activator="{ on, attrs }">
+                <template v-slot:activator="{ on, content, attrs }">
                   <div class="body-2 black--text">
+                    <v-icon
+                      v-if="status.status.includes('-')"
+                      v-clipboard:copy="JSON.stringify(status.status_metadata)"
+                      small
+                      color="secondary"
+                      icon
+                      v-on="content"
+                      @click.stop="() =>{}"
+                    >
+                      mdi-content-paste
+                    </v-icon>
+
                     <span
                       v-if="status.status.includes('-')"
                       v-bind="attrs"
