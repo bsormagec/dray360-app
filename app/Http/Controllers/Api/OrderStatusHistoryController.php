@@ -61,8 +61,8 @@ class OrderStatusHistoryController extends Controller
                 'status' => $statuses[$i]['status'],
                 'display_status' => $statuses[$i]['display_status'],
                 'status_metadata' => $statuses[$i]['status_metadata'],
-                'start_date' => $statuses[$i]['start_date']->toDateTimeString(),
-                'end_date' => $endDate->toDateTimeString(),
+                'start_date' => $statuses[$i]['start_date']->toISOString(),
+                'end_date' => $endDate->toISOString(),
                 'diff_for_humans' => CarbonInterval::instance($statuses[$i]['start_date']->diff($endDate))->forHumans([
                     'parts' => 3,
                     'short' => true,
