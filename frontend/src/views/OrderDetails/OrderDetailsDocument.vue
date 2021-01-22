@@ -1,25 +1,34 @@
 <template>
   <div
     v-if="hasFile"
-    :class="`document ${dimensions.width && dimensions.height ? 'loaded' : ''}`"
+    :class="`document ${loadedImages === pages.length ? 'loaded' : ''}`"
   >
     <div
-      v-for="(page) in pages"
+      v-for="(page, index) in pages"
       :key="page.name"
       class="document__page"
     >
+      <div
+        v-show="!page.loaded"
+        class="loader"
+      >
+        <img
+          src="@/assets/images/loading-animation.gif"
+        >
+      </div>
       <img
-        :class="{ loaded: dimensions.width && dimensions.height }"
+        v-show="page.loaded"
+        :class="{ loaded: page.loaded }"
         :src="page.image"
-        @load="getDimensions"
+        @load="(e) => getDimensions(e, index)"
       >
 
-      <div v-if="dimensions.width && dimensions.height">
+      <div v-if="page.loaded">
         <div
           v-for="(highlight, highlightKey) in getHighlightsForPage(page.number)"
           :id="`${cleanStrForId(highlightKey)}-document`"
           :key="highlightKey"
-          :style="getPos(highlight)"
+          :style="getPos(highlight, page)"
           :class="{
             page__highlight: true,
             edit: highlight.edit,
@@ -75,10 +84,7 @@ export default {
   mixins: [isMobile],
 
   data: () => ({
-    dimensions: {
-      width: undefined,
-      height: undefined
-    }
+    loadedImages: 0
   }),
 
   computed: {
@@ -109,7 +115,8 @@ export default {
     ...mapActions(orderForm.moduleName, {
       startHover: types.startHover,
       stopHover: types.stopHover,
-      startFieldEdit: types.startFieldEdit
+      startFieldEdit: types.startFieldEdit,
+      setPage: types.setPage
     }),
     safeGet,
     cleanStrForId,
@@ -129,19 +136,25 @@ export default {
       this.startFieldEdit({ path: highlightKey })
     },
 
-    getDimensions (evt) {
+    getDimensions (evt, index) {
       const dimensions = (evt.path && evt.path[0]) || evt.target
+      const page = {
+        ...this.pages[index],
+        loaded: true,
+        width: dimensions.naturalWidth,
+        height: dimensions.naturalHeight
+      }
 
-      this.dimensions.width = dimensions.naturalWidth
-      this.dimensions.height = dimensions.naturalHeight
+      this.setPage({ index, page })
+      this.loadedImages++
     },
 
-    getPos ({ bottom, left, right, top }) {
+    getPos ({ bottom, left, right, top }, { width, height }) {
       return {
-        top: `${(top / this.dimensions.height) * 100}%`,
-        left: `${(left / this.dimensions.width) * 100}%`,
-        width: `${((right - left) / this.dimensions.width) * 100}%`,
-        height: `${((bottom - top) / this.dimensions.height) * 100}%`
+        top: `${(top / height) * 100}%`,
+        left: `${(left / width) * 100}%`,
+        width: `${((right - left) / width) * 100}%`,
+        height: `${((bottom - top) / height) * 100}%`
       }
     }
   }
@@ -178,6 +191,20 @@ export default {
 .document__page {
   position: relative;
   width: 100%;
+
+  .loader {
+    background-color: white;
+    display: flex;
+    width: 100%;
+    min-height: rem(700);
+    justify-content: center;
+    align-items: center;
+
+    img {
+      opacity: 1;
+      width: rem(125);
+    }
+  }
 
   img {
     opacity: 0;

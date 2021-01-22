@@ -27,8 +27,8 @@ describe('The Login Page', function () {
     })
 
     cy.visit('localhost:8080')
-    cy.get('input[name=username]').type(this.credentials.email)
-    cy.get('input[name=password]').type(this.credentials.password)
+    cy.get('input[name=username]').type(this.credentials.email, { force: true })
+    cy.get('input[name=password]').type(this.credentials.password, { force: true })
     cy.get('[type=button]').click({ multiple: true, force: true })
 
     cy.route({ url: '**/api/user', response: this.user })
