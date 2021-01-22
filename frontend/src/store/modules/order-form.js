@@ -7,6 +7,7 @@ export const types = {
   setFormOrder: 'SET_FORM_ORDER',
   setHighlights: 'SET_HIGHLIGHTS',
   setHighlight: 'SET_HIGHLIGHT',
+  setPage: 'SET_PAGE',
   updateOrder: 'UPDATE_ORDER',
   toggleEdit: 'TOGGLE_EDIT',
   loadHighlights: 'LOAD_HIGHLIGHTS',
@@ -60,6 +61,9 @@ const mutations = {
   },
   [types.setBackupOrder] (state, order) {
     state.backupOrder = { ...order }
+  },
+  [types.setPage] (state, { index, page }) {
+    state.pages[index] = { ...page }
   }
 }
 
@@ -119,6 +123,7 @@ const actions = {
     for (const key in order.ocr_data.page_index_filenames.value) {
       pages.push({
         number: key,
+        loaded: false,
         name: order.ocr_data.page_index_filenames.value[key].name,
         image: order.ocr_data.page_index_filenames.value[key].presigned_download_uri
       })
@@ -146,6 +151,9 @@ const actions = {
   },
   [types.stopFieldEdit] ({ commit, state }, { path }) {
     commit(types.setHighlight, { path, highlight: { edit: false } })
+  },
+  [types.setPage] ({ commit, state }, { index, page }) {
+    commit(types.setPage, { index, page: { ...page } })
   }
 }
 

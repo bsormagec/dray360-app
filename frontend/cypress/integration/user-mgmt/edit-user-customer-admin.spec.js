@@ -6,12 +6,15 @@ describe('Edit user', function () {
     cy.fixture('user-mgmt/company.json').as('company')
     cy.fixture('user-mgmt/user-list.json').as('users')
     cy.fixture('user-mgmt/edited-user.json').as('editedUser')
+    cy.fixture('user-mgmt/companies.json').as('companies')
   })
 
   it('edits a user successfully', function () {
     cy.server()
 
     cy.route({ url: '**/api/user', response: this.user })
+
+    cy.route({ url: '**/api/companies', response: this.companies })
 
     cy.route({ url: '**/api/current-tenant', response: this.tenant })
 

@@ -13,10 +13,6 @@
       v-if="!loaded"
       class="loading-animation"
     >
-      <!--       <img
-        :class="`loading-animation ${isMobile && 'mobile'}`"
-        src="../assets/images/loading-animation.gif"
-      >> -->
       <img
         src="../assets/images/loading-animation.gif"
       >
