@@ -270,6 +270,7 @@ import SidebarNavigationButton from '@/components/General/SidebarNavigationButto
 import { mapState, mapActions } from 'vuex'
 import permissions from '@/mixins/permissions'
 import utils, { type } from '@/store/modules/utils'
+import auth from '@/store/modules/auth'
 import orders, { types as ordersTypes } from '@/store/modules/orders'
 import { deleteRequest as delRequest } from '@/store/api_calls/requests'
 import isMobile from '@/mixins/is_mobile'
@@ -315,7 +316,9 @@ export default {
   },
   computed: {
     ...mapState(utils.moduleName, {
-      showingSidebar: state => state.sidebar.show,
+      showingSidebar: state => state.sidebar.show
+    }),
+    ...mapState(auth.moduleName, {
       currentUser: state => state.currentUser
     }),
     ordersTabFirst () {
