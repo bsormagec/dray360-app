@@ -41,7 +41,7 @@ class OCRVariantsSeeder extends Seeder
             foreach ($variantsData as $csvRow) {
                 $variantRow = $this->getVariantRowFromCsvRow($csvRow);
                 $variantLookup = [
-                    # 'abbyy_variant_id' => $variantRow['abbyy_variant_id'],
+                    # 'abbyy_variant_id' => $variantRow['abbyy_variant_id'], # don't lookup on abbyy_variant_id
                     'abbyy_variant_name' => $variantRow['abbyy_variant_name'],
                 ];
                 $rownum = $variantRow['rownum'];
