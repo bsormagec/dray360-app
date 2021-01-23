@@ -7,6 +7,23 @@
 use App\Models\OCRVariant;
 use Illuminate\Database\Seeder;
 
+
+
+
+/**
+ * SQLITE3 CHEATSHEET
+ * 
+ *    sqlite3 
+ *     .open abbyexportfile.sqlite
+ *     .tables
+ *     .schema tablename
+ *     .header on
+ *     select * from tablename limit 10;
+ */
+
+
+
+
 /**
  * TerminalSeeder builds tables from Abbyy's sqllite3 database extract of all variants
  *
