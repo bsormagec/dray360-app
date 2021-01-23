@@ -1,26 +1,21 @@
 <template>
   <v-app :style="cssVars">
-    <v-container
-      fluid
-      pa-0
-    >
-      <v-row no-gutters>
-        <v-col
-          :class="Sidebar ? 'sidebar' : 'no__sidebar'"
-        >
-          <SidebarNavigation />
-        </v-col>
-        <v-col
-          :md="isMobile ? 12 : false"
-          :sm="isMobile ? 12 : false"
-          class="content"
-        >
-          <router-view />
-        </v-col>
-      </v-row>
-    </v-container>
-    <Snackbar />
-    <ConfirmationDialog />
+    <SidebarNavigation />
+    <v-main :style="sidebarStyles">
+      <v-container
+        pa-0
+        fluid
+        overflow-hidden
+      >
+        <v-row no-gutters>
+          <v-col class="content">
+            <router-view />
+          </v-col>
+        </v-row>
+      </v-container>
+      <Snackbar />
+      <ConfirmationDialog />
+    </v-main>
   </v-app>
 </template>
 
@@ -46,12 +41,16 @@ export default {
       Sidebar: state => state.sidebar.show
     }),
     cssVars () {
-      const primaryRgb = hexToRgb(this.$vuetify.theme.themes.light.primary)
-      const secondaryRgb = hexToRgb(this.$vuetify.theme.themes.light.secondary)
-      return {
-        '--v-primary-base-rgb': `${primaryRgb.r}, ${primaryRgb.g}, ${primaryRgb.b}`,
-        '--v-secondary-base-rgb': `${secondaryRgb.r}, ${secondaryRgb.g}, ${secondaryRgb.b}`
+      const cssVars = {}
+      for (const key in this.$vuetify.theme.themes.light) {
+        const rgbColor = hexToRgb(this.$vuetify.theme.themes.light[key])
+        cssVars[`--v-${key}-base-rgb`] = `${rgbColor.r}, ${rgbColor.g}, ${rgbColor.b}`
       }
+      return cssVars
+    },
+    sidebarStyles () {
+      if (this.isMobile && this.Sidebar) return 'left: 196px; position: relative; overflow: hidden;'
+      return ''
     }
   }
 
@@ -60,18 +59,7 @@ export default {
 
 <style lang="scss">
 @import "@/assets/styles/index.scss";
-
-.sidebar {
-  background-color: transparent;
-  @include media("min") {
-    max-width: rem(0);
-  }
-  @include media("lg") {
-    max-width: rem(map-get($sizes, sidebar-desktop-width));
-  }
+.v-application {
+  overflow: hidden;
 }
-.no__sidebar{
-  max-width: rem(0);
-}
-
 </style>

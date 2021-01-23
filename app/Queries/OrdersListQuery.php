@@ -23,10 +23,11 @@ class OrdersListQuery extends QueryBuilder
                 't_orders.shipment_direction',
                 't_orders.tms_shipment_id',
                 't_orders.t_company_id',
-                't_orders.tms_template_id',
+                't_orders.tms_template_dictid',
                 't_orders.bill_to_address_id',
                 't_orders.unit_number',
                 't_orders.reference_number',
+                't_orders.is_hidden',
             ])
             ->leftJoin('t_addresses as bill_to', 'bill_to.id', '=', 't_orders.bill_to_address_id')
             ->join('t_job_latest_state as ls_sort', 'ls_sort.order_id', '=', 't_orders.id')
@@ -38,18 +39,21 @@ class OrdersListQuery extends QueryBuilder
                 'ocrRequest:order_id,created_at,updated_at,t_job_state_changes_id',
                 'ocrRequest.latestOcrRequestStatus:id,status,status_metadata',
                 'billToAddress:id,location_name',
+                'tmsTemplate:id,item_key,item_display_name',
             ]);
 
         parent::__construct($query);
 
         $this->allowedFilters([
             AllowedFilter::partial('request_id', 't_orders.request_id'),
+            AllowedFilter::exact('company_id', 't_orders.t_company_id', false),
             AllowedFilter::custom('created_between', new CreatedBetweenFilter(), 't_orders.created_at'),
             AllowedFilter::custom('status', new OrderStatusFilter()),
             AllowedFilter::custom('display_status', new OrderStatusFilter()),
             AllowedFilter::callback('query', function ($query, $value) {
                 $query->where(function ($query) use ($value) {
                     $query->orWhere('t_orders.request_id', 'like', "{$value}%")
+                        ->orWhere('t_orders.id', '=', $value)
                         ->orWhere('t_orders.equipment_type_raw_text', 'like', "{$value}%")
                         ->orWhere('t_orders.shipment_designation', 'like', "{$value}%")
                         ->orWhere('t_orders.shipment_direction', 'like', "{$value}%")
@@ -59,6 +63,11 @@ class OrdersListQuery extends QueryBuilder
                         ->orWhere('bill_to.location_name', 'like', "%{$value}%");
                 });
             }),
+            AllowedFilter::callback('hidden', function ($query, $value) {
+                if (! $value) {
+                    $query->where('is_hidden', false);
+                }
+            })->default(false)
         ])
         ->defaultSort('-t_orders.created_at', '-t_orders.id')
         ->allowedSorts([

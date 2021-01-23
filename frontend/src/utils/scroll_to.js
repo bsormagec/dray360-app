@@ -1,6 +1,7 @@
-export const scrollTo = (id) => {
+export const scrollTo = (elementId, wrapperSelector, offset) => {
   try {
-    document.getElementById(id).scrollIntoView()
+    const topPos = document.getElementById(elementId).offsetTop
+    document.querySelector(wrapperSelector || 'body').scrollTop = topPos - offset || 0
   } catch (e) {
     return e
   }

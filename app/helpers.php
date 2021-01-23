@@ -54,3 +54,8 @@ function request_is_from_nova()
 {
     return request()->is(['nova/*', 'nova-api/*']);
 }
+
+function get_memory_usage_mb()
+{
+    return round(memory_get_usage(true) / 1048576, 2);
+}

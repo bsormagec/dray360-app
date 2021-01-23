@@ -1,73 +1,55 @@
 <template>
   <div class="pa-4">
-    <template>
-      <v-toolbar
-        flat
-        color="white"
-      >
-        <v-toolbar-title>
-          <h1>
-            Change Password
-          </h1>
-        </v-toolbar-title>
-
-        <v-spacer />
-      </v-toolbar>
-    </template>
-    <template
-      style="width: 44%"
-    >
-      <div class="row">
-        <div class="col-4">
-          <v-text-field
-            v-model="old_password"
-            data-cy="old-password-field"
-            type="password"
-            name="password"
-            label="Old Password"
-            hide-details
-            outlined
-            dense
-          />
-        </div>
-      </div>
-      <div class="row">
-        <div class="col-4">
-          <v-text-field
-            v-model="password"
-            data-cy="password-field"
-            type="password"
-            name="password"
-            label="Password"
-            hide-details
-            outlined
-            dense
-          />
-        </div>
-      </div>
-      <div class="row">
-        <div class="col-4">
-          <v-text-field
-            v-model="password_confirmation"
-            data-cy="password-confirmation-field"
-            type="password"
-            name="password"
-            label="Password Confirmation"
-            hide-details
-            outlined
-            dense
-          />
-        </div>
-      </div>
-    </template>
+    <h6 class="password-change__label">
+      <SidebarNavigationButton :dark="false" />
+      Change Password
+    </h6>
+    <v-row>
+      <v-col md="4">
+        <v-text-field
+          v-model="old_password"
+          data-cy="old-password-field"
+          type="password"
+          name="password"
+          label="Old Password"
+          hide-details
+          outlined
+          dense
+        />
+      </v-col>
+    </v-row>
+    <v-row>
+      <v-col md="4">
+        <v-text-field
+          v-model="password"
+          data-cy="password-field"
+          type="password"
+          name="password"
+          label="Password"
+          hide-details
+          outlined
+          dense
+        />
+      </v-col>
+    </v-row>
+    <v-row>
+      <v-col md="4">
+        <v-text-field
+          v-model="password_confirmation"
+          data-cy="password-confirmation-field"
+          type="password"
+          name="password"
+          label="Password Confirmation"
+          hide-details
+          outlined
+          dense
+        />
+      </v-col>
+    </v-row>
     <v-row>
       <v-col
-        cols="4"
-        sm="4"
-      />
-      <v-col
-        cols="2"
-        sm="2"
+        md="4"
+        class="d-flex justify-space-between"
       >
         <v-btn
           class="button"
@@ -91,12 +73,16 @@
 </template>
 
 <script>
+import SidebarNavigationButton from '@/components/General/SidebarNavigationButton'
 import profile, { types } from '@/store/modules/profile'
 import { mapActions } from 'vuex'
 import utils, { type } from '@/store/modules/utils'
+import isMobile from '@/mixins/is_mobile'
+import isMedium from '@/mixins/is_medium'
 
 export default {
-
+  components: { SidebarNavigationButton },
+  mixins: [isMobile, isMedium],
   data () {
     return {
       old_password: '',
@@ -105,18 +91,23 @@ export default {
       error: false
     }
   },
+  watch: {
+    isMedium: function (newVal, oldVal) {
+      if (!newVal) this.setSidebar({ show: true })
+    },
+    isMobile: function (newVal, oldVal) {
+      if (newVal) this.setSidebar({ show: false })
+      else this.setSidebar({ show: true })
+    }
+  },
+
   beforeMount () {
-    this.showSidebar()
+    if (!this.isMobile) return this.setSidebar({ show: true })
+    return this.setSidebar({ show: false })
   },
   methods: {
     ...mapActions(profile.moduleName, [types.changePassword]),
-    ...mapActions(utils.moduleName, [type.setSnackbar, type.setSidebar]),
-
-    async showSidebar () {
-      await this[type.setSidebar]({
-        show: true
-      })
-    },
+    ...mapActions(utils.moduleName, { setSidebar: type.setSidebar }),
     async save () {
       const status = await this[types.changePassword](
         {
@@ -145,10 +136,14 @@ export default {
 }
 </script>
 <style lang="scss" scoped>
-.v-toolbar__title h1 {
-  font-size: rem(26);
-  font-weight: 700;
-  letter-spacing: 0;
+.password-change__label {
+  display: flex;
+  align-items: center;
+  margin-bottom: rem(8);
+  .v-btn {
+    min-width: unset;
+    margin-right: rem(8);
+  }
 }
 input {
   font-size: rem(12);

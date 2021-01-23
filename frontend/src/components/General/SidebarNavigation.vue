@@ -1,33 +1,15 @@
 <template>
   <div>
-    <v-app-bar-nav-icon
-      v-if="isMobile && currentUser !== undefined"
-      class="hamburger__icon"
-      @click="toogleSidebar"
-    />
     <div v-if="showSidebar">
       <v-navigation-drawer
         :value="showSidebar"
         class="sidebar__nav"
-        absolute
-        left
-        :temporary="isMobile"
-        :permanent="showSidebar && !isMobile"
+        app
+        overlay-opacity="0"
+        width="196"
+        mobile-breakpoint="1024"
         @input="onChangeSidebar"
       >
-        <v-btn
-          v-if="isMobile"
-          class="mx-2 my-1"
-          fab
-          dark
-          small
-          color="primary"
-          @click.stop="toogleSidebar"
-        >
-          <v-icon dark>
-            mdi-close
-          </v-icon>
-        </v-btn>
         <img
           v-if="!tenantConfig.logo1"
           class="logo__dry"
@@ -125,6 +107,7 @@ import { mapState, mapActions } from 'vuex'
 import hasPermission from '@/mixins/permissions'
 import utils, { type } from '@/store/modules/utils'
 import isMobile from '@/mixins/is_mobile'
+import { reqStatus } from '@/enums/req_status'
 
 export default {
 
@@ -168,8 +151,10 @@ export default {
     ...mapActions('AUTH', ['logout']),
     ...mapActions(utils.moduleName, [type.getTenantConfig, type.setSidebar]),
     async logoutBtn () {
-      await this.logout()
-      this.$router.push('/login')
+      const result = await this.logout()
+      if (result === reqStatus.success) {
+        return this.$router.push('/login').catch(() => {})
+      }
     },
     toogleSidebar () {
       this[type.setSidebar]({ show: !this.showSidebar })
@@ -199,14 +184,8 @@ $sidebarbackground: url("../../assets/images/menuBackground.png");
 .sidebar__nav{
   background: linear-gradient(90deg, rgba(0, 60, 113, 0) 97.95%, rgba(0, 60, 113, 0.1) 100%), linear-gradient(0deg, rgba(0, 60, 113, 0.05), rgba(0, 60, 113, 0.05)), #FFFFFF;
   box-shadow: inset rem(-1) 0px 0px rgba(0, 60, 113, 0.03);
-  display: flex;
-  flex-direction: column;
-  align-content: center;
-  align-self: center;
   background-image: $sidebarbackground;
   background-size: cover;
-  max-width: rem(196);
-  position: fixed;
   .v-navigation-drawer__border{
     width: 5px;
   }

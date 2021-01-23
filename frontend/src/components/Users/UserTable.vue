@@ -2,26 +2,26 @@
   <div class="user__list">
     <v-data-table
       v-model="selected"
+      :loading="loading"
       :headers="showHeaders"
       :items="userList"
       :server-items-length="total"
       :search="search"
-      show-select
-      hide-default-footer
-      class="user__list"
+      :show-select="hasBulkActions"
+      :hide-default-footer="true"
+      :header-props="{ sortIcon: 'mdi-chevron-down'}"
+      :class="{'table': true, 'loading': loading}"
     >
       <template v-slot:top>
+        <h6 class="user__list-heading">
+          <SidebarNavigationButton :dark="false" />
+          {{ tableTitle }} ({{ userList.length }})
+        </h6>
         <v-toolbar
           flat
           color="white"
+          height="auto"
         >
-          <v-toolbar-title>
-            <h1 class="user-table-title">
-              {{ tableTitle }} ({{ userList.length }})
-            </h1>
-          </v-toolbar-title>
-
-          <v-spacer />
           <DateRangeCalendar
             v-if="hasCalendar"
             @change="handleCalendar"
@@ -54,10 +54,9 @@
             :chips="true"
           >
             <template v-slot:selection="{ index }">
-              <span
-                v-if="index === 2"
-                class=""
-              > Columns</span>
+              <span v-if="index === 2">
+                Columns
+              </span>
             </template>
           </v-select>
 
@@ -73,14 +72,17 @@
           <v-btn
             v-if="hasAddButton.showButton && hasPermission('users-create')"
             class="user_btn add__user_btn"
+            color="primary"
             @click="addUser()"
           >
             Add User
           </v-btn>
         </v-toolbar>
       </template>
-      <template v-slot:[`item.email`]="{ item }">
-        <a href="">{{ item.email }}</a>
+      <template
+        v-slot:[`item.email`]="{ item }"
+      >
+        <span class="text-decoration-underline primary--text">{{ item.email }}</span>
       </template>
       <template v-slot:[`item.deactivated_at`]="{ item }">
         <span>{{ item.deactivated_at === null ? 'Active' : 'Inactive' }}</span>
@@ -122,7 +124,8 @@
 </template>
 <script>
 import DateRangeCalendar from '@/components/Orders/DateRangeCalendar'
-import hasPermission from '@/mixins/permissions'
+import SidebarNavigationButton from '@/components/General/SidebarNavigationButton'
+import permissions from '@/mixins/permissions'
 import Pagination from '@/components/OrderTable/components/Pagination'
 import { getUsers } from '@/store/api_calls/users'
 
@@ -131,10 +134,11 @@ export default {
 
   components: {
     DateRangeCalendar,
-    Pagination
+    Pagination,
+    SidebarNavigationButton
   },
 
-  mixins: [hasPermission],
+  mixins: [permissions],
 
   props: {
     hasColumnFilters: {
@@ -204,6 +208,9 @@ export default {
     }
   },
   created () {
+    if (!this.isSuperadmin()) {
+      this.headers.splice(2, 1)
+    }
     this.selectedHeaders = this.headers
     this.fetchUsers()
   },
@@ -233,7 +240,7 @@ export default {
     },
 
     deleteItem (e) {
-      this.$emit('deleteItem', e.id)
+      this.$emit('delete-item', e.id)
     },
 
     addUser () {
@@ -261,58 +268,95 @@ export default {
   }
 }
 </script>
-  <style lang="scss">
-  .user__list {
-    padding: rem(10);
-    .search{
+<style lang="scss" scoped>
+.user__list {
+  &::v-deep .v-toolbar__content {
+    justify-content: flex-start;
+    flex-wrap: wrap;
+    @include media('med') {
+      justify-content: flex-end;
+      flex-wrap: nowrap;
+    }
+  }
+  .search {
+    flex: 1 0 auto;
+    margin: 0 rem(5) rem(5) 0;
+    font-size: rem(12);
+    @include media('med') {
       max-width: rem(300);
-       margin: 0 rem(5);
-       font-size: rem(12);
-    }
-    .search {
-      label { font-size: rem(12); }
-    }
-    .v-data-table__wrapper table{
-      td {
-        font-size: rem(12);
-      }
-      border: rem(2) solid map-get($colors, grey) !important;
-      border-radius: rem(3);
-    }
-    .user__filter{
-      max-width: rem(180);
-      height: rem(40) !important;
       margin: 0 rem(5);
-      span, label { font-size: rem(12); }
-       .v-input__slot fieldset {
-        border: 1px solid map-get($colors, mainblue ) !important;
-
-      }
-      .v-input__control > .v-input__slot{
-        min-height: rem(20) !important;
-      }
-      .v-label, span{
-        color: map-get($colors, mainblue ) !important;
-      }
     }
-    .user_btn{
-        background-color: map-get($colors, mainblue) !important;
-        color: map-get($colors, white );
-        // .add__user_btn{
-        //   width: rem(120);
-        //   height: rem(40) !important;
-        //   font-size: rem(12);
-        // }
-        .v-btn__content {
-          font-size: rem(12);
-        }
+    label {
+      font-size: rem(12);
     }
-
   }
-
-  .user-table-title {
-    font-size: rem(26);
-    font-weight: 700;
-    letter-spacing: 0;
+  .user_btn {
+    margin-bottom: rem(8);
+    @include media ('med') {
+      margin-bottom: 0;
+    }
   }
-  </style>
+  .v-data-table__wrapper table {
+    border: rem(2) solid map-get($colors, grey) !important;
+    border-radius: rem(3);
+    td {
+      font-size: rem(12);
+    }
+  }
+  .user__filter {
+    height: rem(40);
+    margin: 0 rem(8) rem(5) 0;
+    @include media('med') {
+      max-width: rem(180);
+      margin: 0 rem(10) 0 rem(5);
+    }
+    span, label {
+      font-size: rem(12);
+    }
+    .v-input__slot fieldset {
+      border: 1px solid map-get($colors, mainblue ) !important;
+    }
+    .v-input__control > .v-input__slot{
+      min-height: rem(20) !important;
+    }
+    .v-label, span{
+      color: map-get($colors, mainblue ) !important;
+    }
+  }
+  .user__list-heading {
+    display: flex;
+    align-items: center;
+    margin-bottom: rem(8);
+    .v-btn {
+      min-width: unset;
+      margin-right: rem(8);
+    }
+  }
+}
+.table::v-deep tbody {
+  tr:nth-of-type(even) {
+    background-color: rgba(0, 0, 0, .05);
+    background-color: #F5F6F7;
+  }
+}
+.table.loading::v-deep tbody {
+  opacity: 0.5;
+  transition: opacity 0.3s linear;
+}
+.table:v-deep .v-data-table__wrapper {
+  border: solid 1px #E6ECF1;
+  border-radius: 5px;
+}
+.table::v-deep th {
+  height: rem(40);
+}
+.table::v-deep th.sortable .v-icon {
+    position: absolute;
+}
+.table::v-deep .v-data-table-header th {
+  background-color: #F5F6F7 !important;
+}
+.table::v-deep .v-data-table__empty-wrapper {
+  margin-top:rem(46);
+}
+</style>

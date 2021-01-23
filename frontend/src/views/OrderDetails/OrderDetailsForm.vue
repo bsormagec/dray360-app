@@ -4,7 +4,10 @@
     ref="orderForm"
     :class="`form ${isMobile && 'mobile'}`"
   >
-    <div class="order__title-group">
+    <div
+      ref="orderHeading"
+      class="order__title-group"
+    >
       <v-btn
         v-if="backButton"
         color="primary"
@@ -13,6 +16,19 @@
         class="px-0"
         title="Go back to Orders List"
         @click="goToOrdersList()"
+      >
+        <v-icon>
+          mdi-chevron-left
+        </v-icon>
+      </v-btn>
+      <v-btn
+        v-if="virtualBackButton"
+        color="primary"
+        outlined
+        small
+        class="px-0"
+        title="Go back to Orders List"
+        @click="$emit('go-back')"
       >
         <v-icon>
           mdi-chevron-left
@@ -62,7 +78,8 @@
         :options="[
           { title: 'Edit Order' , action: toggleEdit, hasPermission: true },
           { title: 'Download Source File', action: () => downloadSourceFile(order.id), hasPermission: true },
-          { title: 'Delete Order', action: () => deleteOrder(order.id), hasPermission: hasPermission('orders-remove') }
+          { title: 'Delete Order', action: () => deleteOrder(order.id), hasPermission: hasPermission('orders-remove') },
+          { title: 'Add TMS ID', action: () => addTMSId(order.id), hasPermission: hasPermission('ocr-requests-edit') && isInProcessedState}
         ]"
         :loading="loading"
       />
@@ -90,8 +107,8 @@
       </div>
     </div>
 
-    <!-- <div class="order__changelog">
-      <div class="order__chip-container">
+    <div class="order__changelog">
+      <!-- <div class="order__chip-container">
         <v-chip
           class="mr-1 mb-3"
           outlined
@@ -118,7 +135,8 @@
         >
           <v-avatar
             left
-            small>
+            small
+          >
             <v-icon>mdi-alert-outline</v-icon>
           </v-avatar>
           13 Warning
@@ -136,10 +154,33 @@
           </v-avatar>
           1 Error
         </v-chip>
-      </div>
-      <p>Last Updated <span>{{ lastChandedAt }}</span> by John Doe</p>
-      <a href="#">History</a>
-    </div> -->
+      </div> -->
+      <p class="mb-2 body-2">
+        Submitted <span
+          class="order__changelog_date"
+          @click="openStatusHistoryDialog = true"
+        >{{ formatDate(order.submitted_date, true) }}</span>
+        <br>
+        {{ `by ${userWhoUploadedTheRequest ? userWhoUploadedTheRequest :''}` }}
+      </p>
+      <p class="mb-2 body-2">
+        Last Updated <span
+          class="order__changelog_date"
+          @click="openStatusHistoryDialog = true"
+        >{{ formatDate(order.updated_at, true) }}</span>
+      </p>
+      <a
+        class="caption text-uppercase text-decoration-underline slate-gray--text"
+        @click.prevent="openStatusHistoryDialog = true"
+      >
+        History
+      </a>
+      <StatusHistoryDialog
+        :order="order"
+        :open="openStatusHistoryDialog"
+        @close="openStatusHistoryDialog = false"
+      />
+    </div>
 
     <div class="form__section">
       <div
@@ -157,19 +198,26 @@
           :edit-mode="editMode"
           @change="value => handleChange('shipment_designation', value)"
         /> -->
-        <FormFieldSelect
-          v-if="shouldSelectProfitToolsTemplateId"
-          references="tms_template_id"
-          label="TMS Template Name"
-          :value="order.tms_template_id"
-          :items="profitToolsTemplatesSelectItems"
-          item-text="tms_template_name"
-          item-value="tms_template_id"
-          :display-value="displayName"
+        <FormFieldInputAutocomplete
+          v-if="tmsTemplatesEnabled"
+          references="tms_template_dictid"
+          label="TMS Template"
+          :value="order.tms_template_dictid"
+          :autocomplete-items="tmsTemplates"
+          item-text="item_display_name"
+          item-value="id"
+          :display-value="tmsTemplateDisplayName"
           :edit-mode="editMode"
-          @change="value => handleChange('tms_template_id', value)"
+          :verifiable="order.tms_template_dictid !== null && !order.tms_template_dictid_verified"
+          @change="value => handleChange('tms_template_dictid', value)"
+        />
+        <FormFieldManaged
+          v-if="isManagedByTemplate"
+          references="division_code"
+          label="Division"
         />
         <FormFieldSelectDivisionCodes
+          v-else-if="divisionsEnabled"
           references="division_code"
           label="Division"
           :value="order.division_code"
@@ -179,10 +227,13 @@
           :division-code="order.division_code"
           @change="value => handleChange('division_code', value)"
         />
-        <FormFieldInput
+        <FormFieldSelect
           references="shipment_direction"
           label="Shipment direction"
           :value="order.shipment_direction"
+          :items="shipmentDirection"
+          item-text="name"
+          item-value="id"
           :edit-mode="editMode"
           @change="value => handleChange('shipment_direction', value)"
         />
@@ -213,8 +264,22 @@
           </h3>
         </div>
         <div class="section__rootfields">
+          <FormFieldInputAutocomplete
+            v-if="itgContainersEnabled"
+            references="container_dictid"
+            label="ITG Container Size/Type"
+            :value="order.container_dictid"
+            :autocomplete-items="itgContainers"
+            :item-text="item => `${item.item_display_name} (${item.item_key})`"
+            item-value="id"
+            :display-value="itgContainerDisplayName"
+            :edit-mode="editMode"
+            @change="value => handleChange('container_dictid', value)"
+          />
           <FormFieldEquipmentType
+            v-else
             label="Equipment Type"
+            references="t_equipment_type_id"
             :company-id="order.t_company_id"
             :tms-provider-id="order.t_tms_provider_id"
             :carrier="order.carrier"
@@ -225,6 +290,7 @@
             :verified="order.equipment_type_verified"
             @change="(e) => handleChange('t_equipment_type_id', e)"
           />
+
           <FormFieldInput
             references="unit_number"
             label="Unit number"
@@ -347,6 +413,7 @@
         </div>
       </div>
       <div
+        v-if="!isManagedByTemplate"
         class="form__sub-section"
       >
         <div
@@ -364,6 +431,7 @@
             references="bill_to_address"
             :edit-mode="false"
             billable
+            v-bind="{...addressSearchProps}"
             @change="(e) => handleChange('bill_to_address', e)"
           />
           <FormFieldTextArea
@@ -398,119 +466,161 @@
           />
         </div>
       </div>
-    </div>
-
-    <div class="form__section">
       <div
-        :id="sections.itinerary.id"
-        ref="itineraryLabel"
-        class="form__section-title d-flex align-center"
-      >
-        <h3>
-          {{ sections.itinerary.label }}
-        </h3>
-        <v-btn
-          v-if="!editMode"
-          class="ml-auto"
-          small
-          outlined
-          color="white"
-          @click="handleItinerayEdit"
-        >
-          Edit itinerary
-        </v-btn>
-        <v-btn
-          v-else
-          class="ml-auto"
-          small
-          outlined
-          color="white"
-          @click="handleNewEvent"
-        >
-          Add Event
-        </v-btn>
-      </div>
-
-      <div class="section__rootfields">
-        <div
-          v-for="(orderAddressEvent, index) in order.order_address_events"
-          :key="`${index}${orderAddressEvent.id}`"
-        >
-          <FormFieldItineraryEdit
-            :order-address-event="orderAddressEvent"
-            :current-index="index+1"
-            :references="`order_address_events.${index}`"
-            :edit-mode="editMode"
-            :is-first="index === 0"
-            :is-last="index == order.order_address_events.length - 1"
-            @change="(e) => handleChange(`order_address_events.${index}`, e)"
-            @delete="(e) => handleDelete(index)"
-            @sort="(e) => moveObjectPositionInArray(order.order_address_events[index].id, e)"
-          />
-        </div>
-      </div>
-    </div>
-    <div class="form__section">
-      <div class="form__section-title">
-        <h3>
-          {{ sections.notes.label }}
-        </h3>
-      </div>
-
-      <div class="section__rootfields">
-        <FormFieldTextArea
-          references="ship_comment"
-          label="Shipment comments"
-          :value="order.ship_comment"
-          :edit-mode="editMode"
-          @change="value => handleChange('ship_comment', value)"
-        />
-      </div>
-    </div>
-    <div class="form__section">
-      <div
-        :id="sections.inventory.id"
-        class="form__section-title"
-      >
-        <h3>
-          {{ sections.inventory.label }}
-        </h3>
-      </div>
-
-      <div
-        v-for="(item, index) in availableLineItems"
-        :key="index"
-        class="form__sub-section"
+        v-else
       >
         <div
-          class="form__section-title"
+          :id="sections.bill_to.id"
+          class="form__section-title form__section-title--managed d-flex align-center justify-center mb-2"
         >
-          <h3>Item {{ index + 1 }}</h3>
+          <h3>
+            {{ sections.bill_to.label }} managed by template
+          </h3>
         </div>
+      </div>
+
+      <div
+        v-if="!isManagedByTemplate"
+        class="form__section"
+      >
+        <div
+          :id="sections.itinerary.id"
+          class="form__section-title d-flex align-center"
+        >
+          <h3>
+            {{ sections.itinerary.label }}
+          </h3>
+          <v-btn
+            v-if="!editMode"
+            class="ml-auto"
+            small
+            outlined
+            color="white"
+            @click="handleItinerayEdit(sections.itinerary.id)"
+          >
+            Edit itinerary
+          </v-btn>
+          <v-btn
+            v-else
+            class="ml-auto"
+            small
+            outlined
+            color="white"
+            @click="handleNewEvent"
+          >
+            Add Event
+          </v-btn>
+        </div>
+
+        <div class="section__rootfields">
+          <div
+            v-for="(orderAddressEvent, index) in order.order_address_events"
+            :key="`${index}${orderAddressEvent.id}`"
+          >
+            <FormFieldItineraryEdit
+              :order-address-event="orderAddressEvent"
+              :current-index="index+1"
+              :references="`order_address_events.${index}`"
+              :edit-mode="editMode"
+              :is-first="index === 0"
+              :is-last="index == order.order_address_events.length - 1"
+              v-bind="{...addressSearchProps}"
+              @change="(e) => handleChange(`order_address_events.${index}`, e)"
+              @delete="(e) => handleDelete(index)"
+              @sort="(e) => moveObjectPositionInArray(order.order_address_events[index].id, e)"
+            />
+          </div>
+        </div>
+      </div>
+      <div
+        v-else
+      >
+        <div
+          :id="sections.itinerary.id"
+          class="form__section-title form__section-title--managed d-flex align-center justify-center mb-2"
+        >
+          <h3>
+            {{ sections.itinerary.label }} managed by template
+          </h3>
+        </div>
+      </div>
+      <div class="form__section">
+        <div class="form__section-title">
+          <h3>
+            {{ sections.notes.label }}
+          </h3>
+        </div>
+
         <div class="section__rootfields">
           <FormFieldTextArea
-            :references="`order_line_items.${item.real_index}.contents`"
-            label="Contents"
-            :value="item.contents"
+            references="ship_comment"
+            label="Shipment comments"
+            :value="order.ship_comment"
             :edit-mode="editMode"
-            @change="value => handleChange(`order_line_items.${item.real_index}.contents`, value)"
+            @change="value => handleChange('ship_comment', value)"
           />
-          <FormFieldInput
-            :references="`order_line_items.${item.real_index}.quantity`"
-            label="Quantity"
-            type="number"
-            :value="item.quantity"
-            :edit-mode="editMode"
-            @change="value => handleChange(`order_line_items.${item.real_index}.quantity`, value)"
-          />
-          <FormFieldInput
-            :references="`order_line_items.${item.real_index}.weight`"
-            label="Weight"
-            type="number"
-            :value="item.weight"
-            :edit-mode="editMode"
-            @change="value => handleChange(`order_line_items.${item.real_index}.weight`, value)"
-          />
+        </div>
+      </div>
+      <div
+        v-if="!isManagedByTemplate"
+        class="form__section"
+      >
+        <div
+          :id="sections.inventory.id"
+          class="form__section-title"
+        >
+          <h3>
+            {{ sections.inventory.label }}
+          </h3>
+        </div>
+
+        <div
+          v-for="(item, index) in availableLineItems"
+          :key="index"
+          class="form__sub-section"
+        >
+          <div
+            class="form__section-title"
+          >
+            <h3>Item {{ index + 1 }}</h3>
+          </div>
+          <div class="section__rootfields">
+            <FormFieldTextArea
+              :references="`order_line_items.${item.real_index}.contents`"
+              label="Contents"
+              :value="item.contents"
+              :edit-mode="editMode"
+              @change="value => handleChange(`order_line_items.${item.real_index}.contents`, value)"
+            />
+            <FormFieldInput
+              :references="`order_line_items.${item.real_index}.quantity`"
+              label="Quantity"
+              type="number"
+              :value="item.quantity"
+              :edit-mode="editMode"
+              @change="value => handleChange(`order_line_items.${item.real_index}.quantity`, value)"
+            />
+            <FormFieldInput
+              :references="`order_line_items.${item.real_index}.weight`"
+              label="Weight"
+              type="number"
+              :value="item.weight"
+              :edit-mode="editMode"
+              @change="value => handleChange(`order_line_items.${item.real_index}.weight`, value)"
+            />
+          </div>
+        </div>
+      </div>
+      <div
+        v-else
+      >
+        <div
+          :id="sections.inventory.id"
+          class="form__section-title form__section-title--managed d-flex align-center justify-center"
+        >
+          <h3>
+            {{ sections.inventory.label }} managed by template
+          </h3>
         </div>
       </div>
     </div>
@@ -519,9 +629,11 @@
 
 <script>
 import isMobile from '@/mixins/is_mobile'
+import { scrollTo } from '@/utils/scroll_to'
 import permissions from '@/mixins/permissions'
 import { mapState, mapActions } from 'vuex'
 import get from 'lodash/get'
+import { statuses } from '@/enums/app_objects_types'
 
 import { getSourceFileDownloadURL, postSendToTms, delDeleteOrder } from '@/store/api_calls/orders'
 import orderForm, { types as orderFormTypes } from '@/store/modules/order-form'
@@ -538,7 +650,11 @@ import FormFieldEquipmentType from '@/components/FormFields/FormFieldEquipmentTy
 import OutlinedButtonGroup from '@/components/General/OutlinedButtonGroup'
 import FormFieldSelectDivisionCodes from '@/components/FormFields/FormFieldSelectDivisionCodes'
 import FormFieldSelect from '@/components/FormFields/FormFieldSelect'
+import FormFieldInputAutocomplete from '@/components/FormFields/FormFieldInputAutocomplete'
+import FormFieldManaged from '@/components/FormFields/FormFieldManaged'
 import RequestStatus from '@/components/RequestStatus'
+import StatusHistoryDialog from './StatusHistoryDialog'
+import { formatDate } from '@/utils/dates'
 
 export default {
   name: 'OrderDetailsForm',
@@ -553,8 +669,11 @@ export default {
     FormFieldEquipmentType,
     OutlinedButtonGroup,
     FormFieldSelect,
+    FormFieldInputAutocomplete,
     FormFieldSelectDivisionCodes,
-    RequestStatus
+    FormFieldManaged,
+    RequestStatus,
+    StatusHistoryDialog
   },
   mixins: [isMobile, permissions],
   props: {
@@ -563,17 +682,54 @@ export default {
       required: false,
       default: true
     },
+    virtualBackButton: {
+      type: Boolean,
+      required: false,
+      default: true
+    },
     redirectBack: {
       type: Boolean,
       required: false,
       default: false
+    },
+    tmsTemplates: {
+      type: Array,
+      required: false,
+      default: () => []
+    },
+    tmsTemplatesEnabled: {
+      type: Boolean,
+      required: false,
+      default: false
+    },
+    itgContainers: {
+      type: Array,
+      required: false,
+      default: () => []
+    },
+    itgContainersEnabled: {
+      type: Boolean,
+      required: false,
+      default: false
+    },
+    divisionsEnabled: {
+      type: Boolean,
+      required: false,
+      default: true
     }
   },
   data () {
     return {
       loading: false,
       divisionCodes: [],
-      sentToTms: false
+      sentToTms: false,
+      openStatusHistoryDialog: false,
+      shipmentDirection: [
+        { id: 'import', name: 'Import' },
+        { id: 'export', name: 'Export' },
+        { id: 'oneway', name: 'One way' },
+        { id: 'crosstown', name: 'Crosstown' }
+      ]
     }
   },
 
@@ -585,11 +741,18 @@ export default {
       sections: state => state.sections
     }),
 
-    profitToolsTemplatesSelectItems () {
-      return get(this.order, 'company.configuration.profit_tools_template_list', [])
+    isManagedByTemplate () {
+      return this.order.tms_template_dictid !== null
     },
-    shouldSelectProfitToolsTemplateId () {
-      return get(this.order, 'company.configuration.profit_tools_enable_templates', false)
+
+    addressSearchProps () {
+      return {
+        'enable-location-name': get(this.order.company, 'configuration.address_search_location_name', false),
+        'enable-city': get(this.order.company, 'configuration.address_search_city', false),
+        'enable-postal-code': get(this.order.company, 'configuration.address_search_postal_code', false),
+        'enable-address': get(this.order.company, 'configuration.address_search_address', false),
+        'enable-state': get(this.order.company, 'configuration.address_search_state', false)
+      }
     },
 
     availableLineItems () {
@@ -612,30 +775,21 @@ export default {
       }
 
       return (this.order.tms_shipment_id !== null && this.order.tms_shipment_id !== undefined) ||
-        (get(this.order, 'ocr_request.latest_ocr_request_status.status') === 'sending-to-wint')
+        (get(this.order, 'ocr_request.latest_ocr_request_status.status') === statuses.sendingToWint)
     },
-    lastChandedAt () {
-      Number.prototype.padLeft = function (base, chr) {
-        const len = (String(base || 10).length - String(this).length) + 1
-        return len > 0 ? new Array(len).join(chr || '0') + this : this
-      }
 
-      const lastUpdatedAt = new Date(this.order.updated_at)
-
-      const date = [
-        (lastUpdatedAt.getMonth() + 1).padLeft(),
-        lastUpdatedAt.getDate().padLeft(),
-        lastUpdatedAt.getFullYear()
-      ].join('-')
-
-      const time = [
-        lastUpdatedAt.getHours().padLeft(),
-        lastUpdatedAt.getMinutes().padLeft()
-      ].join(':')
-
-      return `${date} ${time}`
+    isInProcessedState () {
+      const validStatuses = [
+        statuses.processOcrOutputFileComplete,
+        statuses.ocrPostProcessingComplete
+      ]
+      return validStatuses.includes(this.order.ocr_request.latest_ocr_request_status.status)
+    },
+    userWhoUploadedTheRequest () {
+      return this.order.upload_user_name ? this.order.upload_user_name : this.order.email_from_address
     }
   },
+
   beforeMount () {
     if (!this.isMobile) {
       return this[type.setSidebar]({ show: true })
@@ -654,6 +808,8 @@ export default {
       cancelEdit: orderFormTypes.cancelEdit,
       addHighlight: orderFormTypes.addHighlight
     }),
+
+    formatDate,
 
     async handleChange (path, value) {
       await this.updateOrder({ path, value })
@@ -730,10 +886,10 @@ export default {
       this.redirectBack ? this.$router.back() : this.$router.push('/dashboard')
     },
 
-    handleItinerayEdit () {
+    handleItinerayEdit (elemetToScrollID) {
       this.toggleEdit()
       setTimeout(() => {
-        this.$refs.orderForm.scrollTop = this.$refs.itineraryLabel.offsetTop
+        scrollTo(elemetToScrollID, '#order-form', this.$refs.orderHeading.scrollHeight)
       }, 50)
     },
 
@@ -781,10 +937,29 @@ export default {
       arr[index].deleted_at = true
       this.handleChange('order_address_events', arr)
     },
-    displayName (value) {
-      const result = this.profitToolsTemplatesSelectItems.filter(el => el.tms_template_id === value)
-      return result.length > 0 ? result[0].tms_template_name : value
+
+    async addTMSId () {
+      await this[type.setConfirmationDialog]({
+        title: 'Please type the desired TMS ID',
+        hasInputValue: true,
+        onConfirm: async (value) => {
+          this.handleChange('tms_shipment_id', value)
+
+          await this[type.setSnackbar]({ show: true, message: 'TMS ID added' })
+        },
+        onCancel: () => { this.loading = false }
+      })
+    },
+
+    tmsTemplateDisplayName (value) {
+      const result = this.tmsTemplates.filter(el => el.id === value)
+      return result.length > 0 ? result[0].item_display_name : value
+    },
+    itgContainerDisplayName (value) {
+      const result = this.itgContainers.filter(el => el.id === value)
+      return result.length > 0 ? `${result[0].item_display_name} (${result[0].item_key})` : value
     }
+
   }
 }
 </script>
@@ -830,7 +1005,7 @@ export default {
     font-weight: 500;
     line-height: (23.4 / 20);
     letter-spacing: rem(.15);
-    color: map-get($colors, slate-gray);
+    color: var(--v-slate-gray-base);
   }
 
   .order__tms {
@@ -839,7 +1014,7 @@ export default {
     font-size: rem(12);
     line-height: (18 /12);
     letter-spacing: rem(.25);
-    color: map-get($colors, slate-gray);
+    color: var(--v-slate-gray-base);
 
     strong {
       font-weight: 700;
@@ -848,7 +1023,7 @@ export default {
 
     i {
       font-size: rem(14);
-      color: map-get($colors, slate-gray);
+      color: var(--v-slate-gray-base);
       margin-left: rem(4);
     }
   }
@@ -869,23 +1044,28 @@ export default {
 
 .form__section-title {
   padding: rem(4) rem(10) rem(3);
-  background-color: map-get($colors, slate-gray);
-}
-
-.form__section-title h3 {
-  text-transform: uppercase;
-  font-size: rem(13);
-  font-weight: 700;
-  line-height: (24 / 13);
-  letter-spacing: rem(.75);
-  color: map-get($colors, white);
+  background-color: var(--v-slate-gray-base);
+  h3 {
+    text-transform: uppercase;
+    font-size: rem(13);
+    font-weight: 700;
+    line-height: (24 / 13);
+    letter-spacing: rem(.75);
+    color: map-get($colors, white);
+  }
+  &.form__section-title--managed h3 {
+    font-weight: 500;
+    font-size: rem(10);
+    line-height: (15 / 10);
+    letter-spacing: rem(1.5);
+  }
 }
 
 .form__sub-section {
   .form__section-title {
     margin-bottom: rem(5);
     background-color: transparent;
-    border-bottom: 1px solid rgba(map-get($colors, slate-gray), 50%);
+    border-bottom: 1px solid rgba(var(--v-slate-gray-base-rgb), 50%);
 
     h3 {
       color: map-get($colors, mainblue);
@@ -916,6 +1096,8 @@ export default {
 
   .field__value {
     max-width: 50%;
+    align-items: center;
+    display: flex;
   }
 
   .equipment__section {
@@ -934,7 +1116,7 @@ export default {
     position: absolute;
     left: 0;
     top: 0;
-    background-color: map-get($colors, slate-gray);
+    background-color: var(--v-slate-gray-base);
   }
 
   &::after {
@@ -948,28 +1130,11 @@ export default {
     width: rem(2);
     left: rem(7);
   }
-}
-
-.order__changelog p {
-  margin-bottom: rem(6);
-  font-size: rem(14);
-  line-height: (18 / 14);
-  letter-spacing: rem(.25);
-
-  span {
-    font-weight: 700;
+  .order__changelog_date {
+    color: var(--v-primary-base);
     text-decoration: underline;
-    color: map-get($colors, mainblue );
+    cursor: pointer;
   }
-}
-
-.order__changelog a {
-  font-size: rem(10);
-  line-height: (16 / 10);
-  letter-spacing: rem(1.5);
-  font-weight: 500;
-  text-transform: uppercase;
-  color: map-get($colors, slate-gray);
 }
 
 .order__chip-container {

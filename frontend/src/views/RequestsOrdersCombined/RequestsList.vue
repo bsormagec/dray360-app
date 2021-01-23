@@ -7,6 +7,7 @@
         :date-range="initFilters.dateRange"
         :status="initFilters.status"
         :system-status="initFilters.systemStatus"
+        :company-id="initFilters.companyId"
         :update-type="initFilters.updateType"
         @change="filtersUpdated"
       />
@@ -27,17 +28,28 @@
     <v-divider />
     <v-virtual-scroll
       ref="virtualScroll"
-      :items="items"
+      :items="items.length ? items : [ 'empty' ]"
       :item-height="105"
       max-height="100%"
     >
       <template v-slot="{ item: request }">
-        <RequestItem
-          :request="request"
-          :active="requestSelected === request.request_id"
-          @change="handleChange"
-        />
-        <v-divider />
+        <div
+          v-if="request !== 'empty'"
+        >
+          <RequestItem
+            :request="request"
+            :active="requestSelected === request.request_id"
+            @change="handleChange"
+          />
+          <v-divider />
+        </div>
+        <div v-else-if="!loading">
+          <div class="d-flex justify-center px-2 py-4">
+            <h5>
+              Search terms not found
+            </h5>
+          </div>
+        </div>
       </template>
     </v-virtual-scroll>
     <v-overlay
@@ -77,6 +89,7 @@ import { getRequests } from '@/store/api_calls/requests'
 import { getRequestFilters } from '@/utils/filters_handling'
 import { formatDate } from '@/utils/dates'
 import permissions from '@/mixins/permissions'
+import isMobile from '@/mixins/is_mobile'
 
 export default {
   name: 'RequestList',
@@ -84,7 +97,7 @@ export default {
     Filters,
     RequestItem
   },
-  mixins: [permissions],
+  mixins: [permissions, isMobile],
   props: {
     extraUrlParams: {
       type: Array,
@@ -106,6 +119,7 @@ export default {
         dateRange: [],
         status: [],
         systemStatus: [],
+        companyId: [],
         updateType: ''
       },
       // polling stuff
@@ -144,6 +158,9 @@ export default {
     this.initFilters.dateRange = params.dateRange?.split(',')
     this.initFilters.status = params.status?.split(',')
     this.initFilters.systemStatus = params.system_status?.split(',')
+    this.initFilters.companyId = params.company_id?.split(',')
+      .map(item => parseInt(item))
+      .filter(item => !isNaN(item))
     this.initFilters.updateType = params.updateType
     this.requestSelected = params.selected || null
   },
@@ -173,14 +190,18 @@ export default {
       this.resetPagination()
       this.setURLParams()
       await this.fetchRequests()
-      this.selectFirstRequestWithOrders()
+      if (!this.isMobile) {
+        this.selectFirstRequestWithOrders()
+      }
     },
     async refreshRequests () {
       this.startLoading()
       this.resetPagination()
       this.setURLParams()
       await this.fetchRequests()
-      this.selectFirstRequestWithOrders()
+      if (!this.isMobile) {
+        this.selectFirstRequestWithOrders()
+      }
     },
     initializeFilters () {
       if (Object.keys(this.initFilters).some(key => this.initFilters[key] && this.initFilters[key].length > 0)) {
@@ -200,14 +221,14 @@ export default {
       return bottomOfPage || pageHeight < visible
     },
     async fetchRequests () {
-      const [error, { data, meta }] = await getRequests(this.getRequestFilters())
+      const [error, data] = await getRequests(this.getRequestFilters())
 
       if (error !== undefined) {
         return
       }
 
-      this.items = this.items.concat(data)
-      this.meta = meta
+      this.items = this.items.concat(data.data)
+      this.meta = data.meta
       this.loading = false
     },
     getRequestFilters () {
@@ -217,6 +238,7 @@ export default {
         dateRange: 'filter[created_between]',
         system_status: 'filter[status]',
         status: 'filter[display_status]', // Processing, Exception, Rejected, Intake, Processed, Sending to TMS, Sent to TMS, Accepted by TMS
+        company_id: 'filter[company_id]',
         selected: 'selected',
         page: 'page',
         sort: 'sort'
@@ -274,13 +296,13 @@ export default {
     },
 
     async getTotalRequests () {
-      const [error, { meta }] = await getRequests([])
+      const [error, data] = await getRequests([])
 
       if (error !== undefined) {
         return this.initialTotalItems
       }
 
-      return meta.total
+      return data.meta.total
     },
 
     stopPolling () {

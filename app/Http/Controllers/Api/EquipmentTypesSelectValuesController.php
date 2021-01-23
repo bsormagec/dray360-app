@@ -37,6 +37,15 @@ class EquipmentTypesSelectValuesController extends Controller
                 ->orderby('scac')
                 ->get()
                 ->pluck('scac'),
+            'prefix_list' => EquipmentType::query()
+                ->forCompanyAndTmsProvider($company->id, $tmsProvider->id)
+                ->select(DB::raw('distinct line_prefix_list'))
+                ->get()
+                ->pluck('line_prefix_list') 
+                ->flatten()
+                ->unique()
+                ->sort()
+                ->values(),   
             'equipment_types_and_sizes' => EquipmentType::query()
                 ->forCompanyAndTmsProvider($company->id, $tmsProvider->id)
                 ->select(DB::raw('distinct equipment_type_and_size'))

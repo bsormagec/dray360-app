@@ -34,7 +34,7 @@
             class="pt-1"
           >
             <Chip
-              v-if="filter.value.length > 0"
+              v-if="hasValidValue(filter.value)"
               small
               closeable
               handle-close
@@ -167,9 +167,69 @@
                 </v-select>
               </v-col>
             </v-row>
-
-            <v-row v-if="currentUser !== undefined && currentUser.is_superadmin">
-              <!--
+            <v-row v-if="isSuperadmin()">
+              <v-col cols="4 d-flex align-center">
+                <label
+                  for="company_id"
+                  hide-details
+                  class="filter-label"
+                >
+                  Company
+                </label>
+              </v-col>
+              <v-col cols="8">
+                <v-select
+                  v-model="filters.company_id"
+                  :items="companies"
+                  item-value="id"
+                  item-text="name"
+                  outlined
+                  hide-details
+                  multiple
+                  name="company_id"
+                  prepend-icon="mdi-office-building-outline"
+                  dense
+                  class="status-selector"
+                >
+                  <template v-slot:selection="{ item, index }">
+                    <v-chip v-if="index === 0">
+                      <span>{{ item.name }}</span>
+                    </v-chip>
+                    <span
+                      v-if="index === 1"
+                      class="grey--text caption"
+                    >
+                      (+{{ filters.company_id.length - 1 }} others)
+                    </span>
+                  </template>
+                </v-select>
+              </v-col>
+            </v-row>
+            <v-row v-if="hiddenItemsFilter">
+              <v-col cols="4 d-flex align-center">
+                <label
+                  for="company_id"
+                  hide-details
+                  class="filter-label"
+                >
+                  Show Hidden Items
+                </label>
+              </v-col>
+              <v-col cols="8">
+                <v-switch
+                  v-model="filters.displayHidden"
+                  color="primary"
+                  dense
+                  inset
+                  flat
+                  hide-details="true"
+                  :prepend-icon="!filters.displayHidden ? 'mdi-eye-off-outline' : 'mdi-eye-outline'"
+                  :true-value="true"
+                  :false-value="false"
+                />
+              </v-col>
+            </v-row>
+            <!-- <v-row v-if="currentUser !== undefined && currentUser.is_superadmin">
 
                 FUTURE STATE:
 
@@ -190,8 +250,8 @@
                   prepend-icon="mdi-restore"
                   dense
                 />
-              </v-col> -->
-            </v-row>
+              </v-col>
+            </v-row> -->
           </v-container>
         </v-card-text>
         <v-card-actions class="mr-4">
@@ -221,6 +281,8 @@ import Chip from '@/components/Chip'
 import auth from '@/store/modules/auth'
 import { mapState } from 'vuex'
 import permissions from '@/mixins/permissions'
+import { getCompanies } from '@/store/api_calls/companies'
+import { statuses, displayStatuses } from '@/enums/app_objects_types'
 
 export default {
   name: 'Filters',
@@ -250,64 +312,83 @@ export default {
       required: false,
       default: () => []
     },
+    companyId: {
+      type: Array,
+      required: false,
+      default: () => []
+    },
     updateType: {
       type: String,
       required: false,
       default: ''
+    },
+    displayHidden: {
+      type: Boolean,
+      required: false,
+      default: false
+    },
+    hiddenItemsFilter: {
+      type: Boolean,
+      required: false,
+      default: false
     }
   },
   data () {
     return {
       open: false,
       statuses: [
-        { text: 'Processing', value: 'Processing' },
-        { text: 'Exception', value: 'Exception' },
-        { text: 'Rejected', value: 'Rejected' },
-        { text: 'Intake', value: 'Intake' },
-        { text: 'Processed', value: 'Processed' },
-        { text: 'Sending to TMS', value: 'Sending to TMS' },
-        { text: 'Sent to TMS', value: 'Sent to TMS' },
-        { text: 'Accepted by TMS', value: 'Accepted by TMS' },
-        { text: 'TMS Warning', value: 'TMS Warning' },
-        { text: 'TMS Error', value: 'TMS Error' }
+        { text: displayStatuses.processing, value: displayStatuses.processing },
+        { text: displayStatuses.exception, value: displayStatuses.exception },
+        { text: displayStatuses.rejected, value: displayStatuses.rejected },
+        { text: displayStatuses.intake, value: displayStatuses.intake },
+        { text: displayStatuses.processed, value: displayStatuses.processed },
+        { text: displayStatuses.sendingToTms, value: displayStatuses.sendingToTms },
+        { text: displayStatuses.sentToTms, value: displayStatuses.sentToTms },
+        { text: displayStatuses.acceptedByTms, value: displayStatuses.acceptedByTms },
+        { text: displayStatuses.tmsWarning, value: displayStatuses.tmsWarning },
+        { text: displayStatuses.tmsError, value: displayStatuses.tmsError }
       ],
       system_statuses: [
-        { text: 'intake-accepted', value: 'intake-accepted' },
-        { text: 'intake-accepted-datafile', value: 'intake-accepted-datafile' },
-        { text: 'intake-exception', value: 'intake-exception' },
-        { text: 'intake-rejected', value: 'intake-rejected' },
-        { text: 'intake-started', value: 'intake-started' },
-        { text: 'ocr-completed', value: 'ocr-completed' },
-        { text: 'ocr-post-processing-complete', value: 'ocr-post-processing-complete' },
-        { text: 'ocr-post-processing-error', value: 'ocr-post-processing-error' },
-        { text: 'ocr-waiting', value: 'ocr-waiting' },
-        { text: 'ocr-timedout', value: 'ocr-timedout' },
-        { text: 'process-ocr-output-file-complete', value: 'process-ocr-output-file-complete' },
-        { text: 'process-ocr-output-file-error', value: 'process-ocr-output-file-error' },
-        { text: 'upload-requested', value: 'upload-requested' },
-        { text: 'sending-to-wint', value: 'sending-to-wint' },
-        { text: 'failure-sending-to-wint', value: 'failure-sending-to-wint' },
-        { text: 'success-sending-to-wint', value: 'success-sending-to-wint' },
-        { text: 'shipment-created-by-wint', value: 'shipment-created-by-wint' },
-        { text: 'shipment-not-created-by-wint', value: 'shipment-not-created-by-wint' },
-        { text: 'updating-to-wint', value: 'updating-to-wint' },
-        { text: 'failure-updating-to-wint', value: 'failure-updating-to-wint' },
-        { text: 'success-updating-to-wint', value: 'success-updating-to-wint' },
-        { text: 'shipment-updated-by-wint', value: 'shipment-updated-by-wint' },
-        { text: 'shipment-not-updated-by-wint', value: 'shipment-not-updated-by-wint' },
-        { text: 'updates-prior-order', value: 'updates-prior-order' },
-        { text: 'updated-by-subsequent-order', value: 'updated-by-subsequent-order' },
-        { text: 'success-imageuploding-to-blackfl', value: 'success-imageuploding-to-blackfl' },
-        { text: 'failure-imageuploding-to-blackfl', value: 'failure-imageuploding-to-blackfl' },
-        { text: 'untried-imageuploding-to-blackfl', value: 'untried-imageuploding-to-blackfl' }
+        { text: statuses.intakeAccepted, value: statuses.intakeAccepted },
+        { text: statuses.intakeAcceptedDatafile, value: statuses.intakeAcceptedDatafile },
+        { text: statuses.intakeException, value: statuses.intakeException },
+        { text: statuses.intakeRejected, value: statuses.intakeRejected },
+        { text: statuses.intakeStarted, value: statuses.intakeStarted },
+        { text: statuses.ocrCompleted, value: statuses.ocrCompleted },
+        { text: statuses.ocrPostProcessingComplete, value: statuses.ocrPostProcessingComplete },
+        { text: statuses.ocrPostProcessingError, value: statuses.ocrPostProcessingError },
+        { text: statuses.ocrWaiting, value: statuses.ocrWaiting },
+        { text: statuses.ocrTimedout, value: statuses.ocrTimedout },
+        { text: statuses.processOcrOutputFileComplete, value: statuses.processOcrOutputFileComplete },
+        { text: statuses.processOcrOutputFileError, value: statuses.processOcrOutputFileError },
+        { text: statuses.uploadRequested, value: statuses.uploadRequested },
+        { text: statuses.sendingToWint, value: statuses.sendingToWint },
+        { text: statuses.failureSendingToWint, value: statuses.failureSendingToWint },
+        { text: statuses.successSendingToWint, value: statuses.successSendingToWint },
+        { text: statuses.shipmentCreatedByWint, value: statuses.shipmentCreatedByWint },
+        { text: statuses.shipmentNotCreatedByWint, value: statuses.shipmentNotCreatedByWint },
+        { text: statuses.updatingToWint, value: statuses.updatingToWint },
+        { text: statuses.failureUpdatingToWint, value: statuses.failureUpdatingToWint },
+        { text: statuses.successUpdatingToWint, value: statuses.successUpdatingToWint },
+        { text: statuses.shipmentUpdatedByWint, value: statuses.shipmentUpdatedByWint },
+        { text: statuses.shipmentNotUpdatedByWint, value: statuses.shipmentNotUpdatedByWint },
+        { text: statuses.updatesPriorOrder, value: statuses.updatesPriorOrder },
+        { text: statuses.updatedBySubsequentOrder, value: statuses.updatedBySubsequentOrder },
+        { text: statuses.successImageuplodingToBlackfl, value: statuses.successImageuplodingToBlackfl },
+        { text: statuses.failureImageuplodingToBlackfl, value: statuses.failureImageuplodingToBlackfl },
+        { text: statuses.untriedImageuplodingToBlackfl, value: statuses.untriedImageuplodingToBlackfl }
       ],
+      // list of companies for the filters
+      companies: [],
       // these are the models for the form fields
       filters: {
         search: this.search,
         dateRange: this.dateRange,
         status: this.status,
         system_status: this.systemStatus,
-        updateType: this.updateType
+        company_id: this.companyId,
+        updateType: this.updateType,
+        displayHidden: this.displayHidden
       },
       // these are the filters that get rendered as chips and emitted to the parent
       activeFilters: [],
@@ -316,13 +397,17 @@ export default {
         dateRange: 'Date Range',
         status: 'Status',
         system_status: 'System Status',
-        updateType: 'Update Type'
+        company_id: 'Company',
+        updateType: 'Update Type',
+        displayHidden: 'Hidden Items Shown'
       },
       chipColors: {
         search: '#41B6E6',
         dateRange: '#FDAA63',
+        displayHidden: '#8293A0',
         status: '#77C19A',
         system_status: '#77C19A',
+        company_id: '#41B6E6',
         updateType: '#41B6E6',
         default: '#41B6E6'
       }
@@ -331,7 +416,8 @@ export default {
   computed: {
     hasActiveFilters () {
       // if any filter value has a length greater than zero return true
-      return this.activeFilters.some(element => element.value.length > 0)
+      return this.activeFilters.some(element => this.hasValidValue(element.value))
+      // return this.activeFilters.some(element => element.value.length > 0)
     },
     // necessary because of rendering multiple chips for different statuses
     displayFilters () {
@@ -345,12 +431,16 @@ export default {
           filter.value.forEach(statusFilter => {
             dFilters.push({ type: 'system_status', value: statusFilter })
           })
+        } else if (filter.type === 'company_id') {
+          filter.value.forEach(companyId => {
+            dFilters.push({ type: 'company_id', value: this.findCompanyById(companyId).name })
+          })
         } else {
           dFilters.push(filter)
         }
       })
 
-      return dFilters.filter(element => !!element.value.length)
+      return dFilters.filter(element => this.hasValidValue(element.value))
     },
     ...mapState(auth.moduleName, { currentUser: state => state.currentUser })
   },
@@ -359,7 +449,17 @@ export default {
     this.setActiveFilters()
   },
 
+  async beforeMount () {
+    if (this.isSuperadmin()) {
+      await this.fetchCompanies()
+    }
+  },
+
   methods: {
+    hasValidValue (value) {
+      if (typeof value === 'boolean') return value
+      return !!value.length
+    },
     // closes filters modal
     closeDialog () {
       this.open = false
@@ -374,12 +474,17 @@ export default {
       return this.chipColors.hasOwnProperty(filter.type) ? this.chipColors[filter.type] : this.chipColors.default
     },
     setActiveFilters () {
-      this.activeFilters = Object.keys(this.filters).map(k => ({ type: k, value: this.filters[k] })).filter(element => !!element.value.length)
+      this.activeFilters = Object.keys(this.filters).map(k => ({ type: k, value: this.filters[k] })).filter(element => this.hasValidValue(element.value))
+    },
+    findCompanyById (id) {
+      return this.companies.filter(company => company.id === id)[0] || { name: '' }
     },
     removeFilter (filter) {
       // remove from model
       if (filter.type === 'status' || filter.type === 'system_status') {
         this.filters[filter.type] = this.filters[filter.type].filter(element => element !== filter.value)
+      } else if (filter.type === 'company_id') {
+        this.filters[filter.type] = this.filters[filter.type].filter(element => this.findCompanyById(element).name !== filter.value)
       } else if (Array.isArray(filter.value)) {
         this.filters[filter.type] = []
       } else {
@@ -402,6 +507,8 @@ export default {
       let labelValue
       if (Array.isArray(filter.value)) {
         labelValue = filter.value.join(' - ')
+      } else if (typeof filter.value === 'boolean') {
+        return this.labels[filter.type]
       } else {
         labelValue = filter.value
       }
@@ -434,6 +541,15 @@ export default {
       })
       this.setActiveFilters()
       this.onFiltersChange()
+    },
+    async fetchCompanies () {
+      const [error, data] = await getCompanies()
+
+      if (error !== undefined) {
+        return
+      }
+
+      this.companies = data.data
     }
   }
 }

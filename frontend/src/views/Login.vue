@@ -14,21 +14,28 @@
           :src="tenantConfig().logo1"
           alt=""
         >
-        <input
+        <v-text-field
           v-model="email"
+          class="login__input"
+          outlined
+          dense
           type="text"
           name="username"
-          placeholder="Email"
+          label="Email"
+          placeholder=" "
           @focus="error = false"
-        >
-        <br>
-        <input
+        />
+        <v-text-field
           v-model="password"
+          class="login__input"
+          outlined
+          dense
           type="password"
           name="password"
-          placeholder="Password"
+          label="Password"
+          placeholder=" "
           @focus="error = false"
-        >
+        />
         <p
           v-if="error"
           class="text__error"
@@ -46,7 +53,7 @@
             class="btn-login"
             @click="login()"
           >
-            Login
+            Sign In
           </button>
         </div>
       </div>
@@ -62,7 +69,7 @@
         There was a problem. Please check your email and password.
       </div>
       <div class="copyright">
-        <p>©2020 Dray360 — an Affiliate of TCompanies Inc. Privacy Policy • Terms of Use</p>
+        <p>©2020 Dray360 — an Affiliate of TCompanies Inc.</p>
       </div>
     </div>
   </div>
@@ -133,7 +140,7 @@ export default {
 <style lang="scss" scoped>
   $background_login: url("../assets/images/login_background.png");
 
-  .wrapper{
+  .wrapper::v-deep{
     background: $background_login no-repeat center center fixed;
     background-size: cover;
     display: flex;
@@ -167,12 +174,10 @@ export default {
         width: rem(200);
         margin-bottom: rem(50);
       }
-      input{
-        border: rem(1) solid lightgray;
-        margin: rem(5) auto;
-        padding: rem(5) rem(65);
+      .login__input input{
         border-radius: rem(5);
         max-width: rem(250);
+        min-width: rem(250);
         font-size: rem(12);
       }
       .button_checkbox{
@@ -191,7 +196,7 @@ export default {
         }
       }
     }
-    .remember-me-check::v-deep label {
+    .remember-me-check .v-label{
       font-size: rem(12);
     }
     .account{

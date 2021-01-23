@@ -1,5 +1,8 @@
 <template>
-  <div :class="`details ${loaded && 'loaded'} ${isMobile && 'mobile'}`">
+  <div
+    v-if="!has404"
+    :class="`details ${loaded && 'loaded'} ${isMobile && 'mobile'}`"
+  >
     <ContentLoading :loaded="loaded">
       <div :class="`details__content ${isMobile && 'mobile'}`">
         <div
@@ -8,10 +11,16 @@
         >
           <OrderDetailsForm
             :back-button="backButton"
+            :virtual-back-button="isMobile && !backButton"
             :redirect-back="redirectBack"
+            :tms-templates="tmsTemplates"
+            :tms-templates-enabled="profitToolsTemplatesEnabled"
+            :itg-containers="itgContainers"
+            :itg-containers-enabled="itgContainersEnabled"
+            :divisions-enabled="divisionsEnabled"
             @order-deleted="$emit('order-deleted')"
+            @go-back="$emit('go-back')"
           />
-
           <div
             class="form__resize"
             @mousedown.prevent="handleResize"
@@ -20,22 +29,37 @@
           </div>
         </div>
 
-        <OrderDetailsDocument :class="`${isMobile && 'mobile'}`" />
+        <OrderDetailsDocument
+          v-if="!has404"
+          :class="`${isMobile && 'mobile'}`"
+        />
       </div>
     </ContentLoading>
   </div>
+  <ContainerNotFound
+    v-else
+    class="container-not-found"
+    container-type="ORDER"
+  />
 </template>
 
 <script>
 import isMobile from '@/mixins/is_mobile'
 import OrderDetailsForm from '@/views/OrderDetails/OrderDetailsForm'
 import OrderDetailsDocument from '@/views/OrderDetails/OrderDetailsDocument'
+import ContainerNotFound from '@/views/ContainerNotFound'
 import { reqStatus } from '@/enums/req_status'
+import { dictionaryItemsTypes } from '@/enums/app_objects_types'
+
+import { getDictionaryItems } from '@/store/api_calls/utils'
 
 import ContentLoading from '@/components/ContentLoading'
 import orders, { types } from '@/store/modules/orders'
 import orderForm, { types as orderFormTypes } from '@/store/modules/order-form'
 import { mapState, mapActions } from 'vuex'
+
+import utils, { type } from '@/store/modules/utils'
+import get from 'lodash/get'
 
 export default {
   name: 'OrderDetails',
@@ -43,7 +67,8 @@ export default {
   components: {
     OrderDetailsDocument,
     ContentLoading,
-    OrderDetailsForm
+    OrderDetailsForm,
+    ContainerNotFound
   },
 
   mixins: [isMobile],
@@ -59,7 +84,7 @@ export default {
       required: false,
       default: true
     },
-    minSize: {
+    startingSize: {
       type: Number,
       required: false,
       default: 50
@@ -67,11 +92,15 @@ export default {
   },
 
   data: (vm) => ({
-    resizeDiff: vm.minSize,
+    resizeDiff: vm.startingSize,
+    minSize: 30,
     startPos: 0,
     loaded: false,
     redirectBack: false,
-    orderIdToLoad: vm.orderId || vm.$route.params.id
+    tmsTemplates: [],
+    itgContainers: [],
+    orderIdToLoad: vm.orderId || vm.$route.params.id,
+    has404: false
   }),
 
   beforeRouteEnter (to, from, next) {
@@ -84,7 +113,17 @@ export default {
   computed: {
     ...mapState(orders.moduleName, {
       currentOrder: state => state.currentOrder
-    })
+    }),
+    profitToolsTemplatesEnabled () {
+      return get(this.currentOrder, 'company.configuration.profit_tools_enable_templates', false)
+    },
+
+    itgContainersEnabled () {
+      return get(this.currentOrder, 'company.configuration.itg_enable_containers', false)
+    },
+    divisionsEnabled () {
+      return get(this.currentOrder, 'company.configuration.enable_divisions', true)
+    }
   },
   watch: {
     async orderId (newOrderId) {
@@ -93,23 +132,66 @@ export default {
       }
       this.loaded = false
       this.orderIdToLoad = this.orderId
-      await this.requestOrderDetail()
+
+      await this.fetchFormData()
     },
-    minSize: function (newVal, oldVal) {
+    startingSize: function (newVal, oldVal) {
       this.resizeDiff = newVal
     }
 
   },
 
   async beforeMount () {
-    await this.requestOrderDetail()
+    if (!this.isMobile) {
+      this[type.setSidebar]({ show: true })
+    }
+
+    await this.fetchFormData()
   },
 
   methods: {
+    ...mapActions(utils.moduleName, [type.setSnackbar, type.setConfirmationDialog, type.setSidebar]),
     ...mapActions(orders.moduleName, [types.getOrderDetail]),
     ...mapActions(orderForm.moduleName, {
       setFormOrder: orderFormTypes.setFormOrder
     }),
+
+    async fetchFormData () {
+      await this.requestOrderDetail()
+
+      if (this.profitToolsTemplatesEnabled) {
+        await this.fetchTmsTemplates(this.currentOrder.company.id)
+      }
+      if (this.itgContainersEnabled) {
+        await this.fetchItgContainers(this.currentOrder.company.id)
+      }
+    },
+
+    async fetchTmsTemplates (companyId) {
+      const [error, data] = await getDictionaryItems({
+        'filter[company_id]': companyId,
+        'filter[item_type]': dictionaryItemsTypes.template
+      })
+
+      if (error !== undefined) {
+        this.tmsTemplates = []
+      }
+
+      this.tmsTemplates = data.data
+    },
+
+    async fetchItgContainers (companyId) {
+      const [error, data] = await getDictionaryItems({
+        'filter[company_id]': companyId,
+        'filter[item_type]': dictionaryItemsTypes.itgContainer
+      })
+
+      if (error !== undefined) {
+        this.itgContainers = []
+      }
+
+      this.itgContainers = data.data
+    },
 
     async requestOrderDetail () {
       const status = await this[types.getOrderDetail](this.orderIdToLoad)
@@ -119,6 +201,8 @@ export default {
         this.loaded = true
         return
       }
+      this.has404 = true
+      this.loaded = true
       console.log('error')
     },
 
@@ -131,11 +215,9 @@ export default {
     startDragging (e) {
       e.preventDefault()
       const newDiff = this.resizeDiff * e.clientX / this.startPos
-
       if (newDiff >= 70 || newDiff <= this.minSize) {
         return
       }
-
       this.resizeDiff = newDiff
       this.startPos = e.clientX
     },

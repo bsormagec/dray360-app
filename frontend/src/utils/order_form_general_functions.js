@@ -1,5 +1,6 @@
 import { defaultsTo } from '@/utils/defaults_to'
 import get from 'lodash/get'
+import includes from 'lodash/includes'
 
 export function getHighlights (order) {
   const highlights = {}
@@ -53,7 +54,7 @@ export function baseHighlight (ocrData) {
 }
 
 export function keyShouldBeParsed (key) {
-  const shouldNotBeIgnored = ['tms_template_id']
+  const shouldNotBeIgnored = ['t_equipment_type_id', 'tms_template_dictid', 'container_dictid']
 
   if (shouldNotBeIgnored.includes(key)) {
     return true
@@ -69,7 +70,8 @@ export function keyShouldBeParsed (key) {
     '_at'
   ]
 
-  return invalidEndings.reduce((acc, crr) => acc && !key.includes(crr), true)
+  return invalidEndings.reduce((acc, crr) => acc && !key.endsWith(crr), true)
+  // return invalidEndings.reduce((acc, crr) => acc && !key.includes(crr), true)
 }
 
 export function getOcrData (key, ocrData) {
@@ -119,6 +121,16 @@ export function formatAddress (address) {
 
 export function parseChanges ({ path, value, originalOrder }) {
   let changes = {}
+  const simpleVerifiableFields = [
+    {
+      field: 't_equipment_type_id',
+      boolean_field: 'equipment_type_verified'
+    }, {
+      field: 'tms_template_dictid',
+      boolean_field: 'tms_template_dictid_verified'
+    }
+  ]
+
   if (path === 'bill_to_address') {
     changes = {
       bill_to_address_id: value.id,
@@ -148,10 +160,13 @@ export function parseChanges ({ path, value, originalOrder }) {
     order_line_items[index][field] = value
 
     changes = { order_line_items }
-  } else if (path === 't_equipment_type_id') {
+  } else if (simpleVerifiableFields.findIndex(item => item.field === path) !== -1) {
+    const index = simpleVerifiableFields.findIndex(item => item.field === path)
+    const item = simpleVerifiableFields[index]
+
     changes = {
-      t_equipment_type_id: value,
-      equipment_type_verified: true
+      [item.field]: value,
+      [item.boolean_field]: true
     }
   } else {
     changes = { [path]: value }
