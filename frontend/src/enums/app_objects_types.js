@@ -47,6 +47,5 @@ export const displayStatuses = {
   acceptedByTms: 'Accepted by TMS',
   tmsWarning: 'TMS Warning',
   tmsError: 'TMS Error',
-  needsReview: 'Needs Review',
-  underReview: 'Under Review'
+  needsReview: 'Needs Review'
 }

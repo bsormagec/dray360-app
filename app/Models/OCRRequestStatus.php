@@ -67,7 +67,7 @@ class OCRRequestStatus extends Model
         self::INTAKE_ACCEPTED_DATAFILE => 'Processing',
         self::OCR_COMPLETED => 'Processing',
         self::OCR_WAITING => 'Processing',
-        self::OCR_POST_PROCESSING_REVIEW => 'Under Review',
+        self::OCR_POST_PROCESSING_REVIEW => 'Processing',
 
         self::INTAKE_EXCEPTION => 'Exception',
 

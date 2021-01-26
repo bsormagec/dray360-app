@@ -342,7 +342,6 @@ export default {
         { text: displayStatuses.rejected, value: displayStatuses.rejected },
         { text: displayStatuses.intake, value: displayStatuses.intake },
         { text: displayStatuses.processed, value: displayStatuses.processed },
-        { text: displayStatuses.underReview, value: displayStatuses.underReview },
         { text: displayStatuses.needsReview, value: displayStatuses.needsReview },
         { text: displayStatuses.sendingToTms, value: displayStatuses.sendingToTms },
         { text: displayStatuses.sentToTms, value: displayStatuses.sentToTms },
