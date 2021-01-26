@@ -13,6 +13,7 @@ use App\Http\Controllers\Api\OCRRequestController;
 use App\Http\Controllers\Api\BulkActionsController;
 use App\Http\Controllers\Api\OCRVariantsController;
 use App\Http\Controllers\Api\UsersStatusController;
+use App\Http\Controllers\Api\SendToClientController;
 use App\Http\Controllers\Api\DivisionCodesController;
 use App\Http\Controllers\Api\ImpersonationController;
 use App\Http\Controllers\Api\SearchAddressController;
@@ -84,6 +85,9 @@ Route::group(['middleware' => ['auth:sanctum', 'impersonate', 'tenant-aware']], 
 
     Route::post('orders/{order}/send-to-tms', SendToTmsController::class)
         ->name('orders.send-to-tms');
+
+    Route::post('orders/{order}/send-to-client', SendToClientController::class)
+        ->name('orders.send-to-client');
 
     Route::get('orders/{order}/download-source-file', DownloadOriginalOrderSourceFileController::class)
         ->name('orders.download-source-file');

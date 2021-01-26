@@ -70,11 +70,7 @@
       </div>
       <OutlinedButtonGroup
         v-if="!editMode"
-        :main-action="{
-          title: 'Send to TMS',
-          action: postSendToTms,
-          disabled: sendToTmsDisabled
-        }"
+        :main-action="splitButtonMainAction"
         :options="[
           { title: 'Edit Order' , action: toggleEdit, hasPermission: true },
           { title: 'Download Source File', action: () => downloadSourceFile(order.id), hasPermission: true },
@@ -635,7 +631,7 @@ import { mapState, mapActions } from 'vuex'
 import get from 'lodash/get'
 import { statuses } from '@/enums/app_objects_types'
 
-import { getSourceFileDownloadURL, postSendToTms, delDeleteOrder } from '@/store/api_calls/orders'
+import { getOrderDetail, getSourceFileDownloadURL, postSendToTms, delDeleteOrder, postSendToClient } from '@/store/api_calls/orders'
 import orderForm, { types as orderFormTypes } from '@/store/modules/order-form'
 import utils, { type } from '@/store/modules/utils'
 
@@ -774,8 +770,30 @@ export default {
         return false
       }
 
+      const alreadySentToTmsStatuses = [
+        statuses.sendingToWint,
+        statuses.failureSendingToWint,
+        statuses.successSendingToWint,
+        statuses.shipmentCreatedByWint,
+        statuses.shipmentNotCreatedByWint,
+        statuses.updatingToWint,
+        statuses.failureUpdatingToWint,
+        statuses.successUpdatingToWint,
+        statuses.shipmentUpdatedByWint,
+        statuses.shipmentNotUpdatedByWint,
+        statuses.updatesPriorOrder,
+        statuses.updatedBySubsequentOrder,
+        statuses.successImageuplodingToBlackfl,
+        statuses.failureImageuplodingToBlackfl,
+        statuses.untriedImageuplodingToBlackfl
+      ]
+
       return (this.order.tms_shipment_id !== null && this.order.tms_shipment_id !== undefined) ||
-        (get(this.order, 'ocr_request.latest_ocr_request_status.status') === statuses.sendingToWint)
+        (alreadySentToTmsStatuses.includes(this.orderSystemStatus))
+    },
+
+    orderSystemStatus () {
+      return get(this.order, 'ocr_request.latest_ocr_request_status.status', '')
     },
 
     isInProcessedState () {
@@ -783,7 +801,22 @@ export default {
         statuses.processOcrOutputFileComplete,
         statuses.ocrPostProcessingComplete
       ]
-      return validStatuses.includes(this.order.ocr_request.latest_ocr_request_status.status)
+      return validStatuses.includes(this.orderSystemStatus)
+    },
+    splitButtonMainAction () {
+      if (this.orderSystemStatus === statuses.processOcrOutputFileReview) {
+        return {
+          title: 'Send to Client',
+          action: this.postSendToClient,
+          disabled: this.sentToTms
+        }
+      }
+
+      return {
+        title: 'Send to TMS',
+        action: this.postSendToTms,
+        disabled: this.sendToTmsDisabled
+      }
     },
     userWhoUploadedTheRequest () {
       return this.order.upload_user_name ? this.order.upload_user_name : this.order.email_from_address
@@ -802,6 +835,7 @@ export default {
     ...mapActions(utils.moduleName, [type.setSnackbar, type.setConfirmationDialog, type.setSidebar]),
     ...mapActions(orderForm.moduleName, {
       updateOrder: orderFormTypes.updateOrder,
+      setFormOrder: orderFormTypes.setFormOrder,
       startHover: orderFormTypes.startHover,
       stopHover: orderFormTypes.stopHover,
       toggleEdit: orderFormTypes.toggleEdit,
@@ -813,6 +847,15 @@ export default {
 
     async handleChange (path, value) {
       await this.updateOrder({ path, value })
+    },
+
+    async refreshOrder () {
+      const [error, data] = await getOrderDetail(this.order.id)
+
+      if (error !== undefined) {
+        return
+      }
+      this.setFormOrder(data)
     },
 
     async postSendToTms () {
@@ -834,6 +877,29 @@ export default {
       } else {
         message = 'Sending the order to the TMS is in progress'
         this.sentToTms = true
+        await this.refreshOrder()
+      }
+
+      this[type.setSnackbar]({ show: true, message })
+    },
+
+    async postSendToClient () {
+      const [error] = await postSendToClient(this.order.id)
+      let message = ''
+
+      if (error !== undefined) {
+        switch (error.response.status) {
+          case 403:
+            message = 'You are not authorized'
+            break
+          default:
+            message = 'An error has occurred, please contact to technical support'
+            break
+        }
+      } else {
+        message = 'Sending the order to the client is in progress'
+        this.sentToTms = true
+        await this.refreshOrder()
       }
 
       this[type.setSnackbar]({ show: true, message })

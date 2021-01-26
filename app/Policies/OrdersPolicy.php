@@ -83,6 +83,20 @@ class OrdersPolicy
     }
 
     /**
+     * Determine if the user can send the order to the client.
+     */
+    public function review(User $user, Order $order): bool
+    {
+        $hasPermissionsToSendToClient = $user->isAbleTo('admin-review-view');
+
+        if (! $user->isSuperadmin()) {
+            return $hasPermissionsToSendToClient && $user->belongsToSameCompanyAs($order);
+        }
+
+        return $hasPermissionsToSendToClient;
+    }
+
+    /**
      * Determine if the user can download an order pdf.
      */
     public function downloadSourceFile(User $user, Order $order): bool

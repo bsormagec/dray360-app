@@ -10,6 +10,8 @@ export const statuses = {
   intakeRejected: 'intake-rejected',
   intakeStarted: 'intake-started',
   ocrCompleted: 'ocr-completed',
+  ocrPostProcessingReview: 'ocr-post-processing-review',
+  processOcrOutputFileReview: 'process-ocr-output-file-review',
   ocrPostProcessingComplete: 'ocr-post-processing-complete',
   ocrPostProcessingError: 'ocr-post-processing-error',
   ocrWaiting: 'ocr-waiting',
@@ -44,5 +46,7 @@ export const displayStatuses = {
   sentToTms: 'Sent to TMS',
   acceptedByTms: 'Accepted by TMS',
   tmsWarning: 'TMS Warning',
-  tmsError: 'TMS Error'
+  tmsError: 'TMS Error',
+  needsReview: 'Needs Review',
+  underReview: 'Under Review'
 }

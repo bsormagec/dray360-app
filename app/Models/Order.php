@@ -403,4 +403,31 @@ class Order extends Model
             'tmsTemplate:id,item_key,item_display_name',
         ]);
     }
+
+    public function isTheLastUnderReview(): bool
+    {
+        $notOnReview = self::query()
+            ->where('request_id', $this->request_id)
+            ->where('id', '!=', $this->id)
+            ->whereDoesntHave('ocrRequest.latestOcrRequestStatus', function ($query) {
+                $query->where('status', OCRRequestStatus::PROCESS_OCR_OUTPUT_FILE_REVIEW);
+            })
+            ->count();
+
+        $total = self::query()
+            ->where('request_id', $this->request_id)
+            ->count();
+
+        return $total - $notOnReview == 1;
+    }
+
+    public function getPostProcessingReviewStatusMetadata()
+    {
+        $status = OCRRequestStatus::where([
+            'status' => OCRRequestStatus::OCR_POST_PROCESSING_REVIEW,
+            'request_id' => $this->request_id,
+        ])->first(['status', 'status_metadata']);
+
+        return $status->status_metadata ?? [];
+    }
 }

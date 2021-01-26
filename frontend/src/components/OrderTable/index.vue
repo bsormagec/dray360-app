@@ -82,7 +82,14 @@
         {{ formatDate(item.created_at) }}
       </template>
       <template v-slot:[`item.updated_at`]="{ item }">
-        {{ formatDate(item.updated_at || item.created_at) }}
+        {{ formatDate(item.updated_at) }}
+      </template>
+      <template v-slot:[`item.bill_to_or_template`]="{ item }">
+        {{
+          item.tms_template
+            ? item.tms_template.item_display_name
+            : item.bill_to_address ? item.bill_to_address.location_name : ''
+        }}
       </template>
       <template v-slot:[`item.tms_shipment_id`]="{ item }">
         {{ item.tms_shipment_id }}

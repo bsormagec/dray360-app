@@ -2,10 +2,14 @@
 
 namespace Tests\Feature;
 
+use Mockery;
+use Aws\Result;
 use Tests\TestCase;
 use App\Models\User;
+use Aws\MockHandler;
 use App\Models\Order;
 use App\Models\Company;
+use Illuminate\Support\Str;
 use Laravel\Sanctum\Sanctum;
 use App\Models\OrderLineItem;
 use Illuminate\Http\Response;
@@ -17,6 +21,7 @@ use Bezhanov\Faker\Provider\Commerce;
 use Illuminate\Support\Facades\Event;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Foundation\Testing\WithFaker;
+use App\Actions\PublishSnsMessageToFinishRequestReview;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
 
 class OrdersControllerTest extends TestCase
@@ -114,6 +119,25 @@ class OrdersControllerTest extends TestCase
 
         $this->getJson(route('orders.index', ['sort' => '-status']))
                 ->assertJsonCount(5, 'data');
+    }
+
+    /** @test */
+    public function it_should_not_return_order_if_it_is_in_review()
+    {
+        $this->withoutExceptionHandling();
+        (new OrdersTableSeeder())->seedOrderWithProcessOcrOutputFileReview();
+        $order = Order::orderByDesc('id')->first();
+        $order->created_at = now()->subDays(5);
+        $order->save();
+        $companyId = $order->ocrRequest->latestOcrRequestStatus->company_id;
+        $order->update(['t_company_id' => $companyId]);
+
+        $this->getJson(route('orders.index'))->assertJsonCount(2, 'data');
+
+        $this->loginCustomerAdmin();
+        auth()->user()->update(['t_company_id' => $companyId]);
+
+        $this->getJson(route('orders.index'))->assertJsonCount(0, 'data');
     }
 
     /** @test */
@@ -328,10 +352,23 @@ class OrdersControllerTest extends TestCase
     /** @test */
     public function it_should_soft_delete_an_order()
     {
-        (new OrdersTableSeeder())->seedOrderWithPostProcessingComplete();
+        (new OrdersTableSeeder())->seedOrderWithProcessOcrOutputFileReview();
         $this->loginCustomerAdmin();
         $order = Order::latest()->first();
         $order->setCompany(auth()->user()->company)->save();
+
+        $messageId = Str::random(5);
+
+        $mockHandler = tap(new MockHandler())
+            ->append(new Result(['MessageId' => $messageId]));
+        $snsClient = $this->app['aws']->createClient('sns');
+        $snsClient->getHandlerList()->setHandler($mockHandler);
+
+        $mockAction = Mockery::mock(PublishSnsMessageToFinishRequestReview::class)
+            ->makePartial()
+            ->shouldAllowMockingProtectedMethods();
+        $mockAction->shouldReceive('getSnsClient')->andReturn($snsClient)->once();
+        $this->app->instance(PublishSnsMessageToFinishRequestReview::class, $mockAction);
 
         $this->deleteJson(route('orders.destroy', $order->id))
             ->assertStatus(Response::HTTP_NO_CONTENT);

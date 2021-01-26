@@ -12,6 +12,7 @@ use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
 use App\Http\Resources\SideBySideOrder;
 use Illuminate\Support\Facades\Storage;
+use App\Actions\PublishSnsMessageToFinishRequestReview;
 
 class OrdersController extends Controller
 {
@@ -71,6 +72,15 @@ class OrdersController extends Controller
     public function destroy(Order $order)
     {
         $this->authorize('delete', $order);
+
+        if ($order->isTheLastUnderReview() && ! OCRRequestStatus::alreadyCompleted($order->request_id)) {
+            $data = [
+                'request_id' => $order->request_id,
+                'company_id' => $order->t_company_id,
+                'status_metadata' => $order->getPostProcessingReviewStatusMetadata(),
+            ];
+            app(PublishSnsMessageToFinishRequestReview::class)($data);
+        }
 
         $order->delete();
 

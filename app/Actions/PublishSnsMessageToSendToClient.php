@@ -6,31 +6,31 @@ use Aws\Sns\SnsClient;
 use Aws\Exception\AwsException;
 use App\Models\OCRRequestStatus;
 
-class PublishSnsMessageToReprocessRequest
+class PublishSnsMessageToSendToClient
 {
-    public function __invoke(OCRRequestStatus $status)
+    public function __invoke(array $data)
     {
         try {
             $response = $this->getSnsClient()
                 ->publish([
                     'Message' => json_encode([
-                        'request_id' => $status->request_id,
+                        'request_id' => $data['request_id'],
                         'datetime_utciso' => now()->toISOString(),
-                        'status' => OCRRequestStatus::OCR_COMPLETED,
-                        'status_metadata' => $status->status_metadata,
+                        'status' => OCRRequestStatus::PROCESS_OCR_OUTPUT_FILE_COMPLETE,
+                        'status_metadata' => $data['status_metadata']
                     ]),
                     'MessageAttributes' => [
                         'status' => [
                             'DataType' => 'String',
-                            'StringValue' => OCRRequestStatus::OCR_COMPLETED,
+                            'StringValue' => OCRRequestStatus::PROCESS_OCR_OUTPUT_FILE_COMPLETE,
                         ],
                         'company_id' => [
                             'DataType' => 'String',
-                            'StringValue' => $status->company_id,
+                            'StringValue' => $data['company_id'],
                         ],
                         'order_id' => [
                             'DataType' => 'String',
-                            'StringValue' => ' ', // Must send a whitespace string for microservice to store order_id as NULL.
+                            'StringValue' => $data['order_id'],
                         ],
                     ],
                     'TopicArn' => config('services.sns-topics.status'),

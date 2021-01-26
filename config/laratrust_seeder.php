@@ -34,6 +34,7 @@ return [
             'addresses' => 'c,v,e,r',
             'company-address-tms-code' => 'c,v,e,r',
             'dictionary-items' => 'c,v,e,r',
+            'admin-review' => 'v'
         ],
         'customer-admin' => [
             'orders' => 'e,v,c,r',
@@ -53,15 +54,15 @@ return [
     ],
 
     'permissions_map' => [
-        'c' => 'create',
         'a' => 'assign',
-        'v' => 'view',
-        's' => 'submit',
-        'rs' => 'resubmit',
-        'u' => 'update',
+        'c' => 'create',
         'e' => 'edit',
-        'r' => 'remove',
         'f' => 'filter',
         'i' => 'impersonate',
+        's' => 'submit',
+        'u' => 'update',
+        'v' => 'view',
+        'r' => 'remove',
+        'rs' => 'resubmit',
     ]
 ];

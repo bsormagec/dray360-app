@@ -827,12 +827,6 @@
 									"disabled": true
 								},
 								{
-									"key": "filter[hidden]",
-									"value": "1",
-									"description": "Show also hidden orders",
-									"disabled": true
-								},
-								{
 									"key": "filter[company_id]",
 									"value": "1",
 									"disabled": true
@@ -1330,6 +1324,66 @@
 								"orders",
 								":id",
 								"send-to-tms"
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": "8332"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "/api/orders/:id/send-to-client",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"var token1=postman.getResponseCookie('XSRF-TOKEN').value;",
+									"var token2=token1.replace(/%3D/g, '=');",
+									"postman.setEnvironmentVariable('X-XSRF-TOKEN', token2);",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/x-www-form-urlencoded"
+							},
+							{
+								"key": "Referer",
+								"type": "text",
+								"value": "{{server}}"
+							},
+							{
+								"key": "Accept",
+								"type": "text",
+								"value": "application/json, text/plain, */*"
+							},
+							{
+								"key": "X-XSRF-TOKEN",
+								"type": "text",
+								"value": "{{X-XSRF-TOKEN}}"
+							}
+						],
+						"url": {
+							"raw": "{{server}}/api/orders/:id/send-to-client",
+							"host": [
+								"{{server}}"
+							],
+							"path": [
+								"api",
+								"orders",
+								":id",
+								"send-to-client"
 							],
 							"variable": [
 								{
@@ -2985,7 +3039,7 @@
 									"disabled": true
 								},
 								{
-									"key": "filter[item_type]",
+									"key": "",
 									"value": "",
 									"disabled": true
 								}
