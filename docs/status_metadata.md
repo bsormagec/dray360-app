@@ -8,7 +8,7 @@ Each status is very carefully defined, here is a complete list (as of 11/27/2020
 
 
 | Code module | Triggered by status | Issues statuses |
-| :---------- | :-----------------: | :-------------- |
+| :---------- | :------------------ | :-------------- |
 | app/Http/Controllers/Api/SendToTmsController.php <br> _(laravel-api controller)_ | _user clicks [Send to TMS] button_ | [`sending-to-wint`](./status_metadata.md#sending-to-wint-status_metadata) <br> [`sending-to-chainio`](./status_metadata.md#sending-to-chainio-status_metadata) |
 | app/Http/Controllers/Api/ReplicateOrdersController.php <br> _(laravel-api controller)_ | _user clicks [Replicate Order] button_ | [`replicated-from-existing-order`](./status_metadata.md#replicated-from-existing-order-status_metadata) |
 | postprocessingqueue.py | `ocr-completed` | [`ocr-post-processing-error`](./status_metadata.md#ocr-post-processing-error-status_metadata) <br> [`ocr-post-processing-review`](./status_metadata.md#ocr-post-processing-complete-and-ocr-post-processing-review-status_metadata)  <br> [`ocr-post-processing-complete`](./status_metadata.md#ocr-post-processing-complete-and-ocr-post-processing-review-status_metadata) |
