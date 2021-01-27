@@ -10,7 +10,7 @@ Each status is very carefully defined, here is a complete list (as of 11/27/2020
 | Code module | Triggered by status | Issues statuses |
 | ----------- | ------------------- | --------------- |
 | Http/Controllers/Api/SendToTmsController.php <br> (laravel-api controller) | _user clicks [Send to TMS] button_ | [`sending-to-wint`](./status_metadata.md#sending-to-wint-status_metadata) <br> [`sending-to-chainio`](./status_metadata.md#sending-to-chainio-status_metadata) |
-| postprocessingqueue.py | `ocr-completed` | [`ocr-post-processing-error`](./status_metadata.md#ocr-post-processing-error-status_metadata) <br> `ocr-post-processing-review`  <br> `ocr-post-processing-complete` |
+| postprocessingqueue.py | `ocr-completed` | [`ocr-post-processing-error`](./status_metadata.md#ocr-post-processing-error-status_metadata) <br> [`ocr-post-processing-review`](./status_metadata.md#ocr-post-processing-complete-and-ocr-post-processing-review-status_metadata)  <br> [`ocr-post-processing-complete`](./status_metadata.md#ocr-post-processing-complete-and-ocr-post-processing-review-status_metadata) |
 | processonefile.py | _called by postprocessingqueue.py_ | [`process-ocr-output-file-error`](./status_metadata.md#process-ocr-output-file-error-status_metadata) <br> [`process-ocr-output-file-review`](./status_metadata.md#process-ocr-output-file-complete-and-process-ocr-output-file-review-status_metadata) <br> [`process-ocr-output-file-complete`](./status_metadata.md#process-ocr-output-file-complete-and-process-ocr-output-file-review-status_metadata)|
 | need | need | `failure-imageuploding-to-blackfl` |
 | need | need | `failure-sending-to-wint` |
