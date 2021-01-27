@@ -79,7 +79,10 @@
 import RequestStatus from '@/components/RequestStatus'
 
 import { formatDate } from '@/utils/dates'
+import { statuses } from '@/enums/app_objects_types'
 import permissions from '@/mixins/permissions'
+
+import get from 'lodash/get'
 
 export default {
   name: 'RequestItem',
@@ -99,7 +102,11 @@ export default {
   },
   computed: {
     disabled () {
-      return this.request.orders_count === 0
+      return this.request.orders_count === 0 ||
+        (
+          !this.hasPermission('admin-review-view') &&
+          get(this.request, 'latest_ocr_request_status.status', '') === statuses.ocrPostProcessingReview
+        )
     },
     detailsTitle () {
       if (this.request.tms_template_name !== null) {

@@ -22,6 +22,7 @@ class OCRVariant extends Model
         'classification',
         'mapping',
         'company_id_list',
+        'admin_review_company_id_list',
     ];
 
     /**
@@ -31,6 +32,7 @@ class OCRVariant extends Model
      */
     protected $casts = [
         'company_id_list' => 'json',
+        'admin_review_company_id_list' => 'json',
         'classification' => 'json',
         'mapping' => 'json',
     ];

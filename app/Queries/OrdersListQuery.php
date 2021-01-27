@@ -3,6 +3,7 @@
 namespace App\Queries;
 
 use App\Models\Order;
+use App\Models\OCRRequestStatus;
 use Spatie\QueryBuilder\AllowedSort;
 use Spatie\QueryBuilder\QueryBuilder;
 use Spatie\QueryBuilder\AllowedFilter;
@@ -18,6 +19,7 @@ class OrdersListQuery extends QueryBuilder
                 't_orders.id',
                 't_orders.request_id',
                 't_orders.created_at',
+                't_orders.updated_at',
                 't_orders.equipment_type_raw_text',
                 't_orders.shipment_designation',
                 't_orders.shipment_direction',
@@ -34,6 +36,11 @@ class OrdersListQuery extends QueryBuilder
             ->join('t_job_state_changes as s_sort', 's_sort.id', '=', 'ls_sort.t_job_state_changes_id')
             ->when(! is_superadmin() && currentCompany(), function ($query) {
                 return $query->where('t_orders.t_company_id', '=', currentCompany()->id);
+            })
+            ->when(! auth()->user()->isAbleTo('admin-review-view'), function ($query) {
+                return $query->whereDoesntHave('ocrRequest.latestOcrRequestStatus', function ($query) {
+                    $query->where('status', OCRRequestStatus::PROCESS_OCR_OUTPUT_FILE_REVIEW);
+                });
             })
             ->with([
                 'ocrRequest:order_id,created_at,updated_at,t_job_state_changes_id',

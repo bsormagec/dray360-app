@@ -7,6 +7,23 @@
 use App\Models\OCRVariant;
 use Illuminate\Database\Seeder;
 
+
+
+
+/**
+ * SQLITE3 CHEATSHEET
+ * 
+ *    sqlite3 
+ *     .open abbyexportfile.sqlite
+ *     .tables
+ *     .schema tablename
+ *     .header on
+ *     select * from tablename limit 10;
+ */
+
+
+
+
 /**
  * TerminalSeeder builds tables from Abbyy's sqllite3 database extract of all variants
  *
@@ -22,7 +39,7 @@ class OCRVariantsSeeder extends Seeder
 {
     const INPUT_FILES = [
         [
-            "FILENAME" => 'database/seeds/abbyy_variants_20201218.csv'
+            "FILENAME" => 'database/seeds/abbyy_variants_20210122.csv'
         ],
     ];
 
@@ -41,7 +58,7 @@ class OCRVariantsSeeder extends Seeder
             foreach ($variantsData as $csvRow) {
                 $variantRow = $this->getVariantRowFromCsvRow($csvRow);
                 $variantLookup = [
-                    'abbyy_variant_id' => $variantRow['abbyy_variant_id'],
+                    # 'abbyy_variant_id' => $variantRow['abbyy_variant_id'], # don't lookup on abbyy_variant_id
                     'abbyy_variant_name' => $variantRow['abbyy_variant_name'],
                 ];
                 $rownum = $variantRow['rownum'];

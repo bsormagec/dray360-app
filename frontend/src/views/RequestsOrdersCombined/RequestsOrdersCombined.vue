@@ -157,9 +157,9 @@
                 { text: 'Update Status', value: 'latest_ocr_request_status.display_status', align: 'center' },
                 { text: 'TMS ID', sortable: false, value: 'tms_shipment_id', align: 'center' },
                 { text: 'Last Update', sortable: false, value: 'updated_at', align: 'center' },
+                { text: 'Reference', sortable: false, value: 'reference_number', align: 'center' },
                 { text: 'Container', sortable: false, value: 'unit_number' },
-                { text: 'Bill To', value: 'bill_to_address.location_name' },
-                { text: 'Template', value: 'tms_template.item_display_name' },
+                { text: 'Bill To/Template', value: 'bill_to_or_template' },
                 { text: 'Direction', value: 'shipment_direction', align: 'center' },
                 { text: 'Actions', value: 'actions', sortable: false, align: 'center' }
               ]"
@@ -237,7 +237,18 @@
               :request-id="request.request_id"
               :url-filters="false"
               wait-for-request-id
-              :headers="requestOrdersTableHeaders"
+              :headers="[
+                { text: 'Date', sortable: false, value: 'created_at' },
+                { text: 'Order ID', sortable: false, value: 'id' },
+                { text: 'Update Status', value: 'latest_ocr_request_status.display_status', align: 'center' },
+                { text: 'TMS ID', sortable: false, value: 'tms_shipment_id', align: 'center' },
+                { text: 'Last Update', sortable: false, value: 'updated_at', align: 'center' },
+                { text: 'Reference', sortable: false, value: 'reference_number', align: 'center' },
+                { text: 'Container', sortable: false, value: 'unit_number' },
+                { text: 'Bill To/Template', value: 'bill_to_or_template' },
+                { text: 'Direction', value: 'shipment_direction', align: 'center' },
+                { text: 'Actions', value: 'actions', sortable: false, align: 'center' }
+              ]"
               @order-deleted="() => setReloadRequests(true)"
             />
           </div>
@@ -323,21 +334,6 @@ export default {
     }),
     ordersTabFirst () {
       return get(this.currentUser, 'configuration.show_orders_tab_first', false)
-    },
-    requestOrdersTableHeaders () {
-      return [
-        { text: 'Date', sortable: false, value: 'created_at' },
-        { text: 'Order ID', sortable: false, value: 'id' },
-        { text: 'Update Status', value: 'latest_ocr_request_status.display_status', align: 'center' },
-        { text: 'TMS ID', sortable: false, value: 'tms_shipment_id', align: 'center' },
-        { text: 'Container', sortable: false, value: 'unit_number' },
-        {
-          text: this.request.tms_template_name === null ? 'Bill To' : 'Template',
-          value: this.request.tms_template_name === null ? 'bill_to_address.location_name' : 'tms_template.item_display_name'
-        },
-        { text: 'Direction', value: 'shipment_direction', align: 'center' },
-        { text: 'Actions', value: 'actions', sortable: false, align: 'center' }
-      ]
     }
   },
   watch: {
