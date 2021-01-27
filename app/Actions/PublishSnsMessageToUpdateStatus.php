@@ -4,38 +4,40 @@ namespace App\Actions;
 
 use Aws\Sns\SnsClient;
 use Aws\Exception\AwsException;
-use App\Models\OCRRequestStatus;
 
-class PublishSnsMessageToReprocessRequest
+class PublishSnsMessageToUpdateStatus
 {
-    public function __invoke(OCRRequestStatus $status)
+    public function __invoke(array $data)
     {
+        $data['order_id'] = $data['order_id'] ?? ' '; // If not present, MUST send a whitespace string for microservice to store order_id as NULL.
+        $data['order_id'] = $data['order_id'] == '' ? ' ' : $data['order_id'];
+
         try {
             $response = $this->getSnsClient()
                 ->publish([
                     'Message' => json_encode([
-                        'request_id' => $status->request_id,
+                        'request_id' => $data['request_id'],
                         'datetime_utciso' => now()->toISOString(),
-                        'status' => OCRRequestStatus::OCR_COMPLETED,
-                        'status_metadata' => $status->status_metadata,
+                        'status' => $data['status'],
+                        'status_metadata' => $data['status_metadata']
                     ]),
                     'MessageAttributes' => [
                         'status' => [
                             'DataType' => 'String',
-                            'StringValue' => OCRRequestStatus::OCR_COMPLETED,
+                            'StringValue' => $data['status'],
                         ],
                         'company_id' => [
                             'DataType' => 'String',
-                            'StringValue' => $status->company_id,
+                            'StringValue' => $data['company_id'],
                         ],
                         'order_id' => [
                             'DataType' => 'String',
-                            'StringValue' => ' ', // Must send a whitespace string for microservice to store order_id as NULL.
+                            'StringValue' => $data['order_id'],
                         ],
                     ],
                     'TopicArn' => config('services.sns-topics.status'),
                 ]);
-            return ['status' => 'ok', 'message' => $response['MessageId'], ];
+            return ['status' => 'ok', 'message' => $response['MessageId']];
         } catch (AwsException $e) {
             return [
                 'status' => 'error',

@@ -20,6 +20,7 @@ use App\Http\Controllers\Api\SearchAddressController;
 use App\Http\Controllers\Api\ChangePasswordController;
 use App\Http\Controllers\Api\EquipmentTypesController;
 use App\Http\Controllers\Api\DictionaryItemsController;
+use App\Http\Controllers\Api\ReplicateOrdersController;
 use App\Http\Controllers\Api\Auth\ResetPasswordController;
 use App\Http\Controllers\Api\OCRRulesAssignmentController;
 use App\Http\Controllers\Api\OrderStatusHistoryController;
@@ -88,6 +89,9 @@ Route::group(['middleware' => ['auth:sanctum', 'impersonate', 'tenant-aware']], 
 
     Route::post('orders/{order}/send-to-client', SendToClientController::class)
         ->name('orders.send-to-client');
+
+    Route::post('orders/{order}/replicate', ReplicateOrdersController::class)
+        ->name('orders.replicate');
 
     Route::get('orders/{order}/download-source-file', DownloadOriginalOrderSourceFileController::class)
         ->name('orders.download-source-file');

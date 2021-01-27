@@ -32,6 +32,8 @@ export const postSendToTms = async (orderId) => axios.post(`/api/orders/${orderI
 
 export const postSendToClient = async (orderId) => axios.post(`/api/orders/${orderId}/send-to-client`).then(data => [undefined, data]).catch(e => [e])
 
+export const replicateOrder = async (orderId) => axios.post(`/api/orders/${orderId}/replicate`).then(data => [undefined, data]).catch(e => [e])
+
 export const getDivisionCodes = async (companyId, tmsId) => axios.get(`/api/companies/${companyId}/tms-provider/${tmsId}/division-names`).then(data => [undefined, data.data]).catch(e => [e])
 
 export const delDeleteOrder = async (orderId) => axios.delete(`/api/orders/${orderId}`).then(data => [undefined, data.data]).catch(e => [e])

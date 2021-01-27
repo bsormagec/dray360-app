@@ -74,6 +74,7 @@
         :options="[
           { title: 'Edit Order' , action: toggleEdit, hasPermission: true },
           { title: 'Download Source File', action: () => downloadSourceFile(order.id), hasPermission: true },
+          { title: 'Replicate Order', action: () => replicateOrder(order.id), hidden: !hasPermission('admin-review-edit') },
           { title: 'Delete Order', action: () => deleteOrder(order.id), hasPermission: hasPermission('orders-remove') },
           { title: 'Add TMS ID', action: () => addTMSId(order.id), hasPermission: hasPermission('ocr-requests-edit') && isInProcessedState}
         ]"
@@ -631,7 +632,7 @@ import { mapState, mapActions } from 'vuex'
 import get from 'lodash/get'
 import { statuses } from '@/enums/app_objects_types'
 
-import { getOrderDetail, getSourceFileDownloadURL, postSendToTms, delDeleteOrder, postSendToClient } from '@/store/api_calls/orders'
+import { getOrderDetail, getSourceFileDownloadURL, postSendToTms, delDeleteOrder, postSendToClient, replicateOrder } from '@/store/api_calls/orders'
 import orderForm, { types as orderFormTypes } from '@/store/modules/order-form'
 import utils, { type } from '@/store/modules/utils'
 
@@ -808,7 +809,7 @@ export default {
         return {
           title: 'Send to Client',
           action: this.postSendToClient,
-          disabled: this.sentToTms
+          disabled: this.sentToTms || !this.hasPermission('admin-review-edit')
         }
       }
 
@@ -945,6 +946,29 @@ export default {
           await this[type.setSnackbar]({ show: true, message })
         },
         onCancel: () => { this.loading = false }
+      })
+    },
+
+    async replicateOrder (orderId) {
+      this.loading = true
+      await this[type.setConfirmationDialog]({
+        title: 'Are you sure you want to replicate this order?',
+        onConfirm: async () => {
+          this.loading = true
+          const [error] = await replicateOrder(orderId)
+          let message = ''
+
+          if (!error) {
+            this.loading = false
+            message = 'Order replicated'
+          } else {
+            message = 'Error trying to replicate the order'
+          }
+          await this[type.setSnackbar]({ show: true, message })
+        },
+        onCancel: () => {
+          this.loading = false
+        }
       })
     },
 

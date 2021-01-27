@@ -3,20 +3,17 @@
 namespace Tests\Feature;
 
 use Mockery;
-use Aws\Result;
 use Tests\TestCase;
 use App\Models\User;
-use Aws\MockHandler;
 use App\Models\Order;
 use App\Models\Company;
 use App\Models\TMSProvider;
 use Illuminate\Support\Str;
 use Laravel\Sanctum\Sanctum;
 use Illuminate\Http\Response;
-use Aws\Exception\AwsException;
 use Tests\Seeds\CompaniesSeeder;
 use Tests\Seeds\OrdersTableSeeder;
-use App\Actions\PublishSnsMessageToSendToTms;
+use App\Actions\PublishSnsMessageToUpdateStatus;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
 
 class SendToTmsControllerTest extends TestCase
@@ -36,20 +33,12 @@ class SendToTmsControllerTest extends TestCase
     {
         (new OrdersTableSeeder())->seedOrderWithValidatedAddresses();
         $order = Order::first();
-        // asdf        dd(TMSProvider::all());
         $order->update(['t_tms_provider_id' => TMSProvider::getProfitTools()->id]);
         $messageId = Str::random(5);
 
-        $mockHandler = tap(new MockHandler())
-            ->append(new Result(['MessageId' => $messageId]));
-        $snsClient = $this->app['aws']->createClient('sns');
-        $snsClient->getHandlerList()->setHandler($mockHandler);
-
-        $mockAction = Mockery::mock(PublishSnsMessageToSendToTms::class)
-            ->makePartial()
-            ->shouldAllowMockingProtectedMethods();
-        $mockAction->shouldReceive('getSnsClient')->andReturn($snsClient);
-        $this->app->instance(PublishSnsMessageToSendToTms::class, $mockAction);
+        $mockAction = Mockery::mock(PublishSnsMessageToUpdateStatus::class)->makePartial();
+        $mockAction->shouldReceive('__invoke')->andReturn(['status' => 'ok', 'message' => $messageId])->once();
+        $this->app->instance(PublishSnsMessageToUpdateStatus::class, $mockAction);
 
         $this->postJson(route('orders.send-to-tms', $order->id))
             ->assertJsonFragment(['data' => $messageId])
@@ -62,25 +51,13 @@ class SendToTmsControllerTest extends TestCase
         (new OrdersTableSeeder())->seedOrderWithValidatedAddresses();
         $order = Order::first();
         $order->update(['t_tms_provider_id' => TMSProvider::getProfitTools()->id]);
-        $this->withoutExceptionHandling();
-        $mockHandler = tap(new MockHandler())
-            ->append(function ($cmd) {
-                return new AwsException('', $cmd, [
-                    'code' => 'failed',
-                    'message' => 'some aws exception',
-                ]);
-            });
-        $snsClient = $this->app['aws']->createClient('sns');
-        $snsClient->getHandlerList()->setHandler($mockHandler);
 
-        $mockAction = Mockery::mock(PublishSnsMessageToSendToTms::class)
-            ->makePartial()
-            ->shouldAllowMockingProtectedMethods();
-        $mockAction->shouldReceive('getSnsClient')->andReturn($snsClient);
-        $this->app->instance(PublishSnsMessageToSendToTms::class, $mockAction);
+        $mockAction = Mockery::mock(PublishSnsMessageToUpdateStatus::class)->makePartial();
+        $mockAction->shouldReceive('__invoke')->andReturn(['status' => 'error', 'message' => 'exception'])->once();
+        $this->app->instance(PublishSnsMessageToUpdateStatus::class, $mockAction);
 
         $this->postJson(route('orders.send-to-tms', $order->id))
-            ->assertJsonFragment(['data' => 'failed-some aws exception'])
+            ->assertJsonFragment(['data' => 'exception'])
             ->assertStatus(Response::HTTP_INTERNAL_SERVER_ERROR);
     }
 
@@ -92,20 +69,9 @@ class SendToTmsControllerTest extends TestCase
         $user = User::whereRoleIs('customer-user')->first();
         Sanctum::actingAs($user);
 
-        $mockHandler = tap(new MockHandler())
-            ->append(function ($cmd) {
-                return new AwsException('', $cmd, [
-                    'code' => 'failed',
-                    'message' => 'some aws exception',
-                ]);
-            });
-        $snsClient = $this->app['aws']->createClient('sns');
-        $snsClient->getHandlerList()->setHandler($mockHandler);
-
-        $mockAction = Mockery::mock(PublishSnsMessageToSendToTms::class)
-            ->shouldAllowMockingProtectedMethods();
-        $mockAction->shouldNotReceive('getSnsClient');
-        $this->app->instance(PublishSnsMessageToSendToTms::class, $mockAction);
+        $mockAction = Mockery::mock(PublishSnsMessageToUpdateStatus::class)->makePartial();
+        $mockAction->shouldNotReceive('__invoke');
+        $this->app->instance(PublishSnsMessageToUpdateStatus::class, $mockAction);
 
         $this->postJson(route('orders.send-to-tms', $order->id))
             ->assertStatus(Response::HTTP_FORBIDDEN);
@@ -122,20 +88,9 @@ class SendToTmsControllerTest extends TestCase
 
         Sanctum::actingAs($user);
 
-        $mockHandler = tap(new MockHandler())
-            ->append(function ($cmd) {
-                return new AwsException('', $cmd, [
-                    'code' => 'failed',
-                    'message' => 'some aws exception',
-                ]);
-            });
-        $snsClient = $this->app['aws']->createClient('sns');
-        $snsClient->getHandlerList()->setHandler($mockHandler);
-
-        $mockAction = Mockery::mock(PublishSnsMessageToSendToTms::class)
-            ->shouldAllowMockingProtectedMethods();
-        $mockAction->shouldNotReceive('getSnsClient');
-        $this->app->instance(PublishSnsMessageToSendToTms::class, $mockAction);
+        $mockAction = Mockery::mock(PublishSnsMessageToUpdateStatus::class)->makePartial();
+        $mockAction->shouldNotReceive('__invoke');
+        $this->app->instance(PublishSnsMessageToUpdateStatus::class, $mockAction);
 
         $this->postJson(route('orders.send-to-tms', $order->id))
             ->assertStatus(Response::HTTP_FORBIDDEN);
@@ -148,20 +103,9 @@ class SendToTmsControllerTest extends TestCase
         (new OrdersTableSeeder())->seedOrderWithoutValidatedAddresses();
         $order = Order::first();
 
-        $mockHandler = tap(new MockHandler())
-            ->append(function ($cmd) {
-                return new AwsException('', $cmd, [
-                    'code' => 'failed',
-                    'message' => 'some aws exception',
-                ]);
-            });
-        $snsClient = $this->app['aws']->createClient('sns');
-        $snsClient->getHandlerList()->setHandler($mockHandler);
-
-        $mockAction = Mockery::mock(PublishSnsMessageToSendToTms::class)
-            ->shouldAllowMockingProtectedMethods();
-        $mockAction->shouldNotReceive('getSnsClient');
-        $this->app->instance(PublishSnsMessageToSendToTms::class, $mockAction);
+        $mockAction = Mockery::mock(PublishSnsMessageToUpdateStatus::class)->makePartial();
+        $mockAction->shouldNotReceive('__invoke');
+        $this->app->instance(PublishSnsMessageToUpdateStatus::class, $mockAction);
 
         $this->postJson(route('orders.send-to-tms', $order->id))
             ->assertStatus(Response::HTTP_UNPROCESSABLE_ENTITY)

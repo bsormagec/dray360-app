@@ -87,13 +87,27 @@ class OrdersPolicy
      */
     public function review(User $user, Order $order): bool
     {
-        $hasPermissionsToSendToClient = $user->isAbleTo('admin-review-view');
+        $hasPermissionsToSendToClient = $user->isAbleTo('admin-review-edit');
 
         if (! $user->isSuperadmin()) {
             return $hasPermissionsToSendToClient && $user->belongsToSameCompanyAs($order);
         }
 
         return $hasPermissionsToSendToClient;
+    }
+
+    /**
+     * Determine if the user can replicate an order.
+     */
+    public function replicate(User $user, Order $order): bool
+    {
+        $hasPermissionToReplicate = $user->isAbleTo('admin-review-edit');
+
+        if (! $user->isSuperadmin()) {
+            return $hasPermissionToReplicate && $user->belongsToSameCompanyAs($order);
+        }
+
+        return $hasPermissionToReplicate;
     }
 
     /**

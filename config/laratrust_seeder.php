@@ -34,7 +34,7 @@ return [
             'addresses' => 'c,v,e,r',
             'company-address-tms-code' => 'c,v,e,r',
             'dictionary-items' => 'c,v,e,r',
-            'admin-review' => 'v'
+            'admin-review' => 'v,e'
         ],
         'customer-admin' => [
             'orders' => 'e,v,c,r',

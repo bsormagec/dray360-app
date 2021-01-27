@@ -3,10 +3,8 @@
 namespace Tests\Feature;
 
 use Mockery;
-use Aws\Result;
 use Tests\TestCase;
 use App\Models\User;
-use Aws\MockHandler;
 use App\Models\Order;
 use App\Models\Company;
 use Illuminate\Support\Str;
@@ -21,7 +19,7 @@ use Bezhanov\Faker\Provider\Commerce;
 use Illuminate\Support\Facades\Event;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Foundation\Testing\WithFaker;
-use App\Actions\PublishSnsMessageToFinishRequestReview;
+use App\Actions\PublishSnsMessageToUpdateStatus;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
 
 class OrdersControllerTest extends TestCase
@@ -359,16 +357,9 @@ class OrdersControllerTest extends TestCase
 
         $messageId = Str::random(5);
 
-        $mockHandler = tap(new MockHandler())
-            ->append(new Result(['MessageId' => $messageId]));
-        $snsClient = $this->app['aws']->createClient('sns');
-        $snsClient->getHandlerList()->setHandler($mockHandler);
-
-        $mockAction = Mockery::mock(PublishSnsMessageToFinishRequestReview::class)
-            ->makePartial()
-            ->shouldAllowMockingProtectedMethods();
-        $mockAction->shouldReceive('getSnsClient')->andReturn($snsClient)->once();
-        $this->app->instance(PublishSnsMessageToFinishRequestReview::class, $mockAction);
+        $mockAction = Mockery::mock(PublishSnsMessageToUpdateStatus::class)->makePartial();
+        $mockAction->shouldReceive('__invoke')->andReturn(['status' => 'ok', 'message' => $messageId])->once();
+        $this->app->instance(PublishSnsMessageToUpdateStatus::class, $mockAction);
 
         $this->deleteJson(route('orders.destroy', $order->id))
             ->assertStatus(Response::HTTP_NO_CONTENT);

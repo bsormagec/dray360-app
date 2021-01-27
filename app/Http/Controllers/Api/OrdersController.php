@@ -12,7 +12,7 @@ use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
 use App\Http\Resources\SideBySideOrder;
 use Illuminate\Support\Facades\Storage;
-use App\Actions\PublishSnsMessageToFinishRequestReview;
+use App\Actions\PublishSnsMessageToUpdateStatus;
 
 class OrdersController extends Controller
 {
@@ -77,9 +77,10 @@ class OrdersController extends Controller
             $data = [
                 'request_id' => $order->request_id,
                 'company_id' => $order->t_company_id,
+                'status' => OCRRequestStatus::OCR_POST_PROCESSING_COMPLETE,
                 'status_metadata' => $order->getPostProcessingReviewStatusMetadata(),
             ];
-            app(PublishSnsMessageToFinishRequestReview::class)($data);
+            app(PublishSnsMessageToUpdateStatus::class)($data);
         }
 
         $order->delete();

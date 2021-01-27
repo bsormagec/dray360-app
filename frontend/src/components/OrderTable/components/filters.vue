@@ -362,6 +362,7 @@ export default {
         { text: statuses.processOcrOutputFileReview, value: statuses.processOcrOutputFileReview },
         { text: statuses.ocrWaiting, value: statuses.ocrWaiting },
         { text: statuses.ocrTimedout, value: statuses.ocrTimedout },
+        { text: statuses.replicatedFromExistingOrder, value: statuses.replicatedFromExistingOrder },
         { text: statuses.processOcrOutputFileComplete, value: statuses.processOcrOutputFileComplete },
         { text: statuses.processOcrOutputFileError, value: statuses.processOcrOutputFileError },
         { text: statuses.uploadRequested, value: statuses.uploadRequested },

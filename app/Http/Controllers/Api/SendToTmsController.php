@@ -7,8 +7,8 @@ use App\Models\TMSProvider;
 use Illuminate\Http\Response;
 use App\Models\OCRRequestStatus;
 use App\Http\Controllers\Controller;
-use App\Actions\PublishSnsMessageToSendToTms;
 use Illuminate\Validation\ValidationException;
+use App\Actions\PublishSnsMessageToUpdateStatus;
 
 class SendToTmsController extends Controller
 {
@@ -20,15 +20,20 @@ class SendToTmsController extends Controller
         $data = [
             'order_id' => $orderId,
             'status' => $this->getSubmitToTmsStatus($tmsProvider),
+            'request_id' => $order->request_id,
+            'company_id' => $order->t_company_id,
+            'status_metadata' => [
+                'tms_provider_id' => $order->t_tms_provider_id,
+                'user_id' => auth()->id(),
+                'company_id' => $order->t_company_id,
+                'order_id' => $orderId,
+            ]
         ];
 
         // Do not validate that addresses are all verified=true, for now (July 7th, 2020, PBN)
         // $this->checkIfOrderIsValidated($order);
 
-        $data['request_id'] = $order->request_id;
-        $data['company_id'] = $order->t_company_id;
-        $data['tms_provider_id'] = $order->t_tms_provider_id;
-        $response = app(PublishSnsMessageToSendToTms::class)($data);
+        $response = app(PublishSnsMessageToUpdateStatus::class)($data);
 
         if ($response['status'] === 'error') {
             return response()->json(['data' => $response['message']], Response::HTTP_INTERNAL_SERVER_ERROR);

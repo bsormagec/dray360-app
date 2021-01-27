@@ -30,6 +30,8 @@ class OCRRequestStatus extends Model
     OCR_WAITING = 'ocr-waiting',
     OCR_POST_PROCESSING_REVIEW = 'ocr-post-processing-review',
 
+    REPLICATED_FROM_EXISTING_ORDER = 'replicated-from-existing-order',
+
     PROCESS_OCR_OUTPUT_FILE_REVIEW = 'process-ocr-output-file-review',
     PROCESS_OCR_OUTPUT_FILE_COMPLETE = 'process-ocr-output-file-complete',
     PROCESS_OCR_OUTPUT_FILE_ERROR = 'process-ocr-output-file-error',
@@ -81,7 +83,10 @@ class OCRRequestStatus extends Model
 
         self::OCR_POST_PROCESSING_COMPLETE => 'Processed',
         self::PROCESS_OCR_OUTPUT_FILE_COMPLETE => 'Processed',
+
         self::PROCESS_OCR_OUTPUT_FILE_REVIEW => 'Needs Review',
+
+        self::REPLICATED_FROM_EXISTING_ORDER => 'Replication',
 
         self::UPDATES_PRIOR_ORDER => 'Update',
 

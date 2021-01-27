@@ -6,8 +6,7 @@ use App\Models\Order;
 use Illuminate\Http\Response;
 use App\Models\OCRRequestStatus;
 use App\Http\Controllers\Controller;
-use App\Actions\PublishSnsMessageToSendToClient;
-use App\Actions\PublishSnsMessageToFinishRequestReview;
+use App\Actions\PublishSnsMessageToUpdateStatus;
 
 class SendToClientController extends Controller
 {
@@ -23,15 +22,17 @@ class SendToClientController extends Controller
         if ($order->isTheLastUnderReview() && ! OCRRequestStatus::alreadyCompleted($order->request_id)) {
             $data = $baseData + [
                 'status_metadata' => $order->getPostProcessingReviewStatusMetadata(),
+                'status' => OCRRequestStatus::OCR_POST_PROCESSING_COMPLETE,
             ];
-            app(PublishSnsMessageToFinishRequestReview::class)($data);
+            app(PublishSnsMessageToUpdateStatus::class)($data);
         }
 
         $data = $baseData + [
             'order_id' => $orderId,
+            'status' => OCRRequestStatus::PROCESS_OCR_OUTPUT_FILE_COMPLETE,
             'status_metadata' => $this->getReviewStatusMetadata($order),
         ];
-        $response = app(PublishSnsMessageToSendToClient::class)($data);
+        $response = app(PublishSnsMessageToUpdateStatus::class)($data);
 
         if ($response['status'] === 'error') {
             return response()->json(['data' => $response['message']], Response::HTTP_INTERNAL_SERVER_ERROR);
