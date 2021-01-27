@@ -1,4 +1,4 @@
-# Status and Status-Metadata
+# Status and Status-MetaData
 
 
 I will be updating this document to record all possible states here. It is currently documented [(here, copy link location)](https://raw.githubusercontent.com/tcompanies/dray360-microservices/master/docs/abbyy_arch3.xml?token=ABZX3DUKMXGNXQKEO43RIC3ACM734) and opened in [Draw.io](https://app.diagrams.net) using File/OpenFrom/URL.
@@ -8,11 +8,11 @@ Each status is very carefully defined, here is a complete list (as of 11/27/2020
 
 
 | Code module | Triggered by status | Issues statuses |
-| ----------- | ------------------- | --------------- |
+| :---------- | :-----------------: | --------------: |
 | app/Http/Controllers/Api/SendToTmsController.php <br> _(laravel-api controller)_ | _user clicks [Send to TMS] button_ | [`sending-to-wint`](./status_metadata.md#sending-to-wint-status_metadata) <br> [`sending-to-chainio`](./status_metadata.md#sending-to-chainio-status_metadata) |
 | app/Http/Controllers/Api/ReplicateOrdersController.php <br> _(laravel-api controller)_ | _user clicks [Replicate Order] button_ | [`replicated-from-existing-order`](./status_metadata.md#replicated-from-existing-order-status_metadata) |
 | postprocessingqueue.py | `ocr-completed` | [`ocr-post-processing-error`](./status_metadata.md#ocr-post-processing-error-status_metadata) <br> [`ocr-post-processing-review`](./status_metadata.md#ocr-post-processing-complete-and-ocr-post-processing-review-status_metadata)  <br> [`ocr-post-processing-complete`](./status_metadata.md#ocr-post-processing-complete-and-ocr-post-processing-review-status_metadata) |
-| processonefile.py | _called by postprocessingqueue.py_ | [`process-ocr-output-file-error`](./status_metadata.md#process-ocr-output-file-error-status_metadata) <br> [`process-ocr-output-file-review`](./status_metadata.md#process-ocr-output-file-complete-and-process-ocr-output-file-review-status_metadata) <br> [`process-ocr-output-file-complete`](./status_metadata.md#process-ocr-output-file-complete-and-process-ocr-output-file-review-status_metadata)|
+| processonefile.py | `ocr-completed` <br> _called by postprocessingqueue.py_ | [`process-ocr-output-file-error`](./status_metadata.md#process-ocr-output-file-error-status_metadata) <br> [`process-ocr-output-file-review`](./status_metadata.md#process-ocr-output-file-complete-and-process-ocr-output-file-review-status_metadata) <br> [`process-ocr-output-file-complete`](./status_metadata.md#process-ocr-output-file-complete-and-process-ocr-output-file-review-status_metadata)|
 | need | need | `failure-imageuploding-to-blackfl` |
 | need | need | `failure-sending-to-wint` |
 | need | need | `intake-accepted-datafile` |
