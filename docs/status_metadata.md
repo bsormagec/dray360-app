@@ -9,7 +9,8 @@ Each status is very carefully defined, here is a complete list (as of 11/27/2020
 
 | Code module | Triggered by status | Issues statuses |
 | ----------- | ------------------- | --------------- |
-| Http/Controllers/Api/SendToTmsController.php <br> (laravel-api controller) | _user clicks [Send to TMS] button_ | [`sending-to-wint`](./status_metadata.md#sending-to-wint-status_metadata) <br> [`sending-to-chainio`](./status_metadata.md#sending-to-chainio-status_metadata) |
+| app/Http/Controllers/Api/SendToTmsController.php <br> _(laravel-api controller)_ | _user clicks [Send to TMS] button_ | [`sending-to-wint`](./status_metadata.md#sending-to-wint-status_metadata) <br> [`sending-to-chainio`](./status_metadata.md#sending-to-chainio-status_metadata) |
+| app/Http/Controllers/Api/ReplicateOrdersController.php <br> _(laravel-api controller)_ | _user clicks [Replicate Order] button_ | [`replicated-from-existing-order`](./status_metadata.md#replicated-from-existing-order-status_metadata) |
 | postprocessingqueue.py | `ocr-completed` | [`ocr-post-processing-error`](./status_metadata.md#ocr-post-processing-error-status_metadata) <br> [`ocr-post-processing-review`](./status_metadata.md#ocr-post-processing-complete-and-ocr-post-processing-review-status_metadata)  <br> [`ocr-post-processing-complete`](./status_metadata.md#ocr-post-processing-complete-and-ocr-post-processing-review-status_metadata) |
 | processonefile.py | _called by postprocessingqueue.py_ | [`process-ocr-output-file-error`](./status_metadata.md#process-ocr-output-file-error-status_metadata) <br> [`process-ocr-output-file-review`](./status_metadata.md#process-ocr-output-file-complete-and-process-ocr-output-file-review-status_metadata) <br> [`process-ocr-output-file-complete`](./status_metadata.md#process-ocr-output-file-complete-and-process-ocr-output-file-review-status_metadata)|
 | need | need | `failure-imageuploding-to-blackfl` |
@@ -204,12 +205,21 @@ For orders whose variant_name `t_ocrvariants` and `company_id` is found in `t_co
 
 #### `sending-to-chainio` status_metadata
 
-* created by `./Http/Controllers/Api/SendToTmsController.php` when user selects [Send to TMS] option for Compcare orders
+* created by `./app/Http/Controllers/Api/SendToTmsController.php` when user selects [Send to TMS] option for Compcare orders
 
 1. order_id
 1. company_id
 1. tms_provider_id (must be 2, i.e. Compcare)
 1. user_id
+
+
+
+#### `replicated-from-existing-order` status_metadata
+
+* created by `./app/Http/Controllers/Api/ReplicateOrdersController.php` when user selects [Replicate Order] menu option
+
+1. user_id
+1. source_order_id
 
 
 
