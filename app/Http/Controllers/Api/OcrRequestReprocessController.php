@@ -5,7 +5,7 @@ namespace App\Http\Controllers\Api;
 use Illuminate\Http\Response;
 use App\Models\OCRRequestStatus;
 use App\Http\Controllers\Controller;
-use App\Actions\PublishSnsMessageToReprocessRequest;
+use App\Actions\PublishSnsMessageToUpdateStatus;
 
 class OcrRequestReprocessController extends Controller
 {
@@ -20,7 +20,14 @@ class OcrRequestReprocessController extends Controller
             ])
             ->firstOrFail();
 
-        $response = app(PublishSnsMessageToReprocessRequest::class)($status);
+        $data = [
+            'request_id' => $status->request_id,
+            'status' => OCRRequestStatus::OCR_COMPLETED,
+            'status_metadata' => $status->status_metadata,
+            'company_id' => $status->company_id,
+        ];
+
+        $response = app(PublishSnsMessageToUpdateStatus::class)($data);
 
         if ($response['status'] == 'error') {
             return response()->json(['data' => $response['message']], Response::HTTP_INTERNAL_SERVER_ERROR);

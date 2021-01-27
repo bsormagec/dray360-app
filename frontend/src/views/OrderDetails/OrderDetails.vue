@@ -1,6 +1,6 @@
 <template>
   <div
-    v-if="!has404"
+    v-if="!has404 && !orderInReview"
     :class="`details ${loaded && 'loaded'} ${isMobile && 'mobile'}`"
   >
     <ContentLoading :loaded="loaded">
@@ -36,6 +36,20 @@
       </div>
     </ContentLoading>
   </div>
+  <div
+    v-else-if="!has404 && orderInReview"
+    class="d-flex justify-center align-center flex-column"
+    style="height: 100%"
+  >
+    <img
+      src="../../assets/images/loading-animation.gif"
+      alt="loading"
+      height="132"
+    >
+    <h4 class="primary--text">
+      Order Processing
+    </h4>
+  </div>
   <ContainerNotFound
     v-else
     class="container-not-found"
@@ -45,11 +59,12 @@
 
 <script>
 import isMobile from '@/mixins/is_mobile'
+import permissions from '@/mixins/permissions'
 import OrderDetailsForm from '@/views/OrderDetails/OrderDetailsForm'
 import OrderDetailsDocument from '@/views/OrderDetails/OrderDetailsDocument'
 import ContainerNotFound from '@/views/ContainerNotFound'
 import { reqStatus } from '@/enums/req_status'
-import { dictionaryItemsTypes } from '@/enums/app_objects_types'
+import { dictionaryItemsTypes, statuses } from '@/enums/app_objects_types'
 
 import { getDictionaryItems } from '@/store/api_calls/utils'
 
@@ -71,7 +86,7 @@ export default {
     ContainerNotFound
   },
 
-  mixins: [isMobile],
+  mixins: [isMobile, permissions],
 
   props: {
     orderId: {
@@ -114,6 +129,9 @@ export default {
     ...mapState(orders.moduleName, {
       currentOrder: state => state.currentOrder
     }),
+    ...mapState(orderForm.moduleName, {
+      order: state => state.order
+    }),
     profitToolsTemplatesEnabled () {
       return get(this.currentOrder, 'company.configuration.profit_tools_enable_templates', false)
     },
@@ -123,6 +141,11 @@ export default {
     },
     divisionsEnabled () {
       return get(this.currentOrder, 'company.configuration.enable_divisions', true)
+    },
+    orderInReview () {
+      return this.loaded &&
+        !this.hasPermission('admin-review-view') &&
+        get(this.order, 'ocr_request.latest_ocr_request_status.status', '') === statuses.processOcrOutputFileReview
     }
   },
   watch: {

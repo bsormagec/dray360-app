@@ -90,6 +90,9 @@ import { getRequestFilters } from '@/utils/filters_handling'
 import { formatDate } from '@/utils/dates'
 import permissions from '@/mixins/permissions'
 import isMobile from '@/mixins/is_mobile'
+import { statuses } from '@/enums/app_objects_types'
+
+import get from 'lodash/get'
 
 export default {
   name: 'RequestList',
@@ -170,7 +173,7 @@ export default {
     this.initializeFilters()
     this.setURLParams()
     await this.fetchRequests()
-    this.selectFirstRequestWithOrders()
+    this.selectFirstActiveRequest()
 
     this.initialTotalMeta = this.meta.total
     this.startPolling()
@@ -191,7 +194,7 @@ export default {
       this.setURLParams()
       await this.fetchRequests()
       if (!this.isMobile) {
-        this.selectFirstRequestWithOrders()
+        this.selectFirstActiveRequest()
       }
     },
     async refreshRequests () {
@@ -200,7 +203,7 @@ export default {
       this.setURLParams()
       await this.fetchRequests()
       if (!this.isMobile) {
-        this.selectFirstRequestWithOrders()
+        this.selectFirstActiveRequest()
       }
     },
     initializeFilters () {
@@ -259,8 +262,14 @@ export default {
 
       this.$router.replace({ path: 'dashboard', query: filterState }).catch(() => {})
     },
-    selectFirstRequestWithOrders () {
-      const filteredRequests = this.items.filter(request => request.orders_count !== 0)
+    selectFirstActiveRequest () {
+      const filteredRequests = this.items.filter(request => {
+        if (get(request, 'latest_ocr_request_status.status', '') === statuses.ocrPostProcessingReview) {
+          return this.hasPermission('admin-review-view')
+        }
+
+        return request.orders_count !== 0
+      })
 
       if (filteredRequests.length === 0) {
         this.handleChange({ request_id: null, orders_count: 0, first_order_id: null })

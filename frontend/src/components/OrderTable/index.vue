@@ -82,7 +82,14 @@
         {{ formatDate(item.created_at) }}
       </template>
       <template v-slot:[`item.updated_at`]="{ item }">
-        {{ formatDate(item.updated_at || item.created_at) }}
+        {{ formatDate(item.updated_at) }}
+      </template>
+      <template v-slot:[`item.bill_to_or_template`]="{ item }">
+        {{
+          item.tms_template
+            ? item.tms_template.item_display_name
+            : item.bill_to_address ? item.bill_to_address.location_name : ''
+        }}
       </template>
       <template v-slot:[`item.tms_shipment_id`]="{ item }">
         {{ item.tms_shipment_id }}
@@ -130,6 +137,7 @@
           }"
           :options="[
             { title: 'Download Source File', action: () => downloadSourceFile(item.id) },
+            { title: 'Replicate Order', action: () => replicateOrder(item), hidden: !hasPermission('admin-review-edit') },
             { title: 'Reprocess Order', action: () => reprocessRequest(item.request_id) },
             { title: 'Delete Order', action: () => deleteOrder(item) },
             { title: item.is_hidden ? 'Unhide Order' : 'Hide Order', action: () => changeOrderDisplayStatus(item) }
@@ -205,7 +213,7 @@ import Chip from '@/components/Chip'
 import hasPermission from '@/mixins/permissions'
 import { formatDate } from '@/utils/dates'
 import utils, { type as utilTypes } from '@/store/modules/utils'
-import { getOrders, getSourceFileDownloadURL, reprocessOcrRequest, delDeleteOrder, updateOrderDetail } from '@/store/api_calls/orders'
+import { getOrders, getSourceFileDownloadURL, reprocessOcrRequest, delDeleteOrder, updateOrderDetail, replicateOrder } from '@/store/api_calls/orders'
 import { getRequestFilters } from '@/utils/filters_handling'
 
 import { mapState, mapActions } from 'vuex'
@@ -504,6 +512,31 @@ export default {
             }
           } else {
             message = 'Error trying to delete the order'
+          }
+          await this.setSnackbar({ show: true, message })
+        },
+        onCancel: () => {
+          this.loading = false
+        }
+      })
+    },
+
+    async replicateOrder (item) {
+      this.loading = true
+      await this.setConfirmDialog({
+        title: 'Are you sure you want to replicate this order?',
+        onConfirm: async () => {
+          this.loading = true
+          const [error] = await replicateOrder(item.id)
+          let message = ''
+
+          if (!error) {
+            this.loading = false
+            message = 'Order replicated'
+            this.resetFilters()
+            this.$emit('order-deleted')
+          } else {
+            message = 'Error trying to replicate the order'
           }
           await this.setSnackbar({ show: true, message })
         },

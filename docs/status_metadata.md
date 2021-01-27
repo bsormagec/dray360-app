@@ -1,75 +1,78 @@
 # Status and Status-Metadata
 
 
-
-
-
-Not that full detalI will be updating this document to record all possible states here. It is currently documented in a Draw.io diagram and not very accessible.
+I will be updating this document to record all possible states here. It is currently documented [(here, copy link location)](https://raw.githubusercontent.com/tcompanies/dray360-microservices/master/docs/abbyy_arch3.xml?token=ABZX3DUKMXGNXQKEO43RIC3ACM734) and opened in [Draw.io](https://app.diagrams.net) using File/OpenFrom/URL.
 
 
 Each status is very carefully defined, here is a complete list (as of 11/27/2020):
 
 
-| Code module | Triggered by status | Issues status |
-| ----------- | ------------------- | ------------- |
-| Http/Controllers/Api/SendToTmsController.php <br> (laravel-api controller) | trigger: user click [Send to TMS] button | sending-to-wint <br> sending-to-chainio |
-| abc | efg | xyz |
-| abc | efg | xyz |
-| abc | efg | xyz |
-| abc | efg | xyz |
-| abc | efg | xyz |
-| abc | efg | xyz |
+| Code module | Triggered by status | Issues statuses |
+| ----------- | ------------------- | --------------- |
+| Http/Controllers/Api/SendToTmsController.php <br> (laravel-api controller) | _user clicks [Send to TMS] button_ | [`sending-to-wint`](./status_metadata.md#sending-to-wint-status_metadata) <br> [`sending-to-chainio`](./status_metadata.md#sending-to-chainio-status_metadata) |
+| postprocessingqueue.py | `ocr-completed` | `ocr-post-processing-error` <br> `ocr-post-processing-complete` |
+| postprocessingqueue.py -> <br> &nbsp; &nbsp; processonefile.py | _called by postprocessingqueue.py_ | `process-ocr-output-file-error` <br> `process-ocr-output-file-complete` <br> `process-ocr-output-file-review` |
+| need | need | `failure-imageuploding-to-blackfl` |
+| need | need | `failure-sending-to-wint` |
+| need | need | `intake-accepted-datafile` |
+| need | need | `intake-accepted` |
+| need | need | `intake-exception` |
+| need | need | `intake-rejected` |
+| need | need | `intake-started` |
+| need | need | `ocr-timedout` |
+| need | need | `ocr-waiting` |
+| need | need | `shipment-created-by-wint` |
+| need | need | `shipment-not-created-by-wint` |
+| need | need | `shipment-not-updated-by-wint` |
+| need | need | `shipment-updated-by-wint` |
+| need | need | `success-imageuploding-to-blackfl` |
+| need | need | `success-sending-to-wint` |
+| need | need | `success-updating-to-wint` |
+| need | need | `untried-imageuploding-to-blackfl` |
+| need | need | `updated-by-subsequent-order` |
+| need | need | `updates-prior-order` |
+| need | need | `upload-requested` |
 
 
 
 
 
 
-1. failure-imageuploding-to-blackfl
-1. failure-sending-to-wint
-1. intake-accepted
-1. intake-accepted-datafile
-1. intake-exception
-1. intake-rejected
-1. intake-started
-1. ocr-completed
-1. ocr-post-processing-complete
-1. ocr-post-processing-error
-1. ocr-timedout
-1. ocr-waiting
-1. process-ocr-output-file-complete
-1. process-ocr-output-file-error
-1. sending-to-wint
-1. shipment-created-by-wint
-1. shipment-not-created-by-wint
-1. shipment-not-updated-by-wint
-1. shipment-updated-by-wint
-1. success-imageuploding-to-blackfl
-1. success-sending-to-wint
-1. success-updating-to-wint
-1. untried-imageuploding-to-blackfl
-1. updated-by-subsequent-order
-1. updates-prior-order
-1. upload-requested
+#### `ALL STATUSES` status_metadata
 
-New statuses for Chainio (cargowise) as of 1/6/2021
-
-1. sending-to-chainio
-1. 
-
-
-
-
-
-Here follows a list of all status types and their associated metadata. If this list is found to be incompleted, inaccurate, out of date or in error... please correct it.
-
-All status_metadata object include the following properties:
+All status_metadata objects share the following common properties:
 
 1. request_id
 1. datetime_utciso
 1. company_id
 1. order_id (if available)
 
+
+
+
+
+#### `process-ocr-output-file-error` status_metadata
+
+1. exception_type
+1. exception_message
+1. file_list
+1. field_count
+1. orderitem_sequence
+1. order_id_list
+1. order_id
+
+
+
+
+#### `process-ocr-output-file-complete` and `process-ocr-output-file-review` status_metadata
+
+For orders whose variant_name `t_ocrvariants` and `company_id` is found in `t_companies.abbyy_variant_name` and `t_companies.admin_review_company_id_list` respectively.
+
+1. file_list
+1. field_count
+1. orderitem_sequence
+1. order_id_list
+1. order_id
 
 
 
@@ -147,8 +150,6 @@ All status_metadata object include the following properties:
    - or in email subject header with keyword "variant", like "variant: mybestfreightbuyervariant"
 
 
-
-
 #### `intake-accepted` status_metadata
 
 * created by `./intakefilter/intakefilter.py`
@@ -163,8 +164,7 @@ All status_metadata object include the following properties:
 
 
 
-
-##### `failure-imageuploding-to-blackfl` status_metadata
+#### `failure-imageuploding-to-blackfl` status_metadata
 
 * created by `./wintupdater/imageuploader.py`
 
@@ -174,7 +174,7 @@ All status_metadata object include the following properties:
 
 
 
-##### `success-imageuploding-to-blackfl` status_metadata
+#### `success-imageuploding-to-blackfl` status_metadata
 
 * created by `./wintupdater/imageuploader.py`
 
@@ -183,7 +183,7 @@ All status_metadata object include the following properties:
 
 
 
-##### `untried-imageuploding-to-blackfl` status_metadata
+#### `untried-imageuploding-to-blackfl` status_metadata
 
 * created by `./wintupdater/imageuploader.py`
 
@@ -211,6 +211,8 @@ All status_metadata object include the following properties:
 1. tms_provider_id (must be 2, i.e. Compcare)
 1. user_id
 
+
+
 #### `success-sending-to-chainio` status_metadata
 
 * created by `./submitchainio/submitchainio.py`
@@ -219,12 +221,16 @@ All status_metadata object include the following properties:
 1. chainio_data
 1. event_info
 
-#### `failure-sending-to-chainio`
+
+
+#### `failure-sending-to-chainio` status_metadata
 
 * created by `./submitchainio/submitchainio.py`
 
 1. exception_message
 1. event_info
+
+
 
 #### `shipment-created-by-chainio` and `shipment-not-created-by-chainio` status_metadata
 
@@ -241,6 +247,34 @@ All status_metadata object include the following properties:
 1. request_body
 
 
+
+#### `ocr-post-processing-error` status_metadata
+
+1. exception_type
+1. exception_message
+1. num_files_to_process
+1. num_files_processed_successfully
+1. num_files_processed_unsuccessfully
+1. file_list
+1. order_id_list (all ids, even failures)
+1. order_id_success_list
+1. order_id_failure_list
+1. orderitem_success_list  (e.g. row numbers)
+1. orderitem_failure_list
+
+
+
+#### `ocr-post-processing-complete` status_metadata
+
+1. num_files_to_process
+1. num_files_processed_successfully
+1. num_files_processed_unsuccessfully
+1. file_list
+1. order_id_list (all ids, even failures)
+1. order_id_success_list
+1. order_id_failure_list
+1. orderitem_success_list  (e.g. row numbers)
+1. orderitem_failure_list
 
 
 
@@ -281,9 +315,7 @@ All status_metadata object include the following properties:
 
 
 
-
-
-##### `status_metadata.order_id_list` (ocr-post-processing-error and ocr-post-processing-complete)
+##### `status_metadata.order_id_list` (ocr-post-pro cessing-error and ocr-post-processing-complete) status_metadata
 
 This is an array property in `status_metadata` for both the `ocr-post-processing-error` and `ocr-post-processing-complete` states. Here is a sample query showing how to parse its value and its length.
 
@@ -302,6 +334,6 @@ order by id asc
 ;
 ````
 
-##### status_metadata.file_list (ocr-post-processing-error and ocr-post-processing-complete)
+##### status_metadata.file_list (ocr-post-processing-error and ocr-post-processing-complete) status_metadata
 
 Every file processed in this request. If the list grows too large that it cannot be stored in a single SNS message (256KB max) then it will be truncated by deleting the largest element (and in case of a tie for largest, one will be picked at random) until the total size is under 256KB.

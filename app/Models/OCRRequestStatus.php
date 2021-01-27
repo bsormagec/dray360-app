@@ -28,7 +28,11 @@ class OCRRequestStatus extends Model
     OCR_POST_PROCESSING_ERROR = 'ocr-post-processing-error',
     OCR_TIMEDOUT = 'ocr-timedout',
     OCR_WAITING = 'ocr-waiting',
+    OCR_POST_PROCESSING_REVIEW = 'ocr-post-processing-review',
 
+    REPLICATED_FROM_EXISTING_ORDER = 'replicated-from-existing-order',
+
+    PROCESS_OCR_OUTPUT_FILE_REVIEW = 'process-ocr-output-file-review',
     PROCESS_OCR_OUTPUT_FILE_COMPLETE = 'process-ocr-output-file-complete',
     PROCESS_OCR_OUTPUT_FILE_ERROR = 'process-ocr-output-file-error',
 
@@ -61,50 +65,55 @@ class OCRRequestStatus extends Model
     ;
 
     const STATUS_MAP = [
-        self::INTAKE_ACCEPTED                    => 'Processing',
-        self::INTAKE_ACCEPTED_DATAFILE           => 'Processing',
-        self::OCR_COMPLETED                      => 'Processing',
-        self::OCR_WAITING                        => 'Processing',
+        self::INTAKE_ACCEPTED => 'Processing',
+        self::INTAKE_ACCEPTED_DATAFILE => 'Processing',
+        self::OCR_COMPLETED => 'Processing',
+        self::OCR_WAITING => 'Processing',
+        self::OCR_POST_PROCESSING_REVIEW => 'Processing',
 
-        self::INTAKE_EXCEPTION                   => 'Exception',
+        self::INTAKE_EXCEPTION => 'Exception',
 
-        self::INTAKE_STARTED                     => 'Intake',
-        self::UPLOAD_REQUESTED                   => 'Intake',
+        self::INTAKE_STARTED => 'Intake',
+        self::UPLOAD_REQUESTED => 'Intake',
 
-        self::INTAKE_REJECTED                    => 'Rejected',
-        self::OCR_POST_PROCESSING_ERROR          => 'Rejected',
-        self::OCR_TIMEDOUT                       => 'Rejected',
-        self::PROCESS_OCR_OUTPUT_FILE_ERROR      => 'Rejected',
+        self::INTAKE_REJECTED => 'Rejected',
+        self::OCR_POST_PROCESSING_ERROR => 'Rejected',
+        self::OCR_TIMEDOUT => 'Rejected',
+        self::PROCESS_OCR_OUTPUT_FILE_ERROR => 'Rejected',
 
-        self::OCR_POST_PROCESSING_COMPLETE       => 'Processed',
-        self::PROCESS_OCR_OUTPUT_FILE_COMPLETE   => 'Processed',
+        self::OCR_POST_PROCESSING_COMPLETE => 'Processed',
+        self::PROCESS_OCR_OUTPUT_FILE_COMPLETE => 'Processed',
 
-        self::UPDATES_PRIOR_ORDER                => 'Update',
+        self::PROCESS_OCR_OUTPUT_FILE_REVIEW => 'Needs Review',
 
-        self::UPDATED_BY_SUBSEQUENT_ORDER        => 'Replaced',
+        self::REPLICATED_FROM_EXISTING_ORDER => 'Replication',
 
-        self::SENDING_TO_WINT                    => 'Sending to TMS',
-        self::UPDATING_TO_WINT                   => 'Sending to TMS',
-        self::SENDING_TO_CHAINIO                 => 'Sending to TMS',
+        self::UPDATES_PRIOR_ORDER => 'Update',
 
-        self::SUCCESS_SENDING_TO_WINT            => 'Sent to TMS',
-        self::SUCCESS_UPDATING_TO_WINT           => 'Sent to TMS',
-        self::SUCCESS_SENDING_TO_CHAINIO         => 'Sent to TMS',
+        self::UPDATED_BY_SUBSEQUENT_ORDER => 'Replaced',
 
-        self::SHIPMENT_CREATED_BY_WINT           => 'Accepted by TMS',
-        self::SHIPMENT_UPDATED_BY_WINT           => 'Accepted by TMS',
+        self::SENDING_TO_WINT => 'Sending to TMS',
+        self::UPDATING_TO_WINT => 'Sending to TMS',
+        self::SENDING_TO_CHAINIO => 'Sending to TMS',
+
+        self::SUCCESS_SENDING_TO_WINT => 'Sent to TMS',
+        self::SUCCESS_UPDATING_TO_WINT => 'Sent to TMS',
+        self::SUCCESS_SENDING_TO_CHAINIO => 'Sent to TMS',
+
+        self::SHIPMENT_CREATED_BY_WINT => 'Accepted by TMS',
+        self::SHIPMENT_UPDATED_BY_WINT => 'Accepted by TMS',
         self::SUCCESS_IMAGEUPLOADING_TO_BLACKFLY => 'Accepted by TMS',
         self::UNTRIED_IMAGEUPLOADING_TO_BLACKFLY => 'Accepted by TMS',
-        self::SHIPMENT_CREATED_BY_CHAINIO        => 'Accepted by TMS',
+        self::SHIPMENT_CREATED_BY_CHAINIO => 'Accepted by TMS',
 
-        self::SHIPMENT_NOT_UPDATED_BY_WINT       => 'TMS Warning',
-        self::FAILURE_UPDATING_TO_WINT           => 'TMS Warning',
+        self::SHIPMENT_NOT_UPDATED_BY_WINT => 'TMS Warning',
+        self::FAILURE_UPDATING_TO_WINT => 'TMS Warning',
         self::FAILURE_IMAGEUPLOADING_TO_BLACKFLY => 'TMS Warning',
 
-        self::SHIPMENT_NOT_CREATED_BY_WINT       => 'TMS Error',
-        self::FAILURE_SENDING_TO_WINT            => 'TMS Error',
-        self::SHIPMENT_NOT_CREATED_BY_CHAINIO    => 'TMS Error',
-        self::FAILURE_SENDING_TO_CHAINIO         => 'TMS Error',
+        self::SHIPMENT_NOT_CREATED_BY_WINT => 'TMS Error',
+        self::FAILURE_SENDING_TO_WINT => 'TMS Error',
+        self::SHIPMENT_NOT_CREATED_BY_CHAINIO => 'TMS Error',
+        self::FAILURE_SENDING_TO_CHAINIO => 'TMS Error',
     ];
 
     public $table = 't_job_state_changes';
@@ -114,7 +123,8 @@ class OCRRequestStatus extends Model
         'status_date',
         'status',
         'status_metadata',
-        'company_id'
+        'company_id',
+        'order_id'
     ];
 
     protected $casts = [
@@ -168,5 +178,15 @@ class OCRRequestStatus extends Model
         ];
 
         return static::create($data);
+    }
+
+    public static function alreadyCompleted($requestId): bool
+    {
+        return static::query()
+            ->where([
+                'request_id' => $requestId,
+                'status' => static::OCR_POST_PROCESSING_COMPLETE,
+            ])
+            ->exists();
     }
 }

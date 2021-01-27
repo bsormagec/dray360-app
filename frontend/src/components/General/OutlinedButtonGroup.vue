@@ -35,7 +35,7 @@
     </template>
     <v-list>
       <v-list-item
-        v-for="(option, index) in options"
+        v-for="(option, index) in visibleOptions"
         :key="index"
         :disabled="needPermission(option.hasPermission)"
         @click="option.action"
@@ -79,6 +79,9 @@ export default {
     }
   },
   computed: {
+    visibleOptions () {
+      return this.options.filter(option => option.hidden !== true)
+    },
     menuAttributes () {
       return {
         'offset-y': !this.floated,

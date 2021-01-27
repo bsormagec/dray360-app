@@ -15,5 +15,6 @@ $factory->define(OCRVariant::class, function (Faker $faker) {
         'classification' => [],
         'mapping' => [],
         'company_id_list' => [],
+        'admin_review_company_id_list' => [],
     ];
 });

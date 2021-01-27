@@ -46,6 +46,7 @@ class DivisionCodeSeeder extends Seeder
         ['t_tms_provider_id' => TMSProvider::PROFIT_TOOLS,  't_company_id' => self::TCOMPANIES_DEMO,  'division_name' => 'Crosstowns'              , 'division_code' => '2207'                 ],
         ['t_tms_provider_id' => TMSProvider::PROFIT_TOOLS,  't_company_id' => self::TCOMPANIES_DEMO,  'division_name' => 'Crosstowns (OCC)'        , 'division_code' => '2208'                 ],
         ['t_tms_provider_id' => TMSProvider::PROFIT_TOOLS,  't_company_id' => self::TCOMPANIES_DEMO,  'division_name' => 'JB HUNT XTOWNS'          , 'division_code' => '2210'                 ],
+        ['t_tms_provider_id' => TMSProvider::PROFIT_TOOLS,  't_company_id' => self::TCOMPANIES_DEMO,  'division_name' => 'Dray360'                 , 'division_code' => '2211'                 ],
 
         ['t_tms_provider_id' => TMSProvider::PROFIT_TOOLS,  't_company_id' => self::IXT_ONBOARDING,  'division_name' => 'IXT'                      , 'division_code' => '2201'                 ],
 

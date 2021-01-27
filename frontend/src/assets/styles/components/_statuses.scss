@@ -23,6 +23,7 @@
   }
 }
 &.tmswarning,
+&.needsreview,
 &.replaced {
   &::after {
     background-color: #FDAA63;

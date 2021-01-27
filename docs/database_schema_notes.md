@@ -42,7 +42,7 @@ Each entry contains a single-word `status`, for example `intake-accepted` or `oc
 
 These `status` values are typically used as attributes in an SNS message, to trigger a queue-entry which triggers a python-microservice.
 
-For detailed information on `status` values, see [Status Metadata Documentation](docs/status_metadata.md)
+For detailed information on `status` values, see [Status Metadata Documentation](./status_metadata.md)
 
 
 #### status_metadata
@@ -182,6 +182,7 @@ JSON data structure:
 ```
 
 
+
 #### company_id_list
 
 This is a json array that stores list of companies that can use this datafile variant. If NULL or empty it means all companies can use the variant.
@@ -200,19 +201,34 @@ JSON data structure:
 Note that to search the company_id_list for a given company_id, use the `json_contains` function, like this:
 
 ````sql
-select * from t_ocrvariants where json_contains(t_company_id_list, '2','$');
+select * from t_ocrvariants where json_contains(company_id_list, '2','$');
 ````
 
 Which will find company_id=2, for example. note that the single-quotes are required for integer values. String values would be searched with embedded double-quotes, like `'"two"'`
 
 
+#### admin_review_company_id_list
+
+This list indicates which companies required this specific variant to be admin-reviewed. That is, orders processed by these companies for this variant will end up with their status set to `process-ocr-output-file-review` instead of `process-ocr-output-file-complete`
+
+If this is column is left null, then no companies will require admin-review for their orders of this variant type.
+
+Note that to set this value, use a sql command with something like this syntax:
+
+`update t_ocrvariants set admin_review_company_id_list="[2]" where id=36;`
 
 
 
 
-#######################
+
+<br><br><br>
+===================================
 
 ### t_equipment_types
+
+This table is seeded by ./database/seeds/EquipmentLeaseTypesSeeder.php
+
+<br><br>
 
 #### line_prefix_list
 
