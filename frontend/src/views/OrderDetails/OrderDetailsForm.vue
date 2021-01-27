@@ -401,6 +401,7 @@
             @change="value => handleChange('master_bol_mawb', value)"
           />
           <FormFieldInput
+            v-if="!hideFieldNameHouseBolHawb"
             references="house_bol_hawb"
             label="House BOL MAWB"
             :value="order.house_bol_hawb"
@@ -703,6 +704,11 @@ export default {
       type: Array,
       required: false,
       default: () => []
+    },
+    hideFieldNameHouseBolHawb: {
+      type: Boolean,
+      required: false,
+      default: false
     },
     itgContainersEnabled: {
       type: Boolean,
