@@ -83,6 +83,10 @@ class OcrRequestControllerTest extends TestCase
         $this->getJson(route('ocr.requests.index', ['filter[company_id]' => $ocrRequest->latestOcrRequestStatus->company_id]))
             ->assertJsonCount(1, 'data');
         $this->getJson(route('ocr.requests.index', ['sort' => '-status']))
+                ->assertJsonCount(4, 'data');
+        $ocrRequest->update(['done_at' => now()]);
+        $this->getJson(route('ocr.requests.index'))->assertJsonCount(3, 'data');
+        $this->getJson(route('ocr.requests.index', ['filter[show_done]' => 1]))
             ->assertJsonCount(4, 'data');
     }
 
@@ -121,6 +125,7 @@ class OcrRequestControllerTest extends TestCase
         $this->loginAdmin();
         (new OrdersTableSeeder())->seedOrderWithPostProcessingComplete();
         $ocrRequest = OCRRequest::latest()->first();
+        $ocrRequest->update(['order_id' => null]);
 
         $this->deleteJson(route('ocr.requests.destroy', $ocrRequest->request_id))
             ->assertStatus(Response::HTTP_NO_CONTENT);
@@ -137,6 +142,7 @@ class OcrRequestControllerTest extends TestCase
         $this->loginCustomerAdmin();
         (new OrdersTableSeeder())->seedOrderWithPostProcessingComplete();
         $ocrRequest = OCRRequest::latest()->first();
+        $ocrRequest->update(['order_id' => null]);
 
         $this->deleteJson(route('ocr.requests.destroy', $ocrRequest->request_id))
             ->assertStatus(Response::HTTP_FORBIDDEN);

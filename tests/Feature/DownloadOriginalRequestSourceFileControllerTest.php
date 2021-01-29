@@ -12,7 +12,7 @@ use Tests\Seeds\OrdersTableSeeder;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
 
-class DownloadOriginalOrderSourceFileControllerTest extends TestCase
+class DownloadOriginalRequestSourceFileControllerTest extends TestCase
 {
     use DatabaseTransactions;
 
@@ -26,9 +26,9 @@ class DownloadOriginalOrderSourceFileControllerTest extends TestCase
         Storage::fake('s3');
         Storage::shouldReceive('createS3Driver')->andReturn(Storage::getFacadeRoot());
         Storage::shouldReceive('temporaryUrl')->andReturn($signedUrl);
-        $order = Order::first(['id']);
+        $order = Order::first(['request_id']);
 
-        $this->get(route('orders.download-source-file', $order->id))
+        $this->get(route('ocr.requests.download-source-file', $order->request_id))
             ->assertJsonFragment([
                 'data' => $signedUrl
             ])
@@ -43,12 +43,14 @@ class DownloadOriginalOrderSourceFileControllerTest extends TestCase
         $company2 = factory(Company::class)->create();
         $user = factory(User::class)->create(['t_company_id' => $company1->id]);
         $user->attachRole('customer-admin');
-        $order = factory(Order::class)->create(['t_company_id' => $company2->id]);
+        (new OrdersTableSeeder())->seedOrderWithPostProcessingComplete();
+        $order = Order::orderByDesc('id')->first();
+        $order->update(['t_company_id' => $company2->id]);
 
         Sanctum::actingAs($user);
         Storage::fake('s3');
 
-        $this->get(route('orders.download-source-file', $order->id))
+        $this->get(route('ocr.requests.download-source-file', $order->request_id))
             ->assertStatus(Response::HTTP_FORBIDDEN);
     }
 }

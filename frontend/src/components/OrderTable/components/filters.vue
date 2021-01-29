@@ -211,9 +211,7 @@
                   for="company_id"
                   hide-details
                   class="filter-label"
-                >
-                  Show Hidden Items
-                </label>
+                >{{ hiddenItemsText }}</label>
               </v-col>
               <v-col cols="8">
                 <v-switch
@@ -331,6 +329,16 @@ export default {
       type: Boolean,
       required: false,
       default: false
+    },
+    hiddenItemsText: {
+      type: String,
+      required: false,
+      default: 'Show Hidden Items'
+    },
+    hiddenItemsLabel: {
+      type: String,
+      required: false,
+      default: 'Hidden Items Shown'
     }
   },
   data () {
@@ -344,6 +352,8 @@ export default {
         { text: displayStatuses.processed, value: displayStatuses.processed },
         { text: displayStatuses.needsReview, value: displayStatuses.needsReview },
         { text: displayStatuses.sendingToTms, value: displayStatuses.sendingToTms },
+        { text: displayStatuses.markDone, value: displayStatuses.markDone },
+        { text: displayStatuses.markUndone, value: displayStatuses.markUndone },
         { text: displayStatuses.sentToTms, value: displayStatuses.sentToTms },
         { text: displayStatuses.acceptedByTms, value: displayStatuses.acceptedByTms },
         { text: displayStatuses.tmsWarning, value: displayStatuses.tmsWarning },
@@ -377,6 +387,8 @@ export default {
         { text: statuses.shipmentUpdatedByWint, value: statuses.shipmentUpdatedByWint },
         { text: statuses.shipmentNotUpdatedByWint, value: statuses.shipmentNotUpdatedByWint },
         { text: statuses.updatesPriorOrder, value: statuses.updatesPriorOrder },
+        { text: statuses.requestMarkedDone, value: statuses.requestMarkedDone },
+        { text: statuses.requestMarkedUndone, value: statuses.requestMarkedUndone },
         { text: statuses.updatedBySubsequentOrder, value: statuses.updatedBySubsequentOrder },
         { text: statuses.successImageuplodingToBlackfl, value: statuses.successImageuplodingToBlackfl },
         { text: statuses.failureImageuplodingToBlackfl, value: statuses.failureImageuplodingToBlackfl },
@@ -403,7 +415,7 @@ export default {
         system_status: 'System Status',
         company_id: 'Company',
         updateType: 'Update Type',
-        displayHidden: 'Hidden Items Shown'
+        displayHidden: this.hiddenItemsLabel
       },
       chipColors: {
         search: '#41B6E6',
@@ -450,6 +462,8 @@ export default {
   },
 
   created () {
+    this.statuses = this.statuses.sort((a, b) => a.text > b.text ? 1 : -1)
+    this.system_statuses = this.system_statuses.sort((a, b) => a.text > b.text ? 1 : -1)
     this.setActiveFilters()
   },
 

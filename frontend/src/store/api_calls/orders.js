@@ -5,8 +5,6 @@ export const getOrders = async (filters, query) => axios.get(`/api/orders?${toPa
 
 export const getOrderDetail = async (order) => axios.get(`/api/orders/${order}`).then(data => [undefined, data.data]).catch(e => [e])
 
-export const getOrderStatusHistory = async (order, system_status = false) => axios.get(`/api/orders/${order}/status-history?${toParams({ system_status })}`).then(data => [undefined, data.data]).catch(e => [e])
-
 export const updateOrderDetail = async ({ id, changes }) => axios.put(`/api/orders/${id}`, changes).then(data => [undefined, data.data]).catch(e => [e])
 
 export const postUploadPDF = async (file, params) => axios.post('/api/ocr/requests', { filename: file.name, withCredentials: false, ...params })
@@ -23,10 +21,6 @@ export const postUploadPDF = async (file, params) => axios.post('/api/ocr/reques
       .catch(e => [e])
   })
   .catch(e => [e])
-
-export const getSourceFileDownloadURL = async (orderId) => axios.get(`/api/orders/${orderId}/download-source-file`).then(data => [undefined, data.data]).catch(e => [e])
-
-export const reprocessOcrRequest = async (requestId) => axios.post(`/api/ocr/requests/${requestId}/reprocess`).then(data => [undefined, data.data]).catch(e => [e])
 
 export const postSendToTms = async (orderId) => axios.post(`/api/orders/${orderId}/send-to-tms`).then(data => [undefined, data]).catch(e => [e])
 

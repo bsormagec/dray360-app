@@ -65,4 +65,16 @@ class OcrRequestStatusPolicy
     {
         return false;
     }
+
+    /**
+     * Determine if the user can download an request pdf.
+     */
+    public function downloadSourceFile(User $user, OCRRequestStatus $ocrRequestStatus): bool
+    {
+        if (! $user->isSuperadmin()) {
+            return $user->getCompanyId() === $ocrRequestStatus->company_id;
+        }
+
+        return true;
+    }
 }

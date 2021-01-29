@@ -31,6 +31,8 @@ export const statuses = {
   shipmentUpdatedByWint: 'shipment-updated-by-wint',
   shipmentNotUpdatedByWint: 'shipment-not-updated-by-wint',
   updatesPriorOrder: 'updates-prior-order',
+  requestMarkedDone: 'request-marked-done',
+  requestMarkedUndone: 'request-marked-undone',
   updatedBySubsequentOrder: 'updated-by-subsequent-order',
   successImageuplodingToBlackfl: 'success-imageuploding-to-blackfl',
   failureImageuplodingToBlackfl: 'failure-imageuploding-to-blackfl',
@@ -49,5 +51,7 @@ export const displayStatuses = {
   tmsWarning: 'TMS Warning',
   tmsError: 'TMS Error',
   needsReview: 'Needs Review',
-  replication: 'Replication'
+  replication: 'Replication',
+  markDone: 'Marked Complete',
+  markUndone: 'Marked not Complete'
 }

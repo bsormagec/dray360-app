@@ -17,6 +17,7 @@
             :tms-templates-enabled="profitToolsTemplatesEnabled"
             :itg-containers="itgContainers"
             :itg-containers-enabled="itgContainersEnabled"
+            :hide-field-name-house-bol-hawb="hideFieldNameHouseBolHawb"
             :divisions-enabled="divisionsEnabled"
             @order-deleted="$emit('order-deleted')"
             @go-back="$emit('go-back')"
@@ -136,6 +137,9 @@ export default {
       return get(this.currentOrder, 'company.configuration.profit_tools_enable_templates', false)
     },
 
+    hideFieldNameHouseBolHawb() {
+      return get(this.currentOrder, 'company.configuration.hide_field_name_house_bol_hawb', false)
+    },
     itgContainersEnabled () {
       return get(this.currentOrder, 'company.configuration.itg_enable_containers', false)
     },

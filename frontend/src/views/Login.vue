@@ -24,6 +24,7 @@
           label="Email"
           placeholder=" "
           @focus="error = false"
+          @keypress.enter.stop="login()"
         />
         <v-text-field
           v-model="password"
@@ -35,6 +36,7 @@
           label="Password"
           placeholder=" "
           @focus="error = false"
+          @keypress.enter.stop="login()"
         />
         <p
           v-if="error"

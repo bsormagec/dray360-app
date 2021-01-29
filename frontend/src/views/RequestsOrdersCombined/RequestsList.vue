@@ -9,6 +9,10 @@
         :system-status="initFilters.systemStatus"
         :company-id="initFilters.companyId"
         :update-type="initFilters.updateType"
+        :display-hidden="initFilters.displayHidden"
+        :hidden-items-filter="true"
+        hidden-items-text="Show Completed Requests"
+        hidden-items-label="Completed Requests Shown"
         @change="filtersUpdated"
       />
       <v-btn
@@ -40,13 +44,14 @@
             :request="request"
             :active="requestSelected === request.request_id"
             @change="handleChange"
+            @deleteRequest="refreshRequests"
           />
           <v-divider />
         </div>
         <div v-else-if="!loading">
           <div class="d-flex justify-center px-2 py-4">
             <h5>
-              Search terms not found
+              Nothing found
             </h5>
           </div>
         </div>
@@ -123,6 +128,7 @@ export default {
         status: [],
         systemStatus: [],
         companyId: [],
+        displayHidden: false,
         updateType: ''
       },
       // polling stuff
@@ -160,6 +166,7 @@ export default {
     this.initFilters.search = params.search
     this.initFilters.dateRange = params.dateRange?.split(',')
     this.initFilters.status = params.status?.split(',')
+    this.initFilters.displayHidden = !!params.displayHidden
     this.initFilters.systemStatus = params.system_status?.split(',')
     this.initFilters.companyId = params.company_id?.split(',')
       .map(item => parseInt(item))
@@ -207,9 +214,7 @@ export default {
       }
     },
     initializeFilters () {
-      if (Object.keys(this.initFilters).some(key => this.initFilters[key] && this.initFilters[key].length > 0)) {
-        this.filters = [...this.$refs.requestFilters.getActiveFilters()]
-      }
+      this.filters = [...this.$refs.requestFilters.getActiveFilters()]
     },
     addScrollEventToFetchMoreRequests () {
       this.$refs.virtualScroll.$el.addEventListener('scroll', () => {
@@ -239,6 +244,7 @@ export default {
         request_id: 'filter[request_id]',
         search: 'filter[query]',
         dateRange: 'filter[created_between]',
+        displayHidden: 'filter[show_done]',
         system_status: 'filter[status]',
         status: 'filter[display_status]', // Processing, Exception, Rejected, Intake, Processed, Sending to TMS, Sent to TMS, Accepted by TMS
         company_id: 'filter[company_id]',
@@ -298,9 +304,11 @@ export default {
 
     async checkForChanges () {
       const totalItems = await this.getTotalRequests()
-      if (this.initialTotalItems !== totalItems) {
+      if (this.initialTotalItems < totalItems) {
         this.changesDetected = true
         this.initialTotalItems = totalItems
+      } else {
+        this.initialTotalItems = this.totalItems
       }
     },
 

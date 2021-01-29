@@ -109,16 +109,4 @@ class OrdersPolicy
 
         return $hasPermissionToReplicate;
     }
-
-    /**
-     * Determine if the user can download an order pdf.
-     */
-    public function downloadSourceFile(User $user, Order $order): bool
-    {
-        if (! $user->isSuperadmin()) {
-            return $user->belongsToSameCompanyAs($order);
-        }
-
-        return true;
-    }
 }

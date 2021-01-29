@@ -128,6 +128,7 @@ export default {
     display: inline-block;
     text-transform: none;
     font-size: rem(13);
+    min-width: rem(105);
     &--floated {
       position: fixed;
       left: auto;
