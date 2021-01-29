@@ -73,7 +73,7 @@
         :main-action="splitButtonMainAction"
         :options="[
           { title: 'Edit Order' , action: toggleEdit, hasPermission: true },
-          { title: 'Download Source File', action: () => downloadSourceFile(order.id), hasPermission: true },
+          { title: 'Download Source File', action: () => downloadSourceFile(order.request_id), hasPermission: true },
           { title: 'Replicate Order', action: () => replicateOrder(order.id), hidden: !hasPermission('admin-review-edit') },
           { title: 'Delete Order', action: () => deleteOrder(order.id), hasPermission: hasPermission('orders-remove') },
           { title: 'Add TMS ID', action: () => addTMSId(order.id), hasPermission: hasPermission('ocr-requests-edit') && isInProcessedState}
@@ -633,7 +633,8 @@ import { mapState, mapActions } from 'vuex'
 import get from 'lodash/get'
 import { statuses } from '@/enums/app_objects_types'
 
-import { getOrderDetail, getSourceFileDownloadURL, postSendToTms, delDeleteOrder, postSendToClient, replicateOrder } from '@/store/api_calls/orders'
+import { getOrderDetail, postSendToTms, delDeleteOrder, postSendToClient, replicateOrder } from '@/store/api_calls/orders'
+import { getSourceFileDownloadURL } from '@/store/api_calls/requests'
 import orderForm, { types as orderFormTypes } from '@/store/modules/order-form'
 import utils, { type } from '@/store/modules/utils'
 
@@ -912,9 +913,9 @@ export default {
       this[type.setSnackbar]({ show: true, message })
     },
 
-    async downloadSourceFile (orderId) {
+    async downloadSourceFile (requestId) {
       this.loading = true
-      const [error, data] = await getSourceFileDownloadURL(orderId)
+      const [error, data] = await getSourceFileDownloadURL(requestId)
 
       if (error === undefined) {
         const link = document.createElement('a')

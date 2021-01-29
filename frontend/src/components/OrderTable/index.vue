@@ -113,19 +113,10 @@
       </template>
 
       <template v-slot:[`item.latest_ocr_request_status.display_status`]="{ item }">
-        <span
-          v-if="item.latest_ocr_request_status.display_status.toLowerCase() === 'processed'"
-          class="processed-status"
-        >
-          {{ item.latest_ocr_request_status.display_status }}
-        </span>
-        <Chip
-          v-else
-          x-small
-          v-bind="getStatusChip(item)"
-        >
-          {{ item.latest_ocr_request_status.display_status }}
-        </Chip>
+        <RequestStatus
+          class="caption black--text"
+          :status="item.latest_ocr_request_status"
+        />
       </template>
       <template v-slot:[`item.actions`]="{ item }">
         <OutlinedButtonGroup
@@ -136,11 +127,10 @@
             hasPermission: hasPermission('orders-view')
           }"
           :options="[
-            { title: 'Download Source File', action: () => downloadSourceFile(item.id) },
             { title: 'Replicate Order', action: () => replicateOrder(item), hidden: !hasPermission('admin-review-edit') },
-            { title: 'Reprocess Order', action: () => reprocessRequest(item.request_id) },
+            { title: item.is_hidden ? 'Unhide Order' : 'Hide Order', action: () => changeOrderDisplayStatus(item) },
+            { title: 'Show status history', action: () => openStatusHistoryDialog = true },
             { title: 'Delete Order', action: () => deleteOrder(item) },
-            { title: item.is_hidden ? 'Unhide Order' : 'Hide Order', action: () => changeOrderDisplayStatus(item) }
           ]"
         />
 
@@ -154,6 +144,11 @@
         >
           View
         </v-btn>
+        <StatusHistoryDialog
+          :open="openStatusHistoryDialog"
+          :order="item"
+          @close="openStatusHistoryDialog= false"
+        />
       </template>
       <template v-slot:no-data>
         <v-container>
@@ -209,23 +204,26 @@
 import auth from '@/store/modules/auth'
 import Filters from './components/filters'
 import Pagination from './components/Pagination'
-import Chip from '@/components/Chip'
+import RequestStatus from '@/components/RequestStatus'
+
 import hasPermission from '@/mixins/permissions'
 import { formatDate } from '@/utils/dates'
 import utils, { type as utilTypes } from '@/store/modules/utils'
-import { getOrders, getSourceFileDownloadURL, reprocessOcrRequest, delDeleteOrder, updateOrderDetail, replicateOrder } from '@/store/api_calls/orders'
+import { getOrders, delDeleteOrder, updateOrderDetail, replicateOrder } from '@/store/api_calls/orders'
 import { getRequestFilters } from '@/utils/filters_handling'
 
 import { mapState, mapActions } from 'vuex'
 import OutlinedButtonGroup from '@/components/General/OutlinedButtonGroup'
+import StatusHistoryDialog from '@/views/OrderDetails/StatusHistoryDialog'
 
 export default {
   name: 'OrderTable',
   components: {
     Pagination,
-    Chip,
     OutlinedButtonGroup,
-    Filters
+    RequestStatus,
+    Filters,
+    StatusHistoryDialog
   },
   mixins: [hasPermission],
   props: {
@@ -317,7 +315,8 @@ export default {
       // pagination links
       links: null,
       // query meta data
-      meta: null
+      meta: null,
+      openStatusHistoryDialog: false
     }
   },
   computed: {
@@ -457,41 +456,6 @@ export default {
     reloadPage () {
       this.changesDetected = false
       window.location.reload()
-    },
-
-    async downloadSourceFile (orderId) {
-      const [error, data] = await getSourceFileDownloadURL(orderId)
-
-      if (!error) {
-        // not entirely sure why this is necessary, but this is the logic for triggering a DL elsewhere in the app.
-        const link = document.createElement('a')
-        link.href = data.data
-        link.click()
-        link.remove()
-      } else {
-        console.log('error', error)
-      }
-    },
-
-    // reprocess order
-    async reprocessRequest ({ request_id }) {
-      this.setConfirmDialog({
-        title: 'Are you sure you want to reprocess the request associated to this order?',
-        onConfirm: async () => {
-          this.loading = true
-
-          const [error] = await reprocessOcrRequest(request_id)
-
-          if (error !== undefined) {
-            this.loading = false
-            this.setSnackbar({ show: true, message: 'There was an error trying to send the message to reprocess' })
-            return
-          }
-
-          this.setSnackbar({ show: true, message: 'Request sent for reprocessing' })
-          this.loading = false
-        }
-      })
     },
 
     async deleteOrder (item) {
@@ -677,24 +641,6 @@ export default {
       }
 
       return getRequestFilters(this.getFilters(), filterKeyMap)
-    },
-
-    getStatusChip (item) {
-      // different colors for different status types
-      switch (item.latest_ocr_request_status.display_status.toLowerCase()) {
-        case 'processing':
-          return { color: 'blue' }
-        case 'updated':
-          return { color: 'blue', outlined: true, textColor: 'blue' }
-        case 'rejected':
-          return { color: '#FB7660' }
-        case 'error':
-          return { color: '#FB7660' }
-        case 'warning':
-          return { color: '#FB7660' }
-        default:
-          return { color: 'blue' }
-      }
     },
 
     resetFilters () {

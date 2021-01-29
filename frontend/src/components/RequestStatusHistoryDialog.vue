@@ -8,7 +8,7 @@
       <v-card>
         <v-card-title class="justify-space-between">
           <div class="secondary--text">
-            Order #{{ order.id }} History
+            Request #{{ request.request_id.substring(0,8).toUpperCase() }} History
           </div>
           <v-btn
             icon
@@ -50,23 +50,11 @@
               <v-icon>mdi-refresh</v-icon>
             </v-btn>
           </div>
-          <div
-            v-if="order.submitted_date"
-            class="caption mb-3"
-          >
-            Submitted {{ formatDate(order.submitted_date, true) }} in <router-link :to="`/dashboard?selected=${order.request_id}`">
-              Request #{{ order.request_id.substring(0,8).toUpperCase() }}
-            </router-link>
-            <br>
-            {{ userWhoUploadedTheRequest ? `By ${userWhoUploadedTheRequest}` : '' }}
-          </div>
-          <div
-            v-else
-            class="caption mb-3"
-          >
-            Submitted in <router-link :to="`/dashboard?selected=${order.request_id}`">
-              Request #{{ order.request_id.substring(0,8).toUpperCase() }}
-            </router-link>
+          <div class="caption mb-3">
+            Submitted {{ formatDate(request.created_at, true) }}
+            <!-- in <router-link :to="`/dashboard?selected=${request.request_id}`">
+              Request #{{ request.request_id.substring(0,8).toUpperCase() }}
+            </router-link> -->
             <br>
             {{ userWhoUploadedTheRequest ? `By ${userWhoUploadedTheRequest}` : '' }}
           </div>
@@ -142,7 +130,7 @@ import 'vue-json-pretty/lib/styles.css'
 import VueJsonPretty from 'vue-json-pretty'
 
 export default {
-  name: 'StatusHistoryDialog',
+  name: 'RequestStatusHistoryDialog',
   components: {
     VueJsonPretty
   },
@@ -152,7 +140,7 @@ export default {
       type: Boolean,
       required: true
     },
-    order: {
+    request: {
       type: Object,
       required: true
     }
@@ -165,7 +153,7 @@ export default {
 
   computed: {
     userWhoUploadedTheRequest () {
-      return this.order.upload_user_name ? this.order.upload_user_name : this.order.email_from_address
+      return this.request.upload_user_name ? this.request.upload_user_name : this.request.email_from_address
     }
   },
 
@@ -189,7 +177,7 @@ export default {
     },
     async fetchStatusHistory () {
       this.loading = true
-      const [error, data] = await getStatusHistory({ order_id: this.order.id, system_status: this.useSystemStatus })
+      const [error, data] = await getStatusHistory({ request_id: this.request.request_id, system_status: this.useSystemStatus })
       this.loading = false
 
       if (error !== undefined) {

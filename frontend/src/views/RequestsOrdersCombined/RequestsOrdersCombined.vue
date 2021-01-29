@@ -200,33 +200,13 @@
                     mdi-chevron-left
                   </v-icon>
                 </v-btn>
-                <h5>
+                <h5 class="mr-1">
                   Request # {{ request.request_id.substring(0,8).toUpperCase() }} ({{ request.orders_count }} orders)
                 </h5>
-                <v-menu
-                  v-if="hasPermission('ocr-requests-remove')"
-                  offset-y
-                >
-                  <template v-slot:activator="{ on, attrs }">
-                    <v-btn
-                      color="primary"
-                      class="ml-4"
-                      width="32"
-                      height="32"
-                      x-small
-                      outlined
-                      v-bind="attrs"
-                      v-on="on"
-                    >
-                      <v-icon>mdi-chevron-down</v-icon>
-                    </v-btn>
-                  </template>
-                  <v-list>
-                    <v-list-item @click="deleteRequest">
-                      <v-list-item-title>Delete Request</v-list-item-title>
-                    </v-list-item>
-                  </v-list>
-                </v-menu>
+                <RequestItemMenu
+                  :request="request"
+                  @request-deleted="() => setReloadRequests(true)"
+                />
               </div>
               <h5 v-else>
                 No request selected
@@ -271,7 +251,7 @@
   </div>
 </template>
 <script>
-
+import RequestItemMenu from '@/components/RequestItemMenu'
 import OrderTable from '@/components/OrderTable'
 import RequestsList from './RequestsList'
 import OrderDetails from '@/views/OrderDetails/OrderDetails'
@@ -283,7 +263,6 @@ import permissions from '@/mixins/permissions'
 import utils, { type } from '@/store/modules/utils'
 import auth from '@/store/modules/auth'
 import orders, { types as ordersTypes } from '@/store/modules/orders'
-import { deleteRequest as delRequest } from '@/store/api_calls/requests'
 import isMobile from '@/mixins/is_mobile'
 import isMedium from '@/mixins/is_medium'
 
@@ -296,6 +275,7 @@ export default {
     OrderDetails,
     RequestsList,
     UploadOrdersDialog,
+    RequestItemMenu,
     SidebarNavigationButton
   },
   mixins: [permissions, isMobile, isMedium],
@@ -400,35 +380,6 @@ export default {
       }
       this.$router.replace({ path: 'dashboard', query: { tab: value } }).catch(() => {})
       this.tab = value
-    },
-    async deleteRequest () {
-      this.loading = true
-      await this.setConfirmDialog({
-        title: 'Are you sure you want to delete this request?',
-        onConfirm: async () => {
-          this.loading = true
-          const [error] = await delRequest(this.request.request_id)
-
-          if (!error) {
-            await this.setSnackbar({
-              show: true,
-              showSpinner: false,
-              message: 'Request deleted'
-            })
-            location.reload()
-            this.loading = false
-          } else {
-            await this.setSnackbar({
-              show: true,
-              showSpinner: false,
-              message: 'Error trying to delete the request'
-            })
-          }
-        },
-        onCancel: () => {
-          this.loading = false
-        }
-      })
     },
     togglePanels () {
       this.compressed = !this.compressed

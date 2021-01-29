@@ -40,6 +40,7 @@
             :request="request"
             :active="requestSelected === request.request_id"
             @change="handleChange"
+            @deleteRequest="refreshRequests"
           />
           <v-divider />
         </div>
@@ -298,9 +299,11 @@ export default {
 
     async checkForChanges () {
       const totalItems = await this.getTotalRequests()
-      if (this.initialTotalItems !== totalItems) {
+      if (this.initialTotalItems < totalItems) {
         this.changesDetected = true
         this.initialTotalItems = totalItems
+      } else {
+        this.initialTotalItems = this.totalItems
       }
     },
 

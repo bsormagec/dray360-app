@@ -17,18 +17,18 @@ use App\Http\Controllers\Api\SendToClientController;
 use App\Http\Controllers\Api\DivisionCodesController;
 use App\Http\Controllers\Api\ImpersonationController;
 use App\Http\Controllers\Api\SearchAddressController;
+use App\Http\Controllers\Api\StatusHistoryController;
 use App\Http\Controllers\Api\ChangePasswordController;
 use App\Http\Controllers\Api\EquipmentTypesController;
 use App\Http\Controllers\Api\DictionaryItemsController;
 use App\Http\Controllers\Api\ReplicateOrdersController;
 use App\Http\Controllers\Api\Auth\ResetPasswordController;
 use App\Http\Controllers\Api\OCRRulesAssignmentController;
-use App\Http\Controllers\Api\OrderStatusHistoryController;
 use App\Http\Controllers\Api\AccesorialCompaniesController;
 use App\Http\Controllers\Api\Auth\ForgotPasswordController;
 use App\Http\Controllers\Api\OcrRequestReprocessController;
 use App\Http\Controllers\Api\EquipmentTypesSelectValuesController;
-use App\Http\Controllers\Api\DownloadOriginalOrderSourceFileController;
+use App\Http\Controllers\Api\DownloadOriginalRequestSourceFileController;
 
 /*
 |--------------------------------------------------------------------------
@@ -93,11 +93,8 @@ Route::group(['middleware' => ['auth:sanctum', 'impersonate', 'tenant-aware']], 
     Route::post('orders/{order}/replicate', ReplicateOrdersController::class)
         ->name('orders.replicate');
 
-    Route::get('orders/{order}/download-source-file', DownloadOriginalOrderSourceFileController::class)
-        ->name('orders.download-source-file');
-
-    Route::get('orders/{order}/status-history', OrderStatusHistoryController::class)
-        ->name('orders.status-history');
+    Route::get('status-history', StatusHistoryController::class)
+        ->name('status-history.index');
 
     // Orders management
     Route::apiResource('orders', OrdersController::class)
@@ -134,6 +131,10 @@ Route::group(['middleware' => ['auth:sanctum', 'impersonate', 'tenant-aware']], 
     // Reprocess the given OCR request
     Route::post('ocr/requests/{request_id}/reprocess', OcrRequestReprocessController::class)
         ->name('ocr.requests.reprocess');
+
+    // Download OCR request source file
+    Route::get('ocr/requests/{request_id}/download-source-file', DownloadOriginalRequestSourceFileController::class)
+        ->name('ocr.requests.download-source-file');
 
     // CRUD for OCR Request
     Route::apiResource('ocr/requests', OCRRequestController::class, ['as' => 'ocr'])

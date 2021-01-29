@@ -2,21 +2,19 @@
 
 namespace App\Http\Controllers\Api;
 
-use App\Models\Order;
 use App\Models\OCRRequestStatus;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Storage;
 use Symfony\Component\HttpFoundation\HeaderUtils;
 
-class DownloadOriginalOrderSourceFileController extends Controller
+class DownloadOriginalRequestSourceFileController extends Controller
 {
     const MINUTES_URI_REMAINS_VALID = 15;
 
-    public function __invoke(Order $order)
+    public function __invoke($requestId)
     {
-        $this->authorize('downloadSourceFile', $order);
         $status = OCRRequestStatus::query()
-            ->where('request_id', $order->request_id)
+            ->where('request_id', $requestId)
             ->whereIn('status', [
                 OCRRequestStatus::INTAKE_ACCEPTED,
                 OCRRequestStatus::INTAKE_ACCEPTED_DATAFILE
@@ -26,6 +24,9 @@ class DownloadOriginalOrderSourceFileController extends Controller
         if (! $status || ! isset($status->status_metadata['document_archive_location'])) {
             abort(404, 'No file was found for the given order.');
         }
+
+        $this->authorize('downloadSourceFile', $status);
+
 
         return response()->json([
             'data' => $this->getTemporaryDownloadUrl($status)

@@ -14,15 +14,15 @@ class OcrRequestReprocessController extends Controller
         $this->authorize('create', OCRRequestStatus::class);
 
         $status = OCRRequestStatus::query()
-            ->where([
-                'status' => OCRRequestStatus::OCR_COMPLETED,
-                'request_id' => $requestId,
-            ])
+            ->whereIn('status', [OCRRequestStatus::OCR_COMPLETED, OCRRequestStatus::INTAKE_ACCEPTED_DATAFILE])
+            ->where('request_id', $requestId)
             ->firstOrFail();
 
         $data = [
             'request_id' => $status->request_id,
-            'status' => OCRRequestStatus::OCR_COMPLETED,
+            'status' => $status->status === OCRRequestStatus::OCR_COMPLETED
+                ? OCRRequestStatus::OCR_COMPLETED
+                : OCRRequestStatus::INTAKE_ACCEPTED_DATAFILE,
             'status_metadata' => $status->status_metadata,
             'company_id' => $status->company_id,
         ];
