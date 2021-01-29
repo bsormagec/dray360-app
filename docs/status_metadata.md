@@ -33,6 +33,8 @@ Each status is very carefully defined, here is a complete list (as of 11/27/2020
 | need | need | `updated-by-subsequent-order` |
 | need | need | `updates-prior-order` |
 | need | need | `upload-requested` |
+| _app/Http/Controllers/Api/OcrRequestDoneStatusController(laravel-api controller)_ | _user clicks [Mark as done]_ | [`request-marked-done`](./status_metadata.md#request-marked-done-and-request-marked-undone-status-metadata) |
+| _app/Http/Controllers/Api/OcrRequestDoneStatusController(laravel-api controller)_ | _user clicks [Mark as undone]_ | [`request-marked-undone`](./status_metadata.md#request-marked-done-and-request-marked-undone-status-metadata) |
 
 
 
@@ -129,7 +131,7 @@ For orders whose variant_name `t_ocrvariants` and `company_id` is found in `t_co
    - source_email_string_length
    - source_email_attachment_filenames
    - source_email_recipient0  (i.e. aws "to" address)
-   
+
    - source_type: "upload"
    - source_upload_filename
    - source_upload_api_request_id
@@ -330,20 +332,23 @@ For orders whose variant_name `t_ocrvariants` and `company_id` is found in `t_co
 This is an array property in `status_metadata` for both the `ocr-post-processing-error` and `ocr-post-processing-complete` states. Here is a sample query showing how to parse its value and its length.
 
 ````sql
-select 
+select
      id
     ,request_id
     ,status
     ,json_extract(status_metadata,'$.order_id_list[0]') as first_order_id
     ,json_extract(status_metadata,'$.order_id_list') as order_id_list
     ,json_length(json_extract(status_metadata,'$.order_id_list')) as order_id_length
-from t_job_state_changes 
-where status in ('ocr-post-processing-error', 'ocr-post-processing-complete') 
+from t_job_state_changes
+where status in ('ocr-post-processing-error', 'ocr-post-processing-complete')
 having order_id_length > 2
-order by id asc 
+order by id asc
 ;
 ````
 
 ##### status_metadata.file_list (ocr-post-processing-error and ocr-post-processing-complete) status_metadata
 
 Every file processed in this request. If the list grows too large that it cannot be stored in a single SNS message (256KB max) then it will be truncated by deleting the largest element (and in case of a tie for largest, one will be picked at random) until the total size is under 256KB.
+
+#### `request-marked-done` and `request-marked-undone` status_metadata
+1. user_id

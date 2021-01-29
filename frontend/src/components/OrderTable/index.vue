@@ -30,7 +30,6 @@
             :company-id="initFilters.companyId"
             :update-type="initFilters.updateType"
             :display-hidden="initFilters.displayHidden"
-            :hidden-items-filter="true"
             @change="updateFilters"
           />
 
@@ -128,7 +127,7 @@
           }"
           :options="[
             { title: 'Replicate Order', action: () => replicateOrder(item), hidden: !hasPermission('admin-review-edit') },
-            { title: item.is_hidden ? 'Unhide Order' : 'Hide Order', action: () => changeOrderDisplayStatus(item) },
+            { title: item.is_hidden ? 'Unhide Order' : 'Hide Order', action: () => changeOrderDisplayStatus(item), hidden: true },
             { title: 'Show status history', action: () => openStatusHistoryDialog = true },
             { title: 'Delete Order', action: () => deleteOrder(item) },
           ]"

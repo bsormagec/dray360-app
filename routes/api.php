@@ -27,6 +27,7 @@ use App\Http\Controllers\Api\OCRRulesAssignmentController;
 use App\Http\Controllers\Api\AccesorialCompaniesController;
 use App\Http\Controllers\Api\Auth\ForgotPasswordController;
 use App\Http\Controllers\Api\OcrRequestReprocessController;
+use App\Http\Controllers\Api\OcrRequestsDoneStatusController;
 use App\Http\Controllers\Api\EquipmentTypesSelectValuesController;
 use App\Http\Controllers\Api\DownloadOriginalRequestSourceFileController;
 
@@ -135,6 +136,10 @@ Route::group(['middleware' => ['auth:sanctum', 'impersonate', 'tenant-aware']], 
     // Download OCR request source file
     Route::get('ocr/requests/{request_id}/download-source-file', DownloadOriginalRequestSourceFileController::class)
         ->name('ocr.requests.download-source-file');
+
+    // Mark OCR request as done/undone
+    Route::put('ocr/requests/{request_id}/done-status', OcrRequestsDoneStatusController::class)
+        ->name('ocr.requests.done-status');
 
     // CRUD for OCR Request
     Route::apiResource('ocr/requests', OCRRequestController::class, ['as' => 'ocr'])

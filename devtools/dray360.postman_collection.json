@@ -1477,6 +1477,11 @@
 									"disabled": true
 								},
 								{
+									"key": "filter[show_done]",
+									"value": 1,
+									"disabled": true
+								},
+								{
 									"key": "sort",
 									"value": "-status",
 									"description": "Available: id,status,created_at,request_id",

@@ -88,6 +88,11 @@ class OcrRequestsListQuery extends QueryBuilder
                         ->orWhere('t_job_latest_state.request_id', 'like', "%{$value}%");
                     });
             }),
+            AllowedFilter::callback('show_done', function ($query, $value) {
+                if (! $value) {
+                    $query->whereNull('done_at');
+                }
+            })->default(false)
         ])
         ->defaultSort('-t_job_latest_state.created_at')
         ->allowedSorts([

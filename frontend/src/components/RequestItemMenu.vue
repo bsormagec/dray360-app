@@ -36,6 +36,11 @@
           v-text="'Delete request'"
         />
         <v-list-item
+          :disabled="!hasPermission('ocr-requests-edit')"
+          @click="toggleDoneUndone(request)"
+          v-text="`Mark as ${doneText}`"
+        />
+        <v-list-item
           :disabled="!hasPermission('ocr-requests-create')"
           @click="reprocessRequest(request.request_id)"
           v-text="'Reprocess request'"
@@ -57,7 +62,7 @@
 import { mapActions } from 'vuex'
 import permissions from '@/mixins/permissions'
 import utils, { type } from '@/store/modules/utils'
-import { deleteRequest, getSourceFileDownloadURL, reprocessOcrRequest } from '@/store/api_calls/requests'
+import { deleteRequest, getSourceFileDownloadURL, reprocessOcrRequest, changeRequestDoneStatus } from '@/store/api_calls/requests'
 import RequestStatusHistoryDialog from './RequestStatusHistoryDialog'
 
 export default {
@@ -80,6 +85,11 @@ export default {
     return {
       loading: false,
       openStatusHistoryDialog: false
+    }
+  },
+  computed: {
+    doneText () {
+      return this.request.done_at === null ? 'complete' : 'not complete'
     }
   },
   methods: {
@@ -145,6 +155,21 @@ export default {
           this.$emit('request-deleted')
         }
       })
+    },
+    async toggleDoneUndone (request) {
+      this.loading = true
+
+      const [error] = await changeRequestDoneStatus(request.request_id, { done: request.done_at === null })
+
+      if (error !== undefined) {
+        this.loading = false
+        this.setSnackbar({ show: true, message: `There was an error trying to mark the request as ${this.doneText}` })
+        return
+      }
+
+      this.setSnackbar({ show: true, message: `Request marked as ${this.doneText} successfully` })
+      this.loading = false
+      this.$emit('request-deleted')
     }
   }
 }
