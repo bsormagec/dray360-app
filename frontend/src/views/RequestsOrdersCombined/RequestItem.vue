@@ -7,31 +7,17 @@
     }"
     @click="handleClick"
   >
-    <div class="d-flex justify-space-between">
+    <div class="d-flex">
       <div class="d-flex align-center">
         <span class="text-body-1 font-weight-bold secondary--text text-uppercase">#{{ request.request_id.substring(0,8) }}</span>
-        <v-tooltip
-          v-if="isSuperadmin()"
-          bottom
-        >
-          <template v-slot:activator="{ on, attrs }">
-            <v-btn
-              v-clipboard:copy="request.request_id"
-              icon
-              small
-              color="primary"
-              v-bind="attrs"
-              v-on="on"
-              @click.stop="() =>{}"
-            >
-              <v-icon>mdi-link</v-icon>
-            </v-btn>
-          </template>
-          <span>Copy Request ID</span>
-        </v-tooltip>
       </div>
       <RequestStatus
+        class="ml-2 mr-auto caption"
         :status="request.latest_ocr_request_status"
+      />
+      <RequestItemMenu
+        :request="request"
+        @request-deleted="() => this.$emit('deleteRequest')"
       />
     </div>
     <div class="text-body-2">
@@ -65,9 +51,6 @@
     <div class="d-flex justify-space-between mt-auto">
       <div />
       <div class="text-caption">
-        <span class="secondary--text">
-          Received
-        </span>
         <span class="updated-at">
           {{ formatDate(request.created_at, true) }}
         </span>
@@ -77,7 +60,7 @@
 </template>
 <script>
 import RequestStatus from '@/components/RequestStatus'
-
+import RequestItemMenu from '@/components/RequestItemMenu'
 import { formatDate } from '@/utils/dates'
 import { statuses } from '@/enums/app_objects_types'
 import permissions from '@/mixins/permissions'
@@ -86,7 +69,10 @@ import get from 'lodash/get'
 
 export default {
   name: 'RequestItem',
-  components: { RequestStatus },
+  components: {
+    RequestStatus,
+    RequestItemMenu
+  },
   mixins: [permissions],
   props: {
     request: {
@@ -164,6 +150,7 @@ export default {
 
   &.disabled {
     cursor: not-allowed;
+    user-select: none;
     background-color: rgba(40, 97, 160, 0.03);
     opacity: 0.75;
   }

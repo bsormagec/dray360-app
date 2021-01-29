@@ -32,6 +32,9 @@ class OCRRequestStatus extends Model
 
     REPLICATED_FROM_EXISTING_ORDER = 'replicated-from-existing-order',
 
+    REQUEST_MARKED_DONE = 'request-marked-done',
+    REQUEST_MARKED_UNDONE = 'request-marked-undone',
+
     PROCESS_OCR_OUTPUT_FILE_REVIEW = 'process-ocr-output-file-review',
     PROCESS_OCR_OUTPUT_FILE_COMPLETE = 'process-ocr-output-file-complete',
     PROCESS_OCR_OUTPUT_FILE_ERROR = 'process-ocr-output-file-error',
@@ -89,6 +92,9 @@ class OCRRequestStatus extends Model
         self::REPLICATED_FROM_EXISTING_ORDER => 'Replication',
 
         self::UPDATES_PRIOR_ORDER => 'Update',
+
+        self::REQUEST_MARKED_DONE => 'Marked Complete',
+        self::REQUEST_MARKED_UNDONE => 'Marked not Complete',
 
         self::UPDATED_BY_SUBSEQUENT_ORDER => 'Replaced',
 

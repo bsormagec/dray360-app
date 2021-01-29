@@ -11,6 +11,8 @@ use Illuminate\Database\Eloquent\SoftDeletes;
  * @property \App\Models\OCRRequestStatus $latestOcrRequestStatus
  * @property string $request_id
  * @property string $t_job_state_changes_id
+ * @property \Carbon\Carbon $done_at intake_date
+ * @property \Carbon\Carbon $deleted_at intake_date
  * @property \Carbon\Carbon $created_at intake_date
  * @property \Carbon\Carbon $updated_at latest_status_date
  */
@@ -20,12 +22,15 @@ class OCRRequest extends Model
 
     public $table = 't_job_latest_state';
 
-    protected $casts = [];
-
     public $fillable = [
         'request_id',
         't_job_state_changes_id',
-        'order_id'
+        'order_id',
+        'done_at',
+    ];
+
+    protected $casts = [
+        'done_at' => 'datetime',
     ];
 
     public function orders()

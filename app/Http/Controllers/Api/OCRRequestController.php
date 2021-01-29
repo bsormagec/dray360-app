@@ -86,7 +86,10 @@ class OCRRequestController extends Controller
 
     public function destroy($ocrRequest)
     {
-        $ocrRequest = OCRRequest::where('request_id', $ocrRequest)->firstOrFail();
+        $ocrRequest = OCRRequest::query()
+            ->whereNull('order_id')
+            ->where('request_id', $ocrRequest)
+            ->firstOrFail();
 
         $this->authorize('delete', $ocrRequest);
 
