@@ -23,7 +23,10 @@ class OcrRequestReprocessController extends Controller
             'status' => $status->status === OCRRequestStatus::OCR_COMPLETED
                 ? OCRRequestStatus::OCR_COMPLETED
                 : OCRRequestStatus::INTAKE_ACCEPTED_DATAFILE,
-            'status_metadata' => $status->status_metadata,
+            'status_metadata' => array_merge(
+                $status->status_metadata,
+                ['user_id' => auth()->id()]
+            ),
             'company_id' => $status->company_id,
         ];
 
