@@ -62,7 +62,7 @@ export default {
       setSnackbar: type.setSnackbar
     }),
     goToOrdersList () {
-      this.redirectBack ? this.$router.back() : this.$router.push('/dashboard')
+      this.redirectBack ? this.$router.back() : this.$router.push('/inbox')
     },
     deleteUser (id) {
       this.setConfirmationDialog({

@@ -993,7 +993,7 @@ export default {
     },
 
     goToOrdersList () {
-      this.redirectBack ? this.$router.back() : this.$router.push('/dashboard')
+      this.redirectBack ? this.$router.back() : this.$router.push('/inbox')
     },
 
     handleItinerayEdit (elemetToScrollID) {

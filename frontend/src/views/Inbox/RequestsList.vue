@@ -33,6 +33,7 @@
     <v-virtual-scroll
       ref="virtualScroll"
       :items="items.length ? items : [ 'empty' ]"
+      :class="{'empty__list': items.length === 0}"
       :item-height="105"
       max-height="100%"
     >
@@ -49,10 +50,24 @@
           <v-divider />
         </div>
         <div v-else-if="!loading">
-          <div class="d-flex justify-center px-2 py-4">
-            <h5>
-              Nothing found
-            </h5>
+          <div class="empty__item">
+            <img
+              src="../../assets/images/container.png"
+              width="40%"
+            >
+            <span class="primary--text font-weight-light h6 mt-8">
+              No requests...
+            </span>
+            <v-btn
+              class="mt-8"
+              dense
+              small
+              dark
+              color="blue-light"
+              @click="clearFilters"
+            >
+              clear filters
+            </v-btn>
           </div>
         </div>
       </template>
@@ -106,13 +121,6 @@ export default {
     RequestItem
   },
   mixins: [permissions, isMobile],
-  props: {
-    extraUrlParams: {
-      type: Array,
-      required: false,
-      default: () => []
-    }
-  },
   data () {
     return {
       bottom: false,
@@ -194,6 +202,9 @@ export default {
       setReloadRequests: ordersTypes.setReloadRequests
     }),
     formatDate,
+    clearFilters () {
+      this.$refs.requestFilters.clearFilters()
+    },
     async filtersUpdated (filters) {
       this.filters = [...filters]
       this.startLoading()
@@ -263,10 +274,10 @@ export default {
       ]
     },
     setURLParams () {
-      const filters = [...this.getFilters(), ...this.extraUrlParams].filter(item => item.type !== 'page')
+      const filters = [...this.getFilters()].filter(item => item.type !== 'page')
       const filterState = filters.reduce((o, element) => ({ ...o, [element.type]: Array.isArray(element.value) ? element.value.join(',') : element.value }), {})
 
-      this.$router.replace({ path: 'dashboard', query: filterState }).catch(() => {})
+      this.$router.replace({ path: 'inbox', query: filterState }).catch(() => {})
     },
     selectFirstActiveRequest () {
       const filteredRequests = this.items.filter(request => {
@@ -347,6 +358,17 @@ export default {
     .refresh__button {
       margin-left: auto;
       margin-right: rem(16);
+    }
+  }
+
+  .empty__list {
+    background-color: #F5F6F7;
+    .empty__item {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding-top: rem(85);
     }
   }
 }

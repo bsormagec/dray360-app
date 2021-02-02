@@ -58,6 +58,11 @@
         </v-toolbar>
       </template>
 
+      <template v-slot:[`item.request_id`]="{ item }">
+        <router-link :to="`/inbox?selected=${item.request_id}${item.request_is_hidden !== null? '&displayHidden=true' : ''}`">
+          {{ item.request_id.substring(0,8).toUpperCase() }}
+        </router-link>
+      </template>
       <template v-slot:[`item.id`]="{ item }">
         <router-link :to="`/order/${item.id}`">
           {{ item.id }}
@@ -248,11 +253,6 @@ export default {
         { text: 'Actions', value: 'actions', sortable: false, align: 'center' }
       ]
     },
-    extraUrlParams: {
-      type: Array,
-      required: false,
-      default: () => []
-    },
     requestId: {
       type: String,
       required: false,
@@ -343,9 +343,13 @@ export default {
           'bill_to_address.location_name': 'order.bill_to_address',
           'latest_ocr_request_status.display_status': 'status'
         }
-        const sortCol = sortColumnMap.hasOwnProperty(this.options.sortBy.join())
-          ? sortColumnMap[this.options.sortBy.join()]
-          : this.sortColumn
+        let sortCol = this.sortColumnDefault
+
+        if (sortColumnMap.hasOwnProperty(this.options.sortBy.join())) {
+          sortCol = sortColumnMap[this.options.sortBy.join()]
+        } else if (this.options.sortBy.join() !== '') {
+          sortCol = this.options.sortBy.join()
+        }
 
         this.sortColumn = sortCol
         this.sortDesc = this.options.sortDesc.join() == 'true'
@@ -596,10 +600,10 @@ export default {
       if (!this.urlFilters) {
         return
       }
-      const filters = [...this.getFilters(), ...this.extraUrlParams].filter(item => item.type !== 'items_per_page')
+      const filters = [...this.getFilters()].filter(item => item.type !== 'items_per_page')
       const filterState = filters.reduce((o, element) => ({ ...o, [element.type]: Array.isArray(element.value) ? element.value.join(',') : element.value }), {})
       // const params = filters.map(element => `${element.type}=${element.value}`).join('&')
-      this.$router.replace({ path: 'dashboard', query: filterState }).catch(() => {})
+      this.$router.replace({ path: 'search', query: filterState }).catch(() => {})
       // history.pushState(filterState, document.title, `${window.location.pathname}?${params}`)
     },
 

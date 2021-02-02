@@ -121,7 +121,7 @@ export default {
 
   beforeRouteEnter (to, from, next) {
     next(vm => {
-      vm.redirectBack = from.path.includes('/dashboard')
+      vm.redirectBack = from.path.includes('/inbox')
       next()
     })
   },
@@ -137,7 +137,7 @@ export default {
       return get(this.currentOrder, 'company.configuration.profit_tools_enable_templates', false)
     },
 
-    hideFieldNameHouseBolHawb() {
+    hideFieldNameHouseBolHawb () {
       return get(this.currentOrder, 'company.configuration.hide_field_name_house_bol_hawb', false)
     },
     itgContainersEnabled () {

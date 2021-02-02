@@ -4,6 +4,7 @@ namespace App\Queries;
 
 use App\Models\Order;
 use App\Models\OCRRequestStatus;
+use Illuminate\Support\Facades\DB;
 use Spatie\QueryBuilder\AllowedSort;
 use Spatie\QueryBuilder\QueryBuilder;
 use Spatie\QueryBuilder\AllowedFilter;
@@ -30,6 +31,14 @@ class OrdersListQuery extends QueryBuilder
                 't_orders.unit_number',
                 't_orders.reference_number',
                 't_orders.is_hidden',
+            ])
+            ->addSelect(['request_is_hidden' => DB::table('t_job_latest_state', 's_s')
+                ->selectRaw("count(*) as request_is_hidden")
+                ->whereColumn('s_s.request_id', 't_orders.request_id')
+                ->whereNull('s_s.order_id')
+                ->whereNotNull('s_s.done_at')
+                ->groupBy('s_s.request_id')
+                ->limit(1)
             ])
             ->leftJoin('t_addresses as bill_to', 'bill_to.id', '=', 't_orders.bill_to_address_id')
             ->join('t_job_latest_state as ls_sort', 'ls_sort.order_id', '=', 't_orders.id')
@@ -78,8 +87,13 @@ class OrdersListQuery extends QueryBuilder
         ])
         ->defaultSort('-t_orders.created_at', '-t_orders.id')
         ->allowedSorts([
+            AllowedSort::field('id', 't_orders.id'),
+            AllowedSort::field('tms_shipment_id', 't_orders.tms_shipment_id'),
             AllowedSort::field('request_id', 't_orders.request_id'),
             AllowedSort::field('created_at', 't_orders.created_at'),
+            AllowedSort::field('updated_at', 't_orders.updated_at'),
+            AllowedSort::field('reference_number', 't_orders.reference_number'),
+            AllowedSort::field('unit_number', 't_orders.unit_number'),
             AllowedSort::field('status', 's_sort.status'),
             AllowedSort::field('order.equipment_type_raw_text', 't_orders.equipment_type_raw_text'),
             AllowedSort::field('order.shipment_designation', 't_orders.shipment_designation'),
