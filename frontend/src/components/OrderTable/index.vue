@@ -133,7 +133,7 @@
           :options="[
             { title: 'Replicate Order', action: () => replicateOrder(item), hidden: !hasPermission('admin-review-edit') },
             { title: item.is_hidden ? 'Unhide Order' : 'Hide Order', action: () => changeOrderDisplayStatus(item), hidden: true },
-            { title: 'Show status history', action: () => openStatusHistoryDialog = true },
+            { title: 'Show status history', action: () => item.openStatusHistoryDialog = true },
             { title: 'Delete Order', action: () => deleteOrder(item) },
           ]"
         />
@@ -149,9 +149,9 @@
           View
         </v-btn>
         <StatusHistoryDialog
-          :open="openStatusHistoryDialog"
+          :open="item.openStatusHistoryDialog"
           :order="item"
-          @close="openStatusHistoryDialog= false"
+          @close="item.openStatusHistoryDialog = false"
         />
       </template>
       <template v-slot:no-data>
@@ -288,6 +288,7 @@ export default {
       page: 1,
       requestID: this.requestId,
       options: {
+        sortBy: []
       },
       minPause: 500, // 0.5 second minimum delay
       randomizeDelay: true,
@@ -308,14 +309,13 @@ export default {
       selectedHeaders: [],
       orders: [],
       // sorting params
-      sortDesc: false,
+      sortDesc: true,
       sortColumn: 'created_at',
       sortColumnDefault: 'created_at',
       // pagination links
       links: null,
       // query meta data
-      meta: null,
-      openStatusHistoryDialog: false
+      meta: null
     }
   },
   computed: {
@@ -372,11 +372,13 @@ export default {
     // set get params if there are any
 
     const params = this.$route.query
-    const sortValue = params.sort ? params.sort : this.sortColumn
+    const sortValue = params.sort ? params.sort : `-${this.sortColumn}`
 
     this.page = params.page
     this.sortColumn = sortValue.replace('-', '')
     this.sortDesc = !sortValue.includes('-')
+    this.options.sortBy = [this.sortColumn]
+    this.options.sortDesc = [this.sortDesc]
     this.initFilters.search = params.search
     this.initFilters.dateRange = params.dateRange?.split(',')
     this.initFilters.displayHidden = !!params.displayHidden
@@ -546,7 +548,10 @@ export default {
 
       if (deltaTime < this.minPause) {
         this.pause(this.minPause - deltaTime).then(() => {
-          this.orders = data
+          this.orders = data.map((order) => {
+            order.openStatusHistoryDialog = false
+            return order
+          })
           this.links = links
           this.meta = meta
           this.total = this.meta.total

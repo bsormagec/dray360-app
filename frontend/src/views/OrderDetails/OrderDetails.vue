@@ -121,7 +121,7 @@ export default {
 
   beforeRouteEnter (to, from, next) {
     next(vm => {
-      vm.redirectBack = from.path.includes('/inbox')
+      vm.redirectBack = from.path !== '/' // from.path.includes('/search') || from.path.includes('/inbox')
       next()
     })
   },
