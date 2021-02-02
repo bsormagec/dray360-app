@@ -26,7 +26,7 @@ class ImpersonateUser extends Action
 
         app('impersonate')->startWith($user);
 
-        return Action::redirect('/dashboard');
+        return Action::redirect('/inbox');
     }
 
     /**

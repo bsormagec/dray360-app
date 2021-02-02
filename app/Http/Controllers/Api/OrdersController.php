@@ -78,7 +78,10 @@ class OrdersController extends Controller
                 'request_id' => $order->request_id,
                 'company_id' => $order->t_company_id,
                 'status' => OCRRequestStatus::OCR_POST_PROCESSING_COMPLETE,
-                'status_metadata' => $order->getPostProcessingReviewStatusMetadata(),
+                'status_metadata' => array_merge(
+                    $order->getPostProcessingReviewStatusMetadata(),
+                    ['user_id' => auth()->id()]
+                ),
             ];
             app(PublishSnsMessageToUpdateStatus::class)($data);
         }

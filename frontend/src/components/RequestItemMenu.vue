@@ -41,7 +41,7 @@
           v-text="`Mark as ${doneText}`"
         />
         <v-list-item
-          :disabled="!hasPermission('ocr-requests-create')"
+          :disabled="!hasPermission('ocr-request-statuses-create')"
           @click="reprocessRequest(request.request_id)"
           v-text="'Reprocess request'"
         />
@@ -73,7 +73,7 @@ export default {
     request: {
       type: Object,
       required: true,
-      defautl: () => {}
+      defautl: () => { }
     },
     disabled: {
       type: Boolean,
@@ -175,5 +175,4 @@ export default {
 }
 </script>
 <style lang="scss" scoped>
-
 </style>

@@ -22,7 +22,7 @@
             class="btn btn-home"
             color="primary"
             outlined
-            @click="$router.push('/dashboard')"
+            @click="$router.push('/inbox')"
           >
             Return Home
           </v-btn>

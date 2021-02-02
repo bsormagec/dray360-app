@@ -867,28 +867,41 @@ export default {
     },
 
     async postSendToTms () {
-      const [error] = await postSendToTms(this.order.id)
-      let message = ''
+      const onConfirm = async () => {
+        const [error] = await postSendToTms(this.order.id)
+        let message = ''
 
-      if (error !== undefined) {
-        switch (error.response.status) {
-          case 422:
-            message = 'Some addresses are not verified'
-            break
-          case 403:
-            message = 'You are not authorized'
-            break
-          default:
-            message = 'An error has occurred, please contact to technical support'
-            break
+        if (error !== undefined) {
+          switch (error.response.status) {
+            case 422:
+              message = 'Some addresses are not verified'
+              break
+            case 403:
+              message = 'You are not authorized'
+              break
+            default:
+              message = 'An error has occurred, please contact to technical support'
+              break
+          }
+        } else {
+          message = 'Sending the order to the TMS is in progress'
+          this.sentToTms = true
+          await this.refreshOrder()
         }
-      } else {
-        message = 'Sending the order to the TMS is in progress'
-        this.sentToTms = true
-        await this.refreshOrder()
+
+        this[type.setSnackbar]({ show: true, message })
       }
 
-      this[type.setSnackbar]({ show: true, message })
+      if (this.isSuperadmin()) {
+        await this[type.setConfirmationDialog]({
+          title: 'Are you sure you want to send this order to the TMS?',
+          onConfirm,
+          onCancel: () => { this.loading = false }
+        })
+        return
+      }
+
+      await onConfirm()
     },
 
     async postSendToClient () {
@@ -980,7 +993,7 @@ export default {
     },
 
     goToOrdersList () {
-      this.redirectBack ? this.$router.back() : this.$router.push('/dashboard')
+      this.redirectBack ? this.$router.back() : this.$router.push('/inbox')
     },
 
     handleItinerayEdit (elemetToScrollID) {

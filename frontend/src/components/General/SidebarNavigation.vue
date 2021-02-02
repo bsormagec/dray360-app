@@ -136,7 +136,8 @@ export default {
       showSidebar: state => state.sidebar.show,
       menuItems () {
         return [
-          { name: 'dashboard', path: '/dashboard', hasPermission: this.hasPermission('orders-view') },
+          { name: 'inbox', path: '/inbox', hasPermission: this.hasPermission('orders-view') },
+          { name: 'search', path: '/search', hasPermission: this.hasPermission('orders-view') },
           { name: 'manage users', path: '/user/dashboard', hasPermission: this.hasPermission('users-view') },
           { name: 'my profile', path: '/user/edit-profile', hasPermission: true },
           { name: 'logout', path: '#', hasPermission: true }

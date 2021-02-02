@@ -29,7 +29,7 @@ class ImpersonationControllerTest extends TestCase
         $this->postJson(route('impersonate.start', $this->userToImpersonate->id))
             ->assertStatus(200)
             ->assertJsonFragment([
-                'redirect' => '/dashboard'
+                'redirect' => '/inbox'
             ])
             ->assertSessionHas(app('impersonate')->getImpersonatedSessionKey());
 

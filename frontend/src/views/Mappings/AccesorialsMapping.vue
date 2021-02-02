@@ -68,16 +68,6 @@ import utils, { type } from '@/store/modules/utils'
 export default {
   data () {
     return {
-      items: [
-        {
-          text: 'Dashboard',
-          path: '/dashboard'
-        },
-        {
-          text: 'Billing Mapping',
-          path: '/companies/1/billing-mapping'
-        }
-      ],
       variant: '',
       ...mapState(rulesLibrary.moduleName, {
         variant_list: state => state.variant_list
