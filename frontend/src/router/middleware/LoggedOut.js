@@ -3,7 +3,7 @@ export default async function LoggedOut ({ next, store }) {
     await store.dispatch('AUTH/getCurrentUser')
     // If loggedin, then return to dashboard
     if (store.state.AUTH.loggedIn) {
-      return next('/dashboard')
+      return next('/inbox')
     }
   } catch (e) {
     console.log('error ', e)

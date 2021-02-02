@@ -105,7 +105,10 @@ class ReplicateOrdersController extends Controller
             'company_id' => $newOrder->t_company_id,
             'order_id' => $newOrder->id,
             'status' => OCRRequestStatus::PROCESS_OCR_OUTPUT_FILE_REVIEW,
-            'status_metadata' => $ocrRequestStatus->status_metadata ?? [],
+            'status_metadata' => array_merge(
+                ($ocrRequestStatus->status_metadata ?? []),
+                ['user_id' => auth()->id()]
+            ),
         ];
         return app(PublishSnsMessageToUpdateStatus::class)($data);
     }

@@ -2,7 +2,8 @@ import Vue from 'vue'
 import VueRouter from 'vue-router'
 import OrderDetails from '@/views/OrderDetails/OrderDetails'
 import Login from '@/views/Login'
-import RequestsOrdersCombined from '@/views/RequestsOrdersCombined/RequestsOrdersCombined'
+import Inbox from '@/views/Inbox/Inbox'
+import Search from '@/views/Search/Search'
 import RulesEditor from '@/views/RulesEditor/RulesEditor'
 import auth from '@/router/middleware/auth'
 import superadmin from '@/router/middleware/superadmin'
@@ -29,12 +30,24 @@ Vue.use(VueRouter)
 
 const routes = [
   {
-    path: '/dashboard',
-    name: 'RequestsOrdersCombined',
+    path: '/inbox',
+    name: 'Inbox',
     meta: {
       middleware: [auth, permission('orders-view')]
     },
-    component: RequestsOrdersCombined
+    component: Inbox
+  },
+  {
+    path: '/search',
+    name: 'Search',
+    meta: {
+      middleware: [auth, permission('orders-view')]
+    },
+    component: Search
+  },
+  {
+    path: '/dashboard',
+    redirect: '/inbox'
   },
   {
     path: '/user/dashboard',

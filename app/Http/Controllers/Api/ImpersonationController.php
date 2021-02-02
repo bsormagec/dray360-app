@@ -18,7 +18,7 @@ class ImpersonationController extends Controller
         app('impersonate')->startWith($user);
 
         return response()->json([
-            'redirect' => '/dashboard',
+            'redirect' => '/inbox',
         ]);
     }
 

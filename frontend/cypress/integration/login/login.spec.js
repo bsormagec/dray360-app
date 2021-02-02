@@ -34,6 +34,6 @@ describe('The Login Page', function () {
     cy.route({ url: '**/api/user', response: this.user })
     cy.route({ url: '**/api/orders**', response: {} })
 
-    cy.url().should('include', '/dashboard')
+    cy.url().should('include', '/inbox')
   })
 })

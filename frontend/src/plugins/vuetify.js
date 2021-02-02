@@ -17,7 +17,8 @@ export default new Vuetify({
         warning: '#cc904c',
         error: '#FF5252',
         black: '#303435',
-        'slate-gray': '#61788A'
+        'slate-gray': '#61788A',
+        'blue-light': '#41B6E6'
       }
     },
     options: {

@@ -9,7 +9,7 @@
       <v-card>
         <v-card-title>
           <h6 class="secondary--text">
-            Upload Order(s)
+            Upload Request(s)
           </h6>
         </v-card-title>
         <v-divider />
@@ -98,7 +98,7 @@
             color="primary"
             @click="createOrders"
           >
-            Add to Orders Queue
+            Add to Requests Queue
           </v-btn>
         </v-card-actions>
       </v-card>

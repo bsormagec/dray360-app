@@ -21,7 +21,10 @@ class SendToClientController extends Controller
 
         if ($order->isTheLastUnderReview() && ! OCRRequestStatus::alreadyCompleted($order->request_id)) {
             $data = $baseData + [
-                'status_metadata' => $order->getPostProcessingReviewStatusMetadata(),
+                'status_metadata' => array_merge(
+                    $order->getPostProcessingReviewStatusMetadata(),
+                    ['user_id' => auth()->id()]
+                ),
                 'status' => OCRRequestStatus::OCR_POST_PROCESSING_COMPLETE,
             ];
             app(PublishSnsMessageToUpdateStatus::class)($data);
@@ -30,7 +33,10 @@ class SendToClientController extends Controller
         $data = $baseData + [
             'order_id' => $orderId,
             'status' => OCRRequestStatus::PROCESS_OCR_OUTPUT_FILE_COMPLETE,
-            'status_metadata' => $this->getReviewStatusMetadata($order),
+            'status_metadata' => array_merge(
+                $this->getReviewStatusMetadata($order),
+                ['user_id' => auth()->id()]
+            ),
         ];
         $response = app(PublishSnsMessageToUpdateStatus::class)($data);
 

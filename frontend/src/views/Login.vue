@@ -111,7 +111,7 @@ export default {
     this[type.setSidebar]({ show: false })
   },
   mounted () {
-    if (this.loggedIn()) this.$router.push('/dashboard')
+    if (this.loggedIn()) this.$router.push('/inbox')
   },
 
   methods: {
@@ -123,7 +123,7 @@ export default {
         if (response.status === reqStatus.success) {
           this.error = false
           if (this.$store.state.AUTH.intendedUrl === undefined) {
-            this.$router.push('/dashboard')
+            this.$router.push('/inbox')
           } else {
             this.$router.push(this.$store.state.AUTH.intendedUrl)
           }

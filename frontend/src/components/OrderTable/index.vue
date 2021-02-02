@@ -58,6 +58,11 @@
         </v-toolbar>
       </template>
 
+      <template v-slot:[`item.request_id`]="{ item }">
+        <router-link :to="`/inbox?selected=${item.request_id}${item.request_is_hidden !== null? '&displayHidden=true' : ''}`">
+          {{ item.request_id.substring(0,8).toUpperCase() }}
+        </router-link>
+      </template>
       <template v-slot:[`item.id`]="{ item }">
         <router-link :to="`/order/${item.id}`">
           {{ item.id }}
@@ -128,7 +133,7 @@
           :options="[
             { title: 'Replicate Order', action: () => replicateOrder(item), hidden: !hasPermission('admin-review-edit') },
             { title: item.is_hidden ? 'Unhide Order' : 'Hide Order', action: () => changeOrderDisplayStatus(item), hidden: true },
-            { title: 'Show status history', action: () => openStatusHistoryDialog = true },
+            { title: 'Show status history', action: () => item.openStatusHistoryDialog = true },
             { title: 'Delete Order', action: () => deleteOrder(item) },
           ]"
         />
@@ -144,9 +149,9 @@
           View
         </v-btn>
         <StatusHistoryDialog
-          :open="openStatusHistoryDialog"
+          :open="item.openStatusHistoryDialog"
           :order="item"
-          @close="openStatusHistoryDialog= false"
+          @close="item.openStatusHistoryDialog = false"
         />
       </template>
       <template v-slot:no-data>
@@ -248,11 +253,6 @@ export default {
         { text: 'Actions', value: 'actions', sortable: false, align: 'center' }
       ]
     },
-    extraUrlParams: {
-      type: Array,
-      required: false,
-      default: () => []
-    },
     requestId: {
       type: String,
       required: false,
@@ -288,6 +288,7 @@ export default {
       page: 1,
       requestID: this.requestId,
       options: {
+        sortBy: []
       },
       minPause: 500, // 0.5 second minimum delay
       randomizeDelay: true,
@@ -308,14 +309,13 @@ export default {
       selectedHeaders: [],
       orders: [],
       // sorting params
-      sortDesc: false,
+      sortDesc: true,
       sortColumn: 'created_at',
       sortColumnDefault: 'created_at',
       // pagination links
       links: null,
       // query meta data
-      meta: null,
-      openStatusHistoryDialog: false
+      meta: null
     }
   },
   computed: {
@@ -343,9 +343,13 @@ export default {
           'bill_to_address.location_name': 'order.bill_to_address',
           'latest_ocr_request_status.display_status': 'status'
         }
-        const sortCol = sortColumnMap.hasOwnProperty(this.options.sortBy.join())
-          ? sortColumnMap[this.options.sortBy.join()]
-          : this.sortColumn
+        let sortCol = this.sortColumnDefault
+
+        if (sortColumnMap.hasOwnProperty(this.options.sortBy.join())) {
+          sortCol = sortColumnMap[this.options.sortBy.join()]
+        } else if (this.options.sortBy.join() !== '') {
+          sortCol = this.options.sortBy.join()
+        }
 
         this.sortColumn = sortCol
         this.sortDesc = this.options.sortDesc.join() == 'true'
@@ -368,11 +372,13 @@ export default {
     // set get params if there are any
 
     const params = this.$route.query
-    const sortValue = params.sort ? params.sort : this.sortColumn
+    const sortValue = params.sort ? params.sort : `-${this.sortColumn}`
 
     this.page = params.page
     this.sortColumn = sortValue.replace('-', '')
     this.sortDesc = !sortValue.includes('-')
+    this.options.sortBy = [this.sortColumn]
+    this.options.sortDesc = [this.sortDesc]
     this.initFilters.search = params.search
     this.initFilters.dateRange = params.dateRange?.split(',')
     this.initFilters.displayHidden = !!params.displayHidden
@@ -542,7 +548,10 @@ export default {
 
       if (deltaTime < this.minPause) {
         this.pause(this.minPause - deltaTime).then(() => {
-          this.orders = data
+          this.orders = data.map((order) => {
+            order.openStatusHistoryDialog = false
+            return order
+          })
           this.links = links
           this.meta = meta
           this.total = this.meta.total
@@ -596,10 +605,10 @@ export default {
       if (!this.urlFilters) {
         return
       }
-      const filters = [...this.getFilters(), ...this.extraUrlParams].filter(item => item.type !== 'items_per_page')
+      const filters = [...this.getFilters()].filter(item => item.type !== 'items_per_page')
       const filterState = filters.reduce((o, element) => ({ ...o, [element.type]: Array.isArray(element.value) ? element.value.join(',') : element.value }), {})
       // const params = filters.map(element => `${element.type}=${element.value}`).join('&')
-      this.$router.replace({ path: 'dashboard', query: filterState }).catch(() => {})
+      this.$router.replace({ path: 'search', query: filterState }).catch(() => {})
       // history.pushState(filterState, document.title, `${window.location.pathname}?${params}`)
     },
 
