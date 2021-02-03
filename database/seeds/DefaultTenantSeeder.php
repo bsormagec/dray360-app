@@ -36,6 +36,9 @@ class DefaultTenantSeeder extends Seeder
             // Profittools templates
             'itg_enable_containers' => false,
 
+            'hide_field_name_house_bol_hawb' => false,
+            'enable_divisions' => false,
+
             // Address Search Booleans
             'address_search_location_name' => false,
             'address_search_city' => false,

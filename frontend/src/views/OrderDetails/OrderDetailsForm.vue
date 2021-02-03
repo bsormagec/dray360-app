@@ -196,7 +196,7 @@
           @change="value => handleChange('shipment_designation', value)"
         /> -->
         <FormFieldInputAutocomplete
-          v-if="tmsTemplatesEnabled"
+          v-if="!!options.extra.profit_tools_enable_templates"
           references="tms_template_dictid"
           label="TMS Template"
           :value="order.tms_template_dictid"
@@ -214,7 +214,7 @@
           label="Division"
         />
         <FormFieldSelectDivisionCodes
-          v-else-if="divisionsEnabled"
+          v-else-if="!!options.extra.enable_divisions"
           references="division_code"
           label="Division"
           :value="order.division_code"
@@ -225,6 +225,7 @@
           @change="value => handleChange('division_code', value)"
         />
         <FormFieldSelect
+          v-if="fieldShouldBeShown('shipment_direction')"
           references="shipment_direction"
           label="Shipment direction"
           :value="order.shipment_direction"
@@ -235,6 +236,7 @@
           @change="value => handleChange('shipment_direction', value)"
         />
         <FormFieldSwitch
+          v-if="fieldShouldBeShown('expedite')"
           references="expedite"
           label="Expedite"
           :value="order.expedite"
@@ -242,6 +244,7 @@
           @change="value => handleChange('expedite', value)"
         />
         <FormFieldSwitch
+          v-if="fieldShouldBeShown('hazardous')"
           references="hazardous"
           label="Hazardous"
           :value="order.hazardous"
@@ -262,7 +265,7 @@
         </div>
         <div class="section__rootfields">
           <FormFieldInputAutocomplete
-            v-if="itgContainersEnabled"
+            v-if="!!options.extra.itg_enable_containers"
             references="container_dictid"
             label="ITG Container Size/Type"
             :value="order.container_dictid"
@@ -289,6 +292,7 @@
           />
 
           <FormFieldInput
+            v-if="fieldShouldBeShown('unit_number')"
             references="unit_number"
             label="Unit number"
             :value="order.unit_number"
@@ -296,6 +300,7 @@
             @change="value => handleChange('unit_number', value)"
           />
           <FormFieldInput
+            v-if="fieldShouldBeShown('seal_number')"
             references="seal_number"
             label="Seal number"
             :value="order.seal_number"
@@ -317,6 +322,7 @@
         </div>
         <div class="section__rootfields">
           <FormFieldInput
+            v-if="fieldShouldBeShown('reference_number')"
             references="reference_number"
             label="Reference number"
             :value="order.reference_number"
@@ -324,6 +330,7 @@
             @change="value => handleChange('reference_number', value)"
           />
           <FormFieldInput
+            v-if="fieldShouldBeShown('customer_number')"
             references="customer_number"
             label="Customer number"
             :value="order.customer_number === null ? '---' : order.customer_number"
@@ -331,6 +338,7 @@
             @change="value => handleChange('customer_number', value)"
           />
           <FormFieldInput
+            v-if="fieldShouldBeShown('load_number')"
             references="load_number"
             label="Load number"
             :value="order.load_number"
@@ -338,6 +346,7 @@
             @change="value => handleChange('load_number', value)"
           />
           <FormFieldInput
+            v-if="fieldShouldBeShown('purchase_order_number')"
             references="purchase_order_number"
             label="Purchase Order number"
             :value="order.purchase_order_number"
@@ -345,6 +354,7 @@
             @change="value => handleChange('purchase_order_number', value)"
           />
           <FormFieldInput
+            v-if="fieldShouldBeShown('release_number')"
             references="release_number"
             label="Release number"
             :value="order.release_number"
@@ -352,6 +362,7 @@
             @change="value => handleChange('release_number', value)"
           />
           <FormFieldInput
+            v-if="fieldShouldBeShown('pickup_number')"
             references="pickup_number"
             label="Pickup number"
             :value="order.pickup_number"
@@ -359,6 +370,7 @@
             @change="value => handleChange('pickup_number', value)"
           />
           <FormFieldInput
+            v-if="fieldShouldBeShown('vessel')"
             references="vessel"
             label="Vessel"
             :value="order.vessel"
@@ -366,6 +378,7 @@
             @change="value => handleChange('vessel', value)"
           />
           <FormFieldInput
+            v-if="fieldShouldBeShown('voyage')"
             references="voyage"
             label="Voyage"
             :value="order.voyage"
@@ -373,6 +386,7 @@
             @change="value => handleChange('voyage', value)"
           />
           <FormFieldDate
+            v-if="fieldShouldBeShown('cutoff_date')"
             references="cutoff_date"
             label="Cutoff Date"
             :value="order.cutoff_date"
@@ -380,6 +394,7 @@
             @change="value => handleChange('cutoff_date', value)"
           />
           <FormFieldTime
+            v-if="fieldShouldBeShown('cutoff_time')"
             references="cutoff_time"
             label="Cutoff Time"
             :value="order.cutoff_time"
@@ -387,6 +402,7 @@
             @change="value => handleChange('cutoff_time', value)"
           />
           <FormFieldInput
+            v-if="fieldShouldBeShown('booking_number')"
             references="booking_number"
             label="Booking number"
             :value="order.booking_number === null ? '---' : order.booking_number"
@@ -394,6 +410,7 @@
             @change="value => handleChange('booking_number', value)"
           />
           <FormFieldInput
+            v-if="fieldShouldBeShown('master_bol_mawb')"
             references="master_bol_mawb"
             label="Master BOL MAWB"
             :value="order.master_bol_mawb"
@@ -401,7 +418,7 @@
             @change="value => handleChange('master_bol_mawb', value)"
           />
           <FormFieldInput
-            v-if="!hideFieldNameHouseBolHawb"
+            v-if="fieldShouldBeShown('house_bol_hawb')"
             references="house_bol_hawb"
             label="House BOL MAWB"
             :value="order.house_bol_hawb"
@@ -433,6 +450,7 @@
             @change="(e) => handleChange('bill_to_address', e)"
           />
           <FormFieldTextArea
+            v-if="fieldShouldBeShown('bill_comment')"
             references="bill_comment"
             label="Billing comments"
             :value="order.bill_comment"
@@ -449,6 +467,7 @@
         </div>
         <div class="section__rootfields">
           <FormFieldTextArea
+            v-if="fieldShouldBeShown('line_haul')"
             references="line_haul"
             label="Line Haul"
             :value="order.line_haul"
@@ -456,6 +475,7 @@
             @change="value => handleChange('line_haul', value)"
           />
           <FormFieldTextArea
+            v-if="fieldShouldBeShown('fuel_surcharge')"
             references="fuel_surcharge"
             label="FSC"
             :value="order.fuel_surcharge"
@@ -551,6 +571,7 @@
 
         <div class="section__rootfields">
           <FormFieldTextArea
+            v-if="fieldShouldBeShown('ship_comment')"
             references="ship_comment"
             label="Shipment comments"
             :value="order.ship_comment"
@@ -691,35 +712,20 @@ export default {
       required: false,
       default: false
     },
+    options: {
+      type: Object,
+      required: false,
+      default: () => ({ hidden: [], extra: {}, address_search: {} })
+    },
     tmsTemplates: {
       type: Array,
       required: false,
       default: () => []
     },
-    tmsTemplatesEnabled: {
-      type: Boolean,
-      required: false,
-      default: false
-    },
     itgContainers: {
       type: Array,
       required: false,
       default: () => []
-    },
-    hideFieldNameHouseBolHawb: {
-      type: Boolean,
-      required: false,
-      default: false
-    },
-    itgContainersEnabled: {
-      type: Boolean,
-      required: false,
-      default: false
-    },
-    divisionsEnabled: {
-      type: Boolean,
-      required: false,
-      default: true
     }
   },
   data () {
@@ -751,11 +757,11 @@ export default {
 
     addressSearchProps () {
       return {
-        'enable-location-name': get(this.order.company, 'configuration.address_search_location_name', false),
-        'enable-city': get(this.order.company, 'configuration.address_search_city', false),
-        'enable-postal-code': get(this.order.company, 'configuration.address_search_postal_code', false),
-        'enable-address': get(this.order.company, 'configuration.address_search_address', false),
-        'enable-state': get(this.order.company, 'configuration.address_search_state', false)
+        'enable-location-name': !!this.options.address_search.location_name,
+        'enable-city': !!this.options.address_search.city,
+        'enable-postal-code': !!this.options.address_search.postal_code,
+        'enable-address': !!this.options.address_search.address,
+        'enable-state': !!this.options.address_search.state
       }
     },
 
@@ -852,6 +858,10 @@ export default {
     }),
 
     formatDate,
+
+    fieldShouldBeShown (fieldName) {
+      return !this.options.hidden.includes(fieldName)
+    },
 
     async handleChange (path, value) {
       await this.updateOrder({ path, value })
