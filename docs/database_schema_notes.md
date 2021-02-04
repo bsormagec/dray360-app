@@ -132,7 +132,7 @@ JSON data structure:
 {
     "profit_tools_enable_templates": true
 }
-````
+```
 
 
 
@@ -141,47 +141,96 @@ JSON data structure:
 
 By rights this table would be called `t_datasource_variants` but when it was originally created the only variant type we processed was 'ocr' hence the name. Renaming it is fine if someone wants to do that at some point.
 
+#### abbyy_variant_id
+
+The abbyy_variant_id. Used only for abbyy. For non-ocr variant types (i.e. for non-Abbyy variants) set this value to negative one, i.e. `-1`.
+
+#### abbyy_variant_name
+
+Not necessarily the "abbyy" name, but also used as the general purpose variant name for non-ocr variants. For `variant_type=='ocr'` this will be the exact name as used by Abbyy.
+
 #### variant_type
 
 This indicates what type of variant is being described. Valid values are:
 
 1. NULL (implies 'ocr')
-1. ocr
+1. ocr (i.e. Abbyy)
 1. edi
 1. tabular (includes CSV, XLSX, and possibly HTML tables; any flat colum/row data)
+1. pdftext (for files we will parse with pdfplumber instead of using abbyy ocr)
 
 #### classification
 
+A list of matching keywords (and potentially other information like regions), to help classify variants.
+
 JSON data structure: 
 ```json
-{
-    "required_header_field_list": [
-        "field1",
-        "field2",
-        "etc."
-    ], 
-    "forbidden_header_field_list": [
-        "fieldA",
-        "fieldB",
-        "etc."
-    ]    
-}
+[
+    { "TO BE DETERMINED": "SOMETHING" }
+]
 ```
-
-
 #### mapping
 
 JSON data structure: 
-```pseudo-json
+```json
+[
+    "abbyy_fieldname_1": {
+        "source": "xlsx_header_1"
+    },
+    "abbyy_fieldname_2": {
+        "source": "xlsx_header_2"
+    }
+]
+```
+
+#### classifier
+
+This indicates which classifier will report that variant type. It is used by the intakefilter engine.
+
+Example value (for variant 'itgcargowisepdf'): `itgcargowisepdf-classifier`
+
+#### parser
+
+This indicates which pdfplumber parser will be used to parse the variant, It is used by the postprocessingqueue engine.
+
+Example value (for variant 'itgcargowisepdf'): `itgcargowisepdf-parser`
+
+#### parser_options
+
+Set to the parser, to tell it what options (only when overriding its defaults) to use. Usually null, but for example:
+
+```json
 {
-    need to define this
-    ===================
-    list of header=fieldname, 
-    list of header=fixedvalue
+    "pdfplumber_lines_type_options": {
+        "snap_tolerance": 2
+    },
+    "pdfplumber_text_type_options": {
+        "text_x_tolerance": 2
+    }
 }
 ```
 
+#### parser_fields_list
 
+Sent to the parser, to tell it what fields (in case of overriding its defaults) to use. In other words, usually null, but when used, for example:
+
+Sample JSON data structure: 
+```json
+{
+    "vertical_fields_list": [
+        [ "house_bol_hawb", "HOUSE BILL OF LADING" ],
+        [ "master_bol_mawb", "OCEAN BILL OF LADING" ],
+        [ "customer_number", "ORDER NUMBERS / REFERENCE", "ORDER NUMBERS/REFERENCE" ],
+    ],
+    "multiline_vertical_fields_list": [
+        [ "weight", "WEIGHT", "Gross Weight" ],
+        [ "quantity", "PACKAGES" ],
+    ],
+    "horizontal_fields_list": [
+        [ "reference_number", "CONSOL" ],
+    ]
+}
+```
 
 #### company_id_list
 
