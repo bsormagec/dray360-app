@@ -159,6 +159,30 @@ This indicates what type of variant is being described. Valid values are:
 1. tabular (includes CSV, XLSX, and possibly HTML tables; any flat colum/row data)
 1. pdftext (for files we will parse with pdfplumber instead of using abbyy ocr)
 
+#### classification
+
+A list of matching keywords (and potentially other information like regions), to help classify variants.
+
+JSON data structure: 
+```json
+[
+    { "TO BE DETERMINED": "SOMETHING" }
+]
+```
+#### mapping
+
+JSON data structure: 
+```json
+[
+    "abbyy_fieldname_1": {
+        "source": "xlsx_header_1"
+    },
+    "abbyy_fieldname_2": {
+        "source": "xlsx_header_2"
+    }
+]
+```
+
 #### classifier
 
 This indicates which classifier will report that variant type. It is used by the intakefilter engine.
@@ -171,40 +195,37 @@ This indicates which pdfplumber parser will be used to parse the variant, It is 
 
 Example value (for variant 'itgcargowisepdf'): `itgcargowisepdf-parser`
 
-#### classification
-
-This is not currently in use, null for all rows, and may never get used. It's intention was to build a simple classification system for tabular data (csv/xlsx) files.
-
-(proposed) JSON data structure: 
+#### parser_options
 ```json
 {
-    "required_header_field_list": [
-        "field1",
-        "field2",
-        "etc."
-    ], 
-    "forbidden_header_field_list": [
-        "fieldA",
-        "fieldB",
-        "etc."
-    ]    
+    "pdfplumber_lines_type_options": {
+        "snap_tolerance": 2
+    },
+    "pdfplumber_text_type_options": {
+        "text_x_tolerance": 2
+    }
 }
 ```
 
+#### parser_fields_list
 
-#### mapping
-
-JSON data structure: 
-```pseudo-json
+Sample JSON data structure: 
+```json
 {
-    need to define this
-    ===================
-    list of header=fieldname, 
-    list of header=fixedvalue
+    "vertical_fields_list": [
+        [ "house_bol_hawb", "HOUSE BILL OF LADING" ],
+        [ "master_bol_mawb", "OCEAN BILL OF LADING" ],
+        [ "customer_number", "ORDER NUMBERS / REFERENCE", "ORDER NUMBERS/REFERENCE" ],
+    ],
+    "multiline_vertical_fields_list": [
+        [ "weight", "WEIGHT", "Gross Weight" ],
+        [ "quantity", "PACKAGES" ],
+    ],
+    "horizontal_fields_list": [
+        [ "reference_number", "CONSOL" ],
+    ]
 }
 ```
-
-
 
 #### company_id_list
 
