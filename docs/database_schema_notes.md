@@ -196,6 +196,9 @@ This indicates which pdfplumber parser will be used to parse the variant, It is 
 Example value (for variant 'itgcargowisepdf'): `itgcargowisepdf-parser`
 
 #### parser_options
+
+Set to the parser, to tell it what options (only when overriding its defaults) to use. Usually null, but for example:
+
 ```json
 {
     "pdfplumber_lines_type_options": {
@@ -208,6 +211,8 @@ Example value (for variant 'itgcargowisepdf'): `itgcargowisepdf-parser`
 ```
 
 #### parser_fields_list
+
+Sent to the parser, to tell it what fields (in case of overriding its defaults) to use. In other words, usually null, but when used, for example:
 
 Sample JSON data structure: 
 ```json
