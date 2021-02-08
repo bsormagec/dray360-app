@@ -382,7 +382,7 @@ export default {
     height: rem(48);
     width: rem(5);
     margin-right: rem(8);
-    background-color: rgba(var(--v-secondary-base-rgb), 0.35);
+    background-color: rgba(var(--v-secondary-base-rgb), 0.25);
   }
 }
 </style>

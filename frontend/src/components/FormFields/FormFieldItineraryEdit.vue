@@ -121,13 +121,11 @@
         <AddressBookModalDialog
           :is-open="addressModalOpen"
           :filters="filters"
-          :recognized-text="orderAddressEvent.t_address_raw_text || 'No recognized address'"
-          :enable-location-name="enableLocationName"
-          :enable-city="enableCity"
-          :enable-postal-code="enablePostalCode"
-          :enable-address="enableAddress"
-          :enable-state="enableState"
+          :recognized-text="orderAddressEvent.t_address_raw_text || ''"
+          :enable-address-filters="enableAddressFilters"
+          :enable-search="enableSearch"
           @change="handleAddressChange"
+          @close="addressModalOpen = false"
         />
         <div class="form-field">
           <div
@@ -187,11 +185,8 @@ export default {
     editMode: { type: Boolean, required: true },
     isFirst: { type: Boolean, required: true },
     isLast: { type: Boolean, required: true },
-    enableLocationName: { type: Boolean, required: false, default: false },
-    enableCity: { type: Boolean, required: false, default: false },
-    enablePostalCode: { type: Boolean, required: false, default: false },
-    enableAddress: { type: Boolean, required: false, default: false },
-    enableState: { type: Boolean, required: false, default: false }
+    enableAddressFilters: { type: Boolean, required: false, default: true },
+    enableSearch: { type: Boolean, required: false, default: false }
   },
 
   data: (vm) => ({

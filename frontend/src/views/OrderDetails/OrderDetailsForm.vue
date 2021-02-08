@@ -757,11 +757,8 @@ export default {
 
     addressSearchProps () {
       return {
-        'enable-location-name': !!this.options.address_search.location_name,
-        'enable-city': !!this.options.address_search.city,
-        'enable-postal-code': !!this.options.address_search.postal_code,
-        'enable-address': !!this.options.address_search.address,
-        'enable-state': !!this.options.address_search.state
+        'enable-address-filters': get(this.options, 'address_search.address_filters', true),
+        'enable-search': get(this.options, 'address_search.search', false)
       }
     },
 

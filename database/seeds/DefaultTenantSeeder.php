@@ -40,12 +40,8 @@ class DefaultTenantSeeder extends Seeder
             'enable_divisions' => false,
 
             // Address Search Booleans
-            'address_search_location_name' => false,
-            'address_search_city' => false,
-            'address_search_postal_code' => false,
-            'address_search_address' => false,
-            'address_search_state' => false,
-            'show_orders_tab_first' => false,
+            'address_search_search' => false,
+            'address_search_address_filters' => true,
         ];
         $tenant->save();
     }

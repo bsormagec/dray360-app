@@ -219,7 +219,7 @@ export default {
           this.formOptions.hidden.push(key.replace('hide_field_name_', ''))
         } else if (key.startsWith('address_search_')) {
           const newKey = key.replace('address_search_', '')
-          this.formOptions.address_search[newKey] = true
+          this.formOptions.address_search[newKey] = this.companyConfiguration[key]
         } else {
           this.formOptions.extra[key] = this.companyConfiguration[key]
         }
