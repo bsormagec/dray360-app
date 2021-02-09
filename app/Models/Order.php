@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use App\Events\AddressVerified;
+use App\Events\CarrierVerified;
 use App\Events\TmsTemplateVerified;
 use App\Models\Traits\FillWithNulls;
 use App\Models\Traits\BelongsToCompany;
@@ -158,6 +159,8 @@ class Order extends Model
         'container_dictid',
         'tms_template_dictid_verified',
         'is_hidden',
+        'carrier_dictid',
+        'carrier_dictid_verified',
     ];
 
     /**
@@ -186,6 +189,7 @@ class Order extends Model
         'submitted_date' => 'datetime',
         'tms_template_dictid_verified' => 'boolean',
         'is_hidden' => 'boolean',
+        'carrier_dictid_verified' => 'boolean',
     ];
 
     /**
@@ -263,6 +267,8 @@ class Order extends Model
         'container_dictid' => 'sometimes|nullable',
         'tms_template_dictid_verified' => 'sometimes|nullable',
         'is_hidden' => 'sometimes|nullable',
+        'carrier_dictid' => 'sometimes|nullable',
+        'carrier_dictid_verified' => 'sometimes|nullable',
     ];
 
     /**
@@ -271,6 +277,7 @@ class Order extends Model
     public static $verifiableAttributes = [
         'bill_to_address_verified' => AddressVerified::class,
         'tms_template_dictid_verified' => TmsTemplateVerified::class,
+        'carrier_dictid_verified' => CarrierVerified::class,
     ];
 
     public function precededByOrder()

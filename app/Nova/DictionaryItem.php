@@ -62,6 +62,7 @@ class DictionaryItem extends Resource
                 ->options([
                     \App\Models\DictionaryItem::TEMPLATE_TYPE => 'Template',
                     \App\Models\DictionaryItem::ITGCONTAINER_TYPE => 'ITG Container',
+                    \App\Models\DictionaryItem::CARRIER_TYPE => 'Carrier',
                 ])
                 ->rules([
                     'required',

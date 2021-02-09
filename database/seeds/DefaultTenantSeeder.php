@@ -33,8 +33,10 @@ class DefaultTenantSeeder extends Seeder
 
             // Profittools templates
             'profit_tools_enable_templates' => false,
-            // Profittools templates
+            // itg containers
             'itg_enable_containers' => false,
+            // Profittools templates
+            'enable_dictionary_items_carrier' => false,
 
             'hide_field_name_house_bol_hawb' => false,
             'enable_divisions' => false,

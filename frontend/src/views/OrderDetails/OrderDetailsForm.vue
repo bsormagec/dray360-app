@@ -38,21 +38,15 @@
         <div class="order__title mr-4">
           Order #{{ order.id }}
         </div>
-        <div
-          class="secondary--text caption"
-        >
-          <RequestStatus
-            :status="order.ocr_request.latest_ocr_request_status"
-          />
+        <div class="secondary--text caption">
+          <RequestStatus :status="order.ocr_request.latest_ocr_request_status" />
         </div>
         <div
           v-show="order.tms_shipment_id"
           class="order__tms"
         >
           <strong>TMS ID: </strong> {{ order.tms_shipment_id }}
-          <v-tooltip
-            top
-          >
+          <v-tooltip top>
             <template v-slot:activator="{ on }">
               <v-icon
                 v-clipboard:copy="order.tms_shipment_id"
@@ -253,12 +247,8 @@
         />
       </div>
 
-      <div
-        class="form__sub-section"
-      >
-        <div
-          class="form__section-title"
-        >
+      <div class="form__sub-section">
+        <div class="form__section-title">
           <h3 :id="sections.equipment.id">
             {{ sections.equipment.label }}
           </h3>
@@ -272,7 +262,7 @@
             :autocomplete-items="itgContainers"
             :item-text="item => `${item.item_display_name} (${item.item_key})`"
             item-value="id"
-            :display-value="itgContainerDisplayName"
+            :display-value="(value)=> dictionaryItemDisplayName(value, itgContainers)"
             :edit-mode="editMode"
             @change="value => handleChange('container_dictid', value)"
           />
@@ -310,12 +300,8 @@
         </div>
       </div>
 
-      <div
-        class="form__sub-section"
-      >
-        <div
-          class="form__section-title"
-        >
+      <div class="form__sub-section">
+        <div class="form__section-title">
           <h3 :id="sections.origin.id">
             {{ sections.origin.label }}
           </h3>
@@ -368,6 +354,18 @@
             :value="order.pickup_number"
             :edit-mode="editMode"
             @change="value => handleChange('pickup_number', value)"
+          />
+          <FormFieldInputAutocomplete
+            v-if="!!options.extra.enable_dictionary_items_carrier"
+            references="carrier_dictid"
+            label="SSL"
+            :value="order.carrier_dictid"
+            :autocomplete-items="carrierItems"
+            :item-text="item => `${item.item_display_name} (${item.item_key})`"
+            item-value="id"
+            :display-value="(value)=> dictionaryItemDisplayName(value, carrierItems)"
+            :edit-mode="editMode"
+            @change="value => handleChange('carrier_dictid', value)"
           />
           <FormFieldInput
             v-if="fieldShouldBeShown('vessel')"
@@ -431,9 +429,7 @@
         v-if="!isManagedByTemplate"
         class="form__sub-section"
       >
-        <div
-          class="form__section-title"
-        >
+        <div class="form__section-title">
           <h3 :id="sections.bill_to.id">
             {{ sections.bill_to.label }}
           </h3>
@@ -458,9 +454,7 @@
             @change="value => handleChange('bill_comment', value)"
           />
         </div>
-        <div
-          class="form__section-title"
-        >
+        <div class="form__section-title">
           <h3 :id="sections.charges.id">
             {{ sections.charges.label }}
           </h3>
@@ -484,9 +478,7 @@
           />
         </div>
       </div>
-      <div
-        v-else
-      >
+      <div v-else>
         <div
           :id="sections.bill_to.id"
           class="form__section-title form__section-title--managed d-flex align-center justify-center mb-2"
@@ -550,9 +542,7 @@
           </div>
         </div>
       </div>
-      <div
-        v-else
-      >
+      <div v-else>
         <div
           :id="sections.itinerary.id"
           class="form__section-title form__section-title--managed d-flex align-center justify-center mb-2"
@@ -598,9 +588,7 @@
           :key="index"
           class="form__sub-section"
         >
-          <div
-            class="form__section-title"
-          >
+          <div class="form__section-title">
             <h3>Item {{ index + 1 }}</h3>
           </div>
           <div class="section__rootfields">
@@ -630,9 +618,7 @@
           </div>
         </div>
       </div>
-      <div
-        v-else
-      >
+      <div v-else>
         <div
           :id="sections.inventory.id"
           class="form__section-title form__section-title--managed d-flex align-center justify-center"
@@ -723,6 +709,11 @@ export default {
       default: () => []
     },
     itgContainers: {
+      type: Array,
+      required: false,
+      default: () => []
+    },
+    carrierItems: {
       type: Array,
       required: false,
       default: () => []
@@ -1072,8 +1063,8 @@ export default {
       const result = this.tmsTemplates.filter(el => el.id === value)
       return result.length > 0 ? result[0].item_display_name : value
     },
-    itgContainerDisplayName (value) {
-      const result = this.itgContainers.filter(el => el.id === value)
+    dictionaryItemDisplayName (value, items) {
+      const result = items.filter(el => el.id === value)
       return result.length > 0 ? `${result[0].item_display_name} (${result[0].item_key})` : value
     }
 
@@ -1114,14 +1105,19 @@ export default {
     bottom: rem(-15);
     display: block;
     height: rem(15);
-    background: linear-gradient(180deg, rgba(0, 60, 113, 0.1) 0%, rgba(0, 60, 113, 0.05) 31.77%, rgba(0, 60, 113, 0) 100%);
+    background: linear-gradient(
+      180deg,
+      rgba(0, 60, 113, 0.1) 0%,
+      rgba(0, 60, 113, 0.05) 31.77%,
+      rgba(0, 60, 113, 0) 100%
+    );
   }
 
   .order__title {
     font-size: rem(20);
     font-weight: 500;
     line-height: (23.4 / 20);
-    letter-spacing: rem(.15);
+    letter-spacing: rem(0.15);
     color: var(--v-slate-gray-base);
   }
 
@@ -1130,7 +1126,7 @@ export default {
     align-items: center;
     font-size: rem(12);
     line-height: (18 /12);
-    letter-spacing: rem(.25);
+    letter-spacing: rem(0.25);
     color: var(--v-slate-gray-base);
 
     strong {
@@ -1167,7 +1163,7 @@ export default {
     font-size: rem(13);
     font-weight: 700;
     line-height: (24 / 13);
-    letter-spacing: rem(.75);
+    letter-spacing: rem(0.75);
     color: map-get($colors, white);
   }
   &.form__section-title--managed h3 {
@@ -1195,7 +1191,7 @@ export default {
 
   .form-field:nth-child(even),
   & > div:nth-child(even) .form-field-presentation {
-    background-color: #F5F6F7;
+    background-color: #f5f6f7;
   }
 }
 
@@ -1208,7 +1204,7 @@ export default {
     font-size: rem(14);
     font-weight: 400;
     line-height: (20 / 14);
-    letter-spacing: rem(.25);
+    letter-spacing: rem(0.25);
   }
 
   .field__value {

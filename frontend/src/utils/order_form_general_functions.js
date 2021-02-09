@@ -54,7 +54,12 @@ export function baseHighlight (ocrData) {
 }
 
 export function keyShouldBeParsed (key) {
-  const shouldNotBeIgnored = ['t_equipment_type_id', 'tms_template_dictid', 'container_dictid']
+  const shouldNotBeIgnored = [
+    't_equipment_type_id',
+    'tms_template_dictid',
+    'container_dictid',
+    'carrier_dictid'
+  ]
 
   if (shouldNotBeIgnored.includes(key)) {
     return true
@@ -125,9 +130,14 @@ export function parseChanges ({ path, value, originalOrder }) {
     {
       field: 't_equipment_type_id',
       boolean_field: 'equipment_type_verified'
-    }, {
+    },
+    {
       field: 'tms_template_dictid',
       boolean_field: 'tms_template_dictid_verified'
+    },
+    {
+      field: 'carrier_dictid',
+      boolean_field: 'carrier_dictid_verified'
     }
   ]
 

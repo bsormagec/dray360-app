@@ -15,6 +15,7 @@
             :redirect-back="redirectBack"
             :tms-templates="tmsTemplates"
             :itg-containers="itgContainers"
+            :carrier-items="carrierItems"
             :options="{...formOptions}"
             @order-deleted="$emit('order-deleted')"
             @go-back="$emit('go-back')"
@@ -112,6 +113,7 @@ export default {
     redirectBack: false,
     tmsTemplates: [],
     itgContainers: [],
+    carrierItems: [],
     orderIdToLoad: vm.orderId || vm.$route.params.id,
     formOptions: {
       hidden: [],
@@ -185,6 +187,9 @@ export default {
       if (this.formOptions.extra.itg_enable_containers) {
         await this.fetchItgContainers(this.currentOrder.company.id)
       }
+      if (this.formOptions.extra.enable_dictionary_items_carrier) {
+        await this.fetchCarrierItems(this.currentOrder.company.id)
+      }
     },
 
     async fetchTmsTemplates (companyId) {
@@ -211,6 +216,18 @@ export default {
       }
 
       this.itgContainers = data.data
+    },
+    async fetchCarrierItems (companyId) {
+      const [error, data] = await getDictionaryItems({
+        'filter[company_id]': companyId,
+        'filter[item_type]': dictionaryItemsTypes.carrier
+      })
+
+      if (error !== undefined) {
+        this.carrierItems = []
+      }
+
+      this.carrierItems = data.data
     },
 
     initializeFormOptions () {
