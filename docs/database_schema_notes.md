@@ -165,10 +165,24 @@ A list of matching keywords (and potentially other information like regions), to
 
 JSON data structure: 
 ```json
-[
-    { "TO BE DETERMINED": "SOMETHING" }
-]
+{
+    "and_all_keywords": 
+        [
+            "Sea Freight FCL Cartage Advice with Receipt",
+            "Ocean ASDF"
+        ],
+    "and_any_keywords": 
+        [
+            "CONSOLE",
+            "SHIPMENT"
+        ],
+    "and_no_keywords":
+        [
+            "Profit Tools"
+        ]
+}
 ```
+
 #### mapping
 
 JSON data structure: 
