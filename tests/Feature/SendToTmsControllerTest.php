@@ -13,6 +13,7 @@ use Laravel\Sanctum\Sanctum;
 use Illuminate\Http\Response;
 use Tests\Seeds\CompaniesSeeder;
 use Tests\Seeds\OrdersTableSeeder;
+use Illuminate\Support\Facades\Event;
 use App\Actions\PublishSnsMessageToUpdateStatus;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
 
@@ -26,6 +27,7 @@ class SendToTmsControllerTest extends TestCase
 
         $this->loginAdmin();
         $this->seed(CompaniesSeeder::class);
+        Event::fake();
     }
 
     /** @test */
@@ -33,7 +35,12 @@ class SendToTmsControllerTest extends TestCase
     {
         (new OrdersTableSeeder())->seedOrderWithValidatedAddresses();
         $order = Order::first();
-        $order->update(['t_tms_provider_id' => TMSProvider::getProfitTools()->id]);
+        $order->update([
+            't_tms_provider_id' => TMSProvider::getProfitTools()->id,
+            'tms_template_dictid_verified' => false,
+            'carrier_dictid_verified' => false,
+            'vessel_dictid_verified' => false,
+        ]);
         $messageId = Str::random(5);
 
         $mockAction = Mockery::mock(PublishSnsMessageToUpdateStatus::class)->makePartial();
@@ -43,6 +50,13 @@ class SendToTmsControllerTest extends TestCase
         $this->postJson(route('orders.send-to-tms', $order->id))
             ->assertJsonFragment(['data' => $messageId])
             ->assertStatus(Response::HTTP_OK);
+
+        $this->assertDatabaseHas('t_orders', [
+            'id' => $order->id,
+            'tms_template_dictid_verified' => true,
+            'carrier_dictid_verified' => true,
+            'vessel_dictid_verified' => true,
+        ]);
     }
 
     /** @test */
@@ -50,7 +64,14 @@ class SendToTmsControllerTest extends TestCase
     {
         (new OrdersTableSeeder())->seedOrderWithValidatedAddresses();
         $order = Order::first();
-        $order->update(['t_tms_provider_id' => TMSProvider::getProfitTools()->id]);
+        $order->update([
+            't_tms_provider_id' => TMSProvider::getProfitTools()->id,
+            'bill_to_address_verified' => false,
+            'equipment_type_verified' => false,
+            'tms_template_dictid_verified' => false,
+            'carrier_dictid_verified' => false,
+            'vessel_dictid_verified' => false,
+        ]);
 
         $mockAction = Mockery::mock(PublishSnsMessageToUpdateStatus::class)->makePartial();
         $mockAction->shouldReceive('__invoke')->andReturn(['status' => 'error', 'message' => 'exception'])->once();
@@ -59,6 +80,15 @@ class SendToTmsControllerTest extends TestCase
         $this->postJson(route('orders.send-to-tms', $order->id))
             ->assertJsonFragment(['data' => 'exception'])
             ->assertStatus(Response::HTTP_INTERNAL_SERVER_ERROR);
+
+        $this->assertDatabaseHas('t_orders', [
+            'id' => $order->id,
+            'bill_to_address_verified' => false,
+            'equipment_type_verified' => false,
+            'tms_template_dictid_verified' => false,
+            'carrier_dictid_verified' => false,
+            'vessel_dictid_verified' => false,
+        ]);
     }
 
     /** @test */
