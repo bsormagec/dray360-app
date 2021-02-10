@@ -198,6 +198,7 @@ export default {
       //   'application/EDI-X12',
       //   'application/EDIFACT',
       //   'application/EDI-consent',
+      //   'application/vnd.ms-excel',
       //   ''
       // ]
       // const filtered = [...this.files, ...newFiles].filter(f => acceptedMimeTypes.includes(f.type))
