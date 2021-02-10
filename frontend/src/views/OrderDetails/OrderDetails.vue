@@ -16,6 +16,7 @@
             :tms-templates="tmsTemplates"
             :itg-containers="itgContainers"
             :carrier-items="carrierItems"
+            :vessel-items="vesselItems"
             :options="{...formOptions}"
             @order-deleted="$emit('order-deleted')"
             @go-back="$emit('go-back')"
@@ -114,6 +115,7 @@ export default {
     tmsTemplates: [],
     itgContainers: [],
     carrierItems: [],
+    vesselItems: [],
     orderIdToLoad: vm.orderId || vm.$route.params.id,
     formOptions: {
       hidden: [],
@@ -190,6 +192,9 @@ export default {
       if (this.formOptions.extra.enable_dictionary_items_carrier) {
         await this.fetchCarrierItems(this.currentOrder.company.id)
       }
+      if (this.formOptions.extra.enable_dictionary_items_vessel) {
+        await this.getchVesselItems(this.currentOrder.company.id)
+      }
     },
 
     async fetchTmsTemplates (companyId) {
@@ -228,6 +233,18 @@ export default {
       }
 
       this.carrierItems = data.data
+    },
+    async getchVesselItems (companyId) {
+      const [error, data] = await getDictionaryItems({
+        'filter[company_id]': companyId,
+        'filter[item_type]': dictionaryItemsTypes.vessel
+      })
+
+      if (error !== undefined) {
+        this.vesselItems = []
+      }
+
+      this.vesselItems = data.data
     },
 
     initializeFormOptions () {

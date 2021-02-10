@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Events\VesselVerified;
 use App\Events\AddressVerified;
 use App\Events\CarrierVerified;
 use App\Events\TmsTemplateVerified;
@@ -161,6 +162,8 @@ class Order extends Model
         'is_hidden',
         'carrier_dictid',
         'carrier_dictid_verified',
+        'vessel_dictid',
+        'vessel_dictid_verified',
     ];
 
     /**
@@ -190,6 +193,7 @@ class Order extends Model
         'tms_template_dictid_verified' => 'boolean',
         'is_hidden' => 'boolean',
         'carrier_dictid_verified' => 'boolean',
+        'vessel_dictid_verified' => 'boolean',
     ];
 
     /**
@@ -269,6 +273,8 @@ class Order extends Model
         'is_hidden' => 'sometimes|nullable',
         'carrier_dictid' => 'sometimes|nullable',
         'carrier_dictid_verified' => 'sometimes|nullable',
+        'vessel_dictid' => 'sometimes|nullable',
+        'vessel_dictid_verified' => 'sometimes|nullable',
     ];
 
     /**
@@ -278,6 +284,7 @@ class Order extends Model
         'bill_to_address_verified' => AddressVerified::class,
         'tms_template_dictid_verified' => TmsTemplateVerified::class,
         'carrier_dictid_verified' => CarrierVerified::class,
+        'vessel_dictid_verified' => VesselVerified::class,
     ];
 
     public function precededByOrder()

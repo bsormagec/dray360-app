@@ -197,7 +197,7 @@
           :autocomplete-items="tmsTemplates"
           item-text="item_display_name"
           item-value="id"
-          :display-value="tmsTemplateDisplayName"
+          :display-value="value => dictionaryItemDisplayValue(value, tmsTemplates)"
           :edit-mode="editMode"
           :verifiable="order.tms_template_dictid !== null && !order.tms_template_dictid_verified"
           @change="value => handleChange('tms_template_dictid', value)"
@@ -262,7 +262,7 @@
             :autocomplete-items="itgContainers"
             :item-text="item => `${item.item_display_name} (${item.item_key})`"
             item-value="id"
-            :display-value="(value)=> dictionaryItemDisplayName(value, itgContainers)"
+            :display-value="(value)=> dictionaryItemDisplayKeyValue(value, itgContainers)"
             :edit-mode="editMode"
             @change="value => handleChange('container_dictid', value)"
           />
@@ -363,17 +363,29 @@
             :autocomplete-items="carrierItems"
             :item-text="item => `${item.item_display_name} (${item.item_key})`"
             item-value="id"
-            :display-value="(value)=> dictionaryItemDisplayName(value, carrierItems)"
+            :display-value="(value)=> dictionaryItemDisplayKeyValue(value, carrierItems)"
             :edit-mode="editMode"
             @change="value => handleChange('carrier_dictid', value)"
           />
           <FormFieldInput
-            v-if="fieldShouldBeShown('vessel')"
+            v-if="fieldShouldBeShown('vessel') && !options.extra.enable_dictionary_items_vessel"
             references="vessel"
             label="Vessel"
             :value="order.vessel"
             :edit-mode="editMode"
             @change="value => handleChange('vessel', value)"
+          />
+          <FormFieldInputAutocomplete
+            v-if="!!options.extra.enable_dictionary_items_vessel"
+            references="vessel_dictid"
+            label="Vessel"
+            :value="order.vessel_dictid"
+            :autocomplete-items="vesselItems"
+            item-text="item_display_name"
+            item-value="id"
+            :display-value="(value)=> dictionaryItemDisplayValue(value, vesselItems)"
+            :edit-mode="editMode"
+            @change="value => handleChange('vessel_dictid', value)"
           />
           <FormFieldInput
             v-if="fieldShouldBeShown('voyage')"
@@ -714,6 +726,11 @@ export default {
       default: () => []
     },
     carrierItems: {
+      type: Array,
+      required: false,
+      default: () => []
+    },
+    vesselItems: {
       type: Array,
       required: false,
       default: () => []
@@ -1058,14 +1075,13 @@ export default {
         onCancel: () => { this.loading = false }
       })
     },
-
-    tmsTemplateDisplayName (value) {
-      const result = this.tmsTemplates.filter(el => el.id === value)
-      return result.length > 0 ? result[0].item_display_name : value
-    },
-    dictionaryItemDisplayName (value, items) {
+    dictionaryItemDisplayKeyValue (value, items) {
       const result = items.filter(el => el.id === value)
       return result.length > 0 ? `${result[0].item_display_name} (${result[0].item_key})` : value
+    },
+    dictionaryItemDisplayValue (value, items) {
+      const result = items.filter(el => el.id === value)
+      return result.length > 0 ? result[0].item_display_name : value
     }
 
   }

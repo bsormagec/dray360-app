@@ -7,6 +7,7 @@ use App\Models\Order;
 use App\Models\Company;
 use App\Models\TMSProvider;
 use Illuminate\Http\Response;
+use App\Events\VesselVerified;
 use App\Models\DictionaryItem;
 use App\Events\AddressVerified;
 use App\Events\CarrierVerified;
@@ -45,6 +46,7 @@ class OrderControllerVerifyAttributesTest extends TestCase
             'tms_template_dictid' => $template->id,
             'tms_template_dictid_verified' => false,
             'carrier_dictid_verified' => false,
+            'vessel_dictid_verified' => false,
             'bill_to_address_verified' => false,
             't_company_id' => $company->id,
             't_tms_provider_id' => $tmsProvider->id,
@@ -54,6 +56,7 @@ class OrderControllerVerifyAttributesTest extends TestCase
                 'tms_template_dictid_verified' => true,
                 'bill_to_address_verified' => true,
                 'carrier_dictid_verified' => true,
+                'vessel_dictid_verified' => true,
                 'order_address_events' => [
                     $orderAddressEvent->setAttribute('t_address_verified', true)->toArray()
                 ],
@@ -63,5 +66,6 @@ class OrderControllerVerifyAttributesTest extends TestCase
         Event::assertDispatchedTimes(AddressVerified::class, 2);
         Event::assertDispatchedTimes(TmsTemplateVerified::class, 1);
         Event::assertDispatchedTimes(CarrierVerified::class, 1);
+        Event::assertDispatchedTimes(VesselVerified::class, 1);
     }
 }

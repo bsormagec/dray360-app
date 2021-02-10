@@ -1,7 +1,8 @@
 export const dictionaryItemsTypes = {
   template: 'template',
   itgContainer: 'itgcontainer',
-  carrier: 'carrier'
+  carrier: 'carrier',
+  vessel: 'vessel'
 }
 
 export const statuses = {

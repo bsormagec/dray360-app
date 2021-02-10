@@ -11,6 +11,7 @@ class DictionaryItem extends Model
 
     const TEMPLATE_TYPE = 'template',
         ITGCONTAINER_TYPE = 'itgcontainer',
+        VESSEL_TYPE = 'vessel',
         CARRIER_TYPE = 'carrier';
 
     public $table = 't_dictionary_items';

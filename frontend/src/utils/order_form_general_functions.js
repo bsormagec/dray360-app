@@ -58,7 +58,8 @@ export function keyShouldBeParsed (key) {
     't_equipment_type_id',
     'tms_template_dictid',
     'container_dictid',
-    'carrier_dictid'
+    'carrier_dictid',
+    'vessel_dictid'
   ]
 
   if (shouldNotBeIgnored.includes(key)) {
@@ -138,6 +139,10 @@ export function parseChanges ({ path, value, originalOrder }) {
     {
       field: 'carrier_dictid',
       boolean_field: 'carrier_dictid_verified'
+    },
+    {
+      field: 'vessel_dictid',
+      boolean_field: 'vessel_dictid_verified'
     }
   ]
 

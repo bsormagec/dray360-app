@@ -30,7 +30,16 @@ class DictionaryItemsImportSeeder extends Seeder
                         'description' => 'Description',
                     ],
                 ],
-            ],
+            ], [
+                'file' => 'seeds/ITG David Duke - Vessel Listing 1.22.21.xlsx',
+                'sheet' => 1,
+                'columns' => [
+                    'item_key' => 'Vessel',
+                    'item_display_name' => 'Vessel',
+                    'item_type' => DictionaryItem::VESSEL_TYPE,
+                    'item_value' => [],
+                ]
+            ]
         ],
         'ITG' => [
             [
@@ -42,7 +51,16 @@ class DictionaryItemsImportSeeder extends Seeder
                     'item_type' => DictionaryItem::CARRIER_TYPE,
                     'item_value' => [],
                 ],
-            ],
+            ], [
+                'file' => 'seeds/ITG David Duke - Vessel Listing 1.22.21.xlsx',
+                'sheet' => 1,
+                'columns' => [
+                    'item_key' => 'Vessel',
+                    'item_display_name' => 'Vessel',
+                    'item_type' => DictionaryItem::VESSEL_TYPE,
+                    'item_value' => [],
+                ]
+            ]
         ],
     ];
 
