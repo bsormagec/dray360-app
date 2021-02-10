@@ -751,6 +751,14 @@ export default {
     }
   },
 
+  watch: {
+    isMobile (newValue) {
+      if (!newValue && this.backButton) {
+        return this[type.setSidebar]({ show: true })
+      }
+    }
+  },
+
   computed: {
     ...mapState(orderForm.moduleName, {
       order: state => state.order,
