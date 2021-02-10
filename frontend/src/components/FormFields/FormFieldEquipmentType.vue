@@ -61,6 +61,7 @@
       max-width="56rem"
       scrollable
       @click:outside="toggledialg"
+      @keydown.esc="toggledialg"
     >
       <v-card>
         <v-card-title class="pa-0">

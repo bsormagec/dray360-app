@@ -4,6 +4,7 @@
     max-width="550px"
     scrollable
     @click:outside="$emit('close')"
+    @keydown.esc="$emit('close')"
   >
     <v-card>
       <v-card-title class="px-0 py-0">
