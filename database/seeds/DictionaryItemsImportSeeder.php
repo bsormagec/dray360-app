@@ -30,7 +30,8 @@ class DictionaryItemsImportSeeder extends Seeder
                         'description' => 'Description',
                     ],
                 ],
-            ], [
+            ],
+            [
                 'file' => 'seeds/ITG David Duke - Vessel Listing 1.22.21.xlsx',
                 'sheet' => 1,
                 'columns' => [
@@ -39,7 +40,22 @@ class DictionaryItemsImportSeeder extends Seeder
                     'item_type' => DictionaryItem::VESSEL_TYPE,
                     'item_value' => [],
                 ]
-            ]
+            ],
+            [
+                'file' => 'seeds/CargoWise One Export - 20210107113712 - 414.csv',
+                'columns' => [
+                    'item_key' => 'Code',
+                    'item_display_name' => 'Description',
+                    'item_type' => DictionaryItem::ITGCONTAINER_TYPE,
+                    'item_value' => [
+                        'code' => 'Code',
+                        'description' => 'Description',
+                        'mode' => 'Mode',
+                        'container_type' => 'Container Type',
+                        'times_used' => 'Times Used',
+                    ],
+                ]
+            ],
         ],
         'ITG' => [
             [
@@ -49,9 +65,13 @@ class DictionaryItemsImportSeeder extends Seeder
                     'item_key' => 'Code',
                     'item_display_name' => 'Description',
                     'item_type' => DictionaryItem::CARRIER_TYPE,
-                    'item_value' => [],
+                    'item_value' => [
+                        'code' => 'Code',
+                        'description' => 'Description',
+                    ],
                 ],
-            ], [
+            ],
+            [
                 'file' => 'seeds/ITG David Duke - Vessel Listing 1.22.21.xlsx',
                 'sheet' => 1,
                 'columns' => [
@@ -60,7 +80,22 @@ class DictionaryItemsImportSeeder extends Seeder
                     'item_type' => DictionaryItem::VESSEL_TYPE,
                     'item_value' => [],
                 ]
-            ]
+            ],
+            [
+                'file' => 'seeds/CargoWise One Export - 20210107113712 - 414.csv',
+                'columns' => [
+                    'item_key' => 'Code',
+                    'item_display_name' => 'Description',
+                    'item_type' => DictionaryItem::ITGCONTAINER_TYPE,
+                    'item_value' => [
+                        'code' => 'Code',
+                        'description' => 'Description',
+                        'mode' => 'Mode',
+                        'container_type' => 'Container Type',
+                        'times_used' => 'Times Used',
+                    ],
+                ]
+            ],
         ],
     ];
 
