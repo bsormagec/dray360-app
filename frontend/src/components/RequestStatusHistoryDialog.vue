@@ -4,6 +4,7 @@
       :value="open"
       max-width="400"
       @click:outside="$emit('close')"
+      @keydown.esc="$emit('close')"
     >
       <v-card>
         <v-card-title class="justify-space-between">

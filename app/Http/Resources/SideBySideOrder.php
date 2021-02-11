@@ -35,8 +35,23 @@ class SideBySideOrder extends JsonResource
         }
 
         $this->preparePreceedingOrderChanges();
+        $this->loadOrderCompanyConfiguration();
 
         return parent::toArray($request);
+    }
+
+    protected function loadOrderCompanyConfiguration()
+    {
+        $this->resource->load(['company:id,configuration,name,t_domain_id']);
+
+        if (! $this->resource->company) {
+            return;
+        }
+
+        $configuration = app('tenancy')->getCompanyConfiguration($this->resource->company);
+        $this->resource->company->unsetRelation('domain');
+
+        $this->resource->company->configuration = $configuration;
     }
 
     protected function preSignDocumentImages()

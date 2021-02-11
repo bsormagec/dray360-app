@@ -39,6 +39,11 @@ class SendToTmsController extends Controller
             return response()->json(['data' => $response['message']], Response::HTTP_INTERNAL_SERVER_ERROR);
         }
 
+        $verifiableAttributes = collect(Order::$verifiableAttributes)
+            ->map(fn ($value) => true)
+            ->toArray();
+        $order->update($verifiableAttributes);
+
         return response()->json(['data' => $response['message']]);
     }
 

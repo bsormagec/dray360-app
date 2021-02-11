@@ -61,6 +61,7 @@
       max-width="56rem"
       scrollable
       @click:outside="toggledialg"
+      @keydown.esc="toggledialg"
     >
       <v-card>
         <v-card-title class="pa-0">
@@ -382,7 +383,7 @@ export default {
     height: rem(48);
     width: rem(5);
     margin-right: rem(8);
-    background-color: rgba(var(--v-secondary-base-rgb), 0.35);
+    background-color: rgba(var(--v-secondary-base-rgb), 0.25);
   }
 }
 </style>

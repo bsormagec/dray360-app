@@ -14,11 +14,10 @@
             :virtual-back-button="isMobile && !backButton"
             :redirect-back="redirectBack"
             :tms-templates="tmsTemplates"
-            :tms-templates-enabled="profitToolsTemplatesEnabled"
             :itg-containers="itgContainers"
-            :itg-containers-enabled="itgContainersEnabled"
-            :hide-field-name-house-bol-hawb="hideFieldNameHouseBolHawb"
-            :divisions-enabled="divisionsEnabled"
+            :carrier-items="carrierItems"
+            :vessel-items="vesselItems"
+            :options="{...formOptions}"
             @order-deleted="$emit('order-deleted')"
             @go-back="$emit('go-back')"
           />
@@ -115,7 +114,14 @@ export default {
     redirectBack: false,
     tmsTemplates: [],
     itgContainers: [],
+    carrierItems: [],
+    vesselItems: [],
     orderIdToLoad: vm.orderId || vm.$route.params.id,
+    formOptions: {
+      hidden: [],
+      address_search: {},
+      extra: {}
+    },
     has404: false
   }),
 
@@ -133,18 +139,8 @@ export default {
     ...mapState(orderForm.moduleName, {
       order: state => state.order
     }),
-    profitToolsTemplatesEnabled () {
-      return get(this.currentOrder, 'company.configuration.profit_tools_enable_templates', false)
-    },
-
-    hideFieldNameHouseBolHawb () {
-      return get(this.currentOrder, 'company.configuration.hide_field_name_house_bol_hawb', false)
-    },
-    itgContainersEnabled () {
-      return get(this.currentOrder, 'company.configuration.itg_enable_containers', false)
-    },
-    divisionsEnabled () {
-      return get(this.currentOrder, 'company.configuration.enable_divisions', true)
+    companyConfiguration () {
+      return get(this.currentOrder, 'company.configuration', {})
     },
     orderInReview () {
       return this.loaded &&
@@ -185,12 +181,19 @@ export default {
 
     async fetchFormData () {
       await this.requestOrderDetail()
+      this.initializeFormOptions()
 
-      if (this.profitToolsTemplatesEnabled) {
+      if (this.formOptions.extra.profit_tools_enable_templates) {
         await this.fetchTmsTemplates(this.currentOrder.company.id)
       }
-      if (this.itgContainersEnabled) {
+      if (this.formOptions.extra.itg_enable_containers) {
         await this.fetchItgContainers(this.currentOrder.company.id)
+      }
+      if (this.formOptions.extra.enable_dictionary_items_carrier) {
+        await this.fetchCarrierItems(this.currentOrder.company.id)
+      }
+      if (this.formOptions.extra.enable_dictionary_items_vessel) {
+        await this.getchVesselItems(this.currentOrder.company.id)
       }
     },
 
@@ -218,6 +221,43 @@ export default {
       }
 
       this.itgContainers = data.data
+    },
+    async fetchCarrierItems (companyId) {
+      const [error, data] = await getDictionaryItems({
+        'filter[company_id]': companyId,
+        'filter[item_type]': dictionaryItemsTypes.carrier
+      })
+
+      if (error !== undefined) {
+        this.carrierItems = []
+      }
+
+      this.carrierItems = data.data
+    },
+    async getchVesselItems (companyId) {
+      const [error, data] = await getDictionaryItems({
+        'filter[company_id]': companyId,
+        'filter[item_type]': dictionaryItemsTypes.vessel
+      })
+
+      if (error !== undefined) {
+        this.vesselItems = []
+      }
+
+      this.vesselItems = data.data
+    },
+
+    initializeFormOptions () {
+      for (const key in this.companyConfiguration) {
+        if (key.startsWith('hide_field_name_') && this.companyConfiguration[key]) {
+          this.formOptions.hidden.push(key.replace('hide_field_name_', ''))
+        } else if (key.startsWith('address_search_')) {
+          const newKey = key.replace('address_search_', '')
+          this.formOptions.address_search[newKey] = this.companyConfiguration[key]
+        } else {
+          this.formOptions.extra[key] = this.companyConfiguration[key]
+        }
+      }
     },
 
     async requestOrderDetail () {

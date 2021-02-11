@@ -1,3 +1,11 @@
 html {
     overflow: auto;
 }
+
+.v-dialog.v-dialog--active .v-card__title {
+    cursor: grab;
+}
+
+.v-dialog.v-dialog--active .v-card__title:active {
+    cursor: grabbing;
+}

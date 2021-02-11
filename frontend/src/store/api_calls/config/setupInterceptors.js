@@ -4,6 +4,10 @@ export default function ({ store, router }) {
   axios.interceptors.response.use(
     (response) => (response),
     async (error) => {
+      if (error.status === undefined) {
+        return Promise.reject(error)
+      }
+
       const { status, config, data } = error.response
 
       if (data.redirect) {

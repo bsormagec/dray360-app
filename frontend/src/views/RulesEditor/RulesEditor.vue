@@ -3,12 +3,6 @@
     no-gutters
     class="pa-5"
   >
-    <v-col cols="12">
-      <h6 class="rules-editor__label">
-        <SidebarNavigationButton :dark="false" />
-        Rules Editor
-      </h6>
-    </v-col>
     <v-col
       cols="12"
       sm="12"
@@ -156,10 +150,22 @@
                 <v-col
                   cols="4"
                   sm="4"
+                  class="d-flex"
                 >
+                  <v-text-field
+                    v-if="company_variant_rules().length > 0"
+                    v-model="testOrderId"
+                    placeholder="Order Id"
+                    type="number"
+                    outlined
+                    dense
+                    flat
+                    hide-details
+                  />
                   <v-btn
                     v-if="company_variant_rules().length > 0"
-                    class="mr-4"
+                    :disabled="!testOrderId"
+                    class="ml-4"
                     color="default"
                     @click="testSingleRule(selected_rule_index)"
                   >
@@ -398,22 +404,18 @@ import VueJsonPretty from 'vue-json-pretty'
 import rulesLibrary, { types } from '@/store/modules/rules_editor'
 import get from 'lodash/get'
 import groupBy from 'lodash/groupBy'
-import SidebarNavigationButton from '@/components/General/SidebarNavigationButton'
 import utils, { type } from '@/store/modules/utils'
-import isMobile from '@/mixins/is_mobile'
-import isMedium from '@/mixins/is_medium'
 
 export default {
   name: 'RulesEditor',
   components: {
     draggable,
     codemirror,
-    VueJsonPretty,
-    SidebarNavigationButton
+    VueJsonPretty
   },
-  mixins: [isMobile, isMedium],
   data: () => ({
     deep: 3,
+    testOrderId: null,
     open: [1],
     collapsedOnClickBrackets: true,
     selectableType: 'single',
@@ -467,18 +469,8 @@ export default {
       return mappedRules
     }
   },
-  watch: {
-    isMedium: function (newVal, oldVal) {
-      if (!newVal) this.setSidebar({ show: true })
-    },
-    isMobile: function (newVal, oldVal) {
-      if (newVal) this.setSidebar({ show: false })
-      else this.setSidebar({ show: true })
-    }
-  },
   async beforeMount () {
     await this.fetchRules()
-    if (!this.isMobile) return this.setSidebar({ show: true })
     return this.setSidebar({ show: false })
   },
   methods: {
@@ -689,11 +681,7 @@ export default {
 
     async testSingleRule (index) {
       const ruleToTest = this.draggable_rules[index]
-      const orderId = prompt('Please enter order ID')
-      if (orderId == null) {
-        return
-      }
-      const dataObject = { orderId, ruleToTest }
+      const dataObject = { orderId: this.testOrderId, ruleToTest }
       const status = await this[types.getTestingOutput](dataObject)
       if (status === reqStatus.success) {
         console.log('testSingleRule success')

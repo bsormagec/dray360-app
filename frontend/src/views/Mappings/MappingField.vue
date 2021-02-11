@@ -272,7 +272,7 @@ export default {
   },
   methods: {
     ...mapActions(companies.moduleName, [types.updateCompaniesMappingField, types.getCompany]),
-    ...mapActions(utils.moduleName, { setSidebar: type.setSidebar }),
+    ...mapActions(utils.moduleName, { setSidebar: type.setSidebar, setSnackbar: type.setSnackbar }),
     getNames () {
       Object.values(this.mappings).forEach(key => {
         this.reftypes.push(key)
@@ -342,13 +342,13 @@ export default {
       })
       const status = await this[types.updateCompaniesMappingField]({ id: this.companyId, changes: { refs_custom_mapping: jsondata } })
       if (status === reqStatus.success) {
-        await this[type.setSnackbar]({
+        await this.setSnackbar({
           show: true,
           showSpinner: false,
           message: 'Mappings updated'
         })
       } else {
-        await this[type.setSnackbar]({
+        await this.setSnackbar({
           show: false,
           showSpinner: false,
           message: 'Error'
@@ -358,8 +358,8 @@ export default {
     async getCompanybyId () {
       const status = await this[types.getCompany]({ id: this.companyId })
       if (status === reqStatus.success) {
-        if (this.company().refs_custom_mapping !== null) {
-          this.getJsonValues(this.company().refs_custom_mapping)
+        if (this.company.refs_custom_mapping !== null) {
+          this.getJsonValues(this.company.refs_custom_mapping)
         } else {
           this.clearFields()
         }
