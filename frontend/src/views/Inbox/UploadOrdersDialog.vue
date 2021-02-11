@@ -189,19 +189,22 @@ export default {
       this.files = []
     },
     handleChange (newFiles) {
-      const acceptedMimeTypes = [
-        'application/pdf',
-        'text/csv',
-        'text/plain',
-        'application/wps-office.xlsx',
-        'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
-        'application/EDI-X12',
-        'application/EDIFACT',
-        'application/EDI-consent',
-        ''
-      ]
-      const filtered = [...this.files, ...newFiles].filter(f => acceptedMimeTypes.includes(f.type))
-      if (filtered.length > this.maxFiles) {
+      // const acceptedMimeTypes = [
+      //   'application/pdf',
+      //   'text/csv',
+      //   'text/plain',
+      //   'application/wps-office.xlsx',
+      //   'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+      //   'application/EDI-X12',
+      //   'application/EDIFACT',
+      //   'application/EDI-consent',
+      //   'application/vnd.ms-excel',
+      //   ''
+      // ]
+      // const filtered = [...this.files, ...newFiles].filter(f => acceptedMimeTypes.includes(f.type))
+      [...this.files, ...newFiles].forEach(f => console.log(f.type))
+      const finalFiles = [...this.files, ...newFiles]
+      if (finalFiles.length > this.maxFiles) {
         this.setSnackbar({
           message: 'Up to 20 files are allowed for upload',
           show: true
@@ -209,7 +212,7 @@ export default {
         this.files = []
         return
       }
-      this.files = uniqBy(filtered, 'name')
+      this.files = uniqBy(finalFiles, 'name')
     },
     createOrders () {
       if (this.files.length === 0) {

@@ -71,12 +71,10 @@
           :is-open="addressModalOpen"
           :filters="filters"
           :recognized-text="recognizedText"
-          :enable-location-name="enableLocationName"
-          :enable-city="enableCity"
-          :enable-postal-code="enablePostalCode"
-          :enable-address="enableAddress"
-          :enable-state="enableState"
+          :enable-address-filters="enableAddressFilters"
+          :enable-search="enableSearch"
           @change="handleChange"
+          @close="addressModalOpen = false"
         />
       </div>
     </div>
@@ -112,11 +110,8 @@ export default {
     terminal: { type: Boolean, required: false, default: false },
     billable: { type: Boolean, required: false, default: false },
     editMode: { required: true, type: Boolean },
-    enableLocationName: { type: Boolean, required: false, default: false },
-    enableCity: { type: Boolean, required: false, default: false },
-    enablePostalCode: { type: Boolean, required: false, default: false },
-    enableAddress: { type: Boolean, required: false, default: false },
-    enableState: { type: Boolean, required: false, default: false }
+    enableAddressFilters: { type: Boolean, required: false, default: true },
+    enableSearch: { type: Boolean, required: false, default: false }
   },
 
   data: (vm) => ({
@@ -156,9 +151,6 @@ export default {
   methods: {
     handleChange (value) {
       this.addressModalOpen = false
-      if (value === undefined) {
-        return
-      }
       const { address } = value
 
       this.currentAddress = {

@@ -107,6 +107,20 @@ class TenancyManager
         return $this->configuration->toArray();
     }
 
+    public function getCompanyConfiguration(?Company $company): array
+    {
+        if (! $company) {
+            return [];
+        }
+
+        $companyTenant = $company->domain->tenant ?? null;
+
+        return collect(Tenant::getDefaultTenant()->configuration ?? [])
+            ->merge($companyTenant->configuration ?? [])
+            ->merge($company->configuration ?? [])
+            ->toArray();
+    }
+
     protected function discoverTenantFromDomain(Request $request): self
     {
         $hostname = $this->getRefererHostname($request);

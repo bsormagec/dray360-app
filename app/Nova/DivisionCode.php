@@ -4,40 +4,34 @@ namespace App\Nova;
 
 use Laravel\Nova\Fields\ID;
 use Illuminate\Http\Request;
-use Laravel\Nova\Fields\Code;
 use Laravel\Nova\Fields\Text;
+use Laravel\Nova\Fields\BelongsTo;
+use App\Models\Company as CompanyModel;
+use App\Models\TMSProvider as TmsProviderModel;
+use App\Nova\Filters\BelongsTo as BelongsToFilter;
 
-class OcrVariant extends Resource
+class DivisionCode extends Resource
 {
     /**
      * The model the resource corresponds to.
      *
      * @var string
      */
-    public static $model = \App\Models\OCRVariant::class;
+    public static $model = \App\Models\DivisionCode::class;
 
     /**
      * The single value that should be used to represent the resource when being displayed.
      *
      * @var string
      */
-    public static $title = 'abbyy_variant_name';
-
-    /**
-     * The logical group associated with the resource.
-     *
-     * @var string
-     */
-    public static $group = 'Ocr Entities';
+    public static $title = 'division_name';
 
     /**
      * The columns that should be searched.
      *
      * @var array
      */
-    public static $search = [
-        'abbyy_variant_id', 'abbyy_variant_name', 'description', 'id',
-    ];
+    public static $search = ['id', 'division_code', 'division_name'];
 
     /**
      * Get the fields displayed by the resource.
@@ -49,18 +43,15 @@ class OcrVariant extends Resource
     {
         return [
             ID::make(__('ID'), 'id')->sortable(),
-            Text::make('Abbyy variant id', 'abbyy_variant_id')->sortable(),
-            Text::make('Abbyy variant name', 'abbyy_variant_name')->sortable(),
-            Text::make('Description', 'description')->sortable(),
-            Text::make('Variant Type', 'variant_type')->sortable(),
-            Text::make('Classifier', 'classifier')->sortable(),
-            Text::make('Parser', 'parser')->sortable(),
-            Code::make('Mapping', 'mapping')->json(),
-            Code::make('Company ID List (csv/edi uploads)', 'company_id_list')->json(),
-            Code::make('Company ID List (enable admin review)', 'admin_review_company_id_list')->json(),
-            Code::make('Classification', 'classification')->json(),
-            Code::make('Parser Options', 'parser_options')->json(),
-            Code::make('Parser Fields List', 'parser_fields_list')->json(),
+            Text::make('Division Code', 'division_code')
+                ->rules('required')
+                ->sortable(),
+            Text::make('Division Name', 'division_name')
+                ->rules('required')
+                ->sortable(),
+            BelongsTo::make('Company', 'company', Company::class)->nullable(),
+            BelongsTo::make('Tms Provider', 'tmsProvider', TmsProvider::class)->nullable(),
+
         ];
     }
 
@@ -83,7 +74,10 @@ class OcrVariant extends Resource
      */
     public function filters(Request $request)
     {
-        return [];
+        return [
+            new BelongsToFilter('Company', 'company', CompanyModel::class, 'name'),
+            new BelongsToFilter('Tms Provider', 'tmsProvider', TmsProviderModel::class, 'name'),
+        ];
     }
 
     /**

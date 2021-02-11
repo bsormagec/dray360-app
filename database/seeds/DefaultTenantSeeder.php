@@ -33,16 +33,21 @@ class DefaultTenantSeeder extends Seeder
 
             // Profittools templates
             'profit_tools_enable_templates' => false,
-            // Profittools templates
+            // itg containers
             'itg_enable_containers' => false,
 
+            'enable_dictionary_items_carrier' => false,
+            'enable_dictionary_items_vessel' => false,
+
+            'enable_divisions' => false,
+
+            'hide_field_name_house_bol_hawb' => false,
+            'hide_field_name_pickup_by_date' => true,
+            'hide_field_name_pickup_by_time' => true,
+
             // Address Search Booleans
-            'address_search_location_name' => false,
-            'address_search_city' => false,
-            'address_search_postal_code' => false,
-            'address_search_address' => false,
-            'address_search_state' => false,
-            'show_orders_tab_first' => false,
+            'address_search_search' => false,
+            'address_search_address_filters' => true,
         ];
         $tenant->save();
     }

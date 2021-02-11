@@ -38,21 +38,15 @@
         <div class="order__title mr-4">
           Order #{{ order.id }}
         </div>
-        <div
-          class="secondary--text caption"
-        >
-          <RequestStatus
-            :status="order.ocr_request.latest_ocr_request_status"
-          />
+        <div class="secondary--text caption">
+          <RequestStatus :status="order.ocr_request.latest_ocr_request_status" />
         </div>
         <div
           v-show="order.tms_shipment_id"
           class="order__tms"
         >
           <strong>TMS ID: </strong> {{ order.tms_shipment_id }}
-          <v-tooltip
-            top
-          >
+          <v-tooltip top>
             <template v-slot:activator="{ on }">
               <v-icon
                 v-clipboard:copy="order.tms_shipment_id"
@@ -196,14 +190,14 @@
           @change="value => handleChange('shipment_designation', value)"
         /> -->
         <FormFieldInputAutocomplete
-          v-if="tmsTemplatesEnabled"
+          v-if="!!options.extra.profit_tools_enable_templates"
           references="tms_template_dictid"
           label="TMS Template"
           :value="order.tms_template_dictid"
           :autocomplete-items="tmsTemplates"
           item-text="item_display_name"
           item-value="id"
-          :display-value="tmsTemplateDisplayName"
+          :display-value="value => dictionaryItemDisplayValue(value, tmsTemplates)"
           :edit-mode="editMode"
           :verifiable="order.tms_template_dictid !== null && !order.tms_template_dictid_verified"
           @change="value => handleChange('tms_template_dictid', value)"
@@ -214,7 +208,7 @@
           label="Division"
         />
         <FormFieldSelectDivisionCodes
-          v-else-if="divisionsEnabled"
+          v-else-if="!!options.extra.enable_divisions"
           references="division_code"
           label="Division"
           :value="order.division_code"
@@ -225,6 +219,7 @@
           @change="value => handleChange('division_code', value)"
         />
         <FormFieldSelect
+          v-if="fieldShouldBeShown('shipment_direction')"
           references="shipment_direction"
           label="Shipment direction"
           :value="order.shipment_direction"
@@ -235,6 +230,7 @@
           @change="value => handleChange('shipment_direction', value)"
         />
         <FormFieldSwitch
+          v-if="fieldShouldBeShown('expedite')"
           references="expedite"
           label="Expedite"
           :value="order.expedite"
@@ -242,6 +238,7 @@
           @change="value => handleChange('expedite', value)"
         />
         <FormFieldSwitch
+          v-if="fieldShouldBeShown('hazardous')"
           references="hazardous"
           label="Hazardous"
           :value="order.hazardous"
@@ -250,26 +247,22 @@
         />
       </div>
 
-      <div
-        class="form__sub-section"
-      >
-        <div
-          class="form__section-title"
-        >
+      <div class="form__sub-section">
+        <div class="form__section-title">
           <h3 :id="sections.equipment.id">
             {{ sections.equipment.label }}
           </h3>
         </div>
         <div class="section__rootfields">
           <FormFieldInputAutocomplete
-            v-if="itgContainersEnabled"
+            v-if="!!options.extra.itg_enable_containers"
             references="container_dictid"
             label="ITG Container Size/Type"
             :value="order.container_dictid"
             :autocomplete-items="itgContainers"
             :item-text="item => `${item.item_display_name} (${item.item_key})`"
             item-value="id"
-            :display-value="itgContainerDisplayName"
+            :display-value="(value)=> dictionaryItemDisplayKeyValue(value, itgContainers)"
             :edit-mode="editMode"
             @change="value => handleChange('container_dictid', value)"
           />
@@ -289,6 +282,7 @@
           />
 
           <FormFieldInput
+            v-if="fieldShouldBeShown('unit_number')"
             references="unit_number"
             label="Unit number"
             :value="order.unit_number"
@@ -296,6 +290,7 @@
             @change="value => handleChange('unit_number', value)"
           />
           <FormFieldInput
+            v-if="fieldShouldBeShown('seal_number')"
             references="seal_number"
             label="Seal number"
             :value="order.seal_number"
@@ -305,18 +300,15 @@
         </div>
       </div>
 
-      <div
-        class="form__sub-section"
-      >
-        <div
-          class="form__section-title"
-        >
+      <div class="form__sub-section">
+        <div class="form__section-title">
           <h3 :id="sections.origin.id">
             {{ sections.origin.label }}
           </h3>
         </div>
         <div class="section__rootfields">
           <FormFieldInput
+            v-if="fieldShouldBeShown('reference_number')"
             references="reference_number"
             label="Reference number"
             :value="order.reference_number"
@@ -324,6 +316,7 @@
             @change="value => handleChange('reference_number', value)"
           />
           <FormFieldInput
+            v-if="fieldShouldBeShown('customer_number')"
             references="customer_number"
             label="Customer number"
             :value="order.customer_number === null ? '---' : order.customer_number"
@@ -331,6 +324,7 @@
             @change="value => handleChange('customer_number', value)"
           />
           <FormFieldInput
+            v-if="fieldShouldBeShown('load_number')"
             references="load_number"
             label="Load number"
             :value="order.load_number"
@@ -338,6 +332,7 @@
             @change="value => handleChange('load_number', value)"
           />
           <FormFieldInput
+            v-if="fieldShouldBeShown('purchase_order_number')"
             references="purchase_order_number"
             label="Purchase Order number"
             :value="order.purchase_order_number"
@@ -345,6 +340,7 @@
             @change="value => handleChange('purchase_order_number', value)"
           />
           <FormFieldInput
+            v-if="fieldShouldBeShown('release_number')"
             references="release_number"
             label="Release number"
             :value="order.release_number"
@@ -352,20 +348,47 @@
             @change="value => handleChange('release_number', value)"
           />
           <FormFieldInput
+            v-if="fieldShouldBeShown('pickup_number')"
             references="pickup_number"
             label="Pickup number"
             :value="order.pickup_number"
             :edit-mode="editMode"
             @change="value => handleChange('pickup_number', value)"
           />
+          <FormFieldInputAutocomplete
+            v-if="!!options.extra.enable_dictionary_items_carrier"
+            references="carrier_dictid"
+            label="SSL"
+            :value="order.carrier_dictid"
+            :autocomplete-items="carrierItems"
+            :item-text="item => `${item.item_display_name} (${item.item_key})`"
+            item-value="id"
+            :display-value="(value)=> dictionaryItemDisplayKeyValue(value, carrierItems)"
+            :edit-mode="editMode"
+            @change="value => handleChange('carrier_dictid', value)"
+          />
           <FormFieldInput
+            v-if="fieldShouldBeShown('vessel') && !options.extra.enable_dictionary_items_vessel"
             references="vessel"
             label="Vessel"
             :value="order.vessel"
             :edit-mode="editMode"
             @change="value => handleChange('vessel', value)"
           />
+          <FormFieldInputAutocomplete
+            v-if="!!options.extra.enable_dictionary_items_vessel"
+            references="vessel_dictid"
+            label="Vessel"
+            :value="order.vessel_dictid"
+            :autocomplete-items="vesselItems"
+            item-text="item_display_name"
+            item-value="id"
+            :display-value="(value)=> dictionaryItemDisplayValue(value, vesselItems)"
+            :edit-mode="editMode"
+            @change="value => handleChange('vessel_dictid', value)"
+          />
           <FormFieldInput
+            v-if="fieldShouldBeShown('voyage')"
             references="voyage"
             label="Voyage"
             :value="order.voyage"
@@ -373,6 +396,23 @@
             @change="value => handleChange('voyage', value)"
           />
           <FormFieldDate
+            v-if="fieldShouldBeShown('pickup_by_date')"
+            references="pickup_by_date"
+            label="Pickup by date"
+            :value="order.pickup_by_date"
+            :edit-mode="editMode"
+            @change="value => handleChange('pickup_by_date', value)"
+          />
+          <FormFieldTime
+            v-if="fieldShouldBeShown('pickup_by_time')"
+            references="pickup_by_time"
+            label="Pickup by time"
+            :value="order.pickup_by_time"
+            :edit-mode="editMode"
+            @change="value => handleChange('pickup_by_time', value)"
+          />
+          <FormFieldDate
+            v-if="fieldShouldBeShown('cutoff_date')"
             references="cutoff_date"
             label="Cutoff Date"
             :value="order.cutoff_date"
@@ -380,6 +420,7 @@
             @change="value => handleChange('cutoff_date', value)"
           />
           <FormFieldTime
+            v-if="fieldShouldBeShown('cutoff_time')"
             references="cutoff_time"
             label="Cutoff Time"
             :value="order.cutoff_time"
@@ -387,6 +428,7 @@
             @change="value => handleChange('cutoff_time', value)"
           />
           <FormFieldInput
+            v-if="fieldShouldBeShown('booking_number')"
             references="booking_number"
             label="Booking number"
             :value="order.booking_number === null ? '---' : order.booking_number"
@@ -394,6 +436,7 @@
             @change="value => handleChange('booking_number', value)"
           />
           <FormFieldInput
+            v-if="fieldShouldBeShown('master_bol_mawb')"
             references="master_bol_mawb"
             label="Master BOL MAWB"
             :value="order.master_bol_mawb"
@@ -401,7 +444,7 @@
             @change="value => handleChange('master_bol_mawb', value)"
           />
           <FormFieldInput
-            v-if="!hideFieldNameHouseBolHawb"
+            v-if="fieldShouldBeShown('house_bol_hawb')"
             references="house_bol_hawb"
             label="House BOL MAWB"
             :value="order.house_bol_hawb"
@@ -414,9 +457,7 @@
         v-if="!isManagedByTemplate"
         class="form__sub-section"
       >
-        <div
-          class="form__section-title"
-        >
+        <div class="form__section-title">
           <h3 :id="sections.bill_to.id">
             {{ sections.bill_to.label }}
           </h3>
@@ -433,6 +474,7 @@
             @change="(e) => handleChange('bill_to_address', e)"
           />
           <FormFieldTextArea
+            v-if="fieldShouldBeShown('bill_comment')"
             references="bill_comment"
             label="Billing comments"
             :value="order.bill_comment"
@@ -440,15 +482,14 @@
             @change="value => handleChange('bill_comment', value)"
           />
         </div>
-        <div
-          class="form__section-title"
-        >
+        <div class="form__section-title">
           <h3 :id="sections.charges.id">
             {{ sections.charges.label }}
           </h3>
         </div>
         <div class="section__rootfields">
           <FormFieldTextArea
+            v-if="fieldShouldBeShown('line_haul')"
             references="line_haul"
             label="Line Haul"
             :value="order.line_haul"
@@ -456,6 +497,7 @@
             @change="value => handleChange('line_haul', value)"
           />
           <FormFieldTextArea
+            v-if="fieldShouldBeShown('fuel_surcharge')"
             references="fuel_surcharge"
             label="FSC"
             :value="order.fuel_surcharge"
@@ -464,9 +506,7 @@
           />
         </div>
       </div>
-      <div
-        v-else
-      >
+      <div v-else>
         <div
           :id="sections.bill_to.id"
           class="form__section-title form__section-title--managed d-flex align-center justify-center mb-2"
@@ -530,9 +570,7 @@
           </div>
         </div>
       </div>
-      <div
-        v-else
-      >
+      <div v-else>
         <div
           :id="sections.itinerary.id"
           class="form__section-title form__section-title--managed d-flex align-center justify-center mb-2"
@@ -551,6 +589,7 @@
 
         <div class="section__rootfields">
           <FormFieldTextArea
+            v-if="fieldShouldBeShown('ship_comment')"
             references="ship_comment"
             label="Shipment comments"
             :value="order.ship_comment"
@@ -577,9 +616,7 @@
           :key="index"
           class="form__sub-section"
         >
-          <div
-            class="form__section-title"
-          >
+          <div class="form__section-title">
             <h3>Item {{ index + 1 }}</h3>
           </div>
           <div class="section__rootfields">
@@ -609,9 +646,7 @@
           </div>
         </div>
       </div>
-      <div
-        v-else
-      >
+      <div v-else>
         <div
           :id="sections.inventory.id"
           class="form__section-title form__section-title--managed d-flex align-center justify-center"
@@ -691,35 +726,30 @@ export default {
       required: false,
       default: false
     },
+    options: {
+      type: Object,
+      required: false,
+      default: () => ({ hidden: [], extra: {}, address_search: {} })
+    },
     tmsTemplates: {
       type: Array,
       required: false,
       default: () => []
-    },
-    tmsTemplatesEnabled: {
-      type: Boolean,
-      required: false,
-      default: false
     },
     itgContainers: {
       type: Array,
       required: false,
       default: () => []
     },
-    hideFieldNameHouseBolHawb: {
-      type: Boolean,
+    carrierItems: {
+      type: Array,
       required: false,
-      default: false
+      default: () => []
     },
-    itgContainersEnabled: {
-      type: Boolean,
+    vesselItems: {
+      type: Array,
       required: false,
-      default: false
-    },
-    divisionsEnabled: {
-      type: Boolean,
-      required: false,
-      default: true
+      default: () => []
     }
   },
   data () {
@@ -737,6 +767,14 @@ export default {
     }
   },
 
+  watch: {
+    isMobile (newValue) {
+      if (!newValue && this.backButton) {
+        return this[type.setSidebar]({ show: true })
+      }
+    }
+  },
+
   computed: {
     ...mapState(orderForm.moduleName, {
       order: state => state.order,
@@ -746,16 +784,13 @@ export default {
     }),
 
     isManagedByTemplate () {
-      return this.order.tms_template_dictid !== null
+      return this.order.tms_template_dictid !== null && !!this.options.extra.profit_tools_enable_templates
     },
 
     addressSearchProps () {
       return {
-        'enable-location-name': get(this.order.company, 'configuration.address_search_location_name', false),
-        'enable-city': get(this.order.company, 'configuration.address_search_city', false),
-        'enable-postal-code': get(this.order.company, 'configuration.address_search_postal_code', false),
-        'enable-address': get(this.order.company, 'configuration.address_search_address', false),
-        'enable-state': get(this.order.company, 'configuration.address_search_state', false)
+        'enable-address-filters': get(this.options, 'address_search.address_filters', true),
+        'enable-search': get(this.options, 'address_search.search', false)
       }
     },
 
@@ -852,6 +887,10 @@ export default {
     }),
 
     formatDate,
+
+    fieldShouldBeShown (fieldName) {
+      return !this.options.hidden.includes(fieldName)
+    },
 
     async handleChange (path, value) {
       await this.updateOrder({ path, value })
@@ -1060,14 +1099,13 @@ export default {
         onCancel: () => { this.loading = false }
       })
     },
-
-    tmsTemplateDisplayName (value) {
-      const result = this.tmsTemplates.filter(el => el.id === value)
-      return result.length > 0 ? result[0].item_display_name : value
-    },
-    itgContainerDisplayName (value) {
-      const result = this.itgContainers.filter(el => el.id === value)
+    dictionaryItemDisplayKeyValue (value, items) {
+      const result = items.filter(el => el.id === value)
       return result.length > 0 ? `${result[0].item_display_name} (${result[0].item_key})` : value
+    },
+    dictionaryItemDisplayValue (value, items) {
+      const result = items.filter(el => el.id === value)
+      return result.length > 0 ? result[0].item_display_name : value
     }
 
   }
@@ -1107,14 +1145,19 @@ export default {
     bottom: rem(-15);
     display: block;
     height: rem(15);
-    background: linear-gradient(180deg, rgba(0, 60, 113, 0.1) 0%, rgba(0, 60, 113, 0.05) 31.77%, rgba(0, 60, 113, 0) 100%);
+    background: linear-gradient(
+      180deg,
+      rgba(0, 60, 113, 0.1) 0%,
+      rgba(0, 60, 113, 0.05) 31.77%,
+      rgba(0, 60, 113, 0) 100%
+    );
   }
 
   .order__title {
     font-size: rem(20);
     font-weight: 500;
     line-height: (23.4 / 20);
-    letter-spacing: rem(.15);
+    letter-spacing: rem(0.15);
     color: var(--v-slate-gray-base);
   }
 
@@ -1123,7 +1166,7 @@ export default {
     align-items: center;
     font-size: rem(12);
     line-height: (18 /12);
-    letter-spacing: rem(.25);
+    letter-spacing: rem(0.25);
     color: var(--v-slate-gray-base);
 
     strong {
@@ -1160,7 +1203,7 @@ export default {
     font-size: rem(13);
     font-weight: 700;
     line-height: (24 / 13);
-    letter-spacing: rem(.75);
+    letter-spacing: rem(0.75);
     color: map-get($colors, white);
   }
   &.form__section-title--managed h3 {
@@ -1188,7 +1231,7 @@ export default {
 
   .form-field:nth-child(even),
   & > div:nth-child(even) .form-field-presentation {
-    background-color: #F5F6F7;
+    background-color: #f5f6f7;
   }
 }
 
@@ -1201,7 +1244,7 @@ export default {
     font-size: rem(14);
     font-weight: 400;
     line-height: (20 / 14);
-    letter-spacing: rem(.25);
+    letter-spacing: rem(0.25);
   }
 
   .field__value {

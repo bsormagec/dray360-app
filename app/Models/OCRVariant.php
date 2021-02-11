@@ -23,6 +23,10 @@ class OCRVariant extends Model
         'mapping',
         'company_id_list',
         'admin_review_company_id_list',
+        'classifier',
+        'parser',
+        'parser_options',
+        'parser_fields_list',
     ];
 
     /**
@@ -35,6 +39,8 @@ class OCRVariant extends Model
         'admin_review_company_id_list' => 'json',
         'classification' => 'json',
         'mapping' => 'json',
+        'parser_options' => 'json',
+        'parser_fields_list' => 'json',
     ];
 
     /**
