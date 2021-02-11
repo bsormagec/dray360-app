@@ -396,6 +396,22 @@
             @change="value => handleChange('voyage', value)"
           />
           <FormFieldDate
+            v-if="fieldShouldBeShown('pickup_by_date')"
+            references="pickup_by_date"
+            label="Pickup by date"
+            :value="order.pickup_by_date"
+            :edit-mode="editMode"
+            @change="value => handleChange('pickup_by_date', value)"
+          />
+          <FormFieldTime
+            v-if="fieldShouldBeShown('pickup_by_time')"
+            references="pickup_by_time"
+            label="Pickup by time"
+            :value="order.pickup_by_time"
+            :edit-mode="editMode"
+            @change="value => handleChange('pickup_by_time', value)"
+          />
+          <FormFieldDate
             v-if="fieldShouldBeShown('cutoff_date')"
             references="cutoff_date"
             label="Cutoff Date"
@@ -768,7 +784,7 @@ export default {
     }),
 
     isManagedByTemplate () {
-      return this.order.tms_template_dictid !== null
+      return this.order.tms_template_dictid !== null && !!this.options.extra.profit_tools_enable_templates
     },
 
     addressSearchProps () {

@@ -413,7 +413,6 @@ class Order extends Model
             'orderAddressEvents',
             'orderAddressEvents.address',
             'equipmentType',
-            'company:id,configuration,name',
             'tmsTemplate:id,item_key,item_display_name',
         ]);
     }
