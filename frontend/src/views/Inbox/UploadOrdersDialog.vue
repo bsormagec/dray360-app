@@ -96,7 +96,7 @@
           </v-btn>
           <v-btn
             color="primary"
-            @click="createOrders"
+            @click="createRequests"
           >
             Add to Requests Queue
           </v-btn>
@@ -108,7 +108,7 @@
 <script>
 import UploadOrdersFileFields from './UploadOrdersFileFields'
 
-import { postUploadPDF } from '@/store/api_calls/orders'
+import { postUploadRequestFile } from '@/store/api_calls/requests'
 import { getVariantList } from '@/store/api_calls/rules_editor'
 import utils, { type } from '@/store/modules/utils'
 import auth from '@/store/modules/auth'
@@ -172,7 +172,9 @@ export default {
     }
   },
   created () {
-    this.getCompanies()
+    if (this.isSuperadmin()) {
+      this.getCompanies()
+    }
   },
   methods: {
     ...mapActions(utils.moduleName, { setSnackbar: type.setSnackbar }),
@@ -214,7 +216,7 @@ export default {
       }
       this.files = uniqBy(finalFiles, 'name')
     },
-    createOrders () {
+    async createRequests () {
       if (this.files.length === 0) {
         this.setSnackbar({
           message: 'Please select a file to upload first',
@@ -240,7 +242,12 @@ export default {
       }
 
       let error = false
-      this.files.forEach(file => (this.uploadFile(file) ? null : (error = true)))
+      for (let index = 0; index < this.files.length; index++) {
+        const success = await this.uploadFile(this.files[index])
+        if (!success) {
+          error = true
+        }
+      }
 
       this.setSnackbar({
         message: error ? 'There was an error uploading the file(s)' : 'File(s) uploaded successfully',
@@ -255,7 +262,7 @@ export default {
       if (this.isSuperadmin()) {
         params.company_id = this.company_id
       }
-      const [error] = await postUploadPDF(file, params)
+      const [error] = await postUploadRequestFile(file, params)
       return error === undefined
     },
 

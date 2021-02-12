@@ -182,7 +182,9 @@ export default {
 
   beforeMount () {
     this.fetchRoles()
-    this.fetchCompanies()
+    if (this.isSuperadmin()) {
+      this.fetchCompanies()
+    }
     if (this.edit) {
       this.getUserById(this.$route.params.id)
     }
