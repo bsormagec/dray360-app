@@ -5,6 +5,7 @@ namespace App\Jobs;
 use App\Models\Address;
 use App\Models\Company;
 use App\Models\TMSProvider;
+use Illuminate\Support\Str;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Log;
 use App\Models\CompanyAddressTMSCode;
@@ -15,7 +16,6 @@ class ImportItgCargoWiseAddresses
     public Company $company;
     public TMSProvider $tmsProvider;
 
-    protected Collection $billToCodes;
     protected Collection $addresses;
     protected $logger;
 
@@ -45,10 +45,10 @@ class ImportItgCargoWiseAddresses
                 $existingCodes = CompanyAddressTMSCode::query()
                     ->forCompanyTmsProvider($this->company->id, $this->tmsProvider->id)
                     ->pluck('company_address_tms_code');
-                return $addresses->whereNotIn('code', $existingCodes->toArray());
+                return $addresses->whereNotIn('org_code', $existingCodes->toArray());
             })
             ->each(function ($address) {
-                $address['is_billable'] = $this->billToCodes->contains($address['code']);
+                $address['is_billable'] = Str::of($address['payable'])->upper()->exactly('Y');
 
                 ImportItgCargoWiseAddress::dispatch($address, $this->tmsProvider->id, $this->company);
             });
@@ -59,24 +59,19 @@ class ImportItgCargoWiseAddresses
         Address::whereIn('id', function ($query) {
             $query->select('t_address_id')
                 ->from('t_company_address_tms_code')
-                ->whereNotIn('company_address_tms_code', $this->addresses->pluck('code'))
+                ->whereNotIn('company_address_tms_code', $this->addresses->pluck('org_code'))
                 ->where([
                     't_company_id' => $this->company->id,
                     't_tms_provider_id' => $this->tmsProvider->id,
                 ]);
         })->delete();
         CompanyAddressTMSCode::query()
-            ->whereNotIn('company_address_tms_code', $this->addresses->pluck('code'))
+            ->whereNotIn('company_address_tms_code', $this->addresses->pluck('org_code'))
             ->where([
                 't_company_id' => $this->company->id,
                 't_tms_provider_id' => $this->tmsProvider->id,
             ])
             ->delete();
-    }
-
-    public function setBillToAddresses(Collection $billToCodes)
-    {
-        $this->billToCodes = $billToCodes;
     }
 
     public function setAddresses(Collection $addresses)

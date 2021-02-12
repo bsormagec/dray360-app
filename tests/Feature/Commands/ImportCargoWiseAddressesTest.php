@@ -25,8 +25,8 @@ class ImportCargoWiseAddressesTest extends TestCase
         Storage::fake('s3-file-ingestion');
         Storage::disk('s3-file-ingestion')
             ->put(
-                "/company_{$company->id}/addressfiles/itg-addresses-test.xlsx",
-                fopen(base_path('tests/files/itg-addresses-test.xlsx'), 'r')
+                "/company_{$company->id}/addressfiles/itg-addresses-test.csv",
+                fopen(base_path('tests/files/itg-addresses-test-2.csv'), 'r')
             );
     }
 
@@ -44,9 +44,9 @@ class ImportCargoWiseAddressesTest extends TestCase
             'imports',
             ImportItgCargoWiseAddress::class,
             function (ImportItgCargoWiseAddress $job) use (&$lastReturn, &$count) {
-                $lastReturn = $job->addressCode == 'SEASHITOA'
+                $lastReturn = $job->addressCode == '0AKW00XNE'
                     ?$job->address['is_billable'] === true
-                    :$job->addressCode === 'ANNPUBARB';
+                    :$job->addressCode === '022CAMFTW';
 
                 $count++;
                 if ($count == 2) {
@@ -72,7 +72,7 @@ class ImportCargoWiseAddressesTest extends TestCase
         Queue::assertPushedOn(
             'imports',
             ImportItgCargoWiseAddress::class,
-            fn (ImportItgCargoWiseAddress $job) => $job->addressCode == 'SEASHITOA'
+            fn (ImportItgCargoWiseAddress $job) => $job->addressCode == '0AKW00XNE'
         );
     }
 
@@ -84,8 +84,8 @@ class ImportCargoWiseAddressesTest extends TestCase
         $itg = CompaniesSeeder::getTestItg();
         Storage::disk('s3-file-ingestion')
             ->put(
-                "/company_{$itg->id}/addressfiles/itg-addresses-test-deleted.xlsx",
-                fopen(base_path('tests/files/itg-addresses-test-deleted.xlsx'), 'r')
+                "/company_{$itg->id}/addressfiles/itg-addresses-test-2-deleted.csv",
+                fopen(base_path('tests/files/itg-addresses-test-2-deleted.csv'), 'r')
             );
 
         $companyAddress = CompanyAddressTMSCode::with('address:id')->first();
