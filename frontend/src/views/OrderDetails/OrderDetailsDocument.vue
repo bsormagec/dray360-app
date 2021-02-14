@@ -1,6 +1,6 @@
 <template>
   <div
-    v-if="hasFile"
+    v-if="hasTabularDataFile"
     :class="`document ${loadedImages === pages.length ? 'loaded' : ''}`"
   >
     <div
@@ -106,9 +106,18 @@ export default {
           }
         })
     },
-    hasFile () {
-      return !!this.currentOrder.ocr_data.ocr_data_filename.value
-    }
+    hasTabularDataFile () {
+      try {
+        ocr_data_filename = this.currentOrder.ocr_data.ocr_data_filename.value
+        if ocr_data_filename.toLowerCase().endsWith('json') {
+          return false // after feb2021 "pdftext" variant type datafile uploads will have their parsed data json filename stored here
+        }
+        else {
+          return true // after feb2021, any non ".json" datafile name indicates "hasFile", 
+        }
+      } catch (error) {
+        return true // for orders before feb2021, ocr_data_filename being undefined indicated a csv/xlsx datafile upload
+      }
   },
 
   methods: {
