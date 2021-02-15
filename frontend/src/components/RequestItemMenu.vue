@@ -27,6 +27,11 @@
           v-text="'Copy request ID'"
         />
         <v-list-item
+          v-if="request.has_email"
+          @click="downloadSourceEmail(request.request_id)"
+          v-text="'Download source email'"
+        />
+        <v-list-item
           @click="downloadSourceFile(request.request_id)"
           v-text="'Download source file'"
         />
@@ -62,7 +67,14 @@
 import { mapActions } from 'vuex'
 import permissions from '@/mixins/permissions'
 import utils, { type } from '@/store/modules/utils'
-import { deleteRequest, getSourceFileDownloadURL, reprocessOcrRequest, changeRequestDoneStatus } from '@/store/api_calls/requests'
+import { downloadFile } from '@/utils/download_file'
+import {
+  deleteRequest,
+  getSourceFileDownloadURL,
+  reprocessOcrRequest,
+  changeRequestDoneStatus,
+  getSourceEmailDownloadURL
+} from '@/store/api_calls/requests'
 import RequestStatusHistoryDialog from './RequestStatusHistoryDialog'
 
 export default {
@@ -122,15 +134,22 @@ export default {
         }
       })
     },
+
     async downloadSourceFile (requestId) {
       const [error, data] = await getSourceFileDownloadURL(requestId)
 
       if (error === undefined) {
-        // not entirely sure why this is necessary, but this is the logic for triggering a DL elsewhere in the app.
-        const link = document.createElement('a')
-        link.href = data.data
-        link.click()
-        link.remove()
+        downloadFile(data.data)
+      } else {
+        await this.setSnackbar({ show: true, message: error })
+      }
+    },
+
+    async downloadSourceEmail (requestId) {
+      const [error, data] = await getSourceEmailDownloadURL(requestId)
+
+      if (error === undefined) {
+        downloadFile(data.data)
       } else {
         await this.setSnackbar({ show: true, message: error })
       }

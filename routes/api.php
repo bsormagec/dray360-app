@@ -30,6 +30,7 @@ use App\Http\Controllers\Api\OcrRequestReprocessController;
 use App\Http\Controllers\Api\OcrRequestsDoneStatusController;
 use App\Http\Controllers\Api\EquipmentTypesSelectValuesController;
 use App\Http\Controllers\Api\DownloadOriginalRequestSourceFileController;
+use App\Http\Controllers\Api\DownloadOriginalRequestSourceEmailController;
 
 /*
 |--------------------------------------------------------------------------
@@ -136,6 +137,10 @@ Route::group(['middleware' => ['auth:sanctum', 'impersonate', 'tenant-aware']], 
     // Download OCR request source file
     Route::get('ocr/requests/{request_id}/download-source-file', DownloadOriginalRequestSourceFileController::class)
         ->name('ocr.requests.download-source-file');
+
+    // Download OCR request source email
+    Route::get('ocr/requests/{request_id}/download-source-email', DownloadOriginalRequestSourceEmailController::class)
+        ->name('ocr.requests.download-source-email');
 
     // Mark OCR request as done/undone
     Route::put('ocr/requests/{request_id}/done-status', OcrRequestsDoneStatusController::class)
