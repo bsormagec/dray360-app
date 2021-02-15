@@ -108,15 +108,12 @@ export default {
     },
     hasTabularDataFile () {
       try {
-        ocr_data_filename = this.currentOrder.ocr_data.ocr_data_filename.value
-        if ocr_data_filename.toLowerCase().endsWith('json') {
-          return false // after feb2021 "pdftext" variant type datafile uploads will have their parsed data json filename stored here
-        }
-        else {
-          return true // after feb2021, any non ".json" datafile name indicates "hasFile", 
-        }
+        ocrDataFilename = this.currentOrder.ocr_data.ocr_data_filename.value
+        // after feb2021 "pdftext" variant type datafile uploads will have their parsed data json filename stored here
+        // after feb2021, any non ".json" datafile name indicates "hasFile"
+        return !ocrDataFilename.toLowerCase().endsWith('json')
       } catch (error) {
-        return true // for orders before feb2021, ocr_data_filename being undefined indicated a csv/xlsx datafile upload
+        return true // before feb2021, ocr_data_filename being undefined indicated a csv/xlsx datafile upload
       }
   },
 
