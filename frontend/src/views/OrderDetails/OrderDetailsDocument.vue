@@ -111,7 +111,7 @@ export default {
         ocrDataFilename = this.currentOrder.ocr_data.ocr_data_filename.value
         // after feb2021 "pdftext" variant type datafile uploads will have their parsed data json filename stored here
         // after feb2021, any non ".json" datafile name indicates "hasFile"
-        return !ocrDataFilename.toLowerCase().endsWith('json')
+        return !ocrDataFilename.toLowerCase().endsWith('.json')
       } catch (error) {
         return true // before feb2021, ocr_data_filename being undefined indicated a csv/xlsx datafile upload
       }
