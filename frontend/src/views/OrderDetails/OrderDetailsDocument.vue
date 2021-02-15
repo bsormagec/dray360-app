@@ -108,7 +108,7 @@ export default {
     },
     hasTabularDataFile () {
       try {
-        ocrDataFilename = this.currentOrder.ocr_data.ocr_data_filename.value
+        const ocrDataFilename = this.currentOrder.ocr_data.ocr_data_filename.value
         // after feb2021 "pdftext" variant type datafile uploads will have their parsed data json filename stored here
         // after feb2021, any non ".json" datafile name indicates "hasFile"
         return !ocrDataFilename.toLowerCase().endsWith('.json')
