@@ -1,6 +1,6 @@
 <template>
   <div
-    v-if="hasTabularDataFile"
+    v-if="hasImageFile"
     :class="`document ${loadedImages === pages.length ? 'loaded' : ''}`"
   >
     <div
@@ -99,21 +99,22 @@ export default {
         .map(field => {
           const fieldKey = getNonPDFHighlightsParsedFieldName(field)
           return {
-            name: fields[field].name,
+            name: fields[field].name, // throwing error: "Cannot read property 'name' of null"
             value: fields[field].value,
             field_key: fieldKey,
             highlight: this.highlights[fieldKey]
           }
         })
     },
-    hasTabularDataFile () {
+    hasImageFile () {
+      // before feb2021, ocr_data_filename being undefined indicated a csv/xlsx datafile upload
+      // old pdf uploads (15621): works! new pdftext uploads (15655): works!
+      // old csv uploads (15500): works! new csv uploads (15700): works!
       try {
-        const ocrDataFilename = this.currentOrder.ocr_data.ocr_data_filename.value
-        // after feb2021 "pdftext" variant type datafile uploads will have their parsed data json filename stored here
-        // after feb2021, any non ".json" datafile name indicates "hasFile"
-        return !ocrDataFilename.toLowerCase().endsWith('.json')
+        const ocrDataPageIndex1Filename = this.currentOrder.ocr_data.page_index_filenames.value[0].value
+        return ocrDataPageIndex1Filename.toLowerCase().endsWith('.jpg')
       } catch (error) {
-        return true // before feb2021, ocr_data_filename being undefined indicated a csv/xlsx datafile upload
+        return false
       }
     }
   },
