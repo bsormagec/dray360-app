@@ -115,6 +115,7 @@ export default {
       } catch (error) {
         return true // before feb2021, ocr_data_filename being undefined indicated a csv/xlsx datafile upload
       }
+    }
   },
 
   methods: {
