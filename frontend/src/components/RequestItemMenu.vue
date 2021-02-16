@@ -27,11 +27,6 @@
           v-text="'Copy request ID'"
         />
         <v-list-item
-          v-if="request.has_email"
-          @click="downloadSourceEmail(request.request_id)"
-          v-text="'Download source email'"
-        />
-        <v-list-item
           @click="downloadSourceFile(request.request_id)"
           v-text="'Download source file'"
         />
@@ -51,6 +46,11 @@
           v-text="'Reprocess request'"
         />
         <v-list-item
+          v-if="request.has_email"
+          @click="openEmailDialog = true"
+          v-text="'Show email details'"
+        />
+        <v-list-item
           @click="openStatusHistoryDialog = true"
           v-text="'Show request history'"
         />
@@ -61,6 +61,12 @@
       :open="openStatusHistoryDialog"
       @close="openStatusHistoryDialog = false"
     />
+    <RequestEmailDialog
+      v-if="request.has_email"
+      :open="openEmailDialog"
+      :request="request"
+      @close="openEmailDialog = false"
+    />
   </div>
 </template>
 <script>
@@ -68,18 +74,13 @@ import { mapActions } from 'vuex'
 import permissions from '@/mixins/permissions'
 import utils, { type } from '@/store/modules/utils'
 import { downloadFile } from '@/utils/download_file'
-import {
-  deleteRequest,
-  getSourceFileDownloadURL,
-  reprocessOcrRequest,
-  changeRequestDoneStatus,
-  getSourceEmailDownloadURL
-} from '@/store/api_calls/requests'
+import { deleteRequest, getSourceFileDownloadURL, reprocessOcrRequest, changeRequestDoneStatus } from '@/store/api_calls/requests'
 import RequestStatusHistoryDialog from './RequestStatusHistoryDialog'
+import RequestEmailDialog from './RequestEmailDialog'
 
 export default {
   name: 'RequestItemMenu',
-  components: { RequestStatusHistoryDialog },
+  components: { RequestStatusHistoryDialog, RequestEmailDialog },
   mixins: [permissions],
   props: {
     request: {
@@ -96,7 +97,8 @@ export default {
   data () {
     return {
       loading: false,
-      openStatusHistoryDialog: false
+      openStatusHistoryDialog: false,
+      openEmailDialog: false
     }
   },
   computed: {
@@ -109,9 +111,11 @@ export default {
       setSnackbar: type.setSnackbar,
       setConfirmDialog: type.setConfirmationDialog
     }),
+
     handleClipboardSuccess () {
       this.setSnackbar({ show: true, message: 'Request ID coppied to clipboard.' })
     },
+
     async deleteRequest (requestId) {
       this.loading = true
       await this.setConfirmDialog({
@@ -145,16 +149,6 @@ export default {
       }
     },
 
-    async downloadSourceEmail (requestId) {
-      const [error, data] = await getSourceEmailDownloadURL(requestId)
-
-      if (error === undefined) {
-        downloadFile(data.data)
-      } else {
-        await this.setSnackbar({ show: true, message: error })
-      }
-    },
-
     async reprocessRequest (requestId) {
       this.setConfirmDialog({
         title: 'Are you sure you want to reprocess the request?',
@@ -175,6 +169,7 @@ export default {
         }
       })
     },
+
     async toggleDoneUndone (request) {
       this.loading = true
 

@@ -21,6 +21,7 @@ use App\Http\Controllers\Api\StatusHistoryController;
 use App\Http\Controllers\Api\ChangePasswordController;
 use App\Http\Controllers\Api\EquipmentTypesController;
 use App\Http\Controllers\Api\DictionaryItemsController;
+use App\Http\Controllers\Api\OcrRequestEmailController;
 use App\Http\Controllers\Api\ReplicateOrdersController;
 use App\Http\Controllers\Api\Auth\ResetPasswordController;
 use App\Http\Controllers\Api\OCRRulesAssignmentController;
@@ -141,6 +142,10 @@ Route::group(['middleware' => ['auth:sanctum', 'impersonate', 'tenant-aware']], 
     // Download OCR request source email
     Route::get('ocr/requests/{request_id}/download-source-email', DownloadOriginalRequestSourceEmailController::class)
         ->name('ocr.requests.download-source-email');
+
+    // Get OCR request source email details
+    Route::get('ocr/requests/{request_id}/email-details', OcrRequestEmailController::class)
+        ->name('ocr.requests.email-details');
 
     // Mark OCR request as done/undone
     Route::put('ocr/requests/{request_id}/done-status', OcrRequestsDoneStatusController::class)
