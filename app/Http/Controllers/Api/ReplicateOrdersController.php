@@ -35,6 +35,8 @@ class ReplicateOrdersController extends Controller
             return response()->json(['data' => $response['message']], Response::HTTP_INTERNAL_SERVER_ERROR);
         }
 
+        sleep(3); //asdf This is a temporary solution while we implement the FIFO sns topic
+
         $response = $this->submitOrderInReviewStatusToSns($newOrder);
 
         if ($response['status'] === 'error') {

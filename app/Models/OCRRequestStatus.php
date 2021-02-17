@@ -89,7 +89,7 @@ class OCRRequestStatus extends Model
 
         self::PROCESS_OCR_OUTPUT_FILE_REVIEW => 'Needs Review',
 
-        self::REPLICATED_FROM_EXISTING_ORDER => 'Replication',
+        self::REPLICATED_FROM_EXISTING_ORDER => 'Processed',
 
         self::UPDATES_PRIOR_ORDER => 'Update',
 
