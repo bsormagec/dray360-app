@@ -8,17 +8,81 @@ It is not intended to document every individual column and table, most of which 
 
 
 
+<br><br>
 
 ## Table/Column Notes
 
 
 
+<br><br><br>
+
+### t_dictionary_cache_definitions
+
+------
+
+This table `t_dictionary_cache_definitions` is used in conjuction with the `t_dictionary_cache_entries` and `t_dictionary_items` tables. 
+
+The basic idea is that for every distinct `t_dictionary_items.item_type` value there can be a single-row definition at `t_dictionary_cache_definitions.cache_type`. These define how to use any matching rows in `t_dictionary_cache_entries.cache_type` table, rows that each point to a specific memorized entry in `t_dictionary_items.item_type`.
+
+* one `t_dictionary_cache_definitions.cache_type` entry ==>
+* many `t_dictionary_cache_entries.cache_type` entries ==>
+* one `t_dictionary_items.item_type` entry
+
+
+
+<br><br>
+
+#### Related Tables
+
+| `t_dictionary_cache_definitions` | `t_dictionary_cache_entries`       | `t_dictionary_items` | Mapped to raw text at                       | used by cache_type(s)           |  comments |
+| :----------                      | :------------------                | :--------------      | :--------------                             | :-------------                  | :------------ |
+|                                  | `t_company_id`                     | `t_company_id`       |                                             |                                 | should match `t_orders.t_company_id` |
+|                                  |                                    | `t_tms_provider_id`  |                                             |                                 | should match `t_orders.t_tms_provider_id` |
+|                                  |                                    | `t_user_id`          |                                             |                                 | |
+|                                  |                                    |                      |                                             |                                 | |
+| `cache_type`                     | `cache_type`                       | `item_type`          | n/a                                         |                                 | |
+| `use_variant_name`               | `cached_variant_name`              | n/a                  | `t_orders.variant_name`                     | vessel<br>carrier<br>template   | |
+| `use_bill_to_address_raw_text`   | `cached_bill_to_address_raw_text`  | n/a                  | `t_orders.bill_to_address_raw_text`         | template                        | |
+|                                  |                                    |                      |                                             |                                 | |
+| * `use_hazardous`                | * `cached_hazardous`               | n/a                  | `t_orders.hazardous`                        | template                        | this will be a 1 or 0 |
+| * `use_equipment_size`           | * `cached_equipment_size`          | n/a                  | `t_orders.equipment_size`                   | itg_container                   | displayed as "Container" on the ui, only for ITG |
+| * `use_vessel`                   | * `cached_vessel`                  | n/a                  | `t_orders.vessel`                           | vessel                          | |
+| * `use_carrier`                  | * `cached_carrier`                 | n/a                  | `t_orders.carrier`                          | carrier                         | displayed as "SSL" on the ui, only for ITG |
+|                                  |                                    |                      |                                             |                                 | |
+| * `use_shipment_direction`       | * `cached_shipment_direction`      | n/a                  | `t_orders.shipment_direction`               | template                        | i.e. import/export/crosstown |
+| * `use_event3_address_raw_text`  | * `cached_event3_address_raw_text` | n/a                  | `t_order_address_events.t_address_raw_text` | template                        | where `t_order_address_events.event_number` = 3 |
+|                                  |                                    |                      |                                             |                                 | |
+| _* indicates new as of Feb 2021_ |                                    |                      |                                             |                                 | |
+|                                  |                                    |                      |                                             |                                 | |
+| `use_event1_address_raw_text`    | `cached_event1_address_raw_text`   | n/a                  | `t_order_address_events.t_address_raw_text` | template                        | where `t_order_address_events.event_number` = 1 |
+| `use_event2_address_raw_text`    | `cached_event2_address_raw_text`   | n/a                  | `t_order_address_events.t_address_raw_text` | template                        | where `t_order_address_events.event_number` = 2 |
+
+
+<br><br>
+
+#### Cache Types
+
+Note that `t_dictionary_cache_definitions.cache_type` == `t_dictionary_cache_entries` == `t_dictionary_items.item_type`
+
+As of the initial implementation, Feb 2021, these are the in-use cache types
+
+| Cache/Item Type | Where Mapped<br>_table.column_  | Mapped cache columns          |
+| :----------     | :--------------                 | :------------                 |
+| `vessel`        | `t_orders.vessel_dictid`        | variant<br>vessel             |
+| `carrier`       | `t_orders.carrier_dictid`       | variant<br>carrier            |
+| `itgcontainer`  | `t_orders.container_dictid`     | template<br>equipment_size    |
+| `template`      | `t_orders.tms_template_dictid`  | variant<br>bill_to_address_rawtext<br>event1_address_rawtext<br>event2_address_rawtext<br>hazardous |
 
 
 
 
+
+
+<br><br><br>
 
 ### t_chainio_requestid_submissions
+
+------
 
 This table is used to compute the submission sequence of an order within a request in a threadsafe (no race condition) way. To see how this is implemented, refer to the source code in `dray360-microservices:/lambdas/submitchainio/getsubmissionsequence.py`.
 
@@ -31,6 +95,9 @@ In fact this is a concatenated key containing `request_id` + `:` + `reference_nu
 
 
 
+
+------
+<br><br><br>
 
 ### t_job_state_changes
 
@@ -59,6 +126,8 @@ See the dedicated document in this folder for details on each status_metadata ty
 
 
 
+------
+<br><br><br>
 
 ### t_job_latest_state
 
@@ -75,9 +144,8 @@ These columns are nullable and _not_ foreign key references to the t_companies/t
 
 
 
-#######################
-
-
+------
+<br><br><br>
 
 ### t_orders
 
@@ -95,7 +163,9 @@ If there were errors in an order-creation batch that resulted in some orders bei
 
 
 
-#######################
+------
+<br><br><br>
+
 
 ### t_companies
 
