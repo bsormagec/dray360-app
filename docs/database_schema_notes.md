@@ -45,9 +45,9 @@ The basic idea is that for every distinct `t_dictionary_items.item_type` value t
 | `use_bill_to_address_raw_text`   | `cached_bill_to_address_raw_text`  | n/a                  | `t_orders.bill_to_address_raw_text`         | template                        | |
 |                                  |                                    |                      |                                             |                                 | |
 | * `use_hazardous`                | * `cached_hazardous`               | n/a                  | `t_orders.hazardous`                        | template                        | this will be a 1 or 0 |
-| * `use_equipment_size`           | * `cached_equipment_size`          | n/a                  | `t_orders.equipment_size`                   | itg_container                   | displayed as "Container" on the ui, only for ITG |
+| * `use_equipment_size`           | * `cached_equipment_size`          | n/a                  | `t_orders.equipment_size`                   | itg_container                   | displayed as "Container" on the ui for ITG |
 | * `use_vessel`                   | * `cached_vessel`                  | n/a                  | `t_orders.vessel`                           | vessel                          | |
-| * `use_carrier`                  | * `cached_carrier`                 | n/a                  | `t_orders.carrier`                          | carrier                         | displayed as "SSL" on the ui, only for ITG |
+| * `use_carrier`                  | * `cached_carrier`                 | n/a                  | `t_orders.carrier`                          | carrier                         | displayed as "SSL" on the ui for ITG |
 |                                  |                                    |                      |                                             |                                 | |
 | * `use_shipment_direction`       | * `cached_shipment_direction`      | n/a                  | `t_orders.shipment_direction`               | template                        | i.e. import/export/crosstown |
 | * `use_event3_address_raw_text`  | * `cached_event3_address_raw_text` | n/a                  | `t_order_address_events.t_address_raw_text` | template                        | where `t_order_address_events.event_number` = 3 |
