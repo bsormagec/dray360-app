@@ -22,6 +22,9 @@ alter table t_dictionary_cache_entries drop column cached_hazardous;
 alter table t_dictionary_cache_entries drop column cached_equipment_size;
 alter table t_dictionary_cache_entries drop column cached_vessel;
 alter table t_dictionary_cache_entries drop column cached_carrier;
+alter table t_dictionary_cache_entries drop column cached_shipment_direction;
+alter table t_dictionary_cache_entries drop column cached_shipment_direction;
+alter table t_dictionary_cache_entries drop column cached_event3_address_raw_text;
 
 alter table t_dictionary_cache_definitions drop column use_hazardous;
 alter table t_dictionary_cache_definitions drop column use_equipment_size;
