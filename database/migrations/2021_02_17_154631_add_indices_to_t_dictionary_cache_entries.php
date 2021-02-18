@@ -54,6 +54,11 @@ class AddIndicesToTDictionaryCacheEntries extends Migration
      */
     public function up()
     {
+        // Add new column to t_orders
+        Schema::table('t_orders', function (Blueprint $table) {
+            $table->boolean('container_dictid_verified')->nullable();
+        });
+
         // Add indices to existing columns in t_dictionary_cache_entries
         Schema::table('t_dictionary_cache_entries', function (Blueprint $table) {
             $table->index('cached_variant_name');
@@ -70,6 +75,7 @@ class AddIndicesToTDictionaryCacheEntries extends Migration
             $table->string('cached_carrier', 64)->nullable()->index();
             $table->string('cached_shipment_direction', 64)->nullable()->index();
             $table->text('cached_event3_address_raw_text')->nullable(); # index added below
+            $table->string('cached_template_key', 512)->nullable()->index();
         });
 
         // Add new columns (with indices) to t_dictionary_cache_definitions
@@ -80,6 +86,7 @@ class AddIndicesToTDictionaryCacheEntries extends Migration
             $table->boolean('use_carrier')->nullable();
             $table->boolean('use_shipment_direction')->nullable();
             $table->boolean('use_event3_address_raw_text')->nullable();
+            $table->boolean('use_template_key')->nullable();
         });
 
         // Add special index to newly created column in t_dictionary_cache_entries
@@ -95,6 +102,11 @@ class AddIndicesToTDictionaryCacheEntries extends Migration
      */
     public function down()
     {
+        // drop new column from t_orders
+        Schema::table('t_orders', function (Blueprint $table) {
+            $table->dropColumnIfExists('container_dictid_verified');
+        });
+        
         // drop new indices from t_dictionary_cache_entries
         Schema::table('t_dictionary_cache_entries', function (Blueprint $table) {
             $table->dropIndex(['cached_variant_name']);
@@ -111,6 +123,7 @@ class AddIndicesToTDictionaryCacheEntries extends Migration
             $table->dropColumnIfExists('cached_carrier');
             $table->dropColumnIfExists('cached_shipment_direction');
             $table->dropColumnIfExists('cached_event3_address_raw_text');
+            $table->dropColumnIfExists('cached_template_key');
         });
 
         // Remove new columns (and their indices) from t_dictionary_cache_definitions
@@ -121,6 +134,7 @@ class AddIndicesToTDictionaryCacheEntries extends Migration
             $table->dropColumnIfExists('use_carrier');
             $table->dropColumnIfExists('use_shipment_direction');
             $table->dropColumnIfExists('use_event3_address_raw_text');
+            $table->dropColumnIfExists('use_template_key');
         });
     }
 }
