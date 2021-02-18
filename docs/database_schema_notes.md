@@ -81,25 +81,6 @@ As of the initial implementation, Feb 2021, these are the in-use cache types
 
 
 
-mysql> select * from t_dictionary_items where id=304 \G
-*************************** 1. row ***************************
-               id: 304
-       created_at: 2021-01-07 16:17:41
-       updated_at: 2021-01-07 16:17:41
-     t_company_id: 2
-t_tms_provider_id: NULL
-        t_user_id: NULL
-        item_type: template
-         item_key: 2143379
-item_display_name: RL_TO_BNOG_HAZ
-       item_value: NULL
-       deleted_at: NULL
-1 row in set (0.04 sec)
-
-
-
-
-
 
 
 

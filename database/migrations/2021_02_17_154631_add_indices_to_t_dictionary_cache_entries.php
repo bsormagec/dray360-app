@@ -1,46 +1,6 @@
 <?php
 
 
-/*
-
--- MANUALLY ROLLBACK
-
-delete from migrations where migrations.migration='2021_02_17_154631_add_indices_to_t_dictionary_cache_entries';
-
-drop index t_dictionary_cache_entries_cached_variant_name_index on t_dictionary_cache_entries;
-drop index bill_to_address on t_dictionary_cache_entries;
-drop index event1_address on t_dictionary_cache_entries;
-drop index even2_address on t_dictionary_cache_entries;
-drop index event2_address on t_dictionary_cache_entries;
-drop index cached_bill_to_address_index on t_dictionary_cache_entries;
-drop index cached_event1_address_index on t_dictionary_cache_entries;
-drop index cached_even2_address_index on t_dictionary_cache_entries;
-drop index cached_event2_address_index on t_dictionary_cache_entries;
-drop index t_dictionary_cache_entries_cached_shipment_direction_index on t_dictionary_cache_entries;
-
-alter table t_dictionary_cache_entries drop column cached_hazardous;
-alter table t_dictionary_cache_entries drop column cached_equipment_size;
-alter table t_dictionary_cache_entries drop column cached_vessel;
-alter table t_dictionary_cache_entries drop column cached_carrier;
-alter table t_dictionary_cache_entries drop column cached_shipment_direction;
-alter table t_dictionary_cache_entries drop column cached_shipment_direction;
-alter table t_dictionary_cache_entries drop column cached_event3_address_raw_text;
-
-alter table t_dictionary_cache_definitions drop column use_hazardous;
-alter table t_dictionary_cache_definitions drop column use_equipment_size;
-alter table t_dictionary_cache_definitions drop column use_vessel;
-alter table t_dictionary_cache_definitions drop column use_carrier;
-
-describe t_dictionary_cache_definitions;
-show index from t_dictionary_cache_definitions;
-
-describe t_dictionary_cache_entries;
-show index from t_dictionary_cache_entries;
-
-select * from migrations order by id desc limit 3;
-
-*/
-
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
