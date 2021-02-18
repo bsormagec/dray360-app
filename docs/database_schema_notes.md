@@ -8,17 +8,88 @@ It is not intended to document every individual column and table, most of which 
 
 
 
+<br><br>
 
 ## Table/Column Notes
 
 
 
+<br><br><br>
+
+### TABLE:  t_dictionary_cache_definitions
+
+------
+
+This table `t_dictionary_cache_definitions` is used in conjuction with the `t_dictionary_cache_entries` and `t_dictionary_items` tables. 
+
+The basic idea is that for every distinct `t_dictionary_items.item_type` value there can be a single-row definition at `t_dictionary_cache_definitions.cache_type`. These define how to use any matching rows in `t_dictionary_cache_entries.cache_type` table, rows that each point to a specific memorized entry in `t_dictionary_items.item_type`.
+
+* one `t_dictionary_cache_definitions.cache_type` entry ==>
+* many `t_dictionary_cache_entries.cache_type` entries ==>
+* one `t_dictionary_items.item_type` entry
+
+
+
+<br><br>
+
+#### Related Tables
+
+| `t_dictionary_cache_definitions` | `t_dictionary_cache_entries`       | `t_dictionary_items` | Abbyy/rules fieldname | Mapped to raw text at                             | used by cache_type(s)           |  comments |
+| :----------                      | :------------------                | :--------------      | :--------------       | :--------------                                   | :-------------                  | :------------ |
+| n/a                              | `t_dictionary_item_id`             | `id`                 | n/a                   | n/a                                               |                                 | matches `t_orders.whatever_dictid` |
+| n/a                              | `t_company_id`                     | `t_company_id`       | n/a                   | n/a                                               |                                 | should match `t_orders.t_company_id` |
+| n/a                              | `verified_count`                   | n/a                  | n/a                   | n/a                                               |                                 | increments on every verify/submit |
+|                                  |                                    |                      |                       |                                                   |                                 | |
+| `cache_type`                     | `cache_type`                       | `item_type`          | n/a                   | n/a                                               |                                 | |
+| n/a                              |  n/a                               | `t_tms_provider_id`  | n/a                   | n/a                                               |                                 | should match `t_orders.t_tms_provider_id` |
+| n/a                              |  n/a                               | `t_user_id`          | n/a                   | n/a                                               |                                 | |
+| n/a                              |  n/a                               | `item_key`           | n/a                   | n/a                                               |                                 | value sent to TMS |
+| n/a                              |  n/a                               | `item_display_name`  | n/a                   | n/a                                               |                                 | value displayed in UI droplist |
+| n/a                              |  n/a                               | `item_value`         | n/a                   | n/a                                               |                                 | JSON blob of key/value/other_info |
+|                                  |                                    |                      |                       |                                                   |                                 | |
+| `use_bill_to_address_raw_text`   | `cached_bill_to_address_raw_text`  | n/a                  | `bill_to_address`     | `t_orders`<br>`.bill_to_address_raw_text`         | template                        | |
+| `use_carrier`                  * | `cached_carrier`                 * | n/a                  | `carrier`             | `t_orders`<br>`.carrier`                          | carrier                         | displayed as "SSL" on the ui for ITG |
+| `use_equipment_size`           * | `cached_equipment_size`          * | n/a                  | `container_length`    | `t_orders`<br>`.equipment_size`                   | itgcontainer                    | displayed as "Container" on the ui for ITG |
+| `use_event1_address_raw_text`    | `cached_event1_address_raw_text`   | n/a                  | `event1_location`     | `t_order_address_events`<br>`.t_address_raw_text` | template                        | where `t_order_address_events`<br>`.event_number` = 1 |
+| `use_event2_address_raw_text`    | `cached_event2_address_raw_text`   | n/a                  | `event2_location`     | `t_order_address_events`<br>`.t_address_raw_text` | template                        | where `t_order_address_events`<br>`.event_number` = 2 |
+| `use_event3_address_raw_text`  * | `cached_event3_address_raw_text` * | n/a                  | `event3_location`     | `t_order_address_events`<br>`.t_address_raw_text` | template                        | where `t_order_address_events`<br>`.event_number` = 3 |
+| `use_hazardous`                * | `cached_hazardous`               * | n/a                  | `hazmat`              | `t_orders`<br>`.hazardous`                        | template                        | this will be a 1 or 0 |
+| `use_shipment_direction`       * | `cached_shipment_direction`      * | n/a                  | `order_type`          | `t_orders`<br>`.shipment_direction`               | template                        | i.e. import/export/crosstown |
+|                                  |                                    |                      |                       |                                                   |                                 | |
+| `use_template`                 * | `cached_template_key`            * | `item_key`           | n/a <lookup>          | `t_orders`<br>`.tms_template_dictid.item_key`     | itgcontainer                    | first cache-search for template, then use template for further searches |
+|                                  |                                    |                      |                       |                                                   |                                 | |
+| `use_variant_name`               | `cached_variant_name`              | n/a                  | `variant_name`        | `t_orders`<br>`.variant_name`                     | vessel<br>carrier<br>template   | |
+| `use_vessel`                   * | `cached_vessel`                  * | n/a                  | `vessel`              | `t_orders`<br>`.vessel`                           | vessel                          | |
+
+_* indicates new as of Feb 2021_
+
+<br><br>
+
+#### Cache Types
+
+Note that `t_dictionary_cache_definitions.cache_type` == `t_dictionary_cache_entries.cache_type` == `t_dictionary_items.item_type`
+
+As of the initial implementation, Feb 2021, these are the in-use cache types
+
+| Cache/Item Type | Where Mapped<br>_table.column_  | Mapped cache columns          |
+| :----------     | :--------------                 | :------------                 |
+| `vessel`        | `t_orders.vessel_dictid`        | variant<br>vessel             |
+| `carrier`       | `t_orders.carrier_dictid`       | variant<br>carrier            |
+| `itgcontainer`  | `t_orders.container_dictid`     | template<br>equipment_size    |
+| `template`      | `t_orders.tms_template_dictid`  | variant<br>bill_to_address_rawtext<br>event(1/2/3)_address_rawtext<br>shipment_direction<br>hazardous |
 
 
 
 
 
-### t_chainio_requestid_submissions
+
+
+
+<br><br><br>
+
+### TABLE:  t_chainio_requestid_submissions
+
+------
 
 This table is used to compute the submission sequence of an order within a request in a threadsafe (no race condition) way. To see how this is implemented, refer to the source code in `dray360-microservices:/lambdas/submitchainio/getsubmissionsequence.py`.
 
@@ -32,7 +103,11 @@ In fact this is a concatenated key containing `request_id` + `:` + `reference_nu
 
 
 
-### t_job_state_changes
+<br><br><br>
+
+### TABLE:  t_job_state_changes
+
+------
 
 Every state change for a request/order combination (or request/null when orders don't exist yet) is logged here. 
 
@@ -59,8 +134,11 @@ See the dedicated document in this folder for details on each status_metadata ty
 
 
 
+<br><br><br>
 
-### t_job_latest_state
+### TABLE:  t_job_latest_state
+
+------
 
 For a given request/order combination (or request/null when orders don't exist yet) the latest row inserted into the `t_job_state_changes` table will be recorded on this table. 
 
@@ -75,12 +153,11 @@ These columns are nullable and _not_ foreign key references to the t_companies/t
 
 
 
-#######################
+<br><br><br>
 
+### TABLE:  t_orders
 
-
-### t_orders
-
+------
 
 #### interchange_count
 
@@ -95,9 +172,11 @@ If there were errors in an order-creation batch that resulted in some orders bei
 
 
 
-#######################
+<br><br><br>
 
-### t_companies
+### TABLE:  t_companies
+
+------
 
 In this data model a "company" is a customer of Dray360. Each company is uniquely identified by name and id. Those name's are hardcoded into the application and must not be allowed to change. .
 
@@ -136,8 +215,11 @@ JSON data structure:
 
 
 
+<br><br><br>
 
-### t_ocrvariants
+### TABLE:  t_ocrvariants
+
+------
 
 By rights this table would be called `t_datasource_variants` but when it was originally created the only variant type we processed was 'ocr' hence the name. Renaming it is fine if someone wants to do that at some point.
 
@@ -187,14 +269,14 @@ JSON data structure:
 
 JSON data structure: 
 ```json
-[
+{
     "abbyy_fieldname_1": {
         "source": "xlsx_header_1"
     },
     "abbyy_fieldname_2": {
         "source": "xlsx_header_2"
     }
-]
+}
 ```
 
 #### classifier
@@ -285,9 +367,10 @@ Note that to set this value, use a sql command with something like this syntax:
 
 
 <br><br><br>
-===================================
 
-### t_equipment_types
+### TABLE:  t_equipment_types
+
+------
 
 This table is seeded by ./database/seeds/EquipmentLeaseTypesSeeder.php
 
