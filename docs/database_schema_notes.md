@@ -55,9 +55,7 @@ The basic idea is that for every distinct `t_dictionary_items.item_type` value t
 | `use_event3_address_raw_text`  * | `cached_event3_address_raw_text` * | n/a                  | `event3_location`                      | `t_order_address_events`<br>`.t_address_raw_text` | template                        | where `t_order_address_events`<br>`.event_number` = 3 |
 | `use_hazardous`                * | `cached_hazardous`               * | n/a                  | `hazmat`                               | `t_orders`<br>`.hazardous`                        | template                        | this will be a 1 or 0 |
 | `use_shipment_direction`       * | `cached_shipment_direction`      * | n/a                  | `order_type`                           | `t_orders`<br>`.shipment_direction`               | template                        | i.e. import/export/crosstown |
-|                                  |                                    |                      |                                        |                                                   |                                 | |
 | `use_template`                 * | `cached_template_key`            * | `item_key`           | _lookup variant_<br>`container_length` | `t_orders`<br>`.tms_template_dictid.item_key`     | itgcontainer                    | first cache-search for template, then use template for further searches |
-|                                  |                                    |                      |                                        |                                                   |                                 | |
 | `use_variant_name`               | `cached_variant_name`              | n/a                  | `variant_name`                         | `t_orders`<br>`.variant_name`                     | vessel<br>carrier<br>template   | |
 | `use_vessel`                   * | `cached_vessel`                  * | n/a                  | `vessel`                               | `t_orders`<br>`.vessel`                           | vessel                          | |
 
@@ -75,8 +73,9 @@ As of the initial implementation, Feb 2021, these are the in-use cache types
 | :----------     | :--------------                 | :------------                 |
 | `vessel`        | `t_orders.vessel_dictid`        | variant<br>vessel             |
 | `carrier`       | `t_orders.carrier_dictid`       | variant<br>carrier            |
-| `itgcontainer`  | `t_orders.container_dictid`     | template<br>equipment_size    |
-| `template`      | `t_orders.tms_template_dictid`  | variant<br>bill_to_address_rawtext<br>event(1/2/3)_address_rawtext<br>shipment_direction<br>hazardous |
+| `itgcontainer`  | `t_orders.container_dictid`     | variant<br>template<br>equipment_size    |
+| `template`      | `t_orders.tms_template_dictid`  | use_bill_to_address_raw_text<br>use_carrier<br>use_equipment_size<br>use_event(1/2/3)_address_raw_text<br>use_hazardous<br>use_shipment_direction<br>use_template<br>use_variant_name<br>use_vessel |
+
 
 
 
