@@ -5,11 +5,12 @@ namespace App\Events;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Foundation\Events\Dispatchable;
 
-class TmsTemplateVerified
+class AttributeVerified
 {
     use Dispatchable;
     use SerializesModels;
 
+    public $verifiableColumn;
     public $orderData;
 
     /**
@@ -17,8 +18,9 @@ class TmsTemplateVerified
      *
      * @return void
      */
-    public function __construct($order)
+    public function __construct($order, $verifiableColumn)
     {
         $this->orderData = $order->toArray();
+        $this->verifiableColumn = $verifiableColumn;
     }
 }

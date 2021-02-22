@@ -46,6 +46,11 @@
           v-text="'Reprocess request'"
         />
         <v-list-item
+          v-if="request.has_email"
+          @click="openEmailDialog = true"
+          v-text="'Show email details'"
+        />
+        <v-list-item
           @click="openStatusHistoryDialog = true"
           v-text="'Show request history'"
         />
@@ -56,18 +61,26 @@
       :open="openStatusHistoryDialog"
       @close="openStatusHistoryDialog = false"
     />
+    <RequestEmailDialog
+      v-if="request.has_email"
+      :open="openEmailDialog"
+      :request="request"
+      @close="openEmailDialog = false"
+    />
   </div>
 </template>
 <script>
 import { mapActions } from 'vuex'
 import permissions from '@/mixins/permissions'
 import utils, { type } from '@/store/modules/utils'
+import { downloadFile } from '@/utils/download_file'
 import { deleteRequest, getSourceFileDownloadURL, reprocessOcrRequest, changeRequestDoneStatus } from '@/store/api_calls/requests'
 import RequestStatusHistoryDialog from './RequestStatusHistoryDialog'
+import RequestEmailDialog from './RequestEmailDialog'
 
 export default {
   name: 'RequestItemMenu',
-  components: { RequestStatusHistoryDialog },
+  components: { RequestStatusHistoryDialog, RequestEmailDialog },
   mixins: [permissions],
   props: {
     request: {
@@ -84,7 +97,8 @@ export default {
   data () {
     return {
       loading: false,
-      openStatusHistoryDialog: false
+      openStatusHistoryDialog: false,
+      openEmailDialog: false
     }
   },
   computed: {
@@ -97,9 +111,11 @@ export default {
       setSnackbar: type.setSnackbar,
       setConfirmDialog: type.setConfirmationDialog
     }),
+
     handleClipboardSuccess () {
       this.setSnackbar({ show: true, message: 'Request ID coppied to clipboard.' })
     },
+
     async deleteRequest (requestId) {
       this.loading = true
       await this.setConfirmDialog({
@@ -122,15 +138,12 @@ export default {
         }
       })
     },
+
     async downloadSourceFile (requestId) {
       const [error, data] = await getSourceFileDownloadURL(requestId)
 
       if (error === undefined) {
-        // not entirely sure why this is necessary, but this is the logic for triggering a DL elsewhere in the app.
-        const link = document.createElement('a')
-        link.href = data.data
-        link.click()
-        link.remove()
+        downloadFile(data.data)
       } else {
         await this.setSnackbar({ show: true, message: error })
       }
@@ -156,6 +169,7 @@ export default {
         }
       })
     },
+
     async toggleDoneUndone (request) {
       this.loading = true
 

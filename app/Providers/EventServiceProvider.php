@@ -3,11 +3,11 @@
 namespace App\Providers;
 
 use App\Events\AddressVerified;
-use App\Events\TmsTemplateVerified;
+use App\Events\AttributeVerified;
 use Illuminate\Support\Facades\Event;
 use Illuminate\Auth\Events\Registered;
+use App\Listeners\CreateOrUpdateCacheEntry;
 use App\Listeners\CreateOrUpdateVerifiedAddressEntry;
-use App\Listeners\CreateOrUpdateCacheEntryForTmsTemplate;
 use Illuminate\Auth\Listeners\SendEmailVerificationNotification;
 use Illuminate\Foundation\Support\Providers\EventServiceProvider as ServiceProvider;
 
@@ -25,9 +25,9 @@ class EventServiceProvider extends ServiceProvider
         AddressVerified::class => [
             CreateOrUpdateVerifiedAddressEntry::class
         ],
-        TmsTemplateVerified::class => [
-            CreateOrUpdateCacheEntryForTmsTemplate::class
-        ],
+        AttributeVerified::class => [
+            CreateOrUpdateCacheEntry::class,
+        ]
     ];
 
     /**

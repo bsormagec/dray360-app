@@ -102,7 +102,6 @@ class StatusHistoryController extends Controller
                     ->whereNull('order_id');
             })
             ->orWhere('order_id', $order->id)
-            ->orderBy('order_id')
             ->orderBy('id')
             ->get();
     }

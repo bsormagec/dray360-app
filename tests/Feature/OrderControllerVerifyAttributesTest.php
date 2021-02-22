@@ -7,13 +7,11 @@ use App\Models\Order;
 use App\Models\Company;
 use App\Models\TMSProvider;
 use Illuminate\Http\Response;
-use App\Events\VesselVerified;
 use App\Models\DictionaryItem;
 use App\Events\AddressVerified;
-use App\Events\CarrierVerified;
+use App\Events\AttributeVerified;
 use App\Models\OrderAddressEvent;
 use Tests\Seeds\OrdersTableSeeder;
-use App\Events\TmsTemplateVerified;
 use Illuminate\Support\Facades\Event;
 use Illuminate\Support\Testing\Fakes\EventFake;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
@@ -48,6 +46,7 @@ class OrderControllerVerifyAttributesTest extends TestCase
             'carrier_dictid_verified' => false,
             'vessel_dictid_verified' => false,
             'bill_to_address_verified' => false,
+            'container_dictid_verified' => false,
             't_company_id' => $company->id,
             't_tms_provider_id' => $tmsProvider->id,
         ]);
@@ -57,6 +56,7 @@ class OrderControllerVerifyAttributesTest extends TestCase
                 'bill_to_address_verified' => true,
                 'carrier_dictid_verified' => true,
                 'vessel_dictid_verified' => true,
+                'container_dictid_verified' => true,
                 'order_address_events' => [
                     $orderAddressEvent->setAttribute('t_address_verified', true)->toArray()
                 ],
@@ -64,8 +64,21 @@ class OrderControllerVerifyAttributesTest extends TestCase
             ->assertStatus(Response::HTTP_OK);
 
         Event::assertDispatchedTimes(AddressVerified::class, 2);
-        Event::assertDispatchedTimes(TmsTemplateVerified::class, 1);
-        Event::assertDispatchedTimes(CarrierVerified::class, 1);
-        Event::assertDispatchedTimes(VesselVerified::class, 1);
+        Event::assertDispatchedTimes(AttributeVerified::class, 4);
+        $count = 0;
+        Event::assertDispatched(AttributeVerified::class, function ($event) use (&$count) {
+            $wasTriggered = in_array($event->verifiableColumn, [
+                'tms_template_dictid_verified',
+                'carrier_dictid_verified',
+                'vessel_dictid_verified',
+                'container_dictid_verified',
+            ]);
+
+            if ($wasTriggered) {
+                $count++;
+            }
+
+            return $wasTriggered && $count === 4;
+        });
     }
 }

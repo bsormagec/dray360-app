@@ -20,13 +20,13 @@ class CargoWiseItgAddressesSeeder extends Seeder
         $tmsProvider = TMSProvider::getCargoWise();
 
         $baseAddress = [
-            "code" => 'ANNPUBARB',
-            "full_name" => 'ANN ARBOR PUBLIC SCHOOLS',
-            "address" => '2555 S STATE ST',
+            "code" => '022CAMFTW',
+            "full_name" => '022-CAMPING WORLD DFDC',
+            "address" => '2400 SHORT TRACK CT',
             "address_2" => null,
-            "city" => 'ANN ARBOR',
-            "state" => 'MI',
-            "post_code" => "48104",
+            "city" => 'FORT WORTH',
+            "state" => 'TX',
+            "post_code" => "76177",
         ];
 
         $address = Address::create([

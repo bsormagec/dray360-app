@@ -672,6 +672,7 @@ import { getOrderDetail, postSendToTms, delDeleteOrder, postSendToClient, replic
 import { getSourceFileDownloadURL } from '@/store/api_calls/requests'
 import orderForm, { types as orderFormTypes } from '@/store/modules/order-form'
 import utils, { type } from '@/store/modules/utils'
+import { downloadFile } from '@/utils/download_file'
 
 import FormFieldDate from '@/components/FormFields/FormFieldDate'
 import FormFieldTime from '@/components/FormFields/FormFieldTime'
@@ -970,10 +971,7 @@ export default {
       const [error, data] = await getSourceFileDownloadURL(requestId)
 
       if (error === undefined) {
-        const link = document.createElement('a')
-        link.href = data.data
-        link.click()
-        link.remove()
+        downloadFile(data.data)
       } else {
         console.log('error')
       }

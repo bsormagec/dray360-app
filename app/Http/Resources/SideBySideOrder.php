@@ -60,18 +60,21 @@ class SideBySideOrder extends JsonResource
             $ocr_clone = $this->resource->ocr_data;
             // note the & in the foreach specifies pass-by-reference
             foreach ($ocr_clone['page_index_filenames']['value'] as $eachPageIndex => &$eachPage) {
-                $s3Config = config('filesystems.disks.s3-base') + [
-                    'bucket' => s3_bucket_from_url($eachPage['value']),
-                ];
-                $storage = Storage::createS3Driver($s3Config);
-                $urlExpiryTime = now()->addMinutes(self::MINUTES_URI_REMAINS_VALID);
+                $pageUri = $eachPage['value'];
+                if (! is_null($pageUri)) {
+                    $s3Config = config('filesystems.disks.s3-base') + [
+                        'bucket' => s3_bucket_from_url($eachPage['value']),
+                    ];
+                    $storage = Storage::createS3Driver($s3Config);
+                    $urlExpiryTime = now()->addMinutes(self::MINUTES_URI_REMAINS_VALID);
 
-                // save presigned info on eachPage
-                $eachPage['presigned_download_uri'] = $storage->temporaryUrl(
-                    s3_file_name_from_url($eachPage['value']),
-                    $urlExpiryTime
-                );
-                $eachPage['presigned_download_uri_expires'] = $urlExpiryTime;
+                    // save presigned info on eachPage
+                    $eachPage['presigned_download_uri'] = $storage->temporaryUrl(
+                        s3_file_name_from_url($eachPage['value']),
+                        $urlExpiryTime
+                    );
+                    $eachPage['presigned_download_uri_expires'] = $urlExpiryTime;
+                }
             }
             // assign updated ocr_data clone to order object, replacing old ocr_data
             $this->resource->ocr_data = $ocr_clone;
