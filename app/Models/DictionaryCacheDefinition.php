@@ -14,6 +14,13 @@ class DictionaryCacheDefinition extends Model
         'use_bill_to_address_raw_text',
         'use_event1_address_raw_text',
         'use_event2_address_raw_text',
+        'use_event3_address_raw_text',
+        'use_hazardous',
+        'use_equipment_size',
+        'use_vessel',
+        'use_carrier',
+        'use_shipment_direction',
+        'use_template_key',
     ];
 
     /**
@@ -24,21 +31,17 @@ class DictionaryCacheDefinition extends Model
         'use_bill_to_address_raw_text' => 'boolean',
         'use_event1_address_raw_text' => 'boolean',
         'use_event2_address_raw_text' => 'boolean',
+        'use_hazardous' => 'boolean',
+        'use_equipment_size' => 'boolean',
+        'use_vessel' => 'boolean',
+        'use_carrier' => 'boolean',
+        'use_shipment_direction' => 'boolean',
+        'use_event3_address_raw_text' => 'boolean',
+        'use_template_key' => 'boolean',
     ];
 
-    public static function template(): ?self
+    public static function cacheDefinitionForType($type): ?self
     {
-        $definition = static::where('cache_type', DictionaryItem::TEMPLATE_TYPE)->first();
-
-        if ($definition) {
-            return $definition;
-        }
-
-        return new static([
-            'use_variant_name' => false,
-            'use_bill_to_address_raw_text' => false,
-            'use_event1_address_raw_text' => false,
-            'use_event2_address_raw_text' => false,
-        ]);
+        return static::where('cache_type', $type)->firstOrFail();
     }
 }
