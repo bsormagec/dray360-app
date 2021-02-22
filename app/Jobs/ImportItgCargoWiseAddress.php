@@ -21,7 +21,7 @@ class ImportItgCargoWiseAddress extends ImportAddressBase implements ShouldQueue
 
     public function __construct($address, $tmsProviderId, Company $company)
     {
-        $this->addressCode = $address['code'];
+        $this->addressCode = $address['org_code'];
         $this->address = $address;
         $this->companyId = $company->id;
         $this->companyName = $company->name;

@@ -2,10 +2,8 @@
 
 namespace App\Models;
 
-use App\Events\VesselVerified;
 use App\Events\AddressVerified;
-use App\Events\CarrierVerified;
-use App\Events\TmsTemplateVerified;
+use App\Events\AttributeVerified;
 use App\Models\Traits\FillWithNulls;
 use App\Models\Traits\BelongsToCompany;
 use Illuminate\Database\Eloquent\Model;
@@ -158,6 +156,7 @@ class Order extends Model
         'tms_template_id',
         'tms_template_dictid',
         'container_dictid',
+        'container_dictid_verified',
         'tms_template_dictid_verified',
         'is_hidden',
         'carrier_dictid',
@@ -194,6 +193,7 @@ class Order extends Model
         'is_hidden' => 'boolean',
         'carrier_dictid_verified' => 'boolean',
         'vessel_dictid_verified' => 'boolean',
+        'container_dictid_verified' => 'boolean',
     ];
 
     /**
@@ -269,6 +269,7 @@ class Order extends Model
         'tms_template_id' => 'sometimes|nullable',
         'tms_template_dictid' => 'sometimes|nullable',
         'container_dictid' => 'sometimes|nullable',
+        'container_dictid_verified' => 'sometimes|nullable',
         'tms_template_dictid_verified' => 'sometimes|nullable',
         'is_hidden' => 'sometimes|nullable',
         'carrier_dictid' => 'sometimes|nullable',
@@ -282,9 +283,10 @@ class Order extends Model
      */
     public static $verifiableAttributes = [
         'bill_to_address_verified' => AddressVerified::class,
-        'tms_template_dictid_verified' => TmsTemplateVerified::class,
-        'carrier_dictid_verified' => CarrierVerified::class,
-        'vessel_dictid_verified' => VesselVerified::class,
+        'tms_template_dictid_verified' => AttributeVerified::class,
+        'carrier_dictid_verified' => AttributeVerified::class,
+        'vessel_dictid_verified' => AttributeVerified::class,
+        'container_dictid_verified' => AttributeVerified::class,
     ];
 
     public function precededByOrder()

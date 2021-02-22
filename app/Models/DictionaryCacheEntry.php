@@ -17,6 +17,14 @@ class DictionaryCacheEntry extends Model
         'cached_bill_to_address_raw_text',
         'cached_event1_address_raw_text',
         'cached_event2_address_raw_text',
+        'cached_event3_address_raw_text',
+        'cached_hazardous',
+        'cached_equipment_size',
+        'cached_vessel',
+        'cached_carrier',
+        'cached_shipment_direction',
+        'cached_template_key',
+
     ];
 
     /**

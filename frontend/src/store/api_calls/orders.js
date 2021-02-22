@@ -7,21 +7,6 @@ export const getOrderDetail = async (order) => axios.get(`/api/orders/${order}`)
 
 export const updateOrderDetail = async ({ id, changes }) => axios.put(`/api/orders/${id}`, changes).then(data => [undefined, data.data]).catch(e => [e])
 
-export const postUploadPDF = async (file, params) => axios.post('/api/ocr/requests', { filename: file.name, withCredentials: false, ...params })
-  .then(response => {
-    const config = {
-      withCredentials: false,
-      headers: {
-        'content-type': 'multipart/form-data',
-        'Access-Control-Allow-Origin': '*'
-      }
-    }
-
-    return axios.put(response.data.upload_uri, file, config).then(response => [undefined, response.data])
-      .catch(e => [e])
-  })
-  .catch(e => [e])
-
 export const postSendToTms = async (orderId) => axios.post(`/api/orders/${orderId}/send-to-tms`).then(data => [undefined, data]).catch(e => [e])
 
 export const postSendToClient = async (orderId) => axios.post(`/api/orders/${orderId}/send-to-client`).then(data => [undefined, data]).catch(e => [e])

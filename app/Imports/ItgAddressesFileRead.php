@@ -3,7 +3,6 @@
 namespace App\Imports;
 
 use Illuminate\Support\Str;
-use Illuminate\Support\Collection;
 use Rap2hpoutre\FastExcel\FastExcel;
 use Illuminate\Support\Facades\Storage;
 use App\Jobs\ImportItgCargoWiseAddresses;
@@ -20,33 +19,41 @@ class ItgAddressesFileRead
     public function import($path, $disk)
     {
         $file = Storage::disk($disk)->get($path);
-        $extension = Str::afterLast($path, '.');
+        $extension = Str::of($path)->afterLast('.')->lower()->__toString();
         $fileName = sha1($file).".{$extension}";
         Storage::disk('local')->put($fileName, $file);
+        $headers = [
+            'org_code',
+            'org_name',
+            'address_line_1',
+            'address_line_2',
+            'city',
+            'state',
+            'post_code',
+            'receivable',
+            'payable',
+            'consignor',
+            'consignee',
+            'transport_client',
+            'warehouse_client',
+            'carrier',
+            'forwarder',
+            'broker',
+            'services',
+            'competitor',
+            'sales',
+        ];
 
-        $billToSheet = (new FastExcel())
-            ->sheet(1)
-            ->import(storage_path('app/'.$fileName));
-        $allAddressesSheet = (new FastExcel())
-            ->sheet(2)
-            ->import(storage_path('app/'.$fileName));
-
+        $allAddresses = (new FastExcel())
+            ->withoutHeaders()
+            ->import(storage_path('app/'.$fileName))
+            ->reject(fn ($items) => implode('', $items) === '')
+            ->map(function ($row) use ($headers) {
+                return collect($row)->mapWithKeys(fn ($item, $index) => [$headers[$index] => $item]);
+            });
 
         Storage::disk('local')->delete($fileName);
 
-
-        $this->job->setBillToAddresses(
-            $this->mapHeadersToSnakeCase($billToSheet)->pluck('code')
-        );
-        $this->job->setAddresses($this->mapHeadersToSnakeCase($allAddressesSheet));
-    }
-
-    protected function mapHeadersToSnakeCase(Collection $rows)
-    {
-        return $rows->map(function ($row) {
-            return collect($row)
-                ->mapWithKeys(fn ($item, $key) => [Str::snake($key) => $item])
-                ->toArray();
-        });
+        $this->job->setAddresses($allAddresses);
     }
 }

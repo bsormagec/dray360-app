@@ -34,13 +34,13 @@ class ImportItgCargoWiseAddressTest extends TestCase
 
         $this->assertDatabaseCount('t_company_address_tms_code', 2);
         $this->assertDatabaseHas('t_addresses', [
-            'address_line_1' => $addresses[1]['address'],
-            'address_line_2' => $addresses[1]['address_2'],
+            'address_line_1' => $addresses[1]['address_line1'],
+            'address_line_2' => $addresses[1]['address_line2'],
             'city' => $addresses[1]['city'],
             'state' => $addresses[1]['state'],
             'postal_code' => $addresses[1]['post_code'],
             'country' => null,
-            'location_name' => $addresses[1]['full_name'],
+            'location_name' => $addresses[1]['org_name'],
             'location_phone' => null,
             'is_terminal' => 0,
             'is_billable' => $addresses[1]['is_billable'],
@@ -51,7 +51,7 @@ class ImportItgCargoWiseAddressTest extends TestCase
     public function it_updates_the_already_exiting_address()
     {
         $modifiedAddress = $this->getBaseAddresses()[1];
-        $modifiedAddress['code'] = $this->getBaseAddresses()[0]['code'];
+        $modifiedAddress['org_code'] = $this->getBaseAddresses()[0]['org_code'];
         $company = CompaniesSeeder::getTestItg();
         $tmsProvider = TMSProvider::getCargoWise();
 
@@ -60,13 +60,13 @@ class ImportItgCargoWiseAddressTest extends TestCase
 
         $this->assertDatabaseCount('t_company_address_tms_code', 1);
         $this->assertDatabaseHas('t_addresses', [
-            'address_line_1' => $modifiedAddress['address'],
-            'address_line_2' => $modifiedAddress['address_2'],
+            'address_line_1' => $modifiedAddress['address_line1'],
+            'address_line_2' => $modifiedAddress['address_line2'],
             'city' => $modifiedAddress['city'],
             'state' => $modifiedAddress['state'],
             'postal_code' => $modifiedAddress['post_code'],
             'country' => null,
-            'location_name' => $modifiedAddress['full_name'],
+            'location_name' => $modifiedAddress['org_name'],
             'location_phone' => null,
             'is_terminal' => 0,
             'is_billable' => $modifiedAddress['is_billable'],
@@ -77,24 +77,30 @@ class ImportItgCargoWiseAddressTest extends TestCase
     {
         return  [
             [
-                "code" => 'ANNPUBARB',
-                "full_name" => 'ANN ARBOR PUBLIC SCHOOLS',
-                "address" => '2555 S STATE ST',
-                "address_2" => null,
-                "city" => 'ANN ARBOR',
-                "state" => 'MI',
-                "post_code" => "48104",
-                'is_billable' => 0,
-            ], [
-                "code" => 'SEASHITOA',
-                "full_name" => 'SEA SHIPPING LINE (CA)',
-                "address" => '1149 W 190TH ST STE 2130',
-                "address_2" => null,
-                "city" => 'GARDENA',
-                "state" => 'CA',
-                "post_code" => '90248',
-                'is_billable' => true,
-            ]
+                "" => "",
+                "org_code" => "022CAMFTW",
+                "org_name" => "022-CAMPING WORLD DFDC",
+                "address_line1" => "2400 SHORT TRACK CT",
+                "address_line2" => "",
+                "city" => "FORT WORTH",
+                "state" => "TX",
+                "post_code" => "76177",
+                "receivable" => "N",
+                "payable" => "N",
+                "is_billable" => false,
+              ], [
+                "" => "",
+                "org_code" => "0AKW00XNE",
+                "org_name" => "THE OAKWOOD GROUP",
+                "address_line1" => "9755 INKSTER RD",
+                "address_line2" => "",
+                "city" => "TAYLOR",
+                "state" => "MI",
+                "post_code" => "48180",
+                "receivable" => "N",
+                "payable" => "Y",
+                "is_billable" => true,
+              ]
         ];
     }
 }

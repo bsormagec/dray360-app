@@ -2,6 +2,8 @@
 
 namespace App\Models\Traits;
 
+use App\Events\AttributeVerified;
+
 trait VerifiesUserSelectedAttributes
 {
     public static function bootVerifiesUserSelectedAttributes()
@@ -13,6 +15,11 @@ trait VerifiesUserSelectedAttributes
                         && $model->{$attribute} == true;
                 })
                 ->each(function ($event, $attribute) use ($model) {
+                    if ($event === AttributeVerified::class) {
+                        $event::dispatch($model, $attribute);
+                        return;
+                    }
+
                     $event::dispatch($model);
                 });
         });
