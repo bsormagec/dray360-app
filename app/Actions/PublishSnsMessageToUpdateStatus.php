@@ -36,6 +36,7 @@ class PublishSnsMessageToUpdateStatus
                         ],
                     ],
                     'TopicArn' => config('services.sns-topics.status'),
+                    'MessageGroupId' => $data['request_id'],
                 ]);
             return ['status' => 'ok', 'message' => $response['MessageId']];
         } catch (AwsException $e) {
