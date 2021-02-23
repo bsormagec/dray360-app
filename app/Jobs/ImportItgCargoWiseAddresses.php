@@ -48,7 +48,7 @@ class ImportItgCargoWiseAddresses
                 return $addresses->whereNotIn('org_code', $existingCodes->toArray());
             })
             ->each(function ($address) {
-                $address['is_billable'] = Str::of($address['payable'])->upper()->exactly('Y');
+                $address['is_billable'] = Str::of($address['receivable'])->upper()->exactly('Y');
 
                 ImportItgCargoWiseAddress::dispatch($address, $this->tmsProvider->id, $this->company);
             });

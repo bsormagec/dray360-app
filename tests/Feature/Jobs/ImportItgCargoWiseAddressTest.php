@@ -34,8 +34,8 @@ class ImportItgCargoWiseAddressTest extends TestCase
 
         $this->assertDatabaseCount('t_company_address_tms_code', 2);
         $this->assertDatabaseHas('t_addresses', [
-            'address_line_1' => $addresses[1]['address_line1'],
-            'address_line_2' => $addresses[1]['address_line2'],
+            'address_line_1' => $addresses[1]['address_line_1'],
+            'address_line_2' => $addresses[1]['address_line_2'],
             'city' => $addresses[1]['city'],
             'state' => $addresses[1]['state'],
             'postal_code' => $addresses[1]['post_code'],
@@ -60,8 +60,8 @@ class ImportItgCargoWiseAddressTest extends TestCase
 
         $this->assertDatabaseCount('t_company_address_tms_code', 1);
         $this->assertDatabaseHas('t_addresses', [
-            'address_line_1' => $modifiedAddress['address_line1'],
-            'address_line_2' => $modifiedAddress['address_line2'],
+            'address_line_1' => $modifiedAddress['address_line_1'],
+            'address_line_2' => $modifiedAddress['address_line_2'],
             'city' => $modifiedAddress['city'],
             'state' => $modifiedAddress['state'],
             'postal_code' => $modifiedAddress['post_code'],
@@ -80,8 +80,8 @@ class ImportItgCargoWiseAddressTest extends TestCase
                 "" => "",
                 "org_code" => "022CAMFTW",
                 "org_name" => "022-CAMPING WORLD DFDC",
-                "address_line1" => "2400 SHORT TRACK CT",
-                "address_line2" => "",
+                "address_line_1" => "2400 SHORT TRACK CT",
+                "address_line_2" => "",
                 "city" => "FORT WORTH",
                 "state" => "TX",
                 "post_code" => "76177",
@@ -92,13 +92,13 @@ class ImportItgCargoWiseAddressTest extends TestCase
                 "" => "",
                 "org_code" => "0AKW00XNE",
                 "org_name" => "THE OAKWOOD GROUP",
-                "address_line1" => "9755 INKSTER RD",
-                "address_line2" => "",
+                "address_line_1" => "9755 INKSTER RD",
+                "address_line_2" => "",
                 "city" => "TAYLOR",
                 "state" => "MI",
                 "post_code" => "48180",
-                "receivable" => "N",
-                "payable" => "Y",
+                "receivable" => "Y",
+                "payable" => "N",
                 "is_billable" => true,
               ]
         ];
