@@ -28,6 +28,7 @@ class AuthServiceProvider extends ServiceProvider
         \App\Models\Address::class => \App\Policies\AddressPolicy::class,
         \App\Models\CompanyAddressTMSCode::class => \App\Policies\CompanyAddressTmsCodePolicy::class,
         \App\Models\DictionaryItem::class => \App\Policies\DictionaryItemPolicy::class,
+        \OwenIt\Auditing\Models\Audit::class => \App\Policies\AuditLogPolicy::class,
     ];
 
     /**

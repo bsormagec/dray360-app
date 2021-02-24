@@ -7,6 +7,7 @@ use App\Events\AttributeVerified;
 use App\Models\Traits\FillWithNulls;
 use App\Models\Traits\BelongsToCompany;
 use Illuminate\Database\Eloquent\Model;
+use OwenIt\Auditing\Contracts\Auditable;
 use App\Models\Traits\ValidatesAddresses;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use App\Models\Traits\VerifiesUserSelectedAttributes;
@@ -70,8 +71,9 @@ use App\Models\Traits\VerifiesUserSelectedAttributes;
  * @property integer $interchange_err_count
  * @property string $tms_template_id
  */
-class Order extends Model
+class Order extends Model implements Auditable
 {
+    use \OwenIt\Auditing\Auditable;
     use SoftDeletes;
     use FillWithNulls;
     use BelongsToCompany;
