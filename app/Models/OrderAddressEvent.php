@@ -4,6 +4,7 @@ namespace App\Models;
 
 use App\Events\AddressVerified;
 use Illuminate\Database\Eloquent\Model;
+use OwenIt\Auditing\Contracts\Auditable;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use App\Models\Traits\VerifiesUserSelectedAttributes;
 
@@ -28,8 +29,9 @@ use App\Models\Traits\VerifiesUserSelectedAttributes;
  * @property string delivery_instructions
  * @property string $unparsed_event_type
  */
-class OrderAddressEvent extends Model
+class OrderAddressEvent extends Model implements Auditable
 {
+    use \OwenIt\Auditing\Auditable;
     use SoftDeletes;
     use VerifiesUserSelectedAttributes;
 

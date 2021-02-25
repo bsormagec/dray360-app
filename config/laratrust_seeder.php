@@ -34,7 +34,8 @@ return [
             'addresses' => 'c,v,e,r',
             'company-address-tms-code' => 'c,v,e,r',
             'dictionary-items' => 'c,v,e,r',
-            'admin-review' => 'v,e'
+            'admin-review' => 'v,e',
+            'audit-logs' => 'v',
         ],
         'customer-admin' => [
             'orders' => 'e,v,c,r',
@@ -44,6 +45,7 @@ return [
             'roles' => 'u',
             'ocr-variants' => 'v',
             'dictionary-items' => 'v',
+            'audit-logs' => 'v',
         ],
         'customer-user' => [
             'ocr-requests' => 'c,v',

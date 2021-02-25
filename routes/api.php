@@ -5,6 +5,7 @@ use App\Http\Controllers\Api\RolesController;
 use App\Http\Controllers\Api\UsersController;
 use App\Http\Controllers\Api\OrdersController;
 use App\Http\Controllers\Api\OCRRulesController;
+use App\Http\Controllers\Api\AuditLogsController;
 use App\Http\Controllers\Api\CompaniesController;
 use App\Http\Controllers\Api\SendToTmsController;
 use App\Http\Controllers\CurrentTenantController;
@@ -98,6 +99,9 @@ Route::group(['middleware' => ['auth:sanctum', 'impersonate', 'tenant-aware']], 
 
     Route::get('status-history', StatusHistoryController::class)
         ->name('status-history.index');
+
+    Route::get('audit-logs', AuditLogsController::class)
+        ->name('audit-logs.index');
 
     // Orders management
     Route::apiResource('orders', OrdersController::class)
