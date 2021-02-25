@@ -70,7 +70,8 @@
           { title: 'Download Source File', action: () => downloadSourceFile(order.request_id), hasPermission: true },
           { title: 'Replicate Order', action: () => replicateOrder(order.id), hidden: !hasPermission('admin-review-edit') },
           { title: 'Delete Order', action: () => deleteOrder(order.id), hasPermission: hasPermission('orders-remove') },
-          { title: 'Add TMS ID', action: () => addTMSId(order.id), hasPermission: hasPermission('ocr-requests-edit') && isInProcessedState}
+          { title: 'Add TMS ID', action: () => addTMSId(order.id), hasPermission: hasPermission('ocr-requests-edit') && isInProcessedState},
+          { title: 'View audit info', action: () => openAuditDialog = true, hidden: !hasPermission('audit-logs-view')}
         ]"
         :loading="loading"
       />
@@ -97,6 +98,12 @@
         </v-btn>
       </div>
     </div>
+    <OrderAuditDialog
+      v-if="hasPermission('audit-logs-view')"
+      :open="openAuditDialog"
+      :order="order"
+      @close="openAuditDialog = false"
+    />
 
     <div class="order__changelog">
       <!-- <div class="order__chip-container">
@@ -689,6 +696,7 @@ import FormFieldInputAutocomplete from '@/components/FormFields/FormFieldInputAu
 import FormFieldManaged from '@/components/FormFields/FormFieldManaged'
 import RequestStatus from '@/components/RequestStatus'
 import StatusHistoryDialog from './StatusHistoryDialog'
+import OrderAuditDialog from './OrderAuditDialog'
 import { formatDate } from '@/utils/dates'
 
 export default {
@@ -697,6 +705,7 @@ export default {
     FormFieldDate,
     FormFieldTime,
     FormFieldInput,
+    OrderAuditDialog,
     FormFieldSwitch,
     FormFieldTextArea,
     FormFieldAddressSwitchVerify,
@@ -759,6 +768,7 @@ export default {
       divisionCodes: [],
       sentToTms: false,
       openStatusHistoryDialog: false,
+      openAuditDialog: false,
       shipmentDirection: [
         { id: 'import', name: 'Import' },
         { id: 'export', name: 'Export' },

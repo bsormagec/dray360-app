@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use OwenIt\Auditing\Contracts\Auditable;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
 /**
@@ -28,8 +29,9 @@ use Illuminate\Database\Eloquent\SoftDeletes;
  * @property string $haz_flashpoint_temp_uom
  * @property string $packaging_group
  */
-class OrderLineItem extends Model
+class OrderLineItem extends Model implements Auditable
 {
+    use \OwenIt\Auditing\Auditable;
     use SoftDeletes;
 
     public $table = 't_order_line_items';
