@@ -48,7 +48,7 @@ class DownloadOriginalRequestSourceFileController extends Controller
                 'ResponseContentDisposition' => HeaderUtils::makeDisposition(
                     'attachment',
                     preg_replace(
-                        '/[\x00-\x1F\x7F\xA0]/u',
+                        '/[[:cntrl:]]/',
                         '',
                         $status->status_metadata['original_filename'] ?? 'original.pdf'
                     )
