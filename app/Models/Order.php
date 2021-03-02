@@ -4,6 +4,7 @@ namespace App\Models;
 
 use App\Events\AddressVerified;
 use App\Events\AttributeVerified;
+use Illuminate\Support\Facades\DB;
 use App\Models\Traits\FillWithNulls;
 use App\Models\Traits\BelongsToCompany;
 use Illuminate\Database\Eloquent\Model;
@@ -350,6 +351,38 @@ class Order extends Model implements Auditable
     public function container()
     {
         return $this->belongsTo(DictionaryItem::class, 'container_dictid');
+    }
+
+    public function siblings()
+    {
+        return $this->hasMany(self::class, 'request_id', 'request_id');
+    }
+
+    public static function getBasicOrderForSideBySide($orderId): self
+    {
+        return Order::query()
+            ->select('t_orders.*')
+            ->addSelect(['email_from_address' => DB::table('t_job_state_changes', 's_is')
+                ->selectRaw("json_extract(s_is.status_metadata, '$.source_summary.source_email_from_address') as email_from_address")
+                ->whereColumn('t_orders.request_id', 's_is.request_id')
+                ->where('s_is.status', OCRRequestStatus::INTAKE_STARTED)
+                ->limit(1)
+            ])
+            ->addSelect(['upload_user_name' => DB::table('t_job_state_changes', 's_ur')
+                ->select('u.name')
+                ->whereColumn('t_orders.request_id', 's_ur.request_id')
+                ->where('s_ur.status', OCRRequestStatus::UPLOAD_REQUESTED)
+                ->join('users as u', DB::raw("json_extract(s_ur.status_metadata, '$.user_id')"), '=', 'u.id')
+                ->limit(1)
+            ])
+            ->addSelect(['submitted_date' => DB::table('t_job_state_changes', 'sub_date_state')
+                ->select('sub_date_state.created_at')
+                ->whereColumn('t_orders.request_id', 'sub_date_state.request_id')
+                ->orderBy('created_at')
+                ->limit(1)
+            ])
+            ->withCount('siblings')
+            ->findOrFail($orderId);
     }
 
     public function updateRelatedModels($relatedModels): void

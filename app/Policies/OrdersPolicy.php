@@ -55,6 +55,20 @@ class OrdersPolicy
     }
 
     /**
+     * Determine whether the user can update all the models.
+     */
+    public function updateAll(User $user, Order $order): bool
+    {
+        $hasUpdatePermissions = $user->isAbleTo('all-orders-edit');
+
+        if (! $user->isSuperadmin()) {
+            return $hasUpdatePermissions && $user->belongsToSameCompanyAs($order);
+        }
+
+        return $hasUpdatePermissions;
+    }
+
+    /**
      * Determine whether the user can delete the model.
      */
     public function delete(User $user, Order $order)

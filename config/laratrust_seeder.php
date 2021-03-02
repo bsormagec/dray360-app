@@ -17,6 +17,7 @@ return [
             'billing-mapping' => 'e,v',
             'rules-editor' => 'c,v,e,a',
             'orders' => 'e,v,c,r',
+            'all-orders' => 'e',
             'order-address-events' => 'c,v,e,r',
             'order-line-items' => 'c,v,e,r',
             'tms' => 's,rs',

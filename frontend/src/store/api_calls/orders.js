@@ -7,6 +7,8 @@ export const getOrderDetail = async (order) => axios.get(`/api/orders/${order}`)
 
 export const updateOrderDetail = async ({ id, changes }) => axios.put(`/api/orders/${id}`, changes).then(data => [undefined, data.data]).catch(e => [e])
 
+export const updateAllOrders = async ({ id, changes }) => axios.put(`/api/orders/${id}/update-all`, changes).then(data => [undefined, data.data]).catch(e => [e])
+
 export const postSendToTms = async (orderId) => axios.post(`/api/orders/${orderId}/send-to-tms`).then(data => [undefined, data]).catch(e => [e])
 
 export const postSendToClient = async (orderId) => axios.post(`/api/orders/${orderId}/send-to-client`).then(data => [undefined, data]).catch(e => [e])

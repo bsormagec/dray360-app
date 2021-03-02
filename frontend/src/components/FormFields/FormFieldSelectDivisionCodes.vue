@@ -6,6 +6,7 @@
       :label="label"
       :value="division_name"
       @accept="handleAccept"
+      @accept-all="() => handleAccept(true)"
     >
       <div class="form-field__group">
         <div class="form-field__label">
@@ -66,13 +67,14 @@ export default {
     handleChange (e) {
       this.currentValue = e
       if (this.editMode && this.references) {
-        this.$emit('change', this.currentValue !== undefined ? this.currentValue : ' ')
-        const found = this.divisionCodes.find(element => element.division_code === this.currentValue)
-        found !== undefined ? this.division_name = found.division_name : this.division_name = ''
+        this.handleAccept()
       }
     },
-    handleAccept () {
-      this.$emit('change', this.currentValue !== undefined ? this.currentValue : ' ')
+    handleAccept (saveAll = false) {
+      this.$emit('change', {
+        value: this.currentValue !== undefined ? this.currentValue : ' ',
+        saveAll
+      })
       const found = this.divisionCodes.find(element => element.division_code === this.currentValue)
       found !== undefined ? this.division_name = found.division_name : this.division_name = ''
     }

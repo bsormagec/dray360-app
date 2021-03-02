@@ -6,6 +6,7 @@
       :label="label"
       :value="value"
       @accept="handleAccept"
+      @accept-all="() => handleAccept(true)"
     >
       <div class="form-field__group">
         <div class="form-field__label">
@@ -53,11 +54,11 @@ export default {
     handleChange (e) {
       this.currentValue = e
       if (this.editMode && this.references) {
-        this.$emit('change', this.currentValue)
+        this.handleAccept()
       }
     },
-    handleAccept () {
-      this.$emit('change', this.currentValue)
+    handleAccept (saveAll = false) {
+      this.$emit('change', { value: this.currentValue, saveAll })
     }
   }
 }

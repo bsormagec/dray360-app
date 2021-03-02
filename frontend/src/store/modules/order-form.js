@@ -1,5 +1,5 @@
 import { reqStatus } from '@/enums/req_status'
-import { updateOrderDetail } from '@/store/api_calls/orders'
+import { updateOrderDetail, updateAllOrders } from '@/store/api_calls/orders'
 import { getHighlights, parseChanges, baseHighlight } from '@/utils/order_form_general_functions'
 import cloneDeep from 'lodash/cloneDeep'
 
@@ -75,7 +75,7 @@ const actions = {
     commit(types.setFormOrder, order)
     dispatch(types.loadHighlights, order)
   },
-  async [types.updateOrder] ({ commit, state }, { path, value, useOrder = false }) {
+  async [types.updateOrder] ({ commit, state }, { path, value, useOrder = false, saveAll = false }) {
     let changes = {}
 
     if (useOrder) {
@@ -91,7 +91,14 @@ const actions = {
 
     commit(types.setHighlight, { path, highlight: { loading: true } })
 
-    const [error, data] = await updateOrderDetail({ id: state.order.id, changes })
+    let error
+    let data
+
+    if (saveAll) {
+      [error, data] = await updateAllOrders({ id: state.order.id, changes })
+    } else {
+      [error, data] = await updateOrderDetail({ id: state.order.id, changes })
+    }
 
     if (error !== undefined) return { status: reqStatus.error, data: error }
 
@@ -101,14 +108,14 @@ const actions = {
 
     return { status: reqStatus.success, data }
   },
-  [types.toggleEdit] ({ commit, dispatch, state }) {
+  [types.toggleEdit] ({ commit, dispatch, state }, { saveAll = false } = { saveAll: false }) {
     const { editMode } = state
     commit(types.toggleEdit)
     const newEditMode = !editMode
 
     if (editMode === true && newEditMode === false) {
       commit(types.setBackupOrder, {})
-      dispatch(types.updateOrder, { useOrder: true })
+      dispatch(types.updateOrder, { useOrder: true, saveAll })
     } else {
       commit(types.setBackupOrder, { ...cloneDeep(state.order) })
     }
@@ -157,10 +164,17 @@ const actions = {
   }
 }
 
+const getters = {
+  isMultiOrderRequest: state => {
+    return state.order.siblings_count > 1
+  }
+}
+
 export default {
   moduleName: 'ORDER_FORM',
   namespaced: true,
   state: initialState,
   mutations,
-  actions
+  actions,
+  getters
 }

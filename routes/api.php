@@ -24,6 +24,7 @@ use App\Http\Controllers\Api\EquipmentTypesController;
 use App\Http\Controllers\Api\DictionaryItemsController;
 use App\Http\Controllers\Api\OcrRequestEmailController;
 use App\Http\Controllers\Api\ReplicateOrdersController;
+use App\Http\Controllers\Api\UpdateAllOrdersController;
 use App\Http\Controllers\Api\Auth\ResetPasswordController;
 use App\Http\Controllers\Api\OCRRulesAssignmentController;
 use App\Http\Controllers\Api\AccesorialCompaniesController;
@@ -96,6 +97,9 @@ Route::group(['middleware' => ['auth:sanctum', 'impersonate', 'tenant-aware']], 
 
     Route::post('orders/{order}/replicate', ReplicateOrdersController::class)
         ->name('orders.replicate');
+
+    Route::put('orders/{order}/update-all', UpdateAllOrdersController::class)
+        ->name('orders.update-all');
 
     Route::get('status-history', StatusHistoryController::class)
         ->name('status-history.index');
