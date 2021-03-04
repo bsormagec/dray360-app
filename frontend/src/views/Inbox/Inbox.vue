@@ -78,6 +78,18 @@
             </v-btn>
           </div>
           <div
+            v-else-if="request.orders_count ===0"
+            class="empty__order"
+          >
+            <img
+              src="../../assets/images/container.png"
+              width="20%"
+            >
+            <span class="primary--text font-weight-light h6 mt-8">
+              {{ emptyRequestText }}
+            </span>
+          </div>
+          <div
             v-else-if="request.orders_count > 1 || request.first_order_id === null"
             class="pa-5"
           >
@@ -159,6 +171,8 @@ import auth from '@/store/modules/auth'
 import orders, { types as ordersTypes } from '@/store/modules/orders'
 import isMobile from '@/mixins/is_mobile'
 import isMedium from '@/mixins/is_medium'
+import get from 'lodash/get'
+import { statuses } from '@/enums/app_objects_types'
 
 export default {
   name: 'Inbox',
@@ -200,7 +214,22 @@ export default {
     }),
     ...mapState(auth.moduleName, {
       currentUser: state => state.currentUser
-    })
+    }),
+    emptyRequestText () {
+      const requestStatus = get(this.request, 'latest_ocr_request_status.status')
+
+      switch (requestStatus) {
+        case statuses.intakeRejected:
+        case statuses.ocrPostProcessingError:
+        case statuses.ocrTimedout:
+          return 'The request has been rejected'
+        case statuses.intakeException:
+        case statuses.processOcrOutputFileError:
+          return 'There was an error processing the request'
+        default:
+          return 'The request is being processed'
+      }
+    }
   },
   watch: {
     isMedium: function (newVal, oldVal) {
@@ -306,6 +335,15 @@ export default {
   max-height: 100vh;
   overflow-y: auto;
   transition: width 0.5s;
+}
+
+.empty__order{
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
 }
 
 .request__filters {
