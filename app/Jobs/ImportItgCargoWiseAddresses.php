@@ -2,16 +2,18 @@
 
 namespace App\Jobs;
 
-use App\Models\Address;
 use App\Models\Company;
 use App\Models\TMSProvider;
 use Illuminate\Support\Str;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Log;
 use App\Models\CompanyAddressTMSCode;
+use App\Traits\DeletesRemovedAddresses;
 
 class ImportItgCargoWiseAddresses
 {
+    use DeletesRemovedAddresses;
+
     public bool $insertOnly;
     public Company $company;
     public TMSProvider $tmsProvider;
@@ -38,7 +40,11 @@ class ImportItgCargoWiseAddresses
         Log::channel('imports')
             ->info("ImportItgCargoWiseAddress-{$this->company->name}: Endpoint returned ".$this->addresses->count().' addresses');
 
-        $this->deleteAddressesRemovedInTheResponse();
+        $this->deleteAddressesRemovedInTheResponse(
+            $this->addresses->pluck('org_code'),
+            $this->company->id,
+            $this->tmsProvider->id
+        );
 
         $this->addresses
             ->when($this->insertOnly, function (Collection $addresses) {
@@ -52,26 +58,6 @@ class ImportItgCargoWiseAddresses
 
                 ImportItgCargoWiseAddress::dispatch($address, $this->tmsProvider->id, $this->company);
             });
-    }
-
-    protected function deleteAddressesRemovedInTheResponse(): void
-    {
-        Address::whereIn('id', function ($query) {
-            $query->select('t_address_id')
-                ->from('t_company_address_tms_code')
-                ->whereNotIn('company_address_tms_code', $this->addresses->pluck('org_code'))
-                ->where([
-                    't_company_id' => $this->company->id,
-                    't_tms_provider_id' => $this->tmsProvider->id,
-                ]);
-        })->delete();
-        CompanyAddressTMSCode::query()
-            ->whereNotIn('company_address_tms_code', $this->addresses->pluck('org_code'))
-            ->where([
-                't_company_id' => $this->company->id,
-                't_tms_provider_id' => $this->tmsProvider->id,
-            ])
-            ->delete();
     }
 
     public function setAddresses(Collection $addresses)

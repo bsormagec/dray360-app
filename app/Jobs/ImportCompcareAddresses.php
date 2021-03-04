@@ -2,7 +2,6 @@
 
 namespace App\Jobs;
 
-use App\Models\Address;
 use App\Models\Company;
 use App\Models\TMSProvider;
 use Illuminate\Support\Str;
@@ -10,6 +9,7 @@ use App\Services\Apis\Compcare;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Log;
 use App\Models\CompanyAddressTMSCode;
+use App\Traits\DeletesRemovedAddresses;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
@@ -18,6 +18,7 @@ class ImportCompcareAddresses implements ShouldQueue
 {
     use Dispatchable;
     use InteractsWithQueue;
+    use DeletesRemovedAddresses;
 
     public $queue = 'imports';
     public $tries = 1;
@@ -54,7 +55,11 @@ class ImportCompcareAddresses implements ShouldQueue
         Log::channel('imports')
             ->info("ImportCompcareAddresses-{$company->name}: Endpoint returned ".$addresses->count().' addresses');
 
-        $this->deleteAddressesRemovedInTheResponse($addresses);
+        $this->deleteAddressesRemovedInTheResponse(
+            $addresses->pluck('AddressId'),
+            $this->companyId,
+            $this->tmsProviderId
+        );
 
         $addresses
             ->when($this->insertOnly, function (Collection $companies) {
@@ -66,26 +71,6 @@ class ImportCompcareAddresses implements ShouldQueue
             ->each(function ($address) use ($company) {
                 ImportCompcareAddress::dispatch($address, $this->tmsProviderId, $company);
             });
-    }
-
-    protected function deleteAddressesRemovedInTheResponse(Collection $addresses): void
-    {
-        Address::whereIn('id', function ($query) use ($addresses) {
-            $query->select('t_address_id')
-                ->from('t_company_address_tms_code')
-                ->whereNotIn('company_address_tms_code', $addresses->pluck('AddressId'))
-                ->where([
-                    't_company_id' => $this->companyId,
-                    't_tms_provider_id' => $this->tmsProviderId,
-                ]);
-        })->delete();
-        CompanyAddressTMSCode::query()
-            ->whereNotIn('company_address_tms_code', $addresses->pluck('AddressId'))
-            ->where([
-                't_company_id' => $this->companyId,
-                't_tms_provider_id' => $this->tmsProviderId,
-            ])
-            ->delete();
     }
 
     public function tags(): array

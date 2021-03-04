@@ -3,11 +3,13 @@
 namespace Tests\Feature\Jobs;
 
 use Tests\TestCase;
+use App\Models\Address;
 use App\Models\TMSProvider;
 use App\Services\Apis\RipCms;
 use Tests\Seeds\CompaniesSeeder;
 use App\Exceptions\RipCmsException;
 use Illuminate\Support\Facades\Http;
+use App\Models\CompanyAddressTMSCode;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Queue;
 use App\Jobs\ImportProfitToolsAddress;
@@ -42,7 +44,7 @@ class ImportProfitToolsAddressTest extends TestCase
         // Here the cache should be used
         (new ImportProfitToolsAddress(['id' => 2], $company, $tmsProvider))->handle();
 
-        $this->assertDatabaseCount('t_company_address_tms_code', 2);
+        $this->assertEquals(2, CompanyAddressTMSCode::count());
         $this->assertDatabaseHas('t_addresses', [
             'address_line_1' => $addresses[1]['addr1'],
             'address_line_2' => $addresses[1]['addr2'],
@@ -58,7 +60,7 @@ class ImportProfitToolsAddressTest extends TestCase
     }
 
     /** @test */
-    public function it_updates_the_already_exiting_address()
+    public function it_creates_a_new_entry_for_updated_addresses()
     {
         $modifiedAddress = $this->getBaseAddresses()[1];
         $modifiedAddress['id'] = 1;
@@ -73,13 +75,15 @@ class ImportProfitToolsAddressTest extends TestCase
             ->whenEmpty(Http::response(null, 500));
         $company = CompaniesSeeder::getTestCushing();
         $tmsProvider = TMSProvider::getProfitTools();
+        $addressCount = Address::count();
 
         Cache::forget(RipCms::getTokenCacheKeyFor($company));
         (new ImportProfitToolsAddress(['id' => 1], $company, $tmsProvider))->handle();
         Cache::forget(RipCms::getTokenCacheKeyFor($company)); // I want to get the token from ripcms again
         (new ImportProfitToolsAddress(['id' => 1], $company, $tmsProvider))->handle();
 
-        $this->assertDatabaseCount('t_company_address_tms_code', 1);
+        $this->assertEquals(1, CompanyAddressTMSCode::count());
+        $this->assertEquals($addressCount + 2, Address::count());
         $this->assertDatabaseHas('t_addresses', [
             'address_line_1' => $modifiedAddress['addr1'],
             'address_line_2' => $modifiedAddress['addr2'],
@@ -118,7 +122,7 @@ class ImportProfitToolsAddressTest extends TestCase
         Cache::forget(RipCms::getTokenCacheKeyFor($company)); // I want to get the token from ripcms again
         (new ImportProfitToolsAddress(['id' => 1], $company, $tmsProvider))->handle();
 
-        $this->assertDatabaseCount('t_company_address_tms_code', 1);
+        $this->assertEquals(1, CompanyAddressTMSCode::count());
         $this->assertDatabaseHas('t_addresses', [
             'address_line_1' => $modifiedAddress['addr1'],
             'address_line_2' => $modifiedAddress['addr2'],
