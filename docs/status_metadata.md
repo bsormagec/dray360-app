@@ -409,6 +409,7 @@ Every file processed in this request. If the list grows too large that it cannot
    - source_upload_filename
    - source_upload_api_request_id
 1. event_info:
+   - company_id
    - bucket_name
    - recipient0
    - object_key
