@@ -16,6 +16,7 @@
           dense
           outlined
           clearable
+          autofocus
           flat
           solo
           hide-details="true"

@@ -11,9 +11,11 @@
         'hover-paddingless': isHovering && onlyHover,
         edit: isEditing
       }"
+      tabindex="0"
       @mouseover="isMobile || isEditing ? () => {} : startHover({ path: references })"
       @mouseleave="isMobile || isEditing ? () => {} : stopHover({ path: references })"
       @click="startFieldEdit({ path: references })"
+      @keypress.enter.prevent="startFieldEdit({ path: references })"
     >
       <div
         v-show="!isEditing && !onlyHover"
@@ -152,6 +154,9 @@ export default {
     &.hover {
       background-color: rgba($blue--lt, 0.4);
       padding-right: rem(12);
+    }
+    &:focus {
+      outline: var(--v-primary-base) auto 1px;
     }
     &.hover-paddingless {
       background-color: rgba($blue--lt, 0.4);

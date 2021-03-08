@@ -18,6 +18,7 @@
           item-value="division_code"
           :value="value"
           clearable
+          autofocus
           outlined
           dense
           flat
