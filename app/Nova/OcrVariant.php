@@ -61,6 +61,8 @@ class OcrVariant extends Resource
             Code::make('Classification', 'classification')->json(),
             Code::make('Parser Options', 'parser_options')->json(),
             Code::make('Parser Fields List', 'parser_fields_list')->json(),
+            Code::make('Search Tags List', 'search_tags_list')->json(),
+            Code::make('Excluded Fields List', 'excluded_fields_list')->json(),
         ];
     }
 
