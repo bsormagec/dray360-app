@@ -57,7 +57,7 @@ class DictionaryItem extends Resource
             Text::make('Item Display Name', 'item_display_name')
                 ->rules(['required', 'string:128'])
                 ->sortable(),
-            Code::make('Item Value', 'item_value')->json()->nullable(),
+            Code::make('Item Value', 'item_value')->json()->rules(['nullable', 'json']),
             Select::make('Item Type', 'item_type')
                 ->options([
                     \App\Models\DictionaryItem::TEMPLATE_TYPE => 'Template',

@@ -55,14 +55,14 @@ class OcrVariant extends Resource
             Text::make('Variant Type', 'variant_type')->sortable(),
             Text::make('Classifier', 'classifier')->sortable(),
             Text::make('Parser', 'parser')->sortable(),
-            Code::make('Mapping', 'mapping')->json(),
-            Code::make('Company ID List (csv/edi uploads)', 'company_id_list')->json(),
-            Code::make('Company ID List (enable admin review)', 'admin_review_company_id_list')->json(),
-            Code::make('Classification', 'classification')->json(),
-            Code::make('Parser Options', 'parser_options')->json(),
-            Code::make('Parser Fields List', 'parser_fields_list')->json(),
-            Code::make('Search Tags List', 'search_tags_list')->json(),
-            Code::make('Excluded Fields List', 'excluded_fields_list')->json(),
+            Code::make('Mapping', 'mapping')->json()->rules(['nullable', 'json']),
+            Code::make('Company ID List (csv/edi uploads)', 'company_id_list')->json()->rules(['nullable', 'json']),
+            Code::make('Company ID List (enable admin review)', 'admin_review_company_id_list')->json()->rules(['nullable', 'json']),
+            Code::make('Classification', 'classification')->json()->rules(['nullable', 'json']),
+            Code::make('Parser Options', 'parser_options')->json()->rules(['nullable', 'json']),
+            Code::make('Parser Fields List', 'parser_fields_list')->json()->rules(['nullable', 'json']),
+            Code::make('Search Tags List', 'search_tags_list')->json()->rules(['nullable', 'json']),
+            Code::make('Excluded Fields List', 'excluded_fields_list')->json()->rules(['nullable', 'json']),
         ];
     }
 
