@@ -281,11 +281,9 @@ export default {
     },
     selectFirstActiveRequest () {
       const filteredRequests = this.items.filter(request => {
-        if (get(request, 'latest_ocr_request_status.status', '') === statuses.ocrPostProcessingReview) {
-          return this.hasPermission('admin-review-view')
-        }
-
-        return request.orders_count !== 0
+        return get(request, 'latest_ocr_request_status.status', '') === statuses.ocrPostProcessingReview
+          ? this.hasPermission('admin-review-view')
+          : true
       })
 
       if (filteredRequests.length === 0) {

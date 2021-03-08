@@ -27,6 +27,8 @@ class OCRVariant extends Model
         'parser',
         'parser_options',
         'parser_fields_list',
+        'search_tags_list',
+        'excluded_fields_list',
     ];
 
     /**
@@ -41,6 +43,8 @@ class OCRVariant extends Model
         'mapping' => 'json',
         'parser_options' => 'json',
         'parser_fields_list' => 'json',
+        'search_tags_list' => 'json',
+        'excluded_fields_list' => 'json',
     ];
 
     /**

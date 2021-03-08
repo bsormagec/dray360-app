@@ -3,8 +3,10 @@
 namespace Tests\Feature\Jobs;
 
 use Tests\TestCase;
+use App\Models\Address;
 use App\Models\TMSProvider;
 use Tests\Seeds\CompaniesSeeder;
+use App\Models\CompanyAddressTMSCode;
 use Illuminate\Support\Facades\Queue;
 use App\Jobs\ImportItgCargoWiseAddress;
 use Tests\Seeds\CargoWiseItgAddressesSeeder;
@@ -32,7 +34,7 @@ class ImportItgCargoWiseAddressTest extends TestCase
         (new ImportItgCargoWiseAddress($addresses[0], $tmsProvider->id, $company))->handle();
         (new ImportItgCargoWiseAddress($addresses[1], $tmsProvider->id, $company))->handle();
 
-        $this->assertDatabaseCount('t_company_address_tms_code', 2);
+        $this->assertEquals(2, CompanyAddressTMSCode::count());
         $this->assertDatabaseHas('t_addresses', [
             'address_line_1' => $addresses[1]['address_line_1'],
             'address_line_2' => $addresses[1]['address_line_2'],
@@ -48,17 +50,19 @@ class ImportItgCargoWiseAddressTest extends TestCase
     }
 
     /** @test */
-    public function it_updates_the_already_exiting_address()
+    public function it_creates_a_new_entry_for_updated_addresses()
     {
         $modifiedAddress = $this->getBaseAddresses()[1];
         $modifiedAddress['org_code'] = $this->getBaseAddresses()[0]['org_code'];
         $company = CompaniesSeeder::getTestItg();
         $tmsProvider = TMSProvider::getCargoWise();
+        $addressCount = Address::count();
 
         (new ImportItgCargoWiseAddress($this->getBaseAddresses()[0], $tmsProvider->id, $company))->handle();
         (new ImportItgCargoWiseAddress($modifiedAddress, $tmsProvider->id, $company))->handle();
 
-        $this->assertDatabaseCount('t_company_address_tms_code', 1);
+        $this->assertEquals(1, CompanyAddressTMSCode::count());
+        $this->assertEquals($addressCount + 1, Address::count());
         $this->assertDatabaseHas('t_addresses', [
             'address_line_1' => $modifiedAddress['address_line_1'],
             'address_line_2' => $modifiedAddress['address_line_2'],

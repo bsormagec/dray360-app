@@ -72,7 +72,7 @@ class OcrRequestStatus extends Resource
             Text::make('Request Id', 'request_id'),
             Select::make('Status', 'status')->options($statuses),
             DateTime::make('Status date', 'status_date'),
-            Code::make('Status metadata', 'status_metadata')->json(),
+            Code::make('Status metadata', 'status_metadata')->json()->rules(['nullable', 'json']),
             DateTime::make('Created At', 'created_at')
                 ->hideWhenCreating()
                 ->hideWhenUpdating(),

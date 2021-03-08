@@ -6,6 +6,7 @@
       :label="label"
       :value="displayName"
       @accept="handleAccept"
+      @accept-all="() => handleAccept(true)"
     >
       <div class="form-field__group">
         <div class="form-field__label">
@@ -15,6 +16,7 @@
           dense
           outlined
           clearable
+          autofocus
           flat
           solo
           hide-details="true"
@@ -90,11 +92,11 @@ export default {
       this.currentValue = e === undefined ? null : e
 
       if (this.editMode && this.references) {
-        this.$emit('change', this.currentValue)
+        this.handleAccept()
       }
     },
-    handleAccept () {
-      this.$emit('change', this.currentValue)
+    handleAccept (saveAll = false) {
+      this.$emit('change', { value: this.currentValue, saveAll })
     }
   }
 }

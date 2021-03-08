@@ -81,7 +81,6 @@
       >
         <v-btn
           color="primary"
-          :outlined="!editMode && !isMobile"
           small
           text
           @click="cancelEdit"
@@ -90,11 +89,19 @@
         </v-btn>
         <v-btn
           color="primary"
-          :outlined="!editMode && !isMobile"
           small
           @click="toggleEdit"
         >
-          {{ editMode ? 'Save' : 'Edit Order' }}
+          Save
+        </v-btn>
+        <v-btn
+          v-if="isMultiOrderRequest && hasPermission('all-orders-edit')"
+          color="primary"
+          small
+          outlined
+          @click="() => toggleEdit({saveAll: true})"
+        >
+          Save For All
         </v-btn>
       </div>
     </div>
@@ -154,15 +161,26 @@
         </v-chip>
       </div> -->
       <p class="mb-2 body-2">
-        Submitted <span
+        Request created <span
           class="order__changelog_date"
           @click="openStatusHistoryDialog = true"
         >{{ formatDate(order.submitted_date, true) }}</span>
         <br>
         {{ `by ${userWhoUploadedTheRequest ? userWhoUploadedTheRequest :''}` }}
       </p>
+      <p
+        v-if="order.ocr_request.sent_to_tms"
+        class="mb-2 body-2"
+      >
+        Submitted to TMS <span
+          class="order__changelog_date"
+          @click="openStatusHistoryDialog = true"
+        >{{ formatDate(order.ocr_request.sent_to_tms.created_at, true) }}</span>
+        <br>
+        {{ `by ${order.ocr_request.sent_to_tms.user.name}` }}
+      </p>
       <p class="mb-2 body-2">
-        Last Updated <span
+        Last updated <span
           class="order__changelog_date"
           @click="openStatusHistoryDialog = true"
         >{{ formatDate(order.updated_at, true) }}</span>
@@ -189,13 +207,6 @@
       </div>
 
       <div class="section__rootfields">
-        <!-- <FormFieldInput
-          references="shipment_designation"
-          label="Shipment designation"
-          :value="order.shipment_designation"
-          :edit-mode="editMode"
-          @change="value => handleChange('shipment_designation', value)"
-        /> -->
         <FormFieldInputAutocomplete
           v-if="!!options.extra.profit_tools_enable_templates"
           references="tms_template_dictid"
@@ -206,8 +217,7 @@
           item-value="id"
           :display-value="value => dictionaryItemDisplayValue(value, tmsTemplates)"
           :edit-mode="editMode"
-          :verifiable="order.tms_template_dictid !== null && !order.tms_template_dictid_verified"
-          @change="value => handleChange('tms_template_dictid', value)"
+          @change="event => handleChange({ path:'tms_template_dictid', ...event })"
         />
         <FormFieldManaged
           v-if="isManagedByTemplate"
@@ -223,7 +233,7 @@
           :t-company-id="order.t_company_id"
           :t-tms-provider-id="order.t_tms_provider_id"
           :division-code="order.division_code"
-          @change="value => handleChange('division_code', value)"
+          @change="event => handleChange({ path:'division_code', ...event})"
         />
         <FormFieldSelect
           v-if="fieldShouldBeShown('shipment_direction')"
@@ -234,7 +244,7 @@
           item-text="name"
           item-value="id"
           :edit-mode="editMode"
-          @change="value => handleChange('shipment_direction', value)"
+          @change="event => handleChange({ path:'shipment_direction', ...event})"
         />
         <FormFieldSwitch
           v-if="fieldShouldBeShown('expedite')"
@@ -242,7 +252,7 @@
           label="Expedite"
           :value="order.expedite"
           :edit-mode="editMode"
-          @change="value => handleChange('expedite', value)"
+          @change="event => handleChange({ path:'expedite', ...event})"
         />
         <FormFieldSwitch
           v-if="fieldShouldBeShown('hazardous')"
@@ -250,7 +260,7 @@
           label="Hazardous"
           :value="order.hazardous"
           :edit-mode="editMode"
-          @change="value => handleChange('hazardous', value)"
+          @change="event => handleChange({ path:'hazardous', ...event})"
         />
       </div>
 
@@ -271,7 +281,7 @@
             item-value="id"
             :display-value="(value)=> dictionaryItemDisplayKeyValue(value, itgContainers)"
             :edit-mode="editMode"
-            @change="value => handleChange('container_dictid', value)"
+            @change="event => handleChange({ path:'container_dictid', ...event})"
           />
           <FormFieldEquipmentType
             v-else
@@ -285,7 +295,7 @@
             :recognized-text="order.equipment_type_raw_text"
             :unit-number="order.unit_number"
             :verified="order.equipment_type_verified"
-            @change="(e) => handleChange('t_equipment_type_id', e)"
+            @change="event => handleChange({ path:'t_equipment_type_id', ...event})"
           />
 
           <FormFieldInput
@@ -294,7 +304,7 @@
             label="Unit number"
             :value="order.unit_number"
             :edit-mode="editMode"
-            @change="value => handleChange('unit_number', value)"
+            @change="event => handleChange({ path:'unit_number', ...event})"
           />
           <FormFieldInput
             v-if="fieldShouldBeShown('seal_number')"
@@ -302,7 +312,7 @@
             label="Seal number"
             :value="order.seal_number"
             :edit-mode="editMode"
-            @change="value => handleChange('seal_number', value)"
+            @change="event => handleChange({ path:'seal_number', ...event})"
           />
         </div>
       </div>
@@ -320,7 +330,7 @@
             label="Reference number"
             :value="order.reference_number"
             :edit-mode="editMode"
-            @change="value => handleChange('reference_number', value)"
+            @change="event => handleChange({ path:'reference_number', ...event})"
           />
           <FormFieldInput
             v-if="fieldShouldBeShown('customer_number')"
@@ -328,7 +338,7 @@
             label="Customer number"
             :value="order.customer_number === null ? '---' : order.customer_number"
             :edit-mode="editMode"
-            @change="value => handleChange('customer_number', value)"
+            @change="event => handleChange({ path:'customer_number', ...event})"
           />
           <FormFieldInput
             v-if="fieldShouldBeShown('load_number')"
@@ -336,7 +346,7 @@
             label="Load number"
             :value="order.load_number"
             :edit-mode="editMode"
-            @change="value => handleChange('load_number', value)"
+            @change="event => handleChange({ path:'load_number', ...event})"
           />
           <FormFieldInput
             v-if="fieldShouldBeShown('purchase_order_number')"
@@ -344,7 +354,7 @@
             label="Purchase Order number"
             :value="order.purchase_order_number"
             :edit-mode="editMode"
-            @change="value => handleChange('purchase_order_number', value)"
+            @change="event => handleChange({ path:'purchase_order_number', ...event})"
           />
           <FormFieldInput
             v-if="fieldShouldBeShown('release_number')"
@@ -352,7 +362,7 @@
             label="Release number"
             :value="order.release_number"
             :edit-mode="editMode"
-            @change="value => handleChange('release_number', value)"
+            @change="event => handleChange({ path:'release_number', ...event})"
           />
           <FormFieldInput
             v-if="fieldShouldBeShown('pickup_number')"
@@ -360,7 +370,7 @@
             label="Pickup number"
             :value="order.pickup_number"
             :edit-mode="editMode"
-            @change="value => handleChange('pickup_number', value)"
+            @change="event => handleChange({ path:'pickup_number', ...event})"
           />
           <FormFieldInputAutocomplete
             v-if="!!options.extra.enable_dictionary_items_carrier"
@@ -372,7 +382,7 @@
             item-value="id"
             :display-value="(value)=> dictionaryItemDisplayKeyValue(value, carrierItems)"
             :edit-mode="editMode"
-            @change="value => handleChange('carrier_dictid', value)"
+            @change="event => handleChange({ path:'carrier_dictid', ...event})"
           />
           <FormFieldInput
             v-if="fieldShouldBeShown('vessel') && !options.extra.enable_dictionary_items_vessel"
@@ -380,7 +390,7 @@
             label="Vessel"
             :value="order.vessel"
             :edit-mode="editMode"
-            @change="value => handleChange('vessel', value)"
+            @change="event => handleChange({ path:'vessel', ...event})"
           />
           <FormFieldInputAutocomplete
             v-if="!!options.extra.enable_dictionary_items_vessel"
@@ -392,7 +402,7 @@
             item-value="id"
             :display-value="(value)=> dictionaryItemDisplayValue(value, vesselItems)"
             :edit-mode="editMode"
-            @change="value => handleChange('vessel_dictid', value)"
+            @change="event => handleChange({ path:'vessel_dictid', ...event})"
           />
           <FormFieldInput
             v-if="fieldShouldBeShown('voyage')"
@@ -400,7 +410,7 @@
             label="Voyage"
             :value="order.voyage"
             :edit-mode="editMode"
-            @change="value => handleChange('voyage', value)"
+            @change="event => handleChange({ path:'voyage', ...event})"
           />
           <FormFieldDate
             v-if="fieldShouldBeShown('pickup_by_date')"
@@ -408,7 +418,7 @@
             label="Pickup by date"
             :value="order.pickup_by_date"
             :edit-mode="editMode"
-            @change="value => handleChange('pickup_by_date', value)"
+            @change="event => handleChange({ path:'pickup_by_date', ...event})"
           />
           <FormFieldTime
             v-if="fieldShouldBeShown('pickup_by_time')"
@@ -416,7 +426,7 @@
             label="Pickup by time"
             :value="order.pickup_by_time"
             :edit-mode="editMode"
-            @change="value => handleChange('pickup_by_time', value)"
+            @change="event => handleChange({ path:'pickup_by_time', ...event})"
           />
           <FormFieldDate
             v-if="fieldShouldBeShown('cutoff_date')"
@@ -424,7 +434,7 @@
             label="Cutoff Date"
             :value="order.cutoff_date"
             :edit-mode="editMode"
-            @change="value => handleChange('cutoff_date', value)"
+            @change="event => handleChange({ path:'cutoff_date', ...event})"
           />
           <FormFieldTime
             v-if="fieldShouldBeShown('cutoff_time')"
@@ -432,7 +442,7 @@
             label="Cutoff Time"
             :value="order.cutoff_time"
             :edit-mode="editMode"
-            @change="value => handleChange('cutoff_time', value)"
+            @change="event => handleChange({ path:'cutoff_time', ...event})"
           />
           <FormFieldInput
             v-if="fieldShouldBeShown('booking_number')"
@@ -440,7 +450,7 @@
             label="Booking number"
             :value="order.booking_number === null ? '---' : order.booking_number"
             :edit-mode="editMode"
-            @change="value => handleChange('booking_number', value)"
+            @change="event => handleChange({ path:'booking_number', ...event})"
           />
           <FormFieldInput
             v-if="fieldShouldBeShown('master_bol_mawb')"
@@ -448,7 +458,7 @@
             label="Master BOL MAWB"
             :value="order.master_bol_mawb"
             :edit-mode="editMode"
-            @change="value => handleChange('master_bol_mawb', value)"
+            @change="event => handleChange({ path:'master_bol_mawb', ...event})"
           />
           <FormFieldInput
             v-if="fieldShouldBeShown('house_bol_hawb')"
@@ -456,7 +466,7 @@
             label="House BOL MAWB"
             :value="order.house_bol_hawb"
             :edit-mode="editMode"
-            @change="value => handleChange('house_bol_hawb', value)"
+            @change="event => handleChange({ path:'house_bol_hawb', ...event})"
           />
         </div>
       </div>
@@ -471,14 +481,14 @@
         </div>
         <div class="section__rootfields">
           <FormFieldAddressSwitchVerify
-            :recognized-text="order.bill_to_address_raw_text || 'Addres not recognized'"
+            :recognized-text="order.bill_to_address_raw_text || 'Address not recognized'"
             :verified="order.bill_to_address_verified"
             :matched-address="order.bill_to_address"
             references="bill_to_address"
             :edit-mode="false"
             billable
             v-bind="{...addressSearchProps}"
-            @change="(e) => handleChange('bill_to_address', e)"
+            @change="event => handleChange({ path:'bill_to_address', value: event, saveAll: event.saveAll })"
           />
           <FormFieldTextArea
             v-if="fieldShouldBeShown('bill_comment')"
@@ -486,7 +496,7 @@
             label="Billing comments"
             :value="order.bill_comment"
             :edit-mode="editMode"
-            @change="value => handleChange('bill_comment', value)"
+            @change="event => handleChange({ path:'bill_comment', ...event})"
           />
         </div>
         <div class="form__section-title">
@@ -501,7 +511,7 @@
             label="Line Haul"
             :value="order.line_haul"
             :edit-mode="editMode"
-            @change="value => handleChange('line_haul', value)"
+            @change="event => handleChange({ path:'line_haul', ...event})"
           />
           <FormFieldTextArea
             v-if="fieldShouldBeShown('fuel_surcharge')"
@@ -509,7 +519,7 @@
             label="FSC"
             :value="order.fuel_surcharge"
             :edit-mode="editMode"
-            @change="value => handleChange('fuel_surcharge', value)"
+            @change="event => handleChange({ path:'fuel_surcharge', ...event})"
           />
         </div>
       </div>
@@ -570,7 +580,7 @@
               :is-first="index === 0"
               :is-last="index == order.order_address_events.length - 1"
               v-bind="{...addressSearchProps}"
-              @change="(e) => handleChange(`order_address_events.${index}`, e)"
+              @change="(event) => handleChange({path: `order_address_events.${index}`, value: event, saveAll: event.saveAll})"
               @delete="(e) => handleDelete(index)"
               @sort="(e) => moveObjectPositionInArray(order.order_address_events[index].id, e)"
             />
@@ -601,7 +611,7 @@
             label="Shipment comments"
             :value="order.ship_comment"
             :edit-mode="editMode"
-            @change="value => handleChange('ship_comment', value)"
+            @change="event => handleChange({path: 'ship_comment', ...event})"
           />
         </div>
       </div>
@@ -632,7 +642,7 @@
               label="Contents"
               :value="item.contents"
               :edit-mode="editMode"
-              @change="value => handleChange(`order_line_items.${item.real_index}.contents`, value)"
+              @change="event => handleChange({ path:`order_line_items.${item.real_index}.contents`, ...event})"
             />
             <FormFieldInput
               :references="`order_line_items.${item.real_index}.quantity`"
@@ -640,7 +650,7 @@
               type="number"
               :value="item.quantity"
               :edit-mode="editMode"
-              @change="value => handleChange(`order_line_items.${item.real_index}.quantity`, value)"
+              @change="event => handleChange({ path:`order_line_items.${item.real_index}.quantity`, ...event})"
             />
             <FormFieldInput
               :references="`order_line_items.${item.real_index}.weight`"
@@ -648,7 +658,7 @@
               type="number"
               :value="item.weight"
               :edit-mode="editMode"
-              @change="value => handleChange(`order_line_items.${item.real_index}.weight`, value)"
+              @change="event => handleChange({ path:`order_line_items.${item.real_index}.weight`, ...event})"
             />
           </div>
         </div>
@@ -671,7 +681,7 @@
 import isMobile from '@/mixins/is_mobile'
 import { scrollTo } from '@/utils/scroll_to'
 import permissions from '@/mixins/permissions'
-import { mapState, mapActions } from 'vuex'
+import { mapState, mapActions, mapGetters } from 'vuex'
 import get from 'lodash/get'
 import { statuses } from '@/enums/app_objects_types'
 
@@ -777,16 +787,8 @@ export default {
       ]
     }
   },
-
-  watch: {
-    isMobile (newValue) {
-      if (!newValue && this.backButton) {
-        return this[type.setSidebar]({ show: true })
-      }
-    }
-  },
-
   computed: {
+    ...mapGetters(orderForm.moduleName, ['isMultiOrderRequest']),
     ...mapState(orderForm.moduleName, {
       order: state => state.order,
       editMode: state => state.editMode,
@@ -826,16 +828,13 @@ export default {
 
       const alreadySentToTmsStatuses = [
         statuses.sendingToWint,
-        statuses.failureSendingToWint,
         statuses.successSendingToWint,
         statuses.shipmentCreatedByWint,
-        statuses.shipmentNotCreatedByWint,
         statuses.updatingToWint,
         statuses.failureUpdatingToWint,
         statuses.successUpdatingToWint,
         statuses.shipmentUpdatedByWint,
         statuses.shipmentNotUpdatedByWint,
-        statuses.updatesPriorOrder,
         statuses.updatedBySubsequentOrder,
         statuses.successImageuplodingToBlackfl,
         statuses.failureImageuplodingToBlackfl,
@@ -843,7 +842,7 @@ export default {
       ]
 
       return (this.order.tms_shipment_id !== null && this.order.tms_shipment_id !== undefined) ||
-        (alreadySentToTmsStatuses.includes(this.orderSystemStatus))
+          (alreadySentToTmsStatuses.includes(this.orderSystemStatus))
     },
 
     orderSystemStatus () {
@@ -877,6 +876,14 @@ export default {
     }
   },
 
+  watch: {
+    isMobile (newValue) {
+      if (!newValue && this.backButton) {
+        return this[type.setSidebar]({ show: true })
+      }
+    }
+  },
+
   beforeMount () {
     if (!this.isMobile) {
       return this[type.setSidebar]({ show: true })
@@ -903,8 +910,8 @@ export default {
       return !this.options.hidden.includes(fieldName)
     },
 
-    async handleChange (path, value) {
-      await this.updateOrder({ path, value })
+    async handleChange (event) {
+      await this.updateOrder(event)
     },
 
     async refreshOrder () {
@@ -1061,12 +1068,13 @@ export default {
         deleted_at: null
       }
       this.addHighlight(`order_address_events.${this.order.order_address_events.length}`)
-      this.handleChange('order_address_events',
-        [
+      this.handleChange({
+        path: 'order_address_events',
+        value: [
           ...this.order.order_address_events,
           newEvent
         ]
-      )
+      })
     },
 
     moveObjectPositionInArray (id, direction) {
@@ -1086,13 +1094,13 @@ export default {
           arr[index + 1] = el
         }
       }
-      this.handleChange('order_address_events', arr)
+      this.handleChange({ path: 'order_address_events', value: arr })
     },
 
     handleDelete (index) {
       const arr = this.order.order_address_events
       arr[index].deleted_at = true
-      this.handleChange('order_address_events', arr)
+      this.handleChange({ path: 'order_address_events', value: arr })
     },
 
     async addTMSId () {
@@ -1100,7 +1108,7 @@ export default {
         title: 'Please type the desired TMS ID',
         hasInputValue: true,
         onConfirm: async (value) => {
-          this.handleChange('tms_shipment_id', value)
+          this.handleChange({ path: 'tms_shipment_id', value })
 
           await this[type.setSnackbar]({ show: true, message: 'TMS ID added' })
         },

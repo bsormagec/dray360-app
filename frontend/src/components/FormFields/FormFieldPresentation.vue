@@ -7,12 +7,15 @@
       v-if="!editMode"
       :class="{
         'form-field-highlight': true,
-        hover: isHovering,
+        hover: isHovering && !onlyHover,
+        'hover-paddingless': isHovering && onlyHover,
         edit: isEditing
       }"
+      tabindex="0"
       @mouseover="isMobile || isEditing ? () => {} : startHover({ path: references })"
       @mouseleave="isMobile || isEditing ? () => {} : stopHover({ path: references })"
       @click="startFieldEdit({ path: references })"
+      @keypress.enter.prevent="startFieldEdit({ path: references })"
     >
       <div
         v-show="!isEditing && !onlyHover"
@@ -34,17 +37,6 @@
           class="field__value"
         >
           {{ value === null || value === '' ? '--' : value }}
-          <!-- <v-btn
-            v-if="verifiable"
-            dense
-            color="primary"
-            outlined
-            x-small
-            class="ml-4"
-            @click.stop="verify"
-          >
-            Verify Match
-          </v-btn> -->
         </span>
       </div>
       <div
@@ -59,7 +51,9 @@
         <FormFieldHighlightBtns
           v-show="(isEditing || highlight.hover) && !onlyHover"
           :edit-mode="isEditing"
+          :save-for-all="saveForAll"
           @accept="handleAccept"
+          @accept-all="() => handleAccept(true)"
           @cancel="handleCancel"
         />
       </div>
@@ -74,7 +68,8 @@
 import FormFieldHighlightBtns from './FormFieldHighlightBtns'
 
 import isMobile from '@/mixins/is_mobile'
-import { mapState, mapActions } from 'vuex'
+import { mapState, mapActions, mapGetters } from 'vuex'
+import permissions from '@/mixins/permissions'
 import orderForm, { types } from '@/store/modules/order-form'
 import get from 'lodash/get'
 import { cleanStrForId } from '@/utils/clean_str_for_id.js'
@@ -84,11 +79,10 @@ export default {
 
   components: { FormFieldHighlightBtns },
 
-  mixins: [isMobile],
+  mixins: [isMobile, permissions],
 
   props: {
     editMode: { type: Boolean, required: true },
-    verifiable: { type: Boolean, required: false, default: false },
     references: { type: String, required: true },
     label: { type: String, required: true },
     value: { required: true, default: '' },
@@ -96,9 +90,17 @@ export default {
   },
 
   computed: {
+    ...mapGetters(orderForm.moduleName, ['isMultiOrderRequest']),
     ...mapState(orderForm.moduleName, {
       allHighlights: state => state.highlights
     }),
+    saveForAll () {
+      const blackListedParams = ['unit_number', 'seal_number']
+
+      return this.isMultiOrderRequest &&
+        this.hasPermission('all-orders-edit') &&
+        !blackListedParams.includes(this.references)
+    },
     highlight () {
       if (this.references === null || this.references === undefined) {
         return null
@@ -128,9 +130,9 @@ export default {
     verify () {
       this.$emit('accept')
     },
-    handleAccept () {
+    handleAccept (saveAll = false) {
       this.stopFieldEdit({ path: this.references })
-      this.$emit('accept')
+      this.$emit(saveAll ? 'accept-all' : 'accept')
     },
     handleCancel () {
       this.stopFieldEdit({ path: this.references })
@@ -153,8 +155,13 @@ export default {
       background-color: rgba($blue--lt, 0.4);
       padding-right: rem(12);
     }
+    &:focus {
+      outline: var(--v-primary-base) auto 1px;
+    }
+    &.hover-paddingless {
+      background-color: rgba($blue--lt, 0.4);
+    }
   }
-
   .only-hover {
     width: 100%;
   }

@@ -4,6 +4,13 @@
     class="action-btns"
   >
     <div
+      v-if="saveForAll"
+      class="btn btn--accept"
+      @click.stop="$emit('accept-all')"
+    >
+      <v-icon>mdi-check-all</v-icon>
+    </div>
+    <div
       class="btn btn--accept"
       @click.stop="$emit('accept')"
     >
@@ -34,6 +41,11 @@ export default {
     editMode: {
       type: Boolean,
       required: true
+    },
+    saveForAll: {
+      type: Boolean,
+      required: false,
+      default: false
     }
   }
 }

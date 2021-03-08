@@ -139,24 +139,24 @@ class Address extends Model
         switch ($dataSource) {
             case 'ripcms':
                 return [
-                    'address_line_1' => $data['addr1'] ?? null,
-                    'address_line_2' => $data['addr2'] ?? null,
-                    'city' => $data['city'] ?? null,
-                    'state' => $data['state'] ?? null,
-                    'postal_code' => $data['zip'] ?? null,
-                    'country' => $data['country'] ?? null,
-                    'location_name' => $data['name'] ?? null,
-                    'location_phone' => $data['phone'] ?? null,
-                    'is_billable' => strtoupper($data['co_allow_billing'] ?? '') == 'T',
-                    'is_terminal' => strtoupper($data['terminationlocation'] ?? '') == 'T',
+                    'address_line_1' => $data['addr1'],
+                    'address_line_2' => $data['addr2'],
+                    'city' => $data['city'],
+                    'state' => $data['state'],
+                    'postal_code' => $data['zip'],
+                    'country' => $data['country'],
+                    'location_name' => $data['name'],
+                    'location_phone' => $data['phone'],
+                    'is_billable' => strtoupper($data['co_allow_billing']) == 'T',
+                    'is_terminal' => strtoupper($data['terminationlocation']) == 'T',
                 ];
             case 'compcare':
                 return [
-                    'address_line_1' => $data['AddressLine1'] ?? null,
-                    'address_line_2' => $data['AddressLine2'] ?? null,
-                    'city' => Arr::get($data, 'City.CityName') ?? $data['CityName'] ?? null,
+                    'address_line_1' => $data['AddressLine1'],
+                    'address_line_2' => $data['AddressLine2'],
+                    'city' => Arr::get($data, 'City.CityName') ?? $data['CityName'],
                     'state' => Arr::get($data, 'State.StateCode'),
-                    'postal_code' => Arr::get($data, 'PostalCodeNavigation.PostalCode') ?? $data['PostalCode'] ?? null,
+                    'postal_code' => Arr::get($data, 'PostalCodeNavigation.PostalCode') ?? $data['PostalCode'],
                     'country' => Arr::get($data, 'Country.CountryCode'),
                     'location_name' => null,
                     'location_phone' => null,
@@ -165,13 +165,13 @@ class Address extends Model
                 ];
             case 'itg-cargowise':
                 return [
-                    'address_line_1' => $data['address_line_1'] ?? null,
-                    'address_line_2' => $data['address_line_2'] ?? null,
-                    'city' => $data['city'] ?? null,
-                    'state' => $data['state'] ?? null,
-                    'postal_code' => $data['post_code'] ?? null,
+                    'address_line_1' => $data['address_line_1'],
+                    'address_line_2' => $data['address_line_2'],
+                    'city' => $data['city'],
+                    'state' => $data['state'],
+                    'postal_code' => $data['post_code'],
                     'country' => null,
-                    'location_name' => $data['org_name'] ?? null,
+                    'location_name' => $data['org_name'],
                     'location_phone' => null,
                     'is_billable' => $data['is_billable'] ?? 0,
                     'is_terminal' => 0,
@@ -183,37 +183,37 @@ class Address extends Model
     {
         switch ($source) {
             case 'ripcms':
-                return $this->address_line_1 == ($address['addr1'] ?? null) &&
-                $this->address_line_2 == ($address['addr2'] ?? null) &&
-                $this->city == ($address['city'] ?? null) &&
-                $this->state == ($address['state'] ?? null) &&
-                $this->postal_code == ($address['zip'] ?? null) &&
-                $this->country == ($address['country'] ?? null) &&
-                $this->location_name == ($address['name'] ?? null) &&
-                $this->location_phone == ($address['phone'] ?? null) &&
-                $this->is_billable == (strtoupper($address['co_allow_billing'] ?? '') == 'T') &&
-                $this->is_terminal == (strtoupper($address['co_allow_billing'] ?? '') == 'T');
+                return $this->address_line_1 == $address['addr1'] &&
+                $this->address_line_2 == $address['addr2'] &&
+                $this->city == $address['city'] &&
+                $this->state == $address['state'] &&
+                $this->postal_code == $address['zip'] &&
+                $this->country == $address['country'] &&
+                $this->location_name == $address['name'] &&
+                $this->location_phone == $address['phone'] &&
+                $this->is_billable == (strtoupper($address['co_allow_billing']) == 'T') &&
+                $this->is_terminal == (strtoupper($address['co_allow_billing']) == 'T');
             case 'compcare':
-                return $this->address_line_1 == ($address['AddressLine1'] ?? null) &&
-                $this->address_line_2 == ($address['AddressLine2'] ?? null) &&
-                $this->city == (Arr::get($address, 'City.CityName') ?? $address['CityName'] ?? null) &&
-                $this->state == (Arr::get($address, 'State.StateCode')) &&
-                $this->postal_code == (Arr::get($address, 'PostalCodeNavigation.PostalCode') ?? $address['PostalCode'] ?? null) &&
-                $this->country == (Arr::get($address, 'Country.CountryCode')) &&
+                return $this->address_line_1 == $address['AddressLine1'] &&
+                $this->address_line_2 == $address['AddressLine2'] &&
+                $this->city == (Arr::get($address, 'City.CityName') ?? $address['CityName']) &&
+                $this->state == Arr::get($address, 'State.StateCode') &&
+                $this->postal_code == (Arr::get($address, 'PostalCodeNavigation.PostalCode') ?? $address['PostalCode']) &&
+                $this->country == Arr::get($address, 'Country.CountryCode') &&
                 $this->location_name == null &&
                 $this->location_phone == null &&
                 $this->is_billable == 0 &&
                 $this->is_terminal == 0;
             case 'itg-cargowise':
-                return $this->address_line_1 == ($data['address_line_1'] ?? null) &&
-                $this->address_line_2 == ($data['address_line_2'] ?? null) &&
-                $this->city == ($data['city'] ?? null) &&
-                $this->state == ($data['state'] ?? null) &&
-                $this->postal_code == ($data['post_code'] ?? null) &&
+                return $this->address_line_1 == $address['address_line_1'] &&
+                $this->address_line_2 == $address['address_line_2'] &&
+                $this->city == $address['city'] &&
+                $this->state == $address['state'] &&
+                $this->postal_code == $address['post_code'] &&
                 $this->country == null &&
-                $this->location_name == ($data['org_name'] ?? null) &&
+                $this->location_name == $address['org_name'] &&
                 $this->location_phone == null &&
-                $this->is_billable == ($data['is_billable'] ?? 0) &&
+                $this->is_billable == $address['is_billable'] ?? 0 &&
                 $this->is_terminal == 0;
         }
 

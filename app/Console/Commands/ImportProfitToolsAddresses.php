@@ -2,7 +2,6 @@
 
 namespace App\Console\Commands;
 
-use App\Models\Address;
 use App\Models\Company;
 use App\Models\TMSProvider;
 use App\Services\Apis\RipCms;
@@ -11,9 +10,11 @@ use App\Exceptions\RipCmsException;
 use Illuminate\Support\Facades\Log;
 use App\Models\CompanyAddressTMSCode;
 use App\Jobs\ImportProfitToolsAddress;
+use App\Traits\DeletesRemovedAddresses;
 
 class ImportProfitToolsAddresses extends ImportAddressesBaseCommand
 {
+    use DeletesRemovedAddresses;
     /**
      * The name and signature of the console command.
      *
@@ -49,7 +50,11 @@ class ImportProfitToolsAddresses extends ImportAddressesBaseCommand
             Log::channel('imports')
                 ->info("ImportProfitToolsAddresses-{$company->name}: Endpoint returned ".$companiesAddress->count().' addresses');
 
-            $this->deleteAddressesRemovedInTheResponse($companiesAddress, $company);
+            $this->deleteAddressesRemovedInTheResponse(
+                $companiesAddress->pluck('id'),
+                $company->id,
+                $this->tmsProvider->id
+            );
 
             $this->info("Queueing the individual imports for {$company->name}");
             $companiesAddress
@@ -69,25 +74,5 @@ class ImportProfitToolsAddresses extends ImportAddressesBaseCommand
     protected function getTmsProvider(): TMSProvider
     {
         return TMSProvider::getProfitTools();
-    }
-
-    protected function deleteAddressesRemovedInTheResponse(Collection $companiesAddress, Company $company): void
-    {
-        Address::whereIn('id', function ($query) use ($companiesAddress, $company) {
-            $query->select('t_address_id')
-                ->from('t_company_address_tms_code')
-                ->whereNotIn('company_address_tms_code', $companiesAddress->pluck('id'))
-                ->where([
-                    't_company_id' => $company->id,
-                    't_tms_provider_id' => $this->tmsProvider->id,
-                ]);
-        })->delete();
-        CompanyAddressTMSCode::query()
-            ->whereNotIn('company_address_tms_code', $companiesAddress->pluck('id'))
-            ->where([
-                't_company_id' => $company->id,
-                't_tms_provider_id' => $this->tmsProvider->id,
-            ])
-            ->delete();
     }
 }

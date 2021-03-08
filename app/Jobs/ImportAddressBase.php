@@ -27,24 +27,31 @@ abstract class ImportAddressBase
             ->first();
 
         if ($companyAddressTmsProvider) {
-            $this->updateAddress($companyAddressTmsProvider->address, $this->address);
+            $this->updateCompanyAddressTmsCode($companyAddressTmsProvider);
             return;
         }
 
+        $this->createNewCompanyTmsCodeEntry();
+    }
+
+    protected function updateCompanyAddressTmsCode(CompanyAddressTMSCode $companyAddressTmsProvider)
+    {
+        if ($companyAddressTmsProvider->address->isTheSameAs($this->address, $this->getTmsProviderCode())) {
+            return;
+        }
+
+        $companyAddressTmsProvider->delete();
+
+        $this->createNewCompanyTmsCodeEntry();
+    }
+
+    protected function createNewCompanyTmsCodeEntry()
+    {
         CompanyAddressTMSCode::createFrom(
             $this->addressCode,
             Address::createFrom($this->address, $this->getTmsProviderCode()),
             $this->companyId,
             $this->tmsProviderId
         );
-    }
-
-    protected function updateAddress(Address $oldAddress, $newData)
-    {
-        if ($oldAddress->isTheSameAs($newData, $this->getTmsProviderCode())) {
-            return;
-        }
-
-        $oldAddress->updateFrom($newData, $this->getTmsProviderCode());
     }
 }

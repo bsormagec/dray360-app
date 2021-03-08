@@ -73,6 +73,7 @@
           :recognized-text="recognizedText"
           :enable-address-filters="enableAddressFilters"
           :enable-search="enableSearch"
+          :save-to-all="isMultiOrderRequest && hasPermission('all-orders-edit')"
           @change="handleChange"
           @close="addressModalOpen = false"
         />
@@ -86,9 +87,10 @@
 import AddressBookModalDialog from '@/components/Orders/AddressBookModalDialog'
 import FormFieldPresentation from './FormFieldPresentation'
 
-import { mapState } from 'vuex'
+import { mapState, mapGetters } from 'vuex'
 import orders from '@/store/modules/orders'
 import orderForm from '@/store/modules/order-form'
+import permissions from '@/mixins/permissions'
 
 import get from 'lodash/get'
 import { formatAddress } from '@/utils/order_form_general_functions'
@@ -100,6 +102,8 @@ export default {
     AddressBookModalDialog,
     FormFieldPresentation
   },
+
+  mixins: [permissions],
 
   props: {
     references: { type: String, default: null },
@@ -127,6 +131,7 @@ export default {
   }),
 
   computed: {
+    ...mapGetters(orderForm.moduleName, ['isMultiOrderRequest']),
     ...mapState(orders.moduleName, {
       currentOrder: state => state.currentOrder
     }),
@@ -149,19 +154,19 @@ export default {
   },
 
   methods: {
-    handleChange (value) {
+    handleChange (event) {
       this.addressModalOpen = false
-      const { address } = value
+      const { address, saveAll = false } = event
 
       this.currentAddress = {
         ...address,
         id: address.t_address_id
       }
 
-      this.$emit('change', this.currentAddress)
+      this.$emit('change', { ...(this.currentAddress), saveAll })
     },
     verifyMatch () {
-      this.$emit('change', this.currentAddress)
+      this.$emit('change', { ...(this.currentAddress), saveAll: false })
     },
     toggleAddressModal () {
       this.addressModalOpen = !this.addressModalOpen

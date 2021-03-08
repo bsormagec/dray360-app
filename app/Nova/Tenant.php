@@ -51,7 +51,7 @@ class Tenant extends Resource
         return [
             ID::make(__('ID'), 'id')->sortable(),
             Text::make('Name')->sortable(),
-            Code::make('Configuration', 'configuration')->json(),
+            Code::make('Configuration', 'configuration')->json()->rules(['nullable', 'json']),
             HasMany::make('Domains'),
         ];
     }
