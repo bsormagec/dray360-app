@@ -124,7 +124,7 @@ class Order extends Resource
             DateTime::make('Last free date utc', 'last_free_date_utc')->hideFromIndex()->nullable(),
             Text::make('Booking number', 'booking_number')->hideFromIndex()->nullable(),
             Text::make('Bill of lading', 'bill_of_lading')->nullable(),
-            Code::make('Ocr data', 'ocr_data')->json()->nullable(),
+            Code::make('Ocr data', 'ocr_data')->json()->readonly(),
             Text::make('Pickup number', 'pickup_number')->hideFromIndex()->nullable(),
             Text::make('Variant Id', 'variant_id')->hideFromIndex()->nullable(),
             Text::make('Variant name', 'variant_name')->hideFromIndex()->nullable(),
@@ -154,8 +154,8 @@ class Order extends Resource
             HasMany::make('Order Line Items', 'orderLineItems', OrderLineItem::class),
             Text::make('TMS Template ID', 'tms_template_id')->hideFromIndex()->nullable(),
 
-            BelongsTo::make('Preceded by Order', 'precededByOrder', Order::class)->nullable(),
-            BelongsTo::make('Succeded by Order', 'succededByOrder', Order::class)->nullable(),
+            BelongsTo::make('Preceded by Order', 'precededByOrder', Order::class)->nullable()->searchable(),
+            BelongsTo::make('Succeded by Order', 'succededByOrder', Order::class)->nullable()->searchable(),
             DateTime::make('TMS Submission Date', 'tms_submission_datetime')->hideFromIndex()->nullable(),
             DateTime::make('TMS Cancelled Date', 'tms_cancelled_datetime')->hideFromIndex()->nullable(),
             DateTime::make('Cancelled Date', 'cancelled_datetime')->hideFromIndex()->nullable(),
@@ -172,8 +172,8 @@ class Order extends Resource
                 ->step(1.0)
                 ->hideFromIndex()
                 ->nullable(),
-            BelongsTo::make('Tms Template', 'tmsTemplate', DictionaryItem::class)->nullable(),
-            BelongsTo::make('ITG Container', 'container', DictionaryItem::class)->nullable(),
+            BelongsTo::make('Tms Template', 'tmsTemplate', DictionaryItem::class)->nullable()->searchable(),
+            BelongsTo::make('ITG Container', 'container', DictionaryItem::class)->nullable()->searchable(),
             Boolean::make('Is Hidden', 'is_hidden')->hideFromIndex()->nullable(),
         ];
     }

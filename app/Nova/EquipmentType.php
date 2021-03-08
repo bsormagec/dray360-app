@@ -89,7 +89,7 @@ class EquipmentType extends Resource
             Text::make('Equipment type & size', 'equipment_type_and_size'),
             Text::make('Equipment type', 'equipment_type'),
             Text::make('Equipment size', 'equipment_size'),
-            Code::make('Prefix List', 'line_prefix_list')->json(),
+            Code::make('Prefix List', 'line_prefix_list')->json()->rules(['nullable', 'json']),
         ];
     }
 

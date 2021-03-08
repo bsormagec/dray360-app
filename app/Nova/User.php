@@ -72,7 +72,7 @@ class User extends Resource
                 ->rules('nullable', 'email', 'max:254'),
 
             BelongsTo::make('Company')->nullable(),
-            Code::make('Configuration', 'configuration')->json(),
+            Code::make('Configuration', 'configuration')->json()->rules(['nullable', 'json']),
 
             Password::make('Password')
                 ->onlyOnForms()
