@@ -161,15 +161,26 @@
         </v-chip>
       </div> -->
       <p class="mb-2 body-2">
-        Submitted <span
+        Request created <span
           class="order__changelog_date"
           @click="openStatusHistoryDialog = true"
         >{{ formatDate(order.submitted_date, true) }}</span>
         <br>
         {{ `by ${userWhoUploadedTheRequest ? userWhoUploadedTheRequest :''}` }}
       </p>
+      <p
+        v-if="order.ocr_request.sent_to_tms"
+        class="mb-2 body-2"
+      >
+        Submitted to TMS <span
+          class="order__changelog_date"
+          @click="openStatusHistoryDialog = true"
+        >{{ formatDate(order.ocr_request.sent_to_tms.created_at, true) }}</span>
+        <br>
+        {{ `by ${order.ocr_request.sent_to_tms.user.name}` }}
+      </p>
       <p class="mb-2 body-2">
-        Last Updated <span
+        Last updated <span
           class="order__changelog_date"
           @click="openStatusHistoryDialog = true"
         >{{ formatDate(order.updated_at, true) }}</span>
@@ -776,15 +787,6 @@ export default {
       ]
     }
   },
-
-  watch: {
-    isMobile (newValue) {
-      if (!newValue && this.backButton) {
-        return this[type.setSidebar]({ show: true })
-      }
-    }
-  },
-
   computed: {
     ...mapGetters(orderForm.moduleName, ['isMultiOrderRequest']),
     ...mapState(orderForm.moduleName, {
@@ -840,7 +842,7 @@ export default {
       ]
 
       return (this.order.tms_shipment_id !== null && this.order.tms_shipment_id !== undefined) ||
-        (alreadySentToTmsStatuses.includes(this.orderSystemStatus))
+          (alreadySentToTmsStatuses.includes(this.orderSystemStatus))
     },
 
     orderSystemStatus () {
@@ -871,6 +873,14 @@ export default {
     },
     userWhoUploadedTheRequest () {
       return this.order.upload_user_name ? this.order.upload_user_name : this.order.email_from_address
+    }
+  },
+
+  watch: {
+    isMobile (newValue) {
+      if (!newValue && this.backButton) {
+        return this[type.setSidebar]({ show: true })
+      }
     }
   },
 

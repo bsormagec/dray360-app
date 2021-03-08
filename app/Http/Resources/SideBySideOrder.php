@@ -2,9 +2,11 @@
 
 namespace App\Http\Resources;
 
+use App\Models\User;
 use App\Models\Order;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Str;
+use App\Models\OCRRequestStatus;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Http\Resources\Json\JsonResource;
 
@@ -36,6 +38,7 @@ class SideBySideOrder extends JsonResource
 
         $this->preparePreceedingOrderChanges();
         $this->loadOrderCompanyConfiguration();
+        $this->loadUserWhoSentToTms();
 
         return parent::toArray($request);
     }
@@ -52,6 +55,33 @@ class SideBySideOrder extends JsonResource
         $this->resource->company->unsetRelation('domain');
 
         $this->resource->company->configuration = $configuration;
+    }
+
+    protected function loadUserWhoSentToTms()
+    {
+        $status = OCRRequestStatus::query()
+            ->select(['status_metadata', 'created_at'])
+            ->where([
+                'request_id' => $this->resource->request_id,
+                'order_id' => $this->resource->id,
+            ])
+            ->where('status', 'like', 'sending-to-%')
+            ->first();
+
+        if (! $status) {
+            $this->resource->ocrRequest->setRelation('sentToTms', null);
+            return;
+        }
+
+        $userId = $status->status_metadata['user_id'] ?? null;
+
+        if (! $userId) {
+            $this->resource->ocrRequest->setRelation('sentToTms', null);
+            return;
+        }
+
+        $status->setRelation('user', User::find($userId, ['name', 'email']));
+        $this->resource->ocrRequest->setRelation('sentToTms', $status);
     }
 
     protected function preSignDocumentImages()

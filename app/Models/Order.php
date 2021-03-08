@@ -441,12 +441,9 @@ class Order extends Model implements Auditable
     {
         return $this->load([
             'ocrRequest',
-            'ocrRequest.statusList',
             'ocrRequest.latestOcrRequestStatus',
             'orderLineItems',
             'billToAddress',
-            'portRampOfDestinationAddress',
-            'portRampOfOriginAddress',
             'orderAddressEvents',
             'orderAddressEvents.address',
             'equipmentType',
