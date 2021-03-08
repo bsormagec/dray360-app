@@ -3,6 +3,7 @@
 namespace App\Actions;
 
 use Aws\Sns\SnsClient;
+use Illuminate\Support\Str;
 use Aws\Exception\AwsException;
 
 class PublishSnsMessageToUpdateStatus
@@ -13,31 +14,8 @@ class PublishSnsMessageToUpdateStatus
         $data['order_id'] = $data['order_id'] == '' ? ' ' : $data['order_id'];
 
         try {
-            $response = $this->getSnsClient()
-                ->publish([
-                    'Message' => json_encode([
-                        'request_id' => $data['request_id'],
-                        'datetime_utciso' => now()->toISOString(),
-                        'status' => $data['status'],
-                        'status_metadata' => $data['status_metadata']
-                    ]),
-                    'MessageAttributes' => [
-                        'status' => [
-                            'DataType' => 'String',
-                            'StringValue' => $data['status'],
-                        ],
-                        'company_id' => [
-                            'DataType' => 'String',
-                            'StringValue' => $data['company_id'],
-                        ],
-                        'order_id' => [
-                            'DataType' => 'String',
-                            'StringValue' => $data['order_id'],
-                        ],
-                    ],
-                    'TopicArn' => config('services.sns-topics.status'),
-                    'MessageGroupId' => $data['request_id'],
-                ]);
+            $response = $this->getSnsClient()->publish($this->getMessageBody($data));
+
             return ['status' => 'ok', 'message' => $response['MessageId']];
         } catch (AwsException $e) {
             return [
@@ -45,6 +23,40 @@ class PublishSnsMessageToUpdateStatus
                 'message' => $e->getAwsErrorCode()."-".$e->getAwsErrorMessage(),
             ];
         }
+    }
+
+    protected function getMessageBody(array $data): array
+    {
+        $topicArn = config('services.sns-topics.status');
+        $topicMessage = [
+            'Message' => json_encode([
+                'request_id' => $data['request_id'],
+                'datetime_utciso' => now()->toISOString(),
+                'status' => $data['status'],
+                'status_metadata' => $data['status_metadata']
+            ]),
+            'MessageAttributes' => [
+                'status' => [
+                    'DataType' => 'String',
+                    'StringValue' => $data['status'],
+                ],
+                'company_id' => [
+                    'DataType' => 'String',
+                    'StringValue' => $data['company_id'],
+                ],
+                'order_id' => [
+                    'DataType' => 'String',
+                    'StringValue' => $data['order_id'],
+                ],
+            ],
+            'TopicArn' => $topicArn,
+        ];
+
+        if (Str::endsWith($topicArn, '.fifo')) {
+            $topicMessage['MessageGroupId'] = $data['request_id'];
+        }
+
+        return $topicMessage;
     }
 
     protected function getSnsClient(): SnsClient

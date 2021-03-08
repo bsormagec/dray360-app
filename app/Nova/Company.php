@@ -67,9 +67,9 @@ class Company extends Resource
             Number::make('Automatic address verification threshold', 'automatic_address_verification_threshold'),
             Boolean::make('Sync Addresses', 'sync_addresses'),
 
-            Code::make('Ref Mapping', 'refs_custom_mapping')->json()->hideFromIndex(),
-            Code::make('Configuration', 'configuration')->json()->hideFromIndex(),
-            Code::make('Company Configuration', 'company_config')->json()->hideFromIndex()->nullable(),
+            Code::make('Ref Mapping', 'refs_custom_mapping')->json()->hideFromIndex()->rules(['nullable', 'json']),
+            Code::make('Configuration', 'configuration')->json()->hideFromIndex()->rules(['nullable', 'json']),
+            Code::make('Company Configuration', 'company_config')->json()->hideFromIndex()->rules(['nullable', 'json']),
 
             Text::make('Blackfly token', 'blackfly_token')->hideFromIndex()->nullable(),
             Text::make('Blackfly imagetype', 'blackfly_imagetype')->hideFromIndex()->nullable(),

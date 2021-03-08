@@ -203,12 +203,24 @@
                 <td>{{ props.item.equipment_type_and_size }}</td>
                 <td>
                   <v-btn
-                    class="ma-2"
+                    :class="{
+                      'ma-1': hasPermission('all-orders-edit'),
+                      'ma-2': !hasPermission('all-orders-edit')
+                    }"
                     outlined
                     color="primary"
                     @click="() => selectEquipmentType(props.item)"
                   >
                     Select
+                  </v-btn>
+                  <v-btn
+                    v-if="isMultiOrderRequest && hasPermission('all-orders-edit')"
+                    class="ma-1"
+                    outlined
+                    color="primary"
+                    @click="() => selectEquipmentType(props.item, true)"
+                  >
+                    Select For All
                   </v-btn>
                 </td>
               </tr>
@@ -224,15 +236,14 @@
 /* eslint-disable vue/no-v-html */
 
 import { getEquipmentTypeOptions, getEquipmentTypes } from '@/store/api_calls/equipment'
-import { mapState } from 'vuex'
+import { mapState, mapGetters } from 'vuex'
 import orderForm from '@/store/modules/order-form'
+import permissions from '@/mixins/permissions'
 
 export default {
   name: 'FormFieldEquipmentType',
 
-  components: {
-
-  },
+  mixins: [permissions],
 
   props: {
     companyId: { type: Number, required: true },
@@ -275,6 +286,7 @@ export default {
   }),
 
   computed: {
+    ...mapGetters(orderForm.moduleName, ['isMultiOrderRequest']),
     concatenatedRecognizedText () {
       const scac = (this.unitNumber || '').substring(0, 4)
       const string = `${this.carrier || ''} ${this.equipmentSize || ''} ${this.recognizedText || ''} ${scac}`
@@ -340,9 +352,9 @@ export default {
         this.loading = false
       }
     },
-    selectEquipmentType (e) {
+    selectEquipmentType (e, saveAll = false) {
       this.isOpen = false
-      this.$emit('change', e.id)
+      this.$emit('change', { value: e.id, saveAll })
     }
   }
 }

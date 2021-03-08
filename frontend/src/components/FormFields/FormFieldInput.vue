@@ -6,6 +6,7 @@
       :label="label"
       :value="value"
       @accept="handleAccept"
+      @accept-all="() => handleAccept(true)"
     >
       <div class="form-field__group">
         <div class="form-field__label">
@@ -15,11 +16,14 @@
           :placeholder="placeholder"
           :type="type"
           outlined
+          autofocus
           dense
           solo
           flat
           hide-details="true"
           :value="value"
+          @keypress.enter.stop="submit"
+          @keydown.esc="cancel"
           @input="handleChange"
         />
       </div>
@@ -28,6 +32,8 @@
 </template>
 
 <script>
+import { mapActions } from 'vuex'
+import orderForm, { types } from '@/store/modules/order-form'
 import FormFieldPresentation from './FormFieldPresentation'
 
 export default {
@@ -51,14 +57,25 @@ export default {
   }),
 
   methods: {
+    ...mapActions(orderForm.moduleName, {
+      stopFieldEdit: types.stopFieldEdit
+    }),
     handleChange (e) {
       this.currentValue = e
       if (this.editMode && this.references) {
-        this.$emit('change', this.currentValue)
+        this.handleAccept()
       }
     },
-    handleAccept () {
-      this.$emit('change', this.currentValue)
+    submit () {
+      this.stopFieldEdit({ path: this.references })
+      this.handleAccept()
+    },
+    cancel () {
+      this.stopFieldEdit({ path: this.references })
+      this.currentValue = this.value
+    },
+    handleAccept (saveAll = false) {
+      this.$emit('change', { value: this.currentValue, saveAll })
     }
   }
 }

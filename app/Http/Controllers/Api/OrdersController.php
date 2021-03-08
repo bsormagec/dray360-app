@@ -8,7 +8,6 @@ use Illuminate\Http\Request;
 use App\Models\OCRRequestStatus;
 use App\Queries\OrdersListQuery;
 use App\Http\Resources\OrdersJson;
-use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
 use App\Http\Resources\SideBySideOrder;
 use Illuminate\Support\Facades\Storage;
@@ -36,7 +35,7 @@ class OrdersController extends Controller
      */
     public function show($orderId)
     {
-        $order = $this->getBasicOrderForSideBySide($orderId);
+        $order = Order::getBasicOrderForSideBySide($orderId);
 
         $this->authorize('view', $order);
 
@@ -64,7 +63,7 @@ class OrdersController extends Controller
         $order->update($orderData);
         $order->updateRelatedModels($relatedModels);
 
-        $order = $this->getBasicOrderForSideBySide($order->id);
+        $order = Order::getBasicOrderForSideBySide($order->id);
 
         return new SideBySideOrder($order, false);
     }
@@ -89,31 +88,5 @@ class OrdersController extends Controller
         $order->delete();
 
         return response()->noContent();
-    }
-
-    protected function getBasicOrderForSideBySide($orderId)
-    {
-        return Order::query()
-            ->select('t_orders.*')
-            ->addSelect(['email_from_address' => DB::table('t_job_state_changes', 's_is')
-                ->selectRaw("json_extract(s_is.status_metadata, '$.source_summary.source_email_from_address') as email_from_address")
-                ->whereColumn('t_orders.request_id', 's_is.request_id')
-                ->where('s_is.status', OCRRequestStatus::INTAKE_STARTED)
-                ->limit(1)
-            ])
-            ->addSelect(['upload_user_name' => DB::table('t_job_state_changes', 's_ur')
-                ->select('u.name')
-                ->whereColumn('t_orders.request_id', 's_ur.request_id')
-                ->where('s_ur.status', OCRRequestStatus::UPLOAD_REQUESTED)
-                ->join('users as u', DB::raw("json_extract(s_ur.status_metadata, '$.user_id')"), '=', 'u.id')
-                ->limit(1)
-            ])
-            ->addSelect(['submitted_date' => DB::table('t_job_state_changes', 'sub_date_state')
-                ->select('sub_date_state.created_at')
-                ->whereColumn('t_orders.request_id', 'sub_date_state.request_id')
-                ->orderBy('created_at')
-                ->limit(1)
-            ])
-            ->findOrFail($orderId);
     }
 }

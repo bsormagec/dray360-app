@@ -47,7 +47,11 @@ class DownloadOriginalRequestSourceFileController extends Controller
                 'ResponseContentType' => 'application/octet-stream',
                 'ResponseContentDisposition' => HeaderUtils::makeDisposition(
                     'attachment',
-                    $status->status_metadata['original_filename'] ?? 'original.pdf'
+                    preg_replace(
+                        '/[[:cntrl:]]/',
+                        '',
+                        $status->status_metadata['original_filename'] ?? 'original.pdf'
+                    )
                 ),
             ]
         );

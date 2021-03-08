@@ -194,6 +194,16 @@
             >
               Select
             </v-btn>
+            <v-btn
+              v-if="saveToAll"
+              class="ml-2"
+              color="primary"
+              dense
+              outlined
+              @click="() => change({ id: item.t_address_id, address: item, saveAll: true })"
+            >
+              Select For All
+            </v-btn>
           </div>
           <v-divider />
         </div>
@@ -237,6 +247,11 @@ export default {
       type: Boolean,
       required: false,
       default: true
+    },
+    saveToAll: {
+      type: Boolean,
+      required: false,
+      default: false
     }
   },
 
