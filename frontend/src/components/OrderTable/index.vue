@@ -138,7 +138,7 @@
       </template>
       <template v-slot:[`item.actions`]="{ item }">
         <OutlinedButtonGroup
-          v-if="currentUser !== undefined && currentUser.is_superadmin"
+          v-if="currentUser !== undefined"
           :main-action="{
             title: 'DETAILS',
             to: `/order/${item.id}`,
@@ -148,10 +148,9 @@
             { title: 'Replicate Order', action: () => replicateOrder(item), hidden: !hasPermission('admin-review-edit') },
             { title: item.is_hidden ? 'Unhide Order' : 'Hide Order', action: () => changeOrderDisplayStatus(item), hidden: true },
             { title: 'Show status history', action: () => item.openStatusHistoryDialog = true },
-            { title: 'Delete Order', action: () => deleteOrder(item) },
+            { title: 'Delete Order', action: () => deleteOrder(item), hidden: !hasPermission('orders-remove') },
           ]"
         />
-
         <v-btn
           v-else
           color="primary"

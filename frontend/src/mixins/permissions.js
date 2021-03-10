@@ -22,6 +22,10 @@ export default {
 
     isSuperadmin () {
       return this.currentUser !== undefined && this.currentUser.is_superadmin
+    },
+
+    canViewOtherCompanies () {
+      return has_permission(this.currentUser, 'all-companies-view')
     }
   }
 }

@@ -830,7 +830,7 @@ export default {
       return 'primary'
     },
     sendToTmsDisabled () {
-      if (this.sentToTms) {
+      if (this.sentToTms || !this.hasPermission('tms-resubmit') || !this.hasPermission('tms-submit')) {
         return true
       }
 

@@ -53,7 +53,7 @@
           persistent-hint
         />
         <v-select
-          v-if="isSuperadmin()"
+          v-if="canViewOtherCompanies()"
           v-model="companyId"
           data-cy="roles-selector"
           label="Company"
@@ -182,7 +182,7 @@ export default {
 
   beforeMount () {
     this.fetchRoles()
-    if (this.isSuperadmin()) {
+    if (this.canViewOtherCompanies()) {
       this.fetchCompanies()
     }
     if (this.edit) {
@@ -219,7 +219,7 @@ export default {
         role_id: this.role_selected
       }
 
-      if (this.isSuperadmin()) {
+      if (this.canViewOtherCompanies()) {
         data.company_id = this.companyId
       }
 
@@ -245,7 +245,7 @@ export default {
         password: this.password
       }
 
-      if (this.isSuperadmin()) {
+      if (this.canViewOtherCompanies()) {
         data.company_id = this.companyId
       }
 

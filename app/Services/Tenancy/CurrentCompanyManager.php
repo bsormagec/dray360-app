@@ -60,7 +60,9 @@ class CurrentCompanyManager
 
     protected function setOrReplaceFromId(?int $companyId)
     {
-        if (! $companyId || ($this->company && ! is_superadmin())) {
+        $canViewAllCompanies = ! auth()->guest() && auth()->user()->isAbleTo('all-companies-view');
+
+        if (! $companyId || ($this->company && ! $canViewAllCompanies)) {
             return;
         }
 

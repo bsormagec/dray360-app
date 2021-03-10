@@ -43,7 +43,7 @@
           </v-overlay>
           <div class="d-flex align-center justify-space-between">
             <v-switch
-              v-if="isSuperadmin()"
+              v-if="hasPermission('system-status-filter')"
               v-model="useSystemStatus"
               label="Show system status"
               :false-value="false"
@@ -160,7 +160,7 @@ export default {
   data: (vm) => ({
     statusHistory: [],
     loading: false,
-    useSystemStatus: vm.isSuperadmin()
+    useSystemStatus: vm.hasPermission('system-status-filter')
   }),
 
   computed: {

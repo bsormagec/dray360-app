@@ -35,7 +35,10 @@
             <div class="inbox__title_description">
               Requests Inbox
             </div>
-            <div class="add__request">
+            <div
+              v-if="hasPermission('ocr-requests-create')"
+              class="add__request"
+            >
               <v-btn
                 outlined
                 dense
