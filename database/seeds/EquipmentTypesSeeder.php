@@ -104,6 +104,33 @@ class EquipmentTypesSeeder extends Seeder
                 'line_prefix_list' => 'lineprefix',
             ],
         ],
+        'WBContainer' => [
+            'file' => 'seeds/WBContainer_equipment_types_20210215.xlsx',
+            'sheet' => 1,
+            'columns' => [
+                'tms_equipment_id' => 'id',
+                'equipment_owner' => 'line',
+                'equipment_type_and_size' => 'type',
+                'equipment_size' => 'equipmentlength',
+                'scac' => 'scac',
+                'line_prefix_list' => 'lineprefix',
+            ],
+        ],
+        'WBContainerOnboarding' => [
+            'file' => 'seeds/WBContainer_equipment_types_20210215.xlsx',
+            'sheet' => 1,
+            'columns' => [
+                'tms_equipment_id' => 'id',
+                'equipment_owner' => 'line',
+                'equipment_type_and_size' => 'type',
+                'equipment_size' => 'equipmentlength',
+                'scac' => 'scac',
+                'line_prefix_list' => 'lineprefix',
+            ],
+        ],
+
+
+        
 
     ];
 
