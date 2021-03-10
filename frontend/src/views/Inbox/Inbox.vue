@@ -187,7 +187,7 @@ export default {
   mixins: [permissions, isMobile, isMedium],
   data () {
     return {
-      compressed: false,
+      compressed: true,
       openUploadOrdersDialog: false,
       request: {
         first_order_id: null,
@@ -247,6 +247,7 @@ export default {
         this.setSidebar({ show: true })
         this.displayStatus.requestList = true
         this.displayStatus.orderDetail = true
+        this.compressed = true
       }
     }
   },
