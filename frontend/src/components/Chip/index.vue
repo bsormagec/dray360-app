@@ -85,5 +85,14 @@ export default {
     // if custom styling is required
     .chip {
       display: inline-block;
+      .v-chip.v-size--small {
+        min-height: rem(24px);
+        height: auto;
+      }
+
+      &::v-deep .v-chip__content {
+        white-space: pre-line;
+
+      }
     }
 </style>
