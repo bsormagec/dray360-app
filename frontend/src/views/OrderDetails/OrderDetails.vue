@@ -120,7 +120,8 @@ export default {
     formOptions: {
       hidden: [],
       address_search: {},
-      extra: {}
+      extra: {},
+      labels: {}
     },
     has404: false
   }),
@@ -251,6 +252,9 @@ export default {
       for (const key in this.companyConfiguration) {
         if (key.startsWith('hide_field_name_') && this.companyConfiguration[key]) {
           this.formOptions.hidden.push(key.replace('hide_field_name_', ''))
+        } else if (key.startsWith('label_field_name_') && this.companyConfiguration[key]) {
+          const newKey = key.replace('label_field_name_', '')
+          this.formOptions.labels[newKey] = this.companyConfiguration[key]
         } else if (key.startsWith('address_search_')) {
           const newKey = key.replace('address_search_', '')
           this.formOptions.address_search[newKey] = this.companyConfiguration[key]
