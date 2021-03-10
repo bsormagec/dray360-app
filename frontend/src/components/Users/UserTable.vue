@@ -208,7 +208,7 @@ export default {
     }
   },
   created () {
-    if (!this.isSuperadmin()) {
+    if (!this.canViewOtherCompanies()) {
       this.headers.splice(2, 1)
     }
     this.selectedHeaders = this.headers

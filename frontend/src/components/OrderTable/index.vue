@@ -21,6 +21,20 @@
           class="table-tools"
           height="auto"
         >
+          <v-btn
+            outlined
+            dense
+            small
+            icon
+            color="primary"
+            class="ml-0"
+            :loading="loading"
+            @click="getOrderData"
+          >
+            <v-icon class="primary--text">
+              mdi-refresh
+            </v-icon>
+          </v-btn>
           <Filters
             ref="orderFilters"
             :search="initFilters.search"
@@ -124,7 +138,7 @@
       </template>
       <template v-slot:[`item.actions`]="{ item }">
         <OutlinedButtonGroup
-          v-if="currentUser !== undefined && currentUser.is_superadmin"
+          v-if="currentUser !== undefined"
           :main-action="{
             title: 'DETAILS',
             to: `/order/${item.id}`,
@@ -134,10 +148,9 @@
             { title: 'Replicate Order', action: () => replicateOrder(item), hidden: !hasPermission('admin-review-edit') },
             { title: item.is_hidden ? 'Unhide Order' : 'Hide Order', action: () => changeOrderDisplayStatus(item), hidden: true },
             { title: 'Show status history', action: () => item.openStatusHistoryDialog = true },
-            { title: 'Delete Order', action: () => deleteOrder(item) },
+            { title: 'Delete Order', action: () => deleteOrder(item), hidden: !hasPermission('orders-remove') },
           ]"
         />
-
         <v-btn
           v-else
           color="primary"
@@ -709,7 +722,6 @@ export default {
     .table-tools::v-deep .v-toolbar__content {
       padding-left: 0;
       padding-right: 0;
-      justify-content: space-between;
     }
     .table::v-deep .v-data-table__empty-wrapper {
       margin-top:rem(46);
@@ -718,6 +730,7 @@ export default {
       max-width:rem(100);
       font-size: rem(12);
       margin-bottom: rem(8);
+      margin-left: auto;
     }
     .table-column-filter::v-deep .v-icon {
       margin-top: -6px !important;

@@ -35,7 +35,10 @@
             <div class="inbox__title_description">
               Requests Inbox
             </div>
-            <div class="add__request">
+            <div
+              v-if="hasPermission('ocr-requests-create')"
+              class="add__request"
+            >
               <v-btn
                 outlined
                 dense
@@ -187,7 +190,7 @@ export default {
   mixins: [permissions, isMobile, isMedium],
   data () {
     return {
-      compressed: false,
+      compressed: true,
       openUploadOrdersDialog: false,
       request: {
         first_order_id: null,
@@ -247,6 +250,7 @@ export default {
         this.setSidebar({ show: true })
         this.displayStatus.requestList = true
         this.displayStatus.orderDetail = true
+        this.compressed = true
       }
     }
   },

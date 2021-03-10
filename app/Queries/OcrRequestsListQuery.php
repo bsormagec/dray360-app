@@ -61,7 +61,7 @@ class OcrRequestsListQuery extends QueryBuilder
                 ])
                 ->join('t_job_state_changes as s', 't_job_latest_state.t_job_state_changes_id', '=', 's.id')
                 ->join('t_companies as c', 's.company_id', '=', 'c.id')
-                ->when(! is_superadmin() && currentCompany(), function ($query) {
+                ->when(! auth()->user()->isAbleTo('all-companies-view') && currentCompany(), function ($query) {
                     return $query->where('s.company_id', '=', currentCompany()->id);
                 })
                 ->whereNull('t_job_latest_state.order_id')

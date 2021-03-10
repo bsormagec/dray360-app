@@ -43,7 +43,7 @@ class OrdersListQuery extends QueryBuilder
             ->leftJoin('t_addresses as bill_to', 'bill_to.id', '=', 't_orders.bill_to_address_id')
             ->join('t_job_latest_state as ls_sort', 'ls_sort.order_id', '=', 't_orders.id')
             ->join('t_job_state_changes as s_sort', 's_sort.id', '=', 'ls_sort.t_job_state_changes_id')
-            ->when(! is_superadmin() && currentCompany(), function ($query) {
+            ->when(! auth()->user()->isAbleTo('all-companies-view') && currentCompany(), function ($query) {
                 return $query->where('t_orders.t_company_id', '=', currentCompany()->id);
             })
             ->when(! auth()->user()->isAbleTo('admin-review-view'), function ($query) {

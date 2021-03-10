@@ -10,6 +10,18 @@
         <v-card-title class="justify-space-between">
           <div class="secondary--text">
             Request #{{ request.request_id.substring(0,8).toUpperCase() }} History
+            <v-btn
+              outlined
+              dense
+              small
+              icon
+              color="primary"
+              class="refresh__button"
+              :loading="loading"
+              @click="fetchStatusHistory"
+            >
+              <v-icon>mdi-refresh</v-icon>
+            </v-btn>
           </div>
           <v-btn
             icon
@@ -31,25 +43,12 @@
           </v-overlay>
           <div class="d-flex align-center justify-space-between">
             <v-switch
-              v-if="isSuperadmin()"
+              v-if="hasPermission('system-status-filter')"
               v-model="useSystemStatus"
               label="Show system status"
               :false-value="false"
               :true-value="true"
             />
-            <v-btn
-              v-if="isSuperadmin()"
-              outlined
-              dense
-              small
-              icon
-              color="primary"
-              class="refresh__button"
-              :loading="loading"
-              @click="fetchStatusHistory"
-            >
-              <v-icon>mdi-refresh</v-icon>
-            </v-btn>
           </div>
           <div class="caption mb-3">
             Submitted {{ formatDate(request.created_at, true) }}
@@ -149,7 +148,7 @@ export default {
   data: (vm) => ({
     statusHistory: [],
     loading: false,
-    useSystemStatus: vm.isSuperadmin()
+    useSystemStatus: vm.hasPermission('system-status-filter')
   }),
 
   computed: {

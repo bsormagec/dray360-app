@@ -25,7 +25,7 @@ class OrdersPolicy
     {
         $hasViewPermission = $user->isAbleTo('orders-view');
 
-        if (! $user->isSuperadmin()) {
+        if (! $user->isAbleTo('all-companies-view')) {
             return $hasViewPermission && $user->belongsToSameCompanyAs($order);
         }
 
@@ -47,7 +47,7 @@ class OrdersPolicy
     {
         $hasUpdatePermissions = $user->isAbleTo('orders-edit');
 
-        if (! $user->isSuperadmin()) {
+        if (! $user->isAbleTo('all-companies-view')) {
             return $hasUpdatePermissions && $user->belongsToSameCompanyAs($order);
         }
 
@@ -61,7 +61,7 @@ class OrdersPolicy
     {
         $hasUpdatePermissions = $user->isAbleTo('all-orders-edit');
 
-        if (! $user->isSuperadmin()) {
+        if (! $user->isAbleTo('all-companies-view')) {
             return $hasUpdatePermissions && $user->belongsToSameCompanyAs($order);
         }
 
@@ -75,7 +75,7 @@ class OrdersPolicy
     {
         $hasDeletePermissions = $user->isAbleTo('orders-remove');
 
-        if (! $user->isSuperadmin()) {
+        if (! $user->isAbleTo('all-companies-view')) {
             return $hasDeletePermissions && $user->belongsToSameCompanyAs($order);
         }
 
@@ -89,7 +89,7 @@ class OrdersPolicy
     {
         $hasPermissionsToSendToTms = $user->isAbleTo('tms-submit');
 
-        if (! $user->isSuperadmin()) {
+        if (! $user->isAbleTo('all-companies-view')) {
             return $hasPermissionsToSendToTms && $user->belongsToSameCompanyAs($order);
         }
 
@@ -103,7 +103,7 @@ class OrdersPolicy
     {
         $hasPermissionsToSendToClient = $user->isAbleTo('admin-review-edit');
 
-        if (! $user->isSuperadmin()) {
+        if (! $user->isAbleTo('all-companies-view')) {
             return $hasPermissionsToSendToClient && $user->belongsToSameCompanyAs($order);
         }
 
@@ -117,7 +117,7 @@ class OrdersPolicy
     {
         $hasPermissionToReplicate = $user->isAbleTo('admin-review-edit');
 
-        if (! $user->isSuperadmin()) {
+        if (! $user->isAbleTo('all-companies-view')) {
             return $hasPermissionToReplicate && $user->belongsToSameCompanyAs($order);
         }
 

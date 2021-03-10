@@ -17,7 +17,7 @@
         <v-card-text class="mb-1 pb-0">
           <v-container class="mb-0 pb-0">
             <v-row
-              v-if="isSuperadmin()"
+              v-if="canViewOtherCompanies()"
             >
               <v-col class="py-0">
                 <v-autocomplete
@@ -172,7 +172,7 @@ export default {
     }
   },
   created () {
-    if (this.isSuperadmin()) {
+    if (this.canViewOtherCompanies()) {
       this.getCompanies()
     }
   },
@@ -233,7 +233,7 @@ export default {
         return
       }
 
-      if (this.isSuperadmin() && this.company_id === null) {
+      if (this.canViewOtherCompanies() && this.company_id === null) {
         this.setSnackbar({
           message: 'Please select a company first',
           show: true
@@ -259,7 +259,7 @@ export default {
     },
     async uploadFile (file) {
       const params = { variant_name: this.variantName }
-      if (this.isSuperadmin()) {
+      if (this.canViewOtherCompanies()) {
         params.company_id = this.company_id
       }
       const [error] = await postUploadRequestFile(file, params)

@@ -76,6 +76,6 @@ class UserPolicy
 
     protected function belongToSameCompany(User $user, $model): bool
     {
-        return $user->isSuperadmin() || $user->belongsToSameCompanyAs($model);
+        return $user->isAbleTo('all-companies-view') || $user->belongsToSameCompanyAs($model);
     }
 }

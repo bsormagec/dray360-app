@@ -37,7 +37,7 @@
       </div>
     </div>
     <div
-      v-if="!isSuperadmin()"
+      v-if="!canViewOtherCompanies()"
       class="text-caption pb-1"
     >
       {{ request.orders_count }} {{ request.orders_count == 1 ? 'order' : 'orders' }}
