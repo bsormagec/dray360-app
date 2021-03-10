@@ -20,6 +20,7 @@
             :options="{...formOptions}"
             @order-deleted="$emit('order-deleted')"
             @go-back="$emit('go-back')"
+            @refresh="fetchFormData"
           />
           <div
             class="form__resize"

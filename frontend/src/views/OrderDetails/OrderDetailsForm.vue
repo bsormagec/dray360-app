@@ -35,8 +35,20 @@
         </v-icon>
       </v-btn>
       <div>
-        <div class="order__title mr-4">
+        <div class="order__title mr-4 d-flex justify-space-between">
           Order #{{ order.id }}
+          <v-btn
+            outlined
+            dense
+            x-small
+            icon
+            color="primary"
+            class="ml-2"
+            :loading="loading"
+            @click="$emit('refresh')"
+          >
+            <v-icon>mdi-refresh</v-icon>
+          </v-btn>
         </div>
         <div class="secondary--text caption">
           <RequestStatus :status="order.ocr_request.latest_ocr_request_status" />

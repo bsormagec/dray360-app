@@ -10,6 +10,18 @@
         <v-card-title class="justify-space-between">
           <div class="secondary--text">
             Order #{{ order.id }} History
+            <v-btn
+              outlined
+              dense
+              small
+              icon
+              color="primary"
+              class="refresh__button"
+              :loading="loading"
+              @click="fetchStatusHistory"
+            >
+              <v-icon>mdi-refresh</v-icon>
+            </v-btn>
           </div>
           <v-btn
             icon
@@ -37,19 +49,6 @@
               :false-value="false"
               :true-value="true"
             />
-            <v-btn
-              v-if="isSuperadmin()"
-              outlined
-              dense
-              small
-              icon
-              color="primary"
-              class="refresh__button"
-              :loading="loading"
-              @click="fetchStatusHistory"
-            >
-              <v-icon>mdi-refresh</v-icon>
-            </v-btn>
           </div>
           <div
             v-if="order.submitted_date"
