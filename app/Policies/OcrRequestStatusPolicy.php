@@ -71,7 +71,7 @@ class OcrRequestStatusPolicy
      */
     public function downloadSourceFile(User $user, OCRRequestStatus $ocrRequestStatus): bool
     {
-        if (! $user->isSuperadmin()) {
+        if (! $user->isAbleTo('all-companies-view')) {
             return $user->getCompanyId() === $ocrRequestStatus->company_id;
         }
 

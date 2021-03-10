@@ -45,7 +45,7 @@ class TenancyManager
 
     public function isUsingRightDomain(Request $request, User $user): bool
     {
-        if (is_superadmin()) {
+        if (! auth()->guest() && auth()->user()->isAbleTo('all-companies-view')) {
             return true;
         }
 

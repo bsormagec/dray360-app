@@ -18,10 +18,12 @@ class DictionaryItemPolicy
      */
     public function viewAny(User $user)
     {
-        if (! $user->isSuperadmin() && request()->has('filter.company_id')) {
+        $canViewAllCompanies = $user->isAbleTo('all-companies-view');
+
+        if (! $canViewAllCompanies && request()->has('filter.company_id')) {
             return $user->isAbleTo('dictionary-items-view')
                 && $user->getCompanyId() == (request()->get('filter')['company_id'] ?? null);
-        } elseif (! $user->isSuperadmin() && ! request()->has('filter.company_id')) {
+        } elseif (! $canViewAllCompanies && ! request()->has('filter.company_id')) {
             return false;
         }
 

@@ -131,7 +131,7 @@
                 </v-select>
               </v-col>
             </v-row>
-            <v-row v-if="isSuperadmin()">
+            <v-row v-if="hasPermission('system-status-filter')">
               <v-col cols="4 d-flex align-center">
                 <label
                   for="system_status"
@@ -167,7 +167,7 @@
                 </v-select>
               </v-col>
             </v-row>
-            <v-row v-if="isSuperadmin()">
+            <v-row v-if="canViewOtherCompanies()">
               <v-col cols="4 d-flex align-center">
                 <label
                   for="company_id"
@@ -468,7 +468,7 @@ export default {
   },
 
   async beforeMount () {
-    if (this.isSuperadmin()) {
+    if (this.canViewOtherCompanies()) {
       await this.fetchCompanies()
     }
   },

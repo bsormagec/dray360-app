@@ -25,7 +25,7 @@ class UsersController extends Controller
         $this->authorize('viewAny', User::class);
 
         $query = User::query()
-            ->when(! is_superadmin(), function ($query) {
+            ->when(! auth()->user()->isAbleTo('all-companies-view'), function ($query) {
                 return $query->forCurrentCompany()
                     ->where(function ($query) {
                         $query->whereDoesntHave('roles')

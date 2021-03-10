@@ -35,8 +35,20 @@
         </v-icon>
       </v-btn>
       <div>
-        <div class="order__title mr-4">
+        <div class="order__title mr-4 d-flex justify-space-between">
           Order #{{ order.id }}
+          <v-btn
+            outlined
+            dense
+            x-small
+            icon
+            color="primary"
+            class="ml-2"
+            :loading="loading"
+            @click="$emit('refresh')"
+          >
+            <v-icon>mdi-refresh</v-icon>
+          </v-btn>
         </div>
         <div class="secondary--text caption">
           <RequestStatus :status="order.ocr_request.latest_ocr_request_status" />
@@ -210,7 +222,7 @@
         <FormFieldInputAutocomplete
           v-if="!!options.extra.profit_tools_enable_templates"
           references="tms_template_dictid"
-          label="TMS Template"
+          :label="options.labels.tms_template_dictid || 'TMS Template'"
           :value="order.tms_template_dictid"
           :autocomplete-items="tmsTemplates"
           item-text="item_display_name"
@@ -222,12 +234,12 @@
         <FormFieldManaged
           v-if="isManagedByTemplate"
           references="division_code"
-          label="Division"
+          :label="options.labels.division_code || 'Division'"
         />
         <FormFieldSelectDivisionCodes
           v-else-if="!!options.extra.enable_divisions"
           references="division_code"
-          label="Division"
+          :label="options.labels.division_code || 'Division'"
           :value="order.division_code"
           :edit-mode="editMode"
           :t-company-id="order.t_company_id"
@@ -238,7 +250,7 @@
         <FormFieldSelect
           v-if="fieldShouldBeShown('shipment_direction')"
           references="shipment_direction"
-          label="Shipment direction"
+          :label="options.labels.shipment_direction || 'Shipment direction'"
           :value="order.shipment_direction"
           :items="shipmentDirection"
           item-text="name"
@@ -249,7 +261,7 @@
         <FormFieldSwitch
           v-if="fieldShouldBeShown('expedite')"
           references="expedite"
-          label="Expedite"
+          :label="options.labels.expedite || 'Expedite'"
           :value="order.expedite"
           :edit-mode="editMode"
           @change="event => handleChange({ path:'expedite', ...event})"
@@ -257,7 +269,7 @@
         <FormFieldSwitch
           v-if="fieldShouldBeShown('hazardous')"
           references="hazardous"
-          label="Hazardous"
+          :label="options.labels.hazardous || 'Hazardous'"
           :value="order.hazardous"
           :edit-mode="editMode"
           @change="event => handleChange({ path:'hazardous', ...event})"
@@ -274,7 +286,7 @@
           <FormFieldInputAutocomplete
             v-if="!!options.extra.itg_enable_containers"
             references="container_dictid"
-            label="ITG Container Size/Type"
+            :label="options.labels.container_dictid || 'ITG Container Size/Type'"
             :value="order.container_dictid"
             :autocomplete-items="itgContainers"
             :item-text="item => `${item.item_display_name} (${item.item_key})`"
@@ -285,7 +297,7 @@
           />
           <FormFieldEquipmentType
             v-else
-            label="Equipment Type"
+            :label="options.labels.t_equipment_type_id || 'Equipment Type'"
             references="t_equipment_type_id"
             :company-id="order.t_company_id"
             :tms-provider-id="order.t_tms_provider_id"
@@ -301,7 +313,7 @@
           <FormFieldInput
             v-if="fieldShouldBeShown('unit_number')"
             references="unit_number"
-            label="Unit number"
+            :label="options.labels.unit_number || 'Unit number'"
             :value="order.unit_number"
             :edit-mode="editMode"
             @change="event => handleChange({ path:'unit_number', ...event})"
@@ -309,7 +321,7 @@
           <FormFieldInput
             v-if="fieldShouldBeShown('seal_number')"
             references="seal_number"
-            label="Seal number"
+            :label="options.labels.seal_number || 'Seal number'"
             :value="order.seal_number"
             :edit-mode="editMode"
             @change="event => handleChange({ path:'seal_number', ...event})"
@@ -327,7 +339,7 @@
           <FormFieldInput
             v-if="fieldShouldBeShown('reference_number')"
             references="reference_number"
-            label="Reference number"
+            :label="options.labels.reference_number || 'Reference number'"
             :value="order.reference_number"
             :edit-mode="editMode"
             @change="event => handleChange({ path:'reference_number', ...event})"
@@ -335,7 +347,7 @@
           <FormFieldInput
             v-if="fieldShouldBeShown('customer_number')"
             references="customer_number"
-            label="Customer number"
+            :label="options.labels.customer_number || 'Customer number'"
             :value="order.customer_number === null ? '---' : order.customer_number"
             :edit-mode="editMode"
             @change="event => handleChange({ path:'customer_number', ...event})"
@@ -343,7 +355,7 @@
           <FormFieldInput
             v-if="fieldShouldBeShown('load_number')"
             references="load_number"
-            label="Load number"
+            :label="options.labels.load_number || 'Load number'"
             :value="order.load_number"
             :edit-mode="editMode"
             @change="event => handleChange({ path:'load_number', ...event})"
@@ -351,7 +363,7 @@
           <FormFieldInput
             v-if="fieldShouldBeShown('purchase_order_number')"
             references="purchase_order_number"
-            label="Purchase Order number"
+            :label="options.labels.purchase_order_number || 'Purchase Order number'"
             :value="order.purchase_order_number"
             :edit-mode="editMode"
             @change="event => handleChange({ path:'purchase_order_number', ...event})"
@@ -359,7 +371,7 @@
           <FormFieldInput
             v-if="fieldShouldBeShown('release_number')"
             references="release_number"
-            label="Release number"
+            :label="options.labels.release_number || 'Release number'"
             :value="order.release_number"
             :edit-mode="editMode"
             @change="event => handleChange({ path:'release_number', ...event})"
@@ -367,7 +379,7 @@
           <FormFieldInput
             v-if="fieldShouldBeShown('pickup_number')"
             references="pickup_number"
-            label="Pickup number"
+            :label="options.labels.pickup_number || 'Pickup number'"
             :value="order.pickup_number"
             :edit-mode="editMode"
             @change="event => handleChange({ path:'pickup_number', ...event})"
@@ -375,7 +387,7 @@
           <FormFieldInputAutocomplete
             v-if="!!options.extra.enable_dictionary_items_carrier"
             references="carrier_dictid"
-            label="SSL"
+            :label="options.labels.carrier_dictid || 'SSL'"
             :value="order.carrier_dictid"
             :autocomplete-items="carrierItems"
             :item-text="item => `${item.item_display_name} (${item.item_key})`"
@@ -387,7 +399,7 @@
           <FormFieldInput
             v-if="fieldShouldBeShown('vessel') && !options.extra.enable_dictionary_items_vessel"
             references="vessel"
-            label="Vessel"
+            :label="options.labels.vessel || 'Vessel'"
             :value="order.vessel"
             :edit-mode="editMode"
             @change="event => handleChange({ path:'vessel', ...event})"
@@ -395,7 +407,7 @@
           <FormFieldInputAutocomplete
             v-if="!!options.extra.enable_dictionary_items_vessel"
             references="vessel_dictid"
-            label="Vessel"
+            :label="options.labels.vessel || 'Vessel'"
             :value="order.vessel_dictid"
             :autocomplete-items="vesselItems"
             item-text="item_display_name"
@@ -407,7 +419,7 @@
           <FormFieldInput
             v-if="fieldShouldBeShown('voyage')"
             references="voyage"
-            label="Voyage"
+            :label="options.labels.voyage || 'Voyage'"
             :value="order.voyage"
             :edit-mode="editMode"
             @change="event => handleChange({ path:'voyage', ...event})"
@@ -415,7 +427,7 @@
           <FormFieldDate
             v-if="fieldShouldBeShown('pickup_by_date')"
             references="pickup_by_date"
-            label="Pickup by date"
+            :label="options.labels.pickup_by_date || 'Pickup by date'"
             :value="order.pickup_by_date"
             :edit-mode="editMode"
             @change="event => handleChange({ path:'pickup_by_date', ...event})"
@@ -423,7 +435,7 @@
           <FormFieldTime
             v-if="fieldShouldBeShown('pickup_by_time')"
             references="pickup_by_time"
-            label="Pickup by time"
+            :label="options.labels.pickup_by_time || 'Pickup by time'"
             :value="order.pickup_by_time"
             :edit-mode="editMode"
             @change="event => handleChange({ path:'pickup_by_time', ...event})"
@@ -431,7 +443,7 @@
           <FormFieldDate
             v-if="fieldShouldBeShown('cutoff_date')"
             references="cutoff_date"
-            label="Cutoff Date"
+            :label="options.labels.cutoff_date || 'Cutoff Date'"
             :value="order.cutoff_date"
             :edit-mode="editMode"
             @change="event => handleChange({ path:'cutoff_date', ...event})"
@@ -439,7 +451,7 @@
           <FormFieldTime
             v-if="fieldShouldBeShown('cutoff_time')"
             references="cutoff_time"
-            label="Cutoff Time"
+            :label="options.labels.cutoff_time || 'Cutoff Time'"
             :value="order.cutoff_time"
             :edit-mode="editMode"
             @change="event => handleChange({ path:'cutoff_time', ...event})"
@@ -447,7 +459,7 @@
           <FormFieldInput
             v-if="fieldShouldBeShown('booking_number')"
             references="booking_number"
-            label="Booking number"
+            :label="options.labels.booking_number || 'Booking number'"
             :value="order.booking_number === null ? '---' : order.booking_number"
             :edit-mode="editMode"
             @change="event => handleChange({ path:'booking_number', ...event})"
@@ -455,7 +467,7 @@
           <FormFieldInput
             v-if="fieldShouldBeShown('master_bol_mawb')"
             references="master_bol_mawb"
-            label="Master BOL MAWB"
+            :label="options.labels.master_bol_mawb || 'Master BOL MAWB'"
             :value="order.master_bol_mawb"
             :edit-mode="editMode"
             @change="event => handleChange({ path:'master_bol_mawb', ...event})"
@@ -463,7 +475,7 @@
           <FormFieldInput
             v-if="fieldShouldBeShown('house_bol_hawb')"
             references="house_bol_hawb"
-            label="House BOL MAWB"
+            :label="options.labels.house_bol_hawb || 'House BOL MAWB'"
             :value="order.house_bol_hawb"
             :edit-mode="editMode"
             @change="event => handleChange({ path:'house_bol_hawb', ...event})"
@@ -493,7 +505,7 @@
           <FormFieldTextArea
             v-if="fieldShouldBeShown('bill_comment')"
             references="bill_comment"
-            label="Billing comments"
+            :label="options.labels.bill_comment || 'Billing comments'"
             :value="order.bill_comment"
             :edit-mode="editMode"
             @change="event => handleChange({ path:'bill_comment', ...event})"
@@ -508,7 +520,7 @@
           <FormFieldTextArea
             v-if="fieldShouldBeShown('line_haul')"
             references="line_haul"
-            label="Line Haul"
+            :label="options.labels.line_haul || 'Line Haul'"
             :value="order.line_haul"
             :edit-mode="editMode"
             @change="event => handleChange({ path:'line_haul', ...event})"
@@ -516,7 +528,7 @@
           <FormFieldTextArea
             v-if="fieldShouldBeShown('fuel_surcharge')"
             references="fuel_surcharge"
-            label="FSC"
+            :label="options.labels.fuel_surcharge || 'FSC'"
             :value="order.fuel_surcharge"
             :edit-mode="editMode"
             @change="event => handleChange({ path:'fuel_surcharge', ...event})"
@@ -608,7 +620,7 @@
           <FormFieldTextArea
             v-if="fieldShouldBeShown('ship_comment')"
             references="ship_comment"
-            label="Shipment comments"
+            :label="options.labels.ship_comment || 'Shipment comments'"
             :value="order.ship_comment"
             :edit-mode="editMode"
             @change="event => handleChange({path: 'ship_comment', ...event})"
@@ -639,14 +651,14 @@
           <div class="section__rootfields">
             <FormFieldTextArea
               :references="`order_line_items.${item.real_index}.contents`"
-              label="Contents"
+              :label="options.labels.order_line_item_contents || 'Contents'"
               :value="item.contents"
               :edit-mode="editMode"
               @change="event => handleChange({ path:`order_line_items.${item.real_index}.contents`, ...event})"
             />
             <FormFieldInput
               :references="`order_line_items.${item.real_index}.quantity`"
-              label="Quantity"
+              :label="options.labels.order_line_item_quantity || 'Quantity'"
               type="number"
               :value="item.quantity"
               :edit-mode="editMode"
@@ -654,7 +666,7 @@
             />
             <FormFieldInput
               :references="`order_line_items.${item.real_index}.weight`"
-              label="Weight"
+              :label="options.labels.order_line_item_weight || 'Weight'"
               type="number"
               :value="item.weight"
               :edit-mode="editMode"
@@ -749,7 +761,7 @@ export default {
     options: {
       type: Object,
       required: false,
-      default: () => ({ hidden: [], extra: {}, address_search: {} })
+      default: () => ({ hidden: [], extra: {}, address_search: {}, labels: {} })
     },
     tmsTemplates: {
       type: Array,
@@ -818,7 +830,7 @@ export default {
       return 'primary'
     },
     sendToTmsDisabled () {
-      if (this.sentToTms) {
+      if (this.sentToTms || !this.hasPermission('tms-resubmit') || !this.hasPermission('tms-submit')) {
         return true
       }
 

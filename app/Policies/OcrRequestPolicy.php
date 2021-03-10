@@ -49,7 +49,7 @@ class OcrRequestPolicy
     {
         $hasDeletePermissions = $user->isAbleTo('ocr-requests-remove');
 
-        if (! $user->isSuperadmin()) {
+        if (! $user->isAbleTo('all-companies-view')) {
             $ocrRequestCompany = $ocrRequest->latestOcrRequestStatus->company_id ?? null;
             return $hasDeletePermissions && $user->getCompanyId() == $ocrRequestCompany;
         }

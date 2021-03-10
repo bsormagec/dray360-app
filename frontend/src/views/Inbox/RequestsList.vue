@@ -16,7 +16,6 @@
         @change="filtersUpdated"
       />
       <v-btn
-        v-if="isSuperadmin()"
         outlined
         dense
         small
