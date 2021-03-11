@@ -49,10 +49,10 @@ Datetime, creation date of this row, etc.
 #### document_metadata 
 
 ````json
-    [
+    {
         "company_id": 2,
         "user_id": 19
-    ]
+    }
 ````
 
 #### external_references
