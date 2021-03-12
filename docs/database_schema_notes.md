@@ -26,9 +26,9 @@ It is not intended to document every individual column and table, most of which 
 
 This table is used by the (machine-learning) classification system, which identifies what type of document has been requested for processing (i.e. identifies a PDF's variant_type).
 
-#### type (varchar 128):
+#### type
 
-    "deliveryorderpdf" is the only value, to start with
+The value "deliveryorderpdf" is the only value, to start with. In future, we might see something like "customsdeclarationpdf", for example.
 
 #### s3uri
 
@@ -45,6 +45,34 @@ Datetime, indicates when this source document was first used/discovered)
 #### created_at, updated_at, deleted_at
 
 Datetime, creation date of this row, etc.
+
+#### rendered_images
+
+````json
+    {
+        "300dpi": [
+            "s3://55a4a6938a637a216d5610d990f7fb6267bcb4ba8867428481f9bfbc787b28d6.300dpi.page_1.jpg",
+            "s3://55a4a6938a637a216d5610d990f7fb6267bcb4ba8867428481f9bfbc787b28d6.300dpi.page_2.jpg"
+        ],
+        "100x": [
+            "s3://55a4a6938a637a216d5610d990f7fb6267bcb4ba8867428481f9bfbc787b28d6.100X.page_1.jpg",
+            "s3://55a4a6938a637a216d5610d990f7fb6267bcb4ba8867428481f9bfbc787b28d6.100X.page_2.jpg"
+        ],
+        "200x": [
+            "s3://55a4a6938a637a216d5610d990f7fb6267bcb4ba8867428481f9bfbc787b28d6.200X.page_1.jpg",
+            "s3://55a4a6938a637a216d5610d990f7fb6267bcb4ba8867428481f9bfbc787b28d6.200X.page_2.jpg"
+        ],
+        "300x": [
+            "s3://55a4a6938a637a216d5610d990f7fb6267bcb4ba8867428481f9bfbc787b28d6.300X.page_1.jpg",
+            "s3://55a4a6938a637a216d5610d990f7fb6267bcb4ba8867428481f9bfbc787b28d6.300X.page_2.jpg"
+        ],
+        "400x": [
+            "s3://55a4a6938a637a216d5610d990f7fb6267bcb4ba8867428481f9bfbc787b28d6.300X.page_1.jpg",
+            "s3://55a4a6938a637a216d5610d990f7fb6267bcb4ba8867428481f9bfbc787b28d6.300X.page_2.jpg"
+        ]        
+    }
+````
+            $table->json('rendered_images')->nullable();
 
 #### document_metadata 
 

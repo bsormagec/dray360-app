@@ -18,6 +18,7 @@ class CreateTTrainingDocuments extends Migration
             $table->string('type', 128);
             $table->string('s3uri', 1024)->charset('utf8')->index();
             $table->string('sha256sum', 64)->index();
+            $table->json('rendered_images')->nullable();
             $table->json('document_metadata')->nullable();
             $table->json('external_references')->nullable();
             $table->json('extracted_features_list')->nullable();
