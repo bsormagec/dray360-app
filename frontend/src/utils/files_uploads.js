@@ -2,6 +2,7 @@ export const getVariantTypeFromFile = (file) => {
   switch (file.type) {
     case 'text/csv':
     case 'application/wps-office.xlsx':
+    case 'application/vnd.ms-excel' :
     case 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet':
       return 'tabular'
     case '':

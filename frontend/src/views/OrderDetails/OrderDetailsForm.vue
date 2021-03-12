@@ -432,7 +432,15 @@
             :edit-mode="editMode"
             @change="event => handleChange({ path:'pickup_by_date', ...event})"
           />
-          <FormFieldTime
+          <!-- <FormFieldTime
+            v-if="fieldShouldBeShown('pickup_by_time')"
+            references="pickup_by_time"
+            :label="options.labels.pickup_by_time || 'Pickup by time'"
+            :value="order.pickup_by_time"
+            :edit-mode="editMode"
+            @change="event => handleChange({ path:'pickup_by_time', ...event})"
+          /> -->
+          <FormFieldTimeMask
             v-if="fieldShouldBeShown('pickup_by_time')"
             references="pickup_by_time"
             :label="options.labels.pickup_by_time || 'Pickup by time'"
@@ -448,7 +456,15 @@
             :edit-mode="editMode"
             @change="event => handleChange({ path:'cutoff_date', ...event})"
           />
-          <FormFieldTime
+          <!-- <FormFieldTime
+            v-if="fieldShouldBeShown('cutoff_time')"
+            references="cutoff_time"
+            :label="options.labels.cutoff_time || 'Cutoff Time'"
+            :value="order.cutoff_time"
+            :edit-mode="editMode"
+            @change="event => handleChange({ path:'cutoff_time', ...event})"
+          /> -->
+          <FormFieldTimeMask
             v-if="fieldShouldBeShown('cutoff_time')"
             references="cutoff_time"
             :label="options.labels.cutoff_time || 'Cutoff Time'"
@@ -704,7 +720,8 @@ import utils, { type } from '@/store/modules/utils'
 import { downloadFile } from '@/utils/download_file'
 
 import FormFieldDate from '@/components/FormFields/FormFieldDate'
-import FormFieldTime from '@/components/FormFields/FormFieldTime'
+// import FormFieldTime from '@/components/FormFields/FormFieldTime'
+import FormFieldTimeMask from '@/components/FormFields/FormFieldTimeMask'
 import FormFieldInput from '@/components/FormFields/FormFieldInput'
 import FormFieldSwitch from '@/components/FormFields/FormFieldSwitch'
 import FormFieldTextArea from '@/components/FormFields/FormFieldTextArea'
@@ -725,7 +742,8 @@ export default {
   name: 'OrderDetailsForm',
   components: {
     FormFieldDate,
-    FormFieldTime,
+    // FormFieldTime,
+    FormFieldTimeMask,
     FormFieldInput,
     OrderAuditDialog,
     FormFieldSwitch,
@@ -830,7 +848,7 @@ export default {
       return 'primary'
     },
     sendToTmsDisabled () {
-      if ( this.sentToTms || ( !this.hasPermission('tms-resubmit') && !this.hasPermission('tms-submit') )  ) {
+      if (this.sentToTms || (!this.hasPermission('tms-resubmit') && !this.hasPermission('tms-submit'))) {
         return true
       }
 
