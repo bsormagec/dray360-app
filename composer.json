@@ -29,7 +29,8 @@
         "santigarcor/laratrust": "^6.1",
         "sentry/sentry-laravel": "1.8.0",
         "spatie/laravel-query-builder": "^2.8",
-        "spatie/laravel-rate-limited-job-middleware": "^1.4"
+        "spatie/laravel-rate-limited-job-middleware": "^1.4",
+        "dray360/usage-metrics": "*"
     },
     "require-dev": {
         "facade/ignition": "^2.0",
@@ -94,6 +95,10 @@
         {
             "type": "composer",
             "url": "https://nova.laravel.com"
+        },
+        {
+            "type": "path",
+            "url": "./nova-components/UsageMetrics"
         }
     ]
 }
