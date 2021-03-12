@@ -13,6 +13,9 @@ module.exports = {
   projects: [
     {
       root: './frontend',
-    }
+    },
+    {
+      root: './nova-components/UsageMetrics',
+    },
   ]
 }
