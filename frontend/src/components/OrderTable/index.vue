@@ -145,10 +145,10 @@
             hasPermission: hasPermission('orders-view')
           }"
           :options="[
-            { title: 'Replicate Order', action: () => replicateOrder(item), hidden: !hasPermission('admin-review-edit') },
+            { title: 'Replicate Order', action: () => replicateOrder(item), hidden: !hasPermission('admin-review-edit') || locked },
             { title: item.is_hidden ? 'Unhide Order' : 'Hide Order', action: () => changeOrderDisplayStatus(item), hidden: true },
             { title: 'Show status history', action: () => item.openStatusHistoryDialog = true },
-            { title: 'Delete Order', action: () => deleteOrder(item), hidden: !hasPermission('orders-remove') },
+            { title: 'Delete Order', action: () => deleteOrder(item), hidden: !hasPermission('orders-remove') || locked },
           ]"
         />
         <v-btn
@@ -248,6 +248,11 @@ export default {
       type: Number,
       required: false,
       default: 1
+    },
+    locked: {
+      type: Boolean,
+      required: false,
+      default: false
     },
     itemsPerPage: {
       type: Number,

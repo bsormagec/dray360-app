@@ -91,6 +91,9 @@ export default {
       return !this.hasPermission('admin-review-view') &&
           get(this.request, 'latest_ocr_request_status.status', '') === statuses.ocrPostProcessingReview
     },
+    isLocked () {
+      return get(this.request, 'is_locked', false)
+    },
     detailsTitle () {
       if (this.request.tms_template_name !== null) {
         return 'Template:'

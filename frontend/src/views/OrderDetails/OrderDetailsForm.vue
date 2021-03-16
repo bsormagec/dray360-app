@@ -35,7 +35,13 @@
         </v-icon>
       </v-btn>
       <div>
-        <div class="order__title mr-4 d-flex justify-space-between">
+        <div class="order__title mr-4 d-flex justify-space-between align-center">
+          <v-icon
+            v-if="isLocked"
+            color="slate-gray"
+          >
+            mdi-lock
+          </v-icon>
           Order #{{ order.id }}
           <v-btn
             outlined
@@ -78,11 +84,12 @@
         v-if="!editMode"
         :main-action="splitButtonMainAction"
         :options="[
-          { title: 'Edit Order' , action: toggleEdit, hasPermission: true },
+          { title: 'Edit Order' , action: toggleEdit, hasPermission: !isLocked },
+          { title: !isLocked ? 'Lock Order' : 'Unlock Order', action: () => setLocked({ locked: !isLocked }), hidden: !isSuperadmin() },
           { title: 'Download Source File', action: () => downloadSourceFile(order.request_id), hasPermission: true },
-          { title: 'Replicate Order', action: () => replicateOrder(order.id), hidden: !hasPermission('admin-review-edit') },
-          { title: 'Delete Order', action: () => deleteOrder(order.id), hasPermission: hasPermission('orders-remove') },
-          { title: 'Add TMS ID', action: () => addTMSId(order.id), hasPermission: hasPermission('ocr-requests-edit') && isInProcessedState},
+          { title: 'Replicate Order', action: () => replicateOrder(order.id), hidden: !hasPermission('admin-review-edit') || isLocked },
+          { title: 'Delete Order', action: () => deleteOrder(order.id), hasPermission: hasPermission('orders-remove') && !isLocked },
+          { title: 'Add TMS ID', action: () => addTMSId(order.id), hasPermission: hasPermission('ocr-requests-edit') && isInProcessedState && !isLocked},
           { title: 'View audit info', action: () => openAuditDialog = true, hidden: !hasPermission('audit-logs-view')}
         ]"
         :loading="loading"
@@ -579,6 +586,7 @@
             small
             outlined
             color="white"
+            :disabled="isLocked"
             @click="handleItinerayEdit(sections.itinerary.id)"
           >
             Edit itinerary
@@ -818,7 +826,7 @@ export default {
     }
   },
   computed: {
-    ...mapGetters(orderForm.moduleName, ['isMultiOrderRequest']),
+    ...mapGetters(orderForm.moduleName, ['isMultiOrderRequest', 'isLocked']),
     ...mapState(orderForm.moduleName, {
       order: state => state.order,
       editMode: state => state.editMode,
@@ -891,14 +899,14 @@ export default {
         return {
           title: 'Send to Client',
           action: this.postSendToClient,
-          disabled: this.sentToTms || !this.hasPermission('admin-review-edit')
+          disabled: this.sentToTms || this.isLocked || !this.hasPermission('admin-review-edit')
         }
       }
 
       return {
         title: 'Send to TMS',
         action: this.postSendToTms,
-        disabled: this.sendToTmsDisabled
+        disabled: this.sendToTmsDisabled || this.isLocked
       }
     },
     userWhoUploadedTheRequest () {
@@ -931,7 +939,8 @@ export default {
       stopHover: orderFormTypes.stopHover,
       toggleEdit: orderFormTypes.toggleEdit,
       cancelEdit: orderFormTypes.cancelEdit,
-      addHighlight: orderFormTypes.addHighlight
+      addHighlight: orderFormTypes.addHighlight,
+      setLocked: orderFormTypes.setLocked
     }),
 
     formatDate,

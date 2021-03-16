@@ -7,6 +7,7 @@ export const types = {
   setFormOrder: 'SET_FORM_ORDER',
   setHighlights: 'SET_HIGHLIGHTS',
   setHighlight: 'SET_HIGHLIGHT',
+  setLocked: 'SET_LOCKED',
   setPage: 'SET_PAGE',
   updateOrder: 'UPDATE_ORDER',
   toggleEdit: 'TOGGLE_EDIT',
@@ -26,6 +27,7 @@ const initialState = {
   editMode: false,
   highlights: {},
   pages: [],
+  isLocked: false,
   sections: {
     shipment: { id: 'shipment-section', label: 'Shipment', subsection: false },
     equipment: { id: 'equipment-subsection', label: 'Equipment', subsection: true, parent: 'shipment' },
@@ -42,6 +44,7 @@ const initialState = {
 const mutations = {
   [types.setFormOrder] (state, order) {
     state.order = { ...order }
+    state.isLocked = false
   },
   [types.updateOrder] (state, { changes }) {
     state.order = {
@@ -64,6 +67,9 @@ const mutations = {
   },
   [types.setPage] (state, { index, page }) {
     state.pages[index] = { ...page }
+  },
+  [types.setLocked] (state, { locked }) {
+    state.isLocked = locked
   }
 }
 
@@ -161,12 +167,18 @@ const actions = {
   },
   [types.setPage] ({ commit, state }, { index, page }) {
     commit(types.setPage, { index, page: { ...page } })
+  },
+  [types.setLocked] ({ commit, state }, { locked }) {
+    commit(types.setLocked, { locked })
   }
 }
 
 const getters = {
   isMultiOrderRequest: state => {
     return state.order.siblings_count > 1
+  },
+  isLocked: state => {
+    return state.order.is_locked || state.isLocked
   }
 }
 

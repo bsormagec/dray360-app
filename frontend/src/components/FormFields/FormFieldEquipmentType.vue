@@ -37,6 +37,7 @@
         </div>
         <v-btn
           v-if="!verified && equipmentType !== null"
+          :disabled="isLocked"
           color="primary"
           class="mx-5"
           outlined
@@ -48,6 +49,7 @@
         </v-btn>
         <v-btn
           color="primary"
+          :disabled="isLocked"
           outlined
           small
           @click="toggledialg"
@@ -286,7 +288,7 @@ export default {
   }),
 
   computed: {
-    ...mapGetters(orderForm.moduleName, ['isMultiOrderRequest']),
+    ...mapGetters(orderForm.moduleName, ['isMultiOrderRequest', 'isLocked']),
     concatenatedRecognizedText () {
       const scac = (this.unitNumber || '').substring(0, 4)
       const string = `${this.carrier || ''} ${this.equipmentSize || ''} ${this.recognizedText || ''} ${scac}`

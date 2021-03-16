@@ -28,7 +28,7 @@
     class="action-btns"
   >
     <div class="btn">
-      <v-icon>mdi-pencil-outline</v-icon>
+      <v-icon>{{ !locked ? 'mdi-pencil-outline' : 'mdi-lock' }}</v-icon>
     </div>
   </div>
 </template>
@@ -38,6 +38,10 @@ export default {
   name: 'FormFieldHighlightBtns',
 
   props: {
+    locked: {
+      type: Boolean,
+      required: true
+    },
     editMode: {
       type: Boolean,
       required: true

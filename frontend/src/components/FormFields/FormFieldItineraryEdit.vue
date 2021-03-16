@@ -98,6 +98,7 @@
         <div class="address-book-modal__footer">
           <v-btn
             v-if="!verified && addressFound"
+            :disabled="isLocked"
             color="primary"
             outlined
             small
@@ -108,6 +109,7 @@
           </v-btn>
 
           <v-btn
+            :disabled="isLocked"
             class="mr-2"
             color="primary"
             outlined
@@ -211,7 +213,7 @@ export default {
   }),
 
   computed: {
-    ...mapGetters(orderForm.moduleName, ['isMultiOrderRequest']),
+    ...mapGetters(orderForm.moduleName, ['isMultiOrderRequest', 'isLocked']),
     addressFound () {
       return get(this.currentAddress, 'id') !== undefined
     },

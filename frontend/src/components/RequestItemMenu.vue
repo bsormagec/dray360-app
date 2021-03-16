@@ -31,17 +31,17 @@
           v-text="'Download source file'"
         />
         <v-list-item
-          :disabled="!hasPermission('ocr-requests-remove')"
+          :disabled="!hasPermission('ocr-requests-remove') || isLocked"
           @click="deleteRequest(request.request_id)"
           v-text="'Delete request'"
         />
         <v-list-item
-          :disabled="!hasPermission('ocr-requests-edit')"
+          :disabled="!hasPermission('ocr-requests-edit') || isLocked"
           @click="toggleDoneUndone(request)"
           v-text="`Mark as ${doneText}`"
         />
         <v-list-item
-          :disabled="!hasPermission('ocr-request-statuses-create')"
+          :disabled="!hasPermission('ocr-request-statuses-create') || isLocked"
           @click="reprocessRequest(request.request_id)"
           v-text="'Reprocess request'"
         />
@@ -104,6 +104,9 @@ export default {
   computed: {
     doneText () {
       return this.request.done_at === null ? 'complete' : 'not complete'
+    },
+    isLocked () {
+      return this.request.is_locked
     }
   },
   methods: {

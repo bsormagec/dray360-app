@@ -126,6 +126,7 @@
               :request-id="request.request_id"
               :url-filters="false"
               wait-for-request-id
+              :locked="request.is_locked"
               :headers="[
                 { text: 'Date', value: 'created_at' },
                 { text: 'Order ID', value: 'id' },
