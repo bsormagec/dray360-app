@@ -40,10 +40,12 @@
             <Card label="Number of datafile requests" :metric="report.datafile_requests" />
             <Card label="Number of rejected requests" :metric="report.rejected_requests" />
             <Card label="Number of orders" :metric="report.orders" />
+            <Card label="Number of deleted orders" :metric="report.deleted_orders" />
             <Card label="Number of orders from pdf" :metric="report.orders_from_pdf" />
             <Card label="Number of orders from datafile" :metric="report.orders_from_datafile" />
             <Card label="Number of TMS shipments" :metric="report.tms_shipments" />
-            <Card label="Number of pages" :metric="report.pages" />
+            <Card label="Number of JPEG pages" :metric="report.jpeg_pages" />
+            <Card label="Number of PDF pages" :metric="report.pdf_pages" />
         </div>
 
 
