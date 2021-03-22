@@ -13,7 +13,11 @@ use Rap2hpoutre\FastExcel\FastExcel;
 
 class EquipmentTypesSeeder extends Seeder
 {
-    const TO_BE_IMPORTED = [
+    /**
+     * List all companies here, and in the TO_BE_IMPORTED section
+     * add the specific companies to actually import.
+     */
+    const ALL_COMPANIES = [
         'Cushing' => [
             'file' => 'seeds/cushing_equipment_lease_types_20201217.csv',
             'columns' => [
@@ -36,28 +40,28 @@ class EquipmentTypesSeeder extends Seeder
                 'line_prefix_list' => 'lineprefix',
             ],
         ],
-        // 'IXTOnboarding' => [
-        //     'file' => 'seeds/ixt_equipment_lease_types_20201028.csv',
-        //     'columns' => [
-        //         'tms_equipment_id' => 'id',
-        //         'equipment_owner' => 'line',
-        //         'equipment_type_and_size' => 'type',
-        //         'equipment_size' => 'equipmentlength',
-        //         'scac' => 'scac',
-        //         'line_prefix_list' => 'lineprefix',
-        //     ],
-        // ],
-        // 'IXT' => [
-        //     'file' => 'seeds/ixt_equipment_lease_types_20201028.csv',
-        //     'columns' => [
-        //         'tms_equipment_id' => 'id',
-        //         'equipment_owner' => 'line',
-        //         'equipment_type_and_size' => 'type',
-        //         'equipment_size' => 'equipmentlength',
-        //         'scac' => 'scac',
-        //         'line_prefix_list' => 'lineprefix',
-        //     ],
-        // ],
+        'IXTOnboarding' => [
+            'file' => 'seeds/ixt_equipment_lease_types_20201028.csv',
+            'columns' => [
+                'tms_equipment_id' => 'id',
+                'equipment_owner' => 'line',
+                'equipment_type_and_size' => 'type',
+                'equipment_size' => 'equipmentlength',
+                'scac' => 'scac',
+                'line_prefix_list' => 'lineprefix',
+            ],
+        ],
+        'IXT' => [
+            'file' => 'seeds/ixt_equipment_lease_types_20201028.csv',
+            'columns' => [
+                'tms_equipment_id' => 'id',
+                'equipment_owner' => 'line',
+                'equipment_type_and_size' => 'type',
+                'equipment_size' => 'equipmentlength',
+                'scac' => 'scac',
+                'line_prefix_list' => 'lineprefix',
+            ],
+        ],
         'PortCityLogisticsOnboarding' => [
             'file' => 'seeds/pcl_equipment_lease_types_20201028.csv',
             'columns' => [
@@ -128,10 +132,28 @@ class EquipmentTypesSeeder extends Seeder
                 'line_prefix_list' => 'lineprefix',
             ],
         ],
+        'GrahamTrucking' => [
+            'file' => 'seeds/graham_trucking_equipment.20210322.xlsx',
+            'sheet' => 1,
+            'columns' => [
+                'tms_equipment_id' => 'id',
+                'equipment_owner' => 'line',
+                'equipment_type_and_size' => 'type',
+                'equipment_size' => 'equipmentlength',
+                'line_prefix_list' => 'lineprefix',
+                'scac' => 'scac',
+            ],
+        ],
+    ];
 
 
-        
 
+    /**
+     * manually add the companies to import into this list.
+     * there is usually no reason to re-import more than once.
+     */
+    const TO_BE_IMPORTED = [
+        'GrahamTrucking' => self::ALL_COMPANIES['GrahamTrucking']
     ];
 
     /**
