@@ -43,6 +43,11 @@ class OCRRequest extends Model
         return $this->hasMany(\App\Models\Order::class, 'request_id', 'request_id');
     }
 
+    public function order()
+    {
+        return $this->belongsTo(Order::class, 'order_id');
+    }
+
     public function statusList()
     {
         return $this->hasMany(OCRRequestStatus::class, 'request_id', 'request_id');
