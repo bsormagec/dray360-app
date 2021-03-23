@@ -61,20 +61,23 @@
 <script>
 import isMobile from '@/mixins/is_mobile'
 import permissions from '@/mixins/permissions'
+import locks from '@/mixins/locks'
+
 import OrderDetailsForm from '@/views/OrderDetails/OrderDetailsForm'
 import OrderDetailsDocument from '@/views/OrderDetails/OrderDetailsDocument'
 import ContainerNotFound from '@/views/ContainerNotFound'
 import { reqStatus } from '@/enums/req_status'
-import { dictionaryItemsTypes, statuses } from '@/enums/app_objects_types'
+import { dictionaryItemsTypes, statuses, objectLocks } from '@/enums/app_objects_types'
+import events from '@/enums/events'
 
 import { getDictionaryItems } from '@/store/api_calls/utils'
 
 import ContentLoading from '@/components/ContentLoading'
 import orders, { types } from '@/store/modules/orders'
 import orderForm, { types as orderFormTypes } from '@/store/modules/order-form'
+import utils, { type } from '@/store/modules/utils'
 import { mapState, mapActions } from 'vuex'
 
-import utils, { type } from '@/store/modules/utils'
 import get from 'lodash/get'
 
 export default {
@@ -87,7 +90,7 @@ export default {
     ContainerNotFound
   },
 
-  mixins: [isMobile, permissions],
+  mixins: [isMobile, permissions, locks],
 
   props: {
     orderId: {
@@ -96,6 +99,11 @@ export default {
       default: null
     },
     backButton: {
+      type: Boolean,
+      required: false,
+      default: true
+    },
+    refreshLock: {
       type: Boolean,
       required: false,
       default: true
@@ -174,8 +182,19 @@ export default {
     await this.fetchFormData()
   },
 
+  mounted () {
+    this.$root.$on(events.lockClaimed, this.fetchFormData)
+    this.$root.$on(events.requestsRefreshed, () => !this.refreshLock && this.fetchFormData())
+  },
+
+  async beforeDestroy () {
+    if (this.refreshLock) {
+      this.stopRefreshingLock()
+    }
+  },
+
   methods: {
-    ...mapActions(utils.moduleName, [type.setSnackbar, type.setConfirmationDialog, type.setSidebar]),
+    ...mapActions(utils.moduleName, [type.setSidebar]),
     ...mapActions(orders.moduleName, [types.getOrderDetail]),
     ...mapActions(orderForm.moduleName, {
       setFormOrder: orderFormTypes.setFormOrder
@@ -184,6 +203,7 @@ export default {
     async fetchFormData () {
       await this.requestOrderDetail()
       this.initializeFormOptions()
+      await this.initializeLock()
 
       if (this.formOptions.extra.profit_tools_enable_templates) {
         await this.fetchTmsTemplates(this.currentOrder.company.id)
@@ -197,6 +217,22 @@ export default {
       if (this.formOptions.extra.enable_dictionary_items_vessel) {
         await this.getchVesselItems(this.currentOrder.company.id)
       }
+    },
+
+    async initializeLock () {
+      if (!this.refreshLock || !this.hasPermission('object-locks-create') || this.order.is_locked) {
+        return
+      } else if (this.userOwnsLock(this.order.lock)) {
+        this.refreshCurrentLock(this.order.request_id)
+        this.startRefreshingLock(this.order.request_id)
+        return
+      }
+
+      this.attemptToLockRequest({
+        requestId: this.order.request_id,
+        lockType: objectLocks.lockTypes.openOrder,
+        updateList: false,
+      })
     },
 
     async fetchTmsTemplates (companyId) {

@@ -92,7 +92,7 @@ const actions = {
 
     if (!useOrder && state.editMode) {
       commit(types.updateOrder, { changes })
-      return
+      return [undefined]
     }
 
     commit(types.setHighlight, { path, highlight: { loading: true } })
@@ -106,13 +106,12 @@ const actions = {
       [error, data] = await updateOrderDetail({ id: state.order.id, changes })
     }
 
-    if (error !== undefined) return { status: reqStatus.error, data: error }
-
-    commit(types.setFormOrder, data)
+    if (error === undefined) {
+      commit(types.setFormOrder, data)
+    }
 
     commit(types.setHighlight, { path, highlight: { loading: false } })
-
-    return { status: reqStatus.success, data }
+    return [error, data]
   },
   [types.toggleEdit] ({ commit, dispatch, state }, { saveAll = false } = { saveAll: false }) {
     const { editMode } = state

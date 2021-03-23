@@ -9,6 +9,22 @@
   >
     <div class="d-flex">
       <div class="d-flex align-center">
+        <v-tooltip
+          v-if="request.is_locked"
+          bottom
+        >
+          <template v-slot:activator="{ on, attrs }">
+            <v-icon
+              small
+              color="slate-gray"
+              v-bind="attrs"
+              v-on="on"
+            >
+              mdi-lock
+            </v-icon>
+          </template>
+          <span>Locked by {{ request.lock.user.name }}</span>
+        </v-tooltip>
         <span class="text-body-1 font-weight-bold secondary--text text-uppercase">#{{ request.request_id.substring(0,8) }}</span>
       </div>
       <RequestStatus

@@ -1,6 +1,6 @@
 {
 	"info": {
-		"_postman_id": "74ae4816-aa9e-4a7d-8ecd-0279d1708166",
+		"_postman_id": "7572bf3e-4360-4b30-809f-188808d63847",
 		"name": "Dray360 API",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
 	},
@@ -3111,6 +3111,182 @@
 			]
 		},
 		{
+			"name": "Object Locks",
+			"item": [
+				{
+					"name": "/api/object-locks",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"var token1=postman.getResponseCookie('XSRF-TOKEN').value;",
+									"var token2=token1.replace(/%3D/g, '=');",
+									"postman.setEnvironmentVariable('X-XSRF-TOKEN', token2);",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Referer",
+								"type": "text",
+								"value": "{{server}}"
+							},
+							{
+								"key": "Accept",
+								"type": "text",
+								"value": "application/json, text/plain, */*"
+							},
+							{
+								"key": "X-XSRF-TOKEN",
+								"type": "text",
+								"value": "{{X-XSRF-TOKEN}}"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"object_type\":\"request\",\n    \"object_id\":\"1312-dasfsd-234-asdf\",\n    \"lock_type\": \"select-request\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{server}}/api/object-locks",
+							"host": [
+								"{{server}}"
+							],
+							"path": [
+								"api",
+								"object-locks"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "/api/object-locks Copy",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"var token1=postman.getResponseCookie('XSRF-TOKEN').value;",
+									"var token2=token1.replace(/%3D/g, '=');",
+									"postman.setEnvironmentVariable('X-XSRF-TOKEN', token2);",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Referer",
+								"type": "text",
+								"value": "{{server}}"
+							},
+							{
+								"key": "Accept",
+								"type": "text",
+								"value": "application/json, text/plain, */*"
+							},
+							{
+								"key": "X-XSRF-TOKEN",
+								"type": "text",
+								"value": "{{X-XSRF-TOKEN}}"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"object_type\":\"request\",\n    \"object_id\":\"1312-dasfsd-234-asdf\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{server}}/api/object-locks",
+							"host": [
+								"{{server}}"
+							],
+							"path": [
+								"api",
+								"object-locks"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "/api/object-locks-delete",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"var token1=postman.getResponseCookie('XSRF-TOKEN').value;",
+									"var token2=token1.replace(/%3D/g, '=');",
+									"postman.setEnvironmentVariable('X-XSRF-TOKEN', token2);",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Referer",
+								"type": "text",
+								"value": "{{server}}"
+							},
+							{
+								"key": "Accept",
+								"type": "text",
+								"value": "application/json, text/plain, */*"
+							},
+							{
+								"key": "X-XSRF-TOKEN",
+								"type": "text",
+								"value": "{{X-XSRF-TOKEN}}"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"object_type\":\"request\",\n    \"object_id\":\"1312-dasfsd-234-asdf\",\n    \"_method\": \"DELETE\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{server}}/api/object-locks",
+							"host": [
+								"{{server}}"
+							],
+							"path": [
+								"api",
+								"object-locks"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
 			"name": "/api/search-address",
 			"event": [
 				{
@@ -3284,6 +3460,68 @@
 						{
 							"key": "order_id",
 							"value": null
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "/api/audit-logs",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"var token1=postman.getResponseCookie('XSRF-TOKEN').value;",
+							"var token2=token1.replace(/%3D/g, '=');",
+							"postman.setEnvironmentVariable('X-XSRF-TOKEN', token2);",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/x-www-form-urlencoded"
+					},
+					{
+						"key": "Referer",
+						"type": "text",
+						"value": "{{server}}"
+					},
+					{
+						"key": "Accept",
+						"type": "text",
+						"value": "application/json, text/plain, */*"
+					},
+					{
+						"key": "X-XSRF-TOKEN",
+						"type": "text",
+						"value": "{{X-XSRF-TOKEN}}"
+					}
+				],
+				"url": {
+					"raw": "{{server}}/api/audit-logs?model_id=15771&model_type=order",
+					"host": [
+						"{{server}}"
+					],
+					"path": [
+						"api",
+						"audit-logs"
+					],
+					"query": [
+						{
+							"key": "model_id",
+							"value": "15771"
+						},
+						{
+							"key": "model_type",
+							"value": "order"
 						}
 					]
 				}

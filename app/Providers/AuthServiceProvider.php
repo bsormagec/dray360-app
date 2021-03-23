@@ -29,6 +29,7 @@ class AuthServiceProvider extends ServiceProvider
         \App\Models\CompanyAddressTMSCode::class => \App\Policies\CompanyAddressTmsCodePolicy::class,
         \App\Models\DictionaryItem::class => \App\Policies\DictionaryItemPolicy::class,
         \OwenIt\Auditing\Models\Audit::class => \App\Policies\AuditLogPolicy::class,
+        \App\Models\ObjectLock::class => \App\Policies\ObjectLockPolicy::class,
     ];
 
     /**

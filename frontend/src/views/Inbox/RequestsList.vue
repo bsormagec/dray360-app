@@ -42,7 +42,7 @@
         >
           <RequestItem
             :request="request"
-            :active="requestSelected === request.request_id"
+            :active="requestSelected.request_id === request.request_id"
             @change="handleChange"
             @deleteRequest="refreshRequests"
           />
@@ -104,12 +104,17 @@ import RequestItem from './RequestItem'
 
 import { mapActions, mapState } from 'vuex'
 import orders, { types as ordersTypes } from '@/store/modules/orders'
+import requestsList, { types as requestsListTypes } from '@/store/modules/requests-list'
+
 import { getRequests } from '@/store/api_calls/requests'
 import { getRequestFilters } from '@/utils/filters_handling'
+
 import { formatDate } from '@/utils/dates'
 import permissions from '@/mixins/permissions'
+import locks from '@/mixins/locks'
 import isMobile from '@/mixins/is_mobile'
-import { statuses } from '@/enums/app_objects_types'
+import { statuses, objectLocks } from '@/enums/app_objects_types'
+import events from '@/enums/events'
 
 import get from 'lodash/get'
 
@@ -119,12 +124,11 @@ export default {
     Filters,
     RequestItem
   },
-  mixins: [permissions, isMobile],
+  mixins: [permissions, isMobile, locks],
   data () {
     return {
       bottom: false,
-      requestSelected: null,
-      items: [],
+      requestSelected: { request_id: null },
       page: 1,
       meta: {},
       loading: false,
@@ -148,6 +152,9 @@ export default {
   computed: {
     ...mapState(orders.moduleName, {
       reloadRequests: state => state.reloadRequests
+    }),
+    ...mapState(requestsList.moduleName, {
+      items: state => state.requests
     })
   },
   watch: {
@@ -179,7 +186,7 @@ export default {
       .map(item => parseInt(item))
       .filter(item => !isNaN(item))
     this.initFilters.updateType = params.updateType
-    this.requestSelected = params.selected || null
+    this.requestSelected.request_id = params.selected || null
   },
   async mounted () {
     this.addScrollEventToFetchMoreRequests()
@@ -191,14 +198,27 @@ export default {
 
     this.initialTotalMeta = this.meta.total
     this.startPolling()
+    this.$root.$on(events.lockClaimed, request => this.startRefreshingLock(request.request_id))
+    this.$root.$on(events.lockReleased, request => this.stopRefreshingLock())
+    this.$root.$on(events.lockRefreshFailed, request => {
+      this.stopRefreshingLock()
+      this.refreshRequests()
+    })
   },
   beforeDestroy () {
     this.stopPolling()
+    this.stopRefreshingLock()
+    this.releaseLockRequest({ requestId: this.requestSelected.request_id })
+    this.resetPagination()
   },
 
   methods: {
     ...mapActions(orders.moduleName, {
-      setReloadRequests: ordersTypes.setReloadRequests
+      setReloadRequests: ordersTypes.setReloadRequests,
+    }),
+    ...mapActions(requestsList.moduleName, {
+      setRequests: requestsListTypes.setRequests,
+      appendRequests: requestsListTypes.appendRequests,
     }),
     formatDate,
     clearFilters () {
@@ -215,6 +235,7 @@ export default {
       }
     },
     async refreshRequests () {
+      this.$root.$emit(events.requestsRefreshed)
       this.startLoading()
       this.resetPagination()
       this.setURLParams()
@@ -245,7 +266,7 @@ export default {
         return
       }
 
-      this.items = this.items.concat(data.data)
+      this.appendRequests(data.data)
       this.meta = data.meta
       this.loading = false
     },
@@ -269,7 +290,7 @@ export default {
       return [
         ...this.filters,
         { type: 'page', value: this.page },
-        { type: 'selected', value: this.requestSelected }
+        { type: 'selected', value: this.requestSelected.request_id }
       ]
     },
     setURLParams () {
@@ -293,16 +314,42 @@ export default {
       this.handleChange(filteredRequests[0])
     },
     handleChange (request) {
-      this.requestSelected = request.request_id
+      this.handleRequestLock(this.requestSelected, request)
+      this.requestSelected = request
       this.$emit('change', request)
       this.setURLParams()
+    },
+    async handleRequestLock (oldRequest, newRequest) {
+      if (
+        oldRequest.request_id && newRequest.request_id &&
+        oldRequest.request_id !== newRequest.request_id &&
+        !oldRequest.is_locked &&
+        this.hasPermission('object-locks-create')
+      ) {
+        await this.releaseLockRequest({ requestId: oldRequest.request_id, updateList: true })
+        this.stopRefreshingLock()
+      }
+
+      if (!this.hasPermission('object-locks-create') || newRequest.is_locked) {
+        return
+      } else if (this.userOwnsLock(newRequest.lock)) {
+        this.refreshCurrentLock(newRequest.request_id)
+        this.startRefreshingLock(newRequest.request_id)
+        return
+      }
+
+      this.attemptToLockRequest({
+        requestId: newRequest.request_id,
+        lockType: objectLocks.lockTypes.selectRequest,
+        updateList: true
+      })
     },
     startLoading () {
       this.loading = true
     },
     resetPagination () {
       this.page = 1
-      this.items = []
+      this.setRequests([])
     },
 
     async startPolling () {

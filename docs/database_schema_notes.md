@@ -16,6 +16,23 @@ It is not intended to document every individual column and table, most of which 
 
 
 
+<br><br><br>
+
+### TABLE:  t_object_locks
+
+------
+
+0. id (ubigint primary key)
+0. object_type (indexed varchar 64). for example “request”
+0. object_id (indexed varchar 64). for example “0055bec1-d8e9-5726-9918-e6c0b8e380bd”
+0. lock_type (varchar 64), how lock created. e.g. “claim-lock”, “select-request”, “open-order”
+0. user_id (indexed ubint fk to users). user who owns the lock
+0. created_at (datetime). when lock first request
+0. updated_at (datetime). i.e. refreshed_at, used to indicate lock has been refreshed, s/b every <n> seconds. locks updated more than <M> seconds ago are considered to be implicitly released.
+0. deleted_at (datetime). i.e. released_at, used to indicate the lock has been explicitly released.
+
+
+
 
 
 <br><br><br>
@@ -50,26 +67,21 @@ Datetime, creation date of this row, etc.
 
 ````json
     {
-        "300dpi": [
-            "s3://55a4a6938a637a216d5610d990f7fb6267bcb4ba8867428481f9bfbc787b28d6.300dpi.page_1.jpg",
-            "s3://55a4a6938a637a216d5610d990f7fb6267bcb4ba8867428481f9bfbc787b28d6.300dpi.page_2.jpg"
-        ],
         "100x": [
-            "s3://55a4a6938a637a216d5610d990f7fb6267bcb4ba8867428481f9bfbc787b28d6.100X.page_1.jpg",
-            "s3://55a4a6938a637a216d5610d990f7fb6267bcb4ba8867428481f9bfbc787b28d6.100X.page_2.jpg"
+            "s3://dray360-onboarding-extracts/labelled_documents/cargowise_pdftext_jan2021/not_cargowise/ITG-NOT-CW/sorted/AOT/export/titantirefreeporttosantos26-11168.100x.page_1.jpg"
         ],
         "200x": [
-            "s3://55a4a6938a637a216d5610d990f7fb6267bcb4ba8867428481f9bfbc787b28d6.200X.page_1.jpg",
-            "s3://55a4a6938a637a216d5610d990f7fb6267bcb4ba8867428481f9bfbc787b28d6.200X.page_2.jpg"
+            "s3://dray360-onboarding-extracts/labelled_documents/cargowise_pdftext_jan2021/not_cargowise/ITG-NOT-CW/sorted/AOT/export/titantirefreeporttosantos26-11168.200x.page_1.jpg"
         ],
         "300x": [
-            "s3://55a4a6938a637a216d5610d990f7fb6267bcb4ba8867428481f9bfbc787b28d6.300X.page_1.jpg",
-            "s3://55a4a6938a637a216d5610d990f7fb6267bcb4ba8867428481f9bfbc787b28d6.300X.page_2.jpg"
+            "s3://dray360-onboarding-extracts/labelled_documents/cargowise_pdftext_jan2021/not_cargowise/ITG-NOT-CW/sorted/AOT/export/titantirefreeporttosantos26-11168.300x.page_1.jpg"
         ],
         "400x": [
-            "s3://55a4a6938a637a216d5610d990f7fb6267bcb4ba8867428481f9bfbc787b28d6.300X.page_1.jpg",
-            "s3://55a4a6938a637a216d5610d990f7fb6267bcb4ba8867428481f9bfbc787b28d6.300X.page_2.jpg"
-        ]        
+            "s3://dray360-onboarding-extracts/labelled_documents/cargowise_pdftext_jan2021/not_cargowise/ITG-NOT-CW/sorted/AOT/export/titantirefreeporttosantos26-11168.400x.page_1.jpg"
+        ],
+        "300dpi": [
+            "s3://dray360-onboarding-extracts/labelled_documents/cargowise_pdftext_jan2021/not_cargowise/ITG-NOT-CW/sorted/AOT/export/titantirefreeporttosantos26-11168.300dpi.page_1.jpg"
+        ]
     }
 ````
             $table->json('rendered_images')->nullable();
@@ -103,8 +115,8 @@ Datetime, creation date of this row, etc.
 ````json
     [
         {
-            "type": "bigram",
-            "s3uri": "s3://ourbucket/documentfile.bigrams.json"
+            "type": "ordered_word_list",
+            "s3uri": "s3://dray360-onboarding-extracts/labelled_documents/cargowise_pdftext_jan2021/not_cargowise/ITG-NOT-CW/sorted/AOT/export/titantirefreeporttosantos26-11168.ordered_words_list.json"
         },
         {
             "type": "tableshapes",

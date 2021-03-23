@@ -126,7 +126,6 @@
               :request-id="request.request_id"
               :url-filters="false"
               wait-for-request-id
-              :locked="request.is_locked"
               :headers="[
                 { text: 'Date', value: 'created_at' },
                 { text: 'Order ID', value: 'id' },
@@ -145,6 +144,7 @@
           <OrderDetails
             v-else-if="request.orders_count === 1"
             :back-button="false"
+            :refresh-lock="false"
             :order-id="request.first_order_id"
             :starting-size="compressed ? 40 : 50"
             @order-deleted="() => setReloadRequests(true)"

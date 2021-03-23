@@ -27,6 +27,16 @@
           v-text="'Copy request ID'"
         />
         <v-list-item
+          v-if="isLocked && hasPermission('object-locks-edit')"
+          @click="handleClaimLock"
+          v-text="'Claim lock'"
+        />
+        <v-list-item
+          v-if="userOwnsLock(request.lock)"
+          @click="handleReleaseLock"
+          v-text="'Release lock'"
+        />
+        <v-list-item
           @click="downloadSourceFile(request.request_id)"
           v-text="'Download source file'"
         />
@@ -72,16 +82,19 @@
 <script>
 import { mapActions } from 'vuex'
 import permissions from '@/mixins/permissions'
+import locks from '@/mixins/locks'
 import utils, { type } from '@/store/modules/utils'
 import { downloadFile } from '@/utils/download_file'
 import { deleteRequest, getSourceFileDownloadURL, reprocessOcrRequest, changeRequestDoneStatus } from '@/store/api_calls/requests'
 import RequestStatusHistoryDialog from './RequestStatusHistoryDialog'
 import RequestEmailDialog from './RequestEmailDialog'
+import { objectLocks } from '@/enums/app_objects_types'
+import events from '@/enums/events'
 
 export default {
   name: 'RequestItemMenu',
   components: { RequestStatusHistoryDialog, RequestEmailDialog },
-  mixins: [permissions],
+  mixins: [permissions, locks],
   props: {
     request: {
       type: Object,
@@ -135,6 +148,43 @@ export default {
             message = 'Error trying to delete the request'
           }
           await this.setSnackbar({ show: true, message })
+        },
+        onCancel: () => {
+          this.loading = false
+        }
+      })
+    },
+
+    async handleClaimLock () {
+      this.loading = true
+      await this.setConfirmDialog({
+        title: 'Are you sure you want to claim this request\'s lock?',
+        onConfirm: async () => {
+          this.attemptToLockRequest({
+            requestId: this.request.request_id,
+            lockType: objectLocks.lockTypes.claimLock,
+            updateList: true,
+            startRefresh: false,
+          })
+
+          this.$root.$emit(events.lockClaimed, this.request)
+          this.loading = false
+        },
+        onCancel: () => {
+          this.loading = false
+        }
+      })
+    },
+
+    async handleReleaseLock () {
+      this.loading = true
+      await this.setConfirmDialog({
+        title: 'Are you sure you want to release this request\'s lock?',
+        onConfirm: async () => {
+          this.releaseLockRequest({ requestId: this.request.request_id })
+
+          this.$root.$emit(events.lockReleased, this.request)
+          this.loading = false
         },
         onCancel: () => {
           this.loading = false

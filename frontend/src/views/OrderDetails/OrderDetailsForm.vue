@@ -36,12 +36,22 @@
       </v-btn>
       <div>
         <div class="order__title mr-4 d-flex justify-space-between align-center">
-          <v-icon
+          <v-tooltip
             v-if="isLocked"
-            color="slate-gray"
+            bottom
           >
-            mdi-lock
-          </v-icon>
+            <template v-slot:activator="{ on, attrs }">
+              <v-icon
+                small
+                color="slate-gray"
+                v-bind="attrs"
+                v-on="on"
+              >
+                mdi-lock
+              </v-icon>
+            </template>
+            <span>Locked by {{ order.lock.user.name }}</span>
+          </v-tooltip>
           Order #{{ order.id }}
           <v-btn
             outlined
@@ -85,7 +95,6 @@
         :main-action="splitButtonMainAction"
         :options="[
           { title: 'Edit Order' , action: toggleEdit, hasPermission: !isLocked },
-          { title: !isLocked ? 'Lock Order' : 'Unlock Order', action: () => setLocked({ locked: !isLocked }), hidden: !isSuperadmin() },
           { title: 'Download Source File', action: () => downloadSourceFile(order.request_id), hasPermission: true },
           { title: 'Replicate Order', action: () => replicateOrder(order.id), hidden: !hasPermission('admin-review-edit') || isLocked },
           { title: 'Delete Order', action: () => deleteOrder(order.id), hasPermission: hasPermission('orders-remove') && !isLocked },
@@ -940,7 +949,6 @@ export default {
       toggleEdit: orderFormTypes.toggleEdit,
       cancelEdit: orderFormTypes.cancelEdit,
       addHighlight: orderFormTypes.addHighlight,
-      setLocked: orderFormTypes.setLocked
     }),
 
     formatDate,
@@ -950,7 +958,14 @@ export default {
     },
 
     async handleChange (event) {
-      await this.updateOrder(event)
+      const [error, data] = await this.updateOrder(event)
+
+      if (error !== undefined) {
+        this[type.setSnackbar]({
+          show: true,
+          message: get(error, 'response.data.message') || 'There was an error saving the information'
+        })
+      }
     },
 
     async refreshOrder () {

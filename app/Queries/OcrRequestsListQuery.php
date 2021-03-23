@@ -69,6 +69,9 @@ class OcrRequestsListQuery extends QueryBuilder
                 ->with([
                     'latestOcrRequestStatus:id,status,status_date,status_metadata',
                 ])
+                ->with(['locks.user' => function ($with) {
+                    $with->select('id', 'name');
+                }])
                 ->when($requestId, function ($query) use ($requestId) {
                     return $query->orderByDesc(DB::raw("\"{$requestId}\" = t_job_latest_state.request_id"));
                 });

@@ -39,6 +39,7 @@ class SideBySideOrder extends JsonResource
         $this->preparePreceedingOrderChanges();
         $this->loadOrderCompanyConfiguration();
         $this->loadUserWhoSentToTms();
+        $this->loadLocks();
 
         return parent::toArray($request);
     }
@@ -55,6 +56,21 @@ class SideBySideOrder extends JsonResource
         $this->resource->company->unsetRelation('domain');
 
         $this->resource->company->configuration = $configuration;
+    }
+
+    protected function loadLocks()
+    {
+        $this->resource->load([
+            'locks.user' => function ($load) {
+                $load->select('id', 'name');
+            },
+        ]);
+
+        $lock = $this->resource->getActiveLock();
+        $isLocked = $this->resource->isLockedForTheUser();
+        $this->resource->unsetRelation('locks');
+        $this->resource->is_locked = $isLocked;
+        $this->resource->setRelation('lock', $lock);
     }
 
     protected function loadUserWhoSentToTms()
