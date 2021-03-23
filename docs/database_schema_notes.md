@@ -455,7 +455,7 @@ This is a json array that stores list of companies that can use this datafile va
 
 The reason for this column and to *not* to use the `t_company_ocrvariant_ocrrules` table with its `t_company_id`/`t_variant_id` columns to associate a company with the variant is because: the `company_id_list` gets used in conjunction with the aforementioned `classification` column to identify whether a given datafile should be represented by a particular variant; rules don't come into it.
 
-JSON data structure: 
+JSON data structure:
 ````json-list
 [
     company_id_1,
@@ -471,18 +471,6 @@ select * from t_ocrvariants where json_contains(company_id_list, '2','$');
 ````
 
 Which will find company_id=2, for example. note that the single-quotes are required for integer values. String values would be searched with embedded double-quotes, like `'"two"'`
-
-
-#### admin_review_company_id_list
-
-This list indicates which companies required this specific variant to be admin-reviewed. That is, orders processed by these companies for this variant will end up with their status set to `process-ocr-output-file-review` instead of `process-ocr-output-file-complete`
-
-If this is column is left null, then no companies will require admin-review for their orders of this variant type.
-
-Note that to set this value, use a sql command with something like this syntax:
-
-`update t_ocrvariants set admin_review_company_id_list="[2]" where id=36;`
-
 
 
 
