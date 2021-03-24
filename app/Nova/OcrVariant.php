@@ -57,7 +57,7 @@ class OcrVariant extends Resource
             Text::make('Parser', 'parser')->sortable(),
             Code::make('Mapping', 'mapping')->json()->rules(['nullable', 'json']),
             Code::make('Company ID List (csv/edi uploads)', 'company_id_list')->json()->rules(['nullable', 'json']),
-            Code::make('Company ID List (enable admin review)', 'admin_review_company_id_list')->json()->rules(['nullable', 'json']),
+            // Code::make('Company ID List (enable admin review)', 'admin_review_company_id_list')->json()->rules(['nullable', 'json']), // no longer using the column
             Code::make('Classification', 'classification')->json()->rules(['nullable', 'json']),
             Code::make('Parser Options', 'parser_options')->json()->rules(['nullable', 'json']),
             Code::make('Parser Fields List', 'parser_fields_list')->json()->rules(['nullable', 'json']),
