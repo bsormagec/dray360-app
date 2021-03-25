@@ -7,6 +7,10 @@ import * as Sentry from '@sentry/browser'
 import { Vue as VueIntegration } from '@sentry/integrations'
 import setupInterceptors from '@/store/api_calls/config/setupInterceptors'
 import VueClipboard from 'vue-clipboard2'
+import Echo from 'laravel-echo'
+import pusher from 'pusher-js'
+import toBool from '@/utils/to_bool'
+import axios from '@/store/api_calls/config/axios'
 
 Vue.config.productionTip = false
 
@@ -21,6 +25,33 @@ if (process.env.NODE_ENV !== 'development') {
 }
 
 setupInterceptors({ store, router })
+
+window.Pusher = pusher
+const echo = new Echo({
+  broadcaster: 'pusher',
+  authEndpoint: '/api/broadcasting/auth',
+  key: process.env.VUE_APP_PUSHER_APP_KEY,
+  wsHost: window.location.hostname,
+  wsPort: process.env.VUE_APP_WEBSOCKETS_PORT,
+  forceTLS: toBool(process.env.VUE_APP_WEBSOCKETS_TLS),
+  authorizer: (channel, options) => {
+    return {
+      authorize: (socketId, callback) => {
+        axios.post('/api/broadcasting/auth', {
+          socket_id: socketId,
+          channel_name: channel.name
+        }).then(response => {
+          callback(false, response.data)
+        })
+          .catch(error => {
+            callback(true, error)
+          })
+      }
+    }
+  },
+})
+
+Vue.prototype.$echo = echo
 
 new Vue({
   router,

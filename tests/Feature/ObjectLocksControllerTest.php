@@ -7,8 +7,11 @@ use Tests\TestCase;
 use App\Models\User;
 use App\Models\ObjectLock;
 use App\Models\OCRRequest;
+use App\Events\ObjectLocked;
 use Illuminate\Http\Response;
+use App\Events\ObjectUnlocked;
 use Tests\Seeds\OcrRequestSeeder;
+use Illuminate\Support\Facades\Event;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
 
 class ObjectLocksControllerTest extends TestCase
@@ -21,6 +24,7 @@ class ObjectLocksControllerTest extends TestCase
     {
         parent::setUp();
 
+        Event::fake();
         $this->loginAdmin();
         (new OcrRequestSeeder())->seedOcrJob_ocrWaiting();
         $this->ocrRequest = OCRRequest::orderByDesc('id')->first();
@@ -39,6 +43,7 @@ class ObjectLocksControllerTest extends TestCase
 
         $this->assertDatabaseCount('t_object_locks', 1);
         $this->assertDatabaseHas('t_object_locks', $data + ['user_id' => auth()->id()]);
+        Event::assertDispatched(ObjectLocked::class);
     }
 
     /** @test */
@@ -148,6 +153,7 @@ class ObjectLocksControllerTest extends TestCase
 
         $this->delete(route('object-locks.destroy'), $data)->assertStatus(Response::HTTP_NO_CONTENT);
         $this->assertSoftDeleted('t_object_locks', $data);
+        Event::assertDispatched(ObjectUnlocked::class);
     }
 
     /** @test */

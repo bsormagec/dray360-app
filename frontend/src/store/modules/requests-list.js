@@ -5,11 +5,13 @@ export const types = {
   setRequests: 'SET_REQUESTS',
   appendRequests: 'APPEND_REQUESTS',
   lockRequest: 'LOCK_REQUEST',
-  releaseLockRequest: 'RELEASE_LOCK_REQUEST'
+  releaseLockRequest: 'RELEASE_LOCK_REQUEST',
+  wsLockRequest: 'WS_LOCK_REQUEST',
+  wsReleaseLockRequest: 'WS_RELEASE_LOCK_REQUEST',
 }
 
 const initialState = {
-  requests: []
+  requests: [],
 }
 
 const mutations = {
@@ -82,6 +84,20 @@ const actions = {
     }
 
     return [error, data]
+  },
+  [types.wsLockRequest] ({ commit, state }, { requestId, lock }) {
+    if (!lock || !lock.object_id) {
+      return
+    }
+
+    commit(types.lockRequest, { requestId, lock, markAsLocked: true })
+  },
+  async [types.wsReleaseLockRequest] ({ commit, state }, { requestId }) {
+    if (!requestId) {
+      return
+    }
+
+    commit(types.releaseLockRequest, { requestId })
   }
 }
 

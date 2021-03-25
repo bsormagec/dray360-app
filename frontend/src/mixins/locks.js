@@ -21,6 +21,8 @@ export default {
     ...mapActions(requestsList.moduleName, {
       lockRequest: requestsListTypes.lockRequest,
       releaseLockRequest: requestsListTypes.releaseLockRequest,
+      wsLockRequest: requestsListTypes.wsLockRequest,
+      wsReleaseLockRequest: requestsListTypes.wsReleaseLockRequest,
     }),
 
     ...mapActions(utils.moduleName, [type.setSnackbar]),

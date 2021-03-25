@@ -3,8 +3,10 @@
 namespace App\Http\Controllers\Api;
 
 use App\Models\ObjectLock;
+use App\Events\ObjectLocked;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
+use App\Events\ObjectUnlocked;
 use App\Http\Controllers\Controller;
 
 class ObjectLocksController extends Controller
@@ -32,6 +34,7 @@ class ObjectLocksController extends Controller
         }
 
         $lock = ObjectLock::create($data + ['user_id' => auth()->id()]);
+        broadcast(new ObjectLocked($lock))->toOthers();
 
         return $lock;
     }
@@ -78,6 +81,7 @@ class ObjectLocksController extends Controller
         }
 
         $lock->delete();
+        broadcast(new ObjectUnlocked($lock))->toOthers();
 
         return response()->noContent();
     }

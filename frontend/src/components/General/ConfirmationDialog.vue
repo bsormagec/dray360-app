@@ -26,6 +26,7 @@
       <v-card-actions>
         <v-spacer />
         <v-btn
+          v-show="confirmationDialog.cancelText !== ''"
           color="grey"
           text
           @click="cancel"

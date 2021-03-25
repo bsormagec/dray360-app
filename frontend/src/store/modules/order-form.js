@@ -7,7 +7,7 @@ export const types = {
   setFormOrder: 'SET_FORM_ORDER',
   setHighlights: 'SET_HIGHLIGHTS',
   setHighlight: 'SET_HIGHLIGHT',
-  setLocked: 'SET_LOCKED',
+  setOrderLock: 'SET_ORDER_LOCKED',
   setPage: 'SET_PAGE',
   updateOrder: 'UPDATE_ORDER',
   toggleEdit: 'TOGGLE_EDIT',
@@ -68,8 +68,9 @@ const mutations = {
   [types.setPage] (state, { index, page }) {
     state.pages[index] = { ...page }
   },
-  [types.setLocked] (state, { locked }) {
-    state.isLocked = locked
+  [types.setOrderLock] (state, { locked, lock }) {
+    state.order.is_locked = locked
+    state.order.lock = lock
   }
 }
 
@@ -167,8 +168,8 @@ const actions = {
   [types.setPage] ({ commit, state }, { index, page }) {
     commit(types.setPage, { index, page: { ...page } })
   },
-  [types.setLocked] ({ commit, state }, { locked }) {
-    commit(types.setLocked, { locked })
+  [types.setOrderLock] ({ commit, state }, { locked, lock }) {
+    commit(types.setOrderLock, { locked, lock })
   }
 }
 

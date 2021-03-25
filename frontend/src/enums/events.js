@@ -3,4 +3,6 @@ export default {
   lockRefreshFailed: 'lock-refresh-failed',
   lockReleased: 'lock-released',
   requestsRefreshed: 'requests-refresed',
+  objectLocked: 'ObjectLocked',
+  objectUnlocked: 'ObjectUnlocked',
 }
