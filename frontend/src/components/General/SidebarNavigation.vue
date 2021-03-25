@@ -92,7 +92,7 @@
           <h3>{{ currentUser.company.name }}</h3>
         </div>
         <img
-          src="@/assets/images/LogoDryPoweredBy.svg"
+          src="@/assets/images/envase-order-ai.png"
           class="logo__dry_bottom"
           alt=""
         >
@@ -120,11 +120,12 @@ export default {
       admins: [
         { name: 'Nova', path: '/nova' },
         { name: 'Horizon', path: '/horizon' },
+        { name: 'Websockets', path: '/laravel-websockets' },
         { name: 'Telescope', path: '/telescope' },
         { name: 'Roles and permissions', path: '/authorization' },
         { name: 'Sentry', path: 'https://sentry.io/organizations/draymaster/issues/?project=5285677' },
         { name: 'Rules Editor', path: '/rules-editor' },
-        { name: 'Usage Stats', path: '#' },
+        { name: 'Usage Stats', path: '/nova/usage-metrics' },
         { name: 'RefsCustoms Mapping', path: '/companies/refs-custom-mapping' }
       ]
     }
@@ -198,6 +199,8 @@ $sidebarbackground: url("../../assets/images/menuBackground.png");
   }
   .logo__dry_bottom{
     @include center;bottom: rem(30);
+    width: 87%;
+    opacity: 0.80;
   }
   .menu{
     .v-list-item:not(:last-child){
