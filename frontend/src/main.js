@@ -33,6 +33,9 @@ const echo = new Echo({
   key: process.env.VUE_APP_PUSHER_APP_KEY,
   wsHost: window.location.hostname,
   wsPort: process.env.VUE_APP_WEBSOCKETS_PORT,
+  wssPort: process.env.VUE_APP_WEBSOCKETS_PORT,
+  enabledTransports: ['ws', 'wss'],
+  disableStats: false,
   forceTLS: toBool(process.env.VUE_APP_WEBSOCKETS_TLS),
   authorizer: (channel, options) => {
     return {
