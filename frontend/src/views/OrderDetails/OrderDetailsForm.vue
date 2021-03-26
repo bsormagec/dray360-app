@@ -37,7 +37,7 @@
       <div>
         <div class="order__title mr-4 d-flex justify-space-between align-center">
           <v-tooltip
-            v-if="isLocked"
+            v-if="isLocked && hasPermission('object-locks-create')"
             bottom
           >
             <template v-slot:activator="{ on, attrs }">

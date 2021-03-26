@@ -10,7 +10,7 @@
     <div class="d-flex">
       <div class="d-flex align-center">
         <v-tooltip
-          v-if="request.is_locked"
+          v-if="request.is_locked && hasPermission('object-locks-create')"
           bottom
         >
           <template v-slot:activator="{ on, attrs }">
@@ -32,6 +32,7 @@
         :status="request.latest_ocr_request_status"
       />
       <RequestItemMenu
+        :active="active"
         :request="request"
         @request-deleted="() => this.$emit('deleteRequest')"
       />
@@ -78,7 +79,6 @@
 import RequestStatus from '@/components/RequestStatus'
 import RequestItemMenu from '@/components/RequestItemMenu'
 import { formatDate } from '@/utils/dates'
-import { statuses } from '@/enums/app_objects_types'
 import permissions from '@/mixins/permissions'
 
 import get from 'lodash/get'
@@ -104,8 +104,7 @@ export default {
   },
   computed: {
     disabled () {
-      return !this.hasPermission('admin-review-view') &&
-          get(this.request, 'latest_ocr_request_status.status', '') === statuses.ocrPostProcessingReview
+      return false
     },
     isLocked () {
       return get(this.request, 'is_locked', false)

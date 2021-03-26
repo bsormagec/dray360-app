@@ -4,6 +4,7 @@ namespace App\Http\Resources;
 
 use App\Models\User;
 use App\Models\Order;
+use App\Models\OCRRequest;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Str;
 use App\Models\OCRRequestStatus;
@@ -38,10 +39,21 @@ class SideBySideOrder extends JsonResource
 
         $this->preparePreceedingOrderChanges();
         $this->loadOrderCompanyConfiguration();
+        $this->loadLatestOcrRequestLatestStatus();
         $this->loadUserWhoSentToTms();
         $this->loadLocks();
 
         return parent::toArray($request);
+    }
+
+    protected function loadLatestOcrRequestLatestStatus()
+    {
+        $request = OCRRequest::whereNull('order_id')
+            ->where('request_id', $this->resource->request_id)
+            ->with('latestOcrRequestStatus:id,request_id,status')
+            ->first();
+
+        $this->resource->setRelation('parentOcrRequest', $request);
     }
 
     protected function loadOrderCompanyConfiguration()

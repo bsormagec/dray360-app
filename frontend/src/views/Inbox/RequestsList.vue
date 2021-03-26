@@ -114,10 +114,9 @@ import { formatDate } from '@/utils/dates'
 import permissions from '@/mixins/permissions'
 import locks from '@/mixins/locks'
 import isMobile from '@/mixins/is_mobile'
-import { statuses, objectLocks } from '@/enums/app_objects_types'
+import { objectLocks } from '@/enums/app_objects_types'
+import { isInAdminReview } from '@/utils/status_helpers'
 import events from '@/enums/events'
-
-import get from 'lodash/get'
 
 export default {
   name: 'RequestList',
@@ -255,6 +254,9 @@ export default {
       this.$root.$on(events.lockClaimed, request => this.startRefreshingLock(request.request_id))
       this.$root.$on(events.lockReleased, request => this.stopRefreshingLock())
       this.$root.$on(events.lockRefreshFailed, request => this.stopRefreshingLock())
+      if (!this.hasPermission('object-locks-create')) {
+        return
+      }
       this.$echo.private('object-locking')
         .listen(events.objectLocked, (e) => {
           const { objectLock: lock = undefined } = e
@@ -357,18 +359,12 @@ export default {
       this.$router.replace({ path: 'inbox', query: filterState }).catch(() => {})
     },
     selectFirstActiveRequest () {
-      const filteredRequests = this.items.filter(request => {
-        return get(request, 'latest_ocr_request_status.status', '') === statuses.ocrPostProcessingReview
-          ? this.hasPermission('admin-review-view')
-          : true
-      })
-
-      if (filteredRequests.length === 0) {
+      if (this.items.length === 0) {
         this.handleChange({ request_id: null, orders_count: 0, first_order_id: null })
         return
       }
 
-      this.handleChange(filteredRequests[0])
+      this.handleChange(this.items[0])
     },
     async handleChange (request) {
       await this.handleRequestLock(this.requestSelected, request)
@@ -381,13 +377,18 @@ export default {
         oldRequest.request_id && newRequest.request_id &&
         oldRequest.request_id !== newRequest.request_id &&
         !oldRequest.is_locked &&
+        isInAdminReview(oldRequest?.latest_ocr_request_status?.status) &&
         this.hasPermission('object-locks-create')
       ) {
         await this.releaseLockRequest({ requestId: oldRequest.request_id, updateList: true })
         this.stopRefreshingLock()
       }
 
-      if (!this.hasPermission('object-locks-create') || newRequest.is_locked) {
+      if (
+        !this.hasPermission('object-locks-create') ||
+        newRequest.is_locked ||
+        !isInAdminReview(newRequest?.latest_ocr_request_status?.status)
+      ) {
         return
       } else if (this.userOwnsLock(newRequest.lock)) {
         this.refreshCurrentLock(newRequest.request_id)

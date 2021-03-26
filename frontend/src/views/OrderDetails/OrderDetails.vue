@@ -67,7 +67,7 @@ import OrderDetailsForm from '@/views/OrderDetails/OrderDetailsForm'
 import OrderDetailsDocument from '@/views/OrderDetails/OrderDetailsDocument'
 import ContainerNotFound from '@/views/ContainerNotFound'
 import { reqStatus } from '@/enums/req_status'
-import { dictionaryItemsTypes, statuses, objectLocks } from '@/enums/app_objects_types'
+import { dictionaryItemsTypes, objectLocks } from '@/enums/app_objects_types'
 import events from '@/enums/events'
 
 import { getDictionaryItems } from '@/store/api_calls/utils'
@@ -77,6 +77,7 @@ import orders, { types } from '@/store/modules/orders'
 import orderForm, { types as orderFormTypes } from '@/store/modules/order-form'
 import utils, { type as utilsTypes } from '@/store/modules/utils'
 import { mapState, mapActions } from 'vuex'
+import { isInAdminReview } from '@/utils/status_helpers'
 
 import get from 'lodash/get'
 
@@ -155,7 +156,7 @@ export default {
     orderInReview () {
       return this.loaded &&
         !this.hasPermission('admin-review-view') &&
-        get(this.order, 'ocr_request.latest_ocr_request_status.status', '') === statuses.processOcrOutputFileReview
+        isInAdminReview(this.order?.ocr_request?.latest_ocr_request_status?.status)
     }
   },
   watch: {
@@ -224,9 +225,15 @@ export default {
     },
 
     initializeLockingListeners () {
-      this.$root.$on(events.lockClaimed, this.fetchFormData)
       this.$root.$on(events.requestsRefreshed, () => !this.refreshLock && this.fetchFormData())
       this.$root.$on(events.lockRefreshFailed, () => this.stopRefreshingLock())
+      this.$root.$on(events.lockClaimed, request => {
+        if (request.request_id !== this.order.request_id) {
+          return
+        }
+
+        this.setOrderLock({ locked: false, lock: null })
+      })
       this.$root.$on(events.objectLocked, e => {
         const { objectLock: lock = undefined } = e
 
@@ -246,7 +253,7 @@ export default {
         this.setOrderLock({ locked: false, lock: null })
       })
 
-      if (!this.refreshLock) {
+      if (!this.refreshLock || !this.hasPermission('object-locks-create')) {
         return
       }
 
@@ -299,7 +306,12 @@ export default {
     },
 
     async initializeLock () {
-      if (!this.refreshLock || !this.hasPermission('object-locks-create') || this.order.is_locked) {
+      if (
+        !this.refreshLock ||
+        !this.hasPermission('object-locks-create') ||
+        this.order.is_locked ||
+        !isInAdminReview(this.order?.parent_ocr_request?.latest_ocr_request_status?.status)
+      ) {
         return
       } else if (this.userOwnsLock(this.order.lock)) {
         this.refreshCurrentLock(this.order.request_id)

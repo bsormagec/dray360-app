@@ -27,7 +27,7 @@
           v-text="'Copy request ID'"
         />
         <v-list-item
-          v-if="isLocked && hasPermission('object-locks-edit')"
+          v-if="active && isLocked && hasPermission('object-locks-edit')"
           @click="handleClaimLock"
           v-text="'Claim lock'"
         />
@@ -102,6 +102,11 @@ export default {
       defautl: () => { }
     },
     disabled: {
+      type: Boolean,
+      required: false,
+      default: false
+    },
+    active: {
       type: Boolean,
       required: false,
       default: false
