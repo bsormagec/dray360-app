@@ -27,8 +27,13 @@ class OrdersJson extends ResourceCollection
     public function toArray($request)
     {
         return $this->resource->map(function ($item) {
+            $lock = $item->getActiveLock();
+            $isLocked = $item->isLockedForTheUser();
+            $item->unsetRelation('locks');
             $order = $item->toArray();
             $order['latest_ocr_request_status'] = Arr::get($order, 'ocr_request.latest_ocr_request_status', null);
+            $order['is_locked'] = $isLocked;
+            $order['lock'] = $lock;
 
             if ($order['latest_ocr_request_status']) {
                 $message = null;

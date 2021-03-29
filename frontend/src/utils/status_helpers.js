@@ -1,0 +1,3 @@
+import { statuses } from '@/enums/app_objects_types'
+
+export const isInAdminReview = status => status === statuses.ocrPostProcessingReview || status === statuses.processOcrOutputFileReview

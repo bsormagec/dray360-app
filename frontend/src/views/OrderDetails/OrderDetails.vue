@@ -61,20 +61,24 @@
 <script>
 import isMobile from '@/mixins/is_mobile'
 import permissions from '@/mixins/permissions'
+import locks from '@/mixins/locks'
+
 import OrderDetailsForm from '@/views/OrderDetails/OrderDetailsForm'
 import OrderDetailsDocument from '@/views/OrderDetails/OrderDetailsDocument'
 import ContainerNotFound from '@/views/ContainerNotFound'
 import { reqStatus } from '@/enums/req_status'
-import { dictionaryItemsTypes, statuses } from '@/enums/app_objects_types'
+import { dictionaryItemsTypes, objectLocks } from '@/enums/app_objects_types'
+import events from '@/enums/events'
 
 import { getDictionaryItems } from '@/store/api_calls/utils'
 
 import ContentLoading from '@/components/ContentLoading'
 import orders, { types } from '@/store/modules/orders'
 import orderForm, { types as orderFormTypes } from '@/store/modules/order-form'
+import utils, { type as utilsTypes } from '@/store/modules/utils'
 import { mapState, mapActions } from 'vuex'
+import { isInAdminReview } from '@/utils/status_helpers'
 
-import utils, { type } from '@/store/modules/utils'
 import get from 'lodash/get'
 
 export default {
@@ -87,7 +91,7 @@ export default {
     ContainerNotFound
   },
 
-  mixins: [isMobile, permissions],
+  mixins: [isMobile, permissions, locks],
 
   props: {
     orderId: {
@@ -96,6 +100,11 @@ export default {
       default: null
     },
     backButton: {
+      type: Boolean,
+      required: false,
+      default: true
+    },
+    refreshLock: {
       type: Boolean,
       required: false,
       default: true
@@ -147,7 +156,7 @@ export default {
     orderInReview () {
       return this.loaded &&
         !this.hasPermission('admin-review-view') &&
-        get(this.order, 'ocr_request.latest_ocr_request_status.status', '') === statuses.processOcrOutputFileReview
+        isInAdminReview(this.order?.ocr_request?.latest_ocr_request_status?.status)
     }
   },
   watch: {
@@ -168,22 +177,38 @@ export default {
 
   async beforeMount () {
     if (!this.isMobile) {
-      this[type.setSidebar]({ show: true })
+      this.setSidebar({ show: true })
     }
 
     await this.fetchFormData()
   },
 
+  mounted () {
+    this.initializeLockingListeners()
+  },
+
+  async beforeDestroy () {
+    if (this.refreshLock) {
+      this.stopRefreshingLock()
+      this.$echo.leave('object-locking')
+    }
+  },
+
   methods: {
-    ...mapActions(utils.moduleName, [type.setSnackbar, type.setConfirmationDialog, type.setSidebar]),
+    ...mapActions(utils.moduleName, {
+      setConfirmDialog: utilsTypes.setConfirmationDialog,
+      setSidebar: utilsTypes.setSidebar,
+    }),
     ...mapActions(orders.moduleName, [types.getOrderDetail]),
     ...mapActions(orderForm.moduleName, {
-      setFormOrder: orderFormTypes.setFormOrder
+      setFormOrder: orderFormTypes.setFormOrder,
+      setOrderLock: orderFormTypes.setOrderLock,
     }),
 
     async fetchFormData () {
       await this.requestOrderDetail()
       this.initializeFormOptions()
+      await this.initializeLock()
 
       if (this.formOptions.extra.profit_tools_enable_templates) {
         await this.fetchTmsTemplates(this.currentOrder.company.id)
@@ -197,6 +222,108 @@ export default {
       if (this.formOptions.extra.enable_dictionary_items_vessel) {
         await this.getchVesselItems(this.currentOrder.company.id)
       }
+    },
+
+    initializeLockingListeners () {
+      this.$root.$on(events.requestsRefreshed, () => !this.refreshLock && this.fetchFormData())
+      this.$root.$on(events.lockRefreshFailed, () => this.stopRefreshingLock())
+      this.$root.$on(events.lockClaimed, request => {
+        if (request.request_id !== this.order.request_id) {
+          return
+        }
+
+        this.setOrderLock({ locked: false, lock: null })
+      })
+      this.$root.$on(events.objectLocked, e => {
+        const { objectLock: lock = undefined } = e
+
+        if (lock.object_id !== this.order.request_id) {
+          return
+        }
+
+        this.setOrderLock({ locked: true, lock })
+      })
+      this.$root.$on(events.objectUnlocked, e => {
+        const { objectLock: lock = undefined } = e
+
+        if (lock.object_id !== this.order.request_id) {
+          return
+        }
+
+        this.setOrderLock({ locked: false, lock: null })
+      })
+
+      if (!this.refreshLock || !this.hasPermission('object-locks-create')) {
+        return
+      }
+
+      this.$echo.private('object-locking')
+        .listen(events.objectLocked, (e) => {
+          const { objectLock: lock = undefined } = e
+
+          if (!lock || this.userOwnsLock(lock) || lock.object_id !== this.order.request_id) {
+            return
+          }
+
+          if (
+            lock.lock_type === objectLocks.lockTypes.claimLock &&
+            lock.object_id === this.order.request_id &&
+            !this.order.is_locked
+          ) {
+            this.setConfirmDialog({
+              title: 'Lock claimed for this request',
+              text: `${lock.user.name} claimed the lock for this request`,
+              confirmText: 'Ok',
+              cancelText: '',
+              onConfirm: () => {},
+              onCancel: () => {}
+            })
+          }
+
+          this.setOrderLock({ locked: true, lock })
+        })
+        .listen(events.objectUnlocked, async (e) => {
+          const { objectLock: lock = undefined } = e
+
+          if (!lock || this.userOwnsLock(lock) || lock.object_id !== this.order.request_id) {
+            return
+          }
+
+          this.setOrderLock({ locked: false, lock: null })
+          if (!this.hasPermission('object-locks-create')) {
+            return
+          }
+
+          await this.setConfirmDialog({
+            title: 'Request Unlocked',
+            text: 'Do you want to claim the lock?',
+            onConfirm: () => {
+              this.initializeLock()
+            },
+            onCancel: () => {}
+          })
+        })
+    },
+
+    async initializeLock () {
+      if (
+        !this.refreshLock ||
+        !this.hasPermission('object-locks-create') ||
+        this.order.is_locked ||
+        !isInAdminReview(this.order?.parent_ocr_request?.latest_ocr_request_status?.status)
+      ) {
+        return
+      } else if (this.userOwnsLock(this.order.lock)) {
+        this.refreshCurrentLock(this.order.request_id)
+        this.startRefreshingLock(this.order.request_id)
+        return
+      }
+
+      this.attemptToLockRequest({
+        requestId: this.order.request_id,
+        lockType: objectLocks.lockTypes.openOrder,
+        updateList: false,
+      })
     },
 
     async fetchTmsTemplates (companyId) {

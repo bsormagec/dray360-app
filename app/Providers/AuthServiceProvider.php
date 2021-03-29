@@ -2,6 +2,7 @@
 
 namespace App\Providers;
 
+use Illuminate\Support\Facades\Gate;
 use Illuminate\Foundation\Support\Providers\AuthServiceProvider as ServiceProvider;
 
 class AuthServiceProvider extends ServiceProvider
@@ -29,6 +30,7 @@ class AuthServiceProvider extends ServiceProvider
         \App\Models\CompanyAddressTMSCode::class => \App\Policies\CompanyAddressTmsCodePolicy::class,
         \App\Models\DictionaryItem::class => \App\Policies\DictionaryItemPolicy::class,
         \OwenIt\Auditing\Models\Audit::class => \App\Policies\AuditLogPolicy::class,
+        \App\Models\ObjectLock::class => \App\Policies\ObjectLockPolicy::class,
     ];
 
     /**
@@ -39,5 +41,9 @@ class AuthServiceProvider extends ServiceProvider
     public function boot()
     {
         $this->registerPolicies();
+
+        Gate::define('viewWebSocketsDashboard', function ($user = null) {
+            return $user && $user->isAbleTo('nova-view');
+        });
     }
 }

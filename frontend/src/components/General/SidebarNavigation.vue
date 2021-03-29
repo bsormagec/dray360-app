@@ -13,7 +13,7 @@
         <img
           v-if="!tenantConfig.logo1"
           class="logo__dry"
-          src="@/assets/images/dry360_logo.svg"
+          src="@/assets/images/envase-order-ai-2.png"
           alt=""
         >
         <img
@@ -91,6 +91,7 @@
         >
           <h3>{{ currentUser.company.name }}</h3>
         </div>
+        <!-- src="@/assets/images/envase-order-ai.png" -->
         <img
           src="@/assets/images/LogoDryPoweredBy.svg"
           class="logo__dry_bottom"
@@ -120,11 +121,12 @@ export default {
       admins: [
         { name: 'Nova', path: '/nova' },
         { name: 'Horizon', path: '/horizon' },
+        { name: 'Websockets', path: '/laravel-websockets' },
         { name: 'Telescope', path: '/telescope' },
         { name: 'Roles and permissions', path: '/authorization' },
         { name: 'Sentry', path: 'https://sentry.io/organizations/draymaster/issues/?project=5285677' },
         { name: 'Rules Editor', path: '/rules-editor' },
-        { name: 'Usage Stats', path: '#' },
+        { name: 'Usage Stats', path: '/nova/usage-metrics' },
         { name: 'RefsCustoms Mapping', path: '/companies/refs-custom-mapping' }
       ]
     }
@@ -192,12 +194,14 @@ $sidebarbackground: url("../../assets/images/menuBackground.png");
   }
 
   .logo__dry{
-    width: rem(140);
+    width: rem(160);
     margin: rem(15) auto 0 auto;
     display: block;
   }
   .logo__dry_bottom{
     @include center;bottom: rem(30);
+    // width: 87%;
+    opacity: 0.7;
   }
   .menu{
     .v-list-item:not(:last-child){

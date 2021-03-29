@@ -9,7 +9,7 @@
           v-if="displayStatus.requestList"
           :class="{
             'requests__section': true,
-            'col-2': compressed,
+            'c-2': compressed,
             'col-3': !compressed,
             'col-12': isMobile,
           }"
@@ -62,7 +62,7 @@
           :class="{
             'request__orders':true,
             'col-9': !compressed,
-            'col-10': compressed,
+            'c-10': compressed,
             'col-12': isMobile,
           }"
         >
@@ -81,7 +81,7 @@
             </v-btn>
           </div>
           <div
-            v-else-if="request.orders_count ===0"
+            v-else-if="shouldShowEmptyProcessingRequest(request)"
             class="empty__order"
           >
             <img
@@ -144,8 +144,9 @@
           <OrderDetails
             v-else-if="request.orders_count === 1"
             :back-button="false"
+            :refresh-lock="false"
             :order-id="request.first_order_id"
-            :starting-size="compressed ? 40 : 50"
+            :starting-size="compressed ? 40 : 40"
             @order-deleted="() => setReloadRequests(true)"
             @go-back="toggleMobileView"
           />
@@ -176,6 +177,7 @@ import isMobile from '@/mixins/is_mobile'
 import isMedium from '@/mixins/is_medium'
 import get from 'lodash/get'
 import { statuses } from '@/enums/app_objects_types'
+import { isInAdminReview } from '@/utils/status_helpers'
 
 export default {
   name: 'Inbox',
@@ -271,6 +273,14 @@ export default {
     ...mapActions(orders.moduleName, {
       setReloadRequests: ordersTypes.setReloadRequests
     }),
+    isInAdminReview,
+    shouldShowEmptyProcessingRequest (request) {
+      return request.orders_count === 0 ||
+        (
+          isInAdminReview(request?.latest_ocr_request_status?.status) &&
+          !this.hasPermission('admin-review-view')
+        )
+    },
     handleFilesUploaded () {
       this.setReloadRequests(true)
       this.openUploadOrdersDialog = false
@@ -295,6 +305,23 @@ export default {
 }
 </script>
 <style lang="scss" scoped>
+.no-gutters > .col, .no-gutters > [class*=c-] {
+    padding: 0;
+}
+.c-2 {
+    -webkit-box-flex: 0;
+    -ms-flex: 0 0 18%;
+    flex: 0 0 18%;
+    max-width: 18%;
+    width: 100%;
+  }
+  .c-10 {
+    -webkit-box-flex: 0;
+    -ms-flex: 0 0 82%;
+    flex: 0 0 82%;
+    max-width: 82%;
+    width: 100%;
+  }
 .requests__section::v-deep {
   border-right: rem(1) solid rgba(var(--v-slate-gray-base-rgb), 15%);
   height: 100vh;

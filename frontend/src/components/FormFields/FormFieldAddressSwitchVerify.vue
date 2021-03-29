@@ -46,6 +46,7 @@
         <div class="address-book-modal__footer">
           <v-btn
             v-if="!verified && addressFound"
+            :disabled="isLocked"
             :loading="isLoading"
             color="primary"
             outlined
@@ -58,6 +59,7 @@
 
           <v-btn
             class="mr-2"
+            :disabled="isLocked"
             color="primary"
             outlined
             small
@@ -131,7 +133,7 @@ export default {
   }),
 
   computed: {
-    ...mapGetters(orderForm.moduleName, ['isMultiOrderRequest']),
+    ...mapGetters(orderForm.moduleName, ['isMultiOrderRequest', 'isLocked']),
     ...mapState(orders.moduleName, {
       currentOrder: state => state.currentOrder
     }),

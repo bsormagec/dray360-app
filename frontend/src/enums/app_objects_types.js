@@ -5,6 +5,19 @@ export const dictionaryItemsTypes = {
   vessel: 'vessel'
 }
 
+export const objectLocks = {
+  refreshIntervalTime: 10000,
+  objectTypes: {
+    request: 'request',
+    order: 'order'
+  },
+  lockTypes: {
+    claimLock: 'claim-lock',
+    selectRequest: 'select-request',
+    openOrder: 'open-order'
+  }
+}
+
 export const statuses = {
   intakeAccepted: 'intake-accepted',
   intakeAcceptedDatafile: 'intake-accepted-datafile',

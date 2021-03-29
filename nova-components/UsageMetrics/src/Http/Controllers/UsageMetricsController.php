@@ -62,6 +62,10 @@ class UsageMetricsController
                 'current' => $this->getOrdersCount($from, $to),
                 'previous' => $this->getOrdersCount($previousFrom, $previousTo),
             ],
+            'deleted_orders' => [
+                'current' => $this->getDeletedOrdersCount($from, $to),
+                'previous' => $this->getDeletedOrdersCount($previousFrom, $previousTo),
+            ],
             'orders_from_pdf' => [
                 'current' => $this->getOrdersFromPdfRequestsCount($from, $to),
                 'previous' => $this->getOrdersFromPdfRequestsCount($previousFrom, $previousTo),
@@ -74,9 +78,13 @@ class UsageMetricsController
                 'current' => $this->getTmsShipmentsCreatedCount($from, $to),
                 'previous' => $this->getTmsShipmentsCreatedCount($previousFrom, $previousTo),
             ],
-            'pages' => [
-                'current' => $this->getPagesCount($from, $to),
-                'previous' => $this->getPagesCount($previousFrom, $previousTo),
+            'jpeg_pages' => [
+                'current' => $this->getJPEGPagesCount($from, $to),
+                'previous' => $this->getJPEGPagesCount($previousFrom, $previousTo),
+            ],
+            'pdf_pages' => [
+                'current' => $this->getPDFPagesCount($from, $to),
+                'previous' => $this->getPDFPagesCount($previousFrom, $previousTo),
             ],
         ]);
     }
@@ -144,6 +152,19 @@ class UsageMetricsController
         return $response->order_count;
     }
 
+    protected function getDeletedOrdersCount($from, $to)
+    {
+        $response = DB::table('t_orders')
+            ->selectRaw('count(distinct id) as order_count')
+            ->where('t_company_id', $this->companyId)
+            ->where('created_at', '>=', $from)
+            ->where('created_at', '<=', $to)
+            ->whereNotNull('deleted_at')
+            ->first();
+
+        return $response->order_count;
+    }
+
     protected function getOrdersFromPdfRequestsCount($from, $to)
     {
         $response = DB::table('t_orders', 'o')
@@ -188,7 +209,26 @@ class UsageMetricsController
         return $response->tms_shipment_count;
     }
 
-    protected function getPagesCount($from, $to)
+    protected function getPDFPagesCount($from, $to)
+    {
+        $response = DB::selectOne("
+        select sum(json_extract(status_metadata, '$.pdf_page_count')) as pdf_page_count
+            from t_job_state_changes as s
+            join (
+                select max(id) as max_id
+                from t_job_state_changes
+                where status = 'intake-started'
+                  and company_id = ?
+                  and created_at >= ?
+                  and created_at <= ?
+                group by request_id
+            ) as latest_request on s.id = latest_request.max_id
+        ", [$this->companyId, $from, $to]);
+
+        return intval($response->pdf_page_count);
+    }
+
+    protected function getJPEGPagesCount($from, $to)
     {
         $response = DB::selectOne("
             select coalesce(sum(request_page_count), 0) as jpg_page_count

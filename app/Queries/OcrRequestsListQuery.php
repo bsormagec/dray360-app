@@ -69,6 +69,9 @@ class OcrRequestsListQuery extends QueryBuilder
                 ->with([
                     'latestOcrRequestStatus:id,status,status_date,status_metadata',
                 ])
+                ->with(['locks.user' => function ($with) {
+                    $with->select('id', 'name');
+                }])
                 ->when($requestId, function ($query) use ($requestId) {
                     return $query->orderByDesc(DB::raw("\"{$requestId}\" = t_job_latest_state.request_id"));
                 });
@@ -77,7 +80,7 @@ class OcrRequestsListQuery extends QueryBuilder
 
         $this->allowedFilters([
             AllowedFilter::partial('request_id', 't_job_latest_state.request_id'),
-            AllowedFilter::partial('company_id', 's.company_id', false),
+            AllowedFilter::exact('company_id', 's.company_id', false),
             AllowedFilter::custom('created_between', new CreatedBetweenFilter(), 't_job_latest_state.created_at'),
             AllowedFilter::custom('status', new OcrRequestStatusFilter()),
             AllowedFilter::custom('display_status', new OcrRequestStatusFilter()),

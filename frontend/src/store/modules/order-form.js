@@ -7,6 +7,7 @@ export const types = {
   setFormOrder: 'SET_FORM_ORDER',
   setHighlights: 'SET_HIGHLIGHTS',
   setHighlight: 'SET_HIGHLIGHT',
+  setOrderLock: 'SET_ORDER_LOCKED',
   setPage: 'SET_PAGE',
   updateOrder: 'UPDATE_ORDER',
   toggleEdit: 'TOGGLE_EDIT',
@@ -26,6 +27,7 @@ const initialState = {
   editMode: false,
   highlights: {},
   pages: [],
+  isLocked: false,
   sections: {
     shipment: { id: 'shipment-section', label: 'Shipment', subsection: false },
     equipment: { id: 'equipment-subsection', label: 'Equipment', subsection: true, parent: 'shipment' },
@@ -42,6 +44,7 @@ const initialState = {
 const mutations = {
   [types.setFormOrder] (state, order) {
     state.order = { ...order }
+    state.isLocked = false
   },
   [types.updateOrder] (state, { changes }) {
     state.order = {
@@ -64,6 +67,10 @@ const mutations = {
   },
   [types.setPage] (state, { index, page }) {
     state.pages[index] = { ...page }
+  },
+  [types.setOrderLock] (state, { locked, lock }) {
+    state.order.is_locked = locked
+    state.order.lock = lock
   }
 }
 
@@ -86,7 +93,7 @@ const actions = {
 
     if (!useOrder && state.editMode) {
       commit(types.updateOrder, { changes })
-      return
+      return [undefined]
     }
 
     commit(types.setHighlight, { path, highlight: { loading: true } })
@@ -100,13 +107,12 @@ const actions = {
       [error, data] = await updateOrderDetail({ id: state.order.id, changes })
     }
 
-    if (error !== undefined) return { status: reqStatus.error, data: error }
-
-    commit(types.setFormOrder, data)
+    if (error === undefined) {
+      commit(types.setFormOrder, data)
+    }
 
     commit(types.setHighlight, { path, highlight: { loading: false } })
-
-    return { status: reqStatus.success, data }
+    return [error, data]
   },
   [types.toggleEdit] ({ commit, dispatch, state }, { saveAll = false } = { saveAll: false }) {
     const { editMode } = state
@@ -161,12 +167,18 @@ const actions = {
   },
   [types.setPage] ({ commit, state }, { index, page }) {
     commit(types.setPage, { index, page: { ...page } })
+  },
+  [types.setOrderLock] ({ commit, state }, { locked, lock }) {
+    commit(types.setOrderLock, { locked, lock })
   }
 }
 
 const getters = {
   isMultiOrderRequest: state => {
     return state.order.siblings_count > 1
+  },
+  isLocked: state => {
+    return state.order.is_locked || state.isLocked
   }
 }
 

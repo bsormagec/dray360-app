@@ -16,7 +16,7 @@ class CompaniesController extends Controller
 
     public function index()
     {
-        return JsonResource::collection(Company::all());
+        return JsonResource::collection(Company::orderBy('name')->get());
     }
 
     public function update(Request $request, Company $company)

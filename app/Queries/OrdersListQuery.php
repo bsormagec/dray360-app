@@ -55,6 +55,7 @@ class OrdersListQuery extends QueryBuilder
                 'ocrRequest:order_id,created_at,updated_at,t_job_state_changes_id',
                 'ocrRequest.latestOcrRequestStatus:id,status,status_metadata',
                 'billToAddress:id,location_name',
+                'locks',
                 'tmsTemplate:id,item_key,item_display_name',
             ]);
 

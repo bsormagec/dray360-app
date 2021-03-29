@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Models\Traits\HasLocks;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
@@ -19,6 +20,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 class OCRRequest extends Model
 {
     use SoftDeletes;
+    use HasLocks;
 
     public $table = 't_job_latest_state';
 
@@ -33,9 +35,17 @@ class OCRRequest extends Model
         'done_at' => 'datetime',
     ];
 
+    protected $objectLockType = ObjectLock::REQUEST_OBJECT;
+    protected $objectLockLocalKey = 'request_id';
+
     public function orders()
     {
         return $this->hasMany(\App\Models\Order::class, 'request_id', 'request_id');
+    }
+
+    public function order()
+    {
+        return $this->belongsTo(Order::class, 'order_id');
     }
 
     public function statusList()

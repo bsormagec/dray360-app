@@ -145,10 +145,10 @@
             hasPermission: hasPermission('orders-view')
           }"
           :options="[
-            { title: 'Replicate Order', action: () => replicateOrder(item), hidden: !hasPermission('admin-review-edit') },
+            { title: 'Replicate Order', action: () => replicateOrder(item), hidden: !hasPermission('admin-review-edit') || item.is_locked },
             { title: item.is_hidden ? 'Unhide Order' : 'Hide Order', action: () => changeOrderDisplayStatus(item), hidden: true },
             { title: 'Show status history', action: () => item.openStatusHistoryDialog = true },
-            { title: 'Delete Order', action: () => deleteOrder(item), hidden: !hasPermission('orders-remove') },
+            { title: 'Delete Order', action: () => deleteOrder(item), hidden: !hasPermission('orders-remove') || item.is_locked },
           ]"
         />
         <v-btn
@@ -416,7 +416,7 @@ export default {
     }
   },
 
-  unmounted () {
+  beforeDestroy () {
     if (this.waitForRequestId) {
       return
     }
@@ -558,20 +558,21 @@ export default {
       const now = new Date().getTime()
 
       const deltaTime = now - startTime
+      const orders = data.map((order) => {
+        order.openStatusHistoryDialog = false
+        return order
+      })
 
       if (deltaTime < this.minPause) {
         this.pause(this.minPause - deltaTime).then(() => {
-          this.orders = data.map((order) => {
-            order.openStatusHistoryDialog = false
-            return order
-          })
+          this.orders = orders
           this.links = links
           this.meta = meta
           this.total = this.meta.total
           this.loading = false
         })
       } else {
-        this.orders = data
+        this.orders = orders
         this.links = links
         this.meta = meta
         this.total = this.meta.total
