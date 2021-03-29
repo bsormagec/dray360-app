@@ -10,7 +10,9 @@
     "require": {
         "php": "^7.2.5",
         "aws/aws-sdk-php-laravel": "^3.5",
+        "beyondcode/laravel-websockets": "^1.11",
         "doctrine/dbal": "^2.10",
+        "dray360/usage-metrics": "*",
         "fideloper/proxy": "^4.2",
         "fruitcake/laravel-cors": "^1.0",
         "guzzlehttp/guzzle": "^6.3",
@@ -25,12 +27,12 @@
         "nesbot/carbon": "^2.31",
         "owen-it/laravel-auditing": "^12.0",
         "predis/predis": "^1.1",
+        "pusher/pusher-php-server": "~4.0",
         "rap2hpoutre/fast-excel": "^2.3",
         "santigarcor/laratrust": "^6.1",
         "sentry/sentry-laravel": "1.8.0",
         "spatie/laravel-query-builder": "^2.8",
-        "spatie/laravel-rate-limited-job-middleware": "^1.4",
-        "dray360/usage-metrics": "*"
+        "spatie/laravel-rate-limited-job-middleware": "^1.4"
     },
     "require-dev": {
         "facade/ignition": "^2.0",

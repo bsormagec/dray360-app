@@ -39,6 +39,10 @@ class OcrRequestPolicy
      */
     public function update(User $user, OCRRequest $ocrRequest): bool
     {
+        if ($ocrRequest->isLockedForTheUser()) {
+            return false;
+        }
+
         return $user->isAbleTo('ocr-requests-edit') && ! request_is_from_nova();
     }
 
@@ -48,6 +52,10 @@ class OcrRequestPolicy
     public function delete(User $user, OCRRequest $ocrRequest): bool
     {
         $hasDeletePermissions = $user->isAbleTo('ocr-requests-remove');
+
+        if ($ocrRequest->isLockedForTheUser()) {
+            return false;
+        }
 
         if (! $user->isAbleTo('all-companies-view')) {
             $ocrRequestCompany = $ocrRequest->latestOcrRequestStatus->company_id ?? null;

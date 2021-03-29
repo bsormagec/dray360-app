@@ -16,7 +16,9 @@ use Rap2hpoutre\FastExcel\FastExcel;
  */
 class DictionaryItemsImportSeeder extends Seeder
 {
-    const TO_BE_IMPORTED = [
+    const ALL_COMPANIES = [
+
+        // ITG Onboarding
         'ITGOnboarding' => [
             [
                 'file' => 'seeds/CargoWise One Export - 20210204142016 - 164.xlsx',
@@ -57,6 +59,8 @@ class DictionaryItemsImportSeeder extends Seeder
                 ]
             ],
         ],
+
+        // ITG
         'ITG' => [
             [
                 'file' => 'seeds/CargoWise One Export - 20210204142016 - 164.xlsx',
@@ -97,6 +101,28 @@ class DictionaryItemsImportSeeder extends Seeder
                 ]
             ],
         ],
+
+        // Graham Trucking
+        'GrahamTrucking' => [
+            [
+                'file' => 'seeds/graham_trucking_templates.20210322.xlsx',
+                'columns' => [
+                    'item_key' => 'TMP Number',
+                    'item_display_name' => 'Template Name',
+                    'item_type' => DictionaryItem::TEMPLATE_TYPE,
+                    'item_value' => []
+                ]
+            ],
+        ],
+
+    ];
+
+    /**
+     * Put companies to actually import into this list. Normally a
+     * company won't need to be seeded twice.
+     */
+    const TO_BE_IMPORTED = [
+        'GrahamTrucking' => self::ALL_COMPANIES['GrahamTrucking']
     ];
 
     /**

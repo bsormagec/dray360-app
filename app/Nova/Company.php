@@ -68,7 +68,14 @@ class Company extends Resource
             Boolean::make('Sync Addresses', 'sync_addresses'),
 
             Code::make('Ref Mapping', 'refs_custom_mapping')->json()->hideFromIndex()->rules(['nullable', 'json']),
-            Code::make('Configuration', 'configuration')->json()->hideFromIndex()->rules(['nullable', 'json']),
+            Code::make('Configuration', 'configuration')
+                ->json()
+                ->hideFromIndex()
+                ->rules(['nullable', 'json'])
+                ->resolveUsing(function ($configuration) {
+                    $json = json_decode($configuration, true);
+                    return collect($json)->sortKeys()->toJson(JSON_PRETTY_PRINT);
+                }),
             Code::make('Company Configuration', 'company_config')->json()->hideFromIndex()->rules(['nullable', 'json']),
 
             Text::make('Blackfly token', 'blackfly_token')->hideFromIndex()->nullable(),

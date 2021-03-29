@@ -14,8 +14,8 @@
       tabindex="0"
       @mouseover="isMobile || isEditing ? () => {} : startHover({ path: references })"
       @mouseleave="isMobile || isEditing ? () => {} : stopHover({ path: references })"
-      @click="startFieldEdit({ path: references })"
-      @keypress.enter.prevent="startFieldEdit({ path: references })"
+      @click="handleStartEdit"
+      @keypress.enter.prevent="handleStartEdit"
     >
       <div
         v-show="!isEditing && !onlyHover"
@@ -52,6 +52,7 @@
           v-show="(isEditing || highlight.hover) && !onlyHover"
           :edit-mode="isEditing"
           :save-for-all="saveForAll"
+          :locked="isLocked"
           @accept="handleAccept"
           @accept-all="() => handleAccept(true)"
           @cancel="handleCancel"
@@ -90,7 +91,7 @@ export default {
   },
 
   computed: {
-    ...mapGetters(orderForm.moduleName, ['isMultiOrderRequest']),
+    ...mapGetters(orderForm.moduleName, ['isMultiOrderRequest', 'isLocked']),
     ...mapState(orderForm.moduleName, {
       allHighlights: state => state.highlights
     }),
@@ -127,6 +128,13 @@ export default {
       stopFieldEdit: types.stopFieldEdit
     }),
     cleanStrForId,
+    handleStartEdit () {
+      if (this.isLocked) {
+        return
+      }
+
+      this.startFieldEdit({ path: this.references })
+    },
     verify () {
       this.$emit('accept')
     },

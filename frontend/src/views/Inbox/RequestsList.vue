@@ -42,7 +42,7 @@
         >
           <RequestItem
             :request="request"
-            :active="requestSelected === request.request_id"
+            :active="requestIdSelected === request.request_id"
             @change="handleChange"
             @deleteRequest="refreshRequests"
           />
@@ -104,14 +104,19 @@ import RequestItem from './RequestItem'
 
 import { mapActions, mapState } from 'vuex'
 import orders, { types as ordersTypes } from '@/store/modules/orders'
+import requestsList, { types as requestsListTypes } from '@/store/modules/requests-list'
+import utils, { type as utilsTypes } from '@/store/modules/utils'
+
 import { getRequests } from '@/store/api_calls/requests'
 import { getRequestFilters } from '@/utils/filters_handling'
+
 import { formatDate } from '@/utils/dates'
 import permissions from '@/mixins/permissions'
+import locks from '@/mixins/locks'
 import isMobile from '@/mixins/is_mobile'
-import { statuses } from '@/enums/app_objects_types'
-
-import get from 'lodash/get'
+import { objectLocks } from '@/enums/app_objects_types'
+import { isInAdminReview } from '@/utils/status_helpers'
+import events from '@/enums/events'
 
 export default {
   name: 'RequestList',
@@ -119,12 +124,11 @@ export default {
     Filters,
     RequestItem
   },
-  mixins: [permissions, isMobile],
+  mixins: [permissions, isMobile, locks],
   data () {
     return {
       bottom: false,
-      requestSelected: null,
-      items: [],
+      requestIdSelected: null,
       page: 1,
       meta: {},
       loading: false,
@@ -148,7 +152,13 @@ export default {
   computed: {
     ...mapState(orders.moduleName, {
       reloadRequests: state => state.reloadRequests
-    })
+    }),
+    ...mapState(requestsList.moduleName, {
+      items: state => state.requests
+    }),
+    requestSelected () {
+      return this.items.filter(item => item.request_id === this.requestIdSelected)[0] || {}
+    }
   },
   watch: {
     bottom (isBottom) {
@@ -179,7 +189,7 @@ export default {
       .map(item => parseInt(item))
       .filter(item => !isNaN(item))
     this.initFilters.updateType = params.updateType
-    this.requestSelected = params.selected || null
+    this.requestIdSelected = params.selected || null
   },
   async mounted () {
     this.addScrollEventToFetchMoreRequests()
@@ -191,14 +201,27 @@ export default {
 
     this.initialTotalMeta = this.meta.total
     this.startPolling()
+    this.initializeLockingListeners()
   },
   beforeDestroy () {
     this.stopPolling()
+    this.stopRefreshingLock()
+    this.$echo.leave('object-locking')
+    this.releaseLockRequest({ requestId: this.requestIdSelected })
+    this.resetPagination()
   },
 
   methods: {
+    ...mapActions(utils.moduleName, {
+      setConfirmDialog: utilsTypes.setConfirmationDialog,
+      setSnackbar: utilsTypes.setSnackbar,
+    }),
     ...mapActions(orders.moduleName, {
-      setReloadRequests: ordersTypes.setReloadRequests
+      setReloadRequests: ordersTypes.setReloadRequests,
+    }),
+    ...mapActions(requestsList.moduleName, {
+      setRequests: requestsListTypes.setRequests,
+      appendRequests: requestsListTypes.appendRequests,
     }),
     formatDate,
     clearFilters () {
@@ -215,6 +238,7 @@ export default {
       }
     },
     async refreshRequests () {
+      this.$root.$emit(events.requestsRefreshed)
       this.startLoading()
       this.resetPagination()
       this.setURLParams()
@@ -225,6 +249,62 @@ export default {
     },
     initializeFilters () {
       this.filters = [...this.$refs.requestFilters.getActiveFilters()]
+    },
+    initializeLockingListeners () {
+      this.$root.$on(events.lockClaimed, request => this.startRefreshingLock(request.request_id))
+      this.$root.$on(events.lockReleased, request => this.stopRefreshingLock())
+      this.$root.$on(events.lockRefreshFailed, request => this.stopRefreshingLock())
+      if (!this.hasPermission('object-locks-create')) {
+        return
+      }
+      this.$echo.private('object-locking')
+        .listen(events.objectLocked, (e) => {
+          const { objectLock: lock = undefined } = e
+
+          if (!lock || this.userOwnsLock(lock)) {
+            return
+          }
+
+          if (
+            lock.lock_type === objectLocks.lockTypes.claimLock &&
+            lock.object_id === this.requestIdSelected &&
+            !this.requestSelected.is_locked
+          ) {
+            this.setConfirmDialog({
+              title: 'Lock claimed for this request',
+              text: `${lock.user.name} claimed the lock for this request`,
+              confirmText: 'Ok',
+              cancelText: '',
+              onConfirm: () => {},
+              onCancel: () => {}
+            })
+          }
+
+          this.wsLockRequest({ requestId: lock.object_id, lock })
+          this.$root.$emit(events.objectLocked, e)
+        })
+        .listen(events.objectUnlocked, async (e) => {
+          const { objectLock: lock = undefined } = e
+
+          if (!lock || this.userOwnsLock(lock)) {
+            return
+          }
+
+          this.wsReleaseLockRequest({ requestId: lock.object_id })
+          this.$root.$emit(events.objectUnlocked, e)
+          if (this.requestIdSelected !== lock.object_id || !this.hasPermission('object-locks-create')) {
+            return
+          }
+
+          await this.setConfirmDialog({
+            title: 'Request Unlocked',
+            text: 'Do you want to claim the lock?',
+            onConfirm: () => {
+              this.handleChange({ ...this.requestSelected, lock: null, is_locked: false, })
+            },
+            onCancel: () => {}
+          })
+        })
     },
     addScrollEventToFetchMoreRequests () {
       this.$refs.virtualScroll.$el.addEventListener('scroll', () => {
@@ -245,7 +325,7 @@ export default {
         return
       }
 
-      this.items = this.items.concat(data.data)
+      this.appendRequests(data.data)
       this.meta = data.meta
       this.loading = false
     },
@@ -269,7 +349,7 @@ export default {
       return [
         ...this.filters,
         { type: 'page', value: this.page },
-        { type: 'selected', value: this.requestSelected }
+        { type: 'selected', value: this.requestIdSelected }
       ]
     },
     setURLParams () {
@@ -279,30 +359,55 @@ export default {
       this.$router.replace({ path: 'inbox', query: filterState }).catch(() => {})
     },
     selectFirstActiveRequest () {
-      const filteredRequests = this.items.filter(request => {
-        return get(request, 'latest_ocr_request_status.status', '') === statuses.ocrPostProcessingReview
-          ? this.hasPermission('admin-review-view')
-          : true
-      })
-
-      if (filteredRequests.length === 0) {
+      if (this.items.length === 0) {
         this.handleChange({ request_id: null, orders_count: 0, first_order_id: null })
         return
       }
 
-      this.handleChange(filteredRequests[0])
+      this.handleChange(this.items[0])
     },
-    handleChange (request) {
-      this.requestSelected = request.request_id
+    async handleChange (request) {
+      await this.handleRequestLock(this.requestSelected, request)
+      this.requestIdSelected = request.request_id
       this.$emit('change', request)
       this.setURLParams()
+    },
+    async handleRequestLock (oldRequest, newRequest) {
+      if (
+        oldRequest.request_id && newRequest.request_id &&
+        oldRequest.request_id !== newRequest.request_id &&
+        !oldRequest.is_locked &&
+        isInAdminReview(oldRequest?.latest_ocr_request_status?.status) &&
+        this.hasPermission('object-locks-create')
+      ) {
+        await this.releaseLockRequest({ requestId: oldRequest.request_id, updateList: true })
+        this.stopRefreshingLock()
+      }
+
+      if (
+        !this.hasPermission('object-locks-create') ||
+        newRequest.is_locked ||
+        !isInAdminReview(newRequest?.latest_ocr_request_status?.status)
+      ) {
+        return
+      } else if (this.userOwnsLock(newRequest.lock)) {
+        this.refreshCurrentLock(newRequest.request_id)
+        this.startRefreshingLock(newRequest.request_id)
+        return
+      }
+
+      this.attemptToLockRequest({
+        requestId: newRequest.request_id,
+        lockType: objectLocks.lockTypes.selectRequest,
+        updateList: true
+      })
     },
     startLoading () {
       this.loading = true
     },
     resetPagination () {
       this.page = 1
-      this.items = []
+      this.setRequests([])
     },
 
     async startPolling () {

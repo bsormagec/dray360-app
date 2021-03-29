@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use App\Events\AddressVerified;
+use App\Models\Traits\HasLocks;
 use App\Events\AttributeVerified;
 use Illuminate\Support\Facades\DB;
 use App\Models\Traits\FillWithNulls;
@@ -80,6 +81,7 @@ class Order extends Model implements Auditable
     use BelongsToCompany;
     use ValidatesAddresses;
     use VerifiesUserSelectedAttributes;
+    use HasLocks;
 
     public $table = 't_orders';
 
@@ -291,6 +293,9 @@ class Order extends Model implements Auditable
         'vessel_dictid_verified' => AttributeVerified::class,
         'container_dictid_verified' => AttributeVerified::class,
     ];
+
+    protected $objectLockType = ObjectLock::REQUEST_OBJECT;
+    protected $objectLockLocalKey = 'request_id';
 
     public function precededByOrder()
     {

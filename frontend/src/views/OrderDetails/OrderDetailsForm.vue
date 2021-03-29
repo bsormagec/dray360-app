@@ -35,7 +35,23 @@
         </v-icon>
       </v-btn>
       <div>
-        <div class="order__title mr-4 d-flex justify-space-between">
+        <div class="order__title mr-4 d-flex justify-space-between align-center">
+          <v-tooltip
+            v-if="isLocked && hasPermission('object-locks-create')"
+            bottom
+          >
+            <template v-slot:activator="{ on, attrs }">
+              <v-icon
+                small
+                color="slate-gray"
+                v-bind="attrs"
+                v-on="on"
+              >
+                mdi-lock
+              </v-icon>
+            </template>
+            <span>Locked by {{ order.lock.user.name }}</span>
+          </v-tooltip>
           Order #{{ order.id }}
           <v-btn
             outlined
@@ -78,11 +94,11 @@
         v-if="!editMode"
         :main-action="splitButtonMainAction"
         :options="[
-          { title: 'Edit Order' , action: toggleEdit, hasPermission: true },
+          { title: 'Edit Order' , action: toggleEdit, hasPermission: !isLocked },
           { title: 'Download Source File', action: () => downloadSourceFile(order.request_id), hasPermission: true },
-          { title: 'Replicate Order', action: () => replicateOrder(order.id), hidden: !hasPermission('admin-review-edit') },
-          { title: 'Delete Order', action: () => deleteOrder(order.id), hasPermission: hasPermission('orders-remove') },
-          { title: 'Add TMS ID', action: () => addTMSId(order.id), hasPermission: hasPermission('ocr-requests-edit') && isInProcessedState},
+          { title: 'Replicate Order', action: () => replicateOrder(order.id), hidden: !hasPermission('admin-review-edit') || isLocked },
+          { title: 'Delete Order', action: () => deleteOrder(order.id), hasPermission: hasPermission('orders-remove') && !isLocked },
+          { title: 'Add TMS ID', action: () => addTMSId(order.id), hasPermission: hasPermission('ocr-requests-edit') && isInProcessedState && !isLocked},
           { title: 'View audit info', action: () => openAuditDialog = true, hidden: !hasPermission('audit-logs-view')}
         ]"
         :loading="loading"
@@ -579,6 +595,7 @@
             small
             outlined
             color="white"
+            :disabled="isLocked"
             @click="handleItinerayEdit(sections.itinerary.id)"
           >
             Edit itinerary
@@ -818,7 +835,7 @@ export default {
     }
   },
   computed: {
-    ...mapGetters(orderForm.moduleName, ['isMultiOrderRequest']),
+    ...mapGetters(orderForm.moduleName, ['isMultiOrderRequest', 'isLocked']),
     ...mapState(orderForm.moduleName, {
       order: state => state.order,
       editMode: state => state.editMode,
@@ -891,14 +908,14 @@ export default {
         return {
           title: 'Send to Client',
           action: this.postSendToClient,
-          disabled: this.sentToTms || !this.hasPermission('admin-review-edit')
+          disabled: this.sentToTms || this.isLocked || !this.hasPermission('admin-review-edit')
         }
       }
 
       return {
         title: 'Send to TMS',
         action: this.postSendToTms,
-        disabled: this.sendToTmsDisabled
+        disabled: this.sendToTmsDisabled || this.isLocked
       }
     },
     userWhoUploadedTheRequest () {
@@ -931,7 +948,7 @@ export default {
       stopHover: orderFormTypes.stopHover,
       toggleEdit: orderFormTypes.toggleEdit,
       cancelEdit: orderFormTypes.cancelEdit,
-      addHighlight: orderFormTypes.addHighlight
+      addHighlight: orderFormTypes.addHighlight,
     }),
 
     formatDate,
@@ -941,7 +958,14 @@ export default {
     },
 
     async handleChange (event) {
-      await this.updateOrder(event)
+      const [error, data] = await this.updateOrder(event)
+
+      if (error !== undefined) {
+        this[type.setSnackbar]({
+          show: true,
+          message: get(error, 'response.data.message') || 'There was an error saving the information'
+        })
+      }
     },
 
     async refreshOrder () {

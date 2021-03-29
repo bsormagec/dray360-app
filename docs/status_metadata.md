@@ -425,6 +425,7 @@ Every file processed in this request. If the list grows too large that it cannot
 1. variant_name
    - if specified on upload by user-selected droplist
    - or in email subject header with keyword "variant", like "variant: mybestfreightbuyervariant"
+1. pdf_page_count (if type is pdf)
 
 
 

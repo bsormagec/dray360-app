@@ -47,6 +47,10 @@ class OrdersPolicy
     {
         $hasUpdatePermissions = $user->isAbleTo('orders-edit');
 
+        if ($order->isLockedForTheUser()) {
+            return false;
+        }
+
         if (! $user->isAbleTo('all-companies-view')) {
             return $hasUpdatePermissions && $user->belongsToSameCompanyAs($order);
         }
@@ -60,6 +64,10 @@ class OrdersPolicy
     public function updateAll(User $user, Order $order): bool
     {
         $hasUpdatePermissions = $user->isAbleTo('all-orders-edit');
+
+        if ($order->isLockedForTheUser()) {
+            return false;
+        }
 
         if (! $user->isAbleTo('all-companies-view')) {
             return $hasUpdatePermissions && $user->belongsToSameCompanyAs($order);
@@ -75,6 +83,10 @@ class OrdersPolicy
     {
         $hasDeletePermissions = $user->isAbleTo('orders-remove');
 
+        if ($order->isLockedForTheUser()) {
+            return false;
+        }
+
         if (! $user->isAbleTo('all-companies-view')) {
             return $hasDeletePermissions && $user->belongsToSameCompanyAs($order);
         }
@@ -88,6 +100,10 @@ class OrdersPolicy
     public function sendToTms(User $user, Order $order): bool
     {
         $hasPermissionsToSendToTms = $user->isAbleTo('tms-submit');
+
+        if ($order->isLockedForTheUser()) {
+            return false;
+        }
 
         if (! $user->isAbleTo('all-companies-view')) {
             return $hasPermissionsToSendToTms && $user->belongsToSameCompanyAs($order);
@@ -103,6 +119,10 @@ class OrdersPolicy
     {
         $hasPermissionsToSendToClient = $user->isAbleTo('admin-review-edit');
 
+        if ($order->isLockedForTheUser()) {
+            return false;
+        }
+
         if (! $user->isAbleTo('all-companies-view')) {
             return $hasPermissionsToSendToClient && $user->belongsToSameCompanyAs($order);
         }
@@ -116,6 +136,10 @@ class OrdersPolicy
     public function replicate(User $user, Order $order): bool
     {
         $hasPermissionToReplicate = $user->isAbleTo('admin-review-edit');
+
+        if ($order->isLockedForTheUser()) {
+            return false;
+        }
 
         if (! $user->isAbleTo('all-companies-view')) {
             return $hasPermissionToReplicate && $user->belongsToSameCompanyAs($order);

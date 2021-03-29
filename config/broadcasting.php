@@ -38,6 +38,9 @@ return [
             'options' => [
                 'cluster' => env('PUSHER_APP_CLUSTER'),
                 'useTLS' => true,
+                'host' => env('LARAVEL_WEBSOCKETS_HOST'),
+                'scheme' => env('LARAVEL_WEBSOCKETS_SCHEME', 'http'),
+                'port' => env('LARAVEL_WEBSOCKETS_PORT'),
             ],
         ],
 

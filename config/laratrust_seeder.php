@@ -39,6 +39,7 @@ return [
             'admin-review' => 'v,e',
             'audit-logs' => 'v',
             'nova' => 'v',
+            'object-locks' => 'c,e',
         ],
         'order-review' => [
             'billing-mapping' => 'e,v',
@@ -62,6 +63,7 @@ return [
             'dictionary-items' => 'v',
             'admin-review' => 'v,e',
             'audit-logs' => 'v',
+            'object-locks' => 'c,e',
         ],
         'customer-admin' => [
             'orders' => 'e,v,c,r',

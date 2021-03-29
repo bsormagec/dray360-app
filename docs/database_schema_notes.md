@@ -15,6 +15,139 @@ It is not intended to document every individual column and table, most of which 
 
 
 
+
+<br><br><br>
+
+### TABLE:  t_object_locks
+
+------
+
+0. id (ubigint primary key)
+0. object_type (indexed varchar 64). for example “request”
+0. object_id (indexed varchar 64). for example “0055bec1-d8e9-5726-9918-e6c0b8e380bd”
+0. lock_type (varchar 64), how lock created. e.g. “claim-lock”, “select-request”, “open-order”
+0. user_id (indexed ubint fk to users). user who owns the lock
+0. created_at (datetime). when lock first request
+0. updated_at (datetime). i.e. refreshed_at, used to indicate lock has been refreshed, s/b every <n> seconds. locks updated more than <M> seconds ago are considered to be implicitly released.
+0. deleted_at (datetime). i.e. released_at, used to indicate the lock has been explicitly released.
+
+
+
+
+
+<br><br><br>
+
+### TABLE:  t_training_documents
+
+------
+
+This table is used by the (machine-learning) classification system, which identifies what type of document has been requested for processing (i.e. identifies a PDF's variant_type).
+
+#### type
+
+The value "deliveryorderpdf" is the only value, to start with. In future, we might see something like "customsdeclarationpdf", for example.
+
+#### s3uri
+
+Location of document on S3 bucket. e.g. "s3://ourbucket/documentfile.pdf"
+
+#### sha256sum 
+
+The hash of the source document. e.g. "55a4a6938a637a216d5610d990f7fb6267bcb4ba8867428481f9bfbc787b28d6"
+
+#### discovered_at 
+
+Datetime, indicates when this source document was first used/discovered)
+
+#### created_at, updated_at, deleted_at
+
+Datetime, creation date of this row, etc.
+
+#### rendered_images
+
+````json
+    {
+        "100x": [
+            "s3://dray360-onboarding-extracts/labelled_documents/cargowise_pdftext_jan2021/not_cargowise/ITG-NOT-CW/sorted/AOT/export/titantirefreeporttosantos26-11168.100x.page_1.jpg"
+        ],
+        "200x": [
+            "s3://dray360-onboarding-extracts/labelled_documents/cargowise_pdftext_jan2021/not_cargowise/ITG-NOT-CW/sorted/AOT/export/titantirefreeporttosantos26-11168.200x.page_1.jpg"
+        ],
+        "300x": [
+            "s3://dray360-onboarding-extracts/labelled_documents/cargowise_pdftext_jan2021/not_cargowise/ITG-NOT-CW/sorted/AOT/export/titantirefreeporttosantos26-11168.300x.page_1.jpg"
+        ],
+        "400x": [
+            "s3://dray360-onboarding-extracts/labelled_documents/cargowise_pdftext_jan2021/not_cargowise/ITG-NOT-CW/sorted/AOT/export/titantirefreeporttosantos26-11168.400x.page_1.jpg"
+        ],
+        "300dpi": [
+            "s3://dray360-onboarding-extracts/labelled_documents/cargowise_pdftext_jan2021/not_cargowise/ITG-NOT-CW/sorted/AOT/export/titantirefreeporttosantos26-11168.300dpi.page_1.jpg"
+        ]
+    }
+````
+            $table->json('rendered_images')->nullable();
+
+#### document_metadata 
+
+````json
+    {
+        "company_id": 2,
+        "user_id": 19
+    }
+````
+
+#### external_references
+
+````json
+    [
+       {
+           "type": "request_id",
+           "value": "2ec6643b-18ea-51b5-888f-33bc886edd94"
+       },
+       {
+           "type": "onboardingdepository",
+           "value": "s3://ourbucket/documentfile.eml"
+       }
+    ]
+````
+
+#### extracted_features_list
+
+````json
+    [
+        {
+            "type": "ordered_word_list",
+            "s3uri": "s3://dray360-onboarding-extracts/labelled_documents/cargowise_pdftext_jan2021/not_cargowise/ITG-NOT-CW/sorted/AOT/export/titantirefreeporttosantos26-11168.ordered_words_list.json"
+        },
+        {
+            "type": "tableshapes",
+            "s3uri": "s3://ourbucket/documentfile.tableshapes.json"
+        }
+    ]
+````
+
+#### labels
+
+````json
+    [
+        {
+            "type": "iscargowisepdf",
+            "value": true,
+            "source": "aaronbryden",
+            "date": "2021-01-31"
+        },
+        {
+            "type": "variantname",
+            "value": "CargowiseHorizontal-import",
+            "source": "productionrequest",
+            "date": "2021-03-03"
+        }
+    ]
+````
+
+
+
+
+
 <br><br><br>
 
 ### TABLE:  t_dictionary_cache_definitions
@@ -334,7 +467,7 @@ This is a json array that stores list of companies that can use this datafile va
 
 The reason for this column and to *not* to use the `t_company_ocrvariant_ocrrules` table with its `t_company_id`/`t_variant_id` columns to associate a company with the variant is because: the `company_id_list` gets used in conjunction with the aforementioned `classification` column to identify whether a given datafile should be represented by a particular variant; rules don't come into it.
 
-JSON data structure: 
+JSON data structure:
 ````json-list
 [
     company_id_1,
@@ -350,18 +483,6 @@ select * from t_ocrvariants where json_contains(company_id_list, '2','$');
 ````
 
 Which will find company_id=2, for example. note that the single-quotes are required for integer values. String values would be searched with embedded double-quotes, like `'"two"'`
-
-
-#### admin_review_company_id_list
-
-This list indicates which companies required this specific variant to be admin-reviewed. That is, orders processed by these companies for this variant will end up with their status set to `process-ocr-output-file-review` instead of `process-ocr-output-file-complete`
-
-If this is column is left null, then no companies will require admin-review for their orders of this variant type.
-
-Note that to set this value, use a sql command with something like this syntax:
-
-`update t_ocrvariants set admin_review_company_id_list="[2]" where id=36;`
-
 
 
 

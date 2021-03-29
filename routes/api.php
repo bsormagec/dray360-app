@@ -12,6 +12,7 @@ use App\Http\Controllers\CurrentTenantController;
 use App\Http\Controllers\Api\Auth\LoginController;
 use App\Http\Controllers\Api\OCRRequestController;
 use App\Http\Controllers\Api\BulkActionsController;
+use App\Http\Controllers\Api\ObjectLocksController;
 use App\Http\Controllers\Api\OCRVariantsController;
 use App\Http\Controllers\Api\UsersStatusController;
 use App\Http\Controllers\Api\SendToClientController;
@@ -118,6 +119,16 @@ Route::group(['middleware' => ['auth:sanctum', 'impersonate', 'tenant-aware']], 
     // Companies management
     Route::resource('companies', CompaniesController::class)
         ->only(['index', 'update', 'show']);
+
+    // Object locks management
+    Route::post('object-locks', [ObjectLocksController::class, 'store'])
+        ->name('object-locks.store');
+
+    Route::put('object-locks', [ObjectLocksController::class, 'update'])
+        ->name('object-locks.update');
+
+    Route::delete('object-locks', [ObjectLocksController::class, 'destroy'])
+        ->name('object-locks.destroy');
 
     //companies/1/tms-provider/1/equipment-types
     Route::get('companies/{company}/tms-provider/{tmsProvider}/equipment-types', EquipmentTypesController::class)
