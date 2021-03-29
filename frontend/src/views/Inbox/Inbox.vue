@@ -9,7 +9,7 @@
           v-if="displayStatus.requestList"
           :class="{
             'requests__section': true,
-            'col-2': compressed,
+            'c-2': compressed,
             'col-3': !compressed,
             'col-12': isMobile,
           }"
@@ -62,7 +62,7 @@
           :class="{
             'request__orders':true,
             'col-9': !compressed,
-            'col-10': compressed,
+            'c-10': compressed,
             'col-12': isMobile,
           }"
         >
@@ -146,7 +146,7 @@
             :back-button="false"
             :refresh-lock="false"
             :order-id="request.first_order_id"
-            :starting-size="compressed ? 40 : 50"
+            :starting-size="compressed ? 40 : 40"
             @order-deleted="() => setReloadRequests(true)"
             @go-back="toggleMobileView"
           />
@@ -192,7 +192,7 @@ export default {
   mixins: [permissions, isMobile, isMedium],
   data () {
     return {
-      compressed: true,
+      compressed: false,
       openUploadOrdersDialog: false,
       request: {
         first_order_id: null,
@@ -305,6 +305,23 @@ export default {
 }
 </script>
 <style lang="scss" scoped>
+.no-gutters > .col, .no-gutters > [class*=c-] {
+    padding: 0;
+}
+.c-2 {
+    -webkit-box-flex: 0;
+    -ms-flex: 0 0 18%;
+    flex: 0 0 18%;
+    max-width: 18%;
+    width: 100%;
+  }
+  .c-10 {
+    -webkit-box-flex: 0;
+    -ms-flex: 0 0 82%;
+    flex: 0 0 82%;
+    max-width: 82%;
+    width: 100%;
+  }
 .requests__section::v-deep {
   border-right: rem(1) solid rgba(var(--v-slate-gray-base-rgb), 15%);
   height: 100vh;

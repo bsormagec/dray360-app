@@ -25,7 +25,7 @@
           </template>
           <span>Locked by {{ request.lock.user.name }}</span>
         </v-tooltip>
-        <span class="text-body-1 font-weight-bold secondary--text text-uppercase">#{{ request.request_id.substring(0,8) }}</span>
+        <span class="text-body-1 font-weight-bold secondary--text text-uppercase">#{{ request.request_id.substring(0,6) }}</span>
       </div>
       <RequestStatus
         class="ml-2 mr-auto caption"
