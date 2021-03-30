@@ -19,8 +19,14 @@ class CreateOrUpdateVerifiedAddressEntry implements ShouldQueue
      */
     public function handle(AddressVerified $event)
     {
-        $address = $this->getAddress($event);
-        $baseData = $this->getBaseData($event, $address);
+        $model = ($event->type)::find($event->data['id'] ?? null);
+
+        if (! $model) {
+            return;
+        }
+
+        $address = $this->getAddress($model);
+        $baseData = $this->getBaseData($model, $address);
 
         $verifiedAddress = VerifiedAddress::firstOrCreate($baseData, [
             'verified_count' => 0,
@@ -44,37 +50,35 @@ class CreateOrUpdateVerifiedAddressEntry implements ShouldQueue
         return tap($verifiedAddress)->save();
     }
 
-    protected function getAddress(AddressVerified $event): Address
+    protected function getAddress($model): Address
     {
-        $addressIdKey = $event->type == Order::class ? 'bill_to_address_id' : 't_address_id';
+        $addressIdKey = $model instanceof Order ? 'bill_to_address_id' : 't_address_id';
 
-        return Address::find($event->data[$addressIdKey], ['id', 'address_concatenated_text']);
+        return Address::find($model->{$addressIdKey}, ['id', 'address_concatenated_text']);
     }
 
-    protected function getBaseData(AddressVerified $event, Address $address): array
+    protected function getBaseData($model, Address $address): array
     {
-        $data = $event->data;
-
-        if ($event->type == Order::class) {
-            app('company_manager')->setCompanyFromId($data['t_company_id']);
+        if ($model instanceof Order) {
+            app('company_manager')->setCompanyFromId($model->t_company_id);
 
             $companyAddressTmsCode = CompanyAddressTMSCode::query()
-                ->forCompanyTmsProvider($data['t_company_id'], $data['t_tms_provider_id'])
+                ->forCompanyTmsProvider($model->t_company_id, $model->t_tms_provider_id)
                 ->where('t_address_id', $address->id)
                 ->first(['company_address_tms_code']);
 
             return [
-                't_company_id' => $data['t_company_id'],
-                't_tms_provider_id' => $data['t_tms_provider_id'],
+                't_company_id' => $model->t_company_id,
+                't_tms_provider_id' => $model->t_tms_provider_id,
                 'company_address_tms_code' => $companyAddressTmsCode->company_address_tms_code,
-                'ocr_address_raw_text' => $data['bill_to_address_raw_text'],
+                'ocr_address_raw_text' => $model->bill_to_address_raw_text,
             ];
         }
 
-        $order = Order::find($data['t_order_id'], ['id', 't_company_id', 't_tms_provider_id']);
+        $order = Order::find($model->t_order_id, ['id', 't_company_id', 't_tms_provider_id']);
         $companyAddressTmsCode = CompanyAddressTMSCode::query()
             ->forCompanyTmsProvider($order->t_company_id, $order->t_tms_provider_id)
-            ->where('t_address_id', $data['t_address_id'])
+            ->where('t_address_id', $model->t_address_id)
             ->first(['company_address_tms_code']);
 
         app('company_manager')->setCompanyFromId($order->getCompanyId());
@@ -83,7 +87,7 @@ class CreateOrUpdateVerifiedAddressEntry implements ShouldQueue
             't_company_id' => $order->t_company_id,
             't_tms_provider_id' => $order->t_tms_provider_id,
             'company_address_tms_code' => $companyAddressTmsCode->company_address_tms_code,
-            'ocr_address_raw_text' => $data['t_address_raw_text'],
+            'ocr_address_raw_text' => $model->t_address_raw_text,
         ];
     }
 }

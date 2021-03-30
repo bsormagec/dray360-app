@@ -65,6 +65,7 @@ class OcrRequestsListQuery extends QueryBuilder
                     return $query->where('s.company_id', '=', currentCompany()->id);
                 })
                 ->whereNull('t_job_latest_state.order_id')
+                ->whereNotIn('s.status', OCRRequestStatus::HIDE_FROM_REQUESTS_LIST) // list of statuses to exclude from request list
                 ->withCount('orders')
                 ->with([
                     'latestOcrRequestStatus:id,status,status_date,status_metadata',

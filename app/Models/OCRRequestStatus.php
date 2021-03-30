@@ -64,9 +64,20 @@ class OCRRequestStatus extends Model
     FAILURE_IMAGEUPLOADING_TO_BLACKFLY = 'failure-imageuploding-to-blackfl',
     UNTRIED_IMAGEUPLOADING_TO_BLACKFLY = 'untried-imageuploding-to-blackfl',
 
-    SENDING_TO_COMPCARE = 'sending-to-compcare'
+    SENDING_TO_COMPCARE = 'sending-to-compcare',
+
+    INTAKE_FILE_INGESTION = 'intake-file-ingestion'
     ;
 
+
+    // These are request statuses to *not* retrieve with the OcrRequestsListQuery
+    const HIDE_FROM_REQUESTS_LIST = [
+        self::INTAKE_STARTED,
+        self::INTAKE_FILE_INGESTION
+    ];
+
+
+    // This is the map of "system statuses" to "display statuses"
     const STATUS_MAP = [
         self::INTAKE_ACCEPTED => 'Processing',
         self::INTAKE_ACCEPTED_DATAFILE => 'Processing',
