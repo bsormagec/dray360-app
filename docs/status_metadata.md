@@ -19,6 +19,7 @@ Each status is very carefully defined, here is a complete list (as of 11/27/2020
 | `./intakefilter/intakefilter.py` | _user emails PDF, or_<br>_uploads document_ | `intake-exception` |
 | `./intakefilter/intakefilter.py` | _user emails PDF, or_<br>_uploads document_ | `intake-rejected` |
 | `./intakefilter/intakefilter.py` | _user emails PDF, or_<br>_uploads document_ | `intake-started` |
+| `./intakefilter/intakefilter.py` | _file-ingestion email received_ | `intake-file-ingestion` |
 | need | need | `ocr-timedout` |
 | need | need | `ocr-waiting` |
 | need | need | `shipment-created-by-wint` |
@@ -480,3 +481,20 @@ Every file processed in this request. If the list grows too large that it cannot
 1. bucket_name
 1. key_name
 1. traceback (if intake-exception)
+
+
+
+
+
+<br>
+
+-----
+
+### `intake-file-ingestion`
+
+* created by `./intakefilter/intakefilter.py`
+
+1. ingestion_type
+1. original_filename
+1. s3_bucket
+1. s3_key

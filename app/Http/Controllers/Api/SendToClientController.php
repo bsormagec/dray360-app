@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Api;
 
 use App\Models\Order;
 use Illuminate\Http\Response;
+use App\Events\ObjectUnlocked;
 use App\Models\OCRRequestStatus;
 use App\Http\Controllers\Controller;
 use App\Actions\PublishSnsMessageToUpdateStatus;
@@ -44,6 +45,8 @@ class SendToClientController extends Controller
             return response()->json(['data' => $response['message']], Response::HTTP_INTERNAL_SERVER_ERROR);
         }
 
+        $this->unlockOrderRequest($order);
+
         return response()->json(['data' => $response['message']]);
     }
 
@@ -77,5 +80,17 @@ class SendToClientController extends Controller
             ])
             ->with('ocrRequest.latestOcrRequestStatus')
             ->find($orderId);
+    }
+
+    protected function unlockOrderRequest(Order $order)
+    {
+        $lock = $order->getActiveLock();
+
+        if (! $lock || ! $order->isTheLastUnderReview()) {
+            return;
+        }
+
+        $lock->delete();
+        broadcast(new ObjectUnlocked($lock))->toOthers();
     }
 }
