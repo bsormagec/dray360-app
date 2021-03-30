@@ -9,6 +9,7 @@ Each status is very carefully defined, here is a complete list (as of 11/27/2020
 | Code module | Triggered by status | Issues statuses |
 | :---------- | :------------------ | :-------------- |
 | app/Http/Controllers/Api/SendToTmsController.php <br> _(laravel-api controller)_ | _user clicks [Send to TMS] button_ | [`sending-to-wint`](./status_metadata.md#sending-to-wint-status_metadata) <br> [`sending-to-chainio`](./status_metadata.md#sending-to-chainio-status_metadata) |
+| processonefile.py | _order is auto-submitted_ | `auto-sending-to-wint` <br> `auto-sending-to-chainio` |
 | app/Http/Controllers/Api/ReplicateOrdersController.php <br> _(laravel-api controller)_ | _user clicks [Replicate Order] button_ | [`replicated-from-existing-order`](./status_metadata.md#replicated-from-existing-order-status_metadata) |
 | postprocessingqueue.py | `ocr-completed` | [`ocr-post-processing-error`](./status_metadata.md#ocr-post-processing-error-status_metadata) <br> [`ocr-post-processing-review`](./status_metadata.md#ocr-post-processing-complete-and-ocr-post-processing-review-status_metadata)  <br> [`ocr-post-processing-complete`](./status_metadata.md#ocr-post-processing-complete-and-ocr-post-processing-review-status_metadata) |
 | processonefile.py | `ocr-completed` <br> _called by postprocessingqueue.py_ | [`process-ocr-output-file-error`](./status_metadata.md#process-ocr-output-file-error-status_metadata) <br> [`process-ocr-output-file-review`](./status_metadata.md#process-ocr-output-file-complete-and-process-ocr-output-file-review-status_metadata) <br> [`process-ocr-output-file-complete`](./status_metadata.md#process-ocr-output-file-complete-and-process-ocr-output-file-review-status_metadata)|
@@ -177,7 +178,7 @@ For orders whose variant_name `t_ocrvariants` and `company_id` is found in `t_co
 
 -----
 
-### `sending-to-wint`
+### `sending-to-wint` and `auto-sending-to-wint` 
 
 * created by `./Http/Controllers/Api/SendToTmsController.php` when user selects [Send to TMS] option for Profit Tools orders
 
@@ -192,7 +193,7 @@ For orders whose variant_name `t_ocrvariants` and `company_id` is found in `t_co
 
 -----
 
-### `sending-to-chainio`
+### `sending-to-chainio` and `auto-sending-to-chainio`
 
 * created by `./app/Http/Controllers/Api/SendToTmsController.php` when user selects [Send to TMS] option for Compcare orders
 

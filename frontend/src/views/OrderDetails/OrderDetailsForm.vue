@@ -875,6 +875,7 @@ export default {
 
       const alreadySentToTmsStatuses = [
         statuses.sendingToWint,
+        statuses.autoSendingToWint,
         statuses.successSendingToWint,
         statuses.shipmentCreatedByWint,
         statuses.updatingToWint,
@@ -882,6 +883,12 @@ export default {
         statuses.successUpdatingToWint,
         statuses.shipmentUpdatedByWint,
         statuses.shipmentNotUpdatedByWint,
+
+        statuses.sendingToChainio,
+        statuses.autoSendingToChainio,
+        statuses.successSendingToChainio,
+        statuses.shipmentCreatedByChainio,
+
         statuses.updatedBySubsequentOrder,
         statuses.successImageuplodingToBlackfl,
         statuses.failureImageuplodingToBlackfl,
