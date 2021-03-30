@@ -34,7 +34,7 @@ use Illuminate\Database\Seeder;
  * shipment_type
  * zero
  */
-class OCRVariantsSeeder extends Seeder
+class AbbyyVariantsSeeder extends Seeder
 {
     const INPUT_FILES = [
         [

@@ -35,7 +35,7 @@
         </v-icon>
       </v-btn>
       <div>
-        <div class="order__title mr-4 d-flex justify-space-between align-center">
+        <div class="order__title mr-1 d-flex justify-space-between align-center">
           <v-tooltip
             v-if="isLocked && hasPermission('object-locks-create')"
             bottom
@@ -59,7 +59,7 @@
             x-small
             icon
             color="primary"
-            class="ml-2"
+            class="ml-1"
             :loading="loading"
             @click="$emit('refresh')"
           >
