@@ -35,7 +35,9 @@ export const statuses = {
   processOcrOutputFileComplete: 'process-ocr-output-file-complete',
   processOcrOutputFileError: 'process-ocr-output-file-error',
   uploadRequested: 'upload-requested',
+
   sendingToWint: 'sending-to-wint',
+  autoSendingToWint: 'auto-sending-to-wint',
   failureSendingToWint: 'failure-sending-to-wint',
   successSendingToWint: 'success-sending-to-wint',
   shipmentCreatedByWint: 'shipment-created-by-wint',
@@ -45,6 +47,14 @@ export const statuses = {
   successUpdatingToWint: 'success-updating-to-wint',
   shipmentUpdatedByWint: 'shipment-updated-by-wint',
   shipmentNotUpdatedByWint: 'shipment-not-updated-by-wint',
+
+  sendingToChainio: 'sending-to-chainio',
+  autoSendingToChainio: 'auto-sending-to-chainio',
+  successSendingToChainio: 'success-sending-to-chainio',
+  failureSendingToChainio: 'failure-sending-to-chainio',
+  shipmentCreatedByChainio: 'shipment-created-by-chainio',
+  shipmentNotCreatedByChainio: 'shipment-not-created-by-chainio',
+
   updatesPriorOrder: 'updates-prior-order',
   requestMarkedDone: 'request-marked-done',
   requestMarkedUndone: 'request-marked-undone',
