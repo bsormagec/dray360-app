@@ -72,6 +72,7 @@ class OCRRequestStatus extends Model
 
     // These are request statuses to *not* retrieve with the OcrRequestsListQuery
     const HIDE_FROM_REQUESTS_LIST = [
+        self::INTAKE_STARTED,
         self::INTAKE_FILE_INGESTION
     ];
 
