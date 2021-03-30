@@ -1,5 +1,7 @@
 <?php
 
+namespace Database\Seeders;
+
 use App\Models\TMSProvider;
 use Illuminate\Database\Seeder;
 

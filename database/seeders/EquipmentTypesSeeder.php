@@ -1,5 +1,7 @@
 <?php
 
+namespace Database\Seeders;
+
 /**
  * Usage: php artisan db:seed --class=EquipmentTypesSeeder
  */
@@ -19,7 +21,7 @@ class EquipmentTypesSeeder extends Seeder
      */
     const ALL_COMPANIES = [
         'TransportDSquareOnboarding' => [
-            'file' => 'seeds/Transport DSquare Equipment Lease Types.20210324.xlsx',
+            'file' => 'seeders/Transport DSquare Equipment Lease Types.20210324.xlsx',
             'columns' => [
                 'tms_equipment_id' => 'id',
                 'equipment_owner' => 'line',
@@ -30,7 +32,7 @@ class EquipmentTypesSeeder extends Seeder
             ],
         ],
         'TransportDSquare' => [
-            'file' => 'seeds/Transport DSquare Equipment Lease Types.20210324.xlsx',
+            'file' => 'seeders/Transport DSquare Equipment Lease Types.20210324.xlsx',
             'columns' => [
                 'tms_equipment_id' => 'id',
                 'equipment_owner' => 'line',
@@ -41,7 +43,7 @@ class EquipmentTypesSeeder extends Seeder
             ],
         ],
         'Cushing' => [
-            'file' => 'seeds/cushing_equipment_lease_types_20201217.csv',
+            'file' => 'seeders/cushing_equipment_lease_types_20201217.csv',
             'columns' => [
                 'tms_equipment_id' => 'id',
                 'equipment_owner' => 'line',
@@ -52,7 +54,7 @@ class EquipmentTypesSeeder extends Seeder
             ],
         ],
         'TCompaniesDemo' => [
-            'file' => 'seeds/cushing_equipment_lease_types_20201217.csv',
+            'file' => 'seeders/cushing_equipment_lease_types_20201217.csv',
             'columns' => [
                 'tms_equipment_id' => 'id',
                 'equipment_owner' => 'line',
@@ -63,7 +65,7 @@ class EquipmentTypesSeeder extends Seeder
             ],
         ],
         'IXTOnboarding' => [
-            'file' => 'seeds/ixt_equipment_lease_types_20201028.csv',
+            'file' => 'seeders/ixt_equipment_lease_types_20201028.csv',
             'columns' => [
                 'tms_equipment_id' => 'id',
                 'equipment_owner' => 'line',
@@ -74,7 +76,7 @@ class EquipmentTypesSeeder extends Seeder
             ],
         ],
         'IXT' => [
-            'file' => 'seeds/ixt_equipment_lease_types_20201028.csv',
+            'file' => 'seeders/ixt_equipment_lease_types_20201028.csv',
             'columns' => [
                 'tms_equipment_id' => 'id',
                 'equipment_owner' => 'line',
@@ -85,7 +87,7 @@ class EquipmentTypesSeeder extends Seeder
             ],
         ],
         'PortCityLogisticsOnboarding' => [
-            'file' => 'seeds/pcl_equipment_lease_types_20201028.csv',
+            'file' => 'seeders/pcl_equipment_lease_types_20201028.csv',
             'columns' => [
                 'tms_equipment_id' => 'id',
                 'equipment_owner' => 'line',
@@ -96,7 +98,7 @@ class EquipmentTypesSeeder extends Seeder
             ],
         ],
         'PortCityLogistics' => [
-            'file' => 'seeds/pcl_equipment_lease_types_20201028.csv',
+            'file' => 'seeders/pcl_equipment_lease_types_20201028.csv',
             'columns' => [
                 'tms_equipment_id' => 'id',
                 'equipment_owner' => 'line',
@@ -107,7 +109,7 @@ class EquipmentTypesSeeder extends Seeder
             ],
         ],
         'Zariz' => [
-            'file' => 'seeds/Zariz Equipment Lease Types.xlsx',
+            'file' => 'seeders/Zariz Equipment Lease Types.xlsx',
             'sheet' => 1,
             'columns' => [
                 'tms_equipment_id' => 'id',
@@ -119,7 +121,7 @@ class EquipmentTypesSeeder extends Seeder
             ],
         ],
         'ZarizOnboarding' => [
-            'file' => 'seeds/Zariz Equipment Lease Types.xlsx',
+            'file' => 'seeders/Zariz Equipment Lease Types.xlsx',
             'sheet' => 1,
             'columns' => [
                 'tms_equipment_id' => 'id',
@@ -131,7 +133,7 @@ class EquipmentTypesSeeder extends Seeder
             ],
         ],
         'WBContainer' => [
-            'file' => 'seeds/WBContainer_equipment_types_20210215.xlsx',
+            'file' => 'seeders/WBContainer_equipment_types_20210215.xlsx',
             'sheet' => 1,
             'columns' => [
                 'tms_equipment_id' => 'id',
@@ -143,7 +145,7 @@ class EquipmentTypesSeeder extends Seeder
             ],
         ],
         'WBContainerOnboarding' => [
-            'file' => 'seeds/WBContainer_equipment_types_20210215.xlsx',
+            'file' => 'seeders/WBContainer_equipment_types_20210215.xlsx',
             'sheet' => 1,
             'columns' => [
                 'tms_equipment_id' => 'id',
@@ -155,7 +157,7 @@ class EquipmentTypesSeeder extends Seeder
             ],
         ],
         'GrahamTrucking' => [
-            'file' => 'seeds/graham_trucking_equipment.20210322.xlsx',
+            'file' => 'seeders/graham_trucking_equipment.20210322.xlsx',
             'sheet' => 1,
             'columns' => [
                 'tms_equipment_id' => 'id',

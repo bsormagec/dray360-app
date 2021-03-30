@@ -146,9 +146,9 @@ return [
     | Memory Limit (MB)
     |--------------------------------------------------------------------------
     |
-    | This value describes the maximum amount of memory the Horizon worker
-    | may consume before it is terminated and restarted. You should set
-    | this value according to the resources available to your server.
+    | This value describes the maximum amount of memory the Horizon master
+    | supervisor may consume before it is terminated and restarted. For
+    | configuring these limits on your workers, see the next section.
     |
     */
 
@@ -165,43 +165,40 @@ return [
     |
     */
 
+    'defaults' => [
+        'supervisor-1' => [
+            'connection' => 'redis',
+            'queue' => ['default', 'imports'],
+            'balance' => 'auto',
+            'memory' => 128,
+            'tries' => 1,
+            'nice' => 0,
+            'timeout' => 600,
+        ],
+    ],
+
     'environments' => [
         'production' => [
             'supervisor-1' => [
-                'connection' => 'redis',
-                'queue' => ['default', 'imports'],
-                'balance' => 'auto',
-                'processes' => 4,
+                'processes' => 5,
                 'minProcesses' => 1,
-                'maxProcesses' => 4,
-                'tries' => 1,
-                'timeout' => 600,
+                'maxProcesses' => 5,
             ],
         ],
 
         'development' => [
             'supervisor-1' => [
-                'connection' => 'redis',
-                'queue' => ['default', 'imports'],
-                'balance' => 'auto',
                 'processes' => 4,
                 'minProcesses' => 1,
                 'maxProcesses' => 4,
-                'tries' => 1,
-                'timeout' => 600,
             ],
         ],
 
         'local' => [
             'supervisor-1' => [
-                'connection' => 'redis',
-                'queue' => ['default', 'imports'],
-                'balance' => 'auto',
                 'processes' => 4,
                 'minProcesses' => 1,
                 'maxProcesses' => 4,
-                'tries' => 1,
-                'timeout' => 600,
             ],
         ],
     ],

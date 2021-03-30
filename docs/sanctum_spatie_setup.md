@@ -172,7 +172,7 @@ php artisan migrate:make add_paid_to_users
 
 ````bash
 php artisan make:seeder RolesAndPermissionsSeeder
-# edit database/seeds/RolesAndPermissionsSeeder.php
+# edit database/seeders/RolesAndPermissionsSeeder.php
 php artisan db:seed --class=RolesAndPermissionsSeeder
 
 ````

@@ -14,3 +14,12 @@ jobs:
           start: npm run serve
           wait-on: 'http://localhost:8080'
           working-directory: frontend
+        env:
+          VUE_APP_APP_URL: 'http://localhost:8080'
+          APP_URL: 'http://local.dray360.com'
+          VUE_APP_TEST_USER_NAME: 'testuser'
+          VUE_APP_TEST_USER_EMAIL: 'peter+test13@peternelson.com'
+          VUE_APP_TEST_USER_PASSWORD: 'mongomongo'
+          VUE_APP_PUSHER_APP_KEY: 'testPusherAppKey'
+          VUE_APP_WEBSOCKETS_PORT: 6001
+          VUE_APP_WEBSOCKETS_TLS: false

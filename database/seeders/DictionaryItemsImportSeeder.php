@@ -1,5 +1,7 @@
 <?php
 
+namespace Database\Seeders;
+
 /**
  * Usage: php artisan db:seed --class=DictionaryItemsImportSeeder
  */
@@ -21,7 +23,7 @@ class DictionaryItemsImportSeeder extends Seeder
         // ITG Onboarding
         'ITGOnboarding' => [
             [
-                'file' => 'seeds/CargoWise One Export - 20210204142016 - 164.xlsx',
+                'file' => 'seeders/CargoWise One Export - 20210204142016 - 164.xlsx',
                 'sheet' => 1,
                 'columns' => [
                     'item_key' => 'Code',
@@ -34,7 +36,7 @@ class DictionaryItemsImportSeeder extends Seeder
                 ],
             ],
             [
-                'file' => 'seeds/ITG David Duke - Vessel Listing 1.22.21.xlsx',
+                'file' => 'seeders/ITG David Duke - Vessel Listing 1.22.21.xlsx',
                 'sheet' => 1,
                 'columns' => [
                     'item_key' => 'Vessel',
@@ -44,7 +46,7 @@ class DictionaryItemsImportSeeder extends Seeder
                 ]
             ],
             [
-                'file' => 'seeds/CargoWise One Export - 20210107113712 - 414.csv',
+                'file' => 'seeders/CargoWise One Export - 20210107113712 - 414.csv',
                 'columns' => [
                     'item_key' => 'Code',
                     'item_display_name' => 'Description',
@@ -63,7 +65,7 @@ class DictionaryItemsImportSeeder extends Seeder
         // ITG
         'ITG' => [
             [
-                'file' => 'seeds/CargoWise One Export - 20210204142016 - 164.xlsx',
+                'file' => 'seeders/CargoWise One Export - 20210204142016 - 164.xlsx',
                 'sheet' => 1,
                 'columns' => [
                     'item_key' => 'Code',
@@ -76,7 +78,7 @@ class DictionaryItemsImportSeeder extends Seeder
                 ],
             ],
             [
-                'file' => 'seeds/ITG David Duke - Vessel Listing 1.22.21.xlsx',
+                'file' => 'seeders/ITG David Duke - Vessel Listing 1.22.21.xlsx',
                 'sheet' => 1,
                 'columns' => [
                     'item_key' => 'Vessel',
@@ -86,7 +88,7 @@ class DictionaryItemsImportSeeder extends Seeder
                 ]
             ],
             [
-                'file' => 'seeds/CargoWise One Export - 20210107113712 - 414.csv',
+                'file' => 'seeders/CargoWise One Export - 20210107113712 - 414.csv',
                 'columns' => [
                     'item_key' => 'Code',
                     'item_display_name' => 'Description',
@@ -105,7 +107,7 @@ class DictionaryItemsImportSeeder extends Seeder
         // Graham Trucking
         'GrahamTrucking' => [
             [
-                'file' => 'seeds/graham_trucking_templates.20210322.xlsx',
+                'file' => 'seeders/graham_trucking_templates.20210322.xlsx',
                 'columns' => [
                     'item_key' => 'TMP Number',
                     'item_display_name' => 'Template Name',

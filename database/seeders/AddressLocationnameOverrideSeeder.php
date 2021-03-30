@@ -1,11 +1,11 @@
 <?php
 
+namespace Database\Seeders;
+
 /**
  * To run:
  * php artisan db:seed --class="AddressLocationnameOverrideSeeder"
  */
-
-
 
 use App\Models\Company;
 use App\Models\TMSProvider;

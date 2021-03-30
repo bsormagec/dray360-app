@@ -1,5 +1,7 @@
 <?php
 
+namespace Database\Seeders;
+
 /**
  * Usage: php artisan db:seed --class=TerminalSeeder
  */
@@ -18,7 +20,7 @@ class TerminalSeeder extends Seeder
 
     // define filename from Tom's spreadsheet listing validated terminals
     // note that column A was renamed to
-    const TOMS_TERMINAL_LIST_CSV_FILE = 'database/seeds/Copy-of-list-of-terminals-work-in-progress.20200517.csv';
+    const TOMS_TERMINAL_LIST_CSV_FILE = 'database/seeders/Copy-of-list-of-terminals-work-in-progress.20200517.csv';
 
     /**
      * Run the database seeds.
