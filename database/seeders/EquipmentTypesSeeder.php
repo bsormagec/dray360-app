@@ -20,6 +20,29 @@ class EquipmentTypesSeeder extends Seeder
      * add the specific companies to actually import.
      */
     const ALL_COMPANIES = [
+        
+        'PTDemo' => [
+            'file' => 'seeders/PT Demo Equipment Lease Types.xlsx',
+            'columns' => [
+                'tms_equipment_id' => 'id',
+                'equipment_owner' => 'line',
+                'equipment_type_and_size' => 'type',
+                'equipment_size' => 'equipmentlength',
+                'scac' => 'scac',
+                'line_prefix_list' => 'lineprefix',
+            ],
+        ],
+        'TCompaniesDemo' => [
+            'file' => 'seeders/Demo - Equipment Lease Types.xlsx',
+            'columns' => [
+                'tms_equipment_id' => 'id',
+                'equipment_owner' => 'line',
+                'equipment_type_and_size' => 'type',
+                'equipment_size' => 'equipmentlength',
+                'scac' => 'scac',
+                'line_prefix_list' => 'lineprefix',
+            ],
+        ],
         'TransportDSquareOnboarding' => [
             'file' => 'seeders/Transport DSquare Equipment Lease Types.20210324.xlsx',
             'columns' => [
@@ -53,7 +76,7 @@ class EquipmentTypesSeeder extends Seeder
                 'line_prefix_list' => 'lineprefix',
             ],
         ],
-        'TCompaniesDemo' => [
+        'DEPRECATED-CUSHING-BASED-TCompaniesDemo' => [
             'file' => 'seeders/cushing_equipment_lease_types_20201217.csv',
             'columns' => [
                 'tms_equipment_id' => 'id',
@@ -177,8 +200,8 @@ class EquipmentTypesSeeder extends Seeder
      * there is usually no reason to re-import more than once.
      */
     const TO_BE_IMPORTED = [
-        'TransportDSquare' => self::ALL_COMPANIES['TransportDSquare'],
-        'TransportDSquareOnboarding' => self::ALL_COMPANIES['TransportDSquareOnboarding']
+        'PTDemo' => self::ALL_COMPANIES['PTDemo'],
+        'TCompaniesDemo' => self::ALL_COMPANIES['TCompaniesDemo']
     ];
 
     /**
