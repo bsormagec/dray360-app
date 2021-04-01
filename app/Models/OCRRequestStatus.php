@@ -101,7 +101,7 @@ class OCRRequestStatus extends Model
         self::OCR_POST_PROCESSING_COMPLETE => 'Processed',
         self::PROCESS_OCR_OUTPUT_FILE_COMPLETE => 'Processed',
 
-        self::OCR_POST_PROCESSING_AUTOSUBMITED => 'AutoSubmitted',
+        self::OCR_POST_PROCESSING_AUTOSUBMITED => 'Auto Submitted',
 
         self::PROCESS_OCR_OUTPUT_FILE_REVIEW => 'Needs Review',
 

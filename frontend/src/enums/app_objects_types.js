@@ -71,7 +71,7 @@ export const displayStatuses = {
   rejected: 'Rejected',
   intake: 'Intake',
   processed: 'Processed',
-  autoSubmitted: 'AutoSubmitted',
+  autoSubmitted: 'Auto Submitted',
   sendingToTms: 'Sending to TMS',
   sentToTms: 'Sent to TMS',
   acceptedByTms: 'Accepted by TMS',
