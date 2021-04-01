@@ -3,6 +3,7 @@
 &.acceptedbytms,
 &.markedcomplete,
 &.markednotcomplete,
+&.autosubmitted,
 &.senttotms {
   &::after{
     background-color: #77C19A;
