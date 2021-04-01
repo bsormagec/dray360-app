@@ -26,6 +26,7 @@ class OCRRequestStatus extends Model
     OCR_COMPLETED = 'ocr-completed',
     OCR_POST_PROCESSING_COMPLETE = 'ocr-post-processing-complete',
     OCR_POST_PROCESSING_ERROR = 'ocr-post-processing-error',
+    OCR_POST_PROCESSING_AUTOSUBMITED = 'ocr-post-processing-autosubmited',
     OCR_TIMEDOUT = 'ocr-timedout',
     OCR_WAITING = 'ocr-waiting',
     OCR_POST_PROCESSING_REVIEW = 'ocr-post-processing-review',
@@ -99,6 +100,8 @@ class OCRRequestStatus extends Model
 
         self::OCR_POST_PROCESSING_COMPLETE => 'Processed',
         self::PROCESS_OCR_OUTPUT_FILE_COMPLETE => 'Processed',
+
+        self::OCR_POST_PROCESSING_AUTOSUBMITED => 'Auto Submitted',
 
         self::PROCESS_OCR_OUTPUT_FILE_REVIEW => 'Needs Review',
 
@@ -204,10 +207,8 @@ class OCRRequestStatus extends Model
     public static function alreadyCompleted($requestId): bool
     {
         return static::query()
-            ->where([
-                'request_id' => $requestId,
-                'status' => static::OCR_POST_PROCESSING_COMPLETE,
-            ])
+            ->where('request_id', $requestId)
+            ->whereIn('status', [ static::OCR_POST_PROCESSING_COMPLETE, static::OCR_POST_PROCESSING_AUTOSUBMITED ])
             ->exists();
     }
 }

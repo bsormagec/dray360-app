@@ -892,7 +892,9 @@ export default {
         statuses.updatedBySubsequentOrder,
         statuses.successImageuplodingToBlackfl,
         statuses.failureImageuplodingToBlackfl,
-        statuses.untriedImageuplodingToBlackfl
+        statuses.untriedImageuplodingToBlackfl,
+
+        statuses.ocrPostProcessingAutosubmitted
       ]
 
       return (this.order.tms_shipment_id !== null && this.order.tms_shipment_id !== undefined) ||
@@ -906,7 +908,8 @@ export default {
     isInProcessedState () {
       const validStatuses = [
         statuses.processOcrOutputFileComplete,
-        statuses.ocrPostProcessingComplete
+        statuses.ocrPostProcessingComplete,
+        statuses.ocrPostProcessingAutosubmitted
       ]
       return validStatuses.includes(this.orderSystemStatus)
     },
