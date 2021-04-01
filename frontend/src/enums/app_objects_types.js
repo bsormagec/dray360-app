@@ -29,6 +29,7 @@ export const statuses = {
   processOcrOutputFileReview: 'process-ocr-output-file-review',
   ocrPostProcessingComplete: 'ocr-post-processing-complete',
   ocrPostProcessingError: 'ocr-post-processing-error',
+  ocrPostProcessingAutosubmitted: 'ocr-post-processing-autosubmited',
   replicatedFromExistingOrder: 'replicated-from-existing-order',
   ocrWaiting: 'ocr-waiting',
   ocrTimedout: 'ocr-timedout',
