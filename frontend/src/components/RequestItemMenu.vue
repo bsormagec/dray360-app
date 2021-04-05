@@ -27,7 +27,7 @@
           v-text="'Copy request ID'"
         />
         <v-list-item
-          v-if="active && isLocked && hasPermission('object-locks-edit')"
+          v-if="active && !supervise && isLocked && hasPermission('object-locks-edit')"
           @click="handleClaimLock"
           v-text="'Claim lock'"
         />
@@ -80,10 +80,11 @@
   </div>
 </template>
 <script>
-import { mapActions } from 'vuex'
+import { mapActions, mapState } from 'vuex'
 import permissions from '@/mixins/permissions'
 import locks from '@/mixins/locks'
 import utils, { type } from '@/store/modules/utils'
+import requestList from '@/store/modules/requests-list'
 import { downloadFile } from '@/utils/download_file'
 import { deleteRequest, getSourceFileDownloadURL, reprocessOcrRequest, changeRequestDoneStatus } from '@/store/api_calls/requests'
 import RequestStatusHistoryDialog from './RequestStatusHistoryDialog'
@@ -120,11 +121,14 @@ export default {
     }
   },
   computed: {
+    ...mapState(requestList.moduleName, {
+      supervise: state => state.supervise
+    }),
     doneText () {
       return this.request.done_at === null ? 'complete' : 'not complete'
     },
     isLocked () {
-      return this.request.is_locked
+      return this.request.is_locked || this.supervise
     }
   },
   methods: {

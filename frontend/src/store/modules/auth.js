@@ -2,6 +2,7 @@ import { getCsrfCookie, postLogin, getUser, postLogout, postLeaveImpersonation, 
 import { reqStatus } from '@/enums/req_status'
 import get from 'lodash/get'
 import { type as utilsTypes } from './utils'
+import requestsList, { types as requestsListTypes } from './requests-list'
 
 const initialState = {
   loggedIn: false,
@@ -47,7 +48,7 @@ const actions = {
     }
     commit('currentUserLoading', false)
   },
-  async logout ({ commit, state }) {
+  async logout ({ commit, state, dispatch }) {
     if (get(state.currentUser, 'is_impersonated')) {
       const [error] = await postLeaveImpersonation()
 
@@ -59,6 +60,11 @@ const actions = {
 
     const [error] = await postLogout()
     if (!error) {
+      dispatch(
+        `${requestsList.moduleName}/${requestsListTypes.setSupervise}`,
+        false,
+        { root: true }
+      )
       commit('logout')
       return reqStatus.success
     }

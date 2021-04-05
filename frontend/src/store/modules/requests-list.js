@@ -1,5 +1,6 @@
 import { postLockObject, deleteReleaseLock } from '@/store/api_calls/object_locks'
 import { objectLocks } from '@/enums/app_objects_types'
+import toBool from '@/utils/to_bool'
 
 export const types = {
   setRequests: 'SET_REQUESTS',
@@ -8,10 +9,13 @@ export const types = {
   releaseLockRequest: 'RELEASE_LOCK_REQUEST',
   wsLockRequest: 'WS_LOCK_REQUEST',
   wsReleaseLockRequest: 'WS_RELEASE_LOCK_REQUEST',
+  toggleSupervise: 'TOGGLE_SUPERVISE',
+  setSupervise: 'SET_SUPERVISE',
 }
 
 const initialState = {
   requests: [],
+  supervise: toBool(localStorage.getItem(types.toggleSupervise)) || false,
 }
 
 const mutations = {
@@ -42,6 +46,12 @@ const mutations = {
     })
 
     state.requests = newList
+  },
+  [types.toggleSupervise] (state) {
+    state.supervise = !state.supervise
+  },
+  [types.setSupervise] (state, value) {
+    state.supervise = value
   }
 }
 
@@ -98,6 +108,14 @@ const actions = {
     }
 
     commit(types.releaseLockRequest, { requestId })
+  },
+  [types.toggleSupervise] ({ commit, state }) {
+    localStorage.setItem(types.toggleSupervise, !state.supervise)
+    commit(types.toggleSupervise)
+  },
+  [types.setSupervise] ({ commit }, value) {
+    localStorage.setItem(types.toggleSupervise, value)
+    commit(types.setSupervise, value)
   }
 }
 
