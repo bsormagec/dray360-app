@@ -62,7 +62,7 @@
               </thead>
               <tbody>
                 <tr
-                  v-for="(audit, index) in audits"
+                  v-for="(audit, index) in filteredAudits"
                   :key="index"
                 >
                   <td class="caption black--text">
@@ -84,6 +84,16 @@
                   </td>
                   <td class="caption black--text">
                     {{ audit.user }}
+                  </td>
+                </tr>
+                <tr v-if="audits.length !== filteredAudits.length || showHidden">
+                  <td
+                    class="caption black--text text-center"
+                    colspan="6"
+                    style="cursor: pointer"
+                    @click="showHidden = !showHidden"
+                  >
+                    {{ showHidden ? 'Hide attributes' : 'Show hidden attributes' }}
                   </td>
                 </tr>
               </tbody>
@@ -113,8 +123,29 @@ export default {
   },
   data: (vm) => ({
     audits: [],
-    loading: false
+    loading: false,
+    showHidden: false,
   }),
+  computed: {
+    filteredAudits () {
+      if (this.showHidden) {
+        return this.audits
+      }
+
+      return this.audits.filter(item => {
+        const hiddenAttributes = ['_verified']
+        let containsIt = false
+
+        hiddenAttributes.forEach(attribute => {
+          if (item.attribute.includes(attribute)) {
+            containsIt = true
+          }
+        })
+
+        return !containsIt
+      })
+    }
+  },
 
   watch: {
     open () {

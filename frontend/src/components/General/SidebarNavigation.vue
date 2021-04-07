@@ -72,8 +72,15 @@
                     v-if="item.name === 'logout' "
                     :key="i"
                     @click="logoutBtn"
-                    v-text="item.name"
-                  />
+                  >
+                    <v-progress-circular
+                      v-if="loading"
+                      :size="25"
+                      indeterminate
+                      color="primary"
+                    />
+                    {{ item.name }}
+                  </v-list-item-title>
                   <v-list-item-title
                     v-else
                     :key="i"
@@ -117,6 +124,7 @@ export default {
   data () {
     return {
       group: null,
+      loading: false,
       model: 1,
       admins: [
         { name: 'Nova', path: '/nova' },
@@ -154,7 +162,9 @@ export default {
     ...mapActions('AUTH', ['logout']),
     ...mapActions(utils.moduleName, [type.getTenantConfig, type.setSidebar]),
     async logoutBtn () {
+      this.loading = true
       const result = await this.logout()
+      this.loading = false
       if (result === reqStatus.success) {
         return this.$router.push('/login').catch(() => {})
       }

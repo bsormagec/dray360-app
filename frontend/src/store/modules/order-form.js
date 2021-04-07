@@ -2,6 +2,7 @@ import { reqStatus } from '@/enums/req_status'
 import { updateOrderDetail, updateAllOrders } from '@/store/api_calls/orders'
 import { getHighlights, parseChanges, baseHighlight } from '@/utils/order_form_general_functions'
 import cloneDeep from 'lodash/cloneDeep'
+import requestList from './requests-list'
 
 export const types = {
   setFormOrder: 'SET_FORM_ORDER',
@@ -177,8 +178,8 @@ const getters = {
   isMultiOrderRequest: state => {
     return state.order.siblings_count > 1
   },
-  isLocked: state => {
-    return state.order.is_locked || state.isLocked
+  isLocked: (state, getters, rootState) => {
+    return state.order.is_locked || state.isLocked || rootState[requestList.moduleName].supervise
   }
 }
 

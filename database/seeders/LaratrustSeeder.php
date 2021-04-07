@@ -1,5 +1,7 @@
 <?php
 
+namespace Database\Seeders;
+
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Config;
@@ -39,7 +41,7 @@ class LaratrustSeeder extends Seeder
                 foreach (explode(',', $value) as $p => $perm) {
                     $permissionValue = $mapPermission->get($perm);
 
-                    $permissions[] = App\Models\Permission::firstOrCreate([
+                    $permissions[] = \App\Models\Permission::firstOrCreate([
                         'name' => $module . '-' .$permissionValue ,
                         'display_name' => ucfirst($permissionValue) . ' ' . ucfirst($module),
                         'description' => ucfirst($permissionValue) . ' ' . ucfirst($module),

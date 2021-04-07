@@ -1,8 +1,8 @@
 # Dray 360 Database Schema
 
-This document is where overall intentions and particular complexities of the data model can be described. 
+This document is where overall intentions and particular complexities of the data model can be described.
 
-It is not intended to document every individual column and table, most of which are self-explanatory and need no futher comment. 
+It is not intended to document every individual column and table, most of which are self-explanatory and need no futher comment.
 
 
 
@@ -51,11 +51,11 @@ The value "deliveryorderpdf" is the only value, to start with. In future, we mig
 
 Location of document on S3 bucket. e.g. "s3://ourbucket/documentfile.pdf"
 
-#### sha256sum 
+#### sha256sum
 
 The hash of the source document. e.g. "55a4a6938a637a216d5610d990f7fb6267bcb4ba8867428481f9bfbc787b28d6"
 
-#### discovered_at 
+#### discovered_at
 
 Datetime, indicates when this source document was first used/discovered)
 
@@ -86,7 +86,7 @@ Datetime, creation date of this row, etc.
 ````
             $table->json('rendered_images')->nullable();
 
-#### document_metadata 
+#### document_metadata
 
 ````json
     {
@@ -154,7 +154,7 @@ Datetime, creation date of this row, etc.
 
 ------
 
-This table `t_dictionary_cache_definitions` is used in conjuction with the `t_dictionary_cache_entries` and `t_dictionary_items` tables. 
+This table `t_dictionary_cache_definitions` is used in conjuction with the `t_dictionary_cache_entries` and `t_dictionary_items` tables.
 
 The basic idea is that for every distinct `t_dictionary_items.item_type` value there can be a single-row definition at `t_dictionary_cache_definitions.cache_type`. These define how to use any matching rows in `t_dictionary_cache_entries.cache_type` table, rows that each point to a specific memorized entry in `t_dictionary_items.item_type`.
 
@@ -242,7 +242,7 @@ In fact this is a concatenated key containing `request_id` + `:` + `reference_nu
 
 ------
 
-Every state change for a request/order combination (or request/null when orders don't exist yet) is logged here. 
+Every state change for a request/order combination (or request/null when orders don't exist yet) is logged here.
 
 #### status
 
@@ -255,7 +255,7 @@ For detailed information on `status` values, see [Status Metadata Documentation]
 
 #### status_metadata
 
-This JSON type column records different information for each `status` type. 
+This JSON type column records different information for each `status` type.
 
 See the dedicated document in this folder for details on each status_metadata type.
 
@@ -273,13 +273,13 @@ See the dedicated document in this folder for details on each status_metadata ty
 
 ------
 
-For a given request/order combination (or request/null when orders don't exist yet) the latest row inserted into the `t_job_state_changes` table will be recorded on this table. 
+For a given request/order combination (or request/null when orders don't exist yet) the latest row inserted into the `t_job_state_changes` table will be recorded on this table.
 
 Note that this "latest state" is recorded as written to the database, not as dated. Ergo, in the odd case where an earlier status change is written to the database later than an actual subsequent status change (due to some kind of asynchronous process delay) then the earlier timestamp will be recorded as the "latest state". This is an hypothetical problem only, and has not been seen in practice, but I mention it here in case it ever does happen.
 
 As of November 2020, the only thing that writes to the t_job_latest_state table is an automated mysql trigger called `t_job_state_change_updated`
 
-#### company_id and order_id 
+#### company_id and order_id
 
 These columns are nullable and _not_ foreign key references to the t_companies/t_orders table. This is intentional, because we can record order_id's for orders that were rolled-back and not actually committed to the database.
 
@@ -315,17 +315,17 @@ In this data model a "company" is a customer of Dray360. Each company is uniquel
 
 #### name & id
 
-These are hardcoded in `app/Models/Company.php` and reference by constant in `app/Console/Commands/ImportProfitToolsAddresses.php` among other places. 
+These are hardcoded in `app/Models/Company.php` and reference by constant in `app/Console/Commands/ImportProfitToolsAddresses.php` among other places.
 
-At this point in time, the `name` must be unique, it must not change, and it must not be assigned to a different `id` than first assigned. The `name/id` combination must be identical between prod/dev/staging environments. 
+At this point in time, the `name` must be unique, it must not change, and it must not be assigned to a different `id` than first assigned. The `name/id` combination must be identical between prod/dev/staging environments.
 
-If at some point in the future a "display name" is desired, different than "name", then add a new column for that purpose. 
+If at some point in the future a "display name" is desired, different than "name", then add a new column for that purpose.
 
 #### company_config:json
 
 Used for company-specific (i.e. never inherited and overridden by specific tenants/domains/users) configuration parameters. The idea is to not add a plethora of boolean columns to the `t_companies` table for every conceivable flag.
 
-JSON data structure: 
+JSON data structure:
 ```json
 {
     "profit_tools_send_quantity_and_weight": true,
@@ -337,9 +337,9 @@ JSON data structure:
 
 #### configuration:json
 
-Used for inheritable UI-specific configurations. This field is made available to the frontend. It overrides the default `tenants.configuation:json` configuration with any identical properties, and can itself be overridden by `users.configuration:json`. 
+Used for inheritable UI-specific configurations. This field is made available to the frontend. It overrides the default `tenants.configuation:json` configuration with any identical properties, and can itself be overridden by `users.configuration:json`.
 
-JSON data structure: 
+JSON data structure:
 ```json
 {
     "profit_tools_enable_templates": true
@@ -378,15 +378,15 @@ This indicates what type of variant is being described. Valid values are:
 
 A list of matching keywords (and potentially other information like regions), to help classify variants.
 
-JSON data structure: 
+JSON data structure:
 ```json
 {
-    "and_all_keywords": 
+    "and_all_keywords":
         [
             "Sea Freight FCL Cartage Advice with Receipt",
             "Ocean ASDF"
         ],
-    "and_any_keywords": 
+    "and_any_keywords":
         [
             "CONSOLE",
             "SHIPMENT"
@@ -400,7 +400,7 @@ JSON data structure:
 
 #### mapping
 
-JSON data structure: 
+JSON data structure:
 ```json
 {
     "abbyy_fieldname_1": {
@@ -443,7 +443,7 @@ Set to the parser, to tell it what options (only when overriding its defaults) t
 
 Sent to the parser, to tell it what fields (in case of overriding its defaults) to use. In other words, usually null, but when used, for example:
 
-Sample JSON data structure: 
+Sample JSON data structure:
 ```json
 {
     "vertical_fields_list": [
@@ -493,7 +493,7 @@ Which will find company_id=2, for example. note that the single-quotes are requi
 
 ------
 
-This table is seeded by ./database/seeds/EquipmentLeaseTypesSeeder.php
+This table is seeded by ./database/seeders/EquipmentLeaseTypesSeeder.php
 
 <br><br>
 
@@ -501,7 +501,7 @@ This table is seeded by ./database/seeds/EquipmentLeaseTypesSeeder.php
 
 This is another JSON array that stores a list of text container code prefixes to help find and identify equipment types. It can be null of no line prefixes are known for that particular equipment.
 
-JSON data structure: 
+JSON data structure:
 ````json-list
 [
     line_prefix_1,

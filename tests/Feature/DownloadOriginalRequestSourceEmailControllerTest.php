@@ -28,7 +28,7 @@ class DownloadOriginalRequestSourceEmailControllerTest extends TestCase
         Storage::shouldReceive('temporaryUrl')->andReturn($signedUrl);
         $order = Order::first(['request_id']);
 
-        $this->get(route('ocr.requests.download-source-email', $order->request_id))
+        $this->getJson(route('ocr.requests.download-source-email', $order->request_id))
             ->assertJsonFragment([
                 'data' => $signedUrl
             ])
@@ -50,7 +50,7 @@ class DownloadOriginalRequestSourceEmailControllerTest extends TestCase
         Sanctum::actingAs($user);
         Storage::fake('s3');
 
-        $this->get(route('ocr.requests.download-source-email', $order->request_id))
+        $this->getJson(route('ocr.requests.download-source-email', $order->request_id))
             ->assertStatus(Response::HTTP_FORBIDDEN);
     }
 }

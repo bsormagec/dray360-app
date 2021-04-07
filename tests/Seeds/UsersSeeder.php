@@ -2,8 +2,8 @@
 
 namespace Tests\Seeds;
 
-use LaratrustSeeder;
 use Illuminate\Database\Seeder;
+use Database\Seeders\LaratrustSeeder;
 
 class UsersSeeder extends Seeder
 {

@@ -75,6 +75,7 @@ import { getDictionaryItems } from '@/store/api_calls/utils'
 import ContentLoading from '@/components/ContentLoading'
 import orders, { types } from '@/store/modules/orders'
 import orderForm, { types as orderFormTypes } from '@/store/modules/order-form'
+import requestsList from '@/store/modules/requests-list'
 import utils, { type as utilsTypes } from '@/store/modules/utils'
 import { mapState, mapActions } from 'vuex'
 import { isInAdminReview } from '@/utils/status_helpers'
@@ -146,6 +147,9 @@ export default {
   computed: {
     ...mapState(orders.moduleName, {
       currentOrder: state => state.currentOrder
+    }),
+    ...mapState(requestsList.moduleName, {
+      supervise: state => state.supervise,
     }),
     ...mapState(orderForm.moduleName, {
       order: state => state.order
@@ -253,7 +257,7 @@ export default {
         this.setOrderLock({ locked: false, lock: null })
       })
 
-      if (!this.refreshLock || !this.hasPermission('object-locks-create')) {
+      if (!this.refreshLock || this.supervise || !this.hasPermission('object-locks-create')) {
         return
       }
 
@@ -310,7 +314,8 @@ export default {
         !this.refreshLock ||
         !this.hasPermission('object-locks-create') ||
         this.order.is_locked ||
-        !isInAdminReview(this.order?.parent_ocr_request?.latest_ocr_request_status?.status)
+        !isInAdminReview(this.order?.parent_ocr_request?.latest_ocr_request_status?.status) ||
+        this.supervise
       ) {
         return
       } else if (this.userOwnsLock(this.order.lock)) {

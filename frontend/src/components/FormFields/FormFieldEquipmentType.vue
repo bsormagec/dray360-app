@@ -1,62 +1,60 @@
 <template>
   <!--  eslint-disable vue/no-v-html -->
-  <div>
-    <div class="EquipmentType">
+  <div class="pa-2">
+    <div class="d-flex align-center">
       <div class="form-field__label">
         SSL Container Type
       </div>
 
-      <div class="equipment__section">
-        <div
-          v-if="!verified && equipmentType === null"
-        >
+      <div class="ml-auto text-right">
+        <div v-if="!verified && equipmentType === null">
           <v-icon color="error">
             mdi-alert-outline
           </v-icon>
           <span
-            class="not__found"
+            class="verification__status error--text"
           >
             Not Found
           </span>
         </div>
-        <div
-          v-if="!verified && equipmentType !== null"
-        >
+        <div v-if="!verified && equipmentType !== null">
           <v-icon color="warning">
             mdi-alert-outline
           </v-icon>
           <span
-            class="not__verify"
+            class="verification__status warning--text"
           >
             Verification Needed
           </span>
         </div>
 
-        <div class="selected__equipment">
+        <div>
           {{ equipmentType ? equipmentType.equipment_display : '---' }}
         </div>
-        <v-btn
-          v-if="!verified && equipmentType !== null"
-          :disabled="isLocked"
-          color="primary"
-          class="mx-5"
-          outlined
-          small
-          :loading="isLoading"
-          @click="() => selectEquipmentType(equipmentType)"
-        >
-          Verify Closest Match
-        </v-btn>
-        <v-btn
-          color="primary"
-          :disabled="isLocked"
-          outlined
-          small
-          @click="toggledialg"
-        >
-          {{ equipmentType === null ? 'Select' : 'Select Different' }}
-        </v-btn>
       </div>
+    </div>
+    <div class="d-flex w-full justify-end my-2">
+      <v-btn
+        v-if="!verified && equipmentType !== null"
+        :disabled="isLocked"
+        color="primary"
+        class="mr-2"
+        outlined
+        small
+        :loading="isLoading"
+        @click="() => selectEquipmentType(equipmentType)"
+      >
+        Verify Closest Match
+      </v-btn>
+      <v-btn
+        color="primary"
+        :disabled="isLocked"
+        outlined
+        small
+        @click="toggledialg"
+      >
+        {{ equipmentType === null ? 'Select' : 'Select Different' }}
+      </v-btn>
     </div>
     <v-dialog
       :value="isOpen"
@@ -363,27 +361,10 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.not__found {
-  color: map-get($colors, red);
-}
-
-.not__verify {
-  color: map-get($colors, yellow);
-}
-
-.selected__equipment {
-  margin-bottom: rem(8);
-}
-
-.EquipmentType {
-  display: flex;
-  padding: rem(10);
-  align-items: center;
-
-  .equipment__section {
-    margin-left: auto;
-    text-align: right;
-  }
+.verification__status {
+    padding-left: rem(6);
+    font-weight: 700;
+    font-size: rem(14.4) !important;
 }
 
 .recognized-equipment {
