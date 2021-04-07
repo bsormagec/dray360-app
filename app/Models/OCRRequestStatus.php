@@ -26,6 +26,7 @@ class OCRRequestStatus extends Model
     OCR_COMPLETED = 'ocr-completed',
     OCR_POST_PROCESSING_COMPLETE = 'ocr-post-processing-complete',
     OCR_POST_PROCESSING_ERROR = 'ocr-post-processing-error',
+    OCR_POST_PROCESSING_AUTOSUBMITED = 'ocr-post-processing-autosubmited',
     OCR_TIMEDOUT = 'ocr-timedout',
     OCR_WAITING = 'ocr-waiting',
     OCR_POST_PROCESSING_REVIEW = 'ocr-post-processing-review',
@@ -40,6 +41,7 @@ class OCRRequestStatus extends Model
     PROCESS_OCR_OUTPUT_FILE_ERROR = 'process-ocr-output-file-error',
 
     SENDING_TO_WINT = 'sending-to-wint',
+    AUTO_SENDING_TO_WINT = 'auto-sending-to-wint',
     FAILURE_SENDING_TO_WINT = 'failure-sending-to-wint',
     SUCCESS_SENDING_TO_WINT = 'success-sending-to-wint',
     SHIPMENT_CREATED_BY_WINT = 'shipment-created-by-wint',
@@ -52,6 +54,7 @@ class OCRRequestStatus extends Model
     SHIPMENT_NOT_UPDATED_BY_WINT = 'shipment-not-updated-by-wint',
 
     SENDING_TO_CHAINIO = 'sending-to-chainio',
+    AUTO_SENDING_TO_CHAINIO = 'auto-sending-to-chainio',
     SUCCESS_SENDING_TO_CHAINIO = 'success-sending-to-chainio',
     FAILURE_SENDING_TO_CHAINIO = 'failure-sending-to-chainio',
     SHIPMENT_CREATED_BY_CHAINIO = 'shipment-created-by-chainio',
@@ -98,6 +101,8 @@ class OCRRequestStatus extends Model
         self::OCR_POST_PROCESSING_COMPLETE => 'Processed',
         self::PROCESS_OCR_OUTPUT_FILE_COMPLETE => 'Processed',
 
+        self::OCR_POST_PROCESSING_AUTOSUBMITED => 'Auto Submitted',
+
         self::PROCESS_OCR_OUTPUT_FILE_REVIEW => 'Needs Review',
 
         self::REPLICATED_FROM_EXISTING_ORDER => 'Processed',
@@ -110,8 +115,10 @@ class OCRRequestStatus extends Model
         self::UPDATED_BY_SUBSEQUENT_ORDER => 'Replaced',
 
         self::SENDING_TO_WINT => 'Sending to TMS',
+        self::AUTO_SENDING_TO_WINT => 'Sending to TMS',
         self::UPDATING_TO_WINT => 'Sending to TMS',
         self::SENDING_TO_CHAINIO => 'Sending to TMS',
+        self::AUTO_SENDING_TO_CHAINIO => 'Sending to TMS',
 
         self::SUCCESS_SENDING_TO_WINT => 'Sent to TMS',
         self::SUCCESS_UPDATING_TO_WINT => 'Sent to TMS',
@@ -200,10 +207,8 @@ class OCRRequestStatus extends Model
     public static function alreadyCompleted($requestId): bool
     {
         return static::query()
-            ->where([
-                'request_id' => $requestId,
-                'status' => static::OCR_POST_PROCESSING_COMPLETE,
-            ])
+            ->where('request_id', $requestId)
+            ->whereIn('status', [ static::OCR_POST_PROCESSING_COMPLETE, static::OCR_POST_PROCESSING_AUTOSUBMITED ])
             ->exists();
     }
 }

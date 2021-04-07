@@ -310,16 +310,16 @@ export default {
 }
 .c-2 {
     -webkit-box-flex: 0;
-    -ms-flex: 0 0 18%;
-    flex: 0 0 18%;
-    max-width: 18%;
+    -ms-flex: 0 0 20%;
+    flex: 0 0 20%;
+    max-width: 20%;
     width: 100%;
   }
   .c-10 {
     -webkit-box-flex: 0;
-    -ms-flex: 0 0 82%;
-    flex: 0 0 82%;
-    max-width: 82%;
+    -ms-flex: 0 0 80%;
+    flex: 0 0 80%;
+    max-width: 80%;
     width: 100%;
   }
 .requests__section::v-deep {

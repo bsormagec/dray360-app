@@ -1,8 +1,14 @@
+import auth from '@/store/modules/auth'
+
 export default async function LoggedOut ({ next, store }) {
+  if (store.state[auth.moduleName].frontendLogout) {
+    return next()
+  }
+
   try {
     await store.dispatch('AUTH/getCurrentUser')
     // If loggedin, then return to dashboard
-    if (store.state.AUTH.loggedIn) {
+    if (store.getters[`${auth.moduleName}/loggedIn`]) {
       return next('/inbox')
     }
   } catch (e) {
@@ -10,5 +16,6 @@ export default async function LoggedOut ({ next, store }) {
     // Ignore unauthorized request, redirect to login page below.
     return next()
   }
+
   return next()
 }

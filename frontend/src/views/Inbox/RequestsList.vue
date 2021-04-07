@@ -27,6 +27,10 @@
       >
         <v-icon>mdi-refresh</v-icon>
       </v-btn>
+      <LockButtonEnabler
+        v-if="hasPermission('supervise-view')"
+        class-name="mr-2"
+      />
     </div>
     <v-divider />
     <v-virtual-scroll
@@ -101,6 +105,7 @@
 
 import Filters from '@/components/OrderTable/components/filters'
 import RequestItem from './RequestItem'
+import LockButtonEnabler from '@/components/LockButtonEnabler'
 
 import { mapActions, mapState } from 'vuex'
 import orders, { types as ordersTypes } from '@/store/modules/orders'
@@ -122,7 +127,8 @@ export default {
   name: 'RequestList',
   components: {
     Filters,
-    RequestItem
+    RequestItem,
+    LockButtonEnabler,
   },
   mixins: [permissions, isMobile, locks],
   data () {
@@ -154,7 +160,8 @@ export default {
       reloadRequests: state => state.reloadRequests
     }),
     ...mapState(requestsList.moduleName, {
-      items: state => state.requests
+      items: state => state.requests,
+      supervise: state => state.supervise,
     }),
     requestSelected () {
       return this.items.filter(item => item.request_id === this.requestIdSelected)[0] || {}
@@ -387,7 +394,8 @@ export default {
       if (
         !this.hasPermission('object-locks-create') ||
         newRequest.is_locked ||
-        !isInAdminReview(newRequest?.latest_ocr_request_status?.status)
+        !isInAdminReview(newRequest?.latest_ocr_request_status?.status) ||
+        this.supervise
       ) {
         return
       } else if (this.userOwnsLock(newRequest.lock)) {
@@ -459,7 +467,7 @@ export default {
     padding: rem(6) 0 rem(6);
     .refresh__button {
       margin-left: auto;
-      margin-right: rem(16);
+      margin-right: rem(8);
     }
   }
 

@@ -35,9 +35,9 @@
         </v-icon>
       </v-btn>
       <div>
-        <div class="order__title mr-4 d-flex justify-space-between align-center">
+        <div class="order__title mr-1 d-flex justify-space-between align-center">
           <v-tooltip
-            v-if="isLocked && hasPermission('object-locks-create')"
+            v-if="isLocked && order.lock && hasPermission('object-locks-create')"
             bottom
           >
             <template v-slot:activator="{ on, attrs }">
@@ -59,7 +59,7 @@
             x-small
             icon
             color="primary"
-            class="ml-2"
+            class="ml-1"
             :loading="loading"
             @click="$emit('refresh')"
           >
@@ -68,6 +68,18 @@
         </div>
         <div class="secondary--text caption">
           <RequestStatus :status="order.ocr_request.latest_ocr_request_status" />
+        </div>
+        <div
+          v-if="supervise"
+          class="secondary--text caption"
+        >
+          <v-icon
+            x-small
+            color="secondary"
+          >
+            mdi-eye
+          </v-icon>
+          View mode enabled
         </div>
         <div
           v-show="order.tms_shipment_id"
@@ -733,6 +745,7 @@ import { statuses } from '@/enums/app_objects_types'
 import { getOrderDetail, postSendToTms, delDeleteOrder, postSendToClient, replicateOrder } from '@/store/api_calls/orders'
 import { getSourceFileDownloadURL } from '@/store/api_calls/requests'
 import orderForm, { types as orderFormTypes } from '@/store/modules/order-form'
+import requestsList from '@/store/modules/requests-list'
 import utils, { type } from '@/store/modules/utils'
 import { downloadFile } from '@/utils/download_file'
 
@@ -836,6 +849,9 @@ export default {
   },
   computed: {
     ...mapGetters(orderForm.moduleName, ['isMultiOrderRequest', 'isLocked']),
+    ...mapState(requestsList.moduleName, {
+      supervise: state => state.supervise,
+    }),
     ...mapState(orderForm.moduleName, {
       order: state => state.order,
       editMode: state => state.editMode,
@@ -875,6 +891,7 @@ export default {
 
       const alreadySentToTmsStatuses = [
         statuses.sendingToWint,
+        statuses.autoSendingToWint,
         statuses.successSendingToWint,
         statuses.shipmentCreatedByWint,
         statuses.updatingToWint,
@@ -882,10 +899,18 @@ export default {
         statuses.successUpdatingToWint,
         statuses.shipmentUpdatedByWint,
         statuses.shipmentNotUpdatedByWint,
+
+        statuses.sendingToChainio,
+        statuses.autoSendingToChainio,
+        statuses.successSendingToChainio,
+        statuses.shipmentCreatedByChainio,
+
         statuses.updatedBySubsequentOrder,
         statuses.successImageuplodingToBlackfl,
         statuses.failureImageuplodingToBlackfl,
-        statuses.untriedImageuplodingToBlackfl
+        statuses.untriedImageuplodingToBlackfl,
+
+        statuses.ocrPostProcessingAutosubmitted
       ]
 
       return (this.order.tms_shipment_id !== null && this.order.tms_shipment_id !== undefined) ||
@@ -899,7 +924,8 @@ export default {
     isInProcessedState () {
       const validStatuses = [
         statuses.processOcrOutputFileComplete,
-        statuses.ocrPostProcessingComplete
+        statuses.ocrPostProcessingComplete,
+        statuses.ocrPostProcessingAutosubmitted
       ]
       return validStatuses.includes(this.orderSystemStatus)
     },

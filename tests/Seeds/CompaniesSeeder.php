@@ -4,9 +4,9 @@ namespace Tests\Seeds;
 
 use App\Models\Address;
 use App\Models\Company;
-use TmsProvidersSeeder;
 use App\Models\TMSProvider;
 use Illuminate\Database\Seeder;
+use Database\Seeders\TmsProvidersSeeder;
 
 class CompaniesSeeder extends Seeder
 {

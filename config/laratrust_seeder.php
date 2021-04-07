@@ -40,6 +40,7 @@ return [
             'audit-logs' => 'v',
             'nova' => 'v',
             'object-locks' => 'c,e',
+            'supervise' => 'v'
         ],
         'order-review' => [
             'billing-mapping' => 'e,v',

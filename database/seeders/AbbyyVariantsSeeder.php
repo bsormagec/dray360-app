@@ -1,5 +1,7 @@
 <?php
 
+namespace Database\Seeders;
+
 /**
  * Usage: php artisan db:seed --class=OCRVariantsSeeder
  */
@@ -7,13 +9,10 @@
 use App\Models\OCRVariant;
 use Illuminate\Database\Seeder;
 
-
-
-
 /**
  * SQLITE3 CHEATSHEET
- * 
- *    sqlite3 
+ *
+ *    sqlite3
  *     .open abbyexportfile.sqlite
  *     .tables
  *     .schema tablename
@@ -35,11 +34,11 @@ use Illuminate\Database\Seeder;
  * shipment_type
  * zero
  */
-class OCRVariantsSeeder extends Seeder
+class AbbyyVariantsSeeder extends Seeder
 {
     const INPUT_FILES = [
         [
-            "FILENAME" => 'database/seeds/abbyy_variants_20210122.csv'
+            "FILENAME" => 'database/seeders/abbyy_variants_20210122.csv'
         ],
     ];
 
