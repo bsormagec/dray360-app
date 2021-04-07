@@ -3,15 +3,15 @@
     <div class="wrapper">
       <div class="login-box">
         <img
-          v-if="!tenantConfig().logo1"
+          v-if="!tenantConfig.logo1"
           class="logo"
-          src="../assets/images/dry360_logo.svg"
+          src="../assets/images/envase-order-ai-2.png"
           alt=""
         >
         <img
           v-else
           class="logo"
-          :src="tenantConfig().logo1"
+          :src="tenantConfig.logo1"
           alt=""
         >
         <v-text-field
@@ -77,9 +77,8 @@
   </div>
 </template>
 <script>
-// import axios from '@/store/api_calls/axios_config'
 import utils, { type } from '@/store/modules/utils'
-import { mapActions, mapState } from 'vuex'
+import { mapActions, mapState, mapGetters } from 'vuex'
 import auth from '@/store/modules/auth'
 import { reqStatus } from '@/enums/req_status'
 
@@ -88,12 +87,6 @@ export default {
 
   data () {
     return {
-      ...mapState(auth.moduleName, {
-        loggedIn: state => state.loggedIn
-      }),
-      ...mapState(utils.moduleName, {
-        tenantConfig: state => state.tenantConfig
-      }),
       disabled: false,
       error: false,
       errorMessage: '',
@@ -104,18 +97,27 @@ export default {
       fields_password: { name: 'Password', type: 'password', label: 'Password', placeholder: 'Password', el: { value: '' } }
     }
   },
+  computed: {
+    ...mapGetters(auth.moduleName, ['loggedIn']),
+    ...mapState(utils.moduleName, {
+      tenantConfig: state => state.tenantConfig
+    }),
+  },
   async created () {
-    await this[type.getTenantConfig]()
+    await this.getTenantConfig()
   },
   beforeMount () {
-    this[type.setSidebar]({ show: false })
+    this.setSidebar({ show: false })
   },
   mounted () {
-    if (this.loggedIn()) this.$router.push('/inbox')
+    if (this.loggedIn) this.$router.push('/inbox')
   },
 
   methods: {
-    ...mapActions(utils.moduleName, [type.getTenantConfig, type.setSidebar]),
+    ...mapActions(utils.moduleName, {
+      getTenantConfig: type.getTenantConfig,
+      setSidebar: type.setSidebar,
+    }),
     async login () {
       this.loginError = false
       try {
@@ -173,8 +175,9 @@ export default {
         font-size: rem(12);
       }
       .logo{
-        width: rem(200);
-        margin-bottom: rem(50);
+        width: rem(210);
+        margin-bottom: rem(40);
+        margin-top: rem(10);
       }
       .login__input input{
         border-radius: rem(5);

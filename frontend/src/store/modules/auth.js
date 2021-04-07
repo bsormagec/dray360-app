@@ -5,19 +5,21 @@ import { type as utilsTypes } from './utils'
 import requestsList, { types as requestsListTypes } from './requests-list'
 
 const initialState = {
-  loggedIn: false,
+  frontendLogout: false,
   currentUser: undefined,
   currentUserLoading: false,
   intendedUrl: undefined
 }
 
 const mutations = {
-  auth_success: (state) => (state.loggedIn = true),
   logout: (state) => {
-    state.loggedIn = false
     state.currentUser = undefined
+    state.frontendLogout = true
   },
-  currentUser: (state, { user }) => (state.currentUser = user),
+  currentUser: (state, { user }) => {
+    state.currentUser = user
+    state.frontendLogout = false
+  },
   currentUserLoading: (state, isPending) => (state.currentUserLoading = !!isPending),
   intendedUrl: (state, url) => (state.intendedUrl = url)
 }
@@ -30,7 +32,7 @@ const actions = {
     if (error) {
       return { ...(error.response.data), status: reqStatus.error }
     }
-    commit('auth_success')
+
     await dispatch('getCurrentUser', true)
     return { status: reqStatus.success }
   },
@@ -44,7 +46,6 @@ const actions = {
     if (!error) {
       commit('currentUser', { user })
       await dispatch(`UTILS/${utilsTypes.setTenantConfig}`, { ...(user.configuration) }, { root: true })
-      commit('auth_success')
     }
     commit('currentUserLoading', false)
   },
@@ -98,10 +99,15 @@ const actions = {
 
 }
 
+const getters = {
+  loggedIn: state => state.currentUser !== undefined && state.currentUser !== null
+}
+
 export default {
   moduleName: 'AUTH',
   namespaced: true,
   state: initialState,
   mutations,
-  actions
+  actions,
+  getters,
 }
