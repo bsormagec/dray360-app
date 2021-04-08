@@ -16,6 +16,7 @@ use App\Http\Controllers\Api\ObjectLocksController;
 use App\Http\Controllers\Api\OCRVariantsController;
 use App\Http\Controllers\Api\UsersStatusController;
 use App\Http\Controllers\Api\SendToClientController;
+use App\Http\Controllers\Api\AbbyyReimportController;
 use App\Http\Controllers\Api\DivisionCodesController;
 use App\Http\Controllers\Api\ImpersonationController;
 use App\Http\Controllers\Api\SearchAddressController;
@@ -149,6 +150,10 @@ Route::group(['middleware' => ['auth:sanctum', 'impersonate', 'tenant-aware']], 
     //companies/1/variant/1/
     Route::put('companies/{company}/variants/{variant}/accesorials', [AccesorialCompaniesController::class, 'update'])
         ->name('company-variants-accessorials.put');
+
+    // Reprocess the given OCR request
+    Route::post('ocr/requests/{request_id}/reimport-abbyy', AbbyyReimportController::class)
+        ->name('ocr.requests.reimport-abbyy');
 
     // Reprocess the given OCR request
     Route::post('ocr/requests/{request_id}/reprocess', OcrRequestReprocessController::class)

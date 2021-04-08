@@ -26,22 +26,34 @@ class StatusHistoryController extends Controller
             return response()->json(['data' => '`request_id` or `order_id` required'], Response::HTTP_INTERNAL_SERVER_ERROR);
         }
 
+        $previousStatus = '';
+
         $statuses = $statuses
+            ->filter(function ($item) use (&$previousStatus) {
+                $value = true;
+                if ($item->status == OCRRequestStatus::OCR_WAITING && $item->status === $previousStatus) {
+                    $value = false;
+                }
+
+                $previousStatus = $item->status;
+                return $value;
+            })
             ->groupBy(function ($item, $key) use ($request) {
                 if (! $request->get('system_status')) {
                     return $item->display_status;
                 }
 
-                if ($item->status == OCRRequestStatus::OCR_WAITING) {
-                    return $item->status;
-                }
+                // if ($item->status == OCRRequestStatus::OCR_WAITING) {
+                //     return $item->status;
+                // }
 
                 return $item->status . "#{$key}";
             })
             ->map(function ($groupedStatuses, $status) use ($request) {
                 $groupedStatuses = $groupedStatuses->sortBy('id');
                 return [
-                    'status' => $request->get('system_status') ? Str::beforeLast($status, '#') : $status,
+                    'status' => Str::beforeLast($status, '#'),
+                    // 'status' => $request->get('system_status') ? Str::beforeLast($status, '#') : $status,
                     'company_id' => $groupedStatuses->first()->company_id,
                     'status_metadata' => $request->get('system_status')
                         ? $groupedStatuses->first()->status_metadata
