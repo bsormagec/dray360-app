@@ -27,6 +27,7 @@ use App\Http\Controllers\Api\DictionaryItemsController;
 use App\Http\Controllers\Api\OcrRequestEmailController;
 use App\Http\Controllers\Api\ReplicateOrdersController;
 use App\Http\Controllers\Api\UpdateAllOrdersController;
+use App\Http\Controllers\Api\AuditLogsDashboardController;
 use App\Http\Controllers\Api\Auth\ResetPasswordController;
 use App\Http\Controllers\Api\OCRRulesAssignmentController;
 use App\Http\Controllers\Api\AccesorialCompaniesController;
@@ -108,6 +109,9 @@ Route::group(['middleware' => ['auth:sanctum', 'impersonate', 'tenant-aware']], 
 
     Route::get('audit-logs', AuditLogsController::class)
         ->name('audit-logs.index');
+
+    Route::get('audit-logs-dashboard', AuditLogsDashboardController::class)
+        ->name('audit-logs-dashboard.index');
 
     // Orders management
     Route::apiResource('orders', OrdersController::class)

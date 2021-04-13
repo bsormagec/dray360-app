@@ -8,3 +8,5 @@ export const getDictionaryItems = async (filters = {}) => axios.get(`/api/dictio
 export const getStatusHistory = async (filters = {}) => axios.get(`/api/status-history?${toParams(filters)}`).then(data => [undefined, data.data]).catch(e => [e])
 
 export const getAuditLogs = async (filters = {}) => axios.get(`/api/audit-logs?${toParams(filters)}`).then(data => [undefined, data.data]).catch(e => [e])
+
+export const getAuditLogsDashboard = async (filters = {}) => axios.get(`/api/audit-logs-dashboard?${toParams(filters)}`).then(data => [undefined, data.data]).catch(e => [e])

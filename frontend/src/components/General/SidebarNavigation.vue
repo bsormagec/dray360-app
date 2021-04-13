@@ -45,8 +45,9 @@
               <v-list-item
                 v-for="(el, i) in admins"
                 :key="i"
-                :href="el.path"
-                target="_blank"
+                :href="el.href"
+                :to="el.path"
+                :target="el.target || '_blank'"
                 :input-value="false"
                 link
                 dense
@@ -127,15 +128,16 @@ export default {
       loading: false,
       model: 1,
       admins: [
-        { name: 'Nova', path: '/nova' },
-        { name: 'Horizon', path: '/horizon' },
-        { name: 'Websockets', path: '/laravel-websockets' },
-        { name: 'Telescope', path: '/telescope' },
-        { name: 'Roles and permissions', path: '/authorization' },
-        { name: 'Sentry', path: 'https://sentry.io/organizations/draymaster/issues/?project=5285677' },
-        { name: 'Rules Editor', path: '/rules-editor' },
-        { name: 'Usage Stats', path: '/nova/usage-metrics' },
-        { name: 'RefsCustoms Mapping', path: '/companies/refs-custom-mapping' }
+        { name: 'Nova', href: '/nova' },
+        { name: 'Horizon', href: '/horizon' },
+        { name: 'Websockets', href: '/laravel-websockets' },
+        { name: 'Telescope', href: '/telescope' },
+        { name: 'Roles and permissions', href: '/authorization' },
+        { name: 'Sentry', href: 'https://sentry.io/organizations/draymaster/issues/?project=5285677' },
+        { name: 'Rules Editor', href: '/rules-editor' },
+        { name: 'Usage Stats', href: '/nova/usage-metrics' },
+        { name: 'Audit Logs', path: '/audit-logs', target: '_self' },
+        { name: 'RefsCustoms Mapping', href: '/companies/refs-custom-mapping' }
       ]
     }
   },

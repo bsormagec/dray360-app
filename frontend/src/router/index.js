@@ -24,6 +24,7 @@ import AccesorialsMapping from '@/views/Mappings/AccesorialsMapping'
 import ForgotPassword from '@/views/ForgotPassword'
 import EmailConfirmation from '@/views/EmailConfirmation'
 import ResetPassword from '@/views/ResetPassword'
+import AuditLogs from '@/views/AuditLogs/AuditLogs'
 import ApplicationDowntime from '@/views/ApplicationDowntime'
 
 Vue.use(VueRouter)
@@ -56,6 +57,14 @@ const routes = [
       middleware: [auth, permission('users-view')]
     },
     component: Dashboard
+  },
+  {
+    path: '/audit-logs',
+    name: 'Audit Logs',
+    meta: {
+      middleware: [auth, permission('audit-logs-view')]
+    },
+    component: AuditLogs,
   },
   {
     path: '/user/dashboard/add-user',
