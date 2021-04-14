@@ -28,6 +28,7 @@ trait MapsAudits
             ->map(function ($modified, $attribute) use ($audit) {
                 return $modified + [
                     'old' => $audit->old,
+                    'event' => $audit->event,
                     'user' => $audit->user->name ?? null,
                     'attribute' => $attribute,
                     'updated_at' => $audit->created_at,

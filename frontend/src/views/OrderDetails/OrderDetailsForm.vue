@@ -204,7 +204,7 @@
         Request created <span
           class="order__changelog_date"
           @click="openStatusHistoryDialog = true"
-        >{{ formatDate(order.submitted_date, true) }}</span>
+        >{{ formatDate(order.submitted_date, { timeZone: true }) }}</span>
         <br>
         {{ `by ${userWhoUploadedTheRequest ? userWhoUploadedTheRequest :''}` }}
       </p>
@@ -215,7 +215,7 @@
         Submitted to TMS <span
           class="order__changelog_date"
           @click="openStatusHistoryDialog = true"
-        >{{ formatDate(order.ocr_request.sent_to_tms.created_at, true) }}</span>
+        >{{ formatDate(order.ocr_request.sent_to_tms.created_at, { timeZone: true }) }}</span>
         <br>
         {{ `by ${order.ocr_request.sent_to_tms.user.name}` }}
       </p>
@@ -223,7 +223,7 @@
         Last updated <span
           class="order__changelog_date"
           @click="openStatusHistoryDialog = true"
-        >{{ formatDate(order.updated_at, true) }}</span>
+        >{{ formatDate(order.updated_at, { timeZone: true }) }}</span>
       </p>
       <a
         class="caption text-uppercase text-decoration-underline slate-gray--text"

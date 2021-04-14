@@ -1,35 +1,25 @@
 <template>
-  <v-simple-table
+  <v-data-table
     dense
-    fixed-header
+    :headers="headers"
+    :items="filteredAudits"
     :height="height"
+    :header-props="{ sortIcon: 'mdi-chevron-up'}"
+    class="elevation-1"
+    fixed-header
+    disable-pagination
+    hide-default-footer
+    :options="{
+      sortBy: ['updated_at'],
+      sortDesc: [true],
+    }"
   >
-    <template v-slot:default>
-      <thead>
-        <tr>
-          <th class="text-left">
-            Object
-          </th>
-          <th class="text-left">
-            Attribute
-          </th>
-          <th class="text-left">
-            From
-          </th>
-          <th class="text-left">
-            To
-          </th>
-          <th class="text-left">
-            Date
-          </th>
-          <th class="text-left">
-            User
-          </th>
-        </tr>
-      </thead>
+    <template
+      v-slot:body="{ items }"
+    >
       <tbody>
         <tr
-          v-for="(audit, index) in filteredAudits"
+          v-for="(audit, index) in items"
           :key="index"
         >
           <td class="caption black--text">
@@ -42,12 +32,12 @@
             <pre>{{ audit.old }}</pre>
           </td>
           <td class="wrap-overflow new">
-            <pre>{{ audit.new }}</pre>
+            <pre>{{ audit.event === 'deleted' ? "\u003cdeleted\u003e" : audit.new }}</pre>
           </td>
           <td
             class="caption black--text"
           >
-            {{ formatDate(audit.updated_at, true) }}
+            {{ formatDate(audit.updated_at, { timeZone: true, withSeconds: true }) }}
           </td>
           <td class="caption black--text">
             {{ audit.user }}
@@ -65,7 +55,7 @@
         </tr>
       </tbody>
     </template>
-  </v-simple-table>
+  </v-data-table>
 </template>
 <script>
 import { formatDate } from '@/utils/dates'
@@ -84,8 +74,16 @@ export default {
       default: () => [],
     },
   },
-  data: () => ({
+  data: (vm) => ({
     showHidden: false,
+    headers: [
+      { text: 'Object', value: 'model_type' },
+      { text: 'Attribute', value: 'attribute' },
+      { text: 'From', value: 'old', sort: vm.sortValues },
+      { text: 'To', value: 'new', sort: vm.sortValues },
+      { text: 'Date', value: 'updated_at' },
+      { text: 'User', value: 'user' },
+    ],
   }),
   computed: {
     filteredAudits () {
@@ -110,6 +108,17 @@ export default {
 
   methods: {
     formatDate,
+    sortValues (a, b) {
+      let newA = a === null ? '' : String(a).trim()
+      let newB = b === null ? '' : String(b).trim()
+
+      newA = newA === 'undefined' ? '<deleted>' : newA
+      newB = newB === 'undefined' ? '<deleted>' : newB
+
+      return !isNaN(+newA) && !isNaN(+newB)
+        ? Number(newA) - Number(newB)
+        : newA.localeCompare(newB)
+    }
   }
 }
 </script>

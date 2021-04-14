@@ -28,7 +28,14 @@ class AuditLogsDashboardQuery extends QueryBuilder
         };
 
         $query = Order::query()
-            ->select(['t_orders.id', 't_orders.request_id', 't_orders.variant_name', 't_orders.t_company_id'])
+            ->select([
+                't_orders.id',
+                't_orders.request_id',
+                't_orders.variant_name',
+                't_orders.t_company_id',
+                't_orders.created_at',
+                't_orders.updated_at',
+            ])
             ->addSelect(['changes_count' => DB::raw("
                     (select coalesce(sum(
                         if(json_length(old_values) = 0, json_length(new_values), json_length(old_values))
@@ -95,6 +102,8 @@ class AuditLogsDashboardQuery extends QueryBuilder
             AllowedSort::field('request_id', 't_orders.request_id'),
             AllowedSort::field('company.name', 'c.name'),
             AllowedSort::field('variant_name', 't_orders.variant_name'),
+            AllowedSort::field('created_at', 't_orders.created_at'),
+            AllowedSort::field('updated_at', 't_orders.updated_at'),
             AllowedSort::field('changes_count'),
         ])
         ;

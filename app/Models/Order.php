@@ -442,6 +442,8 @@ class Order extends Model implements Auditable
 
             $relatedModel->update($modelData);
         });
+
+        $this->touch();
     }
 
     public function loadRelationshipsForSideBySide(): self

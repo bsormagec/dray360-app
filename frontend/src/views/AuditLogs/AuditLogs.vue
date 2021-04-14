@@ -33,6 +33,9 @@
                 { text: 'Company', value: 'company.name' },
                 { text: 'Variant Name', value: 'variant_name' },
                 { text: 'Changes Count', value: 'changes_count' },
+                { text: 'First Updated', value: 'created_at' },
+                { text: 'Last Updated', value: 'updated_at' },
+                { text: 'Changes Count', value: 'changes_count' },
                 { text: '', sortable: false, value: 'data-table-expand' },
               ]"
               item-key="id"
@@ -47,6 +50,12 @@
             >
               <template v-slot:[`item.changes_count`]="{ item }">
                 {{ item.audits.length }}
+              </template>
+              <template v-slot:[`item.created_at`]="{ item }">
+                {{ formatDate(item.created_at, { timeZone: true, withSeconds: true }) }}
+              </template>
+              <template v-slot:[`item.updated_at`]="{ item }">
+                {{ formatDate(item.updated_at, { timeZone: true, withSeconds: true }) }}
               </template>
               <template v-slot:expanded-item="{ headers, item }">
                 <td :colspan="headers.length">

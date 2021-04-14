@@ -54,7 +54,7 @@
             v-if="order.submitted_date"
             class="caption mb-3"
           >
-            Submitted {{ formatDate(order.submitted_date, true) }} in <router-link :to="`/dashboard?selected=${order.request_id}`">
+            Submitted {{ formatDate(order.submitted_date, { timeZone: true }) }} in <router-link :to="`/dashboard?selected=${order.request_id}`">
               Request #{{ order.request_id.substring(0,8).toUpperCase() }}
             </router-link>
             <br>
@@ -124,7 +124,7 @@
                 </span>
               </v-tooltip>
               <div class="body-2 font-weight-bold black--text">
-                {{ index === 0 || index === statusHistory.length - 1 ? formatDate(status.start_date, true) : status.diff_for_humans }}
+                {{ index === 0 || index === statusHistory.length - 1 ? formatDate(status.start_date, { timeZone: true }) : status.diff_for_humans }}
               </div>
             </li>
           </ul>
