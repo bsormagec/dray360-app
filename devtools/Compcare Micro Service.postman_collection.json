@@ -1,0 +1,2841 @@
+{
+	"info": {
+		"_postman_id": "cd72e0e2-2e0d-4cde-ac59-c69ea22a1941",
+		"name": "Compcare Micro Service",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Entities API",
+			"item": [
+				{
+					"name": "Addresses",
+					"item": [
+						{
+							"name": "/api/Addresses/GetAddressById/:id",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{baseUrl}}/api/Addresses/GetAddressById/:id",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"api",
+										"Addresses",
+										"GetAddressById",
+										":id"
+									],
+									"variable": [
+										{
+											"key": "id",
+											"value": "16109126",
+											"description": "(Required) "
+										}
+									]
+								}
+							},
+							"response": [
+								{
+									"name": "Success",
+									"originalRequest": {
+										"method": "GET",
+										"header": [
+											{
+												"description": "Added as a part of security scheme: apikey",
+												"key": "Authorization",
+												"value": "<API Key>"
+											}
+										],
+										"url": {
+											"raw": "{{baseUrl}}/api/Addresses/GetAddressById/:id",
+											"host": [
+												"{{baseUrl}}"
+											],
+											"path": [
+												"api",
+												"Addresses",
+												"GetAddressById",
+												":id"
+											],
+											"variable": [
+												{
+													"key": "id"
+												}
+											]
+										}
+									},
+									"status": "OK",
+									"code": 200,
+									"_postman_previewlanguage": "text",
+									"header": [
+										{
+											"key": "Content-Type",
+											"value": "text/plain"
+										}
+									],
+									"cookie": [],
+									"body": ""
+								}
+							]
+						},
+						{
+							"name": "Get Addresses Data with Entities and Entities types by filters as optional",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{baseUrl}}/api/Addresses/GetAddresses?page=1&limit=100&sort=&sortDir=&ExternalSystemId=&entityType=&InsertedFrom=1950-01-13T01:43:51.882Z&InsertedTo=1976-03-29T22:19:07.867Z&UpdatedFrom=1948-09-06T20:25:10.223Z&UpdatedTo=1961-01-18T11:53:14.284Z",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"api",
+										"Addresses",
+										"GetAddresses"
+									],
+									"query": [
+										{
+											"key": "page",
+											"value": "1",
+											"description": "Page number"
+										},
+										{
+											"key": "limit",
+											"value": "100",
+											"description": "Page limit"
+										},
+										{
+											"key": "sort",
+											"value": "",
+											"description": "(Default: sorted by AddressId )"
+										},
+										{
+											"key": "sortDir",
+											"value": "",
+											"description": "Sort Direction (Default: asc)"
+										},
+										{
+											"key": "ExternalSystemId",
+											"value": "",
+											"description": "Filter by External System Id"
+										},
+										{
+											"key": "entityType",
+											"value": "",
+											"description": "Filter by Entity Types separated by comma (Ex: Customer,Driver)"
+										},
+										{
+											"key": "InsertedFrom",
+											"value": "1950-01-13T01:43:51.882Z",
+											"description": "Filter by From Inserted Date"
+										},
+										{
+											"key": "InsertedTo",
+											"value": "1976-03-29T22:19:07.867Z",
+											"description": "Filter by To Inserted Date"
+										},
+										{
+											"key": "UpdatedFrom",
+											"value": "1948-09-06T20:25:10.223Z",
+											"description": "Filter by From last updated date if the data was updated"
+										},
+										{
+											"key": "UpdatedTo",
+											"value": "1961-01-18T11:53:14.284Z",
+											"description": "Filter by To lase updated date if the data was updated"
+										}
+									]
+								}
+							},
+							"response": [
+								{
+									"name": "Success",
+									"originalRequest": {
+										"method": "GET",
+										"header": [
+											{
+												"description": "Added as a part of security scheme: apikey",
+												"key": "Authorization",
+												"value": "<API Key>"
+											}
+										],
+										"url": {
+											"raw": "{{baseUrl}}/api/Addresses/GetAddresses?page=1&limit=100&sort=&sortDir=&ExternalSystemId=&entityType=&InsertedFrom=1950-01-13T01:43:51.882Z&InsertedTo=1976-03-29T22:19:07.867Z&UpdatedFrom=1948-09-06T20:25:10.223Z&UpdatedTo=1961-01-18T11:53:14.284Z",
+											"host": [
+												"{{baseUrl}}"
+											],
+											"path": [
+												"api",
+												"Addresses",
+												"GetAddresses"
+											],
+											"query": [
+												{
+													"key": "page",
+													"value": "1"
+												},
+												{
+													"key": "limit",
+													"value": "100"
+												},
+												{
+													"key": "sort",
+													"value": ""
+												},
+												{
+													"key": "sortDir",
+													"value": ""
+												},
+												{
+													"key": "ExternalSystemId",
+													"value": ""
+												},
+												{
+													"key": "entityType",
+													"value": ""
+												},
+												{
+													"key": "InsertedFrom",
+													"value": "1950-01-13T01:43:51.882Z"
+												},
+												{
+													"key": "InsertedTo",
+													"value": "1976-03-29T22:19:07.867Z"
+												},
+												{
+													"key": "UpdatedFrom",
+													"value": "1948-09-06T20:25:10.223Z"
+												},
+												{
+													"key": "UpdatedTo",
+													"value": "1961-01-18T11:53:14.284Z"
+												}
+											]
+										}
+									},
+									"status": "OK",
+									"code": 200,
+									"_postman_previewlanguage": "text",
+									"header": [
+										{
+											"key": "Content-Type",
+											"value": "text/plain"
+										}
+									],
+									"cookie": [],
+									"body": ""
+								}
+							]
+						},
+						{
+							"name": "/api/Addresses/CreateAddress",
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"AddressId\": -21771355,\n    \"OrganizationId\": -18189545,\n    \"EntityId\": 33164724,\n    \"LocationTypeId\": -15466434,\n    \"CityId\": -33915928,\n    \"StateId\": -68087063,\n    \"CountyId\": 3270326,\n    \"PostalCodeId\": -78046046,\n    \"CountryId\": 67321317,\n    \"ExternalSystemAddressId\": \"ipsum et\",\n    \"AddressLine1\": \"sit eu fugiat voluptate\",\n    \"AddressLine2\": \"in in ad\",\n    \"CityName\": \"fugiat exerc\",\n    \"PostalCode\": \"proident laboris\",\n    \"IsDefault\": false,\n    \"InsertedUserId\": 86846503,\n    \"InsertedDate\": \"1977-08-09T05:27:55.820Z\",\n    \"UpdatedUserId\": 47896770,\n    \"UpdatedDate\": \"2004-10-16T12:39:08.492Z\",\n    \"City\": {\n        \"CityId\": -99464786,\n        \"CountyId\": -42426532,\n        \"StateId\": 44972039,\n        \"CityName\": \"ea\",\n        \"Population\": 87198683,\n        \"Households\": -90394541,\n        \"MedianIncome\": -49863053.62501722,\n        \"Latitude\": -35424314.59007607,\n        \"Longitude\": -7014054.639231443,\n        \"InsertedUserId\": 8786493,\n        \"InsertedDate\": \"1960-12-27T05:22:48.118Z\",\n        \"UpdatedUserId\": -12906712,\n        \"UpdatedDate\": \"1994-07-20T17:53:34.670Z\"\n    },\n    \"Country\": {\n        \"CountryId\": 38889235,\n        \"CountryCode\": \"velit ut sint voluptat\",\n        \"Country\": \"esse ex\",\n        \"InsertedUserId\": 62356750,\n        \"InsertedDate\": \"1993-05-26T13:45:03.953Z\",\n        \"UpdatedUserId\": 60133264,\n        \"UpdatedDate\": \"1991-09-11T15:01:16.504Z\"\n    },\n    \"County\": {\n        \"CountyId\": -25541950,\n        \"StateId\": -35799792,\n        \"CountyName\": \"laborum\",\n        \"InsertedUserId\": 79274111,\n        \"InsertedDate\": \"1946-10-23T01:06:23.684Z\",\n        \"UpdatedUserId\": -9222315,\n        \"UpdatedDate\": \"1951-05-01T04:38:43.551Z\"\n    },\n    \"Entity\": {\n        \"EntityId\": -10481273,\n        \"OrganizationId\": 93361144,\n        \"InternalTmsid\": \"est ipsum sunt\",\n        \"ExternalSystemEntityId\": \"commodo sint\",\n        \"EntityName\": \"pariatur velit mollit sit\",\n        \"InsertedUserId\": -26212632,\n        \"InsertedDate\": \"1980-09-14T00:48:20.062Z\",\n        \"UpdatedUserId\": 75284350,\n        \"UpdatedDate\": \"1957-03-21T06:24:44.555Z\",\n        \"EntityTypes\": [\n            {\n                \"EntityTypeId\": 13932822,\n                \"EntityType\": \"sit pari\",\n                \"EntityTypeDescription\": \"esse pariatur \",\n                \"InsertedUserId\": 86070172,\n                \"InsertedDate\": \"1946-03-03T21:19:55.631Z\",\n                \"UpdatedUserId\": 33601231,\n                \"UpdatedDate\": \"1944-11-23T23:13:22.858Z\"\n            },\n            {\n                \"EntityTypeId\": 3555862,\n                \"EntityType\": \"cupidatat reprehenderit ipsum mollit est\",\n                \"EntityTypeDescription\": \"laborum ullamco\",\n                \"InsertedUserId\": -1741818,\n                \"InsertedDate\": \"1990-11-25T22:42:12.402Z\",\n                \"UpdatedUserId\": 99948426,\n                \"UpdatedDate\": \"1979-04-21T00:34:36.429Z\"\n            }\n        ]\n    },\n    \"LocationType\": {\n        \"LocationTypeId\": -52939272,\n        \"LocationTypeCode\": \"nostrud\",\n        \"LocationType\": \"ut esse dolor\",\n        \"InsertedUserId\": 83480210,\n        \"InsertedDate\": \"1985-06-09T20:06:17.505Z\",\n        \"UpdatedUserId\": -21963439,\n        \"UpdatedDate\": \"1979-10-11T16:06:25.293Z\"\n    },\n    \"PostalCodeNavigation\": {\n        \"PostalCodeId\": 6011585,\n        \"CountyId\": 75016214,\n        \"StateId\": 28401290,\n        \"PostalCode\": \"nostrud eu exercitation\",\n        \"InsertedUserId\": 78246472,\n        \"InsertedDate\": \"1946-10-01T15:59:04.390Z\",\n        \"UpdatedUserId\": -44869438,\n        \"UpdatedDate\": \"2011-08-30T19:41:52.198Z\"\n    },\n    \"State\": {\n        \"StateId\": 57607784,\n        \"RegionId\": -50341935,\n        \"RegionDivisionId\": -17577699,\n        \"CountryId\": 98504355,\n        \"StateCode\": \"nisi irure\",\n        \"State\": \"amet Lorem\",\n        \"InsertedUserId\": 59741456,\n        \"InsertedDate\": \"2014-11-22T05:51:16.951Z\",\n        \"UpdatedUserId\": 31277777,\n        \"UpdatedDate\": \"1958-07-09T11:57:20.372Z\",\n        \"Region\": {\n            \"RegionId\": 31028822,\n            \"RegionName\": \"in Duis mollit nulla in\",\n            \"InsertedUserId\": 62015409,\n            \"InsertedDate\": \"1995-12-25T00:01:08.637Z\",\n            \"UpdatedUserId\": 98573264,\n            \"UpdatedDate\": \"1981-09-20T12:22:42.462Z\"\n        },\n        \"RegionDivision\": {\n            \"RegionDivisionId\": 88278694,\n            \"RegionId\": -28639128,\n            \"RegionDivisionName\": \"cillum\",\n            \"InsertedUserId\": 98292589,\n            \"InsertedDate\": \"1944-02-21T15:33:02.390Z\",\n            \"UpdatedUserId\": -7021550,\n            \"UpdatedDate\": \"2005-05-02T21:12:44.745Z\"\n        }\n    }\n}"
+								},
+								"url": {
+									"raw": "{{baseUrl}}/api/Addresses/CreateAddress",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"api",
+										"Addresses",
+										"CreateAddress"
+									]
+								}
+							},
+							"response": [
+								{
+									"name": "Success",
+									"originalRequest": {
+										"method": "POST",
+										"header": [
+											{
+												"description": "Added as a part of security scheme: apikey",
+												"key": "Authorization",
+												"value": "<API Key>"
+											}
+										],
+										"body": {
+											"mode": "raw",
+											"raw": "{\n    \"AddressId\": -21771355,\n    \"OrganizationId\": -18189545,\n    \"EntityId\": 33164724,\n    \"LocationTypeId\": -15466434,\n    \"CityId\": -33915928,\n    \"StateId\": -68087063,\n    \"CountyId\": 3270326,\n    \"PostalCodeId\": -78046046,\n    \"CountryId\": 67321317,\n    \"ExternalSystemAddressId\": \"ipsum et\",\n    \"AddressLine1\": \"sit eu fugiat voluptate\",\n    \"AddressLine2\": \"in in ad\",\n    \"CityName\": \"fugiat exerc\",\n    \"PostalCode\": \"proident laboris\",\n    \"IsDefault\": false,\n    \"InsertedUserId\": 86846503,\n    \"InsertedDate\": \"1977-08-09T05:27:55.820Z\",\n    \"UpdatedUserId\": 47896770,\n    \"UpdatedDate\": \"2004-10-16T12:39:08.492Z\",\n    \"City\": {\n        \"CityId\": -99464786,\n        \"CountyId\": -42426532,\n        \"StateId\": 44972039,\n        \"CityName\": \"ea\",\n        \"Population\": 87198683,\n        \"Households\": -90394541,\n        \"MedianIncome\": -49863053.62501722,\n        \"Latitude\": -35424314.59007607,\n        \"Longitude\": -7014054.639231443,\n        \"InsertedUserId\": 8786493,\n        \"InsertedDate\": \"1960-12-27T05:22:48.118Z\",\n        \"UpdatedUserId\": -12906712,\n        \"UpdatedDate\": \"1994-07-20T17:53:34.670Z\"\n    },\n    \"Country\": {\n        \"CountryId\": 38889235,\n        \"CountryCode\": \"velit ut sint voluptat\",\n        \"Country\": \"esse ex\",\n        \"InsertedUserId\": 62356750,\n        \"InsertedDate\": \"1993-05-26T13:45:03.953Z\",\n        \"UpdatedUserId\": 60133264,\n        \"UpdatedDate\": \"1991-09-11T15:01:16.504Z\"\n    },\n    \"County\": {\n        \"CountyId\": -25541950,\n        \"StateId\": -35799792,\n        \"CountyName\": \"laborum\",\n        \"InsertedUserId\": 79274111,\n        \"InsertedDate\": \"1946-10-23T01:06:23.684Z\",\n        \"UpdatedUserId\": -9222315,\n        \"UpdatedDate\": \"1951-05-01T04:38:43.551Z\"\n    },\n    \"Entity\": {\n        \"EntityId\": -10481273,\n        \"OrganizationId\": 93361144,\n        \"InternalTmsid\": \"est ipsum sunt\",\n        \"ExternalSystemEntityId\": \"commodo sint\",\n        \"EntityName\": \"pariatur velit mollit sit\",\n        \"InsertedUserId\": -26212632,\n        \"InsertedDate\": \"1980-09-14T00:48:20.062Z\",\n        \"UpdatedUserId\": 75284350,\n        \"UpdatedDate\": \"1957-03-21T06:24:44.555Z\",\n        \"EntityTypes\": [\n            {\n                \"EntityTypeId\": 13932822,\n                \"EntityType\": \"sit pari\",\n                \"EntityTypeDescription\": \"esse pariatur \",\n                \"InsertedUserId\": 86070172,\n                \"InsertedDate\": \"1946-03-03T21:19:55.631Z\",\n                \"UpdatedUserId\": 33601231,\n                \"UpdatedDate\": \"1944-11-23T23:13:22.858Z\"\n            },\n            {\n                \"EntityTypeId\": 3555862,\n                \"EntityType\": \"cupidatat reprehenderit ipsum mollit est\",\n                \"EntityTypeDescription\": \"laborum ullamco\",\n                \"InsertedUserId\": -1741818,\n                \"InsertedDate\": \"1990-11-25T22:42:12.402Z\",\n                \"UpdatedUserId\": 99948426,\n                \"UpdatedDate\": \"1979-04-21T00:34:36.429Z\"\n            }\n        ]\n    },\n    \"LocationType\": {\n        \"LocationTypeId\": -52939272,\n        \"LocationTypeCode\": \"nostrud\",\n        \"LocationType\": \"ut esse dolor\",\n        \"InsertedUserId\": 83480210,\n        \"InsertedDate\": \"1985-06-09T20:06:17.505Z\",\n        \"UpdatedUserId\": -21963439,\n        \"UpdatedDate\": \"1979-10-11T16:06:25.293Z\"\n    },\n    \"PostalCodeNavigation\": {\n        \"PostalCodeId\": 6011585,\n        \"CountyId\": 75016214,\n        \"StateId\": 28401290,\n        \"PostalCode\": \"nostrud eu exercitation\",\n        \"InsertedUserId\": 78246472,\n        \"InsertedDate\": \"1946-10-01T15:59:04.390Z\",\n        \"UpdatedUserId\": -44869438,\n        \"UpdatedDate\": \"2011-08-30T19:41:52.198Z\"\n    },\n    \"State\": {\n        \"StateId\": 57607784,\n        \"RegionId\": -50341935,\n        \"RegionDivisionId\": -17577699,\n        \"CountryId\": 98504355,\n        \"StateCode\": \"nisi irure\",\n        \"State\": \"amet Lorem\",\n        \"InsertedUserId\": 59741456,\n        \"InsertedDate\": \"2014-11-22T05:51:16.951Z\",\n        \"UpdatedUserId\": 31277777,\n        \"UpdatedDate\": \"1958-07-09T11:57:20.372Z\",\n        \"Region\": {\n            \"RegionId\": 31028822,\n            \"RegionName\": \"in Duis mollit nulla in\",\n            \"InsertedUserId\": 62015409,\n            \"InsertedDate\": \"1995-12-25T00:01:08.637Z\",\n            \"UpdatedUserId\": 98573264,\n            \"UpdatedDate\": \"1981-09-20T12:22:42.462Z\"\n        },\n        \"RegionDivision\": {\n            \"RegionDivisionId\": 88278694,\n            \"RegionId\": -28639128,\n            \"RegionDivisionName\": \"cillum\",\n            \"InsertedUserId\": 98292589,\n            \"InsertedDate\": \"1944-02-21T15:33:02.390Z\",\n            \"UpdatedUserId\": -7021550,\n            \"UpdatedDate\": \"2005-05-02T21:12:44.745Z\"\n        }\n    }\n}"
+										},
+										"url": {
+											"raw": "{{baseUrl}}/api/Addresses/CreateAddress",
+											"host": [
+												"{{baseUrl}}"
+											],
+											"path": [
+												"api",
+												"Addresses",
+												"CreateAddress"
+											]
+										}
+									},
+									"status": "OK",
+									"code": 200,
+									"_postman_previewlanguage": "text",
+									"header": [
+										{
+											"key": "Content-Type",
+											"value": "text/plain"
+										}
+									],
+									"cookie": [],
+									"body": ""
+								}
+							]
+						},
+						{
+							"name": "/api/Addresses/UpdateAddress",
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"AddressId\": -21771355,\n    \"OrganizationId\": -18189545,\n    \"EntityId\": 33164724,\n    \"LocationTypeId\": -15466434,\n    \"CityId\": -33915928,\n    \"StateId\": -68087063,\n    \"CountyId\": 3270326,\n    \"PostalCodeId\": -78046046,\n    \"CountryId\": 67321317,\n    \"ExternalSystemAddressId\": \"ipsum et\",\n    \"AddressLine1\": \"sit eu fugiat voluptate\",\n    \"AddressLine2\": \"in in ad\",\n    \"CityName\": \"fugiat exerc\",\n    \"PostalCode\": \"proident laboris\",\n    \"IsDefault\": false,\n    \"InsertedUserId\": 86846503,\n    \"InsertedDate\": \"1977-08-09T05:27:55.820Z\",\n    \"UpdatedUserId\": 47896770,\n    \"UpdatedDate\": \"2004-10-16T12:39:08.492Z\",\n    \"City\": {\n        \"CityId\": -99464786,\n        \"CountyId\": -42426532,\n        \"StateId\": 44972039,\n        \"CityName\": \"ea\",\n        \"Population\": 87198683,\n        \"Households\": -90394541,\n        \"MedianIncome\": -49863053.62501722,\n        \"Latitude\": -35424314.59007607,\n        \"Longitude\": -7014054.639231443,\n        \"InsertedUserId\": 8786493,\n        \"InsertedDate\": \"1960-12-27T05:22:48.118Z\",\n        \"UpdatedUserId\": -12906712,\n        \"UpdatedDate\": \"1994-07-20T17:53:34.670Z\"\n    },\n    \"Country\": {\n        \"CountryId\": 38889235,\n        \"CountryCode\": \"velit ut sint voluptat\",\n        \"Country\": \"esse ex\",\n        \"InsertedUserId\": 62356750,\n        \"InsertedDate\": \"1993-05-26T13:45:03.953Z\",\n        \"UpdatedUserId\": 60133264,\n        \"UpdatedDate\": \"1991-09-11T15:01:16.504Z\"\n    },\n    \"County\": {\n        \"CountyId\": -25541950,\n        \"StateId\": -35799792,\n        \"CountyName\": \"laborum\",\n        \"InsertedUserId\": 79274111,\n        \"InsertedDate\": \"1946-10-23T01:06:23.684Z\",\n        \"UpdatedUserId\": -9222315,\n        \"UpdatedDate\": \"1951-05-01T04:38:43.551Z\"\n    },\n    \"Entity\": {\n        \"EntityId\": -10481273,\n        \"OrganizationId\": 93361144,\n        \"InternalTmsid\": \"est ipsum sunt\",\n        \"ExternalSystemEntityId\": \"commodo sint\",\n        \"EntityName\": \"pariatur velit mollit sit\",\n        \"InsertedUserId\": -26212632,\n        \"InsertedDate\": \"1980-09-14T00:48:20.062Z\",\n        \"UpdatedUserId\": 75284350,\n        \"UpdatedDate\": \"1957-03-21T06:24:44.555Z\",\n        \"EntityTypes\": [\n            {\n                \"EntityTypeId\": 13932822,\n                \"EntityType\": \"sit pari\",\n                \"EntityTypeDescription\": \"esse pariatur \",\n                \"InsertedUserId\": 86070172,\n                \"InsertedDate\": \"1946-03-03T21:19:55.631Z\",\n                \"UpdatedUserId\": 33601231,\n                \"UpdatedDate\": \"1944-11-23T23:13:22.858Z\"\n            },\n            {\n                \"EntityTypeId\": 3555862,\n                \"EntityType\": \"cupidatat reprehenderit ipsum mollit est\",\n                \"EntityTypeDescription\": \"laborum ullamco\",\n                \"InsertedUserId\": -1741818,\n                \"InsertedDate\": \"1990-11-25T22:42:12.402Z\",\n                \"UpdatedUserId\": 99948426,\n                \"UpdatedDate\": \"1979-04-21T00:34:36.429Z\"\n            }\n        ]\n    },\n    \"LocationType\": {\n        \"LocationTypeId\": -52939272,\n        \"LocationTypeCode\": \"nostrud\",\n        \"LocationType\": \"ut esse dolor\",\n        \"InsertedUserId\": 83480210,\n        \"InsertedDate\": \"1985-06-09T20:06:17.505Z\",\n        \"UpdatedUserId\": -21963439,\n        \"UpdatedDate\": \"1979-10-11T16:06:25.293Z\"\n    },\n    \"PostalCodeNavigation\": {\n        \"PostalCodeId\": 6011585,\n        \"CountyId\": 75016214,\n        \"StateId\": 28401290,\n        \"PostalCode\": \"nostrud eu exercitation\",\n        \"InsertedUserId\": 78246472,\n        \"InsertedDate\": \"1946-10-01T15:59:04.390Z\",\n        \"UpdatedUserId\": -44869438,\n        \"UpdatedDate\": \"2011-08-30T19:41:52.198Z\"\n    },\n    \"State\": {\n        \"StateId\": 57607784,\n        \"RegionId\": -50341935,\n        \"RegionDivisionId\": -17577699,\n        \"CountryId\": 98504355,\n        \"StateCode\": \"nisi irure\",\n        \"State\": \"amet Lorem\",\n        \"InsertedUserId\": 59741456,\n        \"InsertedDate\": \"2014-11-22T05:51:16.951Z\",\n        \"UpdatedUserId\": 31277777,\n        \"UpdatedDate\": \"1958-07-09T11:57:20.372Z\",\n        \"Region\": {\n            \"RegionId\": 31028822,\n            \"RegionName\": \"in Duis mollit nulla in\",\n            \"InsertedUserId\": 62015409,\n            \"InsertedDate\": \"1995-12-25T00:01:08.637Z\",\n            \"UpdatedUserId\": 98573264,\n            \"UpdatedDate\": \"1981-09-20T12:22:42.462Z\"\n        },\n        \"RegionDivision\": {\n            \"RegionDivisionId\": 88278694,\n            \"RegionId\": -28639128,\n            \"RegionDivisionName\": \"cillum\",\n            \"InsertedUserId\": 98292589,\n            \"InsertedDate\": \"1944-02-21T15:33:02.390Z\",\n            \"UpdatedUserId\": -7021550,\n            \"UpdatedDate\": \"2005-05-02T21:12:44.745Z\"\n        }\n    }\n}"
+								},
+								"url": {
+									"raw": "{{baseUrl}}/api/Addresses/UpdateAddress",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"api",
+										"Addresses",
+										"UpdateAddress"
+									]
+								}
+							},
+							"response": [
+								{
+									"name": "Success",
+									"originalRequest": {
+										"method": "POST",
+										"header": [
+											{
+												"description": "Added as a part of security scheme: apikey",
+												"key": "Authorization",
+												"value": "<API Key>"
+											}
+										],
+										"body": {
+											"mode": "raw",
+											"raw": "{\n    \"AddressId\": -21771355,\n    \"OrganizationId\": -18189545,\n    \"EntityId\": 33164724,\n    \"LocationTypeId\": -15466434,\n    \"CityId\": -33915928,\n    \"StateId\": -68087063,\n    \"CountyId\": 3270326,\n    \"PostalCodeId\": -78046046,\n    \"CountryId\": 67321317,\n    \"ExternalSystemAddressId\": \"ipsum et\",\n    \"AddressLine1\": \"sit eu fugiat voluptate\",\n    \"AddressLine2\": \"in in ad\",\n    \"CityName\": \"fugiat exerc\",\n    \"PostalCode\": \"proident laboris\",\n    \"IsDefault\": false,\n    \"InsertedUserId\": 86846503,\n    \"InsertedDate\": \"1977-08-09T05:27:55.820Z\",\n    \"UpdatedUserId\": 47896770,\n    \"UpdatedDate\": \"2004-10-16T12:39:08.492Z\",\n    \"City\": {\n        \"CityId\": -99464786,\n        \"CountyId\": -42426532,\n        \"StateId\": 44972039,\n        \"CityName\": \"ea\",\n        \"Population\": 87198683,\n        \"Households\": -90394541,\n        \"MedianIncome\": -49863053.62501722,\n        \"Latitude\": -35424314.59007607,\n        \"Longitude\": -7014054.639231443,\n        \"InsertedUserId\": 8786493,\n        \"InsertedDate\": \"1960-12-27T05:22:48.118Z\",\n        \"UpdatedUserId\": -12906712,\n        \"UpdatedDate\": \"1994-07-20T17:53:34.670Z\"\n    },\n    \"Country\": {\n        \"CountryId\": 38889235,\n        \"CountryCode\": \"velit ut sint voluptat\",\n        \"Country\": \"esse ex\",\n        \"InsertedUserId\": 62356750,\n        \"InsertedDate\": \"1993-05-26T13:45:03.953Z\",\n        \"UpdatedUserId\": 60133264,\n        \"UpdatedDate\": \"1991-09-11T15:01:16.504Z\"\n    },\n    \"County\": {\n        \"CountyId\": -25541950,\n        \"StateId\": -35799792,\n        \"CountyName\": \"laborum\",\n        \"InsertedUserId\": 79274111,\n        \"InsertedDate\": \"1946-10-23T01:06:23.684Z\",\n        \"UpdatedUserId\": -9222315,\n        \"UpdatedDate\": \"1951-05-01T04:38:43.551Z\"\n    },\n    \"Entity\": {\n        \"EntityId\": -10481273,\n        \"OrganizationId\": 93361144,\n        \"InternalTmsid\": \"est ipsum sunt\",\n        \"ExternalSystemEntityId\": \"commodo sint\",\n        \"EntityName\": \"pariatur velit mollit sit\",\n        \"InsertedUserId\": -26212632,\n        \"InsertedDate\": \"1980-09-14T00:48:20.062Z\",\n        \"UpdatedUserId\": 75284350,\n        \"UpdatedDate\": \"1957-03-21T06:24:44.555Z\",\n        \"EntityTypes\": [\n            {\n                \"EntityTypeId\": 13932822,\n                \"EntityType\": \"sit pari\",\n                \"EntityTypeDescription\": \"esse pariatur \",\n                \"InsertedUserId\": 86070172,\n                \"InsertedDate\": \"1946-03-03T21:19:55.631Z\",\n                \"UpdatedUserId\": 33601231,\n                \"UpdatedDate\": \"1944-11-23T23:13:22.858Z\"\n            },\n            {\n                \"EntityTypeId\": 3555862,\n                \"EntityType\": \"cupidatat reprehenderit ipsum mollit est\",\n                \"EntityTypeDescription\": \"laborum ullamco\",\n                \"InsertedUserId\": -1741818,\n                \"InsertedDate\": \"1990-11-25T22:42:12.402Z\",\n                \"UpdatedUserId\": 99948426,\n                \"UpdatedDate\": \"1979-04-21T00:34:36.429Z\"\n            }\n        ]\n    },\n    \"LocationType\": {\n        \"LocationTypeId\": -52939272,\n        \"LocationTypeCode\": \"nostrud\",\n        \"LocationType\": \"ut esse dolor\",\n        \"InsertedUserId\": 83480210,\n        \"InsertedDate\": \"1985-06-09T20:06:17.505Z\",\n        \"UpdatedUserId\": -21963439,\n        \"UpdatedDate\": \"1979-10-11T16:06:25.293Z\"\n    },\n    \"PostalCodeNavigation\": {\n        \"PostalCodeId\": 6011585,\n        \"CountyId\": 75016214,\n        \"StateId\": 28401290,\n        \"PostalCode\": \"nostrud eu exercitation\",\n        \"InsertedUserId\": 78246472,\n        \"InsertedDate\": \"1946-10-01T15:59:04.390Z\",\n        \"UpdatedUserId\": -44869438,\n        \"UpdatedDate\": \"2011-08-30T19:41:52.198Z\"\n    },\n    \"State\": {\n        \"StateId\": 57607784,\n        \"RegionId\": -50341935,\n        \"RegionDivisionId\": -17577699,\n        \"CountryId\": 98504355,\n        \"StateCode\": \"nisi irure\",\n        \"State\": \"amet Lorem\",\n        \"InsertedUserId\": 59741456,\n        \"InsertedDate\": \"2014-11-22T05:51:16.951Z\",\n        \"UpdatedUserId\": 31277777,\n        \"UpdatedDate\": \"1958-07-09T11:57:20.372Z\",\n        \"Region\": {\n            \"RegionId\": 31028822,\n            \"RegionName\": \"in Duis mollit nulla in\",\n            \"InsertedUserId\": 62015409,\n            \"InsertedDate\": \"1995-12-25T00:01:08.637Z\",\n            \"UpdatedUserId\": 98573264,\n            \"UpdatedDate\": \"1981-09-20T12:22:42.462Z\"\n        },\n        \"RegionDivision\": {\n            \"RegionDivisionId\": 88278694,\n            \"RegionId\": -28639128,\n            \"RegionDivisionName\": \"cillum\",\n            \"InsertedUserId\": 98292589,\n            \"InsertedDate\": \"1944-02-21T15:33:02.390Z\",\n            \"UpdatedUserId\": -7021550,\n            \"UpdatedDate\": \"2005-05-02T21:12:44.745Z\"\n        }\n    }\n}"
+										},
+										"url": {
+											"raw": "{{baseUrl}}/api/Addresses/UpdateAddress",
+											"host": [
+												"{{baseUrl}}"
+											],
+											"path": [
+												"api",
+												"Addresses",
+												"UpdateAddress"
+											]
+										}
+									},
+									"status": "OK",
+									"code": 200,
+									"_postman_previewlanguage": "text",
+									"header": [
+										{
+											"key": "Content-Type",
+											"value": "text/plain"
+										}
+									],
+									"cookie": [],
+									"body": ""
+								}
+							]
+						},
+						{
+							"name": "/api/Addresses/DeleteAddress/:id",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"url": {
+									"raw": "{{baseUrl}}/api/Addresses/DeleteAddress/:id",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"api",
+										"Addresses",
+										"DeleteAddress",
+										":id"
+									],
+									"variable": [
+										{
+											"key": "id",
+											"value": "16109126",
+											"description": "(Required) "
+										}
+									]
+								}
+							},
+							"response": [
+								{
+									"name": "Success",
+									"originalRequest": {
+										"method": "POST",
+										"header": [
+											{
+												"description": "Added as a part of security scheme: apikey",
+												"key": "Authorization",
+												"value": "<API Key>"
+											}
+										],
+										"url": {
+											"raw": "{{baseUrl}}/api/Addresses/DeleteAddress/:id",
+											"host": [
+												"{{baseUrl}}"
+											],
+											"path": [
+												"api",
+												"Addresses",
+												"DeleteAddress",
+												":id"
+											],
+											"variable": [
+												{
+													"key": "id"
+												}
+											]
+										}
+									},
+									"status": "OK",
+									"code": 200,
+									"_postman_previewlanguage": "text",
+									"header": [
+										{
+											"key": "Content-Type",
+											"value": "text/plain"
+										}
+									],
+									"cookie": [],
+									"body": ""
+								}
+							]
+						},
+						{
+							"name": "/api/Addresses/sync",
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "[\n    {\n        \"ShortId\": \"elit fugiat Lorem\",\n        \"EntityName\": \"consectetur do nostrud nisi\",\n        \"Type\": \"id pariatur esse in\",\n        \"Add1\": \"tempor Excepteur anim occaecat\",\n        \"Add2\": \"culpa Ut\",\n        \"City\": \"ad aliquip eiusmod in\",\n        \"State\": \"dolore sit id Exce\",\n        \"Country\": \"qui magna velit id adipisicing\",\n        \"Zipcode\": \"esse Excepteur minim\"\n    },\n    {\n        \"ShortId\": \"consequat Duis exercitation\",\n        \"EntityName\": \"dolore amet incididunt Excepteur\",\n        \"Type\": \"aute culpa\",\n        \"Add1\": \"qui reprehenderit quis\",\n        \"Add2\": \"id\",\n        \"City\": \"minim velit esse\",\n        \"State\": \"labore\",\n        \"Country\": \"labore consectetur occaecat sed\",\n        \"Zipcode\": \"dolore et\"\n    }\n]"
+								},
+								"url": {
+									"raw": "{{baseUrl}}/api/Addresses/sync",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"api",
+										"Addresses",
+										"sync"
+									]
+								}
+							},
+							"response": [
+								{
+									"name": "Success",
+									"originalRequest": {
+										"method": "POST",
+										"header": [
+											{
+												"description": "Added as a part of security scheme: apikey",
+												"key": "Authorization",
+												"value": "<API Key>"
+											}
+										],
+										"body": {
+											"mode": "raw",
+											"raw": "[\n    {\n        \"ShortId\": \"adipisicing mollit\",\n        \"EntityName\": \"ea\",\n        \"Type\": \"Lorem cupidatat deserunt aliqua voluptate\",\n        \"Add1\": \"consequat pariatur elit reprehenderit culpa\",\n        \"Add2\": \"elit ea laboris aliquip\",\n        \"City\": \"aliqua elit\",\n        \"State\": \"velit elit officia in\",\n        \"Country\": \"commodo consequat ea\",\n        \"Zipcode\": \"Excepte\"\n    },\n    {\n        \"ShortId\": \"ut\",\n        \"EntityName\": \"tempor\",\n        \"Type\": \"Duis deserunt in \",\n        \"Add1\": \"culpa cillum aliquip ullamco\",\n        \"Add2\": \"mollit proident voluptate enim\",\n        \"City\": \"dolor est\",\n        \"State\": \"labore\",\n        \"Country\": \"consequat commodo\",\n        \"Zipcode\": \"in nostrud anim et labore\"\n    }\n]"
+										},
+										"url": {
+											"raw": "{{baseUrl}}/api/Addresses/sync",
+											"host": [
+												"{{baseUrl}}"
+											],
+											"path": [
+												"api",
+												"Addresses",
+												"sync"
+											]
+										}
+									},
+									"status": "OK",
+									"code": 200,
+									"_postman_previewlanguage": "text",
+									"header": [
+										{
+											"key": "Content-Type",
+											"value": "text/plain"
+										}
+									],
+									"cookie": [],
+									"body": ""
+								}
+							]
+						}
+					]
+				},
+				{
+					"name": "Cities",
+					"item": [
+						{
+							"name": "/api/Cities/GetCities",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{baseUrl}}/api/Cities/GetCities?page=1&limit=100&sort=&sortDir=&search=",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"api",
+										"Cities",
+										"GetCities"
+									],
+									"query": [
+										{
+											"key": "page",
+											"value": "1"
+										},
+										{
+											"key": "limit",
+											"value": "100"
+										},
+										{
+											"key": "sort",
+											"value": ""
+										},
+										{
+											"key": "sortDir",
+											"value": ""
+										},
+										{
+											"key": "search",
+											"value": ""
+										}
+									]
+								}
+							},
+							"response": [
+								{
+									"name": "Success",
+									"originalRequest": {
+										"method": "GET",
+										"header": [
+											{
+												"description": "Added as a part of security scheme: apikey",
+												"key": "Authorization",
+												"value": "<API Key>"
+											}
+										],
+										"url": {
+											"raw": "{{baseUrl}}/api/Cities/GetCities?page=1&limit=100&sort=&sortDir=&search=",
+											"host": [
+												"{{baseUrl}}"
+											],
+											"path": [
+												"api",
+												"Cities",
+												"GetCities"
+											],
+											"query": [
+												{
+													"key": "page",
+													"value": "1"
+												},
+												{
+													"key": "limit",
+													"value": "100"
+												},
+												{
+													"key": "sort",
+													"value": ""
+												},
+												{
+													"key": "sortDir",
+													"value": ""
+												},
+												{
+													"key": "search",
+													"value": ""
+												}
+											]
+										}
+									},
+									"status": "OK",
+									"code": 200,
+									"_postman_previewlanguage": "text",
+									"header": [
+										{
+											"key": "Content-Type",
+											"value": "text/plain"
+										}
+									],
+									"cookie": [],
+									"body": ""
+								}
+							]
+						},
+						{
+							"name": "/api/Cities/GetCityById/:CityId",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{baseUrl}}/api/Cities/GetCityById/:CityId",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"api",
+										"Cities",
+										"GetCityById",
+										":CityId"
+									],
+									"variable": [
+										{
+											"key": "CityId",
+											"value": "16109126",
+											"description": "(Required) "
+										}
+									]
+								}
+							},
+							"response": [
+								{
+									"name": "Success",
+									"originalRequest": {
+										"method": "GET",
+										"header": [
+											{
+												"description": "Added as a part of security scheme: apikey",
+												"key": "Authorization",
+												"value": "<API Key>"
+											}
+										],
+										"url": {
+											"raw": "{{baseUrl}}/api/Cities/GetCityById/:CityId",
+											"host": [
+												"{{baseUrl}}"
+											],
+											"path": [
+												"api",
+												"Cities",
+												"GetCityById",
+												":CityId"
+											],
+											"variable": [
+												{
+													"key": "CityId"
+												}
+											]
+										}
+									},
+									"status": "OK",
+									"code": 200,
+									"_postman_previewlanguage": "text",
+									"header": [
+										{
+											"key": "Content-Type",
+											"value": "text/plain"
+										}
+									],
+									"cookie": [],
+									"body": ""
+								}
+							]
+						}
+					]
+				},
+				{
+					"name": "Counties",
+					"item": [
+						{
+							"name": "/api/Counties/GetCounties",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{baseUrl}}/api/Counties/GetCounties?page=1&limit=100&sort=&sortDir=&search=",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"api",
+										"Counties",
+										"GetCounties"
+									],
+									"query": [
+										{
+											"key": "page",
+											"value": "1"
+										},
+										{
+											"key": "limit",
+											"value": "100"
+										},
+										{
+											"key": "sort",
+											"value": ""
+										},
+										{
+											"key": "sortDir",
+											"value": ""
+										},
+										{
+											"key": "search",
+											"value": ""
+										}
+									]
+								}
+							},
+							"response": [
+								{
+									"name": "Success",
+									"originalRequest": {
+										"method": "GET",
+										"header": [
+											{
+												"description": "Added as a part of security scheme: apikey",
+												"key": "Authorization",
+												"value": "<API Key>"
+											}
+										],
+										"url": {
+											"raw": "{{baseUrl}}/api/Counties/GetCounties?page=1&limit=100&sort=&sortDir=&search=",
+											"host": [
+												"{{baseUrl}}"
+											],
+											"path": [
+												"api",
+												"Counties",
+												"GetCounties"
+											],
+											"query": [
+												{
+													"key": "page",
+													"value": "1"
+												},
+												{
+													"key": "limit",
+													"value": "100"
+												},
+												{
+													"key": "sort",
+													"value": ""
+												},
+												{
+													"key": "sortDir",
+													"value": ""
+												},
+												{
+													"key": "search",
+													"value": ""
+												}
+											]
+										}
+									},
+									"status": "OK",
+									"code": 200,
+									"_postman_previewlanguage": "text",
+									"header": [
+										{
+											"key": "Content-Type",
+											"value": "text/plain"
+										}
+									],
+									"cookie": [],
+									"body": ""
+								}
+							]
+						},
+						{
+							"name": "/api/Counties/GetCountyById/:CountyId",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{baseUrl}}/api/Counties/GetCountyById/:CountyId",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"api",
+										"Counties",
+										"GetCountyById",
+										":CountyId"
+									],
+									"variable": [
+										{
+											"key": "CountyId",
+											"value": "16109126",
+											"description": "(Required) "
+										}
+									]
+								}
+							},
+							"response": [
+								{
+									"name": "Success",
+									"originalRequest": {
+										"method": "GET",
+										"header": [
+											{
+												"description": "Added as a part of security scheme: apikey",
+												"key": "Authorization",
+												"value": "<API Key>"
+											}
+										],
+										"url": {
+											"raw": "{{baseUrl}}/api/Counties/GetCountyById/:CountyId",
+											"host": [
+												"{{baseUrl}}"
+											],
+											"path": [
+												"api",
+												"Counties",
+												"GetCountyById",
+												":CountyId"
+											],
+											"variable": [
+												{
+													"key": "CountyId"
+												}
+											]
+										}
+									},
+									"status": "OK",
+									"code": 200,
+									"_postman_previewlanguage": "text",
+									"header": [
+										{
+											"key": "Content-Type",
+											"value": "text/plain"
+										}
+									],
+									"cookie": [],
+									"body": ""
+								}
+							]
+						}
+					]
+				},
+				{
+					"name": "Countries",
+					"item": [
+						{
+							"name": "/api/Countries/GetCountries",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{baseUrl}}/api/Countries/GetCountries?page=1&limit=100&sort=&sortDir=&search=",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"api",
+										"Countries",
+										"GetCountries"
+									],
+									"query": [
+										{
+											"key": "page",
+											"value": "1"
+										},
+										{
+											"key": "limit",
+											"value": "100"
+										},
+										{
+											"key": "sort",
+											"value": ""
+										},
+										{
+											"key": "sortDir",
+											"value": ""
+										},
+										{
+											"key": "search",
+											"value": ""
+										}
+									]
+								}
+							},
+							"response": [
+								{
+									"name": "Success",
+									"originalRequest": {
+										"method": "GET",
+										"header": [
+											{
+												"description": "Added as a part of security scheme: apikey",
+												"key": "Authorization",
+												"value": "<API Key>"
+											}
+										],
+										"url": {
+											"raw": "{{baseUrl}}/api/Countries/GetCountries?page=1&limit=100&sort=&sortDir=&search=",
+											"host": [
+												"{{baseUrl}}"
+											],
+											"path": [
+												"api",
+												"Countries",
+												"GetCountries"
+											],
+											"query": [
+												{
+													"key": "page",
+													"value": "1"
+												},
+												{
+													"key": "limit",
+													"value": "100"
+												},
+												{
+													"key": "sort",
+													"value": ""
+												},
+												{
+													"key": "sortDir",
+													"value": ""
+												},
+												{
+													"key": "search",
+													"value": ""
+												}
+											]
+										}
+									},
+									"status": "OK",
+									"code": 200,
+									"_postman_previewlanguage": "text",
+									"header": [
+										{
+											"key": "Content-Type",
+											"value": "text/plain"
+										}
+									],
+									"cookie": [],
+									"body": ""
+								}
+							]
+						},
+						{
+							"name": "/api/Countries/GetCountryById/:CountryId",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{baseUrl}}/api/Countries/GetCountryById/:CountryId",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"api",
+										"Countries",
+										"GetCountryById",
+										":CountryId"
+									],
+									"variable": [
+										{
+											"key": "CountryId",
+											"value": "16109126",
+											"description": "(Required) "
+										}
+									]
+								}
+							},
+							"response": [
+								{
+									"name": "Success",
+									"originalRequest": {
+										"method": "GET",
+										"header": [
+											{
+												"description": "Added as a part of security scheme: apikey",
+												"key": "Authorization",
+												"value": "<API Key>"
+											}
+										],
+										"url": {
+											"raw": "{{baseUrl}}/api/Countries/GetCountryById/:CountryId",
+											"host": [
+												"{{baseUrl}}"
+											],
+											"path": [
+												"api",
+												"Countries",
+												"GetCountryById",
+												":CountryId"
+											],
+											"variable": [
+												{
+													"key": "CountryId"
+												}
+											]
+										}
+									},
+									"status": "OK",
+									"code": 200,
+									"_postman_previewlanguage": "text",
+									"header": [
+										{
+											"key": "Content-Type",
+											"value": "text/plain"
+										}
+									],
+									"cookie": [],
+									"body": ""
+								}
+							]
+						}
+					]
+				},
+				{
+					"name": "Entities",
+					"item": [
+						{
+							"name": "/api/Entities/GetEntities",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{baseUrl}}/api/Entities/GetEntities?page=1&limit=100&sort=&search=",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"api",
+										"Entities",
+										"GetEntities"
+									],
+									"query": [
+										{
+											"key": "page",
+											"value": "1"
+										},
+										{
+											"key": "limit",
+											"value": "100"
+										},
+										{
+											"key": "sort",
+											"value": ""
+										},
+										{
+											"key": "search",
+											"value": ""
+										}
+									]
+								}
+							},
+							"response": [
+								{
+									"name": "Success",
+									"originalRequest": {
+										"method": "GET",
+										"header": [
+											{
+												"description": "Added as a part of security scheme: apikey",
+												"key": "Authorization",
+												"value": "<API Key>"
+											}
+										],
+										"url": {
+											"raw": "{{baseUrl}}/api/Entities/GetEntities?page=1&limit=100&sort=&search=",
+											"host": [
+												"{{baseUrl}}"
+											],
+											"path": [
+												"api",
+												"Entities",
+												"GetEntities"
+											],
+											"query": [
+												{
+													"key": "page",
+													"value": "1"
+												},
+												{
+													"key": "limit",
+													"value": "100"
+												},
+												{
+													"key": "sort",
+													"value": ""
+												},
+												{
+													"key": "search",
+													"value": ""
+												}
+											]
+										}
+									},
+									"status": "OK",
+									"code": 200,
+									"_postman_previewlanguage": "text",
+									"header": [
+										{
+											"key": "Content-Type",
+											"value": "text/plain"
+										}
+									],
+									"cookie": [],
+									"body": ""
+								}
+							]
+						},
+						{
+							"name": "/api/Entities/GetEntitiesByIdRange",
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "[\n    8085635,\n    -39953530\n]"
+								},
+								"url": {
+									"raw": "{{baseUrl}}/api/Entities/GetEntitiesByIdRange",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"api",
+										"Entities",
+										"GetEntitiesByIdRange"
+									]
+								}
+							},
+							"response": [
+								{
+									"name": "Success",
+									"originalRequest": {
+										"method": "POST",
+										"header": [
+											{
+												"description": "Added as a part of security scheme: apikey",
+												"key": "Authorization",
+												"value": "<API Key>"
+											}
+										],
+										"body": {
+											"mode": "raw",
+											"raw": "[\n    61132668,\n    93603764\n]"
+										},
+										"url": {
+											"raw": "{{baseUrl}}/api/Entities/GetEntitiesByIdRange",
+											"host": [
+												"{{baseUrl}}"
+											],
+											"path": [
+												"api",
+												"Entities",
+												"GetEntitiesByIdRange"
+											]
+										}
+									},
+									"status": "OK",
+									"code": 200,
+									"_postman_previewlanguage": "text",
+									"header": [
+										{
+											"key": "Content-Type",
+											"value": "text/plain"
+										}
+									],
+									"cookie": [],
+									"body": ""
+								}
+							]
+						},
+						{
+							"name": "/api/Entities/GetEntitiesForOrders",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{baseUrl}}/api/Entities/GetEntitiesForOrders?entitySearch=commodo&entitySort=commodo&skip=16109126&take=16109126",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"api",
+										"Entities",
+										"GetEntitiesForOrders"
+									],
+									"query": [
+										{
+											"key": "entitySearch",
+											"value": "commodo"
+										},
+										{
+											"key": "entitySort",
+											"value": "commodo"
+										},
+										{
+											"key": "skip",
+											"value": "16109126"
+										},
+										{
+											"key": "take",
+											"value": "16109126"
+										}
+									]
+								}
+							},
+							"response": [
+								{
+									"name": "Success",
+									"originalRequest": {
+										"method": "GET",
+										"header": [
+											{
+												"description": "Added as a part of security scheme: apikey",
+												"key": "Authorization",
+												"value": "<API Key>"
+											}
+										],
+										"url": {
+											"raw": "{{baseUrl}}/api/Entities/GetEntitiesForOrders?entitySearch=commodo&entitySort=commodo&skip=16109126&take=16109126",
+											"host": [
+												"{{baseUrl}}"
+											],
+											"path": [
+												"api",
+												"Entities",
+												"GetEntitiesForOrders"
+											],
+											"query": [
+												{
+													"key": "entitySearch",
+													"value": "commodo"
+												},
+												{
+													"key": "entitySort",
+													"value": "commodo"
+												},
+												{
+													"key": "skip",
+													"value": "16109126"
+												},
+												{
+													"key": "take",
+													"value": "16109126"
+												}
+											]
+										}
+									},
+									"status": "OK",
+									"code": 200,
+									"_postman_previewlanguage": "text",
+									"header": [
+										{
+											"key": "Content-Type",
+											"value": "text/plain"
+										}
+									],
+									"cookie": [],
+									"body": ""
+								}
+							]
+						},
+						{
+							"name": "/api/Entities/GetEntityById/:id",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{baseUrl}}/api/Entities/GetEntityById/:id",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"api",
+										"Entities",
+										"GetEntityById",
+										":id"
+									],
+									"variable": [
+										{
+											"key": "id",
+											"value": "16109126",
+											"description": "(Required) "
+										}
+									]
+								}
+							},
+							"response": [
+								{
+									"name": "Success",
+									"originalRequest": {
+										"method": "GET",
+										"header": [
+											{
+												"description": "Added as a part of security scheme: apikey",
+												"key": "Authorization",
+												"value": "<API Key>"
+											}
+										],
+										"url": {
+											"raw": "{{baseUrl}}/api/Entities/GetEntityById/:id",
+											"host": [
+												"{{baseUrl}}"
+											],
+											"path": [
+												"api",
+												"Entities",
+												"GetEntityById",
+												":id"
+											],
+											"variable": [
+												{
+													"key": "id"
+												}
+											]
+										}
+									},
+									"status": "OK",
+									"code": 200,
+									"_postman_previewlanguage": "text",
+									"header": [
+										{
+											"key": "Content-Type",
+											"value": "text/plain"
+										}
+									],
+									"cookie": [],
+									"body": ""
+								}
+							]
+						},
+						{
+							"name": "/api/Entities/CreateEntity",
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"EntityId\": -29761702,\n    \"OrganizationId\": -20530484,\n    \"InternalTmsid\": \"nisi incididunt fugiat in\",\n    \"ExternalSystemEntityId\": \"elit quis\",\n    \"EntityName\": \"non consectetur quis\",\n    \"InsertedUserId\": -39222640,\n    \"InsertedDate\": \"1949-10-26T03:14:33.163Z\",\n    \"UpdatedUserId\": 93453596,\n    \"UpdatedDate\": \"1998-06-11T06:15:15.199Z\",\n    \"EntityTypes\": [\n        {\n            \"EntityTypeId\": -1291916,\n            \"EntityType\": \"fugiat\",\n            \"EntityTypeDescription\": \"consectetur dolore pariatur\",\n            \"InsertedUserId\": -81463477,\n            \"InsertedDate\": \"1998-05-31T04:04:40.443Z\",\n            \"UpdatedUserId\": -66463830,\n            \"UpdatedDate\": \"2013-04-22T05:25:30.855Z\"\n        },\n        {\n            \"EntityTypeId\": 27051131,\n            \"EntityType\": \"adipisicing nulla\",\n            \"EntityTypeDescription\": \"anim aute\",\n            \"InsertedUserId\": -19349823,\n            \"InsertedDate\": \"1985-11-11T01:13:47.181Z\",\n            \"UpdatedUserId\": -41651923,\n            \"UpdatedDate\": \"1977-08-14T22:09:07.654Z\"\n        }\n    ]\n}"
+								},
+								"url": {
+									"raw": "{{baseUrl}}/api/Entities/CreateEntity",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"api",
+										"Entities",
+										"CreateEntity"
+									]
+								}
+							},
+							"response": [
+								{
+									"name": "Success",
+									"originalRequest": {
+										"method": "POST",
+										"header": [
+											{
+												"description": "Added as a part of security scheme: apikey",
+												"key": "Authorization",
+												"value": "<API Key>"
+											}
+										],
+										"body": {
+											"mode": "raw",
+											"raw": "{\n    \"EntityId\": -29761702,\n    \"OrganizationId\": -20530484,\n    \"InternalTmsid\": \"nisi incididunt fugiat in\",\n    \"ExternalSystemEntityId\": \"elit quis\",\n    \"EntityName\": \"non consectetur quis\",\n    \"InsertedUserId\": -39222640,\n    \"InsertedDate\": \"1949-10-26T03:14:33.163Z\",\n    \"UpdatedUserId\": 93453596,\n    \"UpdatedDate\": \"1998-06-11T06:15:15.199Z\",\n    \"EntityTypes\": [\n        {\n            \"EntityTypeId\": -1291916,\n            \"EntityType\": \"fugiat\",\n            \"EntityTypeDescription\": \"consectetur dolore pariatur\",\n            \"InsertedUserId\": -81463477,\n            \"InsertedDate\": \"1998-05-31T04:04:40.443Z\",\n            \"UpdatedUserId\": -66463830,\n            \"UpdatedDate\": \"2013-04-22T05:25:30.855Z\"\n        },\n        {\n            \"EntityTypeId\": 27051131,\n            \"EntityType\": \"adipisicing nulla\",\n            \"EntityTypeDescription\": \"anim aute\",\n            \"InsertedUserId\": -19349823,\n            \"InsertedDate\": \"1985-11-11T01:13:47.181Z\",\n            \"UpdatedUserId\": -41651923,\n            \"UpdatedDate\": \"1977-08-14T22:09:07.654Z\"\n        }\n    ]\n}"
+										},
+										"url": {
+											"raw": "{{baseUrl}}/api/Entities/CreateEntity",
+											"host": [
+												"{{baseUrl}}"
+											],
+											"path": [
+												"api",
+												"Entities",
+												"CreateEntity"
+											]
+										}
+									},
+									"status": "OK",
+									"code": 200,
+									"_postman_previewlanguage": "text",
+									"header": [
+										{
+											"key": "Content-Type",
+											"value": "text/plain"
+										}
+									],
+									"cookie": [],
+									"body": ""
+								}
+							]
+						},
+						{
+							"name": "/api/Entities/UpdateEntity",
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"EntityId\": -29761702,\n    \"OrganizationId\": -20530484,\n    \"InternalTmsid\": \"nisi incididunt fugiat in\",\n    \"ExternalSystemEntityId\": \"elit quis\",\n    \"EntityName\": \"non consectetur quis\",\n    \"InsertedUserId\": -39222640,\n    \"InsertedDate\": \"1949-10-26T03:14:33.163Z\",\n    \"UpdatedUserId\": 93453596,\n    \"UpdatedDate\": \"1998-06-11T06:15:15.199Z\",\n    \"EntityTypes\": [\n        {\n            \"EntityTypeId\": -1291916,\n            \"EntityType\": \"fugiat\",\n            \"EntityTypeDescription\": \"consectetur dolore pariatur\",\n            \"InsertedUserId\": -81463477,\n            \"InsertedDate\": \"1998-05-31T04:04:40.443Z\",\n            \"UpdatedUserId\": -66463830,\n            \"UpdatedDate\": \"2013-04-22T05:25:30.855Z\"\n        },\n        {\n            \"EntityTypeId\": 27051131,\n            \"EntityType\": \"adipisicing nulla\",\n            \"EntityTypeDescription\": \"anim aute\",\n            \"InsertedUserId\": -19349823,\n            \"InsertedDate\": \"1985-11-11T01:13:47.181Z\",\n            \"UpdatedUserId\": -41651923,\n            \"UpdatedDate\": \"1977-08-14T22:09:07.654Z\"\n        }\n    ]\n}"
+								},
+								"url": {
+									"raw": "{{baseUrl}}/api/Entities/UpdateEntity",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"api",
+										"Entities",
+										"UpdateEntity"
+									]
+								}
+							},
+							"response": [
+								{
+									"name": "Success",
+									"originalRequest": {
+										"method": "POST",
+										"header": [
+											{
+												"description": "Added as a part of security scheme: apikey",
+												"key": "Authorization",
+												"value": "<API Key>"
+											}
+										],
+										"body": {
+											"mode": "raw",
+											"raw": "{\n    \"EntityId\": -29761702,\n    \"OrganizationId\": -20530484,\n    \"InternalTmsid\": \"nisi incididunt fugiat in\",\n    \"ExternalSystemEntityId\": \"elit quis\",\n    \"EntityName\": \"non consectetur quis\",\n    \"InsertedUserId\": -39222640,\n    \"InsertedDate\": \"1949-10-26T03:14:33.163Z\",\n    \"UpdatedUserId\": 93453596,\n    \"UpdatedDate\": \"1998-06-11T06:15:15.199Z\",\n    \"EntityTypes\": [\n        {\n            \"EntityTypeId\": -1291916,\n            \"EntityType\": \"fugiat\",\n            \"EntityTypeDescription\": \"consectetur dolore pariatur\",\n            \"InsertedUserId\": -81463477,\n            \"InsertedDate\": \"1998-05-31T04:04:40.443Z\",\n            \"UpdatedUserId\": -66463830,\n            \"UpdatedDate\": \"2013-04-22T05:25:30.855Z\"\n        },\n        {\n            \"EntityTypeId\": 27051131,\n            \"EntityType\": \"adipisicing nulla\",\n            \"EntityTypeDescription\": \"anim aute\",\n            \"InsertedUserId\": -19349823,\n            \"InsertedDate\": \"1985-11-11T01:13:47.181Z\",\n            \"UpdatedUserId\": -41651923,\n            \"UpdatedDate\": \"1977-08-14T22:09:07.654Z\"\n        }\n    ]\n}"
+										},
+										"url": {
+											"raw": "{{baseUrl}}/api/Entities/UpdateEntity",
+											"host": [
+												"{{baseUrl}}"
+											],
+											"path": [
+												"api",
+												"Entities",
+												"UpdateEntity"
+											]
+										}
+									},
+									"status": "OK",
+									"code": 200,
+									"_postman_previewlanguage": "text",
+									"header": [
+										{
+											"key": "Content-Type",
+											"value": "text/plain"
+										}
+									],
+									"cookie": [],
+									"body": ""
+								}
+							]
+						},
+						{
+							"name": "/api/Entities/DeleteEntity/:id",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"url": {
+									"raw": "{{baseUrl}}/api/Entities/DeleteEntity/:id",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"api",
+										"Entities",
+										"DeleteEntity",
+										":id"
+									],
+									"variable": [
+										{
+											"key": "id",
+											"value": "16109126",
+											"description": "(Required) "
+										}
+									]
+								}
+							},
+							"response": [
+								{
+									"name": "Success",
+									"originalRequest": {
+										"method": "POST",
+										"header": [
+											{
+												"description": "Added as a part of security scheme: apikey",
+												"key": "Authorization",
+												"value": "<API Key>"
+											}
+										],
+										"url": {
+											"raw": "{{baseUrl}}/api/Entities/DeleteEntity/:id",
+											"host": [
+												"{{baseUrl}}"
+											],
+											"path": [
+												"api",
+												"Entities",
+												"DeleteEntity",
+												":id"
+											],
+											"variable": [
+												{
+													"key": "id"
+												}
+											]
+										}
+									},
+									"status": "OK",
+									"code": 200,
+									"_postman_previewlanguage": "text",
+									"header": [
+										{
+											"key": "Content-Type",
+											"value": "text/plain"
+										}
+									],
+									"cookie": [],
+									"body": ""
+								}
+							]
+						},
+						{
+							"name": "/api/Entities/GetByInternalTmsId/:shortId",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{baseUrl}}/api/Entities/GetByInternalTmsId/:shortId",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"api",
+										"Entities",
+										"GetByInternalTmsId",
+										":shortId"
+									],
+									"variable": [
+										{
+											"key": "shortId",
+											"value": "commodo",
+											"description": "(Required) "
+										}
+									]
+								}
+							},
+							"response": [
+								{
+									"name": "Success",
+									"originalRequest": {
+										"method": "GET",
+										"header": [
+											{
+												"description": "Added as a part of security scheme: apikey",
+												"key": "Authorization",
+												"value": "<API Key>"
+											}
+										],
+										"url": {
+											"raw": "{{baseUrl}}/api/Entities/GetByInternalTmsId/:shortId",
+											"host": [
+												"{{baseUrl}}"
+											],
+											"path": [
+												"api",
+												"Entities",
+												"GetByInternalTmsId",
+												":shortId"
+											],
+											"variable": [
+												{
+													"key": "shortId"
+												}
+											]
+										}
+									},
+									"status": "OK",
+									"code": 200,
+									"_postman_previewlanguage": "text",
+									"header": [
+										{
+											"key": "Content-Type",
+											"value": "text/plain"
+										}
+									],
+									"cookie": [],
+									"body": ""
+								}
+							]
+						},
+						{
+							"name": "/api/Entities/GetByExternalSystemId/:externalSystemId",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{baseUrl}}/api/Entities/GetByExternalSystemId/:externalSystemId",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"api",
+										"Entities",
+										"GetByExternalSystemId",
+										":externalSystemId"
+									],
+									"variable": [
+										{
+											"key": "externalSystemId",
+											"value": "commodo",
+											"description": "(Required) "
+										}
+									]
+								}
+							},
+							"response": [
+								{
+									"name": "Success",
+									"originalRequest": {
+										"method": "GET",
+										"header": [
+											{
+												"description": "Added as a part of security scheme: apikey",
+												"key": "Authorization",
+												"value": "<API Key>"
+											}
+										],
+										"url": {
+											"raw": "{{baseUrl}}/api/Entities/GetByExternalSystemId/:externalSystemId",
+											"host": [
+												"{{baseUrl}}"
+											],
+											"path": [
+												"api",
+												"Entities",
+												"GetByExternalSystemId",
+												":externalSystemId"
+											],
+											"variable": [
+												{
+													"key": "externalSystemId"
+												}
+											]
+										}
+									},
+									"status": "OK",
+									"code": 200,
+									"_postman_previewlanguage": "text",
+									"header": [
+										{
+											"key": "Content-Type",
+											"value": "text/plain"
+										}
+									],
+									"cookie": [],
+									"body": ""
+								}
+							]
+						},
+						{
+							"name": "/api/Entities/UpdateEntityInternalTmsId",
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"EntityId\": 41962467,\n    \"InternalTmsId\": \"nulla enim Lorem\"\n}"
+								},
+								"url": {
+									"raw": "{{baseUrl}}/api/Entities/UpdateEntityInternalTmsId",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"api",
+										"Entities",
+										"UpdateEntityInternalTmsId"
+									]
+								}
+							},
+							"response": [
+								{
+									"name": "Success",
+									"originalRequest": {
+										"method": "POST",
+										"header": [
+											{
+												"description": "Added as a part of security scheme: apikey",
+												"key": "Authorization",
+												"value": "<API Key>"
+											}
+										],
+										"body": {
+											"mode": "raw",
+											"raw": "{\n    \"EntityId\": 41962467,\n    \"InternalTmsId\": \"nulla enim Lorem\"\n}"
+										},
+										"url": {
+											"raw": "{{baseUrl}}/api/Entities/UpdateEntityInternalTmsId",
+											"host": [
+												"{{baseUrl}}"
+											],
+											"path": [
+												"api",
+												"Entities",
+												"UpdateEntityInternalTmsId"
+											]
+										}
+									},
+									"status": "OK",
+									"code": 200,
+									"_postman_previewlanguage": "text",
+									"header": [
+										{
+											"key": "Content-Type",
+											"value": "text/plain"
+										}
+									],
+									"cookie": [],
+									"body": ""
+								}
+							]
+						},
+						{
+							"name": "/api/Entities/sync",
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "[\n    {\n        \"ShortId\": \"tempor nisi\",\n        \"Custname\": \"laboris in inci\",\n        \"TypeId\": \"magna exercitation consequat ea\",\n        \"Ship\": \"aliqua ut commodo\",\n        \"Carr\": \"culpa in labore dolor\",\n        \"Driver\": \"sit\",\n        \"Cust\": \"magna\"\n    },\n    {\n        \"ShortId\": \"pariatur ad Excepteur\",\n        \"Custname\": \"dolor irure dolor\",\n        \"TypeId\": \"dolore ea dolore do\",\n        \"Ship\": \"quis laboris\",\n        \"Carr\": \"ut dolor dolor in consectetur\",\n        \"Driver\": \"non p\",\n        \"Cust\": \"laboris incididunt proident qui\"\n    }\n]"
+								},
+								"url": {
+									"raw": "{{baseUrl}}/api/Entities/sync",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"api",
+										"Entities",
+										"sync"
+									]
+								}
+							},
+							"response": [
+								{
+									"name": "Success",
+									"originalRequest": {
+										"method": "POST",
+										"header": [
+											{
+												"description": "Added as a part of security scheme: apikey",
+												"key": "Authorization",
+												"value": "<API Key>"
+											}
+										],
+										"body": {
+											"mode": "raw",
+											"raw": "[\n    {\n        \"ShortId\": \"Ut in aliqua Lorem\",\n        \"Custname\": \"dolore veniam est mollit\",\n        \"TypeId\": \"pariatur mollit\",\n        \"Ship\": \"laboris deserunt ex adipisicing eiusmod\",\n        \"Carr\": \"nisi\",\n        \"Driver\": \"nisi\",\n        \"Cust\": \"i\"\n    },\n    {\n        \"ShortId\": \"dolore aliquip irure cupidatat\",\n        \"Custname\": \"do eiusmod\",\n        \"TypeId\": \"consequat Excepteur sint\",\n        \"Ship\": \"irure Duis sed\",\n        \"Carr\": \"veniam cillum exercitation\",\n        \"Driver\": \"dolore qu\",\n        \"Cust\": \"ut occaecat\"\n    }\n]"
+										},
+										"url": {
+											"raw": "{{baseUrl}}/api/Entities/sync",
+											"host": [
+												"{{baseUrl}}"
+											],
+											"path": [
+												"api",
+												"Entities",
+												"sync"
+											]
+										}
+									},
+									"status": "OK",
+									"code": 200,
+									"_postman_previewlanguage": "text",
+									"header": [
+										{
+											"key": "Content-Type",
+											"value": "text/plain"
+										}
+									],
+									"cookie": [],
+									"body": ""
+								}
+							]
+						},
+						{
+							"name": "/api/Entities/matching",
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "[\n    {\n        \"ShortId\": \"tempor nisi\",\n        \"Custname\": \"laboris in inci\",\n        \"TypeId\": \"magna exercitation consequat ea\",\n        \"Ship\": \"aliqua ut commodo\",\n        \"Carr\": \"culpa in labore dolor\",\n        \"Driver\": \"sit\",\n        \"Cust\": \"magna\"\n    },\n    {\n        \"ShortId\": \"pariatur ad Excepteur\",\n        \"Custname\": \"dolor irure dolor\",\n        \"TypeId\": \"dolore ea dolore do\",\n        \"Ship\": \"quis laboris\",\n        \"Carr\": \"ut dolor dolor in consectetur\",\n        \"Driver\": \"non p\",\n        \"Cust\": \"laboris incididunt proident qui\"\n    }\n]"
+								},
+								"url": {
+									"raw": "{{baseUrl}}/api/Entities/matching",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"api",
+										"Entities",
+										"matching"
+									]
+								}
+							},
+							"response": [
+								{
+									"name": "Success",
+									"originalRequest": {
+										"method": "POST",
+										"header": [
+											{
+												"description": "Added as a part of security scheme: apikey",
+												"key": "Authorization",
+												"value": "<API Key>"
+											}
+										],
+										"body": {
+											"mode": "raw",
+											"raw": "[\n    {\n        \"ShortId\": \"Ut in aliqua Lorem\",\n        \"Custname\": \"dolore veniam est mollit\",\n        \"TypeId\": \"pariatur mollit\",\n        \"Ship\": \"laboris deserunt ex adipisicing eiusmod\",\n        \"Carr\": \"nisi\",\n        \"Driver\": \"nisi\",\n        \"Cust\": \"i\"\n    },\n    {\n        \"ShortId\": \"dolore aliquip irure cupidatat\",\n        \"Custname\": \"do eiusmod\",\n        \"TypeId\": \"consequat Excepteur sint\",\n        \"Ship\": \"irure Duis sed\",\n        \"Carr\": \"veniam cillum exercitation\",\n        \"Driver\": \"dolore qu\",\n        \"Cust\": \"ut occaecat\"\n    }\n]"
+										},
+										"url": {
+											"raw": "{{baseUrl}}/api/Entities/matching",
+											"host": [
+												"{{baseUrl}}"
+											],
+											"path": [
+												"api",
+												"Entities",
+												"matching"
+											]
+										}
+									},
+									"status": "OK",
+									"code": 200,
+									"_postman_previewlanguage": "text",
+									"header": [
+										{
+											"key": "Content-Type",
+											"value": "text/plain"
+										}
+									],
+									"cookie": [],
+									"body": ""
+								}
+							]
+						},
+						{
+							"name": "/api/Entities/matchingAddresses",
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "[\n    {\n        \"ShortId\": \"elit fugiat Lorem\",\n        \"EntityName\": \"consectetur do nostrud nisi\",\n        \"Type\": \"id pariatur esse in\",\n        \"Add1\": \"tempor Excepteur anim occaecat\",\n        \"Add2\": \"culpa Ut\",\n        \"City\": \"ad aliquip eiusmod in\",\n        \"State\": \"dolore sit id Exce\",\n        \"Country\": \"qui magna velit id adipisicing\",\n        \"Zipcode\": \"esse Excepteur minim\"\n    },\n    {\n        \"ShortId\": \"consequat Duis exercitation\",\n        \"EntityName\": \"dolore amet incididunt Excepteur\",\n        \"Type\": \"aute culpa\",\n        \"Add1\": \"qui reprehenderit quis\",\n        \"Add2\": \"id\",\n        \"City\": \"minim velit esse\",\n        \"State\": \"labore\",\n        \"Country\": \"labore consectetur occaecat sed\",\n        \"Zipcode\": \"dolore et\"\n    }\n]"
+								},
+								"url": {
+									"raw": "{{baseUrl}}/api/Entities/matchingAddresses",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"api",
+										"Entities",
+										"matchingAddresses"
+									]
+								}
+							},
+							"response": [
+								{
+									"name": "Success",
+									"originalRequest": {
+										"method": "POST",
+										"header": [
+											{
+												"description": "Added as a part of security scheme: apikey",
+												"key": "Authorization",
+												"value": "<API Key>"
+											}
+										],
+										"body": {
+											"mode": "raw",
+											"raw": "[\n    {\n        \"ShortId\": \"adipisicing mollit\",\n        \"EntityName\": \"ea\",\n        \"Type\": \"Lorem cupidatat deserunt aliqua voluptate\",\n        \"Add1\": \"consequat pariatur elit reprehenderit culpa\",\n        \"Add2\": \"elit ea laboris aliquip\",\n        \"City\": \"aliqua elit\",\n        \"State\": \"velit elit officia in\",\n        \"Country\": \"commodo consequat ea\",\n        \"Zipcode\": \"Excepte\"\n    },\n    {\n        \"ShortId\": \"ut\",\n        \"EntityName\": \"tempor\",\n        \"Type\": \"Duis deserunt in \",\n        \"Add1\": \"culpa cillum aliquip ullamco\",\n        \"Add2\": \"mollit proident voluptate enim\",\n        \"City\": \"dolor est\",\n        \"State\": \"labore\",\n        \"Country\": \"consequat commodo\",\n        \"Zipcode\": \"in nostrud anim et labore\"\n    }\n]"
+										},
+										"url": {
+											"raw": "{{baseUrl}}/api/Entities/matchingAddresses",
+											"host": [
+												"{{baseUrl}}"
+											],
+											"path": [
+												"api",
+												"Entities",
+												"matchingAddresses"
+											]
+										}
+									},
+									"status": "OK",
+									"code": 200,
+									"_postman_previewlanguage": "text",
+									"header": [
+										{
+											"key": "Content-Type",
+											"value": "text/plain"
+										}
+									],
+									"cookie": [],
+									"body": ""
+								}
+							]
+						},
+						{
+							"name": "Create Entity with Addresses, don't use it if Entity External System Id is exist",
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"EntityId\": -4684838,\n    \"ExternalSystemId\": \"cupidatat\",\n    \"EntityName\": \"Ut minim Lorem do\",\n    \"InternalTmsid\": \"ipsum minim veniam labore laboris\",\n    \"EntityTypeIds\": [\n        1,\n        1\n    ],\n    \"Addresses\": [\n        {\n            \"LocationTypeId\": 1,\n            \"Address1\": \"adipisicing minim ullamco labore\",\n            \"Address2\": \"adipisicing Ut voluptate\",\n            \"State\": \"voluptate cupidatat\",\n            \"Country\": \"Lorem\",\n            \"City\": \"in esse\",\n            \"PostalCode\": \"in nulla Duis\"\n        },\n        {\n            \"LocationTypeId\": 1,\n            \"Address1\": \"qui enim\",\n            \"Address2\": \"consectetur amet\",\n            \"State\": \"pariatur in conse\",\n            \"Country\": \"quis Excepteur Duis\",\n            \"City\": \"ex\",\n            \"PostalCode\": \"aliqua esse quis\"\n        }\n    ]\n}"
+								},
+								"url": {
+									"raw": "{{baseUrl}}/api/Entities/CreateAddressEntity",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"api",
+										"Entities",
+										"CreateAddressEntity"
+									]
+								}
+							},
+							"response": [
+								{
+									"name": "Success",
+									"originalRequest": {
+										"method": "POST",
+										"header": [
+											{
+												"description": "Added as a part of security scheme: apikey",
+												"key": "Authorization",
+												"value": "<API Key>"
+											}
+										],
+										"body": {
+											"mode": "raw",
+											"raw": "{\n    \"EntityId\": -65845547,\n    \"ExternalSystemId\": \"proident qui sint esse\",\n    \"EntityName\": \"ipsum id tempor\",\n    \"InternalTmsid\": \"veniam\",\n    \"EntityTypeIds\": [\n        1,\n        2\n    ],\n    \"Addresses\": [\n        {\n            \"LocationTypeId\": 2,\n            \"Address1\": \"adipisicing enim dolor minim sit\",\n            \"Address2\": \"proident\",\n            \"State\": \"irure\",\n            \"Country\": \"in fugiat ut\",\n            \"City\": \"Duis incididunt\",\n            \"PostalCode\": \"in voluptate enim ipsum consectetur\"\n        },\n        {\n            \"LocationTypeId\": 2,\n            \"Address1\": \"dolor laboris\",\n            \"Address2\": \"Excepteur dolore veniam\",\n            \"State\": \"non\",\n            \"Country\": \"minim qui aute\",\n            \"City\": \"id voluptate\",\n            \"PostalCode\": \"laboris ullamco amet consectetur\"\n        }\n    ]\n}"
+										},
+										"url": {
+											"raw": "{{baseUrl}}/api/Entities/CreateAddressEntity",
+											"host": [
+												"{{baseUrl}}"
+											],
+											"path": [
+												"api",
+												"Entities",
+												"CreateAddressEntity"
+											]
+										}
+									},
+									"status": "OK",
+									"code": 200,
+									"_postman_previewlanguage": "text",
+									"header": [
+										{
+											"key": "Content-Type",
+											"value": "text/plain"
+										}
+									],
+									"cookie": [],
+									"body": ""
+								}
+							]
+						},
+						{
+							"name": "Create Entity with Addresses, if Entity External System Id is exist then it will update Entity",
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"EntityId\": -65845547,\n    \"ExternalSystemId\": \"proident qui sint esse\",\n    \"EntityName\": \"ipsum id tempor\",\n    \"InternalTmsid\": \"veniam\",\n    \"EntityTypeIds\": [\n        1,\n        2\n    ],\n    \"Addresses\": [\n        {\n            \"LocationTypeId\": 2,\n            \"Address1\": \"adipisicing enim dolor minim sit\",\n            \"Address2\": \"proident\",\n            \"State\": \"irure\",\n            \"Country\": \"in fugiat ut\",\n            \"City\": \"Duis incididunt\",\n            \"PostalCode\": \"in voluptate enim ipsum consectetur\"\n        },\n        {\n            \"LocationTypeId\": 2,\n            \"Address1\": \"dolor laboris\",\n            \"Address2\": \"Excepteur dolore veniam\",\n            \"State\": \"non\",\n            \"Country\": \"minim qui aute\",\n            \"City\": \"id voluptate\",\n            \"PostalCode\": \"laboris ullamco amet consectetur\"\n        }\n    ]\n}"
+								},
+								"url": {
+									"raw": "{{baseUrl}}/api/Entities/CreateUpdateAddressEntity",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"api",
+										"Entities",
+										"CreateUpdateAddressEntity"
+									]
+								}
+							},
+							"response": [
+								{
+									"name": "Success",
+									"originalRequest": {
+										"method": "POST",
+										"header": [
+											{
+												"description": "Added as a part of security scheme: apikey",
+												"key": "Authorization",
+												"value": "<API Key>"
+											}
+										],
+										"body": {
+											"mode": "raw",
+											"raw": "{\n    \"EntityId\": -65845547,\n    \"ExternalSystemId\": \"proident qui sint esse\",\n    \"EntityName\": \"ipsum id tempor\",\n    \"InternalTmsid\": \"veniam\",\n    \"EntityTypeIds\": [\n        1,\n        2\n    ],\n    \"Addresses\": [\n        {\n            \"LocationTypeId\": 2,\n            \"Address1\": \"adipisicing enim dolor minim sit\",\n            \"Address2\": \"proident\",\n            \"State\": \"irure\",\n            \"Country\": \"in fugiat ut\",\n            \"City\": \"Duis incididunt\",\n            \"PostalCode\": \"in voluptate enim ipsum consectetur\"\n        },\n        {\n            \"LocationTypeId\": 2,\n            \"Address1\": \"dolor laboris\",\n            \"Address2\": \"Excepteur dolore veniam\",\n            \"State\": \"non\",\n            \"Country\": \"minim qui aute\",\n            \"City\": \"id voluptate\",\n            \"PostalCode\": \"laboris ullamco amet consectetur\"\n        }\n    ]\n}"
+										},
+										"url": {
+											"raw": "{{baseUrl}}/api/Entities/CreateUpdateAddressEntity",
+											"host": [
+												"{{baseUrl}}"
+											],
+											"path": [
+												"api",
+												"Entities",
+												"CreateUpdateAddressEntity"
+											]
+										}
+									},
+									"status": "OK",
+									"code": 200,
+									"_postman_previewlanguage": "text",
+									"header": [
+										{
+											"key": "Content-Type",
+											"value": "text/plain"
+										}
+									],
+									"cookie": [],
+									"body": ""
+								}
+							]
+						}
+					]
+				},
+				{
+					"name": "Error",
+					"item": [
+						{
+							"name": "/api/Error",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{baseUrl}}/api/Error",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"api",
+										"Error"
+									]
+								}
+							},
+							"response": [
+								{
+									"name": "Success",
+									"originalRequest": {
+										"method": "GET",
+										"header": [
+											{
+												"description": "Added as a part of security scheme: apikey",
+												"key": "Authorization",
+												"value": "<API Key>"
+											}
+										],
+										"url": {
+											"raw": "{{baseUrl}}/api/Error",
+											"host": [
+												"{{baseUrl}}"
+											],
+											"path": [
+												"api",
+												"Error"
+											]
+										}
+									},
+									"status": "OK",
+									"code": 200,
+									"_postman_previewlanguage": "text",
+									"header": [
+										{
+											"key": "Content-Type",
+											"value": "text/plain"
+										}
+									],
+									"cookie": [],
+									"body": ""
+								}
+							]
+						},
+						{
+							"name": "/api/Error/detail",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{baseUrl}}/api/Error/detail",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"api",
+										"Error",
+										"detail"
+									]
+								}
+							},
+							"response": [
+								{
+									"name": "Success",
+									"originalRequest": {
+										"method": "GET",
+										"header": [
+											{
+												"description": "Added as a part of security scheme: apikey",
+												"key": "Authorization",
+												"value": "<API Key>"
+											}
+										],
+										"url": {
+											"raw": "{{baseUrl}}/api/Error/detail",
+											"host": [
+												"{{baseUrl}}"
+											],
+											"path": [
+												"api",
+												"Error",
+												"detail"
+											]
+										}
+									},
+									"status": "OK",
+									"code": 200,
+									"_postman_previewlanguage": "text",
+									"header": [
+										{
+											"key": "Content-Type",
+											"value": "text/plain"
+										}
+									],
+									"cookie": [],
+									"body": ""
+								}
+							]
+						},
+						{
+							"name": "/api/Error/testerror",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{baseUrl}}/api/Error/testerror",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"api",
+										"Error",
+										"testerror"
+									]
+								}
+							},
+							"response": [
+								{
+									"name": "Success",
+									"originalRequest": {
+										"method": "GET",
+										"header": [
+											{
+												"description": "Added as a part of security scheme: apikey",
+												"key": "Authorization",
+												"value": "<API Key>"
+											}
+										],
+										"url": {
+											"raw": "{{baseUrl}}/api/Error/testerror",
+											"host": [
+												"{{baseUrl}}"
+											],
+											"path": [
+												"api",
+												"Error",
+												"testerror"
+											]
+										}
+									},
+									"status": "OK",
+									"code": 200,
+									"_postman_previewlanguage": "text",
+									"header": [
+										{
+											"key": "Content-Type",
+											"value": "text/plain"
+										}
+									],
+									"cookie": [],
+									"body": ""
+								}
+							]
+						}
+					]
+				},
+				{
+					"name": "Ping",
+					"item": [
+						{
+							"name": "/api/Ping",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{baseUrl}}/api/Ping?message=commodo",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"api",
+										"Ping"
+									],
+									"query": [
+										{
+											"key": "message",
+											"value": "commodo"
+										}
+									]
+								}
+							},
+							"response": [
+								{
+									"name": "Success",
+									"originalRequest": {
+										"method": "GET",
+										"header": [
+											{
+												"description": "Added as a part of security scheme: apikey",
+												"key": "Authorization",
+												"value": "<API Key>"
+											}
+										],
+										"url": {
+											"raw": "{{baseUrl}}/api/Ping?message=commodo",
+											"host": [
+												"{{baseUrl}}"
+											],
+											"path": [
+												"api",
+												"Ping"
+											],
+											"query": [
+												{
+													"key": "message",
+													"value": "commodo"
+												}
+											]
+										}
+									},
+									"status": "OK",
+									"code": 200,
+									"_postman_previewlanguage": "text",
+									"header": [
+										{
+											"key": "Content-Type",
+											"value": "text/plain"
+										}
+									],
+									"cookie": [],
+									"body": ""
+								}
+							]
+						},
+						{
+							"name": "/api/Ping",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"url": {
+									"raw": "{{baseUrl}}/api/Ping?message=commodo",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"api",
+										"Ping"
+									],
+									"query": [
+										{
+											"key": "message",
+											"value": "commodo"
+										}
+									]
+								}
+							},
+							"response": [
+								{
+									"name": "Success",
+									"originalRequest": {
+										"method": "POST",
+										"header": [
+											{
+												"description": "Added as a part of security scheme: apikey",
+												"key": "Authorization",
+												"value": "<API Key>"
+											}
+										],
+										"url": {
+											"raw": "{{baseUrl}}/api/Ping?message=commodo",
+											"host": [
+												"{{baseUrl}}"
+											],
+											"path": [
+												"api",
+												"Ping"
+											],
+											"query": [
+												{
+													"key": "message",
+													"value": "commodo"
+												}
+											]
+										}
+									},
+									"status": "OK",
+									"code": 200,
+									"_postman_previewlanguage": "text",
+									"header": [
+										{
+											"key": "Content-Type",
+											"value": "text/plain"
+										}
+									],
+									"cookie": [],
+									"body": ""
+								}
+							]
+						}
+					]
+				},
+				{
+					"name": "Postal Codes",
+					"item": [
+						{
+							"name": "/api/PostalCodes/GetPostalCodes",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{baseUrl}}/api/PostalCodes/GetPostalCodes?page=1&limit=100&sort=&sortDir=&search=",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"api",
+										"PostalCodes",
+										"GetPostalCodes"
+									],
+									"query": [
+										{
+											"key": "page",
+											"value": "1"
+										},
+										{
+											"key": "limit",
+											"value": "100"
+										},
+										{
+											"key": "sort",
+											"value": ""
+										},
+										{
+											"key": "sortDir",
+											"value": ""
+										},
+										{
+											"key": "search",
+											"value": ""
+										}
+									]
+								}
+							},
+							"response": [
+								{
+									"name": "Success",
+									"originalRequest": {
+										"method": "GET",
+										"header": [
+											{
+												"description": "Added as a part of security scheme: apikey",
+												"key": "Authorization",
+												"value": "<API Key>"
+											}
+										],
+										"url": {
+											"raw": "{{baseUrl}}/api/PostalCodes/GetPostalCodes?page=1&limit=100&sort=&sortDir=&search=",
+											"host": [
+												"{{baseUrl}}"
+											],
+											"path": [
+												"api",
+												"PostalCodes",
+												"GetPostalCodes"
+											],
+											"query": [
+												{
+													"key": "page",
+													"value": "1"
+												},
+												{
+													"key": "limit",
+													"value": "100"
+												},
+												{
+													"key": "sort",
+													"value": ""
+												},
+												{
+													"key": "sortDir",
+													"value": ""
+												},
+												{
+													"key": "search",
+													"value": ""
+												}
+											]
+										}
+									},
+									"status": "OK",
+									"code": 200,
+									"_postman_previewlanguage": "text",
+									"header": [
+										{
+											"key": "Content-Type",
+											"value": "text/plain"
+										}
+									],
+									"cookie": [],
+									"body": ""
+								}
+							]
+						},
+						{
+							"name": "/api/PostalCodes/GetPostalCodeById/:PostalCodeId",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{baseUrl}}/api/PostalCodes/GetPostalCodeById/:PostalCodeId",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"api",
+										"PostalCodes",
+										"GetPostalCodeById",
+										":PostalCodeId"
+									],
+									"variable": [
+										{
+											"key": "PostalCodeId",
+											"value": "16109126",
+											"description": "(Required) "
+										}
+									]
+								}
+							},
+							"response": [
+								{
+									"name": "Success",
+									"originalRequest": {
+										"method": "GET",
+										"header": [
+											{
+												"description": "Added as a part of security scheme: apikey",
+												"key": "Authorization",
+												"value": "<API Key>"
+											}
+										],
+										"url": {
+											"raw": "{{baseUrl}}/api/PostalCodes/GetPostalCodeById/:PostalCodeId",
+											"host": [
+												"{{baseUrl}}"
+											],
+											"path": [
+												"api",
+												"PostalCodes",
+												"GetPostalCodeById",
+												":PostalCodeId"
+											],
+											"variable": [
+												{
+													"key": "PostalCodeId"
+												}
+											]
+										}
+									},
+									"status": "OK",
+									"code": 200,
+									"_postman_previewlanguage": "text",
+									"header": [
+										{
+											"key": "Content-Type",
+											"value": "text/plain"
+										}
+									],
+									"cookie": [],
+									"body": ""
+								}
+							]
+						}
+					]
+				},
+				{
+					"name": "States",
+					"item": [
+						{
+							"name": "/api/States/GetStates",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{baseUrl}}/api/States/GetStates?page=1&limit=100&sort=&sortDir=&search=",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"api",
+										"States",
+										"GetStates"
+									],
+									"query": [
+										{
+											"key": "page",
+											"value": "1"
+										},
+										{
+											"key": "limit",
+											"value": "100"
+										},
+										{
+											"key": "sort",
+											"value": ""
+										},
+										{
+											"key": "sortDir",
+											"value": ""
+										},
+										{
+											"key": "search",
+											"value": ""
+										}
+									]
+								}
+							},
+							"response": [
+								{
+									"name": "Success",
+									"originalRequest": {
+										"method": "GET",
+										"header": [
+											{
+												"description": "Added as a part of security scheme: apikey",
+												"key": "Authorization",
+												"value": "<API Key>"
+											}
+										],
+										"url": {
+											"raw": "{{baseUrl}}/api/States/GetStates?page=1&limit=100&sort=&sortDir=&search=",
+											"host": [
+												"{{baseUrl}}"
+											],
+											"path": [
+												"api",
+												"States",
+												"GetStates"
+											],
+											"query": [
+												{
+													"key": "page",
+													"value": "1"
+												},
+												{
+													"key": "limit",
+													"value": "100"
+												},
+												{
+													"key": "sort",
+													"value": ""
+												},
+												{
+													"key": "sortDir",
+													"value": ""
+												},
+												{
+													"key": "search",
+													"value": ""
+												}
+											]
+										}
+									},
+									"status": "OK",
+									"code": 200,
+									"_postman_previewlanguage": "text",
+									"header": [
+										{
+											"key": "Content-Type",
+											"value": "text/plain"
+										}
+									],
+									"cookie": [],
+									"body": ""
+								}
+							]
+						},
+						{
+							"name": "/api/States/GetStateById/:StateId",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{baseUrl}}/api/States/GetStateById/:StateId",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"api",
+										"States",
+										"GetStateById",
+										":StateId"
+									],
+									"variable": [
+										{
+											"key": "StateId",
+											"value": "16109126",
+											"description": "(Required) "
+										}
+									]
+								}
+							},
+							"response": [
+								{
+									"name": "Success",
+									"originalRequest": {
+										"method": "GET",
+										"header": [
+											{
+												"description": "Added as a part of security scheme: apikey",
+												"key": "Authorization",
+												"value": "<API Key>"
+											}
+										],
+										"url": {
+											"raw": "{{baseUrl}}/api/States/GetStateById/:StateId",
+											"host": [
+												"{{baseUrl}}"
+											],
+											"path": [
+												"api",
+												"States",
+												"GetStateById",
+												":StateId"
+											],
+											"variable": [
+												{
+													"key": "StateId"
+												}
+											]
+										}
+									},
+									"status": "OK",
+									"code": 200,
+									"_postman_previewlanguage": "text",
+									"header": [
+										{
+											"key": "Content-Type",
+											"value": "text/plain"
+										}
+									],
+									"cookie": [],
+									"body": ""
+								}
+							]
+						}
+					]
+				}
+			]
+		},
+		{
+			"name": "auth",
+			"item": [
+				{
+					"name": "https://identity-compcare-service-dev.azurewebsites.net/api/Auth/apikey/:apikey",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"let jsonData = pm.response.json();\r",
+									"var token = jsonData.data.token;\r",
+									"pm.environment.set('compcareBearerToken', token);"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "https://identity-compcare-service-dev.azurewebsites.net/api/Auth/apikey/:apikey",
+							"protocol": "https",
+							"host": [
+								"identity-compcare-service-dev",
+								"azurewebsites",
+								"net"
+							],
+							"path": [
+								"api",
+								"Auth",
+								"apikey",
+								":apikey"
+							],
+							"variable": [
+								{
+									"key": "apikey",
+									"value": "804226da-8aac-4238-91a8-864d6f5e4c21"
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		}
+	],
+	"auth": {
+		"type": "bearer",
+		"bearer": [
+			{
+				"key": "token",
+				"value": "{{compcareBearerToken}}",
+				"type": "string"
+			},
+			{
+				"key": "password",
+				"value": "{{compcareBearerToken}}",
+				"type": "string"
+			}
+		]
+	},
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "baseUrl",
+			"value": "https://entity.compcareservicesapi.com"
+		}
+	]
+}
