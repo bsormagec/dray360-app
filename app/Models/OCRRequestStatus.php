@@ -63,6 +63,10 @@ class OCRRequestStatus extends Model
     UPDATES_PRIOR_ORDER = 'updates-prior-order',
     UPDATED_BY_SUBSEQUENT_ORDER = 'updated-by-subsequent-order',
 
+    UPLOAD_IMAGE_REQUESTED = 'upload-image-requested',
+    UPLOAD_IMAGE_FAILED = 'upload-image-failed',
+    UPLOAD_IMAGE_SUCCEEDED = 'upload-image-succeeded',
+
     SUCCESS_IMAGEUPLOADING_TO_BLACKFLY = 'success-imageuploding-to-blackfl',
     FAILURE_IMAGEUPLOADING_TO_BLACKFLY = 'failure-imageuploding-to-blackfl',
     UNTRIED_IMAGEUPLOADING_TO_BLACKFLY = 'untried-imageuploding-to-blackfl',
@@ -87,6 +91,10 @@ class OCRRequestStatus extends Model
         self::OCR_COMPLETED => 'Processing',
         self::OCR_WAITING => 'Processing',
         self::OCR_POST_PROCESSING_REVIEW => 'Processing',
+
+        self::UPLOAD_IMAGE_REQUESTED => 'Uploading Image',
+        self::UPLOAD_IMAGE_FAILED => 'Image Upload Failed',
+        self::UPLOAD_IMAGE_SUCCEEDED => 'Image Uploaded',
 
         self::INTAKE_EXCEPTION => 'Exception',
 

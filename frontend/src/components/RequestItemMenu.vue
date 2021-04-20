@@ -37,6 +37,7 @@
           v-text="'Release lock'"
         />
         <v-list-item
+          v-if="!isPtImageUpload"
           @click="downloadSourceFile(request.request_id)"
           v-text="'Download source file'"
         />
@@ -51,18 +52,19 @@
           v-text="`Mark as ${doneText}`"
         />
         <v-list-item
+          v-if="!isPtImageUpload"
           :disabled="!hasPermission('ocr-request-statuses-create') || isLocked"
           @click="reprocessRequest(request.request_id)"
           v-text="'Reprocess request'"
         />
         <v-list-item
-          v-if="request.is_ocr_file"
+          v-if="request.is_ocr_file && !isPtImageUpload"
           :disabled="!hasPermission('ocr-request-statuses-create') || isLocked"
           @click="reimportAbbyy(request.request_id)"
           v-text="'Reimport from Abbyy'"
         />
         <v-list-item
-          v-if="request.has_email"
+          v-if="request.has_email && !isPtImageUpload"
           @click="openEmailDialog = true"
           v-text="'Show email details'"
         />
@@ -95,7 +97,7 @@ import { downloadFile } from '@/utils/download_file'
 import { deleteRequest, getSourceFileDownloadURL, reprocessOcrRequest, changeRequestDoneStatus, reimportOcrRequestAbbyy } from '@/store/api_calls/requests'
 import RequestStatusHistoryDialog from './RequestStatusHistoryDialog'
 import RequestEmailDialog from './RequestEmailDialog'
-import { objectLocks } from '@/enums/app_objects_types'
+import { objectLocks, statuses } from '@/enums/app_objects_types'
 import events from '@/enums/events'
 
 export default {
@@ -135,6 +137,13 @@ export default {
     },
     isLocked () {
       return this.request.is_locked || this.supervise
+    },
+    isPtImageUpload () {
+      return [
+        statuses.uploadImageRequested,
+        statuses.uploadImageFailed,
+        statuses.uploadImageSucceeded,
+      ].includes(this.request.latest_ocr_request_status?.status)
     }
   },
   methods: {

@@ -23,12 +23,14 @@ use App\Http\Controllers\Api\SearchAddressController;
 use App\Http\Controllers\Api\StatusHistoryController;
 use App\Http\Controllers\Api\ChangePasswordController;
 use App\Http\Controllers\Api\EquipmentTypesController;
+use App\Http\Controllers\Api\UploadPtImagesController;
 use App\Http\Controllers\Api\DictionaryItemsController;
 use App\Http\Controllers\Api\OcrRequestEmailController;
 use App\Http\Controllers\Api\ReplicateOrdersController;
 use App\Http\Controllers\Api\UpdateAllOrdersController;
 use App\Http\Controllers\Api\AuditLogsDashboardController;
 use App\Http\Controllers\Api\Auth\ResetPasswordController;
+use App\Http\Controllers\Api\FileUploadRequestsController;
 use App\Http\Controllers\Api\OCRRulesAssignmentController;
 use App\Http\Controllers\Api\AccesorialCompaniesController;
 use App\Http\Controllers\Api\Auth\ForgotPasswordController;
@@ -119,11 +121,19 @@ Route::group(['middleware' => ['auth:sanctum', 'impersonate', 'tenant-aware']], 
 
     // Orders management
     Route::apiResource('dictionary-items', DictionaryItemsController::class)
-        ->only(['index']);
+        ->only(['index', 'store']);
 
     // Companies management
     Route::resource('companies', CompaniesController::class)
         ->only(['index', 'update', 'show']);
+
+    // File uploads requests
+    Route::post('file-upload-requests', FileUploadRequestsController::class)
+        ->name('file-upload-requests.store');
+
+    // Upload pt images
+    Route::post('upload-pt-images', UploadPtImagesController::class)
+        ->name('upload-pt-images.store');
 
     // Object locks management
     Route::post('object-locks', [ObjectLocksController::class, 'store'])

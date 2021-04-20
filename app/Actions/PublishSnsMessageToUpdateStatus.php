@@ -53,7 +53,13 @@ class PublishSnsMessageToUpdateStatus
         ];
 
         if (Str::endsWith($topicArn, '.fifo')) {
-            $topicMessage['MessageGroupId'] = $data['request_id'];
+            $messageGroup = $data['request_id'];
+
+            if (trim($data['order_id']) != '') {
+                $messageGroup = $messageGroup.':'.$data['order_id'];
+            }
+
+            $topicMessage['MessageGroupId'] = $messageGroup;
         }
 
         return $topicMessage;

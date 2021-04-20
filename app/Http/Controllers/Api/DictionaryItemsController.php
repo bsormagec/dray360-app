@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Api;
 
 use Illuminate\Http\Request;
 use App\Models\DictionaryItem;
+use Illuminate\Validation\Rule;
 use App\Http\Controllers\Controller;
 use Spatie\QueryBuilder\QueryBuilder;
 use Spatie\QueryBuilder\AllowedFilter;
@@ -26,5 +27,22 @@ class DictionaryItemsController extends Controller
             ->get();
 
         return JsonResource::collection($dictionaryItems);
+    }
+
+    public function store(Request $request)
+    {
+        $this->authorize('create', DictionaryItem::class);
+
+        $data = $request->validate([
+            'item_key' => 'required|string',
+            'item_display_name' => 'required|string',
+            'item_value' => 'sometimes|nullable',
+            'item_type' => ['required', Rule::in(DictionaryItem::TYPES_LIST)],
+            't_company_id' => 'required_without_all:t_tms_provider_id,t_user_id|exists:t_companies,id',
+            't_tms_provider_id' => 'required_without_all:t_company_id,t_user_id|exists:t_tms_providers,id',
+            't_user_id' => 'required_without_all:t_company_id,t_tms_provider_id|exists:users,id',
+        ]);
+
+        return DictionaryItem::create($data);
     }
 }

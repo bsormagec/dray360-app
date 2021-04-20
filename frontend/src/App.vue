@@ -15,6 +15,7 @@
       </v-container>
       <Snackbar />
       <ConfirmationDialog />
+      <PtImageUploadDialog />
     </v-main>
   </v-app>
 </template>
@@ -22,6 +23,7 @@
 <script>
 import Snackbar from '@/components/General/Snackbar'
 import ConfirmationDialog from '@/components/General/ConfirmationDialog'
+import PtImageUploadDialog from '@/components/PtImageUploadDialog'
 import SidebarNavigation from '@/components/General/SidebarNavigation'
 import { hexToRgb } from '@/utils/hex_to_rgb'
 import utils from '@/store/modules/utils'
@@ -33,6 +35,7 @@ export default {
   components: {
     Snackbar,
     ConfirmationDialog,
+    PtImageUploadDialog,
     SidebarNavigation
   },
   mixins: [isMobile],

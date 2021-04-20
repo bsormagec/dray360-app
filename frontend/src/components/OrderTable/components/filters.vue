@@ -358,7 +358,10 @@ export default {
         { text: displayStatuses.sentToTms, value: displayStatuses.sentToTms },
         { text: displayStatuses.acceptedByTms, value: displayStatuses.acceptedByTms },
         { text: displayStatuses.tmsWarning, value: displayStatuses.tmsWarning },
-        { text: displayStatuses.tmsError, value: displayStatuses.tmsError }
+        { text: displayStatuses.tmsError, value: displayStatuses.tmsError },
+        { text: displayStatuses.uploadingImage, value: displayStatuses.uploadingImage },
+        { text: displayStatuses.imageUploadFailed, value: displayStatuses.imageUploadFailed },
+        { text: displayStatuses.imageUploaded, value: displayStatuses.imageUploaded },
       ],
       system_statuses: [
         { text: statuses.intakeAccepted, value: statuses.intakeAccepted },
@@ -404,7 +407,11 @@ export default {
         { text: statuses.updatedBySubsequentOrder, value: statuses.updatedBySubsequentOrder },
         { text: statuses.successImageuplodingToBlackfl, value: statuses.successImageuplodingToBlackfl },
         { text: statuses.failureImageuplodingToBlackfl, value: statuses.failureImageuplodingToBlackfl },
-        { text: statuses.untriedImageuplodingToBlackfl, value: statuses.untriedImageuplodingToBlackfl }
+        { text: statuses.untriedImageuplodingToBlackfl, value: statuses.untriedImageuplodingToBlackfl },
+
+        { text: statuses.uploadImageRequested, value: statuses.uploadImageRequested },
+        { text: statuses.uploadImageFailed, value: statuses.uploadImageFailed },
+        { text: statuses.uploadImageSucceeded, value: statuses.uploadImageSucceeded },
       ],
       // list of companies for the filters
       companies: [],

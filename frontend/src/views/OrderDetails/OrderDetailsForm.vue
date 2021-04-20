@@ -111,6 +111,7 @@
           { title: 'Replicate Order', action: () => replicateOrder(order.id), hidden: !hasPermission('admin-review-edit') || isLocked },
           { title: 'Delete Order', action: () => deleteOrder(order.id), hasPermission: hasPermission('orders-remove') && !isLocked },
           { title: 'Add TMS ID', action: () => addTMSId(order.id), hasPermission: hasPermission('ocr-requests-edit') && isInProcessedState && !isLocked},
+          { title: 'Upload PT Image', action: openUploadPTImage, hidden: order.t_tms_provider_id !== 1 || !hasPermission('pt-images-create') || isLocked },
           { title: 'View audit info', action: () => openAuditDialog = true, hidden: !hasPermission('audit-logs-view')}
         ]"
         :loading="loading"
@@ -741,6 +742,7 @@ import permissions from '@/mixins/permissions'
 import { mapState, mapActions, mapGetters } from 'vuex'
 import get from 'lodash/get'
 import { statuses } from '@/enums/app_objects_types'
+import events from '@/enums/events'
 
 import { getOrderDetail, postSendToTms, delDeleteOrder, postSendToClient, replicateOrder } from '@/store/api_calls/orders'
 import { getSourceFileDownloadURL } from '@/store/api_calls/requests'
@@ -978,6 +980,14 @@ export default {
     }),
 
     formatDate,
+
+    openUploadPTImage () {
+      this.$root.$emit(events.openPtFileUploadDialog, {
+        orderId: this.order.id,
+        companyId: this.order.t_company_id,
+        tmsShipmentId: this.order.tms_shipment_id,
+      })
+    },
 
     fieldShouldBeShown (fieldName) {
       return !this.options.hidden.includes(fieldName)

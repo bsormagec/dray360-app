@@ -63,31 +63,25 @@
                 v-for="(item, i) in menuItems"
                 :key="i"
                 :to="item.path"
+                :href="item.href"
                 dense
+                v-on="item.events || {}"
               >
                 <v-list-item-icon v-if="item.icon">
                   <v-icon v-text="item.icon" />
                 </v-list-item-icon>
                 <v-list-item-content>
                   <v-list-item-title
-                    v-if="item.name === 'logout' "
                     :key="i"
-                    @click="logoutBtn"
                   >
                     <v-progress-circular
-                      v-if="loading"
+                      v-if="item.hasLoading && loading"
                       :size="25"
                       indeterminate
                       color="primary"
                     />
                     {{ item.name }}
                   </v-list-item-title>
-                  <v-list-item-title
-                    v-else
-                    :key="i"
-                    @click="onChangeSidebar"
-                    v-text="item.name"
-                  />
                 </v-list-item-content>
               </v-list-item>
             </v-list-item-group>
@@ -117,6 +111,7 @@ import hasPermission from '@/mixins/permissions'
 import utils, { type } from '@/store/modules/utils'
 import isMobile from '@/mixins/is_mobile'
 import { reqStatus } from '@/enums/req_status'
+import events from '@/enums/events'
 
 export default {
 
@@ -149,10 +144,11 @@ export default {
       menuItems () {
         return [
           { name: 'inbox', path: '/inbox', hasPermission: this.hasPermission('orders-view') },
+          { name: 'upload images', events: { click: this.openUploadImages }, hasPermission: this.hasPermission('pt-images-create') },
           { name: 'search', path: '/search', hasPermission: this.hasPermission('orders-view') },
           { name: 'manage users', path: '/user/dashboard', hasPermission: this.hasPermission('users-view') },
           { name: 'my profile', path: '/user/edit-profile', hasPermission: true },
-          { name: 'logout', path: '#', hasPermission: true }
+          { name: 'logout', events: { click: this.logoutHandler }, hasPermission: true, hasLoading: true }
         ].filter((item) => item.hasPermission)
       }
     })
@@ -163,13 +159,16 @@ export default {
   methods: {
     ...mapActions('AUTH', ['logout']),
     ...mapActions(utils.moduleName, [type.getTenantConfig, type.setSidebar]),
-    async logoutBtn () {
+    async logoutHandler () {
       this.loading = true
       const result = await this.logout()
       this.loading = false
       if (result === reqStatus.success) {
         return this.$router.push('/login').catch(() => {})
       }
+    },
+    openUploadImages () {
+      this.$root.$emit(events.openPtFileUploadDialog)
     },
     toogleSidebar () {
       this[type.setSidebar]({ show: !this.showSidebar })
