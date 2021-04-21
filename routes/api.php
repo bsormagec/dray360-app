@@ -132,8 +132,9 @@ Route::group(['middleware' => ['auth:sanctum', 'impersonate', 'tenant-aware']], 
         ->name('file-upload-requests.store');
 
     // Upload pt images
-    Route::post('upload-pt-images', UploadPtImagesController::class)
-        ->name('upload-pt-images.store');
+    Route::resource('upload-pt-images', UploadPtImagesController::class)
+        ->parameters(['upload_pt_images' => 'requestId'])
+        ->only(['show', 'store']);
 
     // Object locks management
     Route::post('object-locks', [ObjectLocksController::class, 'store'])

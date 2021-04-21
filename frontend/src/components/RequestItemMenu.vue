@@ -99,6 +99,7 @@ import RequestStatusHistoryDialog from './RequestStatusHistoryDialog'
 import RequestEmailDialog from './RequestEmailDialog'
 import { objectLocks, statuses } from '@/enums/app_objects_types'
 import events from '@/enums/events'
+import { isPtImageUpload } from '@/utils/status_helpers'
 
 export default {
   name: 'RequestItemMenu',
@@ -139,11 +140,7 @@ export default {
       return this.request.is_locked || this.supervise
     },
     isPtImageUpload () {
-      return [
-        statuses.uploadImageRequested,
-        statuses.uploadImageFailed,
-        statuses.uploadImageSucceeded,
-      ].includes(this.request.latest_ocr_request_status?.status)
+      return isPtImageUpload(this.request.latest_ocr_request_status?.status)
     }
   },
   methods: {

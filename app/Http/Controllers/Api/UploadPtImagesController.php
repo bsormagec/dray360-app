@@ -2,10 +2,13 @@
 
 namespace App\Http\Controllers\Api;
 
+use App\Models\User;
 use App\Models\Company;
+use App\Models\OCRRequest;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use App\Models\DictionaryItem;
+use App\Actions\PresignImageUrl;
 use App\Models\OCRRequestStatus;
 use App\Http\Controllers\Controller;
 use App\Actions\PublishSnsMessageToUpdateStatus;
@@ -13,7 +16,33 @@ use Illuminate\Auth\Access\AuthorizationException;
 
 class UploadPtImagesController extends Controller
 {
-    public function __invoke(Request $request)
+    public function show($requestId)
+    {
+        $request = OCRRequest::query()
+            ->with('latestOcrRequestStatus')
+            ->where('request_id', $requestId)
+            ->firstOrFail();
+        $uploadRequest = OCRRequestStatus::where([
+            'status' => OCRRequestStatus::UPLOAD_IMAGE_REQUESTED,
+            'request_id' => $requestId,
+        ])->firstOrFail();
+
+        $response = $request->latestOcrRequestStatus->toArray();
+
+        $url = (new PresignImageUrl())(
+            $uploadRequest->status_metadata['s3_bucket_name'],
+            $uploadRequest->status_metadata['s3_object_key']
+        );
+
+        return response()->json([
+            'data' => $response + [
+                'presigned_image_url' => $url,
+                'user' => User::find($uploadRequest->status_metadata['user_id'], ['name', 'id'])
+            ],
+        ]);
+    }
+
+    public function store(Request $request)
     {
         $data = $request->validate([
             'request_id' => 'required',

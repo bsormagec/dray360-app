@@ -3,9 +3,9 @@
 namespace App\Http\Controllers\Api;
 
 use Illuminate\Support\Arr;
+use App\Actions\PresignImageUrl;
 use App\Models\OCRRequestStatus;
 use App\Http\Controllers\Controller;
-use Illuminate\Support\Facades\Storage;
 use Symfony\Component\HttpFoundation\HeaderUtils;
 
 class DownloadOriginalRequestSourceEmailController extends Controller
@@ -42,12 +42,9 @@ class DownloadOriginalRequestSourceEmailController extends Controller
             abort(404, 'No email was found for the given order.');
         }
 
-        $s3Config = config('filesystems.disks.s3-base') + ['bucket' => $bucketName];
-        $storage = Storage::createS3Driver($s3Config);
-
-        return  $storage->temporaryUrl(
+        return (new PresignImageUrl())(
+            $bucketName,
             $fileName,
-            now()->addMinutes(self::MINUTES_URI_REMAINS_VALID),
             [
                 'ResponseContentType' => 'application/octet-stream',
                 'ResponseContentDisposition' => HeaderUtils::makeDisposition(

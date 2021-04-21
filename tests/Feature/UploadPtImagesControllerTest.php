@@ -11,7 +11,9 @@ use Laravel\Sanctum\Sanctum;
 use Illuminate\Http\Response;
 use App\Models\DictionaryItem;
 use Tests\Seeds\CompaniesSeeder;
+use Tests\Seeds\OcrRequestSeeder;
 use Illuminate\Support\Facades\Event;
+use Illuminate\Support\Facades\Storage;
 use App\Actions\PublishSnsMessageToUpdateStatus;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
 
@@ -135,5 +137,26 @@ class UploadPtImagesControllerTest extends TestCase
                 'pt_image_type' => $dictionaryItem->id,
             ])
             ->assertStatus(Response::HTTP_FORBIDDEN);
+    }
+
+    /** @test */
+    public function it_returns_the_presigned_image_of_a_pt_image_upload_request()
+    {
+        $requestId = (new OcrRequestSeeder())->seedPtImageUploadSucceeded();
+
+        Storage::shouldReceive('createS3Driver')->andReturn(Storage::getFacadeRoot());
+        Storage::shouldReceive('temporaryUrl')->andReturn('http://thesignedurl.com');
+
+        $this->getJson(route('upload-pt-images.show', $requestId))
+            ->assertStatus(Response::HTTP_OK)
+            ->assertJsonFragment(['presigned_image_url' => 'http://thesignedurl.com'])
+            ->assertJsonStructure([
+                'data' => [
+                    'presigned_image_url',
+                    'user' => ['name'],
+                    'status',
+                    'status_metadata',
+                ],
+            ]);
     }
 }

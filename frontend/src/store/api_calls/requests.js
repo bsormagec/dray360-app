@@ -17,6 +17,8 @@ export const reimportOcrRequestAbbyy = async (requestId) => axios.post(`/api/ocr
 
 export const changeRequestDoneStatus = async (requestId, data) => axios.put(`/api/ocr/requests/${requestId}/done-status`, data).then(data => [undefined, data.data]).catch(e => [e])
 
+export const getPtImageRequestDetails = async (requestId) => axios.get(`/api/upload-pt-images/${requestId}`).then(data => [undefined, data.data]).catch(e => [e])
+
 export const postUploadRequestFile = async (file, params) => axios.post('/api/ocr/requests', { filename: file.name, withCredentials: false, ...params })
   .then(response => {
     const config = {
