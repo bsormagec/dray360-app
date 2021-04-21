@@ -254,8 +254,12 @@ export default {
     handleClear () {
       this.files = []
     },
-    handleChange (imageFile) {
-      this.files = [imageFile]
+    handleChange (file) {
+      if (!file || file.name === undefined || file.name === '' || file.name === null) {
+        return
+      }
+
+      this.files = [file]
     },
     async uploadImages () {
       if (this.files.length === 0) {
