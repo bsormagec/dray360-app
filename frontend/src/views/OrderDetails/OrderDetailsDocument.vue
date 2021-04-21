@@ -220,6 +220,9 @@ export default {
     object-fit: contain;
     transition: opacity 200ms ease-in-out;
 
+    -webkit-filter: grayscale(100%);
+    filter: grayscale(100%);
+
     &.loaded {
       opacity: 1;
     }

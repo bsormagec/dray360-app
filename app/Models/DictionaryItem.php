@@ -12,7 +12,24 @@ class DictionaryItem extends Model
     const TEMPLATE_TYPE = 'template',
         ITGCONTAINER_TYPE = 'itgcontainer',
         VESSEL_TYPE = 'vessel',
-        CARRIER_TYPE = 'carrier';
+        CARRIER_TYPE = 'carrier',
+        PT_IMAGETYPE_TYPE = 'pt-imagetype';
+
+    const TYPES_LIST = [
+        self::TEMPLATE_TYPE,
+        self::ITGCONTAINER_TYPE,
+        self::VESSEL_TYPE,
+        self::CARRIER_TYPE,
+        self::PT_IMAGETYPE_TYPE,
+    ];
+
+    const TYPES_LIST_OPTIONS = [
+        self::TEMPLATE_TYPE => 'Template',
+        self::ITGCONTAINER_TYPE => 'ITG Container',
+        self::CARRIER_TYPE => 'Carrier',
+        self::VESSEL_TYPE => 'Vessel',
+        self::PT_IMAGETYPE_TYPE => 'PT Image Type',
+    ];
 
     public $table = 't_dictionary_items';
 

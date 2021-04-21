@@ -111,6 +111,7 @@
           { title: 'Replicate Order', action: () => replicateOrder(order.id), hidden: !hasPermission('admin-review-edit') || isLocked },
           { title: 'Delete Order', action: () => deleteOrder(order.id), hasPermission: hasPermission('orders-remove') && !isLocked },
           { title: 'Add TMS ID', action: () => addTMSId(order.id), hasPermission: hasPermission('ocr-requests-edit') && isInProcessedState && !isLocked},
+          { title: 'Upload PT Image', action: openUploadPTImage, hidden: order.t_tms_provider_id !== 1 || !hasPermission('pt-images-create') || isLocked },
           { title: 'View audit info', action: () => openAuditDialog = true, hidden: !hasPermission('audit-logs-view')}
         ]"
         :loading="loading"
@@ -204,7 +205,7 @@
         Request created <span
           class="order__changelog_date"
           @click="openStatusHistoryDialog = true"
-        >{{ formatDate(order.submitted_date, true) }}</span>
+        >{{ formatDate(order.submitted_date, { timeZone: true }) }}</span>
         <br>
         {{ `by ${userWhoUploadedTheRequest ? userWhoUploadedTheRequest :''}` }}
       </p>
@@ -215,7 +216,7 @@
         Submitted to TMS <span
           class="order__changelog_date"
           @click="openStatusHistoryDialog = true"
-        >{{ formatDate(order.ocr_request.sent_to_tms.created_at, true) }}</span>
+        >{{ formatDate(order.ocr_request.sent_to_tms.created_at, { timeZone: true }) }}</span>
         <br>
         {{ `by ${order.ocr_request.sent_to_tms.user.name}` }}
       </p>
@@ -223,7 +224,7 @@
         Last updated <span
           class="order__changelog_date"
           @click="openStatusHistoryDialog = true"
-        >{{ formatDate(order.updated_at, true) }}</span>
+        >{{ formatDate(order.updated_at, { timeZone: true }) }}</span>
       </p>
       <a
         class="caption text-uppercase text-decoration-underline slate-gray--text"
@@ -741,6 +742,7 @@ import permissions from '@/mixins/permissions'
 import { mapState, mapActions, mapGetters } from 'vuex'
 import get from 'lodash/get'
 import { statuses } from '@/enums/app_objects_types'
+import events from '@/enums/events'
 
 import { getOrderDetail, postSendToTms, delDeleteOrder, postSendToClient, replicateOrder } from '@/store/api_calls/orders'
 import { getSourceFileDownloadURL } from '@/store/api_calls/requests'
@@ -978,6 +980,14 @@ export default {
     }),
 
     formatDate,
+
+    openUploadPTImage () {
+      this.$root.$emit(events.openPtFileUploadDialog, {
+        orderId: this.order.id,
+        companyId: this.order.t_company_id,
+        tmsShipmentId: this.order.tms_shipment_id,
+      })
+    },
 
     fieldShouldBeShown (fieldName) {
       return !this.options.hidden.includes(fieldName)

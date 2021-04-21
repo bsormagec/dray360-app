@@ -2,7 +2,8 @@ export const dictionaryItemsTypes = {
   template: 'template',
   itgContainer: 'itgcontainer',
   carrier: 'carrier',
-  vessel: 'vessel'
+  vessel: 'vessel',
+  ptImageType: 'pt-imagetype',
 }
 
 export const objectLocks = {
@@ -56,6 +57,10 @@ export const statuses = {
   shipmentCreatedByChainio: 'shipment-created-by-chainio',
   shipmentNotCreatedByChainio: 'shipment-not-created-by-chainio',
 
+  uploadImageRequested: 'upload-image-requested',
+  uploadImageFailed: 'upload-image-failed',
+  uploadImageSucceeded: 'upload-image-succeeded',
+
   updatesPriorOrder: 'updates-prior-order',
   requestMarkedDone: 'request-marked-done',
   requestMarkedUndone: 'request-marked-undone',
@@ -80,5 +85,8 @@ export const displayStatuses = {
   needsReview: 'Needs Review',
   replication: 'Replication',
   markDone: 'Marked Complete',
-  markUndone: 'Marked not Complete'
+  markUndone: 'Marked not Complete',
+  uploadingImage: 'Uploading Image',
+  imageUploadFailed: 'Image Upload Failed',
+  imageUploaded: 'Image Uploaded',
 }

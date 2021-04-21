@@ -7,8 +7,8 @@ use App\Models\Order;
 use App\Models\OCRRequest;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Str;
+use App\Actions\PresignImageUrl;
 use App\Models\OCRRequestStatus;
-use Illuminate\Support\Facades\Storage;
 use Illuminate\Http\Resources\Json\JsonResource;
 
 class SideBySideOrder extends JsonResource
@@ -35,6 +35,7 @@ class SideBySideOrder extends JsonResource
     {
         if ($this->preSignImages) {
             $this->preSignDocumentImages();
+            $this->loadAndSignPtImages();
         }
 
         $this->preparePreceedingOrderChanges();
@@ -112,6 +113,38 @@ class SideBySideOrder extends JsonResource
         $this->resource->ocrRequest->setRelation('sentToTms', $status);
     }
 
+    protected function loadAndSignPtImages()
+    {
+        try {
+            $ocrData = $this->resource->ocr_data;
+            $pageCount = count($ocrData['page_index_filenames']['value']);
+
+            OCRRequestStatus::query()
+            ->where([
+                'status' => OCRRequestStatus::UPLOAD_IMAGE_SUCCEEDED,
+                'order_id' => $this->resource->id,
+            ])
+            ->get()
+            ->map(function ($request, $index) use ($pageCount) {
+                return [
+                    'name' => 'page_index_'. ($pageCount + $index + 1),
+                    'value' => $request->status_metadata['event_info']['original_filename'],
+                    'presigned_download_uri' => (new PresignImageUrl())(
+                        $request->status_metadata['event_info']['s3_bucket_name'],
+                        $request->status_metadata['event_info']['s3_object_key']
+                    ),
+                    'presigned_download_uri_expires' => PresignImageUrl::MINUTES_URI_REMAINS_VALID
+                ];
+            })->each(function ($image, $index) use (&$ocrData, $pageCount) {
+                $newIndex = $pageCount + $index + 1;
+                $ocrData['page_index_filenames']['value']["{$newIndex}"] = $image;
+            });
+
+            $this->resource->ocr_data = $ocrData;
+        } catch (\Exception $e) {
+        }
+    }
+
     protected function preSignDocumentImages()
     {
         try {
@@ -120,18 +153,11 @@ class SideBySideOrder extends JsonResource
             foreach ($ocr_clone['page_index_filenames']['value'] as $eachPageIndex => &$eachPage) {
                 $pageUri = $eachPage['value'];
                 if (! is_null($pageUri)) {
-                    $s3Config = config('filesystems.disks.s3-base') + [
-                        'bucket' => s3_bucket_from_url($eachPage['value']),
-                    ];
-                    $storage = Storage::createS3Driver($s3Config);
-                    $urlExpiryTime = now()->addMinutes(self::MINUTES_URI_REMAINS_VALID);
-
-                    // save presigned info on eachPage
-                    $eachPage['presigned_download_uri'] = $storage->temporaryUrl(
-                        s3_file_name_from_url($eachPage['value']),
-                        $urlExpiryTime
+                    $eachPage['presigned_download_uri'] = (new PresignImageUrl())(
+                        s3_bucket_from_url($eachPage['value']),
+                        s3_file_name_from_url($eachPage['value'])
                     );
-                    $eachPage['presigned_download_uri_expires'] = $urlExpiryTime;
+                    $eachPage['presigned_download_uri_expires'] = PresignImageUrl::MINUTES_URI_REMAINS_VALID;
                 }
             }
             // assign updated ocr_data clone to order object, replacing old ocr_data

@@ -34,7 +34,7 @@
               Submitted:
             </div>
             <div class="body-2">
-              {{ formatDate(request.created_at, true) }}
+              {{ formatDate(request.created_at, { timeZone: true }) }}
             </div>
           </div>
           <div class="email__details">

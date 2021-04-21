@@ -3107,6 +3107,63 @@
 						}
 					},
 					"response": []
+				},
+				{
+					"name": "/api/dictionary-items",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"var token1=postman.getResponseCookie('XSRF-TOKEN').value;",
+									"var token2=token1.replace(/%3D/g, '=');",
+									"postman.setEnvironmentVariable('X-XSRF-TOKEN', token2);",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Referer",
+								"type": "text",
+								"value": "{{server}}"
+							},
+							{
+								"key": "Accept",
+								"type": "text",
+								"value": "application/json, text/plain, */*"
+							},
+							{
+								"key": "X-XSRF-TOKEN",
+								"type": "text",
+								"value": "{{X-XSRF-TOKEN}}"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"item_key\": null,\n    \"item_display_name\": null,    \n    \"item_type\": null,    \n    \"t_company_id\": null\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{server}}/api/dictionary-items",
+							"host": [
+								"{{server}}"
+							],
+							"path": [
+								"api",
+								"dictionary-items"
+							]
+						}
+					},
+					"response": []
 				}
 			]
 		},
@@ -3279,6 +3336,123 @@
 							"path": [
 								"api",
 								"object-locks"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "PT Images",
+			"item": [
+				{
+					"name": "/api/upload-pt-images",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"var token1=postman.getResponseCookie('XSRF-TOKEN').value;",
+									"var token2=token1.replace(/%3D/g, '=');",
+									"postman.setEnvironmentVariable('X-XSRF-TOKEN', token2);",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Referer",
+								"type": "text",
+								"value": "{{server}}"
+							},
+							{
+								"key": "Accept",
+								"type": "text",
+								"value": "application/json, text/plain, */*"
+							},
+							{
+								"key": "X-XSRF-TOKEN",
+								"type": "text",
+								"value": "{{X-XSRF-TOKEN}}"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"request_id\": null,\n    \"original_filename\": null,\n    \"uploading_filename\": null,\n    \"datetime_utciso\": null,\n    \"company_id\": null,\n    \"tms_shipment_id\": null,\n    \"pt_image_type\": null,\n    \"order_id\": null\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{server}}/api/upload-pt-images",
+							"host": [
+								"{{server}}"
+							],
+							"path": [
+								"api",
+								"upload-pt-images"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "/api/upload-pt-images",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"var token1=postman.getResponseCookie('XSRF-TOKEN').value;",
+									"var token2=token1.replace(/%3D/g, '=');",
+									"postman.setEnvironmentVariable('X-XSRF-TOKEN', token2);",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Referer",
+								"type": "text",
+								"value": "{{server}}"
+							},
+							{
+								"key": "Accept",
+								"type": "text",
+								"value": "application/json, text/plain, */*"
+							},
+							{
+								"key": "X-XSRF-TOKEN",
+								"type": "text",
+								"value": "{{X-XSRF-TOKEN}}"
+							}
+						],
+						"url": {
+							"raw": "{{server}}/api/upload-pt-images/:request_id",
+							"host": [
+								"{{server}}"
+							],
+							"path": [
+								"api",
+								"upload-pt-images",
+								":request_id"
+							],
+							"variable": [
+								{
+									"key": "request_id",
+									"value": ""
+								}
 							]
 						}
 					},
@@ -3506,7 +3680,7 @@
 					}
 				],
 				"url": {
-					"raw": "{{server}}/api/audit-logs?model_id=15771&model_type=order",
+					"raw": "{{server}}/api/audit-logs?model_id=23527&model_type=order",
 					"host": [
 						"{{server}}"
 					],
@@ -3517,12 +3691,145 @@
 					"query": [
 						{
 							"key": "model_id",
-							"value": "15771"
+							"value": "23527"
 						},
 						{
 							"key": "model_type",
 							"value": "order"
 						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "/api/audit-logs-dashboard",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"var token1=postman.getResponseCookie('XSRF-TOKEN').value;",
+							"var token2=token1.replace(/%3D/g, '=');",
+							"postman.setEnvironmentVariable('X-XSRF-TOKEN', token2);",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/x-www-form-urlencoded"
+					},
+					{
+						"key": "Referer",
+						"type": "text",
+						"value": "{{server}}"
+					},
+					{
+						"key": "Accept",
+						"type": "text",
+						"value": "application/json, text/plain, */*"
+					},
+					{
+						"key": "X-XSRF-TOKEN",
+						"type": "text",
+						"value": "{{X-XSRF-TOKEN}}"
+					}
+				],
+				"url": {
+					"raw": "{{server}}/api/audit-logs-dashboard?start_date=2021-04-07&end_date=2021-04-07&user_id=29",
+					"host": [
+						"{{server}}"
+					],
+					"path": [
+						"api",
+						"audit-logs-dashboard"
+					],
+					"query": [
+						{
+							"key": "start_date",
+							"value": "2021-04-07"
+						},
+						{
+							"key": "end_date",
+							"value": "2021-04-07"
+						},
+						{
+							"key": "company_id",
+							"value": "1",
+							"disabled": true
+						},
+						{
+							"key": "user_id",
+							"value": "29"
+						},
+						{
+							"key": "variant_name",
+							"value": "",
+							"disabled": true
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "/api/file-upload-requests",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"var token1=postman.getResponseCookie('XSRF-TOKEN').value;",
+							"var token2=token1.replace(/%3D/g, '=');",
+							"postman.setEnvironmentVariable('X-XSRF-TOKEN', token2);",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Referer",
+						"type": "text",
+						"value": "{{server}}"
+					},
+					{
+						"key": "Accept",
+						"type": "text",
+						"value": "application/json, text/plain, */*"
+					},
+					{
+						"key": "X-XSRF-TOKEN",
+						"type": "text",
+						"value": "{{X-XSRF-TOKEN}}"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"filename\": null,\n    \"request_id\": null,\n    \"order_id\": null,\n    \"type\": \"pt-imagetype\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{server}}/api/file-upload-requests",
+					"host": [
+						"{{server}}"
+					],
+					"path": [
+						"api",
+						"file-upload-requests"
 					]
 				}
 			},

@@ -37,6 +37,7 @@
           v-text="'Release lock'"
         />
         <v-list-item
+          v-if="!isPtImageUpload"
           @click="downloadSourceFile(request.request_id)"
           v-text="'Download source file'"
         />
@@ -51,12 +52,19 @@
           v-text="`Mark as ${doneText}`"
         />
         <v-list-item
+          v-if="!isPtImageUpload"
           :disabled="!hasPermission('ocr-request-statuses-create') || isLocked"
           @click="reprocessRequest(request.request_id)"
           v-text="'Reprocess request'"
         />
         <v-list-item
-          v-if="request.has_email"
+          v-if="request.is_ocr_file && !isPtImageUpload"
+          :disabled="!hasPermission('ocr-request-statuses-create') || isLocked"
+          @click="reimportAbbyy(request.request_id)"
+          v-text="'Reimport from Abbyy'"
+        />
+        <v-list-item
+          v-if="request.has_email && !isPtImageUpload"
           @click="openEmailDialog = true"
           v-text="'Show email details'"
         />
@@ -86,11 +94,12 @@ import locks from '@/mixins/locks'
 import utils, { type } from '@/store/modules/utils'
 import requestList from '@/store/modules/requests-list'
 import { downloadFile } from '@/utils/download_file'
-import { deleteRequest, getSourceFileDownloadURL, reprocessOcrRequest, changeRequestDoneStatus } from '@/store/api_calls/requests'
+import { deleteRequest, getSourceFileDownloadURL, reprocessOcrRequest, changeRequestDoneStatus, reimportOcrRequestAbbyy } from '@/store/api_calls/requests'
 import RequestStatusHistoryDialog from './RequestStatusHistoryDialog'
 import RequestEmailDialog from './RequestEmailDialog'
-import { objectLocks } from '@/enums/app_objects_types'
+import { objectLocks, statuses } from '@/enums/app_objects_types'
 import events from '@/enums/events'
+import { isPtImageUpload } from '@/utils/status_helpers'
 
 export default {
   name: 'RequestItemMenu',
@@ -129,6 +138,9 @@ export default {
     },
     isLocked () {
       return this.request.is_locked || this.supervise
+    },
+    isPtImageUpload () {
+      return isPtImageUpload(this.request.latest_ocr_request_status?.status)
     }
   },
   methods: {
@@ -226,6 +238,27 @@ export default {
           }
 
           this.setSnackbar({ show: true, message: 'Request sent for reprocessing' })
+          this.loading = false
+          this.$emit('request-deleted')
+        }
+      })
+    },
+
+    async reimportAbbyy (requestId) {
+      this.setConfirmDialog({
+        title: 'Are you sure you want to reimport the request from Abbyy?',
+        onConfirm: async () => {
+          this.loading = true
+
+          const [error] = await reimportOcrRequestAbbyy(requestId)
+
+          if (error !== undefined) {
+            this.loading = false
+            this.setSnackbar({ show: true, message: 'There was an error trying to send the message to reimport' })
+            return
+          }
+
+          this.setSnackbar({ show: true, message: 'Request sent for reimporting' })
           this.loading = false
           this.$emit('request-deleted')
         }

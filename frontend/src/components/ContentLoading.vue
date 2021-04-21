@@ -39,7 +39,7 @@ export default {
 
 <style lang="scss" scoped>
 
-.content-loading {
+.content-loading, .loaded {
   width: 100%;
   height: 100%;
 }

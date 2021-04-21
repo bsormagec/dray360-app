@@ -80,6 +80,11 @@
               Upload a new request
             </v-btn>
           </div>
+          <PtImageRequestDetails
+            v-else-if="currentRequestIsPtImageUpload"
+            :request="request"
+            @go-back="toggleMobileView"
+          />
           <div
             v-else-if="shouldShowEmptyProcessingRequest(request)"
             class="empty__order"
@@ -166,6 +171,7 @@ import OrderTable from '@/components/OrderTable'
 import RequestsList from './RequestsList'
 import OrderDetails from '@/views/OrderDetails/OrderDetails'
 import UploadOrdersDialog from './UploadOrdersDialog'
+import PtImageRequestDetails from './PtImageRequestDetails'
 import SidebarNavigationButton from '@/components/General/SidebarNavigationButton'
 
 import { mapState, mapActions } from 'vuex'
@@ -177,7 +183,7 @@ import isMobile from '@/mixins/is_mobile'
 import isMedium from '@/mixins/is_medium'
 import get from 'lodash/get'
 import { statuses } from '@/enums/app_objects_types'
-import { isInAdminReview } from '@/utils/status_helpers'
+import { isInAdminReview, isPtImageUpload } from '@/utils/status_helpers'
 
 export default {
   name: 'Inbox',
@@ -187,7 +193,8 @@ export default {
     RequestsList,
     UploadOrdersDialog,
     RequestItemMenu,
-    SidebarNavigationButton
+    PtImageRequestDetails,
+    SidebarNavigationButton,
   },
   mixins: [permissions, isMobile, isMedium],
   data () {
@@ -234,6 +241,9 @@ export default {
         default:
           return 'The request is being processed'
       }
+    },
+    currentRequestIsPtImageUpload () {
+      return isPtImageUpload(this.request?.latest_ocr_request_status?.status)
     }
   },
   watch: {
@@ -273,7 +283,6 @@ export default {
     ...mapActions(orders.moduleName, {
       setReloadRequests: ordersTypes.setReloadRequests
     }),
-    isInAdminReview,
     shouldShowEmptyProcessingRequest (request) {
       return request.orders_count === 0 ||
         (

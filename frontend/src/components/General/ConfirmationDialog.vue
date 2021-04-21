@@ -74,6 +74,6 @@ export default {
 
 <style lang="scss" scoped>
 .v-card__title {
-  white-space: nowrap;
+  white-space: normal;
 }
 </style>

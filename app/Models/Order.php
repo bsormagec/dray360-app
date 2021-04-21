@@ -5,6 +5,7 @@ namespace App\Models;
 use App\Events\AddressVerified;
 use App\Models\Traits\HasLocks;
 use App\Events\AttributeVerified;
+use App\Models\Traits\MapsAudits;
 use Illuminate\Support\Facades\DB;
 use App\Models\Traits\FillWithNulls;
 use App\Models\Traits\BelongsToCompany;
@@ -76,6 +77,7 @@ use App\Models\Traits\VerifiesUserSelectedAttributes;
 class Order extends Model implements Auditable
 {
     use \OwenIt\Auditing\Auditable;
+    use MapsAudits;
     use SoftDeletes;
     use FillWithNulls;
     use BelongsToCompany;
@@ -440,6 +442,8 @@ class Order extends Model implements Auditable
 
             $relatedModel->update($modelData);
         });
+
+        $this->touch();
     }
 
     public function loadRelationshipsForSideBySide(): self

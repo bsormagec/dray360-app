@@ -2,9 +2,9 @@
 
 namespace App\Http\Controllers\Api;
 
+use App\Actions\PresignImageUrl;
 use App\Models\OCRRequestStatus;
 use App\Http\Controllers\Controller;
-use Illuminate\Support\Facades\Storage;
 use Symfony\Component\HttpFoundation\HeaderUtils;
 
 class DownloadOriginalRequestSourceFileController extends Controller
@@ -35,14 +35,9 @@ class DownloadOriginalRequestSourceFileController extends Controller
 
     protected function getTemporaryDownloadUrl(OCRRequestStatus $status): string
     {
-        $s3Config = config('filesystems.disks.s3-base') + [
-            'bucket' => s3_bucket_from_url($status->status_metadata['document_archive_location']),
-        ];
-        $storage = Storage::createS3Driver($s3Config);
-
-        return  $storage->temporaryUrl(
+        return (new PresignImageUrl())(
+            s3_bucket_from_url($status->status_metadata['document_archive_location']),
             s3_file_name_from_url($status->status_metadata['document_archive_location']),
-            now()->addMinutes(self::MINUTES_URI_REMAINS_VALID),
             [
                 'ResponseContentType' => 'application/octet-stream',
                 'ResponseContentDisposition' => HeaderUtils::makeDisposition(

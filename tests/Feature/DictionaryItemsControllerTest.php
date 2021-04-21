@@ -39,4 +39,42 @@ class DictionaryItemsControllerTest extends TestCase
             'filter[item_type]' => DictionaryItem::TEMPLATE_TYPE,
         ]))->assertJsonCount(5, 'data');
     }
+
+    /** @test */
+    public function it_should_allow_to_create_dictionary_items()
+    {
+        $company = auth()->user()->company;
+        $this->loginAdmin();
+
+        $this->postJson(route('dictionary-items.store'), [
+                'item_key' => 'test',
+                'item_display_name' => 'test',
+                'item_type' => DictionaryItem::PT_IMAGETYPE_TYPE,
+                't_company_id' => $company->id,
+            ])
+            ->assertStatus(Response::HTTP_CREATED)
+            ->assertJsonStructure([
+                'id',
+                'item_key',
+                'item_display_name',
+            ]);
+
+        $this->assertDatabaseCount('t_dictionary_items', 1);
+    }
+
+    /** @test */
+    public function it_should_allow_to_create_dictionary_items_for_same_company_if_cant_see_other_companies()
+    {
+        $otherCompany = factory(Company::class)->create();
+
+        $this->postJson(route('dictionary-items.store'), [
+                'item_key' => 'test',
+                'item_display_name' => 'test',
+                'item_type' => DictionaryItem::PT_IMAGETYPE_TYPE,
+                't_company_id' => $otherCompany->id,
+            ])
+            ->assertStatus(Response::HTTP_FORBIDDEN);
+
+        $this->assertDatabaseCount('t_dictionary_items', 0);
+    }
 }

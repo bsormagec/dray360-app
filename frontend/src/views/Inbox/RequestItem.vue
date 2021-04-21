@@ -69,7 +69,7 @@
       <div />
       <div class="text-caption">
         <span class="updated-at">
-          {{ formatDate(request.created_at, true) }}
+          {{ formatDate(request.created_at, { timeZone: true }) }}
         </span>
       </div>
     </div>
