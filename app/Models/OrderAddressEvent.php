@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use App\Events\AddressVerified;
+use App\Models\Traits\MapsAudits;
 use Illuminate\Database\Eloquent\Model;
 use OwenIt\Auditing\Contracts\Auditable;
 use Illuminate\Database\Eloquent\SoftDeletes;
@@ -32,6 +33,7 @@ use App\Models\Traits\VerifiesUserSelectedAttributes;
 class OrderAddressEvent extends Model implements Auditable
 {
     use \OwenIt\Auditing\Auditable;
+    use MapsAudits;
     use SoftDeletes;
     use VerifiesUserSelectedAttributes;
 

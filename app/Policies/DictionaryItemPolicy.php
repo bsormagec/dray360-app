@@ -50,6 +50,15 @@ class DictionaryItemPolicy
      */
     public function create(User $user)
     {
+        $canViewAllCompanies = $user->isAbleTo('all-companies-view');
+
+        if (! $canViewAllCompanies && request()->has('t_company_id')) {
+            return $user->isAbleTo('dictionary-items-create')
+                && $user->getCompanyId() == request()->get('t_company_id');
+        } elseif (! $canViewAllCompanies && ! request()->has('t_company_id')) {
+            return false;
+        }
+
         return $user->isAbleTo('dictionary-items-create');
     }
 

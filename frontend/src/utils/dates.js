@@ -1,10 +1,15 @@
 import format from 'date-fns/format'
 
-export const formatDate = (stringDate, timeZone) => {
-  try {
-    if (timeZone) return `${format(new Date(stringDate), 'MM/dd/yyyy HH:mm')} ${getTimeZoneName()}`
+export const formatDate = (
+  stringDate,
+  { timeZone, withSeconds } = { timeZone: false, withSeconds: false }
+) => {
+  const dateFormat = `MM/dd/yyyy HH:mm${withSeconds ? ':ss' : ''}`
 
-    return format(new Date(stringDate), 'MM/dd/yyyy HH:mm')
+  try {
+    return timeZone
+      ? `${format(new Date(stringDate), dateFormat)} ${getTimeZoneName()}`
+      : format(new Date(stringDate), dateFormat)
   } catch (e) {
     console.error(`Cannot format date: ${stringDate}`)
     return '--'

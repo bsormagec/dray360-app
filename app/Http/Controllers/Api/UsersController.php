@@ -20,7 +20,7 @@ class UsersController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
         $this->authorize('viewAny', User::class);
 
@@ -41,7 +41,8 @@ class UsersController extends Controller
 
         $users = QueryBuilder::for($query)
             ->allowedFilters(['name', 'email', 'id', AllowedFilter::scope('active')])
-            ->paginate(10);
+            ->allowedSorts(['name'])
+            ->paginate($request->get('perPage', 10));
 
         return JsonResource::collection($users);
     }

@@ -49,4 +49,9 @@ return [
         'status' => env('SNS_STATUS_TOPIC', 'arn:aws:sns:us-east-2:781066913506:dray360-status-topic-dev'),
     ],
 
+    'dray360-api' => [
+        'url' => env('DRAY360_API_URL', ''),
+        'api_key' => env('DRAY360_API_KEY', ''),
+    ]
+
 ];

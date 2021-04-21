@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Models\Traits\MapsAudits;
 use Illuminate\Database\Eloquent\Model;
 use OwenIt\Auditing\Contracts\Auditable;
 use Illuminate\Database\Eloquent\SoftDeletes;
@@ -32,6 +33,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 class OrderLineItem extends Model implements Auditable
 {
     use \OwenIt\Auditing\Auditable;
+    use MapsAudits;
     use SoftDeletes;
 
     public $table = 't_order_line_items';

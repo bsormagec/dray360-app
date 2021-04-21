@@ -70,7 +70,7 @@ import { reqStatus } from '@/enums/req_status'
 import { dictionaryItemsTypes, objectLocks } from '@/enums/app_objects_types'
 import events from '@/enums/events'
 
-import { getDictionaryItems } from '@/store/api_calls/utils'
+import { getDictionaryItems } from '@/store/api_calls/dictionary_items'
 
 import ContentLoading from '@/components/ContentLoading'
 import orders, { types } from '@/store/modules/orders'

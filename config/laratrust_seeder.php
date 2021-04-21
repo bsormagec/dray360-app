@@ -40,7 +40,8 @@ return [
             'audit-logs' => 'v',
             'nova' => 'v',
             'object-locks' => 'c,e',
-            'supervise' => 'v'
+            'supervise' => 'v',
+            'pt-images' => 'c',
         ],
         'order-review' => [
             'billing-mapping' => 'e,v',
@@ -61,10 +62,11 @@ return [
             'equipment-types' => 'v',
             'addresses' => 'v',
             'company-address-tms-code' => 'v',
-            'dictionary-items' => 'v',
+            'dictionary-items' => 'v,c',
             'admin-review' => 'v,e',
             'audit-logs' => 'v',
             'object-locks' => 'c,e',
+            'pt-images' => 'c',
         ],
         'customer-admin' => [
             'orders' => 'e,v,c,r',
@@ -73,14 +75,15 @@ return [
             'users' => 'v,c,e,r',
             'roles' => 'u',
             'ocr-variants' => 'v',
-            'dictionary-items' => 'v',
+            'dictionary-items' => 'v,c',
             'audit-logs' => 'v',
+            'pt-images' => 'c',
         ],
         'customer-user' => [
             'ocr-requests' => 'c,v',
             'orders' => 'v,c,e',
             'ocr-variants' => 'v',
-            'dictionary-items' => 'v',
+            'dictionary-items' => 'v,c',
         ],
     ],
 

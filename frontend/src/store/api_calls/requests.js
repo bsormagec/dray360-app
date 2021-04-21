@@ -13,7 +13,11 @@ export const getEmailDetails = async (requestId) => axios.get(`/api/ocr/requests
 
 export const reprocessOcrRequest = async (requestId) => axios.post(`/api/ocr/requests/${requestId}/reprocess`).then(data => [undefined, data.data]).catch(e => [e])
 
+export const reimportOcrRequestAbbyy = async (requestId) => axios.post(`/api/ocr/requests/${requestId}/reimport-abbyy`).then(data => [undefined, data.data]).catch(e => [e])
+
 export const changeRequestDoneStatus = async (requestId, data) => axios.put(`/api/ocr/requests/${requestId}/done-status`, data).then(data => [undefined, data.data]).catch(e => [e])
+
+export const getPtImageRequestDetails = async (requestId) => axios.get(`/api/upload-pt-images/${requestId}`).then(data => [undefined, data.data]).catch(e => [e])
 
 export const postUploadRequestFile = async (file, params) => axios.post('/api/ocr/requests', { filename: file.name, withCredentials: false, ...params })
   .then(response => {

@@ -5,4 +5,5 @@ export default {
   requestsRefreshed: 'requests-refresed',
   objectLocked: 'ObjectLocked',
   objectUnlocked: 'ObjectUnlocked',
+  openPtFileUploadDialog: 'open-pt-image-upload',
 }

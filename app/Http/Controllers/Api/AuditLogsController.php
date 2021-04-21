@@ -7,7 +7,6 @@ use Illuminate\Http\Request;
 use App\Models\OrderLineItem;
 use App\Models\OrderAddressEvent;
 use OwenIt\Auditing\Models\Audit;
-use Illuminate\Support\Collection;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Resources\Json\JsonResource;
 
@@ -43,56 +42,30 @@ class AuditLogsController extends Controller
                     'orderLineItems:id,t_order_id',
                     'orderLineItems.audits.user',
                 ])
-                ->find($modelId);
+                ->findOrFail($modelId);
 
             return [
-                'order' => $this->mapToAttributeChanges($order->audits),
+                'order' => $order->getAttributesChanges(),
                 'order_address_events' => $order->orderAddressEvents->map(function ($orderAddressEvent) {
                     return [
                         'id' => $orderAddressEvent->id,
-                        'audits' => $this->mapToAttributeChanges($orderAddressEvent->audits),
+                        'audits' => $orderAddressEvent->getAttributesChanges(),
                     ];
                 }),
                 'order_line_items' => $order->orderLineItems->map(function ($orderLineItem) {
                     return [
                         'id' => $orderLineItem->id,
-                        'audits' => $this->mapToAttributeChanges($orderLineItem->audits),
+                        'audits' => $orderLineItem->getAttributesChanges(),
                     ];
                 }),
             ];
         }
 
         $modelClass = self::AVAILABLE_AUDITS[$modelType];
-        $data = $modelClass::select('id')->with('audits')->find($modelId);
+        $modelInstance = $modelClass::select('id')->with('audits')->find($modelId);
 
         return [
-            $modelType => $this->mapToAttributeChanges($data->audits),
+            $modelType => $modelInstance ? $modelInstance->getAttributesChanges() : [],
         ];
-    }
-
-    protected function mapToAttributeChanges(\Illuminate\Database\Eloquent\Collection $audits)
-    {
-        return $audits
-            ->flatMap(fn ($audit) => $this->getModifiedAudit($audit))
-            ->groupBy('attribute')
-            ->map(function ($changes) {
-                return collect($changes)->sortBy(function ($change) {
-                    return $change['updated_at']->getTimestamp();
-                });
-            });
-    }
-
-    protected function getModifiedAudit(Audit $audit): Collection
-    {
-        return collect($audit->getModified())
-            ->map(function ($modified, $attribute) use ($audit) {
-                return $modified + [
-                    'old' => $audit->old,
-                    'user' => $audit->user->name ?? null,
-                    'attribute' => $attribute,
-                    'updated_at' => $audit->created_at,
-                ];
-            })
-            ->values();
     }
 }

@@ -51,7 +51,7 @@
             />
           </div>
           <div class="caption mb-3">
-            Submitted {{ formatDate(request.created_at, true) }}
+            Submitted {{ formatDate(request.created_at, { timeZone: true }) }}
             <!-- in <router-link :to="`/dashboard?selected=${request.request_id}`">
               Request #{{ request.request_id.substring(0,8).toUpperCase() }}
             </router-link> -->
@@ -112,7 +112,7 @@
                 </span>
               </v-tooltip>
               <div class="body-2 font-weight-bold black--text">
-                {{ index === 0 || index === statusHistory.length - 1 ? formatDate(status.start_date, true) : status.diff_for_humans }}
+                {{ index === 0 || index === statusHistory.length - 1 ? formatDate(status.start_date, { timeZone: true }) : status.diff_for_humans }}
               </div>
             </li>
           </ul>

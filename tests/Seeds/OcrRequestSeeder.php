@@ -3,6 +3,7 @@
 namespace Tests\Seeds;
 
 use Carbon\Carbon;
+use App\Models\User;
 use App\Models\Order;
 use App\Models\Company;
 use Illuminate\Database\Seeder;
@@ -181,6 +182,41 @@ class OcrRequestSeeder extends Seeder
             'status_date' => $time4MinutesAgo,
             'status' => OCRRequestStatus::OCR_WAITING,
             'status_metadata' => '{"wait_reason": "WorkflowException", "exception_message": "No files found matching '.$request_id.'*.csv"}',
+        ]);
+
+        // all done, return request_id needed to create an order
+        return $request_id;
+    }
+
+    public function seedPtImageUploadSucceeded(): string
+    {
+        // echo('Creating OCR job status=intake-rejected'.PHP_EOL);
+        $faker = \Faker\Factory::create();
+
+        // request_id must be shared by all states, and resulting order
+        $request_id = $faker->uuid;
+        $company = factory(Company::class)->create();
+
+        // handy variables
+        $time5MinutesAgo = Carbon::now()->subMinutes(5)->toDateTimeString();
+        $time4MinutesAgo = Carbon::now()->subMinutes(4)->toDateTimeString();
+
+        // create state #1: intake-started
+        $user = factory(User::class)->create();
+        DB::table('t_job_state_changes')->insert([
+            'request_id' => $request_id,
+            'company_id' => $company->id,
+            'status_date' => $time5MinutesAgo,
+            'status' => OCRRequestStatus::UPLOAD_IMAGE_REQUESTED,
+            'status_metadata' => '{"user_id":'.$user->id.',"order_id":null,"company_id":2,"request_id":"671a7bc3-bb7a-4fcf-80f7-8c2182d965d2","pt_image_type":"PRE-NOTE","s3_object_key":"imageupload\/671a7bc3-bb7a-4fcf-80f7-8c2182d965d2.00000001_1.jpg.apiupload","s3_bucket_name":"dray360-emailintake-dev","datetime_utciso":"2021-04-20T16:31:45.159048Z","tms_provider_id":1,"tms_shipment_id":"3937","original_filename":"00000001_1.jpg"}',
+        ]);
+
+        DB::table('t_job_state_changes')->insert([
+            'request_id' => $request_id,
+            'company_id' => $company->id,
+            'status_date' => $time5MinutesAgo,
+            'status' => OCRRequestStatus::UPLOAD_IMAGE_SUCCEEDED,
+            'status_metadata' => '{"message":"success uploading image to profit tools","event_info":{"s3_uri":"s3:\/\/dray360-emailintake-dev\/imageupload\/671a7bc3-bb7a-4fcf-80f7-8c2182d965d2.00000001_1.jpg.apiupload","status":"upload-image-requested","user_id":'.$user->id.',"order_id":" ","company_id":"2","request_id":"671a7bc3-bb7a-4fcf-80f7-8c2182d965d2","pt_image_type":"PRE-NOTE","s3_object_key":"imageupload\/671a7bc3-bb7a-4fcf-80f7-8c2182d965d2.00000001_1.jpg.apiupload","s3_bucket_name":"dray360-emailintake-dev","tms_provider_id":1,"tms_shipment_id":"3937","original_filename":"00000001_1.jpg"},"datetime_utciso":"2021-04-20T16:31:50.298378Z"}',
         ]);
 
         // all done, return request_id needed to create an order

@@ -4,6 +4,7 @@
 &.markedcomplete,
 &.markednotcomplete,
 &.autosubmitted,
+&.imageuploaded,
 &.senttotms {
   &::after{
     background-color: #77C19A;
@@ -13,6 +14,7 @@
   border: 2px solid #B0BBC4;
 }
 &.processing,
+&.uploadingimage,
 &.update {
   &::after{
     background-color: #7BAFD4;
@@ -20,6 +22,7 @@
 }
 &.exception,
 &.rejected,
+&.imageuploadfailed,
 &.tmserror {
   &::after {
     background-color: #FB7660;

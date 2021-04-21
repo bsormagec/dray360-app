@@ -16,17 +16,21 @@ use App\Http\Controllers\Api\ObjectLocksController;
 use App\Http\Controllers\Api\OCRVariantsController;
 use App\Http\Controllers\Api\UsersStatusController;
 use App\Http\Controllers\Api\SendToClientController;
+use App\Http\Controllers\Api\AbbyyReimportController;
 use App\Http\Controllers\Api\DivisionCodesController;
 use App\Http\Controllers\Api\ImpersonationController;
 use App\Http\Controllers\Api\SearchAddressController;
 use App\Http\Controllers\Api\StatusHistoryController;
 use App\Http\Controllers\Api\ChangePasswordController;
 use App\Http\Controllers\Api\EquipmentTypesController;
+use App\Http\Controllers\Api\UploadPtImagesController;
 use App\Http\Controllers\Api\DictionaryItemsController;
 use App\Http\Controllers\Api\OcrRequestEmailController;
 use App\Http\Controllers\Api\ReplicateOrdersController;
 use App\Http\Controllers\Api\UpdateAllOrdersController;
+use App\Http\Controllers\Api\AuditLogsDashboardController;
 use App\Http\Controllers\Api\Auth\ResetPasswordController;
+use App\Http\Controllers\Api\FileUploadRequestsController;
 use App\Http\Controllers\Api\OCRRulesAssignmentController;
 use App\Http\Controllers\Api\AccesorialCompaniesController;
 use App\Http\Controllers\Api\Auth\ForgotPasswordController;
@@ -108,17 +112,29 @@ Route::group(['middleware' => ['auth:sanctum', 'impersonate', 'tenant-aware']], 
     Route::get('audit-logs', AuditLogsController::class)
         ->name('audit-logs.index');
 
+    Route::get('audit-logs-dashboard', AuditLogsDashboardController::class)
+        ->name('audit-logs-dashboard.index');
+
     // Orders management
     Route::apiResource('orders', OrdersController::class)
         ->only(['index', 'update', 'show', 'destroy']);
 
     // Orders management
     Route::apiResource('dictionary-items', DictionaryItemsController::class)
-        ->only(['index']);
+        ->only(['index', 'store']);
 
     // Companies management
     Route::resource('companies', CompaniesController::class)
         ->only(['index', 'update', 'show']);
+
+    // File uploads requests
+    Route::post('file-upload-requests', FileUploadRequestsController::class)
+        ->name('file-upload-requests.store');
+
+    // Upload pt images
+    Route::resource('upload-pt-images', UploadPtImagesController::class)
+        ->parameters(['upload_pt_images' => 'requestId'])
+        ->only(['show', 'store']);
 
     // Object locks management
     Route::post('object-locks', [ObjectLocksController::class, 'store'])
@@ -149,6 +165,10 @@ Route::group(['middleware' => ['auth:sanctum', 'impersonate', 'tenant-aware']], 
     //companies/1/variant/1/
     Route::put('companies/{company}/variants/{variant}/accesorials', [AccesorialCompaniesController::class, 'update'])
         ->name('company-variants-accessorials.put');
+
+    // Reprocess the given OCR request
+    Route::post('ocr/requests/{request_id}/reimport-abbyy', AbbyyReimportController::class)
+        ->name('ocr.requests.reimport-abbyy');
 
     // Reprocess the given OCR request
     Route::post('ocr/requests/{request_id}/reprocess', OcrRequestReprocessController::class)
