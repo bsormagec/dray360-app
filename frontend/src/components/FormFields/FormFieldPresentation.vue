@@ -9,7 +9,8 @@
         'form-field-highlight': true,
         hover: isHovering && !onlyHover,
         'hover-paddingless': isHovering && onlyHover,
-        edit: isEditing
+        'field-updated': !isEditing && hasPrecedingOrder,
+        edit: isEditing,
       }"
       tabindex="0"
       @mouseover="isMobile || isEditing ? () => {} : startHover({ path: references })"
@@ -21,7 +22,28 @@
         v-show="!isEditing && !onlyHover"
         class="form-field__group"
       >
-        <span class="form-field__label">{{ label }}</span>
+        <span class="form-field__label">
+          {{ label }}
+
+          <v-tooltip
+            v-if="hasPrecedingOrder"
+            bottom
+            open-on-click
+            :open-on-hover="true"
+          >
+            <template v-slot:activator="{ on, attrs }">
+              <v-icon
+                v-bind="attrs"
+                class="ml-1"
+                color="orange-changes"
+                v-on="on"
+              >
+                mdi-history
+              </v-icon>
+            </template>
+            <span>Order #{{ order.id }}</span>
+          </v-tooltip>
+        </span>
         <span
           v-if="isLoading"
           class="field__value"
@@ -93,8 +115,10 @@ export default {
   computed: {
     ...mapGetters(orderForm.moduleName, ['isMultiOrderRequest', 'isLocked']),
     ...mapState(orderForm.moduleName, {
-      allHighlights: state => state.highlights
+      allHighlights: state => state.highlights,
+      order: state => state.order,
     }),
+
     saveForAll () {
       const blackListedParams = ['unit_number', 'seal_number']
 
@@ -102,6 +126,7 @@ export default {
         this.hasPermission('all-orders-edit') &&
         !blackListedParams.includes(this.references)
     },
+
     highlight () {
       if (this.references === null || this.references === undefined) {
         return null
@@ -109,15 +134,22 @@ export default {
 
       return this.allHighlights[this.references]
     },
+
     isHovering () {
       return !this.isEditing && this.highlight.hover
     },
+
     isEditing () {
       return this.editMode || get(this.highlight, 'edit', false)
     },
+
     isLoading () {
       return this.allHighlights[this.references]?.loading || false
-    }
+    },
+
+    hasPrecedingOrder () {
+      return this.order.preceded_by_order_id && get(this.order.preceding_order_changes, this.references, undefined) !== undefined
+    },
   },
 
   methods: {
@@ -159,9 +191,22 @@ export default {
     transition: all 200ms ease-in-out;
     cursor: pointer;
 
+    &.field-updated {
+      background-color: rgba(var(--v-orange-changes-base-rgb), 0.1);
+
+      &::after {
+        content: " ";
+        position:absolute;
+        height: 100%;
+        width: rem(4);
+        background-color: var(--v-orange-changes-base);
+      }
+    }
+
     &.hover {
       background-color: rgba($blue--lt, 0.4);
       padding-right: rem(12);
+
     }
     &:focus {
       outline: var(--v-primary-base) auto 1px;

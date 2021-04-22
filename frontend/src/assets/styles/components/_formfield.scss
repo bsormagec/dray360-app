@@ -49,6 +49,10 @@
   }
 }
 
+.field-updated .form-field__label {
+  color: var(--v-orange-changes-base);
+}
+
 .form-field__label {
   font-weight: 700;
   line-height: (20 / 13);

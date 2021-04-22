@@ -221,7 +221,7 @@
         {{ `by ${order.ocr_request.sent_to_tms.user.name}` }}
       </p>
       <p class="mb-2 body-2">
-        Last updated <span
+        Last edited <span
           class="order__changelog_date"
           @click="openStatusHistoryDialog = true"
         >{{ formatDate(order.updated_at, { timeZone: true }) }}</span>
@@ -232,6 +232,31 @@
       >
         History
       </a>
+      <p
+        v-if="precededOrderChanges !== 0"
+        class="mt-2 mb-0 body-2 orange-changes--text"
+      >
+        {{ precededOrderChanges }}
+        changes from order
+        <router-link
+          :to="`/order/${order.preceded_by_order_id}`"
+          target="_blank"
+        >
+          #{{ order.preceded_by_order_id }}
+        </router-link>
+      </p>
+      <p
+        v-if="order.succeded_by_order_id"
+        class="mt-2 mb-0 body-2 orange-changes--text"
+      >
+        Updated by order
+        <router-link
+          :to="`/order/${order.succeded_by_order_id}`"
+          target="_blank"
+        >
+          #{{ order.succeded_by_order_id }}
+        </router-link>
+      </p>
       <StatusHistoryDialog
         :order="order"
         :open="openStatusHistoryDialog"
@@ -883,7 +908,11 @@ export default {
       return 'primary'
     },
     sendToTmsDisabled () {
-      if (this.sentToTms || (!this.hasPermission('tms-resubmit') && !this.hasPermission('tms-submit'))) {
+      if (
+        this.sentToTms ||
+        (!this.hasPermission('tms-resubmit') && !this.hasPermission('tms-submit')) ||
+        this.order.succeded_by_order_id
+      ) {
         return true
       }
 
@@ -931,6 +960,7 @@ export default {
       ]
       return validStatuses.includes(this.orderSystemStatus)
     },
+
     splitButtonMainAction () {
       if (this.orderSystemStatus === statuses.processOcrOutputFileReview) {
         return {
@@ -946,9 +976,32 @@ export default {
         disabled: this.sendToTmsDisabled || this.isLocked
       }
     },
+
     userWhoUploadedTheRequest () {
       return this.order.upload_user_name ? this.order.upload_user_name : this.order.email_from_address
-    }
+    },
+
+    precededOrderChanges () {
+      if (!this.order.preceded_by_order_id) {
+        return 0
+      }
+      let changes = 0
+      for (const key in this.order.preceding_order_changes) {
+        const change = this.order.preceding_order_changes[key]
+        if (['succeded_by_order_id', 'bill_to_address', 'equipment_type'].includes(key)) {
+          continue
+        }
+
+        if (Array.isArray(change)) {
+          changes += change.length
+          continue
+        }
+
+        changes++
+      }
+
+      return changes
+    },
   },
 
   watch: {

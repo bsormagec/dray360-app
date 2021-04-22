@@ -1,239 +1,249 @@
 <template>
   <!--  eslint-disable vue/no-v-html -->
-  <div class="pa-2">
-    <div class="d-flex align-center">
-      <div class="form-field__label">
-        SSL Container Type
-      </div>
-
-      <div class="ml-auto text-right">
-        <div v-if="!verified && equipmentType === null">
-          <v-icon color="error">
-            mdi-alert-outline
-          </v-icon>
-          <span
-            class="verification__status error--text"
-          >
-            Not Found
-          </span>
-        </div>
-        <div v-if="!verified && equipmentType !== null">
-          <v-icon color="warning">
-            mdi-alert-outline
-          </v-icon>
-          <span
-            class="verification__status warning--text"
-          >
-            Verification Needed
-          </span>
+  <FormFieldPresentation
+    :references="references"
+    value=""
+    label=""
+    :edit-mode="false"
+    only-hover
+  >
+    <div class="pa-2">
+      <div class="d-flex align-center">
+        <div class="form-field__label">
+          SSL Container Type
         </div>
 
-        <div>
-          {{ equipmentType ? equipmentType.equipment_display : '---' }}
+        <div class="ml-auto text-right">
+          <div v-if="!verified && equipmentType === null">
+            <v-icon color="error">
+              mdi-alert-outline
+            </v-icon>
+            <span
+              class="verification__status error--text"
+            >
+              Not Found
+            </span>
+          </div>
+          <div v-if="!verified && equipmentType !== null">
+            <v-icon color="warning">
+              mdi-alert-outline
+            </v-icon>
+            <span
+              class="verification__status warning--text"
+            >
+              Verification Needed
+            </span>
+          </div>
+
+          <div>
+            {{ equipmentType ? equipmentType.equipment_display : '---' }}
+          </div>
         </div>
       </div>
-    </div>
-    <div class="d-flex w-full justify-end my-2">
-      <v-btn
-        v-if="!verified && equipmentType !== null"
-        :disabled="isLocked"
-        color="primary"
-        class="mr-2"
-        outlined
-        small
-        :loading="isLoading"
-        @click="() => selectEquipmentType(equipmentType)"
+      <div class="d-flex w-full justify-end my-2">
+        <v-btn
+          v-if="!verified && equipmentType !== null"
+          :disabled="isLocked"
+          color="primary"
+          class="mr-2"
+          outlined
+          small
+          :loading="isLoading"
+          @click="() => selectEquipmentType(equipmentType)"
+        >
+          Verify Closest Match
+        </v-btn>
+        <v-btn
+          color="primary"
+          :disabled="isLocked"
+          outlined
+          small
+          @click="toggledialg"
+        >
+          {{ equipmentType === null ? 'Select' : 'Select Different' }}
+        </v-btn>
+      </div>
+      <v-dialog
+        :value="isOpen"
+        max-width="56rem"
+        scrollable
+        @click:outside="toggledialg"
+        @keydown.esc="toggledialg"
       >
-        Verify Closest Match
-      </v-btn>
-      <v-btn
-        color="primary"
-        :disabled="isLocked"
-        outlined
-        small
-        @click="toggledialg"
-      >
-        {{ equipmentType === null ? 'Select' : 'Select Different' }}
-      </v-btn>
-    </div>
-    <v-dialog
-      :value="isOpen"
-      max-width="56rem"
-      scrollable
-      @click:outside="toggledialg"
-      @keydown.esc="toggledialg"
-    >
-      <v-card>
-        <v-card-title class="pa-0">
-          <div class="d-flex flex-column">
-            <v-row
-              align="center"
-              no-gutters
-              class="px-8 py-4"
-            >
-              <h5 class="secondary--text">
-                Select SSL Container Type
-              </h5>
-              <v-spacer />
-              <v-btn
-                text
-                icon
-                color="primary"
-                @click="toggledialg"
+        <v-card>
+          <v-card-title class="pa-0">
+            <div class="d-flex flex-column">
+              <v-row
+                align="center"
+                no-gutters
+                class="px-8 py-4"
               >
-                <v-icon>mdi-close</v-icon>
-              </v-btn>
-            </v-row>
-            <v-divider />
-            <v-row
-              align="center"
-              no-gutters
-              class="px-8 py-4"
-            >
-              <v-col
-                class="subtitle-1"
-                cols="1"
-              >
-                Filter by
-              </v-col>
-              <v-col cols="8">
-                <v-row dense>
-                  <v-col cols="4">
-                    <v-autocomplete
-                      v-model="filters.owner"
-                      :items="equipmentTypeOptions.equipment_owners"
-                      outlined
-                      dense
-                      clearable
-                      hide-details
-                      placeholder=" "
-                      label="Steamship Line"
-                    />
-                  </v-col>
-                  <v-col cols="4">
-                    <v-autocomplete
-                      v-model="filters.scac"
-                      :items="equipmentTypeOptions.scacs"
-                      dense
-                      clearable
-                      outlined
-                      hide-details
-                      placeholder=" "
-                      label="Scac"
-                    />
-                  </v-col>
-                  <v-col cols="4">
-                    <v-autocomplete
-                      v-model="filters.prefix"
-                      :items="equipmentTypeOptions.prefix_list"
-                      dense
-                      clearable
-                      outlined
-                      hide-details
-                      placeholder=" "
-                      label="Prefix"
-                    />
-                  </v-col>
-                  <v-col cols="4">
-                    <v-autocomplete
-                      v-model="filters.type"
-                      :items="equipmentTypeOptions.equipment_types"
-                      dense
-                      clearable
-                      hide-details
-                      outlined
-                      placeholder=" "
-                      label="Type"
-                    />
-                  </v-col>
-                  <v-col cols="4">
-                    <v-autocomplete
-                      v-model="filters.size"
-                      :items="equipmentTypeOptions.equipment_sizes"
-                      dense
-                      clearable
-                      outlined
-                      hide-details
-                      placeholder=" "
-                      label="Size"
-                    />
-                  </v-col>
-                </v-row>
-              </v-col>
-              <v-col
-                cols="2"
-                class="ml-auto"
-              >
+                <h5 class="secondary--text">
+                  Select SSL Container Type
+                </h5>
+                <v-spacer />
                 <v-btn
                   text
+                  icon
                   color="primary"
-                  @click="clearSelects"
+                  @click="toggledialg"
                 >
-                  Clear
+                  <v-icon>mdi-close</v-icon>
                 </v-btn>
-              </v-col>
-            </v-row>
-          </div>
-        </v-card-title>
-        <v-divider />
-        <v-card-text
-          style="height: 50vh;"
-          class="pa-0"
-        >
-          <div class="recognized-equipment">
-            <span class="d-flex align-center secondary--text font-weight-bold body-2 mr-16">Equipment as recognized</span>
-            <span class="d-flex align-center secondary--text ml-16">{{ concatenatedRecognizedText }}</span>
-          </div>
-          <v-data-table
-            :loading="loading"
-            :headers="headers"
-            fixed-header
-            :items="equipment_matches"
-            item-key:item.id
-            :hide-default-header="false"
-            :hide-default-footer="false"
-            scrollable
+              </v-row>
+              <v-divider />
+              <v-row
+                align="center"
+                no-gutters
+                class="px-8 py-4"
+              >
+                <v-col
+                  class="subtitle-1"
+                  cols="1"
+                >
+                  Filter by
+                </v-col>
+                <v-col cols="8">
+                  <v-row dense>
+                    <v-col cols="4">
+                      <v-autocomplete
+                        v-model="filters.owner"
+                        :items="equipmentTypeOptions.equipment_owners"
+                        outlined
+                        dense
+                        clearable
+                        hide-details
+                        placeholder=" "
+                        label="Steamship Line"
+                      />
+                    </v-col>
+                    <v-col cols="4">
+                      <v-autocomplete
+                        v-model="filters.scac"
+                        :items="equipmentTypeOptions.scacs"
+                        dense
+                        clearable
+                        outlined
+                        hide-details
+                        placeholder=" "
+                        label="Scac"
+                      />
+                    </v-col>
+                    <v-col cols="4">
+                      <v-autocomplete
+                        v-model="filters.prefix"
+                        :items="equipmentTypeOptions.prefix_list"
+                        dense
+                        clearable
+                        outlined
+                        hide-details
+                        placeholder=" "
+                        label="Prefix"
+                      />
+                    </v-col>
+                    <v-col cols="4">
+                      <v-autocomplete
+                        v-model="filters.type"
+                        :items="equipmentTypeOptions.equipment_types"
+                        dense
+                        clearable
+                        hide-details
+                        outlined
+                        placeholder=" "
+                        label="Type"
+                      />
+                    </v-col>
+                    <v-col cols="4">
+                      <v-autocomplete
+                        v-model="filters.size"
+                        :items="equipmentTypeOptions.equipment_sizes"
+                        dense
+                        clearable
+                        outlined
+                        hide-details
+                        placeholder=" "
+                        label="Size"
+                      />
+                    </v-col>
+                  </v-row>
+                </v-col>
+                <v-col
+                  cols="2"
+                  class="ml-auto"
+                >
+                  <v-btn
+                    text
+                    color="primary"
+                    @click="clearSelects"
+                  >
+                    Clear
+                  </v-btn>
+                </v-col>
+              </v-row>
+            </div>
+          </v-card-title>
+          <v-divider />
+          <v-card-text
+            style="height: 50vh;"
+            class="pa-0"
           >
-            <template
-              slot="item"
-              slot-scope="props"
+            <div class="recognized-equipment">
+              <span class="d-flex align-center secondary--text font-weight-bold body-2 mr-16">Equipment as recognized</span>
+              <span class="d-flex align-center secondary--text ml-16">{{ concatenatedRecognizedText }}</span>
+            </div>
+            <v-data-table
+              :loading="loading"
+              :headers="headers"
+              fixed-header
+              :items="equipment_matches"
+              item-key:item.id
+              :hide-default-header="false"
+              :hide-default-footer="false"
+              scrollable
             >
-              <tr>
-                <td>{{ props.item.equipment_owner }}</td>
-                <td>{{ props.item.equipment_type_and_size }}</td>
-                <td>
-                  <v-btn
-                    :class="{
-                      'ma-1': hasPermission('all-orders-edit'),
-                      'ma-2': !hasPermission('all-orders-edit')
-                    }"
-                    outlined
-                    color="primary"
-                    @click="() => selectEquipmentType(props.item)"
-                  >
-                    Select
-                  </v-btn>
-                  <v-btn
-                    v-if="isMultiOrderRequest && hasPermission('all-orders-edit')"
-                    class="ma-1"
-                    outlined
-                    color="primary"
-                    @click="() => selectEquipmentType(props.item, true)"
-                  >
-                    Select For All
-                  </v-btn>
-                </td>
-              </tr>
-            </template>
-          </v-data-table>
-        </v-card-text>
-      </v-card>
-    </v-dialog>
-  </div>
+              <template
+                slot="item"
+                slot-scope="props"
+              >
+                <tr>
+                  <td>{{ props.item.equipment_owner }}</td>
+                  <td>{{ props.item.equipment_type_and_size }}</td>
+                  <td>
+                    <v-btn
+                      :class="{
+                        'ma-1': hasPermission('all-orders-edit'),
+                        'ma-2': !hasPermission('all-orders-edit')
+                      }"
+                      outlined
+                      color="primary"
+                      @click="() => selectEquipmentType(props.item)"
+                    >
+                      Select
+                    </v-btn>
+                    <v-btn
+                      v-if="isMultiOrderRequest && hasPermission('all-orders-edit')"
+                      class="ma-1"
+                      outlined
+                      color="primary"
+                      @click="() => selectEquipmentType(props.item, true)"
+                    >
+                      Select For All
+                    </v-btn>
+                  </td>
+                </tr>
+              </template>
+            </v-data-table>
+          </v-card-text>
+        </v-card>
+      </v-dialog>
+    </div>
+  </FormFieldPresentation>
 </template>
 
 <script>
 /* eslint-disable vue/no-v-html */
+
+import FormFieldPresentation from './FormFieldPresentation'
 
 import { getEquipmentTypeOptions, getEquipmentTypes } from '@/store/api_calls/equipment'
 import { mapState, mapGetters } from 'vuex'
@@ -242,6 +252,8 @@ import permissions from '@/mixins/permissions'
 
 export default {
   name: 'FormFieldEquipmentType',
+
+  components: { FormFieldPresentation },
 
   mixins: [permissions],
 
