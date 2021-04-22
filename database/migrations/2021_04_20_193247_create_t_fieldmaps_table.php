@@ -9,6 +9,9 @@ alter table t_tms_providers drop column t_fieldmap_id;
 alter table t_companies drop foreign key t_companies_t_fieldmap_id_foreign;
 alter table t_companies drop column t_fieldmap_id;
 
+alter table t_ocrvariants drop foreign key t_companies_t_fieldmap_id_foreign;
+alter table t_ocrvariants drop column t_fieldmap_id;
+
 delete from migrations where migration = '2021_04_20_193247_create_t_fieldmaps_table';
 
 drop table t_company_ocrvariant; 
@@ -64,15 +67,24 @@ class CreateTfieldmapsTable extends Migration
 
         /////////////////////////////////
         // Update existing tables
+
+        // t_ocrvariants
+        Schema::table('t_ocrvariants', function (Blueprint $table) {
+            $table->bigInteger('t_fieldmap_id')->unsigned()->nullable();
+        });
+        Schema::table('t_ocrvariants', function (Blueprint $table) {
+            $table->foreign('t_fieldmap_id')->references('id')->on('t_fieldmaps');
+        });
+
+        // t_companies
         Schema::table('t_companies', function (Blueprint $table) {
             $table->bigInteger('t_fieldmap_id')->unsigned()->nullable();
         });
-
         Schema::table('t_companies', function (Blueprint $table) {
             $table->foreign('t_fieldmap_id')->references('id')->on('t_fieldmaps');
         });
 
-        // add foreign keys
+        // t_tms_providers
         Schema::table('t_tms_providers', function (Blueprint $table) {
             $table->bigInteger('t_fieldmap_id')->unsigned()->nullable();
         });
@@ -89,6 +101,7 @@ class CreateTfieldmapsTable extends Migration
      */
     public function down()
     {
+        // t_tms_providers
         Schema::table('t_tms_providers', function (Blueprint $table) {
             $table->dropForeign(['t_fieldmap_id']);
         });
@@ -96,6 +109,7 @@ class CreateTfieldmapsTable extends Migration
             $table->dropColumnIfExists('t_fieldmap_id');
         });
 
+        // t_companies
         Schema::table('t_companies', function (Blueprint $table) {
             $table->dropForeign(['t_fieldmap_id']);
         });
@@ -103,10 +117,20 @@ class CreateTfieldmapsTable extends Migration
             $table->dropColumnIfExists('t_fieldmap_id');
         });
 
+        // t_ocrvariants
+        Schema::table('t_ocrvariants', function (Blueprint $table) {
+            $table->dropForeign(['t_fieldmap_id']);
+        });
+        Schema::table('t_ocrvariants', function (Blueprint $table) {
+            $table->dropColumnIfExists('t_fieldmap_id');
+        });
+
+        // t_company_ocrvariant (drop foreign key constraint)
         Schema::table('t_company_ocrvariant', function (Blueprint $table) {
             $table->dropForeign(['t_fieldmap_id']);
         });
 
+        // drop new tables
         Schema::dropIfExists('t_company_ocrvariant');
         Schema::dropIfExists('t_fieldmaps');
 
