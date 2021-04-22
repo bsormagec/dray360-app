@@ -33,7 +33,7 @@ class CreateTfieldmapsTable extends Migration
         // new t_fieldmaps table
         Schema::create('t_fieldmaps', function (Blueprint $table) {
             $table->id();
-            $table->boolean('system_default')->nullable();
+            $table->boolean('system_default')->default(false);
             $table->json('fieldmap_config')->nullable();
             $table->timestamp('created_at')->useCurrent();
             $table->timestamp('replaced_at')->nullable();
