@@ -1,29 +1,43 @@
+
 /* 
 REQUIREMENTS:
     https://envasetechnologies-my.sharepoint.com/:x:/p/aaron_bryden/EWPGV93XGK1DqAQ5Tq4SKXcB-ZIFNI3ADQaHYpn7OC6T_w?rtime=Smih-RAF2Ug
 */
 
-
 /*
-DONE bill_to_address_code: ds_billto_id
-DONE division_code: ds_ship_type
-DONE shipment_direction: Events.movecode
-DONE note: Events.de_note
-DONE is_xyz_event: Events.de_event_type
-DONE event_address_tms_code: Events.de_site
-*/
-
-/*
-select *,json_pretty(fieldmap_config) from t_fieldmaps \G
-*/
-
-/*
- t_fieldmappings ->
+ t_fieldmaps default ->
     t_tms_providers ->
-      t_companies ->
-        t_company_ocrvariant
+      t_ocrvariants ->
+        t_companies ->
+          t_company_ocrvariant
 
 ... lowest layer takes priority.
+*/
+
+
+/*
+set collation_connection = utf8mb4_unicode_ci;
+
+set @VARIANT_NAME = 'WilliamGrant-import';
+set @COMPANY_NAME = 'Zariz';
+set @TMSPROVIDER_NAME = 'Profit Tools';
+
+set @COMPANY_ID = (select id from t_companies where name = @COMPANY_NAME);
+set @TMSPROVIDER_ID = (select id from t_tms_providers where name = @TMSPROVIDER_NAME);
+
+set @OCRVARIANT_ID = (select id from t_ocrvariants where abbyy_variant_name = @VARIANT_NAME);
+set @COMPANY_OCRVARIANT_ID = (select id from t_company_ocrvariant where t_ocrvariant_id = @OCRVARIANT_ID and t_company_id = @COMPANY_ID);
+set @DEFAULT_FIELDMAP_ID = (select id from t_fieldmaps as f where f.system_default and f.replaced_at is null order by f.id desc limit 1);
+
+select json_pretty(json_merge_patch(
+     coalesce(( select f.fieldmap_config from t_fieldmaps as f                                                          where f.id = @DEFAULT_FIELDMAP_ID   ), '{}')
+    ,coalesce(( select f.fieldmap_config from t_fieldmaps as f join t_tms_providers      as t on t.t_fieldmap_id = f.id where t.id = @TMSPROVIDER_ID        ), '{}')
+    ,coalesce(( select f.fieldmap_config from t_fieldmaps as f join t_ocrvariants        as c on c.t_fieldmap_id = f.id where c.id = @OCRVARIANT_ID         ), '{}')
+    ,coalesce(( select f.fieldmap_config from t_fieldmaps as f join t_companies          as c on c.t_fieldmap_id = f.id where c.id = @COMPANY_ID            ), '{}')
+    ,coalesce(( select f.fieldmap_config from t_fieldmaps as f join t_company_ocrvariant as v on v.t_fieldmap_id = f.id where v.id = @COMPANY_OCRVARIANT_ID ), '{}')
+))
+\G
+
 */
 
 /* 
