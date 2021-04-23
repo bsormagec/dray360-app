@@ -296,6 +296,6 @@ insert into t_fieldmaps(fieldmap_config) values('
 }
 ');
 
-set @ZARIZ_COMPANY_FIELDMAP_ID = (SELECT LAST_INSERT_ID());
-set @ZARIZ_COMPANY_ID = (select id from t_companies where name = 'Zariz');
-update t_companies set t_fieldmap_id=@ZARIZ_COMPANY_FIELDMAP_ID where id=@ZARIZ_COMPANY_ID;
+set @TCOMPANIESDEMO_COMPANY_FIELDMAP_ID = (SELECT LAST_INSERT_ID());
+set @TCOMPANIESDEMO_COMPANY_ID = (select id from t_companies where name = 'TCompaniesDemo');
+update t_companies set t_fieldmap_id=@TCOMPANIESDEMO_COMPANY_FIELDMAP_ID where id=@TCOMPANIESDEMO_COMPANY_ID;
