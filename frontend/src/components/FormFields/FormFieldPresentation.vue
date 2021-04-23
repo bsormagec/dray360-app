@@ -41,7 +41,7 @@
                 mdi-history
               </v-icon>
             </template>
-            <span>Order #{{ order.id }}</span>
+            <span>Order #{{ order.preceded_by_order_id }}</span>
           </v-tooltip>
         </span>
         <span
