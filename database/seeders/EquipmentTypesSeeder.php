@@ -191,6 +191,18 @@ class EquipmentTypesSeeder extends Seeder
                 'scac' => 'scac',
             ],
         ],
+        'MTSTruckingServices' => [
+            'file' => 'seeders/MTS Equipment Lease Types.20210426.xlsx',
+            'sheet' => 1,
+            'columns' => [
+                'tms_equipment_id' => 'id',
+                'equipment_owner' => 'line',
+                'equipment_type_and_size' => 'type',
+                'equipment_size' => 'equipmentlength',
+                'line_prefix_list' => 'lineprefix',
+                'scac' => 'scac',
+            ],
+        ]
     ];
 
 
@@ -200,8 +212,7 @@ class EquipmentTypesSeeder extends Seeder
      * there is usually no reason to re-import more than once.
      */
     const TO_BE_IMPORTED = [
-        'PTDemo' => self::ALL_COMPANIES['PTDemo'],
-        'TCompaniesDemo' => self::ALL_COMPANIES['TCompaniesDemo']
+        'MTSTruckingServices' => self::ALL_COMPANIES['MTSTruckingServices']
     ];
 
     /**
