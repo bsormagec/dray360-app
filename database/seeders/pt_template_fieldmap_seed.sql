@@ -314,7 +314,7 @@ insert into t_fieldmaps(system_default, fieldmap_config) values(true, '
 
 
 
-
+-- TCompaniesDemo site, just testing...
 insert into t_fieldmaps(fieldmap_config) values('
 {
     "item_description" : {
@@ -327,7 +327,48 @@ insert into t_fieldmaps(fieldmap_config) values('
         "use_template_value": false
     }}
 ');
-
 set @TCOMPANIESDEMO_COMPANY_FIELDMAP_ID = (SELECT LAST_INSERT_ID());
 set @TCOMPANIESDEMO_COMPANY_ID = (select id from t_companies where name = 'TCompaniesDemo');
 update t_companies set t_fieldmap_id=@TCOMPANIESDEMO_COMPANY_FIELDMAP_ID where id=@TCOMPANIESDEMO_COMPANY_ID;
+
+
+
+
+-- For Zariz, they don't want decription/weight/quantity to be templated
+insert into t_fieldmaps(fieldmap_config) values('
+{
+    "item_description" : {
+        "use_template_value": false
+    },
+    "item_weight" : {
+        "use_template_value": true
+    },
+    "item_quantity" : {
+        "use_template_value": false
+    }}
+');
+set @ZARIZ_COMPANY_FIELDMAP_ID = (SELECT LAST_INSERT_ID());
+set @ZARIZ_COMPANY_ID = (select id from t_companies where name = 'Zariz');
+update t_companies set t_fieldmap_id=@ZARIZ_COMPANY_FIELDMAP_ID where id=@ZARIZ_COMPANY_ID;
+
+
+
+
+-- for TransportDSquare, they don't want events to be templated
+insert into t_fieldmaps(fieldmap_config) values('
+{
+    "item_description" : {
+        "use_template_value": false
+    },
+    "item_weight" : {
+        "use_template_value": true
+    },
+    "item_quantity" : {
+        "use_template_value": false
+    }}
+');
+set @TRANSPORTDSQUARE_COMPANY_FIELDMAP_ID = (SELECT LAST_INSERT_ID());
+set @TRANSPORTDSQUARE_COMPANY_ID = (select id from t_companies where name = 'TransportDSquare');
+update t_companies set t_fieldmap_id=@TRANSPORTDSQUARE_COMPANY_FIELDMAP_ID where id=@TRANSPORTDSQUARE_COMPANY_ID;
+
+
