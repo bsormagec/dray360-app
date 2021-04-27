@@ -303,7 +303,7 @@ insert into t_fieldmaps(system_default, fieldmap_config) values(true, '
         "constant_value": null,
         "post_process_source_field": null,
         "post_process_source_regex": null,
-        "profittools_destination": "Events.de_site",
+        "profittools_destination": "Events.di_totitemweight",
         "cargowise_destination": null,
         "compcare_destination": null,
         "notes": null
