@@ -317,7 +317,7 @@ insert into t_fieldmaps(system_default, fieldmap_config) values(true, '
 -- TCompaniesDemo site, just testing...
 insert into t_fieldmaps(fieldmap_config) values('
 {
-    "item_description" : {
+    "item_contents" : {
         "use_template_value": false
     },
     "item_weight" : {
@@ -337,7 +337,7 @@ update t_companies set t_fieldmap_id=@TCOMPANIESDEMO_COMPANY_FIELDMAP_ID where i
 -- For Zariz, they don't want decription/weight/quantity to be templated
 insert into t_fieldmaps(fieldmap_config) values('
 {
-    "item_description" : {
+    "item_contents" : {
         "use_template_value": false
     },
     "item_weight" : {
@@ -357,7 +357,7 @@ update t_companies set t_fieldmap_id=@ZARIZ_COMPANY_FIELDMAP_ID where id=@ZARIZ_
 -- for TransportDSquare, they don't want events to be templated
 insert into t_fieldmaps(fieldmap_config) values('
 {
-    "item_description" : {
+    "item_contents" : {
         "use_template_value": false
     },
     "item_weight" : {
