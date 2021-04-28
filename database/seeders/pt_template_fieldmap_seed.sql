@@ -64,11 +64,11 @@ insert into t_fieldmaps(system_default, fieldmap_config) values(true, '
         "abbyy_source_regex": null,
         "available": true,
         "templateable": false,
+        "use_template_value": true,
         "adminreview_if_missing": false,
         "adminreview_validation_regex": null,
         "screen_hide": false,
         "screen_name": "Unit number",
-        "use_template_value": true,
         "constant_value": null,
         "post_process_source_field": null,
         "post_process_source_regex": null,
@@ -85,11 +85,11 @@ insert into t_fieldmaps(system_default, fieldmap_config) values(true, '
         "abbyy_source_regex": null,
         "available": true,
         "templateable": false,
+        "use_template_value": true,
         "adminreview_if_missing": false,
         "adminreview_validation_regex": null,
         "screen_hide": false,
         "screen_name": "Actual destination",
-        "use_template_value": true,
         "constant_value": null,
         "post_process_source_field": "actual_destination",
         "post_process_source_regex": null,
@@ -106,11 +106,11 @@ insert into t_fieldmaps(system_default, fieldmap_config) values(true, '
         "abbyy_source_regex": null,
         "available": true,
         "templateable": false,
+        "use_template_value": true,
         "adminreview_if_missing": false,
         "adminreview_validation_regex": null,
         "screen_hide": false,
         "screen_name": "Is Texas",
-        "use_template_value": true,
         "constant_value": null,
         "post_process_source_field": "bill_to_address.city",
         "post_process_source_regex": "s/texas/1/, i.e. something to return true if texas is in post_process_source_field",
@@ -127,11 +127,11 @@ insert into t_fieldmaps(system_default, fieldmap_config) values(true, '
         "abbyy_source_regex": null,
         "available": true,
         "templateable": true,
+        "use_template_value": true,
         "adminreview_if_missing": false,
         "adminreview_validation_regex": null,
         "screen_hide": false,
         "screen_name": "Division Code",
-        "use_template_value": true,
         "constant_value": null,
         "post_process_source_field": null,
         "post_process_source_regex": null,
@@ -148,11 +148,11 @@ insert into t_fieldmaps(system_default, fieldmap_config) values(true, '
         "abbyy_source_regex": null,
         "available": true,
         "templateable": true,
+        "use_template_value": true,
         "adminreview_if_missing": false,
         "adminreview_validation_regex": null,
         "screen_hide": false,
         "screen_name": "Bill To",
-        "use_template_value": true,
         "constant_value": null,
         "post_process_source_field": null,
         "post_process_source_regex": null,
@@ -169,11 +169,11 @@ insert into t_fieldmaps(system_default, fieldmap_config) values(true, '
         "abbyy_source_regex": null,
         "available": true,
         "templateable": true,
+        "use_template_value": true,
         "adminreview_if_missing": true,
         "adminreview_validation_regex": null,
         "screen_hide": false,
         "screen_name": "Shipment Direction",
-        "use_template_value": true,
         "constant_value": null,
         "post_process_source_field": null,
         "post_process_source_regex": null,
@@ -190,11 +190,11 @@ insert into t_fieldmaps(system_default, fieldmap_config) values(true, '
         "abbyy_source_regex": null,
         "available": true,
         "templateable": true,
+        "use_template_value": true,
         "adminreview_if_missing": false,
         "adminreview_validation_regex": null,
         "screen_hide": false,
         "screen_name": null,
-        "use_template_value": true,
         "constant_value": null,
         "post_process_source_field": null,
         "post_process_source_regex": null,
@@ -211,11 +211,11 @@ insert into t_fieldmaps(system_default, fieldmap_config) values(true, '
         "abbyy_source_regex": null,
         "available": true,
         "templateable": true,
+        "use_template_value": true,
         "adminreview_if_missing": false,
         "adminreview_validation_regex": null,
         "screen_hide": false,
         "screen_name": null,
-        "use_template_value": true,
         "constant_value": null,
         "post_process_source_field": null,
         "post_process_source_regex": null,
@@ -232,11 +232,11 @@ insert into t_fieldmaps(system_default, fieldmap_config) values(true, '
         "abbyy_source_regex": null,
         "available": true,
         "templateable": true,
+        "use_template_value": true,
         "adminreview_if_missing": false,
         "adminreview_validation_regex": null,
         "screen_hide": false,
         "screen_name": null,
-        "use_template_value": true,
         "constant_value": null,
         "post_process_source_field": null,
         "post_process_source_regex": null,
@@ -245,23 +245,65 @@ insert into t_fieldmaps(system_default, fieldmap_config) values(true, '
         "compcare_destination": null,
         "notes": null
     },
-    "item_description" : {
-        "d3canon_name": "item_description",
+    "item_contents" : {
+        "d3canon_name": "item_contents",
         "d3canon_table_column": "t_order_line_items",
-        "d3canon_column": "company_address_tms_code",
-        "abbyy_source_field": "event#.location",
+        "d3canon_column": "contents",
+        "abbyy_source_field": "contents",
         "abbyy_source_regex": null,
         "available": true,
         "templateable": true,
+        "use_template_value": true,
+        "adminreview_if_missing": false,
+        "adminreview_validation_regex": null,
+        "screen_hide": true,
+        "screen_name": null,
+        "constant_value": null,
+        "post_process_source_field": null,
+        "post_process_source_regex": null,
+        "profittools_destination": "Items.di_description",
+        "cargowise_destination": null,
+        "compcare_destination": null,
+        "notes": null
+    },
+    "item_quantity" : {
+        "d3canon_name": "item_quantity",
+        "d3canon_table_column": "t_order_line_items",
+        "d3canon_column": "quantity",
+        "abbyy_source_field": "quantity",
+        "abbyy_source_regex": null,
+        "available": true,
+        "templateable": true,
+        "use_template_value": true,
         "adminreview_if_missing": false,
         "adminreview_validation_regex": null,
         "screen_hide": false,
         "screen_name": null,
-        "use_template_value": true,
         "constant_value": null,
         "post_process_source_field": null,
         "post_process_source_regex": null,
-        "profittools_destination": "Events.de_site",
+        "profittools_destination": "Items.di_qty",
+        "cargowise_destination": null,
+        "compcare_destination": null,
+        "notes": null
+    },
+    "item_weight" : {
+        "d3canon_name": "item_weight",
+        "d3canon_table_column": "t_order_line_items",
+        "d3canon_column": "weight",
+        "abbyy_source_field": "weight",
+        "abbyy_source_regex": null,
+        "available": true,
+        "templateable": true,
+        "use_template_value": true,
+        "adminreview_if_missing": false,
+        "adminreview_validation_regex": null,
+        "screen_hide": false,
+        "screen_name": null,
+        "constant_value": null,
+        "post_process_source_field": null,
+        "post_process_source_regex": null,
+        "profittools_destination": "Events.di_totitemweight",
         "cargowise_destination": null,
         "compcare_destination": null,
         "notes": null
@@ -272,30 +314,61 @@ insert into t_fieldmaps(system_default, fieldmap_config) values(true, '
 
 
 
-
+-- TCompaniesDemo site, just testing...
 insert into t_fieldmaps(fieldmap_config) values('
 {
-    "division_code" : {
+    "item_contents" : {
         "use_template_value": false
     },
-    "bill_to_address_code" : {
+    "item_weight" : {
         "use_template_value": true
     },
-    "movecode" : {
+    "item_quantity" : {
         "use_template_value": false
-    },
-    "event_type" : {
-        "use_template_value": true
-    },
-    "event_note" : {
-        "use_template_value": true
-    },
-    "event_address_tms_code" : {
-        "use_template_value": true
-    }
-}
+    }}
 ');
+set @TCOMPANIESDEMO_COMPANY_FIELDMAP_ID = (SELECT LAST_INSERT_ID());
+set @TCOMPANIESDEMO_COMPANY_ID = (select id from t_companies where name = 'TCompaniesDemo');
+update t_companies set t_fieldmap_id=@TCOMPANIESDEMO_COMPANY_FIELDMAP_ID where id=@TCOMPANIESDEMO_COMPANY_ID;
 
+
+
+
+-- For Zariz, they don't want decription/weight/quantity to be templated
+insert into t_fieldmaps(fieldmap_config) values('
+{
+    "item_contents" : {
+        "use_template_value": false
+    },
+    "item_weight" : {
+        "use_template_value": true
+    },
+    "item_quantity" : {
+        "use_template_value": false
+    }}
+');
 set @ZARIZ_COMPANY_FIELDMAP_ID = (SELECT LAST_INSERT_ID());
 set @ZARIZ_COMPANY_ID = (select id from t_companies where name = 'Zariz');
 update t_companies set t_fieldmap_id=@ZARIZ_COMPANY_FIELDMAP_ID where id=@ZARIZ_COMPANY_ID;
+
+
+
+
+-- for TransportDSquare, they don't want events to be templated
+insert into t_fieldmaps(fieldmap_config) values('
+{
+    "item_contents" : {
+        "use_template_value": false
+    },
+    "item_weight" : {
+        "use_template_value": true
+    },
+    "item_quantity" : {
+        "use_template_value": false
+    }}
+');
+set @TRANSPORTDSQUARE_COMPANY_FIELDMAP_ID = (SELECT LAST_INSERT_ID());
+set @TRANSPORTDSQUARE_COMPANY_ID = (select id from t_companies where name = 'TransportDSquare');
+update t_companies set t_fieldmap_id=@TRANSPORTDSQUARE_COMPANY_FIELDMAP_ID where id=@TRANSPORTDSQUARE_COMPANY_ID;
+
+
