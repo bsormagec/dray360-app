@@ -20,7 +20,15 @@ class TMSProvider extends Model
 
     protected $dates = ['deleted_at'];
 
-    public $fillable = ['name'];
+    public $fillable = [
+        'name',
+        't_fieldmap_id'
+    ];
+
+    public function fieldMap()
+    {
+        return $this->belongsTo(FieldMap::class, 't_fieldmap_id');
+    }
 
     /**
      * Get TMS provider 'Profit Tools'.

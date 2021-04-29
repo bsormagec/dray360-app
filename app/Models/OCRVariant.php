@@ -29,6 +29,7 @@ class OCRVariant extends Model
         'parser_fields_list',
         'search_tags_list',
         'excluded_fields_list',
+        't_fieldmap_id',
     ];
 
     /**
@@ -66,5 +67,10 @@ class OCRVariant extends Model
             't_ocrvariant_id',
             't_company_id'
         )->using(AccesorialMappingPivot::class);
+    }
+
+    public function fieldMap()
+    {
+        return $this->belongsTo(FieldMap::class, 't_fieldmap_id');
     }
 }
