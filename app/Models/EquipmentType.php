@@ -46,13 +46,12 @@ class EquipmentType extends Model
         'line_prefix_list' => 'array',
     ];
 
-
     public function tmsProvider()
     {
         return $this->belongsTo(TMSProvider::class, 't_tms_provider_id');
     }
 
-    public function scopeForCompanyAndTmsProvider($query, int $companyId,int $tmsProviderId)
+    public function scopeForCompanyAndTmsProvider($query, int $companyId, int $tmsProviderId)
     {
         return $query->where([
             't_company_id' => $companyId,

@@ -14,14 +14,14 @@ alter table t_ocrvariants drop column t_fieldmap_id;
 
 delete from migrations where migration = '2021_04_20_193247_create_t_fieldmaps_table';
 
-drop table t_company_ocrvariant; 
-drop table t_fieldmaps; 
+drop table t_company_ocrvariant;
+drop table t_fieldmaps;
 */
 
 
-use Illuminate\Database\Migrations\Migration;
-use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Database\Migrations\Migration;
 
 class CreateTfieldmapsTable extends Migration
 {
@@ -91,7 +91,6 @@ class CreateTfieldmapsTable extends Migration
         Schema::table('t_tms_providers', function (Blueprint $table) {
             $table->foreign('t_fieldmap_id')->references('id')->on('t_fieldmaps');
         });
-
     }
 
     /**
@@ -133,6 +132,5 @@ class CreateTfieldmapsTable extends Migration
         // drop new tables
         Schema::dropIfExists('t_company_ocrvariant');
         Schema::dropIfExists('t_fieldmaps');
-
     }
 }

@@ -7,6 +7,7 @@ use App\Http\Controllers\Api\OrdersController;
 use App\Http\Controllers\Api\OCRRulesController;
 use App\Http\Controllers\Api\AuditLogsController;
 use App\Http\Controllers\Api\CompaniesController;
+use App\Http\Controllers\Api\FieldMapsController;
 use App\Http\Controllers\Api\SendToTmsController;
 use App\Http\Controllers\CurrentTenantController;
 use App\Http\Controllers\Api\Auth\LoginController;
@@ -82,7 +83,7 @@ Route::group(['middleware' => ['auth:sanctum', 'impersonate', 'tenant-aware']], 
     // Users management
     Route::put('users/{user}/status', UsersStatusController::class)
         ->name('users.status.update');
-    Route::resource('users', UsersController::class);
+    Route::apiResource('users', UsersController::class);
 
     Route::delete('impersonate', [ImpersonationController::class, 'destroy'])
             ->name('impersonate.stop')
@@ -119,12 +120,16 @@ Route::group(['middleware' => ['auth:sanctum', 'impersonate', 'tenant-aware']], 
     Route::apiResource('orders', OrdersController::class)
         ->only(['index', 'update', 'show', 'destroy']);
 
+    // Field maps management
+    Route::apiResource('field-maps', FieldMapsController::class)
+        ->except(['show']);
+
     // Orders management
     Route::apiResource('dictionary-items', DictionaryItemsController::class)
         ->only(['index', 'store']);
 
     // Companies management
-    Route::resource('companies', CompaniesController::class)
+    Route::apiResource('companies', CompaniesController::class)
         ->only(['index', 'update', 'show']);
 
     // File uploads requests
@@ -132,7 +137,7 @@ Route::group(['middleware' => ['auth:sanctum', 'impersonate', 'tenant-aware']], 
         ->name('file-upload-requests.store');
 
     // Upload pt images
-    Route::resource('upload-pt-images', UploadPtImagesController::class)
+    Route::apiResource('upload-pt-images', UploadPtImagesController::class)
         ->parameters(['upload_pt_images' => 'requestId'])
         ->only(['show', 'store']);
 

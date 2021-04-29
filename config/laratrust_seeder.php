@@ -42,6 +42,7 @@ return [
             'object-locks' => 'c,e',
             'supervise' => 'v',
             'pt-images' => 'c',
+            'field-maps' => 'c,v',
         ],
         'order-review' => [
             'billing-mapping' => 'e,v',
