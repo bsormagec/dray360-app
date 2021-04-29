@@ -20,7 +20,29 @@ class EquipmentTypesSeeder extends Seeder
      * add the specific companies to actually import.
      */
     const ALL_COMPANIES = [
-        
+
+        'Arrowlink' => [
+            'file' => 'seeders/ArrowlinkUSA-EquipmentLeaseTypes.20210428.xlsx',
+            'columns' => [
+                'tms_equipment_id' => 'id',
+                'equipment_owner' => 'line',
+                'equipment_type_and_size' => 'type',
+                'equipment_size' => 'equipmentlength',
+                'scac' => 'scac',
+                'line_prefix_list' => 'lineprefix',
+            ],
+        ],
+        'XLR8' => [
+            'file' => 'seeders/XLR8EquipmentLeaseTypes.20210428.xlsx',
+            'columns' => [
+                'tms_equipment_id' => 'id',
+                'equipment_owner' => 'line',
+                'equipment_type_and_size' => 'type',
+                'equipment_size' => 'equipmentlength',
+                'scac' => 'scac',
+                'line_prefix_list' => 'lineprefix',
+            ],
+        ],
         'PTDemo' => [
             'file' => 'seeders/PT Demo Equipment Lease Types.xlsx',
             'columns' => [
@@ -212,7 +234,9 @@ class EquipmentTypesSeeder extends Seeder
      * there is usually no reason to re-import more than once.
      */
     const TO_BE_IMPORTED = [
-        'MTSTruckingServices' => self::ALL_COMPANIES['MTSTruckingServices']
+        'XLR8' => self::ALL_COMPANIES['XLR8'],
+        'Arrowlink' => self::ALL_COMPANIES['Arrowlink'],
+
     ];
 
     /**
