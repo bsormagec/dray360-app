@@ -29,6 +29,11 @@ class OCRVariant extends Model
         'parser_fields_list',
         'search_tags_list',
         'excluded_fields_list',
+        'abbyy_label1',
+        'abbyy_label2',
+        'abbyy_label3',
+        'abbyy_label4',
+        'abbyy_label5',
     ];
 
     /**
