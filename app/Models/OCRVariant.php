@@ -30,6 +30,11 @@ class OCRVariant extends Model
         'search_tags_list',
         'excluded_fields_list',
         't_fieldmap_id',
+        'abbyy_label1',
+        'abbyy_label2',
+        'abbyy_label3',
+        'abbyy_label4',
+        'abbyy_label5',
     ];
 
     /**
