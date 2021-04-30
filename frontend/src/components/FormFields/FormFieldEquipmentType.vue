@@ -6,6 +6,7 @@
     label=""
     :edit-mode="false"
     only-hover
+    :managed-by-template="managedByTemplate"
   >
     <div class="pa-2">
       <div class="d-flex align-center">
@@ -266,7 +267,8 @@ export default {
     unitNumber: { type: String, required: false, default: '' },
     recognizedText: { type: String, required: false, default: '--' },
     verified: { type: Boolean, required: false, default: false },
-    references: { type: String, default: null }
+    references: { type: String, default: null },
+    managedByTemplate: { type: Boolean, required: false, default: false },
   },
 
   data: (vm) => ({

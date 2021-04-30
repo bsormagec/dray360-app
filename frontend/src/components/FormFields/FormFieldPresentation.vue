@@ -4,7 +4,7 @@
     class="form-field-presentation"
   >
     <div
-      v-if="!editMode"
+      v-if="!editMode && !managedByTemplate"
       :class="{
         'form-field-highlight': true,
         hover: isHovering && !onlyHover,
@@ -81,14 +81,20 @@
         />
       </div>
     </div>
+    <FormFieldManaged
+      v-else-if="managedByTemplate"
+      :references="references"
+      :label="label"
+    />
     <slot
-      v-if="editMode"
+      v-else-if="editMode"
     />
   </div>
 </template>
 
 <script>
 import FormFieldHighlightBtns from './FormFieldHighlightBtns'
+import FormFieldManaged from './FormFieldManaged'
 
 import isMobile from '@/mixins/is_mobile'
 import { mapState, mapActions, mapGetters } from 'vuex'
@@ -100,7 +106,7 @@ import { cleanStrForId } from '@/utils/clean_str_for_id.js'
 export default {
   name: 'FormFieldPresentation',
 
-  components: { FormFieldHighlightBtns },
+  components: { FormFieldHighlightBtns, FormFieldManaged },
 
   mixins: [isMobile, permissions],
 
@@ -109,7 +115,8 @@ export default {
     references: { type: String, required: true },
     label: { type: String, required: true },
     value: { required: true, default: '' },
-    onlyHover: { type: Boolean, required: false, default: false }
+    onlyHover: { type: Boolean, required: false, default: false },
+    managedByTemplate: { type: Boolean, required: false, default: false },
   },
 
   computed: {

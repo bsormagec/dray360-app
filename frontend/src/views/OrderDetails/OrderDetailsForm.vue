@@ -285,13 +285,8 @@
           :edit-mode="editMode"
           @change="event => handleChange({ path:'tms_template_dictid', ...event })"
         />
-        <FormFieldManaged
-          v-if="isManagedByTemplate"
-          references="division_code"
-          :label="options.labels.division_code || 'Division'"
-        />
         <FormFieldSelectDivisionCodes
-          v-else-if="!!options.extra.enable_divisions"
+          v-if="!!options.extra.enable_divisions"
           references="division_code"
           :label="options.labels.division_code || 'Division'"
           :value="order.division_code"
@@ -299,6 +294,7 @@
           :t-company-id="order.t_company_id"
           :t-tms-provider-id="order.t_tms_provider_id"
           :division-code="order.division_code"
+          :managed-by-template="managedByTemplate('division_code')"
           @change="event => handleChange({ path:'division_code', ...event})"
         />
         <FormFieldSelect
@@ -310,6 +306,7 @@
           item-text="name"
           item-value="id"
           :edit-mode="editMode"
+          :managed-by-template="managedByTemplate('shipment_direction')"
           @change="event => handleChange({ path:'shipment_direction', ...event})"
         />
         <FormFieldSwitch
@@ -370,6 +367,7 @@
             :label="options.labels.unit_number || 'Unit number'"
             :value="order.unit_number"
             :edit-mode="editMode"
+            :managed-by-template="managedByTemplate('unit_number')"
             @change="event => handleChange({ path:'unit_number', ...event})"
           />
           <FormFieldInput
@@ -486,14 +484,6 @@
             :edit-mode="editMode"
             @change="event => handleChange({ path:'pickup_by_date', ...event})"
           />
-          <!-- <FormFieldTime
-            v-if="fieldShouldBeShown('pickup_by_time')"
-            references="pickup_by_time"
-            :label="options.labels.pickup_by_time || 'Pickup by time'"
-            :value="order.pickup_by_time"
-            :edit-mode="editMode"
-            @change="event => handleChange({ path:'pickup_by_time', ...event})"
-          /> -->
           <FormFieldTimeMask
             v-if="fieldShouldBeShown('pickup_by_time')"
             references="pickup_by_time"
@@ -510,14 +500,6 @@
             :edit-mode="editMode"
             @change="event => handleChange({ path:'cutoff_date', ...event})"
           />
-          <!-- <FormFieldTime
-            v-if="fieldShouldBeShown('cutoff_time')"
-            references="cutoff_time"
-            :label="options.labels.cutoff_time || 'Cutoff Time'"
-            :value="order.cutoff_time"
-            :edit-mode="editMode"
-            @change="event => handleChange({ path:'cutoff_time', ...event})"
-          /> -->
           <FormFieldTimeMask
             v-if="fieldShouldBeShown('cutoff_time')"
             references="cutoff_time"
@@ -553,7 +535,7 @@
         </div>
       </div>
       <div
-        v-if="!isManagedByTemplate"
+        v-if="!managedByTemplate('bill_to_address_code')"
         class="form__sub-section"
       >
         <div class="form__section-title">
@@ -581,6 +563,15 @@
             @change="event => handleChange({ path:'bill_comment', ...event})"
           />
         </div>
+      </div>
+      <ManagedByTemplateSection
+        v-else
+        :section-name="sections.bill_to.label"
+        :section-id="sections.bill_to.id"
+      />
+      <div
+        class="form__sub-section"
+      >
         <div class="form__section-title">
           <h3 :id="sections.charges.id">
             {{ sections.charges.label }}
@@ -605,19 +596,9 @@
           />
         </div>
       </div>
-      <div v-else>
-        <div
-          :id="sections.bill_to.id"
-          class="form__section-title form__section-title--managed d-flex align-center justify-center mb-2"
-        >
-          <h3>
-            {{ sections.bill_to.label }} managed by template
-          </h3>
-        </div>
-      </div>
 
       <div
-        v-if="!isManagedByTemplate"
+        v-if="!(managedByTemplate('event_type') && managedByTemplate('event_note') && managedByTemplate('event_address_tms_code'))"
         class="form__section"
       >
         <div
@@ -670,16 +651,11 @@
           </div>
         </div>
       </div>
-      <div v-else>
-        <div
-          :id="sections.itinerary.id"
-          class="form__section-title form__section-title--managed d-flex align-center justify-center mb-2"
-        >
-          <h3>
-            {{ sections.itinerary.label }} managed by template
-          </h3>
-        </div>
-      </div>
+      <ManagedByTemplateSection
+        v-else
+        :section-id="sections.itinerary.id"
+        :section-name="sections.itinerary.label"
+      />
       <div class="form__section">
         <div class="form__section-title">
           <h3>
@@ -699,7 +675,6 @@
         </div>
       </div>
       <div
-        v-if="!isManagedByTemplate"
         class="form__section"
       >
         <div
@@ -725,35 +700,28 @@
               :label="options.labels.order_line_item_contents || 'Contents'"
               :value="item.contents"
               :edit-mode="editMode"
+              :managed-by-template="managedByTemplate('item_contents')"
               @change="event => handleChange({ path:`order_line_items.${item.real_index}.contents`, ...event})"
             />
             <FormFieldInput
+              type="number"
               :references="`order_line_items.${item.real_index}.quantity`"
               :label="options.labels.order_line_item_quantity || 'Quantity'"
-              type="number"
               :value="item.quantity"
               :edit-mode="editMode"
+              :managed-by-template="managedByTemplate('item_quantity')"
               @change="event => handleChange({ path:`order_line_items.${item.real_index}.quantity`, ...event})"
             />
             <FormFieldInput
+              type="number"
               :references="`order_line_items.${item.real_index}.weight`"
               :label="options.labels.order_line_item_weight || 'Weight'"
-              type="number"
               :value="item.weight"
               :edit-mode="editMode"
+              :managed-by-template="managedByTemplate('item_weight')"
               @change="event => handleChange({ path:`order_line_items.${item.real_index}.weight`, ...event})"
             />
           </div>
-        </div>
-      </div>
-      <div v-else>
-        <div
-          :id="sections.inventory.id"
-          class="form__section-title form__section-title--managed d-flex align-center justify-center"
-        >
-          <h3>
-            {{ sections.inventory.label }} managed by template
-          </h3>
         </div>
       </div>
     </div>
@@ -777,7 +745,6 @@ import utils, { type } from '@/store/modules/utils'
 import { downloadFile } from '@/utils/download_file'
 
 import FormFieldDate from '@/components/FormFields/FormFieldDate'
-// import FormFieldTime from '@/components/FormFields/FormFieldTime'
 import FormFieldTimeMask from '@/components/FormFields/FormFieldTimeMask'
 import FormFieldInput from '@/components/FormFields/FormFieldInput'
 import FormFieldSwitch from '@/components/FormFields/FormFieldSwitch'
@@ -789,9 +756,9 @@ import OutlinedButtonGroup from '@/components/General/OutlinedButtonGroup'
 import FormFieldSelectDivisionCodes from '@/components/FormFields/FormFieldSelectDivisionCodes'
 import FormFieldSelect from '@/components/FormFields/FormFieldSelect'
 import FormFieldInputAutocomplete from '@/components/FormFields/FormFieldInputAutocomplete'
-import FormFieldManaged from '@/components/FormFields/FormFieldManaged'
 import RequestStatus from '@/components/RequestStatus'
 import StatusHistoryDialog from './StatusHistoryDialog'
+import ManagedByTemplateSection from './ManagedByTemplateSection'
 import OrderAuditDialog from './OrderAuditDialog'
 import { formatDate } from '@/utils/dates'
 
@@ -799,7 +766,6 @@ export default {
   name: 'OrderDetailsForm',
   components: {
     FormFieldDate,
-    // FormFieldTime,
     FormFieldTimeMask,
     FormFieldInput,
     OrderAuditDialog,
@@ -812,8 +778,8 @@ export default {
     FormFieldSelect,
     FormFieldInputAutocomplete,
     FormFieldSelectDivisionCodes,
-    FormFieldManaged,
     RequestStatus,
+    ManagedByTemplateSection,
     StatusHistoryDialog
   },
   mixins: [isMobile, permissions],
@@ -885,10 +851,6 @@ export default {
       highlights: state => state.highlights,
       sections: state => state.sections
     }),
-
-    isManagedByTemplate () {
-      return this.order.tms_template_dictid !== null && !!this.options.extra.profit_tools_enable_templates
-    },
 
     addressSearchProps () {
       return {
@@ -1031,6 +993,13 @@ export default {
       cancelEdit: orderFormTypes.cancelEdit,
       addHighlight: orderFormTypes.addHighlight,
     }),
+
+    managedByTemplate (field) {
+      return this.order.tms_template_dictid !== null &&
+        !!this.options.extra.profit_tools_enable_templates &&
+        get(this.options.field_maps, `${field}.use_template_value`) &&
+        get(this.options.field_maps, `${field}.templateable`)
+    },
 
     formatDate,
 
@@ -1364,12 +1333,6 @@ export default {
     line-height: (24 / 13);
     letter-spacing: rem(0.75);
     color: map-get($colors, white);
-  }
-  &.form__section-title--managed h3 {
-    font-weight: 500;
-    font-size: rem(10);
-    line-height: (15 / 10);
-    letter-spacing: rem(1.5);
   }
 }
 

@@ -4,7 +4,9 @@ namespace App\Http\Resources;
 
 use App\Models\User;
 use App\Models\Order;
+use App\Models\FieldMap;
 use App\Models\OCRRequest;
+use App\Models\OCRVariant;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Str;
 use App\Actions\PresignImageUrl;
@@ -40,6 +42,7 @@ class SideBySideOrder extends JsonResource
 
         $this->preparePreceedingOrderChanges();
         $this->loadOrderCompanyConfiguration();
+        $this->loadFieldMappingConfiguration();
         $this->loadLatestOcrRequestLatestStatus();
         $this->loadUserWhoSentToTms();
         $this->loadLocks();
@@ -69,6 +72,18 @@ class SideBySideOrder extends JsonResource
         $this->resource->company->unsetRelation('domain');
 
         $this->resource->company->configuration = $configuration;
+    }
+
+    protected function loadFieldMappingConfiguration()
+    {
+        $variant = OCRVariant::where('abbyy_variant_name', $this->resource->variant_name)->first(['id']);
+
+        $fieldMap = FieldMap::getFrom([
+            'company_id' => $this->resource->t_company_id,
+            'variant_id' => $variant->id ?? null,
+        ]);
+
+        $this->resource->setRelation('fieldMaps', collect($fieldMap));
     }
 
     protected function loadLocks()

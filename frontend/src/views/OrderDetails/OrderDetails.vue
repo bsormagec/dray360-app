@@ -394,6 +394,8 @@ export default {
         } else {
           this.formOptions.extra[key] = this.companyConfiguration[key]
         }
+
+        this.formOptions.field_maps = this.currentOrder.field_maps
       }
     },
 
