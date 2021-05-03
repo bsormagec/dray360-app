@@ -20,7 +20,28 @@ class EquipmentTypesSeeder extends Seeder
      * add the specific companies to actually import.
      */
     const ALL_COMPANIES = [
-
+        'DentonCartage' => [
+            'file' => 'seeders/DentonCartage_EquipmentLeaseTypes.20210430.xlsx',
+            'columns' => [
+                'tms_equipment_id' => 'id',
+                'equipment_owner' => 'line',
+                'equipment_type_and_size' => 'type',
+                'equipment_size' => 'equipmentlength',
+                'scac' => 'scac',
+                'line_prefix_list' => 'lineprefix',
+            ],
+        ],
+        'GreenMountainTransportation' => [
+            'file' => 'seeders/GreenMountain_EquipmentLeaseTypes.20210430.xlsx',
+            'columns' => [
+                'tms_equipment_id' => 'id',
+                'equipment_owner' => 'line',
+                'equipment_type_and_size' => 'type',
+                'equipment_size' => 'equipmentlength',
+                'scac' => 'scac',
+                'line_prefix_list' => 'lineprefix',
+            ],
+        ],
         'Arrowlink' => [
             'file' => 'seeders/ArrowlinkUSA-EquipmentLeaseTypes.20210428.xlsx',
             'columns' => [
@@ -234,9 +255,8 @@ class EquipmentTypesSeeder extends Seeder
      * there is usually no reason to re-import more than once.
      */
     const TO_BE_IMPORTED = [
-        'XLR8' => self::ALL_COMPANIES['XLR8'],
-        'Arrowlink' => self::ALL_COMPANIES['Arrowlink'],
-
+        'DentonCartage' => self::ALL_COMPANIES['DentonCartage'],
+        'GreenMountainTransportation' => self::ALL_COMPANIES['GreenMountainTransportation'],
     ];
 
     /**
