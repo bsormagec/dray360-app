@@ -321,12 +321,21 @@ insert into t_fieldmaps(fieldmap_config) values('
         "use_template_value": false
     },
     "item_weight" : {
-        "use_template_value": true
+        "use_template_value": false
     },
     "item_quantity" : {
         "use_template_value": false
-    }}
-');
+    },
+    "event_type" : {
+        "use_template_value": false
+    },
+    "event_note" : {
+        "use_template_value": false
+    },
+    "event_address_tms_code" : {
+        "use_template_value": false
+    }
+}');
 set @TCOMPANIESDEMO_COMPANY_FIELDMAP_ID = (SELECT LAST_INSERT_ID());
 set @TCOMPANIESDEMO_COMPANY_ID = (select id from t_companies where name = 'TCompaniesDemo');
 update t_companies set t_fieldmap_id=@TCOMPANIESDEMO_COMPANY_FIELDMAP_ID where id=@TCOMPANIESDEMO_COMPANY_ID;
@@ -341,7 +350,7 @@ insert into t_fieldmaps(fieldmap_config) values('
         "use_template_value": false
     },
     "item_weight" : {
-        "use_template_value": true
+        "use_template_value": false
     },
     "item_quantity" : {
         "use_template_value": false
@@ -372,45 +381,3 @@ insert into t_fieldmaps(fieldmap_config) values('
 set @TRANSPORTDSQUARE_COMPANY_FIELDMAP_ID = (SELECT LAST_INSERT_ID());
 set @TRANSPORTDSQUARE_COMPANY_ID = (select id from t_companies where name = 'TransportDSquare');
 update t_companies set t_fieldmap_id=@TRANSPORTDSQUARE_COMPANY_FIELDMAP_ID where id=@TRANSPORTDSQUARE_COMPANY_ID;
-
-
-
--- Test for cargowise
-insert into t_fieldmaps(fieldmap_config) values('
-{
-    "custom8" : {
-        "available": false
-    }
-}
-');
-set @CARGOWISE_TMS_FIELDMAP_ID = (SELECT LAST_INSERT_ID());
-set @CARGOWISE_TMS_ID = (select id from t_tms_providers where name = 'CargoWise');
-update t_tms_providers set t_fieldmap_id=@CARGOWISE_TMS_FIELDMAP_ID where id=@CARGOWISE_TMS_ID;
-
-
--- Test for ocr variant
-insert into t_fieldmaps(fieldmap_config) values('
-{
-    "custom8" : {
-        "available": false
-    }
-}
-');
-set @COWIN_VARIANT_FIELDMAP_ID = (SELECT LAST_INSERT_ID());
-set @COWIN_VARIANT_ID = (select id from t_ocrvariants where abbyy_variant_name = 'Cowin-import');
-update t_ocrvariants set t_fieldmap_id=@COWIN_VARIANT_FIELDMAP_ID where id=@COWIN_VARIANT_ID;
-
-
--- Test for cushing-cowin-import
-insert into t_fieldmaps(fieldmap_config) values('
-{
-    "custom8" : {
-        "available": true
-    }
-}
-');
-set @COWIN_VARIANT_FIELDMAP_ID = (SELECT LAST_INSERT_ID());
-set @COWIN_VARIANT_ID = (select id from t_ocrvariants where abbyy_variant_name = 'Cowin-import');
-set @CUSHING_COMPANY_ID = (select id from t_companies where name = 'Cushing');
-insert into t_company_ocrvariant(t_company_id, t_ocrvariant_id, t_fieldmap_id)
-	values (@CUSHING_COMPANY_ID, @COWIN_VARIANT_ID, @COWIN_VARIANT_FIELDMAP_ID);

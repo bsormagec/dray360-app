@@ -1,3 +1,4 @@
+
 /*
 actual_destination
 actual_origin
@@ -83,8 +84,8 @@ insert into t_ocrvariants(
 ) values(
      CURRENT_TIMESTAMP
     ,-1
-    ,'Template #1 - Imports'
-    ,'Generic Order Template Spreadsheet #1 - Imports'
+    ,'Template 001 - Imports'
+    ,'Order Spreadsheet Template 001 - Imports'
     ,'tabular'
     ,'{
         "expedite": {"source": "Expedite (Y/N)"},
@@ -114,52 +115,15 @@ insert into t_ocrvariants(
         "ship_comment": {"source": "Ship Comments"},
         "contents": {"source": "Contents"},
         "quantity": {"source": "QTY"},
-        "asdfweight": {"source": "Weight"}
-        "weight": {"value": 999}
+        "weight": {"source": "Weight"}
     }'
     ,'[2, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22]'
 )
 ;
 
-SELECT LAST_INSERT_ID() as `Imports Template` \G
+SELECT LAST_INSERT_ID() as `Imports Template Id` \G
 
 
-
-
-
-
-
-
-
-
-
-Expedite
-Haz
-Steamship Line 
-Equipment Size / Type
-Reference #
-Customer #
-Load #
-PO #
-Release #
-Pickup #
-Vessel
-Voyage
-Cutoff Date
-Cutoff Time
-Booking Number
-Bill To
-Billing Comments
-Line Haul
-FSC
-Terminal Location
-Terminal Notes
-Customer Location
-Customer Notes
-Ship Notes
-Contents
-QTY
-Weight
 
 
 
@@ -176,8 +140,8 @@ insert into t_ocrvariants(
 ) values(
      CURRENT_TIMESTAMP
     ,-1
-    ,'Template #2 - Exports'
-    ,'Generic Order Template Spreadsheet #2 - Exports'
+    ,'Template 002 - Exports'
+    ,'Order Spreadsheet Template 002 - Exports'
     ,'tabular'
     ,'{
         "expedite": {"source": "Expedite"},
@@ -214,4 +178,74 @@ insert into t_ocrvariants(
 )
 ;
 
-SELECT LAST_INSERT_ID() as `Exports Template` \G
+SELECT LAST_INSERT_ID() as `Exports Template Id` \G
+
+
+
+
+
+insert into t_ocrvariants(
+     created_at
+    ,abbyy_variant_id
+    ,abbyy_variant_name
+    ,description
+    ,variant_type
+    ,mapping
+    ,company_id_list
+) values(
+     CURRENT_TIMESTAMP
+    ,-1
+    ,'Template 003 - One Ways'
+    ,'Order Spreadsheet Template 003 - One Ways'
+    ,'tabular'
+    ,'{
+        "expedite": {"source": "Expedite (Y/N)"},
+        "hazmat": {"source": "Haz (Y/N)"},
+        "unit_number": {"source": "Unit #"},
+        "seal_number": {"source": "Seal"},
+        "carrier": {"source": "Steamship Line "},
+        "container_length": {"source": "Equipment Size / Type"},
+        "reference_number": {"source": "Reference #"},
+        "customer_number": {"source": "Customer #"},
+        "load_number": {"source": "Load #"},
+        "purchase_order_number": {"source": "PO #"},
+        "release_number": {"source": "Release #"},
+        "pickup_number": {"source": "Pickup #"},
+        "vessel": {"source": "Vessel"},
+        "voyage": {"source": "Voyage"},
+        "cutoff_date": {"source": "Cutoff Date"},
+        "cutoff_time": {"source": "Cutoff Time"},
+        "booking_number": {"source": "Booking Number"},
+        "house_bol_hawb": {"source": "House BL"},
+        "master_bol_mawb": {"source": "Master BL"},
+        "bill_to_address": {"source": "Bill To"},
+        "bill_comment": {"source": "Bill Comments"},
+        "line_haul": {"source": "Line Haul"},
+        "fuel_surcharge": {"source": "FSC"},
+        "event1_location": {"source": "Terminal Location"},
+        "event1_note": {"source": "Terminal Notes"},
+        "event2_location": {"source": "Customer Location"},
+        "event2_note": {"source": "Customer Notes"},
+        "ship_comment": {"source": "Ship Comments"},
+        "contents": {"source": "Contents"},
+        "quantity": {"source": "QTY"},
+        "weight": {"value": 999}
+    }'
+    ,'[2, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22]'
+)
+;
+
+SELECT LAST_INSERT_ID() as `Oneway Template Id` \G
+
+
+
+
+
+/* SHOW THE RESULTS */
+
+select id, abbyy_variant_name, description, variant_type, deleted_at 
+from t_ocrvariants 
+where variant_type <> 'ocr' and variant_type is not null 
+order by id asc
+;
+
