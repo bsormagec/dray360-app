@@ -5,6 +5,7 @@
       :references="references"
       :label="label"
       :value="displayName"
+      :managed-by-template="managedByTemplate"
       @accept="handleAccept"
       @accept-all="() => handleAccept(true)"
     >
@@ -42,41 +43,15 @@ export default {
   },
 
   props: {
-    references: {
-      type: String,
-      default: null
-    },
-    label: {
-      type: String,
-      required: true
-    },
-    value: {
-      required: true,
-      default: ''
-    },
-    items: {
-      type: Array,
-      required: true
-    },
-    itemValue: {
-      type: String,
-      required: false,
-      default: 'id'
-    },
-    itemText: {
-      type: String,
-      required: false,
-      default: 'name'
-    },
-    editMode: {
-      type: Boolean,
-      required: true
-    },
-    displayValue: {
-      type: Function,
-      required: false,
-      default: undefined
-    }
+    references: { type: String, default: null },
+    label: { type: String, required: true },
+    value: { required: true, default: '' },
+    items: { type: Array, required: true },
+    itemValue: { type: String, required: false, default: 'id' },
+    itemText: { type: String, required: false, default: 'name' },
+    editMode: { type: Boolean, required: true },
+    displayValue: { type: Function, required: false, default: undefined },
+    managedByTemplate: { type: Boolean, required: false, default: false },
   },
 
   data: (vm) => ({

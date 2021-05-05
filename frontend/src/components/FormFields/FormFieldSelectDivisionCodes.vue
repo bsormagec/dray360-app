@@ -5,6 +5,7 @@
       :references="references"
       :label="label"
       :value="division_name"
+      :managed-by-template="managedByTemplate"
       @accept="handleAccept"
       @accept-all="() => handleAccept(true)"
     >
@@ -46,7 +47,8 @@ export default {
     references: { type: String, default: null },
     label: { required: true, type: String },
     value: { required: true, default: '' },
-    editMode: { required: true, type: Boolean }
+    editMode: { required: true, type: Boolean },
+    managedByTemplate: { required: false, type: Boolean, default: false },
   },
   data: (vm) => ({
     currentValue: vm.value,

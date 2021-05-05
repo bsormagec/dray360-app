@@ -31,6 +31,7 @@ class OrdersListQuery extends QueryBuilder
                 't_orders.unit_number',
                 't_orders.reference_number',
                 't_orders.is_hidden',
+                't_orders.preceded_by_order_id',
             ])
             ->addSelect(['request_is_hidden' => DB::table('t_job_latest_state', 's_s')
                 ->selectRaw("count(*) as request_is_hidden")

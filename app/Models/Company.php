@@ -73,6 +73,7 @@ class Company extends Model
         'chainio_url',
         'chainio_api_key',
         'sync_addresses',
+        't_fieldmap_id',
     ];
 
     protected $encryptable = [
@@ -127,6 +128,11 @@ class Company extends Model
     public function defaultTmsProvider()
     {
         return $this->belongsTo(TMSProvider::class, 'default_tms_provider_id');
+    }
+
+    public function fieldMap()
+    {
+        return $this->belongsTo(FieldMap::class, 't_fieldmap_id');
     }
 
     public static function withTemplates()
