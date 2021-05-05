@@ -4,7 +4,9 @@ namespace App\Http\Resources;
 
 use App\Models\User;
 use App\Models\Order;
+use App\Models\FieldMap;
 use App\Models\OCRRequest;
+use App\Models\OCRVariant;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Str;
 use App\Actions\PresignImageUrl;
@@ -40,6 +42,7 @@ class SideBySideOrder extends JsonResource
 
         $this->preparePreceedingOrderChanges();
         $this->loadOrderCompanyConfiguration();
+        $this->loadFieldMappingConfiguration();
         $this->loadLatestOcrRequestLatestStatus();
         $this->loadUserWhoSentToTms();
         $this->loadLocks();
@@ -69,6 +72,18 @@ class SideBySideOrder extends JsonResource
         $this->resource->company->unsetRelation('domain');
 
         $this->resource->company->configuration = $configuration;
+    }
+
+    protected function loadFieldMappingConfiguration()
+    {
+        $variant = OCRVariant::where('abbyy_variant_name', $this->resource->variant_name)->first(['id']);
+
+        $fieldMap = FieldMap::getFrom([
+            'company_id' => $this->resource->t_company_id,
+            'variant_id' => $variant->id ?? null,
+        ]);
+
+        $this->resource->setRelation('fieldMaps', collect($fieldMap));
     }
 
     protected function loadLocks()
@@ -194,13 +209,23 @@ class SideBySideOrder extends JsonResource
                 }
 
                 if (in_array($key, ['order_line_items', 'order_address_events'])) {
-                    $columnToCompare = $key == 'order_line_items' ? 'multiline_contents' : 't_address_id';  # can we have more than one key? 'multiline_contents' is not always used, also look at contents, others...
+                    $columnsMap = [
+                        'order_address_events' => ['t_address_id'],
+                        'order_line_items' => ['multiline_contents', 'contents', 'quantity', 'weight'],
+                    ];
 
-                    return $this->relatedItemsAreTheSame(
-                        $this->resource->getRelationValue(Str::camel($key))->toArray(),
-                        $precedingValue,
-                        $columnToCompare
-                    );
+
+                    foreach ($columnsMap[$key] as $columnToCompare) {
+                        $areTheSame = $this->relatedItemsAreTheSame(
+                            $this->resource->getRelationValue(Str::camel($key))->toArray(),
+                            $precedingValue,
+                            $columnToCompare
+                        );
+                        if (! $areTheSame) {
+                            return false;
+                        }
+                    }
+                    return true;
                 }
 
                 return $this->resource->getAttribute($key) == $precedingValue;

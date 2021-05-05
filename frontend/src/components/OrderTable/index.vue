@@ -560,6 +560,11 @@ export default {
       const deltaTime = now - startTime
       const orders = data.map((order) => {
         order.openStatusHistoryDialog = false
+
+        if (order.preceded_by_order_id) {
+          order.latest_ocr_request_status.display_status += ' (update)'
+        }
+
         return order
       })
 

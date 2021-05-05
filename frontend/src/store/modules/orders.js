@@ -56,6 +56,10 @@ const actions = {
 
     if (error) return reqStatus.error
 
+    if (data.preceded_by_order_id) {
+      data.ocr_request.latest_ocr_request_status.display_status += ' (update)'
+    }
+
     commit(types.setCurrentOrder, data)
     return reqStatus.success
   },

@@ -6,6 +6,7 @@
     label=""
     :edit-mode="editMode"
     only-hover
+    :managed-by-template="managedByTemplate"
   >
     <div class="form-field-element-modal-address">
       <div class="address-book-modal">
@@ -117,7 +118,8 @@ export default {
     billable: { type: Boolean, required: false, default: false },
     editMode: { required: true, type: Boolean },
     enableAddressFilters: { type: Boolean, required: false, default: true },
-    enableSearch: { type: Boolean, required: false, default: false }
+    enableSearch: { type: Boolean, required: false, default: false },
+    managedByTemplate: { type: Boolean, required: false, default: false },
   },
 
   data: (vm) => ({

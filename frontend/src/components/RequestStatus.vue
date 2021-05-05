@@ -44,7 +44,7 @@ export default {
   },
   computed: {
     statusClass () {
-      return cleanStrForId(this.status.display_status)
+      return cleanStrForId(this.status.display_status.replace('(update)', ''))
     }
   }
 }

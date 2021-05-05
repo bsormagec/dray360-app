@@ -31,6 +31,7 @@ class AuthServiceProvider extends ServiceProvider
         \App\Models\DictionaryItem::class => \App\Policies\DictionaryItemPolicy::class,
         \OwenIt\Auditing\Models\Audit::class => \App\Policies\AuditLogPolicy::class,
         \App\Models\ObjectLock::class => \App\Policies\ObjectLockPolicy::class,
+        \App\Models\FieldMap::class => \App\Policies\FieldMapPolicy::class,
     ];
 
     /**

@@ -5,6 +5,7 @@
       :references="references"
       :label="label"
       :value="displayValue"
+      :managed-by-template="managedByTemplate"
       @accept="handleAccept"
       @accept-all="() => handleAccept(true)"
     >
@@ -42,7 +43,8 @@ export default {
     references: { type: String, default: null },
     label: { required: true, type: String },
     value: { required: true, default: '' },
-    editMode: { required: true, type: Boolean }
+    editMode: { required: true, type: Boolean },
+    managedByTemplate: { type: Boolean, required: false, default: false },
   },
 
   data: (vm) => ({
