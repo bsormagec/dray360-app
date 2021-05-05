@@ -18,6 +18,11 @@
 
       <span class="input__legend">
         <strong>Supported file types:</strong> {{ accept.toUpperCase() }}
+        <br>
+        <strong>Uploading XLSX?</strong> Use one of these <a
+          href="https://dray360-site-assets.s3.us-east-2.amazonaws.com/order_template_spreadsheets/order_template_spreadsheets.zip"
+          target="_blank"
+        >templates</a>
       </span>
     </div>
 
