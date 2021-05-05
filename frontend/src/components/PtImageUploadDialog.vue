@@ -155,15 +155,16 @@ import { getDictionaryItems, createDictionaryItem } from '@/store/api_calls/dict
 import utils, { type } from '@/store/modules/utils'
 import auth from '@/store/modules/auth'
 import { mapActions, mapState } from 'vuex'
-import { getCompanies } from '@/store/api_calls/companies'
+
 import permissions from '@/mixins/permissions'
+import allCompanies from '@/mixins/all_companies'
 
 import events from '@/enums/events'
 import { dictionaryItemsTypes } from '@/enums/app_objects_types'
 
 export default {
   name: 'PtImageUploadDialog',
-  mixins: [permissions],
+  mixins: [permissions, allCompanies],
   data: () => ({
     open: false,
     loading: false,
@@ -227,7 +228,7 @@ export default {
       this.lockTmsShipmentId = tmsShipmentId !== null
 
       if (this.canViewOtherCompanies() && this.companies.length === 0) {
-        await this.getCompanies()
+        await this.fetchCompanies()
       } else if (!this.canViewOtherCompanies()) {
         this.companyId = this.currentUser.t_company_id
       }
@@ -325,12 +326,6 @@ export default {
       const [error] = await postUploadPtImageFile(file, params)
 
       return error === undefined
-    },
-
-    async getCompanies () {
-      const [error, data] = await getCompanies()
-      if (error) return
-      this.companies = data.data
     },
 
     async getPTImageTypes () {

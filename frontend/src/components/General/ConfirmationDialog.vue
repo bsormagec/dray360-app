@@ -67,6 +67,7 @@ export default {
 
     acceptDialog () {
       this.accept(this.inputValue)
+      this.inputValue = ''
     }
   }
 }

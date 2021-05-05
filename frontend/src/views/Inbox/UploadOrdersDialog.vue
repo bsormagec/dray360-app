@@ -113,8 +113,9 @@ import { getVariantList } from '@/store/api_calls/rules_editor'
 import utils, { type } from '@/store/modules/utils'
 import auth from '@/store/modules/auth'
 import { mapActions, mapState } from 'vuex'
-import { getCompanies } from '@/store/api_calls/companies'
+
 import permissions from '@/mixins/permissions'
+import allCompanies from '@/mixins/all_companies'
 
 import { getVariantTypeFromFile, isPdf } from '@/utils/files_uploads'
 import uniq from 'lodash/uniq'
@@ -123,7 +124,7 @@ import uniqBy from 'lodash/uniqBy'
 export default {
   name: 'UploadOrdersDialog',
   components: { UploadOrdersFileFields },
-  mixins: [permissions],
+  mixins: [permissions, allCompanies],
   props: {
     open: {
       type: Boolean,
@@ -139,7 +140,6 @@ export default {
     files: [],
     variantName: null,
     variants: [],
-    companies: [],
     company_id: null
   }),
   computed: {
@@ -173,7 +173,7 @@ export default {
   },
   created () {
     if (this.canViewOtherCompanies()) {
-      this.getCompanies()
+      this.fetchCompanies()
     }
   },
   methods: {
@@ -265,12 +265,6 @@ export default {
       const [error] = await postUploadRequestFile(file, params)
       return error === undefined
     },
-
-    async getCompanies () {
-      const [error, data] = await getCompanies()
-      if (error) return
-      this.companies = data.data
-    }
   }
 }
 </script>

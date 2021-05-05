@@ -132,7 +132,8 @@ export default {
         { name: 'Rules Editor', href: '/rules-editor' },
         { name: 'Usage Stats', href: '/nova/usage-metrics' },
         { name: 'Audit Logs', path: '/audit-logs', target: '_self' },
-        { name: 'RefsCustoms Mapping', href: '/companies/refs-custom-mapping' }
+        { name: 'RefsCustoms Mapping', href: '/companies/refs-custom-mapping' },
+        { name: 'Field Mapping', path: '/field-mapping', target: '_self' },
       ]
     }
   },
@@ -221,6 +222,7 @@ $sidebarbackground: url("../../assets/images/menuBackground.png");
     .v-list-group__items a{
       border-bottom: unset !important;
     .v-list-item__title.admin__menu {
+      color: var(--v-slate-gray-base) !important;
       text-transform: capitalize;
       font-size: rem(13);
       font-weight: 500;

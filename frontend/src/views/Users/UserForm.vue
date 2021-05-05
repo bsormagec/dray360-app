@@ -122,10 +122,11 @@
   />
 </template>
 <script>
-import { mapActions } from 'vuex'
 import permissions from '@/mixins/permissions'
+import allCompanies from '@/mixins/all_companies'
+
+import { mapActions } from 'vuex'
 import utils, { type } from '@/store/modules/utils'
-import { getCompanies } from '@/store/api_calls/companies'
 import { getUser, getRoles, changeUserStatus, editUser, deleteUser, addUser } from '@/store/api_calls/users'
 import ContainerNotFound from '@/views/ContainerNotFound'
 import SidebarNavigationButton from '@/components/General/SidebarNavigationButton'
@@ -140,7 +141,7 @@ export default {
     SidebarNavigationButton
   },
 
-  mixins: [permissions],
+  mixins: [permissions, allCompanies],
 
   props: {
     edit: {
@@ -164,7 +165,6 @@ export default {
     role_selected: null,
     activated: true,
     roles: [],
-    companies: [],
     user: {
       id: undefined,
       t_company_id: null,
@@ -271,15 +271,6 @@ export default {
       }
 
       this.roles = data.data
-    },
-    async fetchCompanies () {
-      const [error, data] = await getCompanies()
-
-      if (error !== undefined) {
-        return
-      }
-
-      this.companies = data.data
     },
 
     async toggleUserStatus () {
