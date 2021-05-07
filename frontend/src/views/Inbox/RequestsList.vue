@@ -120,7 +120,6 @@ import permissions from '@/mixins/permissions'
 import locks from '@/mixins/locks'
 import isMobile from '@/mixins/is_mobile'
 import { objectLocks } from '@/enums/app_objects_types'
-import { isInAdminReview } from '@/utils/status_helpers'
 import events from '@/enums/events'
 
 export default {
@@ -299,7 +298,11 @@ export default {
 
           this.wsReleaseLockRequest({ requestId: lock.object_id })
           this.$root.$emit(events.objectUnlocked, e)
-          if (this.requestIdSelected !== lock.object_id || !this.hasPermission('object-locks-create')) {
+          if (
+            this.requestIdSelected !== lock.object_id ||
+            !this.hasPermission('object-locks-create') ||
+            this.supervise
+          ) {
             return
           }
 
@@ -379,26 +382,18 @@ export default {
       this.$emit('change', request)
       this.setURLParams()
     },
+
     async handleRequestLock (oldRequest, newRequest) {
-      if (
-        oldRequest.request_id && newRequest.request_id &&
-        oldRequest.request_id !== newRequest.request_id &&
-        !oldRequest.is_locked &&
-        isInAdminReview(oldRequest?.latest_ocr_request_status?.status) &&
-        this.hasPermission('object-locks-create')
-      ) {
+      if (this.shouldReleaseLock(oldRequest, newRequest)) {
         await this.releaseLockRequest({ requestId: oldRequest.request_id, updateList: true })
         this.stopRefreshingLock()
       }
 
-      if (
-        !this.hasPermission('object-locks-create') ||
-        newRequest.is_locked ||
-        !isInAdminReview(newRequest?.latest_ocr_request_status?.status) ||
-        this.supervise
-      ) {
+      if (this.shouldOmitAutolocking(newRequest)) {
         return
-      } else if (this.userOwnsLock(newRequest.lock)) {
+      }
+
+      if (this.userOwnsLock(newRequest.lock)) {
         this.refreshCurrentLock(newRequest.request_id)
         this.startRefreshingLock(newRequest.request_id)
         return
@@ -410,6 +405,7 @@ export default {
         updateList: true
       })
     },
+
     startLoading () {
       this.loading = true
     },

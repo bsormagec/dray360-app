@@ -312,13 +312,12 @@ export default {
     async initializeLock () {
       if (
         !this.refreshLock ||
-        !this.hasPermission('object-locks-create') ||
-        this.order.is_locked ||
-        !isInAdminReview(this.order?.parent_ocr_request?.latest_ocr_request_status?.status) ||
-        this.supervise
+        this.shouldOmitAutolocking({ ...(this.order?.parent_ocr_request), is_locked: this.order.is_locked })
       ) {
         return
-      } else if (this.userOwnsLock(this.order.lock)) {
+      }
+
+      if (this.userOwnsLock(this.order.lock)) {
         this.refreshCurrentLock(this.order.request_id)
         this.startRefreshingLock(this.order.request_id)
         return

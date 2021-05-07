@@ -40,6 +40,8 @@ return [
             'audit-logs' => 'v',
             'nova' => 'v',
             'object-locks' => 'c,e',
+            'auto-lock-processing' => 'c',
+            'auto-lock-not-processing' => 'c',
             'supervise' => 'v',
             'pt-images' => 'c',
             'field-maps' => 'c,v',
@@ -67,6 +69,7 @@ return [
             'admin-review' => 'v,e',
             'audit-logs' => 'v',
             'object-locks' => 'c,e',
+            'auto-lock-processing' => 'c',
             'pt-images' => 'c',
         ],
         'customer-admin' => [
@@ -79,12 +82,16 @@ return [
             'dictionary-items' => 'v,c',
             'audit-logs' => 'v',
             'pt-images' => 'c',
+            'object-locks' => 'c,e',
+            'auto-lock-not-processing' => 'c',
         ],
         'customer-user' => [
             'ocr-requests' => 'c,v',
             'orders' => 'v,c,e',
             'ocr-variants' => 'v',
             'dictionary-items' => 'v,c',
+            'object-locks' => 'c,e',
+            'auto-lock-not-processing' => 'c',
         ],
     ],
 

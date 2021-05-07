@@ -5,8 +5,12 @@ import { putRefreshLock } from '@/store/api_calls/object_locks'
 import { objectLocks } from '@/enums/app_objects_types'
 import events from '@/enums/events'
 import auth from '@/store/modules/auth'
+import permissions from '@/mixins/permissions'
+import { isInProcessing } from '@/utils/status_helpers'
 
 export default {
+  mixins: [permissions],
+
   data: () => ({
     lockRefresher: null,
   }),
@@ -14,7 +18,10 @@ export default {
   computed: {
     ...mapState(auth.moduleName, {
       currentUser: state => state.currentUser
-    })
+    }),
+    ...mapState(requestsList.moduleName, {
+      supervise: state => state.supervise,
+    }),
   },
 
   methods: {
@@ -73,6 +80,23 @@ export default {
         this.$root.$emit(events.lockRefreshFailed, { request_id: requestId })
         this.stopRefreshingLock()
       }
+    },
+
+    shouldOmitAutolocking (requestToAutoLock) {
+      const inProcessing = isInProcessing(requestToAutoLock?.latest_ocr_request_status?.display_status)
+
+      return this.supervise ||
+        requestToAutoLock.is_locked ||
+        !this.hasPermission('object-locks-create') ||
+        (inProcessing && !this.hasPermission('auto-lock-processing-create')) ||
+        (!inProcessing && !this.hasPermission('auto-lock-not-processing-create'))
+    },
+
+    shouldReleaseLock (oldRequest, newRequest) {
+      return oldRequest.request_id && newRequest.request_id &&
+        oldRequest.request_id !== newRequest.request_id &&
+        this.userOwnsLock(oldRequest.lock) &&
+        this.hasPermission('object-locks-create')
     },
 
     stopRefreshingLock () {

@@ -27,7 +27,7 @@
           v-text="'Copy request ID'"
         />
         <v-list-item
-          v-if="active && !supervise && isLocked && hasPermission('object-locks-edit')"
+          v-if="active && !supervise && hasPermission('object-locks-edit')"
           @click="handleClaimLock"
           v-text="'Claim lock'"
         />

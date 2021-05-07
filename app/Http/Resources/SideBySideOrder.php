@@ -90,7 +90,7 @@ class SideBySideOrder extends JsonResource
     {
         $this->resource->load([
             'locks.user' => function ($load) {
-                $load->select('id', 'name');
+                $load->select('id', 'name', 't_company_id');
             },
         ]);
 
