@@ -32,7 +32,6 @@
                 { text: 'Request ID', value: 'request_id' },
                 { text: 'Company', value: 'company.name' },
                 { text: 'Variant Name', value: 'variant_name' },
-                { text: 'Changes Count', value: 'changes_count' },
                 { text: 'First Updated', value: 'created_at' },
                 { text: 'Last Updated', value: 'updated_at' },
                 { text: 'Changes Count', value: 'changes_count' },
