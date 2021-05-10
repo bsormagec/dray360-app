@@ -27,7 +27,7 @@
           v-text="'Copy request ID'"
         />
         <v-list-item
-          v-if="active && !supervise && hasPermission('object-locks-edit')"
+          v-if="active && !supervise && hasPermission('object-locks-edit') && !userOwnsLock(request.lock)"
           @click="handleClaimLock"
           v-text="'Claim lock'"
         />
@@ -200,9 +200,9 @@ export default {
     async handleReleaseLock () {
       this.loading = true
       await this.setConfirmDialog({
-        title: 'Are you sure you want to release this request\'s lock?',
+        title: 'Are you sure you want to release the request lock?',
         onConfirm: async () => {
-          this.releaseLockRequest({ requestId: this.request.request_id })
+          this.releaseLockRequest({ requestId: this.request.request_id, updateList: true, })
 
           this.$root.$emit(events.lockReleased, this.request)
           this.loading = false

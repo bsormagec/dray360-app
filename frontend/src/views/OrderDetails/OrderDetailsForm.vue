@@ -37,7 +37,7 @@
       <div>
         <div class="order__title mr-1 d-flex justify-space-between align-center">
           <v-tooltip
-            v-if="isLocked && order.lock && hasPermission('object-locks-create')"
+            v-if="isLocked && hasPermission('object-locks-create')"
             bottom
           >
             <template v-slot:activator="{ on, attrs }">
@@ -50,7 +50,8 @@
                 mdi-lock
               </v-icon>
             </template>
-            <span>Locked by {{ order.lock.user.name }}</span>
+            <span v-if="order.lock">Locked by {{ order.lock.user.name }}</span>
+            <span v-else>Locked</span>
           </v-tooltip>
           Order #{{ order.id }}
           <v-btn

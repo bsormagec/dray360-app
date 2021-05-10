@@ -230,6 +230,7 @@ export default {
 
     initializeLockingListeners () {
       this.$root.$on(events.requestsRefreshed, () => !this.refreshLock && this.fetchFormData())
+      this.$root.$on(events.lockReleased, request => this.setOrderLock({ locked: true, lock: null }))
       this.$root.$on(events.lockRefreshFailed, () => this.stopRefreshingLock())
       this.$root.$on(events.lockClaimed, request => {
         if (request.request_id !== this.order.request_id) {
