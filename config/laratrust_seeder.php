@@ -48,6 +48,7 @@ return [
         ],
         'order-review' => [
             'billing-mapping' => 'e,v',
+            'rules-editor' => 'v',
             'orders' => 'e,v,c,r',
             'all-orders' => 'e',
             'order-address-events' => 'c,v,e,r',

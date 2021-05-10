@@ -32,7 +32,7 @@
         <div class="menu">
           <v-list>
             <v-list-group
-              v-if="isSuperadmin()"
+              v-if="canViewOtherCompanies()"
               no-action
               sub-group
             >
@@ -43,7 +43,7 @@
               </template>
 
               <v-list-item
-                v-for="(el, i) in admins"
+                v-for="(el, i) in adminMenuItems"
                 :key="i"
                 :href="el.href"
                 :to="el.path"
@@ -122,19 +122,6 @@ export default {
       group: null,
       loading: false,
       model: 1,
-      admins: [
-        { name: 'Nova', href: '/nova' },
-        { name: 'Horizon', href: '/horizon' },
-        { name: 'Websockets', href: '/laravel-websockets' },
-        { name: 'Telescope', href: '/telescope' },
-        { name: 'Roles and permissions', href: '/authorization' },
-        { name: 'Sentry', href: 'https://sentry.io/organizations/draymaster/issues/?project=5285677' },
-        { name: 'Rules Editor', href: '/rules-editor' },
-        { name: 'Usage Stats', href: '/nova/usage-metrics' },
-        { name: 'Audit Logs', path: '/audit-logs', target: '_self' },
-        { name: 'RefsCustoms Mapping', href: '/companies/refs-custom-mapping' },
-        { name: 'Field Mapping', path: '/field-mapping', target: '_self' },
-      ]
     }
   },
   computed: {
@@ -142,17 +129,32 @@ export default {
     ...mapState(utils.moduleName, {
       tenantConfig: state => state.tenantConfig,
       showSidebar: state => state.sidebar.show,
-      menuItems () {
-        return [
-          { name: 'inbox', path: '/inbox', hasPermission: this.hasPermission('orders-view') },
-          { name: 'upload images', events: { click: this.openUploadImages }, hasPermission: this.hasPermission('pt-images-create') },
-          { name: 'search', path: '/search', hasPermission: this.hasPermission('orders-view') },
-          { name: 'manage users', path: '/user/dashboard', hasPermission: this.hasPermission('users-view') },
-          { name: 'my profile', path: '/user/edit-profile', hasPermission: true },
-          { name: 'logout', events: { click: this.logoutHandler }, hasPermission: true, hasLoading: true }
-        ].filter((item) => item.hasPermission)
-      }
-    })
+    }),
+    adminMenuItems () {
+      return [
+        { name: 'Nova', href: '/nova', hasPermission: this.hasPermission('nova-view') },
+        { name: 'Horizon', href: '/horizon', hasPermission: this.hasPermission('nova-view') },
+        { name: 'Websockets', href: '/laravel-websockets', hasPermission: this.hasPermission('nova-view') },
+        { name: 'Telescope', href: '/telescope', hasPermission: this.hasPermission('nova-view') },
+        { name: 'Roles and permissions', href: '/authorization', hasPermission: this.hasPermission('nova-view') },
+        { name: 'Sentry', href: 'https://sentry.io/organizations/draymaster/issues/?project=5285677', hasPermission: this.hasPermission('nova-view') },
+        { name: 'Rules Editor', href: '/rules-editor', hasPermission: this.hasPermission('rules-editor-view') },
+        { name: 'Usage Stats', href: '/nova/usage-metrics', hasPermission: this.hasPermission('nova-view') },
+        { name: 'Audit Logs', path: '/audit-logs', target: '_self', hasPermission: this.hasPermission('audit-logs-view') },
+        { name: 'RefsCustoms Mapping', href: '/companies/refs-custom-mapping', hasPermission: this.hasPermission('nova-view') },
+        { name: 'Field Mapping', path: '/field-mapping', target: '_self', hasPermission: this.hasPermission('field-maps-view') },
+      ].filter((item) => item.hasPermission)
+    },
+    menuItems () {
+      return [
+        { name: 'inbox', path: '/inbox', hasPermission: this.hasPermission('orders-view') },
+        { name: 'upload images', events: { click: this.openUploadImages }, hasPermission: this.hasPermission('pt-images-create') },
+        { name: 'search', path: '/search', hasPermission: this.hasPermission('orders-view') },
+        { name: 'manage users', path: '/user/dashboard', hasPermission: this.hasPermission('users-view') },
+        { name: 'my profile', path: '/user/edit-profile', hasPermission: true },
+        { name: 'logout', events: { click: this.logoutHandler }, hasPermission: true, hasLoading: true }
+      ].filter((item) => item.hasPermission)
+    }
   },
   async mounted () {
     await this[type.getTenantConfig]()
