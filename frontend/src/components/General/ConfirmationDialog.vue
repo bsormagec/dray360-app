@@ -7,6 +7,7 @@
     <v-card>
       <v-card-title
         v-show="confirmationDialog.title !== ''"
+        :class="{'no-wrap':confirmationDialog.noWrap}"
       >
         {{ confirmationDialog.title }}
       </v-card-title>
@@ -76,5 +77,8 @@ export default {
 <style lang="scss" scoped>
 .v-card__title {
   white-space: normal;
+  &.no-wrap{
+    white-space: nowrap !important;
+  }
 }
 </style>

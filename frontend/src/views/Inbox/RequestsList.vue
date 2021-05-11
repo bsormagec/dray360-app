@@ -277,9 +277,10 @@ export default {
             !this.requestSelected.is_locked
           ) {
             this.setConfirmDialog({
-              title: 'Lock claimed for this request',
-              text: `${lock.user.name} claimed the lock for this request`,
+              title: 'Edit-lock taken for this request',
+              text: `${lock.user.name} took the edit-lock for this request`,
               confirmText: 'Ok',
+              noWrap: true,
               cancelText: '',
               onConfirm: () => {},
               onCancel: () => {}
@@ -308,7 +309,8 @@ export default {
 
           await this.setConfirmDialog({
             title: 'Request Unlocked',
-            text: 'Do you want to claim the lock?',
+            text: 'Do you want to take the edit-lock?',
+            noWrap: true,
             onConfirm: () => {
               this.handleChange({ ...this.requestSelected, lock: null, is_locked: false, })
             },

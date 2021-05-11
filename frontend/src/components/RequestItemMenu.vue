@@ -29,12 +29,12 @@
         <v-list-item
           v-if="active && !supervise && hasPermission('object-locks-edit') && !userOwnsLock(request.lock)"
           @click="handleClaimLock"
-          v-text="'Claim lock'"
+          v-text="'Take edit-lock'"
         />
         <v-list-item
           v-if="userOwnsLock(request.lock)"
           @click="handleReleaseLock"
-          v-text="'Release lock'"
+          v-text="'Release edit-lock'"
         />
         <v-list-item
           v-if="!isPtImageUpload"
@@ -179,7 +179,8 @@ export default {
     async handleClaimLock () {
       this.loading = true
       await this.setConfirmDialog({
-        title: 'Are you sure you want to claim this request\'s lock?',
+        title: 'Are you sure you want to take the request edit-lock?',
+        noWrap: true,
         onConfirm: async () => {
           this.attemptToLockRequest({
             requestId: this.request.request_id,

@@ -53,6 +53,13 @@
             <span v-if="order.lock">Locked by {{ order.lock.user.name }}</span>
             <span v-else>Locked</span>
           </v-tooltip>
+          <v-icon
+            v-else
+            small
+            color="slate-gray"
+          >
+            mdi-lock-open-variant
+          </v-icon>
           Order #{{ order.id }}
           <v-btn
             outlined

@@ -61,6 +61,7 @@ const actions = {
     title = '',
     text = '',
     hasInputValue = '',
+    noWrap = false,
     confirmText = 'Accept',
     cancelText = 'Cancel',
     onConfirm,
@@ -74,7 +75,8 @@ const actions = {
       confirmText,
       cancelText,
       onConfirm,
-      onCancel
+      onCancel,
+      noWrap,
     })
   },
   [type.acceptConfirmationDialog] ({ commit, state }, value) {
@@ -102,6 +104,7 @@ function getBaseConfirmationDialog () {
     title: '',
     text: '',
     hasInputValue: true,
+    noWrap: false,
     confirmText: 'Confirm',
     cancelText: 'Cancel',
     onConfirm: () => {},

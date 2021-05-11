@@ -276,8 +276,8 @@ export default {
             !this.order.is_locked
           ) {
             this.setConfirmDialog({
-              title: 'Lock claimed for this request',
-              text: `${lock.user.name} claimed the lock for this request`,
+              title: 'Edit-lock taken for this request',
+              text: `${lock.user.name} took the edit-lock for this request`,
               confirmText: 'Ok',
               cancelText: '',
               onConfirm: () => {},
