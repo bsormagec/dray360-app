@@ -29,17 +29,17 @@
         dense
       />
       <v-text-field
-        v-model="formFieldMap.d3canon_column"
-        :class="{'field-mapping-form-field__changed': hasChanged('d3canon_column')}"
-        label="D3canon Column"
+        v-model="formFieldMap.d3canon_table"
+        :class="{'field-mapping-form-field__changed': hasChanged('d3canon_table')}"
+        label="D3canon Table"
         clearable
         outlined
         dense
       />
       <v-text-field
-        v-model="formFieldMap.d3canon_table_column"
-        :class="{'field-mapping-form-field__changed': hasChanged('d3canon_table_column')}"
-        label="D3canon Table Column"
+        v-model="formFieldMap.d3canon_column"
+        :class="{'field-mapping-form-field__changed': hasChanged('d3canon_column')}"
+        label="D3canon Column"
         clearable
         outlined
         dense
@@ -205,9 +205,9 @@ export default {
       cargowise_destination: null,
       compcare_destination: null,
       constant_value: null,
-      d3canon_column: 'company_address_tms_code',
       d3canon_name: 'bill_to_address_code',
-      d3canon_table_column: 't_company_address_tms_code',
+      d3canon_table: 't_company_address_tms_code',
+      d3canon_column: 'company_address_tms_code',
       notes: null,
       post_process_source_field: null,
       post_process_source_regex: null,
