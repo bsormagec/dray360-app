@@ -46,7 +46,7 @@
 </template>
 <script>
 
-import utils, { type } from '@/store/modules/utils'
+import utils, { actionTypes } from '@/store/modules/utils'
 import { mapActions, mapState } from 'vuex'
 import { reqStatus } from '@/enums/req_status'
 
@@ -69,11 +69,11 @@ export default {
   },
 
   async created () {
-    await this[type.getTenantConfig]()
+    await this[actionTypes.getTenantConfig]()
   },
 
   methods: {
-    ...mapActions(utils.moduleName, [type.getTenantConfig, type.setSnackbar]),
+    ...mapActions(utils.moduleName, [actionTypes.getTenantConfig, actionTypes.setSnackbar]),
     async ResetPassword () {
       const response = await this.$store.dispatch('AUTH/PasswordReset', {
         token: this.$route.params.id,
@@ -83,11 +83,7 @@ export default {
       })
 
       if (response.status === reqStatus.success) {
-        await this[type.setSnackbar]({
-          show: true,
-          showSpinner: false,
-          message: 'Your password has been reset!'
-        })
+        this.setSnackbar({ message: 'Your password has been reset!' })
         this.$router.push({ path: '/login' })
       } else {
         this.error = true

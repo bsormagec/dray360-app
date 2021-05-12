@@ -1,46 +1,56 @@
 import { getTenantConfig } from '@/store/api_calls/utils'
-import { reqStatus } from '@/enums/req_status'
 import vuetify from '@/plugins/vuetify'
 
-export const type = {
+export const mutationTypes = {
   setSnackbar: 'SET_SNACKBAR',
-  setConfirmationDialog: 'SET_CONFIRMATION_DIALOG',
-  cancelConfirmationDialog: 'CANCEL_CONFIRMATION_DIALOG',
-  acceptConfirmationDialog: 'ACCEPT_CONFIRMATION_DIALOG',
   setTenantConfig: 'SET_TENANT_CONFIG',
-  getTenantConfig: 'GET_TENANT_CONFIG',
+  setConfirmationDialog: 'SET_CONFIRMATION_DIALOG',
   setSidebar: 'SET_SIDEBAR'
 }
+
+export const actionTypes = {
+  setSnackbar: 'setSnackbar',
+  setConfirmationDialog: 'setConfirmationDialog',
+  cancelConfirmationDialog: 'cancelConfirmationDialog',
+  acceptConfirmationDialog: 'acceptConfirmationDialog',
+  getTenantConfig: 'getTenantConfig',
+  setTenantConfig: 'setTenantConfig',
+  setSidebar: 'setSidebar',
+}
+
 const initialState = {
-  snackbar: { show: false, showSpinner: false, message: '' },
+  snackbar: { message: '' },
   tenantConfig: {},
   confirmationDialog: getBaseConfirmationDialog(),
   sidebar: { show: false }
 }
 
 const mutations = {
-  [type.setSnackbar] (state, snackbar) {
+  [mutationTypes.setSnackbar] (state, snackbar) {
     state.snackbar = snackbar
   },
-  [type.setTenantConfig] (state, tenantConfig) {
+
+  [mutationTypes.setTenantConfig] (state, tenantConfig) {
     state.tenantConfig = tenantConfig
   },
-  [type.setConfirmationDialog] (state, confirmationDialog) {
+
+  [mutationTypes.setConfirmationDialog] (state, confirmationDialog) {
     state.confirmationDialog = { ...confirmationDialog }
   },
-  [type.setSidebar] (state, sidebar) {
+
+  [mutationTypes.setSidebar] (state, sidebar) {
     state.sidebar = sidebar
   }
 
 }
 
 const actions = {
-  async [type.setSnackbar] ({ commit }, { show, showSpinner, message }) {
-    commit(type.setSnackbar, { show, showSpinner, message })
-    return reqStatus.success
+  [actionTypes.setSnackbar] ({ commit }, { message = '' }) {
+    commit(mutationTypes.setSnackbar, { message })
   },
-  async [type.setTenantConfig] ({ state, commit }, newconfig) {
-    commit(type.setTenantConfig, { ...newconfig })
+
+  async [actionTypes.setTenantConfig] ({ state, commit }, newconfig) {
+    commit(mutationTypes.setTenantConfig, { ...newconfig })
 
     for (const key in newconfig) {
       if (!key.includes('_color') || newconfig[key] === null) {
@@ -50,14 +60,16 @@ const actions = {
       vuetify.framework.theme.themes.light[colorKey] = newconfig[key]
     }
   },
-  async [type.getTenantConfig] ({ dispatch }) {
+
+  async [actionTypes.getTenantConfig] ({ dispatch }) {
     const [error, response] = await getTenantConfig()
 
     if (error) return
 
-    await dispatch(type.setTenantConfig, { ...response })
+    await dispatch(actionTypes.setTenantConfig, { ...response })
   },
-  [type.setConfirmationDialog] ({ commit }, {
+
+  [actionTypes.setConfirmationDialog] ({ commit }, {
     title = '',
     text = '',
     hasInputValue = '',
@@ -67,7 +79,7 @@ const actions = {
     onConfirm,
     onCancel
   }) {
-    commit(type.setConfirmationDialog, {
+    commit(mutationTypes.setConfirmationDialog, {
       open: true,
       title,
       text,
@@ -79,22 +91,25 @@ const actions = {
       noWrap,
     })
   },
-  [type.acceptConfirmationDialog] ({ commit, state }, value) {
+
+  [actionTypes.acceptConfirmationDialog] ({ commit, state }, value) {
     if (state.confirmationDialog.onConfirm) {
       state.confirmationDialog.onConfirm(value)
     }
 
-    commit(type.setConfirmationDialog, getBaseConfirmationDialog())
+    commit(mutationTypes.setConfirmationDialog, getBaseConfirmationDialog())
   },
-  [type.cancelConfirmationDialog] ({ commit, state }) {
+
+  [actionTypes.cancelConfirmationDialog] ({ commit, state }) {
     if (state.confirmationDialog.onCancel) {
       state.confirmationDialog.onCancel()
     }
 
-    commit(type.setConfirmationDialog, getBaseConfirmationDialog())
+    commit(mutationTypes.setConfirmationDialog, getBaseConfirmationDialog())
   },
-  [type.setSidebar] ({ commit }, { show }) {
-    commit(type.setSidebar, { show })
+
+  [actionTypes.setSidebar] ({ commit }, { show }) {
+    commit(mutationTypes.setSidebar, { show })
   }
 }
 

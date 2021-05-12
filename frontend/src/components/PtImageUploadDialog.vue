@@ -152,7 +152,7 @@
 
 import { postUploadPtImageFile } from '@/store/api_calls/utils'
 import { getDictionaryItems, createDictionaryItem } from '@/store/api_calls/dictionary_items'
-import utils, { type } from '@/store/modules/utils'
+import utils, { actionTypes as utilsActionTypes } from '@/store/modules/utils'
 import auth from '@/store/modules/auth'
 import { mapActions, mapState } from 'vuex'
 
@@ -198,7 +198,7 @@ export default {
   },
 
   methods: {
-    ...mapActions(utils.moduleName, { setSnackbar: type.setSnackbar }),
+    ...mapActions(utils.moduleName, [utilsActionTypes.setSnackbar]),
 
     async addImageTypeItem () {
       if (!this.companyId || !this.ptImageTypeSearch) {
@@ -264,34 +264,22 @@ export default {
     },
     async uploadImages () {
       if (this.files.length === 0) {
-        this.setSnackbar({
-          message: 'Please select a file to upload',
-          show: true
-        })
+        this.setSnackbar({ message: 'Please select a file to upload' })
         return
       }
 
       if (this.tmsShipmentId === null) {
-        this.setSnackbar({
-          message: 'Please specify a TMS Shipment ID',
-          show: true
-        })
+        this.setSnackbar({ message: 'Please specify a TMS Shipment ID' })
         return
       }
 
       if (this.ptImageType === null || this.ptImageType === undefined) {
-        this.setSnackbar({
-          message: 'Please specify an image type',
-          show: true
-        })
+        this.setSnackbar({ message: 'Please specify an image type' })
         return
       }
 
       if (this.canViewOtherCompanies() && this.companyId === null) {
-        this.setSnackbar({
-          message: 'Please select a company',
-          show: true
-        })
+        this.setSnackbar({ message: 'Please select a company' })
         return
       }
 
@@ -307,7 +295,6 @@ export default {
 
       this.setSnackbar({
         message: error ? 'There was an error uploading the file' : 'File uploaded successfully',
-        show: true
       })
       this.variantName = null
       this.files = []

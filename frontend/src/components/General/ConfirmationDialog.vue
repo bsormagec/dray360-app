@@ -48,7 +48,7 @@
 
 <script>
 
-import utils, { type } from '@/store/modules/utils'
+import utils, { actionTypes } from '@/store/modules/utils'
 import { mapActions, mapState } from 'vuex'
 export default {
   name: 'ConfirmationDialog',
@@ -62,8 +62,8 @@ export default {
   },
   methods: {
     ...mapActions(utils.moduleName, {
-      accept: type.acceptConfirmationDialog,
-      cancel: type.cancelConfirmationDialog
+      accept: actionTypes.acceptConfirmationDialog,
+      cancel: actionTypes.cancelConfirmationDialog
     }),
 
     acceptDialog () {

@@ -21,7 +21,7 @@
 import UserTable from '@/components/Users/UserTable'
 import { mapState, mapActions } from 'vuex'
 import userDashboard, { types } from '@/store/modules/users'
-import utils, { type } from '@/store/modules/utils'
+import utils, { actionTypes } from '@/store/modules/utils'
 import { deleteUser } from '@/store/api_calls/users'
 import isMobile from '@/mixins/is_mobile'
 import isMedium from '@/mixins/is_medium'
@@ -57,10 +57,10 @@ export default {
   methods: {
     ...mapActions(userDashboard.moduleName, [types.getUsers]),
     ...mapActions(utils.moduleName, {
-      setSidebar: type.setSidebar,
-      setConfirmationDialog: type.setConfirmationDialog,
-      setSnackbar: type.setSnackbar
+      setSidebar: actionTypes.setSidebar,
+      setConfirmationDialog: actionTypes.setConfirmationDialog,
     }),
+    ...mapActions(utils.moduleName, [actionTypes.setSnackbar]),
     goToOrdersList () {
       this.redirectBack ? this.$router.back() : this.$router.push('/inbox')
     },
@@ -80,7 +80,7 @@ export default {
             message = 'An error has ocurred'
           }
 
-          await this.setSnackbar({ show: true, message })
+          await this.setSnackbar({ message })
         }
       })
     }

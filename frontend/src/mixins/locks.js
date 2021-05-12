@@ -1,6 +1,6 @@
 import { mapActions, mapState } from 'vuex'
 import requestsList, { types as requestsListTypes } from '@/store/modules/requests-list'
-import utils, { type } from '@/store/modules/utils'
+import utils, { actionTypes, actionTypes as utilsActionTypes } from '@/store/modules/utils'
 import { putRefreshLock } from '@/store/api_calls/object_locks'
 import { objectLocks } from '@/enums/app_objects_types'
 import events from '@/enums/events'
@@ -32,7 +32,7 @@ export default {
       wsReleaseLockRequest: requestsListTypes.wsReleaseLockRequest,
     }),
 
-    ...mapActions(utils.moduleName, [type.setSnackbar]),
+    ...mapActions(utils.moduleName, [utilsActionTypes.setSnackbar]),
 
     userOwnsLock (lock) {
       if (!lock) {
@@ -51,7 +51,7 @@ export default {
       })
 
       if (error !== undefined && error.response.status === 409) {
-        this[type.setSnackbar]({ show: true, message: 'Request is already locked' })
+        this.setSnackbar({ message: 'Request is already locked' })
       }
 
       if (startRefresh) {

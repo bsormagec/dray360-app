@@ -44,22 +44,17 @@
   </div>
 </template>
 <script>
-import utils, { type } from '@/store/modules/utils'
+import utils, { actionTypes } from '@/store/modules/utils'
 import { mapActions } from 'vuex'
 
 export default {
   name: 'NotAuthorized',
   async created () {
-    await this[type.getTenantConfig]()
-    this.showSidebar()
+    await this.getTenantConfig()
+    this.setSidebar({ show: false })
   },
   methods: {
-    ...mapActions(utils.moduleName, [type.getTenantConfig, type.setSidebar]),
-    showSidebar () {
-      this[type.setSidebar]({
-        show: false
-      })
-    }
+    ...mapActions(utils.moduleName, [actionTypes.getTenantConfig, actionTypes.setSidebar]),
   }
 }
 </script>

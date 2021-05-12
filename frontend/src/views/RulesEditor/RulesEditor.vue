@@ -408,7 +408,7 @@ import VueJsonPretty from 'vue-json-pretty'
 import rulesLibrary, { types } from '@/store/modules/rules_editor'
 import get from 'lodash/get'
 import groupBy from 'lodash/groupBy'
-import utils, { type } from '@/store/modules/utils'
+import utils, { actionTypes } from '@/store/modules/utils'
 import permissions from '@/mixins/permissions'
 
 export default {
@@ -489,10 +489,10 @@ export default {
         types.getCompanyList, types.getVariantList
       ]),
     ...mapActions(utils.moduleName, {
-      setSidebar: type.setSidebar,
-      setSnackbar: type.setSnackbar,
-      setConfirmationDialog: type.setConfirmationDialog,
+      setSidebar: actionTypes.setSidebar,
+      setConfirmationDialog: actionTypes.setConfirmationDialog,
     }),
+    ...mapActions(utils.moduleName, [actionTypes.setSnackbar]),
     onCopy: function (e) {
       console.log('copied')
     },
@@ -635,7 +635,7 @@ export default {
 
     addToCompanyVariant (ruleId) {
       if (this.company_id === null || this.variant_id === null) {
-        this.setSnackbar({ show: true, message: 'Please select a company/variant pair first.' })
+        this.setSnackbar({ message: 'Please select a company/variant pair first.' })
         return
       }
       const rule = this.rules_library.find(rule => rule.id === ruleId)
@@ -656,7 +656,7 @@ export default {
         this.draggable_rules.splice(i, 1)
         this.updateSelectedIndex(0)
       } else {
-        this.setSnackbar({ show: true, message: 'There must be at least 1 rule' })
+        this.setSnackbar({ message: 'There must be at least 1 rule' })
       }
     },
 

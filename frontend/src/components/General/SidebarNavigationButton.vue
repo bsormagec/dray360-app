@@ -13,7 +13,7 @@
 <script>
 import auth from '@/store/modules/auth'
 import { mapState, mapActions } from 'vuex'
-import utils, { type } from '@/store/modules/utils'
+import utils, { actionTypes } from '@/store/modules/utils'
 import isMobile from '@/mixins/is_mobile'
 
 export default {
@@ -48,9 +48,9 @@ export default {
     })
   },
   methods: {
-    ...mapActions(utils.moduleName, [type.setSidebar]),
+    ...mapActions(utils.moduleName, [actionTypes.setSidebar]),
     toogleSidebar () {
-      this[type.setSidebar]({ show: !this.showSidebar })
+      this.setSidebar({ show: !this.showSidebar })
     }
   }
 }

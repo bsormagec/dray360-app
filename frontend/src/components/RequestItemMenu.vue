@@ -91,7 +91,7 @@
 import { mapActions, mapState } from 'vuex'
 import permissions from '@/mixins/permissions'
 import locks from '@/mixins/locks'
-import utils, { type } from '@/store/modules/utils'
+import utils, { actionTypes as utilsActionTypes } from '@/store/modules/utils'
 import requestList from '@/store/modules/requests-list'
 import { downloadFile } from '@/utils/download_file'
 import { deleteRequest, getSourceFileDownloadURL, reprocessOcrRequest, changeRequestDoneStatus, reimportOcrRequestAbbyy } from '@/store/api_calls/requests'
@@ -144,13 +144,13 @@ export default {
     }
   },
   methods: {
+    ...mapActions(utils.moduleName, [utilsActionTypes.setSnackbar]),
     ...mapActions(utils.moduleName, {
-      setSnackbar: type.setSnackbar,
-      setConfirmDialog: type.setConfirmationDialog
+      setConfirmDialog: utilsActionTypes.setConfirmationDialog
     }),
 
     handleClipboardSuccess () {
-      this.setSnackbar({ show: true, message: 'Request ID coppied to clipboard.' })
+      this.setSnackbar({ message: 'Request ID coppied to clipboard.' })
     },
 
     async deleteRequest (requestId) {
@@ -168,7 +168,7 @@ export default {
           } else {
             message = 'Error trying to delete the request'
           }
-          await this.setSnackbar({ show: true, message })
+          await this.setSnackbar({ message })
         },
         onCancel: () => {
           this.loading = false
@@ -220,7 +220,7 @@ export default {
       if (error === undefined) {
         downloadFile(data.data)
       } else {
-        await this.setSnackbar({ show: true, message: error })
+        await this.setSnackbar({ message: error })
       }
     },
 
@@ -234,11 +234,11 @@ export default {
 
           if (error !== undefined) {
             this.loading = false
-            this.setSnackbar({ show: true, message: 'There was an error trying to send the message to reprocess' })
+            this.setSnackbar({ message: 'There was an error trying to send the message to reprocess' })
             return
           }
 
-          this.setSnackbar({ show: true, message: 'Request sent for reprocessing' })
+          this.setSnackbar({ message: 'Request sent for reprocessing' })
           this.loading = false
           this.$emit('request-deleted')
         }
@@ -255,11 +255,11 @@ export default {
 
           if (error !== undefined) {
             this.loading = false
-            this.setSnackbar({ show: true, message: 'There was an error trying to send the message to reimport' })
+            this.setSnackbar({ message: 'There was an error trying to send the message to reimport' })
             return
           }
 
-          this.setSnackbar({ show: true, message: 'Request sent for reimporting' })
+          this.setSnackbar({ message: 'Request sent for reimporting' })
           this.loading = false
           this.$emit('request-deleted')
         }
@@ -273,11 +273,11 @@ export default {
 
       if (error !== undefined) {
         this.loading = false
-        this.setSnackbar({ show: true, message: `There was an error trying to mark the request as ${this.doneText}` })
+        this.setSnackbar({ message: `There was an error trying to mark the request as ${this.doneText}` })
         return
       }
 
-      this.setSnackbar({ show: true, message: `Request marked as ${this.doneText} successfully` })
+      this.setSnackbar({ message: `Request marked as ${this.doneText} successfully` })
       this.loading = false
       this.$emit('request-deleted')
     }

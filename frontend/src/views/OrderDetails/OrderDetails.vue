@@ -76,7 +76,7 @@ import ContentLoading from '@/components/ContentLoading'
 import orders, { types } from '@/store/modules/orders'
 import orderForm, { types as orderFormTypes } from '@/store/modules/order-form'
 import requestsList from '@/store/modules/requests-list'
-import utils, { type as utilsTypes } from '@/store/modules/utils'
+import utils, { actionTypes as utilsActionTypes } from '@/store/modules/utils'
 import { mapState, mapActions } from 'vuex'
 import { isInAdminReview } from '@/utils/status_helpers'
 
@@ -199,10 +199,7 @@ export default {
   },
 
   methods: {
-    ...mapActions(utils.moduleName, {
-      setConfirmDialog: utilsTypes.setConfirmationDialog,
-      setSidebar: utilsTypes.setSidebar,
-    }),
+    ...mapActions(utils.moduleName, [utilsActionTypes.setConfirmationDialog, utilsActionTypes.setSidebar]),
     ...mapActions(orders.moduleName, [types.getOrderDetail]),
     ...mapActions(orderForm.moduleName, {
       setFormOrder: orderFormTypes.setFormOrder,
@@ -275,7 +272,7 @@ export default {
             lock.object_id === this.order.request_id &&
             !this.order.is_locked
           ) {
-            this.setConfirmDialog({
+            this.setConfirmationDialog({
               title: 'Edit-lock taken for this request',
               text: `${lock.user.name} took the edit-lock for this request`,
               confirmText: 'Ok',
@@ -299,7 +296,7 @@ export default {
             return
           }
 
-          await this.setConfirmDialog({
+          await this.setConfirmationDialog({
             title: 'Request Unlocked',
             text: 'Do you want to claim the lock?',
             onConfirm: () => {

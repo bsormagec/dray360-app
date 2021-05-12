@@ -170,7 +170,7 @@ import SidebarNavigationButton from '@/components/General/SidebarNavigationButto
 import { mapActions, mapState } from 'vuex'
 import companies, { types } from '@/store/modules/companies'
 import { reqStatus } from '@/enums/req_status'
-import utils, { type } from '@/store/modules/utils'
+import utils, { actionTypes as utilsActionTypes } from '@/store/modules/utils'
 import { getCompanies } from '@/store/api_calls/companies'
 import isMobile from '@/mixins/is_mobile'
 import isMedium from '@/mixins/is_medium'
@@ -272,7 +272,8 @@ export default {
   },
   methods: {
     ...mapActions(companies.moduleName, [types.updateCompaniesMappingField, types.getCompany]),
-    ...mapActions(utils.moduleName, { setSidebar: type.setSidebar, setSnackbar: type.setSnackbar }),
+    ...mapActions(utils.moduleName, { setSidebar: utilsActionTypes.setSidebar }),
+    ...mapActions(utils.moduleName, [utilsActionTypes.setSnackbar]),
     getNames () {
       Object.values(this.mappings).forEach(key => {
         this.reftypes.push(key)
@@ -342,17 +343,9 @@ export default {
       })
       const status = await this[types.updateCompaniesMappingField]({ id: this.companyId, changes: { refs_custom_mapping: jsondata } })
       if (status === reqStatus.success) {
-        await this.setSnackbar({
-          show: true,
-          showSpinner: false,
-          message: 'Mappings updated'
-        })
+        await this.setSnackbar({ message: 'Mappings updated' })
       } else {
-        await this.setSnackbar({
-          show: false,
-          showSpinner: false,
-          message: 'Error'
-        })
+        await this.setSnackbar({ message: 'Error' })
       }
     },
     async getCompanybyId () {

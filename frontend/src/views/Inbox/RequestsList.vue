@@ -110,7 +110,7 @@ import LockButtonEnabler from '@/components/LockButtonEnabler'
 import { mapActions, mapState } from 'vuex'
 import orders, { types as ordersTypes } from '@/store/modules/orders'
 import requestsList, { types as requestsListTypes } from '@/store/modules/requests-list'
-import utils, { type as utilsTypes } from '@/store/modules/utils'
+import utils, { actionTypes as utilsActionTypes } from '@/store/modules/utils'
 
 import { getRequests } from '@/store/api_calls/requests'
 import { getRequestFilters } from '@/utils/filters_handling'
@@ -218,10 +218,7 @@ export default {
   },
 
   methods: {
-    ...mapActions(utils.moduleName, {
-      setConfirmDialog: utilsTypes.setConfirmationDialog,
-      setSnackbar: utilsTypes.setSnackbar,
-    }),
+    ...mapActions(utils.moduleName, [utilsActionTypes.setConfirmationDialog]),
     ...mapActions(orders.moduleName, {
       setReloadRequests: ordersTypes.setReloadRequests,
     }),
@@ -276,7 +273,7 @@ export default {
             lock.object_id === this.requestIdSelected &&
             !this.requestSelected.is_locked
           ) {
-            this.setConfirmDialog({
+            this.setConfirmationDialog({
               title: 'Edit-lock taken for this request',
               text: `${lock.user.name} took the edit-lock for this request`,
               confirmText: 'Ok',
@@ -307,7 +304,7 @@ export default {
             return
           }
 
-          await this.setConfirmDialog({
+          await this.setConfirmationDialog({
             title: 'Request Unlocked',
             text: 'Do you want to take the edit-lock?',
             noWrap: true,

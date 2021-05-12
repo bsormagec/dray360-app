@@ -108,7 +108,7 @@
 import auth from '@/store/modules/auth'
 import { mapState, mapActions } from 'vuex'
 import hasPermission from '@/mixins/permissions'
-import utils, { type } from '@/store/modules/utils'
+import utils, { actionTypes } from '@/store/modules/utils'
 import isMobile from '@/mixins/is_mobile'
 import { reqStatus } from '@/enums/req_status'
 import events from '@/enums/events'
@@ -157,11 +157,11 @@ export default {
     }
   },
   async mounted () {
-    await this[type.getTenantConfig]()
+    await this.getTenantConfig()
   },
   methods: {
     ...mapActions('AUTH', ['logout']),
-    ...mapActions(utils.moduleName, [type.getTenantConfig, type.setSidebar]),
+    ...mapActions(utils.moduleName, [actionTypes.getTenantConfig, actionTypes.setSidebar]),
     async logoutHandler () {
       this.loading = true
       const result = await this.logout()
@@ -174,10 +174,10 @@ export default {
       this.$root.$emit(events.openPtFileUploadDialog)
     },
     toogleSidebar () {
-      this[type.setSidebar]({ show: !this.showSidebar })
+      this.setSidebar({ show: !this.showSidebar })
     },
     onChangeSidebar (value) {
-      this[type.setSidebar]({ show: value })
+      this.setSidebar({ show: value })
     }
   }
 

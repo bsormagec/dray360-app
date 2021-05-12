@@ -76,7 +76,7 @@ import permissions from '@/mixins/permissions'
 import isMobile from '@/mixins/is_mobile'
 
 import { mapActions, mapState } from 'vuex'
-import utils, { type } from '@/store/modules/utils'
+import utils, { actionTypes as utilsActionTypes } from '@/store/modules/utils'
 import fieldMaps, { types as fieldMapsTypes } from '@/store/modules/field_maps'
 
 import cloneDeep from 'lodash/cloneDeep'
@@ -153,11 +153,11 @@ export default {
   },
 
   methods: {
-    ...mapActions(utils.moduleName, {
-      setSidebar: type.setSidebar,
-      setSnackbar: type.setSnackbar,
-      setConfirmationDialog: type.setConfirmationDialog,
-    }),
+    ...mapActions(utils.moduleName, [
+      utilsActionTypes.setSidebar,
+      utilsActionTypes.setSnackbar,
+      utilsActionTypes.setConfirmationDialog,
+    ]),
 
     ...mapActions(fieldMaps.moduleName, {
       getFieldMaps: fieldMapsTypes.GET_FIELD_MAPS,
@@ -193,17 +193,11 @@ export default {
       const [error] = await this.saveFieldMaps()
 
       if (error !== undefined) {
-        this.setSnackbar({
-          show: true,
-          message: 'There was an error saving the field mapping',
-        })
+        this.setSnackbar({ message: 'There was an error saving the field mapping' })
         return
       }
 
-      this.setSnackbar({
-        show: true,
-        message: 'Field mapping saved',
-      })
+      this.setSnackbar({ message: 'Field mapping saved' })
     },
 
     addNewFieldMap () {

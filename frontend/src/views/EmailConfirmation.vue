@@ -23,9 +23,8 @@
 </template>
 <script>
 
-import utils, { type } from '@/store/modules/utils'
+import utils, { actionTypes } from '@/store/modules/utils'
 import { mapActions, mapState } from 'vuex'
-import auth from '@/store/modules/auth'
 
 export default {
   name: 'EmailConfirmation',
@@ -36,11 +35,11 @@ export default {
   },
 
   async created () {
-    await this[type.getTenantConfig]()
+    await this.getTenantConfig()
   },
 
   methods: {
-    ...mapActions(utils.moduleName, [type.getTenantConfig])
+    ...mapActions(utils.moduleName, [actionTypes.getTenantConfig])
   }
 }
 </script>

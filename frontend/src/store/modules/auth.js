@@ -1,7 +1,7 @@
 import { getCsrfCookie, postLogin, getUser, postLogout, postLeaveImpersonation, postForgotPassword, postPasswordReset } from '@/store/api_calls/auth'
 import { reqStatus } from '@/enums/req_status'
 import get from 'lodash/get'
-import { type as utilsTypes } from './utils'
+import { actionTypes as utilsActionTypes } from './utils'
 import requestsList, { types as requestsListTypes } from './requests-list'
 
 const initialState = {
@@ -45,7 +45,7 @@ const actions = {
 
     if (!error) {
       commit('currentUser', { user })
-      await dispatch(`UTILS/${utilsTypes.setTenantConfig}`, { ...(user.configuration) }, { root: true })
+      await dispatch(`UTILS/${utilsActionTypes.setTenantConfig}`, { ...(user.configuration) }, { root: true })
     }
     commit('currentUserLoading', false)
   },

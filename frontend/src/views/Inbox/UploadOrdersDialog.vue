@@ -110,7 +110,7 @@ import UploadOrdersFileFields from './UploadOrdersFileFields'
 
 import { postUploadRequestFile } from '@/store/api_calls/requests'
 import { getVariantList } from '@/store/api_calls/rules_editor'
-import utils, { type } from '@/store/modules/utils'
+import utils, { actionTypes as utilsActionTypes } from '@/store/modules/utils'
 import auth from '@/store/modules/auth'
 import { mapActions, mapState } from 'vuex'
 
@@ -177,7 +177,7 @@ export default {
     }
   },
   methods: {
-    ...mapActions(utils.moduleName, { setSnackbar: type.setSnackbar }),
+    ...mapActions(utils.moduleName, [utilsActionTypes.setSnackbar]),
     handleClose () {
       this.files = []
       this.variantName = ''
@@ -207,10 +207,7 @@ export default {
       [...this.files, ...newFiles].forEach(f => console.log(f.type))
       const finalFiles = [...this.files, ...newFiles]
       if (finalFiles.length > this.maxFiles) {
-        this.setSnackbar({
-          message: 'Up to 20 files are allowed for upload',
-          show: true
-        })
+        this.setSnackbar({ message: 'Up to 20 files are allowed for upload' })
         this.files = []
         return
       }
@@ -218,26 +215,17 @@ export default {
     },
     async createRequests () {
       if (this.files.length === 0) {
-        this.setSnackbar({
-          message: 'Please select a file to upload first',
-          show: true
-        })
+        this.setSnackbar({ message: 'Please select a file to upload' })
         return
       }
 
       if (this.shouldAskForVariantName && (this.variantName === '' || this.variantName === null || this.variantName === undefined)) {
-        this.setSnackbar({
-          message: 'Please specify a variant name',
-          show: true
-        })
+        this.setSnackbar({ message: 'Please specify a variant name' })
         return
       }
 
       if (this.canViewOtherCompanies() && this.company_id === null) {
-        this.setSnackbar({
-          message: 'Please select a company first',
-          show: true
-        })
+        this.setSnackbar({ message: 'Please select a company' })
         return
       }
 
@@ -251,7 +239,6 @@ export default {
 
       this.setSnackbar({
         message: error ? 'There was an error uploading the file(s)' : 'File(s) uploaded successfully',
-        show: true
       })
       this.variantName = null
       this.files = []

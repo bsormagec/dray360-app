@@ -1,88 +1,63 @@
 <template>
-  <div>
-    <div
-      v-if="snackbar().showSpinner"
-      class="snackbar"
-    >
-      <v-snackbar
+  <v-snackbar
+    v-model="show"
+    timeout="5000"
+    top
+  >
+    {{ snackbar.message }}
 
-        v-model="snackbar().show"
-        :top="true"
-        :timeout="-1"
-        @input="close"
+    <template v-slot:action="{ attrs }">
+      <v-btn
+        text
+        v-bind="attrs"
+        @click="show = false"
       >
-        <v-progress-circular
-          v-if="snackbar().showSpinner"
-          indeterminate
-          color="white"
-        />
-      </v-snackbar>
-    </div>
-    <div
-      v-else-if="!snackbar().showSpinner && snackbar().show"
-      class="snackbar__withMessage"
-    >
-      <v-snackbar
-        v-model="snackbar().show"
-        :top="true"
-        :timeout="4000"
-        @input="close"
-      >
-        {{ snackbar().message }}
-        <v-btn
-          color="white"
-          text
-          @click="close"
-        >
-          Close
-        </v-btn>
-      </v-snackbar>
-    </div>
-  </div>
+        Close
+      </v-btn>
+    </template>
+  </v-snackbar>
 </template>
 
 <script>
 
-import utils, { type } from '@/store/modules/utils'
-import { mapActions, mapState } from 'vuex'
-export default {
-  data () {
-    return {
-      ...mapState(utils.moduleName, { snackbar: state => state.snackbar }),
-      loaded: false,
-      snackclass: ''
-    }
-  },
-  methods: {
-    ...mapActions(utils.moduleName, [type.setSnackbar]),
-    async close () {
-      this.loaded = !this.snackbar().showSpinner
-      this.$emit('close',
-        await this[type.setSnackbar]({
-          show: undefined,
-          showSpinner: undefined,
-          message: ''
-        })
+import utils, { actionTypes } from '@/store/modules/utils'
+import { mapState, mapActions } from 'vuex'
 
-      )
-    }
+export default {
+  data: () => ({
+    show: false,
+  }),
+
+  computed: {
+    ...mapState(utils.moduleName, { snackbar: state => state.snackbar }),
+  },
+
+  watch: {
+    snackbar: {
+      handler () {
+        if (this.snackbar.message !== '') {
+          this.show = true
+        }
+      },
+      deep: true,
+    },
+    show () {
+      if (!this.show) {
+        this.setSnackbar({ message: '' })
+      }
+    },
+  },
+
+  methods: {
+    ...mapActions(utils.moduleName, [actionTypes.setSnackbar])
   }
 }
 </script>
 
 <style lang="scss">
-.snackbar{
+.v-snack {
   .v-snack__wrapper{
-    min-width: rem(60) !important;
-    max-width: rem(60) !important;
-  }
-  .v-snack__content{
-    color: map-get($colors, white ) !important;
-  }
-}
-.snackbar__withMessage{
-  .v-snack__content{
-    color: map-get($colors, white ) !important;
+    min-height: rem(56);
   }
 }
 </style>

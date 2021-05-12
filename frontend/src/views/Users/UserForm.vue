@@ -126,7 +126,7 @@ import permissions from '@/mixins/permissions'
 import allCompanies from '@/mixins/all_companies'
 
 import { mapActions } from 'vuex'
-import utils, { type } from '@/store/modules/utils'
+import utils, { actionTypes } from '@/store/modules/utils'
 import { getUser, getRoles, changeUserStatus, editUser, deleteUser, addUser } from '@/store/api_calls/users'
 import ContainerNotFound from '@/views/ContainerNotFound'
 import SidebarNavigationButton from '@/components/General/SidebarNavigationButton'
@@ -192,9 +192,9 @@ export default {
 
   methods: {
     ...mapActions(utils.moduleName, {
-      setSnackbar: type.setSnackbar,
-      setConfirmDialog: type.setConfirmationDialog
+      setConfirmDialog: actionTypes.setConfirmationDialog
     }),
+    ...mapActions(utils.moduleName, [actionTypes.setSnackbar]),
 
     async getUserById (userId) {
       const [error, data] = await getUser(userId)
@@ -234,7 +234,7 @@ export default {
         message = 'An error has ocurred'
       }
 
-      await this.setSnackbar({ show: true, message })
+      await this.setSnackbar({ message })
     },
 
     async addUser () {
@@ -260,7 +260,7 @@ export default {
         message = 'An error has ocurred'
       }
 
-      await this.setSnackbar({ show: true, message })
+      await this.setSnackbar({ message })
     },
 
     async fetchRoles () {
@@ -280,7 +280,7 @@ export default {
       this.loading = false
 
       if (error !== undefined) {
-        await this.setSnackbar({ show: true, message: 'There was an error in the server, please try again.' })
+        await this.setSnackbar({ message: 'There was an error in the server, please try again.' })
         return
       }
 
@@ -303,7 +303,7 @@ export default {
             message = 'An error has ocurred'
           }
 
-          await this.setSnackbar({ show: true, message })
+          await this.setSnackbar({ message })
           this.loading = false
         }
       })
