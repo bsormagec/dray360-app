@@ -606,7 +606,7 @@ insert into t_fieldmaps(system_default, fieldmap_config) values(true, '
         "d3canon_name": "event1_location",
         "d3canon_table_column": "t_company_address_tms_code",
         "d3canon_column": "company_address_tms_code",
-        "abbyy_source_field": "event#.location",
+        "abbyy_source_field": null,
         "abbyy_source_regex": null,
         "available": true,
         "templateable": true,
@@ -648,7 +648,7 @@ insert into t_fieldmaps(system_default, fieldmap_config) values(true, '
         "d3canon_name": "event1_type",
         "d3canon_table": "t_order_address_events",
         "d3canon_column": "is_hook_event|is_mount_event|is_deliver_event|is_dismount_event|is_drop_event|is_pickup_event",
-        "abbyy_source_field": "event#.type",
+        "abbyy_source_field": null,
         "abbyy_source_regex": null,
         "available": true,
         "templateable": true,
@@ -1803,7 +1803,7 @@ insert into t_fieldmaps(system_default, fieldmap_config) values(true, '
         "d3canon_name": "event_type",
         "d3canon_table": "t_order_address_events",
         "d3canon_column": "is_hook_event|is_mount_event|is_deliver_event|is_dismount_event|is_drop_event|is_pickup_event",
-        "abbyy_source_field": "event#.type",
+        "abbyy_source_field": null,
         "abbyy_source_regex": null,
         "available": true,
         "templateable": true,
@@ -1845,7 +1845,7 @@ insert into t_fieldmaps(system_default, fieldmap_config) values(true, '
         "d3canon_name": "event_address_tms_code",
         "d3canon_table_column": "t_company_address_tms_code",
         "d3canon_column": "company_address_tms_code",
-        "abbyy_source_field": "event#.location",
+        "abbyy_source_field": null,
         "abbyy_source_regex": null,
         "available": true,
         "templateable": true,
@@ -1871,22 +1871,22 @@ insert into t_fieldmaps(system_default, fieldmap_config) values(true, '
 -- TCompaniesDemo site, just testing...
 insert into t_fieldmaps(fieldmap_config) values('
 {
-    "item_contents" : {
+    "contents" : {
         "use_template_value": false
     },
-    "item_weight" : {
+    "weight" : {
         "use_template_value": false
     },
-    "item_quantity" : {
+    "quantity" : {
         "use_template_value": false
     },
-    "event_type" : {
+    "event1_type" : {
         "use_template_value": false
     },
-    "event_note" : {
+    "event1_note" : {
         "use_template_value": false
     },
-    "event_address_tms_code" : {
+    "event1_location" : {
         "use_template_value": false
     }
 }');
@@ -1900,13 +1900,13 @@ update t_companies set t_fieldmap_id=@TCOMPANIESDEMO_COMPANY_FIELDMAP_ID where i
 -- For Zariz, they don't want decription/weight/quantity to be templated
 insert into t_fieldmaps(fieldmap_config) values('
 {
-    "item_contents" : {
+    "contents" : {
         "use_template_value": false
     },
-    "item_weight" : {
+    "weight" : {
         "use_template_value": false
     },
-    "item_quantity" : {
+    "quantity" : {
         "use_template_value": false
     }
 }
@@ -1921,13 +1921,13 @@ update t_companies set t_fieldmap_id=@ZARIZ_COMPANY_FIELDMAP_ID where id=@ZARIZ_
 -- for TransportDSquare, they don't want events to be templated
 insert into t_fieldmaps(fieldmap_config) values('
 {
-    "event_type" : {
+    "event1_type" : {
         "use_template_value": false
     },
-    "event_note" : {
+    "event1_note" : {
         "use_template_value": false
     },
-    "event_address_tms_code" : {
+    "event1_location" : {
         "use_template_value": false
     }
 }
