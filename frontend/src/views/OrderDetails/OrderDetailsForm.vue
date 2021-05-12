@@ -598,7 +598,7 @@
       </div>
 
       <div
-        v-if="!(managedByTemplate('event_type') && managedByTemplate('event_note') && managedByTemplate('event_address_tms_code'))"
+        v-if="!(managedByTemplate('event1_type') && managedByTemplate('event1_note') && managedByTemplate('event1_location'))"
         class="form__section"
       >
         <div
@@ -700,7 +700,7 @@
               :label="options.labels.order_line_item_contents || 'Contents'"
               :value="item.contents"
               :edit-mode="editMode"
-              :managed-by-template="managedByTemplate('item_contents')"
+              :managed-by-template="managedByTemplate('contents')"
               @change="event => handleChange({ path:`order_line_items.${item.real_index}.contents`, ...event})"
             />
             <FormFieldInput
@@ -709,7 +709,7 @@
               :label="options.labels.order_line_item_quantity || 'Quantity'"
               :value="item.quantity"
               :edit-mode="editMode"
-              :managed-by-template="managedByTemplate('item_quantity')"
+              :managed-by-template="managedByTemplate('quantity')"
               @change="event => handleChange({ path:`order_line_items.${item.real_index}.quantity`, ...event})"
             />
             <FormFieldInput
@@ -718,7 +718,7 @@
               :label="options.labels.order_line_item_weight || 'Weight'"
               :value="item.weight"
               :edit-mode="editMode"
-              :managed-by-template="managedByTemplate('item_weight')"
+              :managed-by-template="managedByTemplate('weight')"
               @change="event => handleChange({ path:`order_line_items.${item.real_index}.weight`, ...event})"
             />
           </div>
