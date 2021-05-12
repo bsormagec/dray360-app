@@ -53,10 +53,6 @@
         outlined
         dense
       />
-      <v-divider class="mb-4" />
-      <h3 class="h6 pa-0 ma-0 mb-4 text-left primary--text">
-        To be implemented
-      </h3>
       <v-text-field
         v-model="formFieldMap.abbyy_source_field"
         :class="{'field-mapping-form-field__changed': hasChanged('abbyy_source_field')}"
@@ -64,8 +60,11 @@
         clearable
         outlined
         dense
-        disabled
       />
+      <v-divider class="mb-4" />
+      <h3 class="h6 pa-0 ma-0 mb-4 text-left primary--text">
+        To be implemented
+      </h3>
       <v-text-field
         v-model="formFieldMap.abbyy_source_regex"
         :class="{'field-mapping-form-field__changed': hasChanged('abbyy_source_regex')}"
