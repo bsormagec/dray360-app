@@ -106,7 +106,7 @@
 
 import { mapActions, mapState } from 'vuex'
 import { reqStatus } from '@/enums/req_status'
-import utils, { type } from '@/store/modules/utils'
+import utils, { actionTypes } from '@/store/modules/utils'
 import users, { types } from '@/store/modules/users'
 import auth from '@/store/modules/auth'
 import isMobile from '@/mixins/is_mobile'
@@ -145,7 +145,8 @@ export default {
   },
   methods: {
     ...mapActions(users.moduleName, [types.editUser]),
-    ...mapActions(utils.moduleName, { setSidebar: type.setSidebar }),
+    ...mapActions(utils.moduleName, { setSidebar: actionTypes.setSidebar }),
+    ...mapActions(utils.moduleName, [actionTypes.setSnackbar]),
     ...mapActions(auth.moduleName, ['getCurrentUser']),
     getUserData () {
       if (this.currentUser) {
@@ -173,7 +174,7 @@ export default {
       } else {
         message = 'An error has occurred, please contact to technical support'
       }
-      this[type.setSnackbar]({ show: true, message })
+      this.setSnackbar({ message })
     }
   }
 

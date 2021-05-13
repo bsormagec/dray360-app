@@ -10,7 +10,7 @@
     <div class="d-flex">
       <div class="d-flex align-center">
         <v-tooltip
-          v-if="request.is_locked && hasPermission('object-locks-create')"
+          v-if="isLocked"
           bottom
         >
           <template v-slot:activator="{ on, attrs }">
@@ -107,7 +107,13 @@ export default {
       return false
     },
     isLocked () {
-      return get(this.request, 'is_locked', false)
+      const lockUserCompanyId = get(this.request, 'lock.user.t_company_id')
+
+      if (!this.canViewOtherCompanies() && lockUserCompanyId !== this.currentUser.t_company_id) {
+        return false
+      }
+
+      return get(this.request, 'is_locked', false) && this.hasPermission('object-locks-create')
     },
     detailsTitle () {
       if (this.request.tms_template_name !== null) {

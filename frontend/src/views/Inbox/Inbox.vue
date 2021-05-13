@@ -176,7 +176,7 @@ import SidebarNavigationButton from '@/components/General/SidebarNavigationButto
 
 import { mapState, mapActions } from 'vuex'
 import permissions from '@/mixins/permissions'
-import utils, { type } from '@/store/modules/utils'
+import utils, { actionTypes as utilsActionTypes } from '@/store/modules/utils'
 import auth from '@/store/modules/auth'
 import orders, { types as ordersTypes } from '@/store/modules/orders'
 import isMobile from '@/mixins/is_mobile'
@@ -275,11 +275,7 @@ export default {
   },
 
   methods: {
-    ...mapActions(utils.moduleName, {
-      setSidebar: type.setSidebar,
-      setSnackbar: type.setSnackbar,
-      setConfirmDialog: type.setConfirmationDialog
-    }),
+    ...mapActions(utils.moduleName, [utilsActionTypes.setSidebar]),
     ...mapActions(orders.moduleName, {
       setReloadRequests: ordersTypes.setReloadRequests
     }),

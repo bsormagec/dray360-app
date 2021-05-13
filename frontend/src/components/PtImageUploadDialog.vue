@@ -152,18 +152,19 @@
 
 import { postUploadPtImageFile } from '@/store/api_calls/utils'
 import { getDictionaryItems, createDictionaryItem } from '@/store/api_calls/dictionary_items'
-import utils, { type } from '@/store/modules/utils'
+import utils, { actionTypes as utilsActionTypes } from '@/store/modules/utils'
 import auth from '@/store/modules/auth'
 import { mapActions, mapState } from 'vuex'
-import { getCompanies } from '@/store/api_calls/companies'
+
 import permissions from '@/mixins/permissions'
+import allCompanies from '@/mixins/all_companies'
 
 import events from '@/enums/events'
 import { dictionaryItemsTypes } from '@/enums/app_objects_types'
 
 export default {
   name: 'PtImageUploadDialog',
-  mixins: [permissions],
+  mixins: [permissions, allCompanies],
   data: () => ({
     open: false,
     loading: false,
@@ -197,7 +198,7 @@ export default {
   },
 
   methods: {
-    ...mapActions(utils.moduleName, { setSnackbar: type.setSnackbar }),
+    ...mapActions(utils.moduleName, [utilsActionTypes.setSnackbar]),
 
     async addImageTypeItem () {
       if (!this.companyId || !this.ptImageTypeSearch) {
@@ -227,7 +228,7 @@ export default {
       this.lockTmsShipmentId = tmsShipmentId !== null
 
       if (this.canViewOtherCompanies() && this.companies.length === 0) {
-        await this.getCompanies()
+        await this.fetchCompanies()
       } else if (!this.canViewOtherCompanies()) {
         this.companyId = this.currentUser.t_company_id
       }
@@ -263,34 +264,22 @@ export default {
     },
     async uploadImages () {
       if (this.files.length === 0) {
-        this.setSnackbar({
-          message: 'Please select a file to upload',
-          show: true
-        })
+        this.setSnackbar({ message: 'Please select a file to upload' })
         return
       }
 
       if (this.tmsShipmentId === null) {
-        this.setSnackbar({
-          message: 'Please specify a TMS Shipment ID',
-          show: true
-        })
+        this.setSnackbar({ message: 'Please specify a TMS Shipment ID' })
         return
       }
 
       if (this.ptImageType === null || this.ptImageType === undefined) {
-        this.setSnackbar({
-          message: 'Please specify an image type',
-          show: true
-        })
+        this.setSnackbar({ message: 'Please specify an image type' })
         return
       }
 
       if (this.canViewOtherCompanies() && this.companyId === null) {
-        this.setSnackbar({
-          message: 'Please select a company',
-          show: true
-        })
+        this.setSnackbar({ message: 'Please select a company' })
         return
       }
 
@@ -306,7 +295,6 @@ export default {
 
       this.setSnackbar({
         message: error ? 'There was an error uploading the file' : 'File uploaded successfully',
-        show: true
       })
       this.variantName = null
       this.files = []
@@ -325,12 +313,6 @@ export default {
       const [error] = await postUploadPtImageFile(file, params)
 
       return error === undefined
-    },
-
-    async getCompanies () {
-      const [error, data] = await getCompanies()
-      if (error) return
-      this.companies = data.data
     },
 
     async getPTImageTypes () {

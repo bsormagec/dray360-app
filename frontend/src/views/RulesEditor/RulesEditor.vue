@@ -44,8 +44,7 @@
                 tile
               >
                 <v-list>
-                  <v-subheader>{{ company_name }}</v-subheader>
-                  <v-subheader>{{ variant_name }}</v-subheader>
+                  <v-subheader>{{ company_name }} - {{ variant_name }}</v-subheader>
                   <v-list-item-group color="primary">
                     <draggable
                       v-model="draggable_rules"
@@ -62,6 +61,7 @@
                         </v-list-item-content>
                         <v-btn
                           icon
+                          :disabled="!hasPermission('rules-editor-assign')"
                           color="primary"
                           :ripple="false"
                           @click="removeFromCompanyVariant(i)"
@@ -77,7 +77,7 @@
                 <div class="card-header">
                   <v-btn
                     color="success"
-                    :disabled="!companyVariantSelected"
+                    :disabled="!companyVariantSelected || !hasPermission('rules-editor-assign')"
                     class="ma-4"
                     @click="saveRuleSequence()"
                   >
@@ -110,6 +110,7 @@
                     <div v-if="company_variant_rules().length">
                       <codemirror
                         ref="cmEditor"
+
                         v-model="company_variant_rules()[selected_rule_index].code"
                         :options="cmOptions"
                       />
@@ -178,6 +179,7 @@
                 >
                   <v-btn
                     v-if="company_variant_rules().length > 0"
+                    :disabled="!hasPermission('rules-editor-edit')"
                     color="success"
                     class="mr-4"
                     @click="editRule(selected_rule_index)"
@@ -339,6 +341,7 @@
               <v-btn
                 class="mx-auto"
                 color="yellow"
+                :disabled="!hasPermission('rules-editor-create')"
                 @click="addRuleToLibrary()"
               >
                 New Rule
@@ -363,6 +366,7 @@
                     </v-icon>
                     <v-icon
                       v-else
+                      :disabled="!hasPermission('rules-editor-assign')"
                       @click="addToCompanyVariant(item.id)"
                     >
                       mdi-chevron-left
@@ -404,22 +408,23 @@ import VueJsonPretty from 'vue-json-pretty'
 import rulesLibrary, { types } from '@/store/modules/rules_editor'
 import get from 'lodash/get'
 import groupBy from 'lodash/groupBy'
-import utils, { type } from '@/store/modules/utils'
+import utils, { actionTypes } from '@/store/modules/utils'
+import permissions from '@/mixins/permissions'
 
 export default {
   name: 'RulesEditor',
+
   components: {
     draggable,
     codemirror,
     VueJsonPretty
   },
+
+  mixins: [permissions],
+
   data: () => ({
-    deep: 3,
     testOrderId: null,
-    open: [1],
     collapsedOnClickBrackets: true,
-    selectableType: 'single',
-    showSelectController: true,
     showLength: false,
     showLine: true,
     ...mapState(rulesLibrary.moduleName, {
@@ -437,7 +442,7 @@ export default {
       line: true,
       foldGutter: true,
       showCursorWhenSelecting: true,
-      styleActiveLine: true
+      styleActiveLine: true,
     },
     draggable_rules: [],
     selected_rule_index: 0,
@@ -463,9 +468,11 @@ export default {
     rulesList () {
       const grouped = groupBy(this.rules_library, 'description')
       const mappedRules = []
-      Object.entries(grouped).forEach(([index, value]) => {
-        mappedRules.push({ index, children: value, name: index })
-      })
+
+      for (const key in grouped) {
+        mappedRules.push({ index: key, children: grouped[key], name: key })
+      }
+
       return mappedRules
     }
   },
@@ -481,7 +488,11 @@ export default {
         types.setRuleCode, types.getTestingOutput,
         types.getCompanyList, types.getVariantList
       ]),
-    ...mapActions(utils.moduleName, { setSidebar: type.setSidebar }),
+    ...mapActions(utils.moduleName, {
+      setSidebar: actionTypes.setSidebar,
+      setConfirmationDialog: actionTypes.setConfirmationDialog,
+    }),
+    ...mapActions(utils.moduleName, [actionTypes.setSnackbar]),
     onCopy: function (e) {
       console.log('copied')
     },
@@ -597,14 +608,6 @@ export default {
       }
     },
 
-    // THIS IS USEFUL FOR DEBUGGING PURPOSES
-    // onCmCodeChange (index) {
-    //   const vc = this
-    //   // vc.company_variant_rules[index].code = JSON.stringify(vc.company_variant_rules[index].code)
-    //   console.log('oncmcodechange')
-    //   console.log(vc.company_variant_rules[index].code)
-    // },
-
     async addRuleToLibrary () {
       const newName = prompt('Please type the name of the new rule')
       const newDescription = prompt('Rule description: events, direction, utility, etc.')
@@ -632,14 +635,20 @@ export default {
 
     addToCompanyVariant (ruleId) {
       if (this.company_id === null || this.variant_id === null) {
-        alert('Please select a company/variant pair first.')
+        this.setSnackbar({ message: 'Please select a company/variant pair first.' })
         return
       }
       const rule = this.rules_library.find(rule => rule.id === ruleId)
 
-      if (confirm('Add ' + rule.name + ' to company variant')) {
-        this.draggable_rules.push(rule)
-      }
+      this.setConfirmationDialog({
+        open: true,
+        title: 'Add rule to company-variant',
+        text: `Do you want to add the rule '${rule.name}' to the selected company-variant?`,
+        confirmText: 'Add',
+        cancelText: 'Cancel',
+        onConfirm: () => { this.draggable_rules.push(rule) },
+        onCancel: () => {}
+      })
     },
 
     removeFromCompanyVariant (i) {
@@ -647,7 +656,7 @@ export default {
         this.draggable_rules.splice(i, 1)
         this.updateSelectedIndex(0)
       } else {
-        alert('There must be at least 1 rule')
+        this.setSnackbar({ message: 'There must be at least 1 rule' })
       }
     },
 

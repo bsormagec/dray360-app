@@ -17,6 +17,7 @@ use App\Http\Controllers\Api\ObjectLocksController;
 use App\Http\Controllers\Api\OCRVariantsController;
 use App\Http\Controllers\Api\UsersStatusController;
 use App\Http\Controllers\Api\SendToClientController;
+use App\Http\Controllers\Api\TmsProvidersController;
 use App\Http\Controllers\Api\AbbyyReimportController;
 use App\Http\Controllers\Api\DivisionCodesController;
 use App\Http\Controllers\Api\ImpersonationController;
@@ -199,6 +200,10 @@ Route::group(['middleware' => ['auth:sanctum', 'impersonate', 'tenant-aware']], 
     Route::apiResource('ocr/requests', OCRRequestController::class, ['as' => 'ocr'])
         ->parameters(['requests' => 'ocrRequest'])
         ->only(['index', 'store', 'destroy']);
+
+    // Tms providers
+    Route::apiResource('tms-providers', TmsProvidersController::class)
+        ->only(['index']);
 
     // CRUD for OCR Rules
     Route::apiResource('ocr/rules', OCRRulesController::class, ['as' => 'ocr'])

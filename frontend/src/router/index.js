@@ -19,6 +19,7 @@ import { runMiddleware } from '@/router/middleware'
 import PageNotFound from '@/views/PageNotFound'
 import PageNotAuthorized from '@/views/PageNotAuthorized'
 import MappingField from '@/views/Mappings/MappingField'
+import FieldMapping from '@/views/FieldMapping/FieldMapping'
 import LoggedOut from '@/router/middleware/LoggedOut'
 import AccesorialsMapping from '@/views/Mappings/AccesorialsMapping'
 import ForgotPassword from '@/views/ForgotPassword'
@@ -127,7 +128,7 @@ const routes = [
     path: '/rules-editor',
     name: 'RulesEditor',
     meta: {
-      middleware: [auth, superadmin]
+      middleware: [auth, permission('rules-editor-view')]
     },
     component: RulesEditor
   },
@@ -137,6 +138,14 @@ const routes = [
     component: MappingField,
     meta: {
       middleware: [auth]
+    }
+  },
+  {
+    path: '/field-mapping',
+    name: 'Field Mapping',
+    component: FieldMapping,
+    meta: {
+      middleware: [auth, permission('field-maps-view')]
     }
   },
   {

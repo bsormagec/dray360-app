@@ -76,7 +76,7 @@
 import SidebarNavigationButton from '@/components/General/SidebarNavigationButton'
 import profile, { types } from '@/store/modules/profile'
 import { mapActions } from 'vuex'
-import utils, { type } from '@/store/modules/utils'
+import utils, { actionTypes } from '@/store/modules/utils'
 import isMobile from '@/mixins/is_mobile'
 import isMedium from '@/mixins/is_medium'
 
@@ -107,7 +107,8 @@ export default {
   },
   methods: {
     ...mapActions(profile.moduleName, [types.changePassword]),
-    ...mapActions(utils.moduleName, { setSidebar: type.setSidebar }),
+    ...mapActions(utils.moduleName, { setSidebar: actionTypes.setSidebar }),
+    ...mapActions(utils.moduleName, [actionTypes.setSnackbar]),
     async save () {
       const status = await this[types.changePassword](
         {
@@ -117,17 +118,9 @@ export default {
         }
       )
       if ('errors' in status) {
-        await this[type.setSnackbar]({
-          show: true,
-          showSpinner: false,
-          message: status.message
-        })
+        await this.setSnackbar({ message: status.message })
       } else {
-        await this[type.setSnackbar]({
-          show: true,
-          showSpinner: false,
-          message: 'Password changed'
-        })
+        await this.setSnackbar({ message: 'Password changed' })
         this.$router.push({ path: '/user/edit-profile/' })
       }
     }

@@ -63,7 +63,7 @@
 import { mapActions, mapState } from 'vuex'
 import rulesLibrary, { types } from '@/store/modules/rules_editor'
 import accesorialmapping, { accesorialmappingtype } from '@/store/modules/accesorialmapping'
-import utils, { type } from '@/store/modules/utils'
+import utils, { actionTypes } from '@/store/modules/utils'
 
 export default {
   data () {
@@ -95,10 +95,10 @@ export default {
   methods: {
     ...mapActions(rulesLibrary.moduleName, [types.getVariantList]),
     ...mapActions(accesorialmapping.moduleName, [accesorialmappingtype.updateAccesorialMapping, accesorialmappingtype.getAccesorialMapping]),
-    ...mapActions(utils.moduleName, [type.setSnackbar, type.setSidebar]),
+    ...mapActions(utils.moduleName, [actionTypes.setSnackbar, actionTypes.setSidebar]),
 
     async showSidebar () {
-      await this[type.setSidebar]({
+      await this[actionTypes.setSidebar]({
         show: true
       })
     },
@@ -159,11 +159,7 @@ export default {
               mapping: this.mapping
             })
           if (status.status === 'success') {
-            await this[type.setSnackbar]({
-              show: true,
-              showSpinner: false,
-              message: 'Updated'
-            })
+            await this.setSnackbar({ message: 'Updated' })
           }
         } else {
           await this[accesorialmappingtype.updateAccesorialMapping](
@@ -174,11 +170,7 @@ export default {
             })
         }
       } else {
-        await this[type.setSnackbar]({
-          show: true,
-          showSpinner: false,
-          message: 'You need to select a variant'
-        })
+        await this.setSnackbar({ message: 'You need to select a variant' })
       }
     }
   }

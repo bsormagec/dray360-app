@@ -77,7 +77,7 @@
   </div>
 </template>
 <script>
-import utils, { type } from '@/store/modules/utils'
+import utils, { actionTypes } from '@/store/modules/utils'
 import { mapActions, mapState, mapGetters } from 'vuex'
 import auth from '@/store/modules/auth'
 import { reqStatus } from '@/enums/req_status'
@@ -114,10 +114,8 @@ export default {
   },
 
   methods: {
-    ...mapActions(utils.moduleName, {
-      getTenantConfig: type.getTenantConfig,
-      setSidebar: type.setSidebar,
-    }),
+    ...mapActions(utils.moduleName, [actionTypes.getTenantConfig, actionTypes.setSidebar]),
+
     async login () {
       this.loginError = false
       try {

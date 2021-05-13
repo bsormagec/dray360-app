@@ -9,7 +9,7 @@ import UserForm from './UserForm'
 import isMobile from '@/mixins/is_mobile'
 import isMedium from '@/mixins/is_medium'
 
-import utils, { type } from '@/store/modules/utils'
+import utils, { actionTypes } from '@/store/modules/utils'
 import { mapActions } from 'vuex'
 
 export default {
@@ -32,7 +32,7 @@ export default {
     return this.setSidebar({ show: false })
   },
   methods: {
-    ...mapActions(utils.moduleName, { setSidebar: type.setSidebar })
+    ...mapActions(utils.moduleName, [actionTypes.setSidebar])
   }
 }
 </script>

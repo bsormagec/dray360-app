@@ -225,7 +225,7 @@ import RequestStatus from '@/components/RequestStatus'
 
 import hasPermission from '@/mixins/permissions'
 import { formatDate } from '@/utils/dates'
-import utils, { type as utilTypes } from '@/store/modules/utils'
+import utils, { actionTypes as utilsActionTypes } from '@/store/modules/utils'
 import { getOrders, delDeleteOrder, updateOrderDetail, replicateOrder } from '@/store/api_calls/orders'
 import { getRequestFilters } from '@/utils/filters_handling'
 
@@ -365,6 +365,7 @@ export default {
         }
 
         this.sortColumn = sortCol
+        // eslint-disable-next-line eqeqeq
         this.sortDesc = this.options.sortDesc.join() == 'true'
         this.setURLParams()
         this.getOrderData()
@@ -441,10 +442,7 @@ export default {
       this.startPolling()
     },
 
-    ...mapActions(utils.moduleName, {
-      setSnackbar: utilTypes.setSnackbar,
-      setConfirmDialog: utilTypes.setConfirmationDialog
-    }),
+    ...mapActions(utils.moduleName, [utilsActionTypes.setSnackbar, utilsActionTypes.setConfirmationDialog]),
 
     // polling
     async startPolling () {
@@ -478,7 +476,7 @@ export default {
 
     async deleteOrder (item) {
       this.loading = true
-      await this.setConfirmDialog({
+      await this.setConfirmationDialog({
         title: 'Are you sure you want to delete this order?',
         onConfirm: async () => {
           this.loading = true
@@ -495,7 +493,7 @@ export default {
           } else {
             message = 'Error trying to delete the order'
           }
-          await this.setSnackbar({ show: true, message })
+          await this.setSnackbar({ message })
         },
         onCancel: () => {
           this.loading = false
@@ -505,7 +503,7 @@ export default {
 
     async replicateOrder (item) {
       this.loading = true
-      await this.setConfirmDialog({
+      await this.setConfirmationDialog({
         title: 'Are you sure you want to replicate this order?',
         onConfirm: async () => {
           this.loading = true
@@ -520,7 +518,7 @@ export default {
           } else {
             message = 'Error trying to replicate the order'
           }
-          await this.setSnackbar({ show: true, message })
+          await this.setSnackbar({ message })
         },
         onCancel: () => {
           this.loading = false
@@ -542,7 +540,7 @@ export default {
         message = 'An error has ocurred'
       }
 
-      await this.setSnackbar({ show: true, message })
+      await this.setSnackbar({ message })
     },
 
     async getOrderData () {
@@ -599,12 +597,14 @@ export default {
     },
 
     onHistoryChange (e) {
+      // eslint-disable-next-line camelcase
       const { search, status, system_status, dateRange, updateType, page } = e.state
 
       const f = {
         search: search || '',
         dateRange: dateRange ? dateRange.split(',') : [],
         status: status ? status.split(',') : [],
+        // eslint-disable-next-line camelcase
         systemStatus: system_status ? system_status.split(',') : [],
         updateType: updateType || '',
         page: page || 1

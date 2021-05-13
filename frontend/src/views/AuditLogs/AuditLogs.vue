@@ -32,7 +32,6 @@
                 { text: 'Request ID', value: 'request_id' },
                 { text: 'Company', value: 'company.name' },
                 { text: 'Variant Name', value: 'variant_name' },
-                { text: 'Changes Count', value: 'changes_count' },
                 { text: 'First Updated', value: 'created_at' },
                 { text: 'Last Updated', value: 'updated_at' },
                 { text: 'Changes Count', value: 'changes_count' },
@@ -88,7 +87,7 @@ import { flatMapAudits } from '@/utils/flatmap_audits'
 import { formatDate } from '@/utils/dates'
 
 import { mapActions } from 'vuex'
-import utils, { type as utilsTypes } from '@/store/modules/utils'
+import utils, { actionTypes } from '@/store/modules/utils'
 import { getAuditLogsDashboard } from '@/store/api_calls/utils'
 
 import Filters from './Filters'
@@ -138,6 +137,7 @@ export default {
     options: {
       handler () {
         const sortCol = this.options.sortBy.join()
+        // eslint-disable-next-line eqeqeq
         const sortDesc = this.options.sortDesc.join() == 'true'
 
         this.sort = `${sortDesc ? '-' : ''}${sortCol !== '' ? sortCol : ''}`
@@ -162,17 +162,16 @@ export default {
 
   methods: {
     formatDate,
-    ...mapActions(utils.moduleName, {
-      setSidebar: utilsTypes.setSidebar,
-      setSnackbar: utilsTypes.setSnackbar,
-    }),
+
+    ...mapActions(utils.moduleName, [actionTypes.setSnackbar, actionTypes.setSidebar]),
+
     filtersChanged (newFilters) {
       this.filters = { ...newFilters }
       this.page = 1
     },
     async searchAudits () {
       if (this.filters.dateRange.length !== 2) {
-        this.setSnackbar({ show: true, message: 'Please select a date range.' })
+        this.setSnackbar({ message: 'Please select a date range.' })
         return
       }
       this.loading = true
@@ -188,7 +187,7 @@ export default {
       this.loading = false
 
       if (error !== undefined) {
-        this.setSnackbar({ show: true, message: 'There was an error please try again.' })
+        this.setSnackbar({ message: 'There was an error please try again.' })
         return
       }
 
