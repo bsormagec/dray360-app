@@ -194,6 +194,7 @@ export default {
   async beforeDestroy () {
     if (this.refreshLock) {
       this.stopRefreshingLock()
+      this.releaseLockRequest({ requestId: this.order.request_id })
       this.$echo.leave('object-locking')
     }
   },
@@ -310,7 +311,7 @@ export default {
     async initializeLock () {
       if (
         !this.refreshLock ||
-        this.shouldOmitAutolocking({ ...(this.order?.parent_ocr_request), is_locked: this.order.is_locked })
+        this.shouldOmitAutolocking({ ...(this.order?.parent_ocr_request), is_locked: this.order.ocr_request_is_locked })
       ) {
         return
       }
@@ -321,11 +322,15 @@ export default {
         return
       }
 
-      this.attemptToLockRequest({
+      const [error] = await this.attemptToLockRequest({
         requestId: this.order.request_id,
         lockType: objectLocks.lockTypes.openOrder,
         updateList: false,
       })
+
+      if (error === undefined && this.order.is_locked && !this.order.ocr_request_is_locked) {
+        this.setOrderLock({ locked: false, lock: null })
+      }
     },
 
     async fetchTmsTemplates (companyId) {
