@@ -21,7 +21,7 @@ const initialState = {
 const mutations = {
   [types.setOrders] (state, { data, links, meta }) {
     state.list = data.map(item => {
-      item.key = `${item.id}-${item.order.id || null}`
+      // item.key = `${item.id}-${item.order.id || null}`
       return item
     })
     state.links = links
@@ -62,6 +62,10 @@ const actions = {
 
     commit(types.setCurrentOrder, data)
     return reqStatus.success
+  },
+
+  async [types.setCurrentOrder] ({ commit }, order) {
+    commit(types.setCurrentOrder, order)
   },
 
   async [types.updateOrderDetail] ({ commit, state }, { id, changes }) {

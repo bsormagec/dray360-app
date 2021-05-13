@@ -7,6 +7,7 @@
     <v-card>
       <v-card-title
         v-show="confirmationDialog.title !== ''"
+        :class="{'no-wrap':confirmationDialog.noWrap}"
       >
         {{ confirmationDialog.title }}
       </v-card-title>
@@ -47,7 +48,7 @@
 
 <script>
 
-import utils, { type } from '@/store/modules/utils'
+import utils, { actionTypes } from '@/store/modules/utils'
 import { mapActions, mapState } from 'vuex'
 export default {
   name: 'ConfirmationDialog',
@@ -61,12 +62,13 @@ export default {
   },
   methods: {
     ...mapActions(utils.moduleName, {
-      accept: type.acceptConfirmationDialog,
-      cancel: type.cancelConfirmationDialog
+      accept: actionTypes.acceptConfirmationDialog,
+      cancel: actionTypes.cancelConfirmationDialog
     }),
 
     acceptDialog () {
       this.accept(this.inputValue)
+      this.inputValue = ''
     }
   }
 }
@@ -75,5 +77,8 @@ export default {
 <style lang="scss" scoped>
 .v-card__title {
   white-space: normal;
+  &.no-wrap{
+    white-space: nowrap !important;
+  }
 }
 </style>

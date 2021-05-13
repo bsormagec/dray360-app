@@ -90,8 +90,8 @@
 
 <script>
 import permissions from '@/mixins/permissions'
+import allCompanies from '@/mixins/all_companies'
 
-import { getCompanies } from '@/store/api_calls/companies'
 import { getUsers } from '@/store/api_calls/users'
 
 import DateRangeCalendar from '@/components/OrderTable/components/DateRange'
@@ -103,7 +103,7 @@ export default {
     DateRangeCalendar
   },
 
-  mixins: [permissions],
+  mixins: [permissions, allCompanies],
 
   props: {
     initialFilters: {
@@ -119,7 +119,6 @@ export default {
   },
 
   data: (vm) => ({
-    companies: [],
     users: [],
     filters: {
       dateRange: vm.initialFilters.dateRange,
@@ -147,15 +146,6 @@ export default {
   },
 
   methods: {
-    async fetchCompanies () {
-      const [error, data] = await getCompanies()
-
-      if (error !== undefined) {
-        return
-      }
-
-      this.companies = data.data
-    },
     async fetchUsers () {
       const [error, data] = await getUsers({ perPage: 1000, sort: 'name' })
 

@@ -37,7 +37,7 @@
       <div>
         <div class="order__title mr-1 d-flex justify-space-between align-center">
           <v-tooltip
-            v-if="isLocked && order.lock && hasPermission('object-locks-create')"
+            v-if="isLocked && hasPermission('object-locks-create')"
             bottom
           >
             <template v-slot:activator="{ on, attrs }">
@@ -50,8 +50,16 @@
                 mdi-lock
               </v-icon>
             </template>
-            <span>Locked by {{ order.lock.user.name }}</span>
+            <span v-if="order.lock">Locked by {{ order.lock.user.name }}</span>
+            <span v-else>Locked</span>
           </v-tooltip>
+          <v-icon
+            v-else
+            small
+            color="slate-gray"
+          >
+            mdi-lock-open-variant
+          </v-icon>
           Order #{{ order.id }}
           <v-btn
             outlined
@@ -598,7 +606,7 @@
       </div>
 
       <div
-        v-if="!(managedByTemplate('event_type') && managedByTemplate('event_note') && managedByTemplate('event_address_tms_code'))"
+        v-if="!(managedByTemplate('event1_type') && managedByTemplate('event1_note') && managedByTemplate('event1_location'))"
         class="form__section"
       >
         <div
@@ -700,7 +708,7 @@
               :label="options.labels.order_line_item_contents || 'Contents'"
               :value="item.contents"
               :edit-mode="editMode"
-              :managed-by-template="managedByTemplate('item_contents')"
+              :managed-by-template="managedByTemplate('contents')"
               @change="event => handleChange({ path:`order_line_items.${item.real_index}.contents`, ...event})"
             />
             <FormFieldInput
@@ -709,7 +717,7 @@
               :label="options.labels.order_line_item_quantity || 'Quantity'"
               :value="item.quantity"
               :edit-mode="editMode"
-              :managed-by-template="managedByTemplate('item_quantity')"
+              :managed-by-template="managedByTemplate('quantity')"
               @change="event => handleChange({ path:`order_line_items.${item.real_index}.quantity`, ...event})"
             />
             <FormFieldInput
@@ -718,7 +726,7 @@
               :label="options.labels.order_line_item_weight || 'Weight'"
               :value="item.weight"
               :edit-mode="editMode"
-              :managed-by-template="managedByTemplate('item_weight')"
+              :managed-by-template="managedByTemplate('weight')"
               @change="event => handleChange({ path:`order_line_items.${item.real_index}.weight`, ...event})"
             />
           </div>
@@ -741,7 +749,7 @@ import { getOrderDetail, postSendToTms, delDeleteOrder, postSendToClient, replic
 import { getSourceFileDownloadURL } from '@/store/api_calls/requests'
 import orderForm, { types as orderFormTypes } from '@/store/modules/order-form'
 import requestsList from '@/store/modules/requests-list'
-import utils, { type } from '@/store/modules/utils'
+import utils, { actionTypes as utilsActionTypes } from '@/store/modules/utils'
 import { downloadFile } from '@/utils/download_file'
 
 import FormFieldDate from '@/components/FormFields/FormFieldDate'
@@ -969,21 +977,25 @@ export default {
   watch: {
     isMobile (newValue) {
       if (!newValue && this.backButton) {
-        return this[type.setSidebar]({ show: true })
+        return this.setSidebar({ show: true })
       }
     }
   },
 
   beforeMount () {
     if (!this.isMobile) {
-      return this[type.setSidebar]({ show: true })
+      return this.setSidebar({ show: true })
     }
   },
   mounted () {
     if (this.editMode) this.toggleEdit()
   },
   methods: {
-    ...mapActions(utils.moduleName, [type.setSnackbar, type.setConfirmationDialog, type.setSidebar]),
+    ...mapActions(utils.moduleName, [
+      utilsActionTypes.setSnackbar,
+      utilsActionTypes.setConfirmationDialog,
+      utilsActionTypes.setSidebar
+    ]),
     ...mapActions(orderForm.moduleName, {
       updateOrder: orderFormTypes.updateOrder,
       setFormOrder: orderFormTypes.setFormOrder,
@@ -1016,11 +1028,10 @@ export default {
     },
 
     async handleChange (event) {
-      const [error, data] = await this.updateOrder(event)
+      const [error] = await this.updateOrder(event)
 
       if (error !== undefined) {
-        this[type.setSnackbar]({
-          show: true,
+        this.setSnackbar({
           message: get(error, 'response.data.message') || 'There was an error saving the information'
         })
       }
@@ -1058,11 +1069,11 @@ export default {
           await this.refreshOrder()
         }
 
-        this[type.setSnackbar]({ show: true, message })
+        this.setSnackbar({ message })
       }
 
       if (this.isSuperadmin()) {
-        await this[type.setConfirmationDialog]({
+        await this.setConfirmationDialog({
           title: 'Are you sure you want to send this order to the TMS?',
           onConfirm,
           onCancel: () => { this.loading = false }
@@ -1092,7 +1103,7 @@ export default {
         await this.refreshOrder()
       }
 
-      this[type.setSnackbar]({ show: true, message })
+      this.setSnackbar({ message })
     },
 
     async downloadSourceFile (requestId) {
@@ -1110,7 +1121,7 @@ export default {
     async deleteOrder (orderId) {
       this.loading = true
 
-      await this[type.setConfirmationDialog]({
+      await this.setConfirmationDialog({
         title: 'Are you sure you want to delete this order?',
         onConfirm: async () => {
           this.loading = true
@@ -1129,7 +1140,7 @@ export default {
           } else {
             message = 'Error trying to delete the order'
           }
-          await this[type.setSnackbar]({ show: true, message })
+          await this.setSnackbar({ message })
         },
         onCancel: () => { this.loading = false }
       })
@@ -1137,7 +1148,7 @@ export default {
 
     async replicateOrder (orderId) {
       this.loading = true
-      await this[type.setConfirmationDialog]({
+      await this.setConfirmationDialog({
         title: 'Are you sure you want to replicate this order?',
         onConfirm: async () => {
           this.loading = true
@@ -1150,7 +1161,7 @@ export default {
           } else {
             message = 'Error trying to replicate the order'
           }
-          await this[type.setSnackbar]({ show: true, message })
+          await this.setSnackbar({ message })
         },
         onCancel: () => {
           this.loading = false
@@ -1216,13 +1227,13 @@ export default {
     },
 
     async addTMSId () {
-      await this[type.setConfirmationDialog]({
+      await this.setConfirmationDialog({
         title: 'Please type the desired TMS ID',
         hasInputValue: true,
         onConfirm: async (value) => {
           this.handleChange({ path: 'tms_shipment_id', value })
 
-          await this[type.setSnackbar]({ show: true, message: 'TMS ID added' })
+          await this.setSnackbar({ show: true, message: 'TMS ID added' })
         },
         onCancel: () => { this.loading = false }
       })

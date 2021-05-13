@@ -27,14 +27,14 @@
           v-text="'Copy request ID'"
         />
         <v-list-item
-          v-if="active && !supervise && isLocked && hasPermission('object-locks-edit')"
+          v-if="active && !supervise && hasPermission('object-locks-edit') && !userOwnsLock(request.lock)"
           @click="handleClaimLock"
-          v-text="'Claim lock'"
+          v-text="'Take edit-lock'"
         />
         <v-list-item
           v-if="userOwnsLock(request.lock)"
           @click="handleReleaseLock"
-          v-text="'Release lock'"
+          v-text="'Release edit-lock'"
         />
         <v-list-item
           v-if="!isPtImageUpload"
@@ -91,7 +91,7 @@
 import { mapActions, mapState } from 'vuex'
 import permissions from '@/mixins/permissions'
 import locks from '@/mixins/locks'
-import utils, { type } from '@/store/modules/utils'
+import utils, { actionTypes as utilsActionTypes } from '@/store/modules/utils'
 import requestList from '@/store/modules/requests-list'
 import { downloadFile } from '@/utils/download_file'
 import { deleteRequest, getSourceFileDownloadURL, reprocessOcrRequest, changeRequestDoneStatus, reimportOcrRequestAbbyy } from '@/store/api_calls/requests'
@@ -144,13 +144,13 @@ export default {
     }
   },
   methods: {
+    ...mapActions(utils.moduleName, [utilsActionTypes.setSnackbar]),
     ...mapActions(utils.moduleName, {
-      setSnackbar: type.setSnackbar,
-      setConfirmDialog: type.setConfirmationDialog
+      setConfirmDialog: utilsActionTypes.setConfirmationDialog
     }),
 
     handleClipboardSuccess () {
-      this.setSnackbar({ show: true, message: 'Request ID coppied to clipboard.' })
+      this.setSnackbar({ message: 'Request ID coppied to clipboard.' })
     },
 
     async deleteRequest (requestId) {
@@ -168,7 +168,7 @@ export default {
           } else {
             message = 'Error trying to delete the request'
           }
-          await this.setSnackbar({ show: true, message })
+          await this.setSnackbar({ message })
         },
         onCancel: () => {
           this.loading = false
@@ -179,7 +179,8 @@ export default {
     async handleClaimLock () {
       this.loading = true
       await this.setConfirmDialog({
-        title: 'Are you sure you want to claim this request\'s lock?',
+        title: 'Are you sure you want to take the request edit-lock?',
+        noWrap: true,
         onConfirm: async () => {
           this.attemptToLockRequest({
             requestId: this.request.request_id,
@@ -200,9 +201,9 @@ export default {
     async handleReleaseLock () {
       this.loading = true
       await this.setConfirmDialog({
-        title: 'Are you sure you want to release this request\'s lock?',
+        title: 'Are you sure you want to release the request lock?',
         onConfirm: async () => {
-          this.releaseLockRequest({ requestId: this.request.request_id })
+          this.releaseLockRequest({ requestId: this.request.request_id, updateList: true, })
 
           this.$root.$emit(events.lockReleased, this.request)
           this.loading = false
@@ -219,7 +220,7 @@ export default {
       if (error === undefined) {
         downloadFile(data.data)
       } else {
-        await this.setSnackbar({ show: true, message: error })
+        await this.setSnackbar({ message: error })
       }
     },
 
@@ -233,11 +234,11 @@ export default {
 
           if (error !== undefined) {
             this.loading = false
-            this.setSnackbar({ show: true, message: 'There was an error trying to send the message to reprocess' })
+            this.setSnackbar({ message: 'There was an error trying to send the message to reprocess' })
             return
           }
 
-          this.setSnackbar({ show: true, message: 'Request sent for reprocessing' })
+          this.setSnackbar({ message: 'Request sent for reprocessing' })
           this.loading = false
           this.$emit('request-deleted')
         }
@@ -254,11 +255,11 @@ export default {
 
           if (error !== undefined) {
             this.loading = false
-            this.setSnackbar({ show: true, message: 'There was an error trying to send the message to reimport' })
+            this.setSnackbar({ message: 'There was an error trying to send the message to reimport' })
             return
           }
 
-          this.setSnackbar({ show: true, message: 'Request sent for reimporting' })
+          this.setSnackbar({ message: 'Request sent for reimporting' })
           this.loading = false
           this.$emit('request-deleted')
         }
@@ -272,11 +273,11 @@ export default {
 
       if (error !== undefined) {
         this.loading = false
-        this.setSnackbar({ show: true, message: `There was an error trying to mark the request as ${this.doneText}` })
+        this.setSnackbar({ message: `There was an error trying to mark the request as ${this.doneText}` })
         return
       }
 
-      this.setSnackbar({ show: true, message: `Request marked as ${this.doneText} successfully` })
+      this.setSnackbar({ message: `Request marked as ${this.doneText} successfully` })
       this.loading = false
       this.$emit('request-deleted')
     }

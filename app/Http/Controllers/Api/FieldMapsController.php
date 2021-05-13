@@ -28,9 +28,10 @@ class FieldMapsController extends Controller
             'tms_provider_id' => 'sometimes|nullable|exists:t_tms_providers,id',
         ], ['all' => true]);
 
-        return JsonResource::make(
-            FieldMap::getFrom($params)
-        );
+        return JsonResource::make([
+            'current' => FieldMap::getFrom($params),
+            'previous' => FieldMap::getPreviousLevelFrom($params),
+        ]);
     }
 
     /**
@@ -43,29 +44,39 @@ class FieldMapsController extends Controller
     {
         $this->authorize('create', FieldMap::class);
         $data = $request->validate([
-            'company_id' => 'required_without_all:variant_id,tms_provider_id|exists:t_companies,id',
-            'variant_id' => 'required_without_all:company_id,tms_provider_id|exists:t_ocrvariants,id',
-            'tms_provider_id' => 'required_without_all:company_id,variant_id|exists:t_tms_providers,id',
+            'company_id' => 'sometimes|nullable|exists:t_companies,id',
+            'variant_id' => 'sometimes|nullable|exists:t_ocrvariants,id',
+            'tms_provider_id' => 'sometimes|nullable|exists:t_tms_providers,id',
             'fieldmap_config' => 'required|array'
         ]);
 
         $relatedObject = null;
-        if (isset($data['variant_id']) && isset($data['company_id'])) {
+        $companyId = $data['company_id'] ?? null;
+        $variantId = $data['variant_id'] ?? null;
+        $tmsProviderId = $data['tms_provider_id'] ?? null;
+
+        if (! $companyId && ! $variantId && ! $tmsProviderId) {
+            $defaultFieldMap = FieldMap::getSystemDefault();
+            $newDefaultFieldMap = FieldMap::createFrom($data, $defaultFieldMap);
+            return $newDefaultFieldMap;
+        }
+
+        if ($variantId && $companyId) {
             $relatedObject = CompanyOcrVariant::query()
                 ->with('fieldMap:id')
                 ->firstOrNew([
                     't_company_id' => $data['company_id'],
                     't_ocrvariant_id' => $data['variant_id'],
                 ]);
-        } elseif (isset($data['company_id'])) {
+        } elseif ($companyId) {
             $relatedObject = Company::query()
                 ->with('fieldMap:id')
                 ->findOrFail($data['company_id'], ['id', 't_fieldmap_id']);
-        } elseif (isset($data['variant_id'])) {
+        } elseif ($variantId) {
             $relatedObject = OCRVariant::query()
                 ->with('fieldMap:id')
                 ->findOrFail($data['variant_id'], ['id', 't_fieldmap_id']);
-        } elseif (isset($data['tms_provider_id'])) {
+        } elseif ($tmsProviderId) {
             $relatedObject = TMSProvider::query()
                 ->with('fieldMap:id')
                 ->findOrFail($data['tms_provider_id'], ['id', 't_fieldmap_id']);

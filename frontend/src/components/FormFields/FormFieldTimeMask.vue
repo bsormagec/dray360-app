@@ -36,7 +36,7 @@
 <script>
 import { mapActions } from 'vuex'
 import orderForm, { types } from '@/store/modules/order-form'
-import utils, { type } from '@/store/modules/utils'
+import utils, { actionTypes as utilsActionTypes } from '@/store/modules/utils'
 import FormFieldPresentation from './FormFieldPresentation'
 import { mask } from 'vue-the-mask'
 
@@ -63,9 +63,7 @@ export default {
   }),
 
   methods: {
-    ...mapActions(utils.moduleName, {
-      setSnackbar: type.setSnackbar
-    }),
+    ...mapActions(utils.moduleName, [utilsActionTypes.setSnackbar]),
     ...mapActions(orderForm.moduleName, {
       stopFieldEdit: types.stopFieldEdit
     }),
@@ -85,7 +83,7 @@ export default {
     },
     handleAccept (saveAll = false) {
       if (this.currentValue !== null && this.currentValue !== '' && !this.isValidTime(this.currentValue)) {
-        this.setSnackbar({ show: true, message: 'Please enter a valid date' })
+        this.setSnackbar({ message: 'Please enter a valid date' })
         return
       }
       this.$emit('change', { value: this.currentValue, saveAll })

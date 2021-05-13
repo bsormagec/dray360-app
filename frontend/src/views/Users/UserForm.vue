@@ -122,10 +122,11 @@
   />
 </template>
 <script>
-import { mapActions } from 'vuex'
 import permissions from '@/mixins/permissions'
-import utils, { type } from '@/store/modules/utils'
-import { getCompanies } from '@/store/api_calls/companies'
+import allCompanies from '@/mixins/all_companies'
+
+import { mapActions } from 'vuex'
+import utils, { actionTypes } from '@/store/modules/utils'
 import { getUser, getRoles, changeUserStatus, editUser, deleteUser, addUser } from '@/store/api_calls/users'
 import ContainerNotFound from '@/views/ContainerNotFound'
 import SidebarNavigationButton from '@/components/General/SidebarNavigationButton'
@@ -140,7 +141,7 @@ export default {
     SidebarNavigationButton
   },
 
-  mixins: [permissions],
+  mixins: [permissions, allCompanies],
 
   props: {
     edit: {
@@ -164,7 +165,6 @@ export default {
     role_selected: null,
     activated: true,
     roles: [],
-    companies: [],
     user: {
       id: undefined,
       t_company_id: null,
@@ -192,9 +192,9 @@ export default {
 
   methods: {
     ...mapActions(utils.moduleName, {
-      setSnackbar: type.setSnackbar,
-      setConfirmDialog: type.setConfirmationDialog
+      setConfirmDialog: actionTypes.setConfirmationDialog
     }),
+    ...mapActions(utils.moduleName, [actionTypes.setSnackbar]),
 
     async getUserById (userId) {
       const [error, data] = await getUser(userId)
@@ -234,7 +234,7 @@ export default {
         message = 'An error has ocurred'
       }
 
-      await this.setSnackbar({ show: true, message })
+      await this.setSnackbar({ message })
     },
 
     async addUser () {
@@ -260,7 +260,7 @@ export default {
         message = 'An error has ocurred'
       }
 
-      await this.setSnackbar({ show: true, message })
+      await this.setSnackbar({ message })
     },
 
     async fetchRoles () {
@@ -272,15 +272,6 @@ export default {
 
       this.roles = data.data
     },
-    async fetchCompanies () {
-      const [error, data] = await getCompanies()
-
-      if (error !== undefined) {
-        return
-      }
-
-      this.companies = data.data
-    },
 
     async toggleUserStatus () {
       const active = !this.userIsActive
@@ -289,7 +280,7 @@ export default {
       this.loading = false
 
       if (error !== undefined) {
-        await this.setSnackbar({ show: true, message: 'There was an error in the server, please try again.' })
+        await this.setSnackbar({ message: 'There was an error in the server, please try again.' })
         return
       }
 
@@ -312,7 +303,7 @@ export default {
             message = 'An error has ocurred'
           }
 
-          await this.setSnackbar({ show: true, message })
+          await this.setSnackbar({ message })
           this.loading = false
         }
       })

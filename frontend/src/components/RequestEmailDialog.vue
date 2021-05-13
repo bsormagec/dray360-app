@@ -103,7 +103,7 @@
 import get from 'lodash/get'
 import { mapActions } from 'vuex'
 import { formatDate } from '@/utils/dates'
-import utils, { type } from '@/store/modules/utils'
+import utils, { actionTypes } from '@/store/modules/utils'
 import { downloadFile } from '@/utils/download_file'
 import { getEmailDetails, getSourceEmailDownloadURL } from '@/store/api_calls/requests'
 
@@ -149,7 +149,7 @@ export default {
     }
   },
   methods: {
-    ...mapActions(utils.moduleName, { setSnackbar: type.setSnackbar }),
+    ...mapActions(utils.moduleName, [actionTypes.setSnackbar]),
     formatDate,
     async fetchEmailDetails () {
       this.loading = true
@@ -167,7 +167,7 @@ export default {
       if (error === undefined) {
         downloadFile(data.data)
       } else {
-        await this.setSnackbar({ show: true, message: error })
+        await this.setSnackbar({ message: error })
       }
     }
   }

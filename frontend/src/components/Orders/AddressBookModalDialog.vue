@@ -215,7 +215,7 @@
 <script>
 import { getSearchAddress } from '@/store/api_calls/addresses'
 import { mapActions } from 'vuex'
-import utils, { type } from '@/store/modules/utils'
+import utils, { actionTypes } from '@/store/modules/utils'
 
 export default {
   props: {
@@ -290,9 +290,7 @@ export default {
   },
 
   methods: {
-    ...mapActions(utils.moduleName, {
-      setSnackbar: type.setSnackbar
-    }),
+    ...mapActions(utils.moduleName, [actionTypes.setSnackbar]),
     async searchApi () {
       const extraFilters = {
         locationName: { enabled: this.enableAddressFilters, filterParam: 'location_name' },
@@ -320,15 +318,9 @@ export default {
       if (error === undefined) {
         this.addresses = data.address_list
       } else if (error.message && error.message.includes('timeout')) {
-        this.setSnackbar({
-          message: 'The search timed out. Please add more details to the search',
-          show: true
-        })
+        this.setSnackbar({ message: 'The search timed out. Please add more details to the search' })
       } else {
-        this.setSnackbar({
-          message: 'There was an error in the search, please try again',
-          show: true
-        })
+        this.setSnackbar({ message: 'There was an error in the search, please try again' })
       }
       this.loading = false
     },

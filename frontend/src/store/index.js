@@ -10,6 +10,7 @@ import accesorialmapping from '@/store/modules/accesorialmapping'
 import profile from '@/store/modules/profile'
 import orderForm from '@/store/modules/order-form'
 import requestsList from '@/store/modules/requests-list'
+import fieldMaps from '@/store/modules/field_maps'
 
 Vue.use(Vuex)
 
@@ -24,6 +25,7 @@ export default new Vuex.Store({
     [accesorialmapping.moduleName]: accesorialmapping,
     [profile.moduleName]: profile,
     [orderForm.moduleName]: orderForm,
-    [requestsList.moduleName]: requestsList
+    [requestsList.moduleName]: requestsList,
+    [fieldMaps.moduleName]: fieldMaps,
   }
 })

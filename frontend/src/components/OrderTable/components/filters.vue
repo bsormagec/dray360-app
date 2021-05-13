@@ -278,8 +278,10 @@ import DateRangeCalendar from './DateRange'
 import Chip from '@/components/Chip'
 import auth from '@/store/modules/auth'
 import { mapState } from 'vuex'
+
 import permissions from '@/mixins/permissions'
-import { getCompanies } from '@/store/api_calls/companies'
+import allCompanies from '@/mixins/all_companies'
+
 import { statuses, displayStatuses } from '@/enums/app_objects_types'
 
 export default {
@@ -288,7 +290,7 @@ export default {
     DateRangeCalendar,
     Chip
   },
-  mixins: [permissions],
+  mixins: [permissions, allCompanies],
   props: {
     search: {
       type: String,
@@ -413,8 +415,6 @@ export default {
         { text: statuses.uploadImageFailed, value: statuses.uploadImageFailed },
         { text: statuses.uploadImageSucceeded, value: statuses.uploadImageSucceeded },
       ],
-      // list of companies for the filters
-      companies: [],
       // these are the models for the form fields
       filters: {
         search: this.search,
@@ -579,15 +579,6 @@ export default {
       this.setActiveFilters()
       this.onFiltersChange()
     },
-    async fetchCompanies () {
-      const [error, data] = await getCompanies()
-
-      if (error !== undefined) {
-        return
-      }
-
-      this.companies = data.data
-    }
   }
 }
 </script>

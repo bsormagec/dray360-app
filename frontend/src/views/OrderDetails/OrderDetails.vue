@@ -76,7 +76,7 @@ import ContentLoading from '@/components/ContentLoading'
 import orders, { types } from '@/store/modules/orders'
 import orderForm, { types as orderFormTypes } from '@/store/modules/order-form'
 import requestsList from '@/store/modules/requests-list'
-import utils, { type as utilsTypes } from '@/store/modules/utils'
+import utils, { actionTypes as utilsActionTypes } from '@/store/modules/utils'
 import { mapState, mapActions } from 'vuex'
 import { isInAdminReview } from '@/utils/status_helpers'
 
@@ -199,10 +199,7 @@ export default {
   },
 
   methods: {
-    ...mapActions(utils.moduleName, {
-      setConfirmDialog: utilsTypes.setConfirmationDialog,
-      setSidebar: utilsTypes.setSidebar,
-    }),
+    ...mapActions(utils.moduleName, [utilsActionTypes.setConfirmationDialog, utilsActionTypes.setSidebar]),
     ...mapActions(orders.moduleName, [types.getOrderDetail]),
     ...mapActions(orderForm.moduleName, {
       setFormOrder: orderFormTypes.setFormOrder,
@@ -230,6 +227,7 @@ export default {
 
     initializeLockingListeners () {
       this.$root.$on(events.requestsRefreshed, () => !this.refreshLock && this.fetchFormData())
+      this.$root.$on(events.lockReleased, request => this.setOrderLock({ locked: true, lock: null }))
       this.$root.$on(events.lockRefreshFailed, () => this.stopRefreshingLock())
       this.$root.$on(events.lockClaimed, request => {
         if (request.request_id !== this.order.request_id) {
@@ -274,9 +272,9 @@ export default {
             lock.object_id === this.order.request_id &&
             !this.order.is_locked
           ) {
-            this.setConfirmDialog({
-              title: 'Lock claimed for this request',
-              text: `${lock.user.name} claimed the lock for this request`,
+            this.setConfirmationDialog({
+              title: 'Edit-lock taken for this request',
+              text: `${lock.user.name} took the edit-lock for this request`,
               confirmText: 'Ok',
               cancelText: '',
               onConfirm: () => {},
@@ -298,7 +296,7 @@ export default {
             return
           }
 
-          await this.setConfirmDialog({
+          await this.setConfirmationDialog({
             title: 'Request Unlocked',
             text: 'Do you want to claim the lock?',
             onConfirm: () => {
@@ -312,13 +310,12 @@ export default {
     async initializeLock () {
       if (
         !this.refreshLock ||
-        !this.hasPermission('object-locks-create') ||
-        this.order.is_locked ||
-        !isInAdminReview(this.order?.parent_ocr_request?.latest_ocr_request_status?.status) ||
-        this.supervise
+        this.shouldOmitAutolocking({ ...(this.order?.parent_ocr_request), is_locked: this.order.is_locked })
       ) {
         return
-      } else if (this.userOwnsLock(this.order.lock)) {
+      }
+
+      if (this.userOwnsLock(this.order.lock)) {
         this.refreshCurrentLock(this.order.request_id)
         this.startRefreshingLock(this.order.request_id)
         return

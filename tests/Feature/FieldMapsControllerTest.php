@@ -73,9 +73,12 @@ class FieldMapsControllerTest extends TestCase
             ->assertJsonFragment(['something' => false])
             ->assertJsonStructure([
                 'data' => [
-                    'main' => [
-                        'something',
+                    'current' => [
+                        'main' => [
+                            'something',
+                        ],
                     ],
+                    'previous',
                 ],
             ]);
     }
@@ -90,13 +93,20 @@ class FieldMapsControllerTest extends TestCase
             ->assertJsonFragment(['another' => 1])
             ->assertJsonStructure([
                 'data' => [
-                    'main' => [
-                        'something',
-                        'another',
+                    'current' => [
+                        'main' => [
+                            'something',
+                            'another',
+                        ],
+                        'secondary' => [
+                            'something2',
+                        ],
                     ],
-                    'secondary' => [
-                        'something2',
-                    ],
+                    'previous' => [
+                        'main' => [
+                            'something',
+                        ],
+                    ]
                 ],
             ]);
     }
@@ -111,13 +121,24 @@ class FieldMapsControllerTest extends TestCase
             ->assertJsonFragment(['something3' => false])
             ->assertJsonStructure([
                 'data' => [
-                    'main' => [
-                        'something',
-                        'another'
+                    'current' => [
+                        'main' => [
+                            'something',
+                            'another'
+                        ],
+                        'secondary' => [
+                            'something2',
+                            'something3',
+                        ],
                     ],
-                    'secondary' => [
-                        'something2',
-                        'something3',
+                    'previous' => [
+                        'main' => [
+                            'something',
+                            'another',
+                        ],
+                        'secondary' => [
+                            'something2',
+                        ],
                     ],
                 ],
             ]);
@@ -133,13 +154,16 @@ class FieldMapsControllerTest extends TestCase
             ->assertJsonFragment(['something4' => false])
             ->assertJsonStructure([
                 'data' => [
-                    'main' => [
-                        'something',
-                        'another2',
+                    'current' => [
+                        'main' => [
+                            'something',
+                            'another2',
+                        ],
+                        'secondary' => [
+                            'something4',
+                        ],
                     ],
-                    'secondary' => [
-                        'something4',
-                    ],
+                    'previous',
                 ],
             ]);
     }
@@ -153,18 +177,52 @@ class FieldMapsControllerTest extends TestCase
             ]))
             ->assertJsonStructure([
                 'data' => [
-                    'main' => [
-                        'something',
-                        'another',
-                        'another2',
+                    'current' => [
+                        'main' => [
+                            'something',
+                            'another',
+                            'another2',
+                        ],
+                        'secondary' => [
+                            'something2',
+                            'something3',
+                            'something4',
+                        ],
                     ],
-                    'secondary' => [
-                        'something2',
-                        'something3',
-                        'something4',
-                    ],
+                    'previous',
                 ],
             ]);
+    }
+
+    /** @test */
+    public function it_saves_a_new_default_when_nothing_provided()
+    {
+        $initialFieldMap = FieldMap::getSystemDefault();
+        $this->postJson(route('field-maps.store'), [
+                'fieldmap_config' => ['main' => ['something' => false, 'newdefault' => 1]],
+            ])
+            ->assertStatus(Response::HTTP_CREATED)
+            ->assertJsonStructure([
+                'created_at',
+                'fieldmap_config' => [
+                    'main' => ['something', 'newdefault'],
+                ],
+            ]);
+
+        $finalFieldMap = FieldMap::getSystemDefault();
+        $this->assertDatabaseHas('t_fieldmaps', [
+            'id' => $finalFieldMap->id,
+            'replaces_id' => $initialFieldMap->id,
+            'system_default' => true,
+        ]);
+        $this->assertEquals(json_encode($finalFieldMap->fieldmap_config), json_encode(['main' => ['something' => false, 'newdefault' => 1]]));
+
+        $initialFieldMap->refresh();
+        $this->assertNotNull($initialFieldMap->replaced_at);
+        $this->assertDatabaseHas('t_fieldmaps', [
+            'id' => $initialFieldMap->id,
+            'replacedby_id' => $finalFieldMap->id,
+        ]);
     }
 
     /** @test */

@@ -36,7 +36,7 @@
             </span>
           </div>
 
-          <div>
+          <div class="equipment-type__value">
             {{ equipmentType ? equipmentType.equipment_display : '---' }}
           </div>
         </div>
@@ -379,6 +379,10 @@ export default {
     padding-left: rem(6);
     font-weight: 700;
     font-size: rem(14.4) !important;
+}
+
+.equipment-type__value {
+  font-size: rem(14);
 }
 
 .recognized-equipment {

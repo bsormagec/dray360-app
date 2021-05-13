@@ -76,24 +76,41 @@ class FieldMap extends Model
         return json_decode($response->fieldmap, true);
     }
 
-    public static function createFrom(array $params, FieldMap $replaces = null): self
+    public static function getPreviousLevelFrom(array $params): array
     {
-        $mapFromPreviousLevel = [];
-        if (isset($params['variant_id']) && isset($params['company_id'])) {
-            $mapFromPreviousLevel = static::getFrom([
-                'company_id' => $params['company_id'],
-                'variant_id' => $params['variant_id'],
+        $companyId = $params['company_id'] ?? null;
+        $variantId = $params['variant_id'] ?? null;
+        $tmsProviderId = $params['tms_provider_id'] ?? null;
+
+        if ($variantId && $companyId) {
+            return static::getFrom([
+                'company_id' => $companyId,
+                'variant_id' => $variantId,
             ], false);
-        } elseif (isset($params['company_id'])) {
-            $company = Company::find($params['company_id'], ['id', 'default_tms_provider_id']);
-            $mapFromPreviousLevel = static::getFrom(['tms_provider_id' => $company->default_tms_provider_id]);
-        } elseif (isset($params['variant_id']) || isset($params['tms_provider_id'])) {
-            $mapFromPreviousLevel = static::getFrom([]);
+        } elseif ($companyId) {
+            $company = Company::find($companyId, ['id', 'default_tms_provider_id']);
+            return static::getFrom(['tms_provider_id' => $company->default_tms_provider_id]);
+        } elseif ($variantId || $tmsProviderId) {
+            return static::getFrom([]);
         }
 
-        $mapDiff = array_diff_assoc_recursive($params['fieldmap_config'], $mapFromPreviousLevel);
+        return [];
+    }
+
+    public static function createFrom(array $params, FieldMap $replaces = null): self
+    {
+        $mapDiff = [];
+        if ($replaces && $replaces->system_default) {
+            $mapDiff = $params['fieldmap_config'];
+        } else {
+            $mapDiff = array_diff_assoc_recursive(
+                $params['fieldmap_config'],
+                static::getPreviousLevelFrom($params)
+            );
+        }
 
         $data = [
+            'system_default' => $replaces && $replaces->system_default,
             'fieldmap_config' => empty($mapDiff) ? new \stdClass() : $mapDiff,
             'created_at' => now(),
             'replaces_id' => $replaces ? $replaces->id : null,
@@ -109,5 +126,10 @@ class FieldMap extends Model
         }
 
         return $newModel;
+    }
+
+    public static function getSystemDefault(): self
+    {
+        return static::where('system_default', true)->whereNull('replaced_at')->first();
     }
 }
