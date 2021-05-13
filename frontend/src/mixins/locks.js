@@ -57,6 +57,8 @@ export default {
       if (startRefresh) {
         this.startRefreshingLock(requestId)
       }
+
+      return [error]
     },
 
     async startRefreshingLock (requestId) {

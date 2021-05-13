@@ -95,9 +95,11 @@ class SideBySideOrder extends JsonResource
         ]);
 
         $lock = $this->resource->getActiveLock();
-        $isLocked = ! $lock || $this->resource->isLockedForTheUser();
+        $isLocked = $this->resource->isLockedForTheUser();
+
         $this->resource->unsetRelation('locks');
-        $this->resource->is_locked = $isLocked;
+        $this->resource->is_locked = ! $lock || $isLocked;
+        $this->resource->ocr_request_is_locked = $isLocked;
         $this->resource->setRelation('lock', $lock);
     }
 
