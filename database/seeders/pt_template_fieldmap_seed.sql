@@ -184,8 +184,8 @@ insert into t_fieldmaps(system_default, fieldmap_config) values(true, '
     },
     "bill_to_address" : {
         "d3canon_name": "bill_to_address",
-        "d3canon_table_column": "t_company_address_tms_code",
-        "d3canon_column": "company_address_tms_code",
+        "d3canon_table": null,
+        "d3canon_column": null,
         "abbyy_source_field": "bill_to_address",
         "abbyy_source_regex": null,
         "available": true,
@@ -205,9 +205,9 @@ insert into t_fieldmaps(system_default, fieldmap_config) values(true, '
     },
     "booking_number" : {
         "d3canon_name": "bill_to_address",
-        "d3canon_table_column": "t_company_address_tms_code",
-        "d3canon_column": "company_address_tms_code",
-        "abbyy_source_field": "bill_to_address",
+        "d3canon_table": null,
+        "d3canon_column": null,
+        "abbyy_source_field": "booking_number",
         "abbyy_source_regex": null,
         "available": true,
         "templateable": true,
@@ -541,8 +541,8 @@ insert into t_fieldmaps(system_default, fieldmap_config) values(true, '
     },
     "division_code" : {
         "d3canon_name": "division_code",
-        "d3canon_table": "t_orders",
-        "d3canon_column": "division_code",
+        "d3canon_table": null,
+        "d3canon_column": null,
         "abbyy_source_field": null,
         "abbyy_source_regex": null,
         "available": true,
@@ -604,9 +604,9 @@ insert into t_fieldmaps(system_default, fieldmap_config) values(true, '
     },
     "event1_location" : {
         "d3canon_name": "event1_location",
-        "d3canon_table_column": "t_company_address_tms_code",
-        "d3canon_column": "company_address_tms_code",
-        "abbyy_source_field": "event#.location",
+        "d3canon_table": null,
+        "d3canon_column": null,
+        "abbyy_source_field": null,
         "abbyy_source_regex": null,
         "available": true,
         "templateable": true,
@@ -625,8 +625,8 @@ insert into t_fieldmaps(system_default, fieldmap_config) values(true, '
     },
     "event1_note" : {
         "d3canon_name": "event1_note",
-        "d3canon_table": "t_order_address_events",
-        "d3canon_column": "note",
+        "d3canon_table": null,
+        "d3canon_column": null,
         "abbyy_source_field": null,
         "abbyy_source_regex": null,
         "available": true,
@@ -646,9 +646,9 @@ insert into t_fieldmaps(system_default, fieldmap_config) values(true, '
     },
     "event1_type" : {
         "d3canon_name": "event1_type",
-        "d3canon_table": "t_order_address_events",
-        "d3canon_column": "is_hook_event|is_mount_event|is_deliver_event|is_dismount_event|is_drop_event|is_pickup_event",
-        "abbyy_source_field": "event#.type",
+        "d3canon_table": null,
+        "d3canon_column": null,
+        "abbyy_source_field": null,
         "abbyy_source_regex": null,
         "available": true,
         "templateable": true,
@@ -1192,8 +1192,8 @@ insert into t_fieldmaps(system_default, fieldmap_config) values(true, '
     },
     "contents" : {
         "d3canon_name": "contents",
-        "d3canon_table_column": "t_order_line_items",
-        "d3canon_column": "contents",
+        "d3canon_table": null,
+        "d3canon_column": null,
         "abbyy_source_field": "contents",
         "abbyy_source_regex": null,
         "available": true,
@@ -1213,8 +1213,8 @@ insert into t_fieldmaps(system_default, fieldmap_config) values(true, '
     },
     "quantity" : {
         "d3canon_name": "quantity",
-        "d3canon_table_column": "t_order_line_items",
-        "d3canon_column": "quantity",
+        "d3canon_table": null,
+        "d3canon_column": null,
         "abbyy_source_field": "quantity",
         "abbyy_source_regex": null,
         "available": true,
@@ -1234,8 +1234,8 @@ insert into t_fieldmaps(system_default, fieldmap_config) values(true, '
     },
     "weight" : {
         "d3canon_name": "weight",
-        "d3canon_table_column": "t_order_line_items",
-        "d3canon_column": "weight",
+        "d3canon_table": null,
+        "d3canon_column": null,
         "abbyy_source_field": "weight",
         "abbyy_source_regex": null,
         "available": true,
@@ -1383,7 +1383,7 @@ insert into t_fieldmaps(system_default, fieldmap_config) values(true, '
         "d3canon_name": "pt_ref1_type",
         "d3canon_table": null,
         "d3canon_column": null,
-        "abbyy_source_field": "purchase_order_number",
+        "abbyy_source_field": null,
         "abbyy_source_regex": null,
         "available": true,
         "templateable": false,
@@ -1404,7 +1404,7 @@ insert into t_fieldmaps(system_default, fieldmap_config) values(true, '
         "d3canon_name": "pt_ref1_text",
         "d3canon_table": null,
         "d3canon_column": null,
-        "abbyy_source_field": "purchase_order_number",
+        "abbyy_source_field": null,
         "abbyy_source_regex": null,
         "available": true,
         "templateable": false,
@@ -1425,7 +1425,7 @@ insert into t_fieldmaps(system_default, fieldmap_config) values(true, '
         "d3canon_name": "pt_ref2_type",
         "d3canon_table": null,
         "d3canon_column": null,
-        "abbyy_source_field": "purchase_order_number",
+        "abbyy_source_field": null,
         "abbyy_source_regex": null,
         "available": true,
         "templateable": false,
@@ -1446,7 +1446,7 @@ insert into t_fieldmaps(system_default, fieldmap_config) values(true, '
         "d3canon_name": "pt_ref2_text",
         "d3canon_table": null,
         "d3canon_column": null,
-        "abbyy_source_field": "purchase_order_number",
+        "abbyy_source_field": null,
         "abbyy_source_regex": null,
         "available": true,
         "templateable": false,
@@ -1467,7 +1467,7 @@ insert into t_fieldmaps(system_default, fieldmap_config) values(true, '
         "d3canon_name": "pt_ref3_type",
         "d3canon_table": null,
         "d3canon_column": null,
-        "abbyy_source_field": "purchase_order_number",
+        "abbyy_source_field": null,
         "abbyy_source_regex": null,
         "available": true,
         "templateable": false,
@@ -1488,7 +1488,7 @@ insert into t_fieldmaps(system_default, fieldmap_config) values(true, '
         "d3canon_name": "pt_ref3_text",
         "d3canon_table": null,
         "d3canon_column": null,
-        "abbyy_source_field": "purchase_order_number",
+        "abbyy_source_field": null,
         "abbyy_source_regex": null,
         "available": true,
         "templateable": false,
@@ -1633,9 +1633,9 @@ insert into t_fieldmaps(system_default, fieldmap_config) values(true, '
     },
     "shipment_direction" : {
         "d3canon_name": "shipment_direction",
-        "d3canon_table": "t_orders",
-        "d3canon_column": "shipment_direction",
-        "abbyy_source_field": "order_info.order_type",
+        "d3canon_table": null,
+        "d3canon_column": null,
+        "abbyy_source_field": null,
         "abbyy_source_regex": null,
         "available": true,
         "templateable": true,
@@ -1675,9 +1675,9 @@ insert into t_fieldmaps(system_default, fieldmap_config) values(true, '
     },
     "unit_number" : {
         "d3canon_name": "unit_number",
-        "d3canon_table": "t_orders",
-        "d3canon_column": "unit_number",
-        "abbyy_source_field": "equip_info.unit_number",
+        "d3canon_table": null,
+        "d3canon_column": null,
+        "abbyy_source_field": "unit_number",
         "abbyy_source_regex": null,
         "available": true,
         "templateable": false,
@@ -1738,8 +1738,8 @@ insert into t_fieldmaps(system_default, fieldmap_config) values(true, '
     },
     "item_contents" : {
         "d3canon_name": "item_contents",
-        "d3canon_table_column": "t_order_line_items",
-        "d3canon_column": "contents",
+        "d3canon_table": null,
+        "d3canon_column": null,
         "abbyy_source_field": "contents",
         "abbyy_source_regex": null,
         "available": true,
@@ -1759,8 +1759,8 @@ insert into t_fieldmaps(system_default, fieldmap_config) values(true, '
     },
     "item_quantity" : {
         "d3canon_name": "item_quantity",
-        "d3canon_table_column": "t_order_line_items",
-        "d3canon_column": "quantity",
+        "d3canon_table": null,
+        "d3canon_column": null,
         "abbyy_source_field": "quantity",
         "abbyy_source_regex": null,
         "available": true,
@@ -1780,8 +1780,8 @@ insert into t_fieldmaps(system_default, fieldmap_config) values(true, '
     },
     "item_weight" : {
         "d3canon_name": "item_weight",
-        "d3canon_table_column": "t_order_line_items",
-        "d3canon_column": "weight",
+        "d3canon_table": null,
+        "d3canon_column": null,
         "abbyy_source_field": "weight",
         "abbyy_source_regex": null,
         "available": true,
@@ -1801,9 +1801,9 @@ insert into t_fieldmaps(system_default, fieldmap_config) values(true, '
     },
     "event_type" : {
         "d3canon_name": "event_type",
-        "d3canon_table": "t_order_address_events",
-        "d3canon_column": "is_hook_event|is_mount_event|is_deliver_event|is_dismount_event|is_drop_event|is_pickup_event",
-        "abbyy_source_field": "event#.type",
+        "d3canon_table": null,
+        "d3canon_column": null,
+        "abbyy_source_field": null,
         "abbyy_source_regex": null,
         "available": true,
         "templateable": true,
@@ -1822,8 +1822,8 @@ insert into t_fieldmaps(system_default, fieldmap_config) values(true, '
     },
     "event_note" : {
         "d3canon_name": "event_note",
-        "d3canon_table": "t_order_address_events",
-        "d3canon_column": "note",
+        "d3canon_table": null,
+        "d3canon_column": null,
         "abbyy_source_field": null,
         "abbyy_source_regex": null,
         "available": true,
@@ -1843,9 +1843,9 @@ insert into t_fieldmaps(system_default, fieldmap_config) values(true, '
     },
     "event_address_tms_code" : {
         "d3canon_name": "event_address_tms_code",
-        "d3canon_table_column": "t_company_address_tms_code",
-        "d3canon_column": "company_address_tms_code",
-        "abbyy_source_field": "event#.location",
+        "d3canon_table": null,
+        "d3canon_column": null,
+        "abbyy_source_field": null,
         "abbyy_source_regex": null,
         "available": true,
         "templateable": true,
@@ -1871,22 +1871,22 @@ insert into t_fieldmaps(system_default, fieldmap_config) values(true, '
 -- TCompaniesDemo site, just testing...
 insert into t_fieldmaps(fieldmap_config) values('
 {
-    "item_contents" : {
+    "contents" : {
         "use_template_value": false
     },
-    "item_weight" : {
+    "weight" : {
         "use_template_value": false
     },
-    "item_quantity" : {
+    "quantity" : {
         "use_template_value": false
     },
-    "event_type" : {
+    "event1_type" : {
         "use_template_value": false
     },
-    "event_note" : {
+    "event1_note" : {
         "use_template_value": false
     },
-    "event_address_tms_code" : {
+    "event1_location" : {
         "use_template_value": false
     }
 }');
@@ -1900,13 +1900,13 @@ update t_companies set t_fieldmap_id=@TCOMPANIESDEMO_COMPANY_FIELDMAP_ID where i
 -- For Zariz, they don't want decription/weight/quantity to be templated
 insert into t_fieldmaps(fieldmap_config) values('
 {
-    "item_contents" : {
+    "contents" : {
         "use_template_value": false
     },
-    "item_weight" : {
+    "weight" : {
         "use_template_value": false
     },
-    "item_quantity" : {
+    "quantity" : {
         "use_template_value": false
     }
 }
@@ -1921,13 +1921,13 @@ update t_companies set t_fieldmap_id=@ZARIZ_COMPANY_FIELDMAP_ID where id=@ZARIZ_
 -- for TransportDSquare, they don't want events to be templated
 insert into t_fieldmaps(fieldmap_config) values('
 {
-    "event_type" : {
+    "event1_type" : {
         "use_template_value": false
     },
-    "event_note" : {
+    "event1_note" : {
         "use_template_value": false
     },
-    "event_address_tms_code" : {
+    "event1_location" : {
         "use_template_value": false
     }
 }
