@@ -1,10 +1,12 @@
 <template>
   <v-snackbar
     v-model="show"
-    timeout="5000"
+    :timeout="snackbar.timeout"
     top
   >
-    {{ snackbar.message }}
+    <span :class="{'v-snack-multiline__content': snackbar.multiline}">
+      {{ snackbar.message.trim() }}
+    </span>
 
     <template v-slot:action="{ attrs }">
       <v-btn
@@ -58,6 +60,9 @@ export default {
 .v-snack {
   .v-snack__wrapper{
     min-height: rem(56);
+  }
+  .v-snack-multiline__content {
+    white-space: break-spaces;
   }
 }
 </style>

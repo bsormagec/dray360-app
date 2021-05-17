@@ -577,9 +577,7 @@
         :section-name="sections.bill_to.label"
         :section-id="sections.bill_to.id"
       />
-      <div
-        class="form__sub-section"
-      >
+      <div class="form__sub-section">
         <div class="form__section-title">
           <h3 :id="sections.charges.id">
             {{ sections.charges.label }}
@@ -682,9 +680,7 @@
           />
         </div>
       </div>
-      <div
-        class="form__section"
-      >
+      <div class="form__section">
         <div
           :id="sections.inventory.id"
           class="form__section-title"
@@ -915,7 +911,7 @@ export default {
       ]
 
       return (this.order.tms_shipment_id !== null && this.order.tms_shipment_id !== undefined) ||
-          (alreadySentToTmsStatuses.includes(this.orderSystemStatus))
+        (alreadySentToTmsStatuses.includes(this.orderSystemStatus))
     },
 
     orderSystemStatus () {

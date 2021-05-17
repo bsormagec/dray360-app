@@ -19,7 +19,7 @@ export const actionTypes = {
 }
 
 const initialState = {
-  snackbar: { message: '' },
+  snackbar: { message: '', multiline: false, timeout: 5000 },
   tenantConfig: {},
   confirmationDialog: getBaseConfirmationDialog(),
   sidebar: { show: false }
@@ -45,8 +45,8 @@ const mutations = {
 }
 
 const actions = {
-  [actionTypes.setSnackbar] ({ commit }, { message = '' }) {
-    commit(mutationTypes.setSnackbar, { message })
+  [actionTypes.setSnackbar] ({ commit }, { message = '', multiline = false, timeout = 5000 }) {
+    commit(mutationTypes.setSnackbar, { message, multiline, timeout })
   },
 
   async [actionTypes.setTenantConfig] ({ state, commit }, newconfig) {
