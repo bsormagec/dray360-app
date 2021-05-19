@@ -71,6 +71,7 @@ return [
             'audit-logs' => 'v',
             'object-locks' => 'c,e',
             'auto-lock-processing' => 'c',
+            'supervise' => 'v',
             'pt-images' => 'c',
         ],
         'customer-admin' => [

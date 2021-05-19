@@ -203,7 +203,6 @@ export default {
     this.initializeFilters()
     this.setURLParams()
     await this.fetchRequests()
-    this.selectFirstActiveRequest()
 
     this.initialTotalMeta = this.meta.total
     this.startPolling()
@@ -236,9 +235,6 @@ export default {
       this.resetPagination()
       this.setURLParams()
       await this.fetchRequests()
-      if (!this.isMobile) {
-        this.selectFirstActiveRequest()
-      }
     },
     async refreshRequests () {
       this.$root.$emit(events.requestsRefreshed)
@@ -246,9 +242,6 @@ export default {
       this.resetPagination()
       this.setURLParams()
       await this.fetchRequests()
-      if (!this.isMobile) {
-        this.selectFirstActiveRequest()
-      }
     },
     initializeFilters () {
       this.filters = [...this.$refs.requestFilters.getActiveFilters()]
@@ -367,14 +360,7 @@ export default {
 
       this.$router.replace({ path: 'inbox', query: filterState }).catch(() => {})
     },
-    selectFirstActiveRequest () {
-      if (this.items.length === 0) {
-        this.handleChange({ request_id: null, orders_count: 0, first_order_id: null })
-        return
-      }
 
-      this.handleChange(this.items[0])
-    },
     async handleChange (request) {
       await this.handleRequestLock(this.requestSelected, request)
       this.requestIdSelected = request.request_id
