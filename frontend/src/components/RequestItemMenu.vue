@@ -156,10 +156,7 @@ export default {
     }
   },
   methods: {
-    ...mapActions(utils.moduleName, [utilsActionTypes.setSnackbar]),
-    ...mapActions(utils.moduleName, {
-      setConfirmDialog: utilsActionTypes.setConfirmationDialog
-    }),
+    ...mapActions(utils.moduleName, [utilsActionTypes.setSnackbar, utilsActionTypes.setConfirmationDialog]),
 
     handleClipboardSuccess () {
       this.setSnackbar({ message: 'Request ID coppied to clipboard.' })
@@ -167,7 +164,7 @@ export default {
 
     async deleteRequest () {
       this.loading = true
-      await this.setConfirmDialog({
+      await this.setConfirmationDialog({
         title: 'Are you sure you want to delete this request?',
         onConfirm: async () => {
           this.loading = true
@@ -190,7 +187,7 @@ export default {
 
     async handleClaimLock () {
       this.loading = true
-      await this.setConfirmDialog({
+      await this.setConfirmationDialog({
         title: 'Are you sure you want to take the request edit-lock?',
         noWrap: true,
         onConfirm: async () => {
@@ -212,7 +209,7 @@ export default {
 
     async handleReleaseLock () {
       this.loading = true
-      await this.setConfirmDialog({
+      await this.setConfirmationDialog({
         title: 'Are you sure you want to release the request lock?',
         onConfirm: async () => {
           this.releaseLockRequest({ requestId: this.request.request_id, updateList: true, })
@@ -237,7 +234,7 @@ export default {
     },
 
     async reprocessRequest () {
-      this.setConfirmDialog({
+      this.setConfirmationDialog({
         title: 'Are you sure you want to reprocess the request?',
         onConfirm: async () => {
           this.loading = true
@@ -258,7 +255,7 @@ export default {
     },
 
     async reimportAbbyy () {
-      this.setConfirmDialog({
+      this.setConfirmationDialog({
         title: 'Are you sure you want to reimport the request from Abbyy?',
         onConfirm: async () => {
           this.loading = true
@@ -279,7 +276,7 @@ export default {
     },
 
     async sendRequestOrdersToTms () {
-      this.setConfirmDialog({
+      this.setConfirmationDialog({
         title: 'Send orders to TMS',
         text: 'Are you sure you want to send all the request orders to the TMS?',
         onConfirm: async () => {

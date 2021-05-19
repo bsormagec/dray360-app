@@ -21,6 +21,7 @@
             @order-deleted="$emit('order-deleted')"
             @go-back="$emit('go-back')"
             @refresh="fetchFormData"
+            @lock-requested="handleClaimLock"
           />
           <div
             class="form__resize"
@@ -331,6 +332,23 @@ export default {
       if (error === undefined && this.order.is_locked && !this.order.ocr_request_is_locked) {
         this.setOrderLock({ locked: false, lock: null })
       }
+    },
+
+    async handleClaimLock (order) {
+      await this.setConfirmationDialog({
+        title: 'Are you sure you want to take the request edit-lock?',
+        noWrap: true,
+        onConfirm: async () => {
+          this.attemptToLockRequest({
+            requestId: order.request_id,
+            lockType: objectLocks.lockTypes.claimLock,
+            updateList: false,
+          })
+
+          this.$root.$emit(events.lockClaimed, order.ocr_request)
+        },
+        onCancel: () => {}
+      })
     },
 
     async fetchTmsTemplates (companyId) {

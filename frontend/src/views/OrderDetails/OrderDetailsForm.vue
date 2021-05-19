@@ -114,12 +114,13 @@
         v-if="!editMode"
         :main-action="splitButtonMainAction"
         :options="[
-          { title: 'Edit Order' , action: toggleEdit, hasPermission: !isLocked },
-          { title: 'Download Source File', action: () => downloadSourceFile(order.request_id), hasPermission: true },
-          { title: 'Replicate Order', action: () => replicateOrder(order.id), hidden: !hasPermission('admin-review-edit') || isLocked },
-          { title: 'Delete Order', action: () => deleteOrder(order.id), hasPermission: hasPermission('orders-remove') && !isLocked },
           { title: 'Add TMS ID', action: () => addTMSId(order.id), hasPermission: hasPermission('ocr-requests-edit') && isInProcessedState && !isLocked},
+          { title: 'Delete Order', action: () => deleteOrder(order.id), hasPermission: hasPermission('orders-remove') && !isLocked },
+          { title: 'Download Source File', action: () => downloadSourceFile(order.request_id), hasPermission: true },
+          { title: 'Edit Order' , action: toggleEdit, hasPermission: !isLocked },
+          { title: 'Replicate Order', action: () => replicateOrder(order.id), hidden: !hasPermission('admin-review-edit') || isLocked },
           { title: 'Upload PT Image', action: openUploadPTImage, hidden: order.t_tms_provider_id !== 1 || !hasPermission('pt-images-create') || isLocked },
+          { title: 'Take edit-lock', action: () => $emit('lock-requested', order), hidden: !hasPermission('object-locks-create') || order.ocr_request_is_locked || supervise},
           { title: 'View audit info', action: () => openAuditDialog = true, hidden: !hasPermission('audit-logs-view')}
         ]"
         :loading="loading"
