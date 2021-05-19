@@ -114,7 +114,7 @@ export default {
     startingSize: {
       type: Number,
       required: false,
-      default: 50
+      default: 35
     }
   },
 

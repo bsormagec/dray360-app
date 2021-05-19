@@ -207,6 +207,10 @@ export default {
     this.initialTotalMeta = this.meta.total
     this.startPolling()
     this.initializeLockingListeners()
+
+    if (this.requestIdSelected) {
+      this.handleChange({ ...this.requestSelected })
+    }
   },
   beforeDestroy () {
     this.stopPolling()
