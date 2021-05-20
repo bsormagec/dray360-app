@@ -17,6 +17,7 @@ class OCRVariantsController extends Controller
         $this->authorize('viewAny', OCRVariant::class);
 
         $ocrVariants = QueryBuilder::for(OCRVariant::class)
+            ->allowedFields((new OCRVariant())->getFillable())
             ->allowedFilters([
                 'abbyy_variant_name',
                 'description',
