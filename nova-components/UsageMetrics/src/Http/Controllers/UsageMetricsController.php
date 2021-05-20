@@ -45,7 +45,6 @@ class UsageMetricsController
             'requests' => [
                 'current' => $this->getNumberOfRequests($from, $to),
                 'previous' => $this->getNumberOfRequests($previousFrom, $previousTo),
-                'tooltip' => 'asdf'
             ],
             'pdf_requests' => [
                 'current' => $this->getNumberOfPdfRequests($from, $to),
