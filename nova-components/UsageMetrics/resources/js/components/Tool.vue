@@ -36,23 +36,27 @@
         </div>
 <!-- 
         To test this page, in terminal run:
-            cd nova-components
+            cd nova-components/UsageMetrics
             npm install
             npm run watch
         then navigate to: http://local.dray360.com/nova/usage-metrics
+        test until done. then before building:
+            stop the `npm run watch`
+        then run:
+            npm run prod
 -->
         <div class="max-w-full flex flex-wrap flex-row space-between -mx-2">
-            <Card label="*Total number of requests" :metric="report.requests" tooltip="All PDF and datafile requests,<br>including rejected&deleted." />
-            <Card label="Number of PDF requests" :metric="report.pdf_requests" tooltip="PDF requests (not from datafiles),<br>including rejected&deleted." />
-            <Card label="Number of datafile requests" :metric="report.datafile_requests" tooltip="Datafile requests (not from PDFs),<br>including rejected&deleted." />
-            <Card label="Number of rejected requests" :metric="report.rejected_requests" tooltip="All rejected PDF and requests,<br>not including deleted requests." />
-            <Card label="Number of orders" :metric="report.orders" tooltip="All orders, including deleted." />
-            <Card label="Number of deleted orders" :metric="report.deleted_orders" tooltip="Deleted order count, nothing<br>to do with rejected requests" />
-            <Card label="Number of orders from pdf" :metric="report.orders_from_pdf" tooltip="Orders created from PDF requests<br>(not from datafiles), including deleted orders." />
-            <Card label="Number of orders from datafile" :metric="report.orders_from_datafile" tooltip="Orders created from datafile requests<br>(not from PDFs), including deleted orders." />
-            <Card label="Number of TMS shipments" :metric="report.tms_shipments" tooltip="TMS Shipments created, including those<br>created from deleted orders." />
-            <Card label="Number of JPEG pages" :metric="report.jpeg_pages" tooltip="Number of jpg page images stored for each order,<br>including deleted orders. If there are multiple<br>orders created per page, then this will over-count<br>those pages for each order created." />
-            <Card label="Number of PDF pages" :metric="report.pdf_pages" tooltip="Number of PDF pages in all requests,<br>including rejected and deleted." />
+            <Card label="*Total number of requests" :metric="report.requests" :tooltip="getTooltip(report.requests)" />
+            <Card label="Number of PDF requests" :metric="report.pdf_requests" :tooltip="getTooltip(report.pdf_requests)" />
+            <Card label="Number of datafile requests" :metric="report.datafile_requests" :tooltip="getTooltip(report.datafile_requests)" />
+            <Card label="Number of rejected requests" :metric="report.rejected_requests" :tooltip="getTooltip(report.rejected_requests)" />
+            <Card label="Number of orders" :metric="report.orders" :tooltip="getTooltip(report.orders)" />
+            <Card label="Number of deleted orders" :metric="report.deleted_orders" :tooltip="getTooltip(report.deleted_orders)" />
+            <Card label="Number of orders from pdf" :metric="report.orders_from_pdf" :tooltip="getTooltip(report.orders_from_pdf)" />
+            <Card label="Number of orders from datafile" :metric="report.orders_from_datafile" :tooltip="getTooltip(report.orders_from_datafile)" />
+            <Card label="Number of TMS shipments" :metric="report.tms_shipments" :tooltip="getTooltip(report.tms_shipments)" />
+            <Card label="Number of JPEG pages" :metric="report.jpeg_pages" :tooltip="getTooltip(report.jpeg_pages)" />
+            <Card label="Number of PDF pages" :metric="report.pdf_pages" :tooltip="getTooltip(report.pdf_pages)" />
         </div>
 
 
@@ -96,6 +100,13 @@ export default {
     },
 
     methods: {
+        getTooltip(metric) {
+            if (metric === undefined) {
+                return undefined
+            }
+            return metric.tooltip
+        },
+
         async search() {
             if (!this.companyId) {
                 alert('Please select a company')
