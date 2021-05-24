@@ -180,4 +180,7 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+.v-select.v-input--dense::v-deep .v-chip {
+  margin: rem(3)
+}
 </style>
