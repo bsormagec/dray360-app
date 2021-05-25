@@ -58,5 +58,6 @@ class CompanyDailyMetric extends Model
         'datafile_requests_deleted',
         'pdf_orders_including_deleted',
         'datafile_orders_including_deleted',
+        'orders',
     ];
 }

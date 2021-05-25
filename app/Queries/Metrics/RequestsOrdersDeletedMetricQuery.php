@@ -18,65 +18,61 @@ class RequestsOrdersDeletedMetricQuery
         $this->companyId = $companyId;
 
         return [
-            'orders_deleted' => $this->ordersDeleted(),
+            'orders' => $this->orders(false),
+            'orders_deleted' => $this->orders(true),
             'pdf_orders_deleted' => $this->pdfOrders(true),
+            'pdf_orders_including_deleted' => $this->pdfOrders(false),
             'datafile_orders_deleted' => $this->datafileOrders(true),
+            'datafile_orders_including_deleted' => $this->datafileOrders(false),
             'requests_rejected' => $this->requestsRejected(), // F
             'pdf_pages_including_deleted' => $this->pdfPages(), // L
             'tms_shipments' => $this->tmsShipments(), // M
             'requests_deleted' => $this->requestsDeleted(), // N
             'pdf_requests_deleted' => $this->pdfRequestsDeleted(),
             'datafile_requests_deleted' => $this->datafileRequestsDeleted(),
-            'pdf_orders_including_deleted' => $this->pdfOrders(false),
-            'datafile_orders_including_deleted' => $this->datafileOrders(false),
         ];
     }
 
-    protected function ordersDeleted(): int
+    protected function baseOrdersQuery(bool $onlyDeleted): Builder
     {
-        $response = DB::table('t_orders')
-            ->selectRaw('count(distinct id) as order_count')
-            ->where('t_company_id', $this->companyId)
-            ->whereDate('created_at', '>=', $this->date)
-            ->whereDate('created_at', '<=', $this->date)
-            ->whereNotNull('deleted_at')
+        return DB::table('t_orders', 'o')
+            ->where('o.t_company_id', $this->companyId)
+            ->whereDate('o.created_at', '>=', $this->date)
+            ->whereDate('o.created_at', '<=', $this->date)
+            ->when($onlyDeleted, function (Builder $query) {
+                return $query->whereNotNull('o.deleted_at');
+            });
+    }
+
+    protected function orders(bool $onlyDeleted): int
+    {
+        $response = $this->baseOrdersQuery($onlyDeleted)
+            ->selectRaw('count(distinct o.id) as order_count')
             ->first();
 
         return $response->order_count;
     }
 
-    protected function pdfOrders(bool $deleted): int
+    protected function pdfOrders(bool $onlyDeleted): int
     {
-        $response = DB::table('t_orders', 'o')
+        $response = $this->baseOrdersQuery($onlyDeleted)
             ->selectRaw('count(distinct o.id) as pdf_order_count')
             ->join('t_job_state_changes as s', function ($join) {
                 $join->on('o.request_id', '=', 's.request_id')
                     ->where('s.status', OCRRequestStatus::INTAKE_ACCEPTED);
-            })
-            ->where('o.t_company_id', $this->companyId)
-            ->whereDate('o.created_at', '>=', $this->date)
-            ->whereDate('o.created_at', '<=', $this->date)
-            ->when($deleted, function (Builder $query) {
-                return $query->whereNotNull('o.deleted_at');
             })
             ->first();
 
         return $response->pdf_order_count;
     }
 
-    protected function datafileOrders(bool $deleted): int
+    protected function datafileOrders(bool $onlyDeleted): int
     {
-        $response = DB::table('t_orders', 'o')
+        $response = $this->baseOrdersQuery($onlyDeleted)
             ->selectRaw('count(distinct o.id) as datafile_order_count')
             ->join('t_job_state_changes as s', function ($join) {
                 $join->on('o.request_id', '=', 's.request_id')
                     ->where('s.status', OCRRequestStatus::INTAKE_ACCEPTED_DATAFILE);
-            })
-            ->where('o.t_company_id', $this->companyId)
-            ->whereDate('o.created_at', '>=', $this->date)
-            ->whereDate('o.created_at', '<=', $this->date)
-            ->when($deleted, function (Builder $query) {
-                return $query->whereNotNull('o.deleted_at');
             })
             ->first();
 
@@ -102,7 +98,7 @@ class RequestsOrdersDeletedMetricQuery
         $to = $this->date->clone()->endOfDay()->toDateTimeString();
 
         $response = DB::selectOne("
-        select sum(json_extract(status_metadata, '$.pdf_page_count')) as pdf_page_count
+        select sum(coalesce(json_extract(status_metadata, '$.pdf_page_count'), 0)) as pdf_page_count
             from t_job_state_changes as s
             join (
                 select max(id) as max_id
@@ -120,11 +116,8 @@ class RequestsOrdersDeletedMetricQuery
 
     protected function tmsShipments(): int
     {
-        $response = DB::table('t_orders')
-            ->selectRaw('count(distinct tms_shipment_id) as tms_shipment_count')
-            ->where('t_company_id', $this->companyId)
-            ->whereDate('created_at', '>=', $this->date)
-            ->whereDate('created_at', '<=', $this->date)
+        $response = $this->baseOrdersQuery(false)
+            ->selectRaw('count(distinct o.tms_shipment_id) as tms_shipment_count')
             ->first();
 
         return $response->tms_shipment_count;
