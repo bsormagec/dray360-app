@@ -306,7 +306,13 @@ export default {
             text: 'Do you want to take the edit-lock?',
             noWrap: true,
             onConfirm: () => {
-              this.handleChange({ ...this.requestSelected, lock: null, is_locked: false, })
+              this.attemptToLockRequest({
+                requestId: this.requestSelected.request_id,
+                lockType: objectLocks.lockTypes.selectRequest,
+                updateList: true
+              })
+              // this.handleChange({ ...this.requestSelected, lock: null, is_locked: false, })
+              this.$root.$emit(events.lockClaimed, this.requestSelected)
             },
             onCancel: () => {}
           })

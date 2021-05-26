@@ -119,8 +119,9 @@
           { title: 'Download Source File', action: () => downloadSourceFile(order.request_id), hasPermission: true },
           { title: 'Edit Order' , action: toggleEdit, hasPermission: !isLocked },
           { title: 'Replicate Order', action: () => replicateOrder(order.id), hidden: !hasPermission('admin-review-edit') || isLocked },
+          { title: 'Release edit-lock', action: () => $emit('lock-released', order), hidden: !refreshLock|| !hasPermission('object-locks-create') || order.ocr_request_is_locked || order.is_locked || supervise},
           { title: 'Upload PT Image', action: openUploadPTImage, hidden: order.t_tms_provider_id !== 1 || !hasPermission('pt-images-create') || isLocked },
-          { title: 'Take edit-lock', action: () => $emit('lock-requested', order), hidden: !hasPermission('object-locks-create') || order.ocr_request_is_locked || supervise},
+          { title: 'Take edit-lock', action: () => $emit('lock-requested', order), hidden: !refreshLock|| !hasPermission('object-locks-create') || (!order.ocr_request_is_locked && !order.is_locked) || supervise},
           { title: 'View audit info', action: () => openAuditDialog = true, hidden: !hasPermission('audit-logs-view')}
         ]"
         :loading="loading"
@@ -800,6 +801,11 @@ export default {
       default: true
     },
     redirectBack: {
+      type: Boolean,
+      required: false,
+      default: false
+    },
+    refreshLock: {
       type: Boolean,
       required: false,
       default: false

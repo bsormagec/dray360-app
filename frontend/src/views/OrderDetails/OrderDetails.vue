@@ -18,10 +18,12 @@
             :carrier-items="carrierItems"
             :vessel-items="vesselItems"
             :options="{...formOptions}"
+            :refresh-lock="refreshLock"
             @order-deleted="$emit('order-deleted')"
             @go-back="$emit('go-back')"
             @refresh="fetchFormData"
             @lock-requested="handleClaimLock"
+            @lock-released="handleReleaseLock"
           />
           <div
             class="form__resize"
@@ -229,14 +231,14 @@ export default {
 
     initializeLockingListeners () {
       this.$root.$on(events.requestsRefreshed, () => !this.refreshLock && this.fetchFormData())
-      this.$root.$on(events.lockReleased, request => this.setOrderLock({ locked: true, lock: null }))
+      this.$root.$on(events.lockReleased, request => this.setOrderLock({ locked: true, ocrRequestLocked: false, lock: null }))
       this.$root.$on(events.lockRefreshFailed, () => this.stopRefreshingLock())
       this.$root.$on(events.lockClaimed, request => {
         if (request.request_id !== this.order.request_id) {
           return
         }
 
-        this.setOrderLock({ locked: false, lock: null })
+        this.setOrderLock({ locked: false, ocrRequestLocked: false, lock: null })
       })
       this.$root.$on(events.objectLocked, e => {
         const { objectLock: lock = undefined } = e
@@ -245,7 +247,7 @@ export default {
           return
         }
 
-        this.setOrderLock({ locked: true, lock })
+        this.setOrderLock({ locked: true, ocrRequestLocked: true, lock })
       })
       this.$root.$on(events.objectUnlocked, e => {
         const { objectLock: lock = undefined } = e
@@ -254,7 +256,7 @@ export default {
           return
         }
 
-        this.setOrderLock({ locked: false, lock: null })
+        this.setOrderLock({ locked: true, ocrRequestLocked: false, lock: null })
       })
 
       if (!this.refreshLock || this.supervise || !this.hasPermission('object-locks-create')) {
@@ -284,7 +286,7 @@ export default {
             })
           }
 
-          this.setOrderLock({ locked: true, lock })
+          this.setOrderLock({ locked: true, ocrRequestLocked: true, lock })
         })
         .listen(events.objectUnlocked, async (e) => {
           const { objectLock: lock = undefined } = e
@@ -293,7 +295,7 @@ export default {
             return
           }
 
-          this.setOrderLock({ locked: false, lock: null })
+          this.setOrderLock({ locked: true, ocrRequestLocked: false, lock: null })
           if (!this.hasPermission('object-locks-create')) {
             return
           }
@@ -301,8 +303,16 @@ export default {
           await this.setConfirmationDialog({
             title: 'Request Unlocked',
             text: 'Do you want to claim the lock?',
-            onConfirm: () => {
-              this.initializeLock()
+            onConfirm: async () => {
+              const [error] = await this.attemptToLockRequest({
+                requestId: this.order.request_id,
+                lockType: objectLocks.lockTypes.openOrder,
+                updateList: false,
+              })
+
+              if (error === undefined) {
+                this.setOrderLock({ locked: false, ocrRequestLocked: false, lock: null })
+              }
             },
             onCancel: () => {}
           })
@@ -330,7 +340,7 @@ export default {
       })
 
       if (error === undefined && this.order.is_locked && !this.order.ocr_request_is_locked) {
-        this.setOrderLock({ locked: false, lock: null })
+        this.setOrderLock({ locked: false, ocrRequestLocked: false, lock: null })
       }
     },
 
@@ -346,6 +356,18 @@ export default {
           })
 
           this.$root.$emit(events.lockClaimed, order.ocr_request)
+        },
+        onCancel: () => {}
+      })
+    },
+
+    async handleReleaseLock (order) {
+      await this.setConfirmationDialog({
+        title: 'Are you sure you want to release the edit-lock?',
+        noWrap: true,
+        onConfirm: async () => {
+          this.releaseLockRequest({ requestId: order.request_id })
+          this.$root.$emit(events.lockReleased, order.ocr_request)
         },
         onCancel: () => {}
       })
