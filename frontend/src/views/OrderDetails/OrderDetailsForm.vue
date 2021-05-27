@@ -114,12 +114,14 @@
         v-if="!editMode"
         :main-action="splitButtonMainAction"
         :options="[
-          { title: 'Edit Order' , action: toggleEdit, hasPermission: !isLocked },
-          { title: 'Download Source File', action: () => downloadSourceFile(order.request_id), hasPermission: true },
-          { title: 'Replicate Order', action: () => replicateOrder(order.id), hidden: !hasPermission('admin-review-edit') || isLocked },
-          { title: 'Delete Order', action: () => deleteOrder(order.id), hasPermission: hasPermission('orders-remove') && !isLocked },
           { title: 'Add TMS ID', action: () => addTMSId(order.id), hasPermission: hasPermission('ocr-requests-edit') && isInProcessedState && !isLocked},
+          { title: 'Delete Order', action: () => deleteOrder(order.id), hasPermission: hasPermission('orders-remove') && !isLocked },
+          { title: 'Download Source File', action: () => downloadSourceFile(order.request_id), hasPermission: true },
+          { title: 'Edit Order' , action: toggleEdit, hasPermission: !isLocked },
+          { title: 'Replicate Order', action: () => replicateOrder(order.id), hidden: !hasPermission('admin-review-edit') || isLocked },
+          { title: 'Release edit-lock', action: () => $emit('lock-released', order), hidden: !refreshLock|| !hasPermission('object-locks-create') || order.ocr_request_is_locked || order.is_locked || supervise},
           { title: 'Upload PT Image', action: openUploadPTImage, hidden: order.t_tms_provider_id !== 1 || !hasPermission('pt-images-create') || isLocked },
+          { title: 'Take edit-lock', action: () => $emit('lock-requested', order), hidden: !refreshLock|| !hasPermission('object-locks-create') || (!order.ocr_request_is_locked && !order.is_locked) || supervise},
           { title: 'View audit info', action: () => openAuditDialog = true, hidden: !hasPermission('audit-logs-view')}
         ]"
         :loading="loading"
@@ -577,9 +579,7 @@
         :section-name="sections.bill_to.label"
         :section-id="sections.bill_to.id"
       />
-      <div
-        class="form__sub-section"
-      >
+      <div class="form__sub-section">
         <div class="form__section-title">
           <h3 :id="sections.charges.id">
             {{ sections.charges.label }}
@@ -682,9 +682,7 @@
           />
         </div>
       </div>
-      <div
-        class="form__section"
-      >
+      <div class="form__section">
         <div
           :id="sections.inventory.id"
           class="form__section-title"
@@ -807,6 +805,11 @@ export default {
       required: false,
       default: false
     },
+    refreshLock: {
+      type: Boolean,
+      required: false,
+      default: false
+    },
     options: {
       type: Object,
       required: false,
@@ -915,7 +918,7 @@ export default {
       ]
 
       return (this.order.tms_shipment_id !== null && this.order.tms_shipment_id !== undefined) ||
-          (alreadySentToTmsStatuses.includes(this.orderSystemStatus))
+        (alreadySentToTmsStatuses.includes(this.orderSystemStatus))
     },
 
     orderSystemStatus () {

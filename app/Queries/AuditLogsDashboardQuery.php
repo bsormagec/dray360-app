@@ -2,6 +2,7 @@
 
 namespace App\Queries;
 
+use Closure;
 use App\Models\Order;
 use App\Models\OrderLineItem;
 use Illuminate\Support\Carbon;
@@ -15,17 +16,7 @@ class AuditLogsDashboardQuery extends QueryBuilder
 {
     public function __construct(array $filters)
     {
-        $filters['start_date'] = Carbon::createFromDate($filters['start_date'])
-            ->startOfDay()
-            ->toDateTimeString();
-        $filters['end_date'] = Carbon::createFromDate($filters['end_date'])
-            ->endOfDay()
-            ->toDateTimeString();
-        $auditsFilterQuery = function ($query) use ($filters) {
-            $query->where('created_at', '>=', $filters['start_date'])
-                ->where('created_at', '<=', $filters['end_date'])
-                ->when($filters['user_id'] ?? null, fn ($q) => $q->where('user_id', $filters['user_id']));
-        };
+        $auditsFilterQuery = $this->getAuditsFilterQuery($filters);
 
         $query = Order::query()
             ->select([
@@ -107,5 +98,29 @@ class AuditLogsDashboardQuery extends QueryBuilder
             AllowedSort::field('changes_count'),
         ])
         ;
+    }
+
+    protected function getAuditsFilterQuery(array $filters): Closure
+    {
+        $timeRange = $filters['time_range'] ?? null;
+        $userId = isset($filters['user_id']) ? explode(',', $filters['user_id']) : null;
+
+        if ($timeRange && $timeRange != -1) {
+            $startDate = now()->subHours($filters['time_range'])->toDateTimeString();
+            $endDate = now()->toDateTimeString();
+        } else {
+            $startDate = Carbon::createFromDate($filters['start_date'])
+                ->startOfDay()
+                ->toDateTimeString();
+            $endDate = Carbon::createFromDate($filters['end_date'])
+                ->endOfDay()
+                ->toDateTimeString();
+        }
+
+        return function ($query) use ($userId, $startDate, $endDate) {
+            $query->where('created_at', '>=', $startDate)
+                ->where('created_at', '<=', $endDate)
+                ->when($userId, fn ($q) => $q->whereIn('user_id', $userId));
+        };
     }
 }

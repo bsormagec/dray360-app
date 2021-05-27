@@ -69,9 +69,12 @@ const mutations = {
   [types.setPage] (state, { index, page }) {
     state.pages[index] = { ...page }
   },
-  [types.setOrderLock] (state, { locked, lock }) {
+  [types.setOrderLock] (state, { locked, lock, ocrRequestLocked }) {
     state.order.is_locked = locked
     state.order.lock = lock
+    if (ocrRequestLocked !== undefined) {
+      state.order.ocr_request_is_locked = ocrRequestLocked
+    }
   }
 }
 
@@ -169,8 +172,8 @@ const actions = {
   [types.setPage] ({ commit, state }, { index, page }) {
     commit(types.setPage, { index, page: { ...page } })
   },
-  [types.setOrderLock] ({ commit, state }, { locked, lock }) {
-    commit(types.setOrderLock, { locked, lock })
+  [types.setOrderLock] ({ commit, state }, { locked, lock, ocrRequestLocked }) {
+    commit(types.setOrderLock, { locked, lock, ocrRequestLocked })
   }
 }
 

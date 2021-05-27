@@ -12,8 +12,9 @@
       <template v-slot:activator="{ on, attrs }">
         <v-text-field
           :value="dates.join(' - ')"
-          prepend-icon="mdi-calendar-blank"
+          :prepend-icon="prependIcon"
           class="calendar__input"
+          :label="label"
           clearable
           readonly
           outlined
@@ -57,11 +58,9 @@
 export default {
 
   props: {
-    value: {
-      type: Array,
-      required: true,
-      default: () => []
-    }
+    value: { type: Array, required: true, default: () => [] },
+    label: { type: String, required: false, default: undefined },
+    prependIcon: { type: String, required: false, default: 'mdi-calendar-blank' },
   },
   data () {
     return {

@@ -38,6 +38,7 @@ use App\Http\Controllers\Api\AccesorialCompaniesController;
 use App\Http\Controllers\Api\Auth\ForgotPasswordController;
 use App\Http\Controllers\Api\OcrRequestReprocessController;
 use App\Http\Controllers\Api\OcrRequestsDoneStatusController;
+use App\Http\Controllers\Api\SendRequestOrdersToTmsController;
 use App\Http\Controllers\Api\EquipmentTypesSelectValuesController;
 use App\Http\Controllers\Api\DownloadOriginalRequestSourceFileController;
 use App\Http\Controllers\Api\DownloadOriginalRequestSourceEmailController;
@@ -171,6 +172,10 @@ Route::group(['middleware' => ['auth:sanctum', 'impersonate', 'tenant-aware']], 
     //companies/1/variant/1/
     Route::put('companies/{company}/variants/{variant}/accesorials', [AccesorialCompaniesController::class, 'update'])
         ->name('company-variants-accessorials.put');
+
+    // Send all the request orders to the tms
+    Route::post('ocr/requests/{request_id}/send-to-tms', SendRequestOrdersToTmsController::class)
+        ->name('ocr.requests.send-to-tms');
 
     // Reprocess the given OCR request
     Route::post('ocr/requests/{request_id}/reimport-abbyy', AbbyyReimportController::class)

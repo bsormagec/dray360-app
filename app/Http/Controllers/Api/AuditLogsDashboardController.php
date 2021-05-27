@@ -15,11 +15,12 @@ class AuditLogsDashboardController extends Controller
         $this->authorize('viewAny', Audit::class);
 
         $filters = $request->validate([
-            'start_date' => 'required|date',
-            'end_date' => 'required|date|after_or_equal:start_date',
-            'user_id' => 'sometimes|integer|exists:users,id',
-            'filter[company_id]' => 'sometimes|integer|exists:t_companies,id',
-            'filter[variant_name]' => 'sometimes|string',
+            'time_range' => 'sometimes|integer',
+            'start_date' => 'required_with:end_date|date',
+            'end_date' => 'required_with:start_date|date|after_or_equal:start_date',
+            'user_id' => 'sometimes|string',
+            'filter.company_id' => 'sometimes|string',
+            'filter.variant_name' => 'sometimes|string',
         ]);
 
         return JsonResource::collection($this->getAuditLogData($filters));

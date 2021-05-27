@@ -154,22 +154,8 @@ export default {
     }
   },
   watch: {
-    files: async function (files) {
-      const types = []
-
-      files.forEach(file => {
-        types.push(getVariantTypeFromFile(file))
-      })
-
-      if (uniq(types).join('') === 'ocr') return
-
-      const [error, data] = await getVariantList({
-        'filter[company_id]': this.currentUser.t_company_id,
-        'filter[variant_type]': uniq(types).join(','),
-        sort: 'description'
-      })
-      this.variants = data
-    }
+    company_id () { this.fetchVariantsForFiles() },
+    files () { this.fetchVariantsForFiles() },
   },
   created () {
     if (this.canViewOtherCompanies()) {
@@ -178,18 +164,23 @@ export default {
   },
   methods: {
     ...mapActions(utils.moduleName, [utilsActionTypes.setSnackbar]),
+
     handleClose () {
       this.files = []
       this.variantName = ''
       this.variants = []
+      this.company_id = null
       this.$emit('close')
     },
+
     removeFile (file) {
       this.files = this.files.filter(f => f.name !== file.name)
     },
+
     handleClear () {
       this.files = []
     },
+
     handleChange (newFiles) {
       // const acceptedMimeTypes = [
       //   'application/pdf',
@@ -213,6 +204,7 @@ export default {
       }
       this.files = uniqBy(finalFiles, 'name')
     },
+
     async createRequests () {
       if (this.files.length === 0) {
         this.setSnackbar({ message: 'Please select a file to upload' })
@@ -244,6 +236,7 @@ export default {
       this.files = []
       this.$emit('uploaded')
     },
+
     async uploadFile (file) {
       const params = { variant_name: this.variantName }
       if (this.canViewOtherCompanies()) {
@@ -252,6 +245,26 @@ export default {
       const [error] = await postUploadRequestFile(file, params)
       return error === undefined
     },
+
+    async fetchVariantsForFiles () {
+      const types = []
+      const companyId = this.canViewOtherCompanies() ? this.company_id : this.currentUser.t_company_id
+
+      this.files.forEach(file => {
+        types.push(getVariantTypeFromFile(file))
+      })
+
+      if (!companyId || types.length === 0 || uniq(types).join('') === 'ocr') {
+        return
+      }
+
+      const [, data] = await getVariantList({
+        'filter[company_id]': companyId,
+        'filter[variant_type]': uniq(types).join(','),
+        sort: 'description'
+      })
+      this.variants = data
+    }
   }
 }
 </script>

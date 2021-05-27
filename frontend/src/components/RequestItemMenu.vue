@@ -38,30 +38,35 @@
         />
         <v-list-item
           v-if="!isPtImageUpload"
-          @click="downloadSourceFile(request.request_id)"
+          @click="downloadSourceFile"
           v-text="'Download source file'"
         />
         <v-list-item
           :disabled="!hasPermission('ocr-requests-remove') || isLocked"
-          @click="deleteRequest(request.request_id)"
+          @click="deleteRequest"
           v-text="'Delete request'"
         />
         <v-list-item
           :disabled="!hasPermission('ocr-requests-edit') || isLocked"
-          @click="toggleDoneUndone(request)"
+          @click="toggleDoneUndone"
           v-text="`Mark as ${doneText}`"
         />
         <v-list-item
           v-if="!isPtImageUpload"
           :disabled="!hasPermission('ocr-request-statuses-create') || isLocked"
-          @click="reprocessRequest(request.request_id)"
+          @click="reprocessRequest"
           v-text="'Reprocess request'"
         />
         <v-list-item
           v-if="request.is_ocr_file && !isPtImageUpload"
           :disabled="!hasPermission('ocr-request-statuses-create') || isLocked"
-          @click="reimportAbbyy(request.request_id)"
+          @click="reimportAbbyy"
           v-text="'Reimport from Abbyy'"
+        />
+        <v-list-item
+          v-if="hasPermission('tms-submit') && request.orders_count > 0"
+          @click="sendRequestOrdersToTms"
+          v-text="'Send orders to TMS'"
         />
         <v-list-item
           v-if="request.has_email && !isPtImageUpload"
@@ -94,7 +99,14 @@ import locks from '@/mixins/locks'
 import utils, { actionTypes as utilsActionTypes } from '@/store/modules/utils'
 import requestList from '@/store/modules/requests-list'
 import { downloadFile } from '@/utils/download_file'
-import { deleteRequest, getSourceFileDownloadURL, reprocessOcrRequest, changeRequestDoneStatus, reimportOcrRequestAbbyy } from '@/store/api_calls/requests'
+import {
+  deleteRequest,
+  reprocessOcrRequest,
+  sendRequestOrdersToTms,
+  changeRequestDoneStatus,
+  reimportOcrRequestAbbyy,
+  getSourceFileDownloadURL,
+} from '@/store/api_calls/requests'
 import RequestStatusHistoryDialog from './RequestStatusHistoryDialog'
 import RequestEmailDialog from './RequestEmailDialog'
 import { objectLocks, statuses } from '@/enums/app_objects_types'
@@ -144,22 +156,19 @@ export default {
     }
   },
   methods: {
-    ...mapActions(utils.moduleName, [utilsActionTypes.setSnackbar]),
-    ...mapActions(utils.moduleName, {
-      setConfirmDialog: utilsActionTypes.setConfirmationDialog
-    }),
+    ...mapActions(utils.moduleName, [utilsActionTypes.setSnackbar, utilsActionTypes.setConfirmationDialog]),
 
     handleClipboardSuccess () {
       this.setSnackbar({ message: 'Request ID coppied to clipboard.' })
     },
 
-    async deleteRequest (requestId) {
+    async deleteRequest () {
       this.loading = true
-      await this.setConfirmDialog({
+      await this.setConfirmationDialog({
         title: 'Are you sure you want to delete this request?',
         onConfirm: async () => {
           this.loading = true
-          const [error] = await deleteRequest(requestId)
+          const [error] = await deleteRequest(this.request.request_id)
           let message = ''
           if (!error) {
             message = 'Request deleted'
@@ -178,7 +187,7 @@ export default {
 
     async handleClaimLock () {
       this.loading = true
-      await this.setConfirmDialog({
+      await this.setConfirmationDialog({
         title: 'Are you sure you want to take the request edit-lock?',
         noWrap: true,
         onConfirm: async () => {
@@ -200,7 +209,7 @@ export default {
 
     async handleReleaseLock () {
       this.loading = true
-      await this.setConfirmDialog({
+      await this.setConfirmationDialog({
         title: 'Are you sure you want to release the request lock?',
         onConfirm: async () => {
           this.releaseLockRequest({ requestId: this.request.request_id, updateList: true, })
@@ -214,8 +223,8 @@ export default {
       })
     },
 
-    async downloadSourceFile (requestId) {
-      const [error, data] = await getSourceFileDownloadURL(requestId)
+    async downloadSourceFile () {
+      const [error, data] = await getSourceFileDownloadURL(this.request.request_id)
 
       if (error === undefined) {
         downloadFile(data.data)
@@ -224,13 +233,13 @@ export default {
       }
     },
 
-    async reprocessRequest (requestId) {
-      this.setConfirmDialog({
+    async reprocessRequest () {
+      this.setConfirmationDialog({
         title: 'Are you sure you want to reprocess the request?',
         onConfirm: async () => {
           this.loading = true
 
-          const [error] = await reprocessOcrRequest(requestId)
+          const [error] = await reprocessOcrRequest(this.request.request_id)
 
           if (error !== undefined) {
             this.loading = false
@@ -245,13 +254,13 @@ export default {
       })
     },
 
-    async reimportAbbyy (requestId) {
-      this.setConfirmDialog({
+    async reimportAbbyy () {
+      this.setConfirmationDialog({
         title: 'Are you sure you want to reimport the request from Abbyy?',
         onConfirm: async () => {
           this.loading = true
 
-          const [error] = await reimportOcrRequestAbbyy(requestId)
+          const [error] = await reimportOcrRequestAbbyy(this.request.request_id)
 
           if (error !== undefined) {
             this.loading = false
@@ -266,10 +275,41 @@ export default {
       })
     },
 
-    async toggleDoneUndone (request) {
+    async sendRequestOrdersToTms () {
+      this.setConfirmationDialog({
+        title: 'Send orders to TMS',
+        text: 'Are you sure you want to send all the request orders to the TMS?',
+        onConfirm: async () => {
+          this.loading = true
+
+          const [error, data] = await sendRequestOrdersToTms(this.request.request_id)
+
+          if (error !== undefined) {
+            this.loading = false
+            this.setSnackbar({ message: 'There was an error trying to send the orders to the tms' })
+            return
+          }
+
+          const { data: counters } = data
+          this.setSnackbar({
+            message: `${counters.sent} order(s) queued to be sent. \n` +
+              ` ${counters.not_sent} order(s) not queued. \n` +
+              ` ${counters.failed} order(s) failed to queue. \n`,
+            multiline: true,
+            timeout: -1,
+          })
+          console.log(counters.messages)
+
+          this.loading = false
+          this.$emit('request-deleted')
+        }
+      })
+    },
+
+    async toggleDoneUndone () {
       this.loading = true
 
-      const [error] = await changeRequestDoneStatus(request.request_id, { done: request.done_at === null })
+      const [error] = await changeRequestDoneStatus(this.request.request_id, { done: this.request.done_at === null })
 
       if (error !== undefined) {
         this.loading = false

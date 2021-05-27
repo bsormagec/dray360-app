@@ -34,18 +34,29 @@
                 Go
             </button>
         </div>
+<!-- 
+        To test this page, in terminal run:
+            cd nova-components/UsageMetrics
+            npm install
+            npm run watch
+        then navigate to: http://local.dray360.com/nova/usage-metrics
+        test until done. then before building:
+            stop the `npm run watch`
+        then run:
+            npm run prod
+-->
         <div class="max-w-full flex flex-wrap flex-row space-between -mx-2">
-            <Card label="Number of requests" :metric="report.requests"/>
-            <Card label="Number of PDF requests" :metric="report.pdf_requests"/>
-            <Card label="Number of datafile requests" :metric="report.datafile_requests" />
-            <Card label="Number of rejected requests" :metric="report.rejected_requests" />
-            <Card label="Number of orders" :metric="report.orders" />
-            <Card label="Number of deleted orders" :metric="report.deleted_orders" />
-            <Card label="Number of orders from pdf" :metric="report.orders_from_pdf" />
-            <Card label="Number of orders from datafile" :metric="report.orders_from_datafile" />
-            <Card label="Number of TMS shipments" :metric="report.tms_shipments" />
-            <Card label="Number of JPEG pages" :metric="report.jpeg_pages" />
-            <Card label="Number of PDF pages" :metric="report.pdf_pages" />
+            <Card label="*Total number of requests" :metric="report.requests" :tooltip="getTooltip(report.requests)" />
+            <Card label="Number of PDF requests" :metric="report.pdf_requests" :tooltip="getTooltip(report.pdf_requests)" />
+            <Card label="Number of datafile requests" :metric="report.datafile_requests" :tooltip="getTooltip(report.datafile_requests)" />
+            <Card label="Number of rejected requests" :metric="report.rejected_requests" :tooltip="getTooltip(report.rejected_requests)" />
+            <Card label="Number of orders" :metric="report.orders" :tooltip="getTooltip(report.orders)" />
+            <Card label="Number of deleted orders" :metric="report.deleted_orders" :tooltip="getTooltip(report.deleted_orders)" />
+            <Card label="Number of orders from pdf" :metric="report.orders_from_pdf" :tooltip="getTooltip(report.orders_from_pdf)" />
+            <Card label="Number of orders from datafile" :metric="report.orders_from_datafile" :tooltip="getTooltip(report.orders_from_datafile)" />
+            <Card label="Number of TMS shipments" :metric="report.tms_shipments" :tooltip="getTooltip(report.tms_shipments)" />
+            <Card label="Number of JPEG pages" :metric="report.jpeg_pages" :tooltip="getTooltip(report.jpeg_pages)" />
+            <Card label="Number of PDF pages" :metric="report.pdf_pages" :tooltip="getTooltip(report.pdf_pages)" />
         </div>
 
 
@@ -89,6 +100,13 @@ export default {
     },
 
     methods: {
+        getTooltip(metric) {
+            if (metric === undefined) {
+                return undefined
+            }
+            return metric.tooltip
+        },
+
         async search() {
             if (!this.companyId) {
                 alert('Please select a company')

@@ -71,8 +71,10 @@
 
 <script>
 import orderForm, { types } from '@/store/modules/order-form'
+import requestsList from '@/store/modules/requests-list'
+
 import { cleanStrForId } from '@/utils/clean_str_for_id.js'
-import { mapState, mapActions } from 'vuex'
+import { mapState, mapActions, mapGetters } from 'vuex'
 import isMobile from '@/mixins/is_mobile'
 import { scrollTo } from '@/utils/scroll_to'
 import { getNonPDFHighlightsParsedFieldName } from '@/utils/order_form_general_functions.js'
@@ -88,6 +90,10 @@ export default {
   }),
 
   computed: {
+    ...mapGetters(orderForm.moduleName, ['isLocked']),
+    ...mapState(requestsList.moduleName, {
+      supervise: state => state.supervise,
+    }),
     ...mapState(orderForm.moduleName, {
       highlights: state => state.highlights,
       pages: state => state.pages,
@@ -141,6 +147,9 @@ export default {
     scrollToAndStartFieldEdit (highlightKey) {
       const offsetElement = this.$parent.$children[0].$refs.orderHeading
       scrollTo(`${cleanStrForId(highlightKey)}-formfield`, '.form', offsetElement.scrollHeight)
+      if (this.isLocked || this.supervise) {
+        return
+      }
       this.startFieldEdit({ path: highlightKey })
     },
 

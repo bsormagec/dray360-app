@@ -168,7 +168,7 @@ return [
     'defaults' => [
         'supervisor-1' => [
             'connection' => 'redis',
-            'queue' => ['default', 'imports'],
+            'queue' => ['default', 'imports', 'metrics'],
             'balance' => 'auto',
             'memory' => 128,
             'tries' => 1,

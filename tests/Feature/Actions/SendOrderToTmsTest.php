@@ -1,23 +1,20 @@
 <?php
 
-namespace Tests\Feature;
+namespace Tests\Feature\Actions;
 
 use Mockery;
 use Tests\TestCase;
-use App\Models\User;
 use App\Models\Order;
-use App\Models\Company;
 use App\Models\TMSProvider;
 use Illuminate\Support\Str;
-use Laravel\Sanctum\Sanctum;
-use Illuminate\Http\Response;
 use App\Actions\SendOrderToTms;
 use Tests\Seeds\CompaniesSeeder;
 use Tests\Seeds\OrdersTableSeeder;
 use Illuminate\Support\Facades\Event;
+use App\Actions\PublishSnsMessageToUpdateStatus;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
 
-class SendToTmsControllerTest extends TestCase
+class SendOrderToTmsTest extends TestCase
 {
     use DatabaseTransactions;
 
@@ -31,7 +28,7 @@ class SendToTmsControllerTest extends TestCase
     }
 
     /** @test */
-    public function it_publishs_a_message_to_sns_update_gateway()
+    public function it_sends_the_given_order_to_the_tms()
     {
         (new OrdersTableSeeder())->seedOrderWithValidatedAddresses();
         $order = Order::first();
@@ -43,13 +40,19 @@ class SendToTmsControllerTest extends TestCase
         ]);
         $messageId = Str::random(5);
 
-        $mockAction = Mockery::mock(SendOrderToTms::class)->makePartial();
+        $mockAction = Mockery::mock(PublishSnsMessageToUpdateStatus::class)->makePartial();
         $mockAction->shouldReceive('__invoke')->andReturn(['status' => 'ok', 'message' => $messageId])->once();
-        $this->app->instance(SendOrderToTms::class, $mockAction);
+        $this->app->instance(PublishSnsMessageToUpdateStatus::class, $mockAction);
 
-        $this->postJson(route('orders.send-to-tms', $order->id))
-            ->assertJsonFragment(['data' => $messageId])
-            ->assertStatus(Response::HTTP_OK);
+        $response = (new SendOrderToTms())($order);
+
+        $this->assertEquals($messageId, $response['message']);
+        $this->assertDatabaseHas('t_orders', [
+            'id' => $order->id,
+            'tms_template_dictid_verified' => true,
+            'carrier_dictid_verified' => true,
+            'vessel_dictid_verified' => true,
+        ]);
     }
 
     /** @test */
@@ -66,47 +69,42 @@ class SendToTmsControllerTest extends TestCase
             'vessel_dictid_verified' => false,
         ]);
 
-        $mockAction = Mockery::mock(SendOrderToTms::class)->makePartial();
+        $mockAction = Mockery::mock(PublishSnsMessageToUpdateStatus::class)->makePartial();
         $mockAction->shouldReceive('__invoke')->andReturn(['status' => 'error', 'message' => 'exception'])->once();
-        $this->app->instance(SendOrderToTms::class, $mockAction);
+        $this->app->instance(PublishSnsMessageToUpdateStatus::class, $mockAction);
 
-        $this->postJson(route('orders.send-to-tms', $order->id))
-            ->assertJsonFragment(['data' => 'exception'])
-            ->assertStatus(Response::HTTP_INTERNAL_SERVER_ERROR);
+        $response = (new SendOrderToTms())($order);
+
+        $this->assertEquals('exception', $response['message']);
+
+        $this->assertDatabaseHas('t_orders', [
+            'id' => $order->id,
+            'bill_to_address_verified' => false,
+            'equipment_type_verified' => false,
+            'tms_template_dictid_verified' => false,
+            'carrier_dictid_verified' => false,
+            'vessel_dictid_verified' => false,
+        ]);
     }
 
     /** @test */
-    public function it_should_fail_if_not_authorized_to_send_to_tms()
+    public function it_should_fail_if_the_order_doesnt_have_all_the_addresses_validated()
     {
-        $this->seed(OrdersTableSeeder::class);
+        $this->markTestSkipped('validation is disabled for now');
+        (new OrdersTableSeeder())->seedOrderWithoutValidatedAddresses();
         $order = Order::first();
-        $user = User::whereRoleIs('customer-user')->first();
-        Sanctum::actingAs($user);
 
         $mockAction = Mockery::mock(SendOrderToTms::class)->makePartial();
         $mockAction->shouldNotReceive('__invoke');
         $this->app->instance(SendOrderToTms::class, $mockAction);
 
         $this->postJson(route('orders.send-to-tms', $order->id))
-            ->assertStatus(Response::HTTP_FORBIDDEN);
-    }
-
-    /** @test */
-    public function it_should_fail_if_order_is_from_other_company()
-    {
-        $company1 = factory(Company::class)->create();
-        $company2 = factory(Company::class)->create();
-        $user = factory(User::class)->create(['t_company_id' => $company1->id]);
-        $user->attachRole('customer-admin');
-        $order = factory(Order::class)->create(['t_company_id' => $company2->id]);
-
-        Sanctum::actingAs($user);
-
-        $mockAction = Mockery::mock(SendOrderToTms::class)->makePartial();
-        $mockAction->shouldNotReceive('__invoke');
-        $this->app->instance(SendOrderToTms::class, $mockAction);
-
-        $this->postJson(route('orders.send-to-tms', $order->id))
-            ->assertStatus(Response::HTTP_FORBIDDEN);
+            ->assertStatus(Response::HTTP_UNPROCESSABLE_ENTITY)
+            ->assertJsonValidationErrors([
+                'port_ramp_of_destination_address_verified',
+                'port_ramp_of_origin_address_verified',
+                'bill_to_address_verified',
+                'order_address_events.*.t_address_verified',
+            ]);
     }
 }

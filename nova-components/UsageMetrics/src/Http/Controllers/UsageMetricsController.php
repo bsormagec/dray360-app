@@ -45,46 +45,57 @@ class UsageMetricsController
             'requests' => [
                 'current' => $this->getNumberOfRequests($from, $to),
                 'previous' => $this->getNumberOfRequests($previousFrom, $previousTo),
+                'tooltip' => 'All PDF and datafile requests,<br>including rejected&deleted.',
             ],
             'pdf_requests' => [
                 'current' => $this->getNumberOfPdfRequests($from, $to),
                 'previous' => $this->getNumberOfPdfRequests($previousFrom, $previousTo),
+                'tooltip' => 'PDF requests (not from datafiles),<br>including rejected&deleted.',
             ],
             'datafile_requests' => [
                 'current' => $this->getDatafileRequestCount($from, $to),
                 'previous' => $this->getDatafileRequestCount($previousFrom, $previousTo),
+                'tooltip' => 'Datafile requests (not from PDFs),<br>including rejected&deleted.',
             ],
             'rejected_requests' => [
                 'current' => $this->getRejectedRequestsCount($from, $to),
                 'previous' => $this->getRejectedRequestsCount($previousFrom, $previousTo),
+                'tooltip' => 'All rejected PDF and requests,<br>not including deleted requests.',
             ],
             'orders' => [
                 'current' => $this->getOrdersCount($from, $to),
                 'previous' => $this->getOrdersCount($previousFrom, $previousTo),
+                'tooltip' => 'All orders, including deleted.',
             ],
             'deleted_orders' => [
                 'current' => $this->getDeletedOrdersCount($from, $to),
                 'previous' => $this->getDeletedOrdersCount($previousFrom, $previousTo),
+                'tooltip' => 'Deleted order count, nothing<br>to do with rejected requests.',
             ],
             'orders_from_pdf' => [
                 'current' => $this->getOrdersFromPdfRequestsCount($from, $to),
                 'previous' => $this->getOrdersFromPdfRequestsCount($previousFrom, $previousTo),
+                'tooltip' => 'Orders created from PDF requests<br>(not from datafiles), including deleted orders.',
             ],
             'orders_from_datafile' => [
                 'current' => $this->getOrdersFromDatafilesRequestsCount($from, $to),
                 'previous' => $this->getOrdersFromDatafilesRequestsCount($previousFrom, $previousTo),
+                'tooltip' => 'Orders created from datafile requests<br>(not from PDFs), including deleted orders.',
             ],
             'tms_shipments' => [
                 'current' => $this->getTmsShipmentsCreatedCount($from, $to),
                 'previous' => $this->getTmsShipmentsCreatedCount($previousFrom, $previousTo),
+                'tooltip' => 'TMS Shipments created, including those<br>created from deleted orders.',
             ],
             'jpeg_pages' => [
                 'current' => $this->getJPEGPagesCount($from, $to),
                 'previous' => $this->getJPEGPagesCount($previousFrom, $previousTo),
+                'tooltip' => 'Number of jpg page images stored for each order,<br>including deleted orders. If there are multiple<br>orders created per page, then this will over-count<br>those pages for each order created.',
             ],
             'pdf_pages' => [
                 'current' => $this->getPDFPagesCount($from, $to),
                 'previous' => $this->getPDFPagesCount($previousFrom, $previousTo),
+                'tooltip' => 'Number of PDF pages in all requests,<br>including rejected and deleted.',
             ],
         ]);
     }
