@@ -109,6 +109,7 @@ export default {
 
   data: () => ({
     filters: {
+      timeRange: null,
       dateRange: [],
       companyId: null,
       variantName: null,
@@ -170,17 +171,20 @@ export default {
       this.page = 1
     },
     async searchAudits () {
-      if (this.filters.dateRange.length !== 2) {
+      const { timeRange, dateRange, userId, companyId, variantName } = this.filters
+
+      if (!timeRange || (timeRange === -1 && dateRange.length !== 2)) {
         this.setSnackbar({ message: 'Please select a date range.' })
         return
       }
       this.loading = true
       const [error, data] = await getAuditLogsDashboard({
-        start_date: this.filters.dateRange[0],
-        end_date: this.filters.dateRange[1],
-        user_id: this.filters.userId,
-        'filter[company_id]': this.filters.companyId,
-        'filter[variant_name]': this.filters.variantName,
+        time_range: timeRange,
+        start_date: timeRange === -1 ? dateRange[0] : null,
+        end_date: timeRange === -1 ? dateRange[1] : null,
+        user_id: userId ? userId.join(',') : null,
+        'filter[company_id]': companyId ? companyId.join(',') : null,
+        'filter[variant_name]': variantName ? variantName.join(',') : null,
         page: this.page,
         sort: this.sort,
       })

@@ -89,7 +89,7 @@
                 </label>
               </v-col>
               <v-col cols="8">
-                <DateRangeCalendar
+                <DateRange
                   v-model="filters.dateRange"
                 />
               </v-col>
@@ -274,7 +274,7 @@
   </div>
 </template>
 <script>
-import DateRangeCalendar from './DateRange'
+import DateRange from '@/components/DateRange'
 import Chip from '@/components/Chip'
 import auth from '@/store/modules/auth'
 import { mapState } from 'vuex'
@@ -287,7 +287,7 @@ import { statuses, displayStatuses } from '@/enums/app_objects_types'
 export default {
   name: 'Filters',
   components: {
-    DateRangeCalendar,
+    DateRange,
     Chip
   },
   mixins: [permissions, allCompanies],

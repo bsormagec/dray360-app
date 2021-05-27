@@ -64,4 +64,23 @@ class OcrRequestPolicy
 
         return $hasDeletePermissions && ! request_is_from_nova();
     }
+
+    /**
+     * Determine if the user can send to the request orders to the tms.
+     */
+    public function sendToTms(User $user, OCRRequest $ocrRequest): bool
+    {
+        $hasPermissionsToSendToTms = $user->isAbleTo('tms-submit');
+
+        if ($ocrRequest->isLockedForTheUser()) {
+            return false;
+        }
+
+        if (! $user->isAbleTo('all-companies-view')) {
+            $ocrRequestCompany = $ocrRequest->latestOcrRequestStatus->company_id ?? null;
+            return $hasPermissionsToSendToTms && $user->getCompanyId() == $ocrRequestCompany;
+        }
+
+        return $hasPermissionsToSendToTms;
+    }
 }

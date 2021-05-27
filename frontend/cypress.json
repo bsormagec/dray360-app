@@ -1,5 +1,6 @@
 {
     "baseUrl": "http://localhost:8080",
     "env": {},
-    "video": false
+    "video": false,
+    "screenshotOnRunFailure": false
 }

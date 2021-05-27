@@ -151,7 +151,7 @@
             :back-button="false"
             :refresh-lock="false"
             :order-id="request.first_order_id"
-            :starting-size="compressed ? 40 : 40"
+            :starting-size="compressed ? 35 : 35"
             @order-deleted="() => setReloadRequests(true)"
             @go-back="toggleMobileView"
           />

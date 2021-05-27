@@ -1,87 +1,84 @@
 <template>
   <div>
     <v-row>
-      <v-col cols="1 d-flex align-center">
-        <label
-          for="search"
-          class="filter-label"
-        >
-          Variant Name
-        </label>
-      </v-col>
       <v-col cols="2">
-        <v-text-field
-          v-model="filters.variantName"
-          name="search"
-          hide-details
-          prepend-icon="mdi-magnify"
+        <v-autocomplete
+          v-model="filters.timeRange"
+          :items="timeSpans"
+          item-value="hours"
+          item-text="label"
+          name="time_range"
+          label="*Time Span"
+          class="mb-4"
           outlined
           clearable
           dense
-        />
-      </v-col>
-    </v-row>
-    <v-row>
-      <v-col cols="1 d-flex align-center">
-        <label class="filter-label">
-          Date Range*
-        </label>
-      </v-col>
-      <v-col cols="2">
-        <DateRangeCalendar
-          v-model="filters.dateRange"
-        />
-      </v-col>
-    </v-row>
-    <v-row v-if="canViewOtherCompanies()">
-      <v-col cols="1 d-flex align-center">
-        <label
-          for="company_id"
           hide-details
-          class="filter-label"
-        >
-          Company
-        </label>
+        />
+        <DateRange
+          v-if="filters.timeRange === -1"
+          v-model="filters.dateRange"
+          label="*Custom Date Range"
+          prepend-icon=""
+        />
       </v-col>
-      <v-col cols="2">
-        <v-select
+      <v-col cols="3">
+        <v-autocomplete
+          v-model="filters.variantName"
+          :items="variants"
+          item-value="abbyy_variant_name"
+          item-text="abbyy_variant_name"
+          name="variant_name"
+          label="Variant name"
+          outlined
+          clearable
+          dense
+          chips
+          deletable-chips
+          multiple
+          small-chips
+        />
+      </v-col>
+      <v-col
+        v-if="canViewOtherCompanies()"
+        cols="3"
+      >
+        <v-autocomplete
           v-model="filters.companyId"
           :items="companies"
           item-value="id"
           item-text="name"
-          outlined
-          hide-details
           name="company_id"
+          label="Company"
+          outlined
           clearable
-          prepend-icon="mdi-office-building-outline"
           dense
-          class="status-selector"
+          chips
+          deletable-chips
+          multiple
+          small-chips
+          hide-details
         />
       </v-col>
-    </v-row>
-    <v-row v-if="canViewOtherCompanies()">
-      <v-col cols="1 d-flex align-center">
-        <label
-          for="user_id"
-          hide-details
-          class="filter-label"
-        >
-          User
-        </label>
-      </v-col>
-      <v-col cols="2">
+      <v-col
+        v-if="canViewOtherCompanies()"
+        cols="3"
+      >
         <v-autocomplete
           v-model="filters.userId"
           :items="users"
           item-value="id"
           item-text="name"
-          outlined
-          hide-details
           name="user_id"
+          label="User"
+          outlined
           clearable
-          prepend-icon="mdi-office-building-outline"
           dense
-          class="status-selector"
+          chips
+          deletable-chips
+          multiple
+          small-chips
+          hide-details
         />
       </v-col>
     </v-row>
@@ -93,14 +90,15 @@ import permissions from '@/mixins/permissions'
 import allCompanies from '@/mixins/all_companies'
 
 import { getUsers } from '@/store/api_calls/users'
+import { getVariantList } from '@/store/api_calls/rules_editor'
 
-import DateRangeCalendar from '@/components/OrderTable/components/DateRange'
+import DateRange from '@/components/DateRange'
 
 export default {
   name: 'Filters',
 
   components: {
-    DateRangeCalendar
+    DateRange
   },
 
   mixins: [permissions, allCompanies],
@@ -110,6 +108,7 @@ export default {
       type: Object,
       required: true,
       default: () => ({
+        timeRange: null,
         dateRange: [],
         companyId: null,
         userId: null,
@@ -120,6 +119,15 @@ export default {
 
   data: (vm) => ({
     users: [],
+    variants: [],
+    timeSpans: [
+      { hours: 1, label: 'Last hour' },
+      { hours: 8, label: 'Last eight hours' },
+      { hours: 24, label: 'Last 24 hours' },
+      { hours: 72, label: 'Last 3 days' },
+      { hours: 168, label: 'Last week' },
+      { hours: -1, label: 'Custom Range' },
+    ],
     filters: {
       dateRange: vm.initialFilters.dateRange,
       companyId: vm.initialFilters.companyId,
@@ -143,6 +151,7 @@ export default {
     }
 
     await this.fetchUsers()
+    await this.fetchVariants()
   },
 
   methods: {
@@ -155,9 +164,23 @@ export default {
 
       this.users = data.data
     },
+    async fetchVariants () {
+      const [error, data] = await getVariantList({
+        'fields[t_ocrvariants]': 'abbyy_variant_name'
+      })
+
+      if (error !== undefined) {
+        return
+      }
+
+      this.variants = data
+    },
   }
 }
 </script>
 
 <style lang="scss" scoped>
+.v-select.v-input--dense::v-deep .v-chip {
+  margin: rem(3)
+}
 </style>

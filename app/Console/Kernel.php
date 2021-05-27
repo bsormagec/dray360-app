@@ -36,6 +36,17 @@ class Kernel extends ConsoleKernel
             ->command('import:profit-tools-addresses', ['--insert-only'])
             ->hourly()
             ->onOneServer();
+
+        $schedule
+            ->command('metrics:companies-daily')
+            ->dailyAt('06:00');
+        $schedule
+            ->command('metrics:companies-daily', [
+                '--from' => now()->toDateString(),
+                '--to' => now()->toDateString(),
+            ])
+            ->hourly();
+
         $schedule->command('horizon:snapshot')->everyFiveMinutes();
     }
 

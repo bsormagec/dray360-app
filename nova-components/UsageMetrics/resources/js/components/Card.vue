@@ -3,7 +3,12 @@
       class="report-card"
       style="min-height: 100px"
   >
-    <h5 class="text-xl text-80 font-semibold my-4">{{ label }}</h5>
+    <div class="flex justify-between items-center">
+      <h5 class="text-xl text-80 font-semibold my-4">{{ label }}</h5>
+      <span v-tooltip="{content:tooltip, trigger:'click' }" v-show="tooltip">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24"><path class="fill-current text-80" d="M12 22a10 10 0 1 1 0-20 10 10 0 0 1 0 20zm0-2a8 8 0 1 0 0-16 8 8 0 0 0 0 16zm0-9a1 1 0 0 1 1 1v4a1 1 0 0 1-2 0v-4a1 1 0 0 1 1-1zm0-4a1 1 0 1 1 0 2 1 1 0 0 1 0-2z"/></svg>
+      </span>
+    </div>
     <p class="text-90 text-3xl">
       {{metric !== undefined ? metric.current : '--'}}
     </p>
@@ -58,6 +63,11 @@ export default {
       label: {
         type: String,
         required: true
+      },
+      tooltip: {
+        type: String,
+        required: false,
+        default: undefined,
       }
     },
     computed: {
