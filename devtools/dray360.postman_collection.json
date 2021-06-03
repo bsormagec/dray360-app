@@ -3727,6 +3727,88 @@
 			]
 		},
 		{
+			"name": "Metrics",
+			"item": [
+				{
+					"name": "/api/metrics",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"var token1=postman.getResponseCookie('XSRF-TOKEN').value;",
+									"var token2=token1.replace(/%3D/g, '=');",
+									"postman.setEnvironmentVariable('X-XSRF-TOKEN', token2);",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/x-www-form-urlencoded"
+							},
+							{
+								"key": "Referer",
+								"type": "text",
+								"value": "{{server}}"
+							},
+							{
+								"key": "Accept",
+								"type": "text",
+								"value": "application/json, text/plain, */*"
+							},
+							{
+								"key": "X-XSRF-TOKEN",
+								"type": "text",
+								"value": "{{X-XSRF-TOKEN}}"
+							}
+						],
+						"url": {
+							"raw": "{{server}}/api/metrics?metric=company-daily-report",
+							"host": [
+								"{{server}}"
+							],
+							"path": [
+								"api",
+								"metrics"
+							],
+							"query": [
+								{
+									"key": "metric",
+									"value": "company-daily-report",
+									"description": "Supported: company-daily-report"
+								},
+								{
+									"key": "filter[company_id]",
+									"value": "",
+									"description": "Companies ids separated by a comma",
+									"disabled": true
+								},
+								{
+									"key": "start_date",
+									"value": "2021-01-01",
+									"description": "YYYY-MM-DD",
+									"disabled": true
+								},
+								{
+									"key": "end_date",
+									"value": "2021-05-31",
+									"description": "YYYY-MM-DD",
+									"disabled": true
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
 			"name": "/api/search-address",
 			"event": [
 				{
@@ -4178,9 +4260,18 @@
 			"script": {
 				"type": "text/javascript",
 				"exec": [
+					"//const unparsedToken= pm.cookies.get('XSRF-TOKEN');",
+					"//const parsedToken = unparsedToken.replace(/%3D/g, '=');",
+					"//pm.collectionVariables.set('csrfToken', parsedToken);",
 					""
 				]
 			}
+		}
+	],
+	"variable": [
+		{
+			"key": "csrfToken",
+			"value": "null"
 		}
 	]
 }
