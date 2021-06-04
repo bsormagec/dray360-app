@@ -143,7 +143,7 @@ export default {
 
         this.sort = `${sortDesc ? '-' : ''}${sortCol !== '' ? sortCol : ''}`
 
-        if (this.filters.dateRange.length < 2 || sortCol === '') {
+        if ((this.filters.dateRange.length < 2 && !this.filters.timeRange) || sortCol === '') {
           return
         }
 

@@ -59,5 +59,6 @@ class CompanyDailyMetric extends Model
         'pdf_orders_including_deleted',
         'datafile_orders_including_deleted',
         'orders',
+        'pdf_pages_overage',
     ];
 }

@@ -17,7 +17,7 @@ class RequestsOrdersDeletedMetricQuery
         $this->date = $date;
         $this->companyId = $companyId;
 
-        return [
+        $data = [
             'orders' => $this->orders(false),
             'orders_deleted' => $this->orders(true),
             'pdf_orders_deleted' => $this->pdfOrders(true),
@@ -25,12 +25,19 @@ class RequestsOrdersDeletedMetricQuery
             'datafile_orders_deleted' => $this->datafileOrders(true),
             'datafile_orders_including_deleted' => $this->datafileOrders(false),
             'requests_rejected' => $this->requestsRejected(), // F
-            'pdf_pages_including_deleted' => $this->pdfPages(), // L
+            'pdf_pages_including_deleted' => $this->pdfPages(),
             'tms_shipments' => $this->tmsShipments(), // M
             'requests_deleted' => $this->requestsDeleted(), // N
             'pdf_requests_deleted' => $this->pdfRequestsDeleted(),
             'datafile_requests_deleted' => $this->datafileRequestsDeleted(),
         ];
+
+        $data['pdf_pages_overage'] = max(
+            0,
+            $data['pdf_orders_including_deleted'] - (2 * $data['pdf_pages_including_deleted'])
+        ); // L
+
+        return $data;
     }
 
     protected function baseOrdersQuery(bool $onlyDeleted): Builder
