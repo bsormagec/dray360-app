@@ -39,7 +39,9 @@ class RequestsOrdersSharedMetricsQuery
             'pdf_requests_multiorder_all_updateprior' => $baseData->sum(fn ($item) => $item->is_pdf && $item->is_multiorder && $item->all_updateprior),
             'pdf_requests_multiorder_mixed_updateprior' => $baseData->sum(fn ($item) => $item->is_pdf && $item->is_multiorder && $item->mixed_updateprior),
             'pdf_requests_multiorder_none_updateprior' => $baseData->sum(fn ($item) => $item->is_pdf && $item->is_multiorder && $item->none_updateprior),
-            'pdf_requests_multiorder_less_all_updateprior' => $baseData->sum(fn ($item) => $item->is_pdf && $item->is_multiorder && ! $item->all_updateprior), // B
+            'pdf_requests_multiorder_less_all_updateprior' =>
+                $baseData->sum(fn ($item) => $item->is_pdf && $item->is_multiorder)
+                - $baseData->sum(fn ($item) => $item->is_pdf && $item->is_multiorder && $item->all_updateprior), // B
 
 
             'pdf_orders' => $baseData->sum(fn ($item) => $item->is_pdf * $item->orders),
@@ -47,7 +49,7 @@ class RequestsOrdersSharedMetricsQuery
             'pdf_orders_dontupdateprior' => $baseData->sum(fn ($item) => $item->is_pdf * $item->orders_dontupdateprior),
             'pdf_orders_less_requests_anyupdateprior' =>
                 $baseData->sum(fn ($item) => $item->is_pdf * $item->orders_dontupdateprior)
-                - $baseData->sum(fn ($item) => $item->is_pdf * $item->any_updateprior), // H
+                - $baseData->sum(fn ($item) => $item->is_pdf && ! $item->all_updateprior), // H
 
             'datafile_requests' => $baseData->sum('is_datafile'),
 
@@ -60,7 +62,7 @@ class RequestsOrdersSharedMetricsQuery
             'datafile_orders_dontupdateprior' => $baseData->sum(fn ($item) => $item->is_datafile * $item->orders_dontupdateprior),
             'datafile_orders_less_requests_anyupdateprior' =>
                 $baseData->sum(fn ($item) => $item->is_datafile * $item->orders_dontupdateprior)
-                - $baseData->sum(fn ($item) => $item->is_datafile * $item->any_updateprior), // I
+                - $baseData->sum(fn ($item) => $item->is_datafile && ! $item->all_updateprior), // I
         ];
     }
 

@@ -25,6 +25,7 @@ use App\Http\Controllers\Api\SearchAddressController;
 use App\Http\Controllers\Api\StatusHistoryController;
 use App\Http\Controllers\Api\ChangePasswordController;
 use App\Http\Controllers\Api\EquipmentTypesController;
+use App\Http\Controllers\Api\MetricsReportsController;
 use App\Http\Controllers\Api\UploadPtImagesController;
 use App\Http\Controllers\Api\DictionaryItemsController;
 use App\Http\Controllers\Api\OcrRequestEmailController;
@@ -152,6 +153,9 @@ Route::group(['middleware' => ['auth:sanctum', 'impersonate', 'tenant-aware']], 
 
     Route::delete('object-locks', [ObjectLocksController::class, 'destroy'])
         ->name('object-locks.destroy');
+
+    Route::get('metrics', MetricsReportsController::class)
+        ->name('metrics.index');
 
     //companies/1/tms-provider/1/equipment-types
     Route::get('companies/{company}/tms-provider/{tmsProvider}/equipment-types', EquipmentTypesController::class)
