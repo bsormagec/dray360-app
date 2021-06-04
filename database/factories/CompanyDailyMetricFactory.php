@@ -51,5 +51,6 @@ $factory->define(CompanyDailyMetric::class, function (Faker $faker) {
         'pdf_orders_including_deleted' => $faker->numberBetween(0, 2000),
         'datafile_orders_including_deleted' => $faker->numberBetween(0, 2000),
         'orders' => $faker->numberBetween(0, 2000),
+        'pdf_pages_overage' => $faker->numberBetween(0, 2000),
     ];
 });
