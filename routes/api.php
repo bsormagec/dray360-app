@@ -38,6 +38,7 @@ use App\Http\Controllers\Api\OCRRulesAssignmentController;
 use App\Http\Controllers\Api\AccesorialCompaniesController;
 use App\Http\Controllers\Api\Auth\ForgotPasswordController;
 use App\Http\Controllers\Api\OcrRequestReprocessController;
+use App\Http\Controllers\Api\MetricsReportsExportController;
 use App\Http\Controllers\Api\OcrRequestsDoneStatusController;
 use App\Http\Controllers\Api\SendRequestOrdersToTmsController;
 use App\Http\Controllers\Api\EquipmentTypesSelectValuesController;
@@ -156,6 +157,9 @@ Route::group(['middleware' => ['auth:sanctum', 'impersonate', 'tenant-aware']], 
 
     Route::get('metrics', MetricsReportsController::class)
         ->name('metrics.index');
+
+    Route::get('metrics-export', MetricsReportsExportController::class)
+        ->name('metrics-export.index');
 
     //companies/1/tms-provider/1/equipment-types
     Route::get('companies/{company}/tms-provider/{tmsProvider}/equipment-types', EquipmentTypesController::class)
