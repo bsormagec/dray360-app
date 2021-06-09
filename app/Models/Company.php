@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use Illuminate\Support\Str;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Database\Eloquent\Model;
 use App\Models\Traits\EncryptsAttributes;
@@ -59,6 +60,7 @@ class Company extends Model
         'name',
         'email_intake_address',
         'email_intake_address_alt',
+        'email_onboarding_address',
         'default_tms_provider_id',
         'refs_custom_mapping',
         'configuration',
@@ -104,6 +106,19 @@ class Company extends Model
         't_address_id' => 'required',
         'refs_custom_mapping' => 'required'
     ];
+
+    protected static function booted()
+    {
+        static::creating(function ($company) {
+            $env = config('app.env') === 'production' ? 'prod' : 'dev';
+            $companyName = Str::snake($company->name, '');
+            $uuid = str_replace('-', '', Str::uuid()->toString());
+            $company->email_intake_address = "{$env}+{$companyName}_{$uuid}@in.dray360.com";
+
+            $uuid = str_replace('-', '', Str::uuid()->toString());
+            $company->email_onboarding_address = "{$env}+{$companyName}_onboarding_{$uuid}@in.dray360.com";
+        });
+    }
 
     public function address()
     {

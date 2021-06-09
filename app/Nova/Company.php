@@ -60,8 +60,20 @@ class Company extends Resource
         return [
             ID::make('Id', 'id')->sortable(),
             Text::make('Name'),
-            Text::make('Intake Email', 'email_intake_address'),
-            Text::make('Intake Email Alt', 'email_intake_address_alt'),
+            Text::make('Intake Email', 'email_intake_address')
+                ->readonly(function ($request) {
+                    return $request->isCreateOrAttachRequest();
+                })
+                ->help('This email is auto-generated once the company is created'),
+            Text::make('Intake Email Alt', 'email_intake_address_alt')
+                ->readonly(function ($request) {
+                    return $request->isCreateOrAttachRequest();
+                }),
+            Text::make('Intake Onboarding Email', 'email_onboarding_address')
+                ->readonly(function ($request) {
+                    return $request->isCreateOrAttachRequest();
+                })
+                ->help('This email is auto-generated once the company is created'),
             BelongsTo::make('Default TMS Provider', 'defaultTmsProvider', TmsProvider::class)->sortable(),
             BelongsTo::make('Domain', 'domain', Domain::class)->sortable()->nullable(),
             Number::make('Automatic address verification threshold', 'automatic_address_verification_threshold'),
