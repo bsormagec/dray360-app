@@ -117,6 +117,18 @@ class DictionaryItemsImportSeeder extends Seeder
             ],
         ],
 
+        // Mercer
+        'Mercer' => [
+            [
+                'file' => 'seeders/MercerTemplates_20210610.xlsx',
+                'columns' => [
+                    'item_key' => 'TMP #',
+                    'item_display_name' => 'Template Name',
+                    'item_type' => DictionaryItem::TEMPLATE_TYPE,
+                    'item_value' => []
+                ]
+            ],
+        ],
     ];
 
     /**
@@ -124,7 +136,8 @@ class DictionaryItemsImportSeeder extends Seeder
      * company won't need to be seeded twice.
      */
     const TO_BE_IMPORTED = [
-        'GrahamTrucking' => self::ALL_COMPANIES['GrahamTrucking']
+        'GrahamTrucking' => self::ALL_COMPANIES['GrahamTrucking'],
+        'Mercer' => self::ALL_COMPANIES['Mercer'],
     ];
 
     /**
