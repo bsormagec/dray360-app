@@ -90,3 +90,7 @@ export const displayStatuses = {
   imageUploadFailed: 'Image Upload Failed',
   imageUploaded: 'Image Uploaded',
 }
+
+export const metrics = {
+  companyDaily: 'company-daily-report'
+}

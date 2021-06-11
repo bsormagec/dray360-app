@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Api;
 
 use Illuminate\Http\Request;
+use Illuminate\Http\Response;
 use Illuminate\Validation\Rule;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Resources\Json\JsonResource;
@@ -12,6 +13,10 @@ class MetricsReportsController extends Controller
 {
     public function __invoke(Request $request)
     {
+        if (! auth()->user()->isAbleTo('metrics-view')) {
+            abort(Response::HTTP_FORBIDDEN);
+        }
+
         $metricsQueries = [
             CompaniesDailyMetricsReportQuery::QUERY_KEY => CompaniesDailyMetricsReportQuery::class,
         ];

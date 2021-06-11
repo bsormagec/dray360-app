@@ -27,6 +27,7 @@ import EmailConfirmation from '@/views/EmailConfirmation'
 import ResetPassword from '@/views/ResetPassword'
 import AuditLogs from '@/views/AuditLogs/AuditLogs'
 import ApplicationDowntime from '@/views/ApplicationDowntime'
+import AccountingDashboard from '@/views/AccountingDashboard'
 
 Vue.use(VueRouter)
 
@@ -194,6 +195,14 @@ const routes = [
     path: '/application-downtime',
     name: 'Application Downtime',
     component: ApplicationDowntime
+  },
+  {
+    path: '/accounting-dashboard',
+    name: 'Accounting Dashboard',
+    component: AccountingDashboard,
+    meta: {
+      middleware: [auth]
+    }
   }
 ]
 

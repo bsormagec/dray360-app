@@ -45,6 +45,7 @@ return [
             'supervise' => 'v',
             'pt-images' => 'c',
             'field-maps' => 'c,v',
+            'metrics' => 'v',
         ],
         'order-review' => [
             'billing-mapping' => 'e,v',
