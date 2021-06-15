@@ -47,14 +47,12 @@ class UpdateAllOrdersControllerTest extends TestCase
         $this->withoutExceptionHandling();
 
         $this->putJson(route('orders.update-all', $originalOrder->id), [
-                'has_chassis' => 1,
-                'rate_quote_number' => 123,
+                'equipment_size' => 123,
             ])
             ->assertStatus(Response::HTTP_OK);
 
         $this->assertEquals(2, Order::where([
-            'has_chassis' => 1,
-            'rate_quote_number' => 123,
+            'equipment_size' => 123,
         ])->count());
     }
 
@@ -65,16 +63,14 @@ class UpdateAllOrdersControllerTest extends TestCase
         $this->withoutExceptionHandling();
 
         $this->putJson(route('orders.update-all', $originalOrder->id), [
-                'has_chassis' => 1,
-                'rate_quote_number' => 123,
+                'equipment_size' => 123,
                 'unit_number' => 123123,
                 'seal_number' => 342422,
             ])
             ->assertStatus(Response::HTTP_OK);
 
         $this->assertEquals(0, Order::where([
-            'has_chassis' => 1,
-            'rate_quote_number' => 123,
+            'equipment_size' => 123,
             'unit_number' => 123123,
             'seal_number' => 342422,
         ])->count());

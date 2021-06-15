@@ -21,7 +21,6 @@ import PageNotAuthorized from '@/views/PageNotAuthorized'
 import MappingField from '@/views/Mappings/MappingField'
 import FieldMapping from '@/views/FieldMapping/FieldMapping'
 import LoggedOut from '@/router/middleware/LoggedOut'
-import AccesorialsMapping from '@/views/Mappings/AccesorialsMapping'
 import ForgotPassword from '@/views/ForgotPassword'
 import EmailConfirmation from '@/views/EmailConfirmation'
 import ResetPassword from '@/views/ResetPassword'
@@ -147,14 +146,6 @@ const routes = [
     component: FieldMapping,
     meta: {
       middleware: [auth, permission('field-maps-view')]
-    }
-  },
-  {
-    path: '/companies/:id/billing-mapping',
-    name: 'Billing Mapping',
-    component: AccesorialsMapping,
-    meta: {
-      middleware: [auth]
     }
   },
   {

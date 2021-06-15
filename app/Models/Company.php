@@ -7,12 +7,10 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Database\Eloquent\Model;
 use App\Models\Traits\EncryptsAttributes;
 use Illuminate\Database\Eloquent\SoftDeletes;
-use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 
 /**
  * @property \App\Models\Address $address
  * @property \Illuminate\Database\Eloquent\Collection $companyAddressTmsCodes
- * @property \Illuminate\Database\Eloquent\Collection $contacts
  * @property \App\Models\Domain $domain
  * @property int $t_address_id
  * @property array $configuration
@@ -130,11 +128,6 @@ class Company extends Model
         return $this->hasMany(\App\Models\CompanyAddressTmsCode::class, 't_company_id');
     }
 
-    public function contacts()
-    {
-        return $this->hasMany(\App\Models\Contact::class, 't_company_id');
-    }
-
     public function domain()
     {
         return $this->belongsTo(Domain::class, 't_domain_id');
@@ -159,17 +152,5 @@ class Company extends Model
             ])
             ->where('configuration->profit_tools_enable_templates', true)
             ->get();
-    }
-
-    public function variantsAccessorials(): BelongsToMany
-    {
-        return $this->belongsToMany(
-            OCRVariant::class,
-            't_company_ocrvariant_accessorial_mappings',
-            't_company_id',
-            't_ocrvariant_id'
-        )
-        ->using(AccesorialMappingPivot::class)
-        ->withPivot(['mapping']);
     }
 }

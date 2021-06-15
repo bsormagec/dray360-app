@@ -12,7 +12,6 @@ use Illuminate\Database\Eloquent\SoftDeletes;
  * @property \Illuminate\Database\Eloquent\Collection $canonicalAddresses
  * @property \Illuminate\Database\Eloquent\Collection $companies
  * @property \Illuminate\Database\Eloquent\Collection $companyAddressTmsCodes
- * @property \Illuminate\Database\Eloquent\Collection $contacts
  * @property \Illuminate\Database\Eloquent\Collection $orderAddressEvents
  * @property int $id
  * @property float $latitude
@@ -79,16 +78,6 @@ class Address extends Model
      */
     public static $rules = [];
 
-    public function canonicalAddressMatches()
-    {
-        return $this->hasMany(\App\Models\CanonicalAddressMatch::class, 't_address_id');
-    }
-
-    public function canonicalAddresses()
-    {
-        return $this->hasMany(\App\Models\CanonicalAddress::class, 't_address_id');
-    }
-
     public function companies()
     {
         return $this->hasMany(\App\Models\Company::class, 't_address_id');
@@ -97,11 +86,6 @@ class Address extends Model
     public function companyAddressTmsCodes()
     {
         return $this->hasMany(\App\Models\CompanyAddressTmsCode::class, 't_address_id');
-    }
-
-    public function contacts()
-    {
-        return $this->hasMany(\App\Models\Contact::class, 't_address_id');
     }
 
     public function orderAddressEvents()

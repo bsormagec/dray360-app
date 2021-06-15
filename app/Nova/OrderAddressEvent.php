@@ -62,7 +62,6 @@ class OrderAddressEvent extends Resource
     {
         return [
             ID::make(__('ID'), 'id')->sortable(),
-            Text::make('Address schedule description', 'address_schedule_description')->hideFromIndex(),
             BelongsTo::make('Order', 'order', Order::class),
             BelongsTo::make('Address', 'address', Address::class),
             Text::make('Event number', 'event_number'),
@@ -72,10 +71,6 @@ class OrderAddressEvent extends Resource
             Boolean::make('Is dismount event', 'is_dismount_event')->hideFromIndex(),
             Boolean::make('Is pickup event', 'is_pickup_event')->hideFromIndex(),
             Boolean::make('Is drop event', 'is_drop_event')->hideFromIndex(),
-            Text::make('Call for appointment', 'call_for_appointment')->hideFromIndex(),
-            Text::make('Delivery window from localtime', 'delivery_window_from_localtime')->hideFromIndex(),
-            Text::make('Delivery window to localtime', 'delivery_window_to_localtime')->hideFromIndex(),
-            Text::make('Delivery instructions', 'delivery_instructions')->hideFromIndex(),
             Text::make('Unparsed event type', 'unparsed_event_type'),
             Boolean::make('Address verified', 't_address_verified'),
             Text::make('Address raw text', 't_address_raw_text'),
