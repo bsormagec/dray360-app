@@ -6,10 +6,10 @@ use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Validation\Rule;
 use App\Http\Controllers\Controller;
-use Illuminate\Http\Resources\Json\JsonResource;
+use Rap2hpoutre\FastExcel\FastExcel;
 use App\Queries\Metrics\CompaniesDailyMetricsReportQuery;
 
-class MetricsReportsController extends Controller
+class MetricsReportsExportController extends Controller
 {
     public function __invoke(Request $request)
     {
@@ -25,10 +25,12 @@ class MetricsReportsController extends Controller
             'metric' => ['required', Rule::in(array_keys($metricsQueries))],
             'start_date' => ['required', 'date'],
             'end_date' => ['required', 'date', 'after_or_equal:start_date'],
+            'to_export' => ['sometimes', 'nullable', 'string'],
         ]);
 
-        return JsonResource::collection(
-            (new $metricsQueries[$data['metric']]($data))->execute()
-        );
+        $metricQuery = new $metricsQueries[$data['metric']]($data);
+
+        return (new FastExcel($metricQuery->execute()))
+            ->download($metricQuery->filename(), $metricQuery->columnsMapperCallback($data['to_export'] ?? null));
     }
 }

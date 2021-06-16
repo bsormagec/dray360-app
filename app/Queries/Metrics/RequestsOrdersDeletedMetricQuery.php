@@ -34,7 +34,7 @@ class RequestsOrdersDeletedMetricQuery
 
         $data['pdf_pages_overage'] = max(
             0,
-            $data['pdf_orders_including_deleted'] - (2 * $data['pdf_pages_including_deleted'])
+            $data['pdf_pages_including_deleted'] - (2 * $data['pdf_orders_including_deleted'])
         ); // L
 
         return $data;

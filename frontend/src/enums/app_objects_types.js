@@ -90,3 +90,61 @@ export const displayStatuses = {
   imageUploadFailed: 'Image Upload Failed',
   imageUploaded: 'Image Uploaded',
 }
+
+export const metrics = {
+  companyDaily: 'company-daily-report'
+}
+
+export const abbySourceFileds = {
+  preset_fields: [
+    'bill_comment',
+    'bill_to_address',
+    'booking_number',
+    'carrier',
+    'container_length|container_size',
+    'contents',
+    'customer_number',
+    'cutoff_date',
+    'cutoff_time',
+    'equipment_type',
+    'expedite',
+    'fuel_surcharge',
+    'hazmat',
+    'house_bol_hawb',
+    'line_haul',
+    'load_number',
+    'master_bol_mawb',
+    'pickup_by_date|appointment_date',
+    'pickup_by_time|appointment_time',
+    'pickup_number',
+    'purchase_order_number',
+    'quantity',
+    'reference_number',
+    'seal_number',
+    'ship_comment',
+    'unit_number',
+    'vessel',
+    'voyage',
+    'weight'
+  ],
+  old_fields: [
+    'actual_destination',
+    'actual_orgin',
+    'aux_1',
+    'aux_2',
+    'aux_3',
+    'aux_4',
+    'bill_charge',
+    'equipment_provider',
+    'location',
+    'location1',
+    'location2',
+    'rate_box',
+    'total_accessorial_charges'
+  ],
+  new_fields: [
+    'customer_location',
+    'empty_location',
+    'terminal_location'
+  ],
+}

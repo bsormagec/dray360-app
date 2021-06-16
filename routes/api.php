@@ -35,9 +35,9 @@ use App\Http\Controllers\Api\AuditLogsDashboardController;
 use App\Http\Controllers\Api\Auth\ResetPasswordController;
 use App\Http\Controllers\Api\FileUploadRequestsController;
 use App\Http\Controllers\Api\OCRRulesAssignmentController;
-use App\Http\Controllers\Api\AccesorialCompaniesController;
 use App\Http\Controllers\Api\Auth\ForgotPasswordController;
 use App\Http\Controllers\Api\OcrRequestReprocessController;
+use App\Http\Controllers\Api\MetricsReportsExportController;
 use App\Http\Controllers\Api\OcrRequestsDoneStatusController;
 use App\Http\Controllers\Api\SendRequestOrdersToTmsController;
 use App\Http\Controllers\Api\EquipmentTypesSelectValuesController;
@@ -157,6 +157,9 @@ Route::group(['middleware' => ['auth:sanctum', 'impersonate', 'tenant-aware']], 
     Route::get('metrics', MetricsReportsController::class)
         ->name('metrics.index');
 
+    Route::get('metrics-export', MetricsReportsExportController::class)
+        ->name('metrics-export.index');
+
     //companies/1/tms-provider/1/equipment-types
     Route::get('companies/{company}/tms-provider/{tmsProvider}/equipment-types', EquipmentTypesController::class)
         ->name('equipment-types.show');
@@ -168,14 +171,6 @@ Route::group(['middleware' => ['auth:sanctum', 'impersonate', 'tenant-aware']], 
     //companies/1/tms-provider/1/equipment-types-options
     Route::get('companies/{company}/tms-provider/{tmsProvider}/equipment-types-options', EquipmentTypesSelectValuesController::class)
         ->name('equipment-types-options.show');
-
-    //companies/1/variant/1/
-    Route::get('companies/{company}/variants/{variant}/accesorials', [AccesorialCompaniesController::class, 'show'])
-        ->name('company-variants-accessorials.show');
-
-    //companies/1/variant/1/
-    Route::put('companies/{company}/variants/{variant}/accesorials', [AccesorialCompaniesController::class, 'update'])
-        ->name('company-variants-accessorials.put');
 
     // Send all the request orders to the tms
     Route::post('ocr/requests/{request_id}/send-to-tms', SendRequestOrdersToTmsController::class)

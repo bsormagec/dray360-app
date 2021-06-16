@@ -215,7 +215,7 @@ class OrdersControllerTest extends TestCase
 
         $orderAddressEvents = [factory(OrderAddressEvent::class)->create(['t_order_id' => $order->id])->toArray()];
         $orderAddressEvents[] = $this->makeFakeDataFor(OrderAddressEvent::class, $order);
-        $orderAddressEvents[0]['address_schedule_description'] = $this->faker->address;
+        $orderAddressEvents[0]['unparsed_event_type'] = 'hook';
 
         $this->putJson(route('orders.update', $order->id), [
                 'order_line_items' => $orderLineItems,

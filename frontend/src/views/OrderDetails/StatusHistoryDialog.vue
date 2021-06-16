@@ -70,6 +70,14 @@
             <br>
             {{ userWhoUploadedTheRequest ? `By ${userWhoUploadedTheRequest}` : '' }}
           </div>
+          <div v-if="hasPermission('system-status-filter')">
+            <div class="caption mt-3">
+              {{ `Company: ${historyLabels.companyName}` }}
+            </div>
+            <div class="caption mb-3">
+              {{ `Variant: ${historyLabels.variantName}` }}
+            </div>
+          </div>
           <ul
             style="list-style-type: none;"
             class="pa-0"
@@ -166,6 +174,12 @@ export default {
   computed: {
     userWhoUploadedTheRequest () {
       return this.order.upload_user_name ? this.order.upload_user_name : this.order.email_from_address
+    },
+    historyLabels () {
+      return {
+        companyName: this.order.company?.name || '---',
+        variantName: this.order.variant_name || '---',
+      }
     }
   },
 

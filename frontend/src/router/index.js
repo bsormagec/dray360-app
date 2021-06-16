@@ -21,12 +21,12 @@ import PageNotAuthorized from '@/views/PageNotAuthorized'
 import MappingField from '@/views/Mappings/MappingField'
 import FieldMapping from '@/views/FieldMapping/FieldMapping'
 import LoggedOut from '@/router/middleware/LoggedOut'
-import AccesorialsMapping from '@/views/Mappings/AccesorialsMapping'
 import ForgotPassword from '@/views/ForgotPassword'
 import EmailConfirmation from '@/views/EmailConfirmation'
 import ResetPassword from '@/views/ResetPassword'
 import AuditLogs from '@/views/AuditLogs/AuditLogs'
 import ApplicationDowntime from '@/views/ApplicationDowntime'
+import AccountingDashboard from '@/views/AccountingDashboard'
 
 Vue.use(VueRouter)
 
@@ -149,14 +149,6 @@ const routes = [
     }
   },
   {
-    path: '/companies/:id/billing-mapping',
-    name: 'Billing Mapping',
-    component: AccesorialsMapping,
-    meta: {
-      middleware: [auth]
-    }
-  },
-  {
     path: '*',
     name: 'Not Found',
     component: PageNotFound
@@ -194,6 +186,14 @@ const routes = [
     path: '/application-downtime',
     name: 'Application Downtime',
     component: ApplicationDowntime
+  },
+  {
+    path: '/accounting-dashboard',
+    name: 'Accounting Dashboard',
+    component: AccountingDashboard,
+    meta: {
+      middleware: [auth]
+    }
   }
 ]
 

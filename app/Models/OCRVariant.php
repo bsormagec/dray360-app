@@ -64,16 +64,6 @@ class OCRVariant extends Model
         'description' => 'required'
     ];
 
-    public function companiesAccesorials()
-    {
-        return $this->belongsToMany(
-            Company::class,
-            't_company_ocrvariant_accessorial_mappings',
-            't_ocrvariant_id',
-            't_company_id'
-        )->using(AccesorialMappingPivot::class);
-    }
-
     public function fieldMap()
     {
         return $this->belongsTo(FieldMap::class, 't_fieldmap_id');

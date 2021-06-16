@@ -38,14 +38,4 @@ class CompanyPolicy
     {
         return $user->isAbleTo('companies-remove');
     }
-
-    public function viewAccesorialMapping(User $user): bool
-    {
-        return $user->isAbleTo('billing-mapping-view');
-    }
-
-    public function updateAccesorialMapping(User $user, Company $company): bool
-    {
-        return $user->isAbleTo('billing-mapping-edit');
-    }
 }
