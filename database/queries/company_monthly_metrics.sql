@@ -34,9 +34,7 @@ select
     sum(datafile_orders_less_requests_anyupdateprior) as I_datafile_orders_less_requests_anyupdateprior,
     sum(pdf_orders_updateprior) as J_pdf_orders_updateprior,
     sum(datafile_orders_updateprior) as K_datafile_orders_updateprior,
-    sum(datafile_orders_updateprior) as K_datafile_orders_updateprior,
---    if(metric_date < '2021-03-01', 'na', sum(pdf_pages_overage)) as L_pdf_pages_overages, uncomment once the migration is merged in production
-    if(metric_date < '2021-03-01', 'na', sum(greatest(0, pdf_orders_including_deleted - (pdf_pages_including_deleted * 2)))) as L_pdf_pages_overages, -- remove this once the line above is uncommented
+    if(metric_date < '2021-03-01', 'na', sum(pdf_pages_overage)) as L_pdf_pages_overages,
     sum(tms_shipments) as M_tms_shipments,
     sum(pdf_orders_including_deleted) as O_pdf_orders_including_deleted,
     sum(datafile_orders_including_deleted) as P_datafile_orders_including_deleted,

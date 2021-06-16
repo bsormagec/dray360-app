@@ -2,16 +2,15 @@
 
 namespace App\Models;
 
+use Illuminate\Support\Str;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Database\Eloquent\Model;
 use App\Models\Traits\EncryptsAttributes;
 use Illuminate\Database\Eloquent\SoftDeletes;
-use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 
 /**
  * @property \App\Models\Address $address
  * @property \Illuminate\Database\Eloquent\Collection $companyAddressTmsCodes
- * @property \Illuminate\Database\Eloquent\Collection $contacts
  * @property \App\Models\Domain $domain
  * @property int $t_address_id
  * @property array $configuration
@@ -59,6 +58,7 @@ class Company extends Model
         'name',
         'email_intake_address',
         'email_intake_address_alt',
+        'email_onboarding_address',
         'default_tms_provider_id',
         'refs_custom_mapping',
         'configuration',
@@ -105,6 +105,19 @@ class Company extends Model
         'refs_custom_mapping' => 'required'
     ];
 
+    protected static function booted()
+    {
+        static::creating(function ($company) {
+            $env = config('app.env') === 'production' ? 'prod' : 'dev';
+            $companyName = Str::snake($company->name, '');
+            $uuid = str_replace('-', '', Str::uuid()->toString());
+            $company->email_intake_address = "{$env}+{$companyName}_{$uuid}@in.dray360.com";
+
+            $uuid = str_replace('-', '', Str::uuid()->toString());
+            $company->email_onboarding_address = "{$env}+{$companyName}_onboarding_{$uuid}@in.dray360.com";
+        });
+    }
+
     public function address()
     {
         return $this->belongsTo(\App\Models\AAddress::class, 't_address_id');
@@ -113,11 +126,6 @@ class Company extends Model
     public function companyAddressTmsCodes()
     {
         return $this->hasMany(\App\Models\CompanyAddressTmsCode::class, 't_company_id');
-    }
-
-    public function contacts()
-    {
-        return $this->hasMany(\App\Models\Contact::class, 't_company_id');
     }
 
     public function domain()
@@ -144,17 +152,5 @@ class Company extends Model
             ])
             ->where('configuration->profit_tools_enable_templates', true)
             ->get();
-    }
-
-    public function variantsAccessorials(): BelongsToMany
-    {
-        return $this->belongsToMany(
-            OCRVariant::class,
-            't_company_ocrvariant_accessorial_mappings',
-            't_company_id',
-            't_ocrvariant_id'
-        )
-        ->using(AccesorialMappingPivot::class)
-        ->withPivot(['mapping']);
     }
 }

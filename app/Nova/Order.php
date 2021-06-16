@@ -108,20 +108,15 @@ class Order extends Resource
             Text::make('Equipment type raw text', 'equipment_type_raw_text')->hideFromIndex()->nullable(),
             Text::make('Shipment direction', 'shipment_direction')->nullable(),
             Boolean::make('One way', 'one_way')->hideFromIndex()->nullable(),
-            Boolean::make('Yard pre pull', 'yard_pre_pull')->hideFromIndex()->nullable(),
-            Boolean::make('Has chassis', 'has_chassis')->hideFromIndex()->nullable(),
             Text::make('Unit number', 'unit_number')->hideFromIndex()->nullable(),
             Text::make('Equipment size', 'equipment_size')->hideFromIndex()->nullable(),
             Boolean::make('Hazardous', 'hazardous')->hideFromIndex()->nullable(),
             Text::make('Reference number', 'reference_number')->nullable(),
-            Text::make('Rate quote number', 'rate_quote_number')->hideFromIndex()->nullable(),
             Text::make('Seal number', 'seal_number')->hideFromIndex()->nullable(),
             Text::make('Vessel', 'vessel')->hideFromIndex()->nullable(),
             Text::make('Voyage', 'voyage')->hideFromIndex()->nullable(),
             Text::make('Master bol mawb', 'master_bol_mawb')->hideFromIndex()->nullable(),
             Text::make('House bol hawb', 'house_bol_hawb')->hideFromIndex()->nullable(),
-            DateTime::make('Estimated arrival utc', 'estimated_arrival_utc')->hideFromIndex()->nullable(),
-            DateTime::make('Last free date utc', 'last_free_date_utc')->hideFromIndex()->nullable(),
             Text::make('Booking number', 'booking_number')->hideFromIndex()->nullable(),
             Text::make('Bill of lading', 'bill_of_lading')->nullable(),
             Code::make('Ocr data', 'ocr_data')->json()->readonly(),
@@ -158,7 +153,6 @@ class Order extends Resource
             BelongsTo::make('Succeded by Order', 'succededByOrder', Order::class)->nullable()->searchable(),
             DateTime::make('TMS Submission Date', 'tms_submission_datetime')->hideFromIndex()->nullable(),
             DateTime::make('TMS Cancelled Date', 'tms_cancelled_datetime')->hideFromIndex()->nullable(),
-            DateTime::make('Cancelled Date', 'cancelled_datetime')->hideFromIndex()->nullable(),
 
             Number::make('Interchange Count', 'interchange_count')
                 ->min(0)

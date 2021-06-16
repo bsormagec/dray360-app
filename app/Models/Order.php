@@ -28,21 +28,16 @@ use App\Models\Traits\VerifiesUserSelectedAttributes;
  * @property string $equipment_type_raw_text
  * @property string $shipment_direction
  * @property boolean $one_way
- * @property boolean $yard_pre_pull
- * @property boolean $has_chassis
  * @property string $unit_number
  * @property string $equipment_size
  * @property boolean $hazardous
  * @property boolean $expedite
  * @property string $reference_number
- * @property string $rate_quote_number
  * @property string $seal_number
  * @property string $vessel
  * @property string $voyage
  * @property string $master_bol_mawb
  * @property string $house_bol_hawb
- * @property string|\Carbon\Carbon $estimated_arrival_utc
- * @property string|\Carbon\Carbon $last_free_date_utc
  * @property string $booking_number
  * @property string $bill_of_lading
  * @property string $bill_to_address_id
@@ -69,7 +64,6 @@ use App\Models\Traits\VerifiesUserSelectedAttributes;
  * @property string $succeded_by_order_id
  * @property \Carbon\Carbon $tms_submission_datetime
  * @property \Carbon\Carbon $tms_cancelled_datetime
- * @property \Carbon\Carbon $cancelled_datetime
  * @property integer $interchange_count
  * @property integer $interchange_err_count
  * @property string $tms_template_id
@@ -98,20 +92,15 @@ class Order extends Model implements Auditable
         'equipment_type_raw_text',
         'shipment_direction',
         'one_way',
-        'yard_pre_pull',
-        'has_chassis',
         'unit_number',
         'equipment_size',
         'hazardous',
         'reference_number',
-        'rate_quote_number',
         'seal_number',
         'vessel',
         'voyage',
         'master_bol_mawb',
         'house_bol_hawb',
-        'estimated_arrival_utc',
-        'last_free_date_utc',
         'booking_number',
         'bill_of_lading',
         'bill_to_address_id',
@@ -157,7 +146,6 @@ class Order extends Model implements Auditable
         'succeded_by_order_id',
         'tms_submission_datetime',
         'tms_cancelled_datetime',
-        'cancelled_datetime',
         'interchange_count',
         'interchange_err_count',
         'tms_template_id',
@@ -179,12 +167,8 @@ class Order extends Model implements Auditable
      */
     protected $casts = [
         'one_way' => 'boolean',
-        'yard_pre_pull' => 'boolean',
-        'has_chassis' => 'boolean',
         'hazardous' => 'boolean',
         'expedite' => 'boolean',
-        'estimated_arrival_utc' => 'datetime',
-        'last_free_date_utc' => 'datetime',
         'bill_to_address_verified' => 'boolean',
         'port_ramp_of_origin_address_verified' => 'boolean',
         'port_ramp_of_destination_address_verified' => 'boolean',
@@ -194,7 +178,6 @@ class Order extends Model implements Auditable
         'equipment_type_verified' => 'boolean',
         'tms_submission_datetime' => 'datetime',
         'tms_cancelled_datetime' => 'datetime',
-        'cancelled_datetime' => 'datetime',
         'submitted_date' => 'datetime',
         'tms_template_dictid_verified' => 'boolean',
         'is_hidden' => 'boolean',
@@ -218,20 +201,15 @@ class Order extends Model implements Auditable
         'shipment_designation' => 'sometimes|nullable',
         'shipment_direction' => 'sometimes|nullable',
         'one_way' => 'sometimes|nullable',
-        'yard_pre_pull' => 'sometimes|nullable',
-        'has_chassis' => 'sometimes|nullable',
         'unit_number' => 'sometimes|nullable',
         'equipment_size' => 'sometimes|nullable',
         'hazardous' => 'sometimes|nullable',
         'reference_number' => 'sometimes|nullable',
-        'rate_quote_number' => 'sometimes|nullable',
         'seal_number' => 'sometimes|nullable',
         'vessel' => 'sometimes|nullable',
         'voyage' => 'sometimes|nullable',
         'master_bol_mawb' => 'sometimes|nullable',
         'house_bol_hawb' => 'sometimes|nullable',
-        'estimated_arrival_utc' => 'sometimes|nullable',
-        'last_free_date_utc' => 'sometimes|nullable',
         'booking_number' => 'sometimes|nullable',
         'bill_of_lading' => 'sometimes|nullable',
         'bill_to_address_id' => 'sometimes|nullable|exists:t_addresses,id',
@@ -270,7 +248,6 @@ class Order extends Model implements Auditable
         'equipment_type_verified' => 'sometimes|nullable',
         'tms_submission_datetime' => 'sometimes|nullable',
         'tms_cancelled_datetime' => 'sometimes|nullable',
-        'cancelled_datetime' => 'sometimes|nullable',
         'interchange_count' => 'sometimes|nullable',
         'interchange_err_count' => 'sometimes|nullable',
         'tms_template_id' => 'sometimes|nullable',

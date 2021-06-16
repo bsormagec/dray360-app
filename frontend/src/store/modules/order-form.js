@@ -106,7 +106,7 @@ const actions = {
     let data
 
     if (saveAll) {
-      [error, data] = await updateAllOrders({ id: state.order.id, changes })
+      [error, data] = await updateAllOrders({ id: state.order.id, changes, path })
     } else {
       [error, data] = await updateOrderDetail({ id: state.order.id, changes })
     }

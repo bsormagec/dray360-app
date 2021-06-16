@@ -53,9 +53,26 @@
         outlined
         dense
       />
-      <v-text-field
+      <v-row>
+        <v-checkbox
+          v-model="abbySourceFieldFilter.old"
+          label="Old Fields"
+          class="mt-0 mb-2 mx-2"
+          dense
+          hide-details
+        />
+        <v-checkbox
+          v-model="abbySourceFieldFilter.new"
+          label="New Fields"
+          class="mt-0 mb-2 mx-2"
+          dense
+          hide-details
+        />
+      </v-row>
+      <v-autocomplete
         v-model="formFieldMap.abbyy_source_field"
         :class="{'field-mapping-form-field__changed': hasChanged('abbyy_source_field')}"
+        :items="abbySourceField"
         label="Abbyy Source Field"
         clearable
         outlined
@@ -187,6 +204,8 @@ import fieldMaps from '@/store/modules/field_maps'
 
 import cloneDeep from 'lodash/cloneDeep'
 
+import { abbySourceFileds } from '@/enums/app_objects_types'
+
 export default {
   name: 'FieldMappingForm',
 
@@ -217,6 +236,10 @@ export default {
       templateable: true,
       use_template_value: true,
     },
+    abbySourceFieldFilter: {
+      old: false,
+      new: false
+    }
   }),
 
   computed: {
@@ -225,11 +248,26 @@ export default {
     ...mapState(fieldMaps.moduleName, {
       fieldMaps: state => state.fieldMaps,
     }),
+
+    abbySourceField () {
+      return [
+        ...abbySourceFileds.preset_fields,
+        ...this.abbySourceFieldFilter.old ? abbySourceFileds.old_fields : [],
+        ...this.abbySourceFieldFilter.new ? abbySourceFileds.new_fields : []
+      ]
+    }
   },
 
   watch: {
     selectedField () {
       this.formFieldMap = { ...cloneDeep(this.fieldMaps[this.selectedField]) }
+      if (abbySourceFileds.old_fields.indexOf(this.selectedField) > -1) {
+        this.abbySourceFieldFilter.old = true
+        this.abbySourceFieldFilter.new = false
+      } else {
+        this.abbySourceFieldFilter.old = false
+        this.abbySourceFieldFilter.new = true
+      }
     }
   },
 

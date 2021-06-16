@@ -32,6 +32,7 @@ class OrdersListQuery extends QueryBuilder
                 't_orders.reference_number',
                 't_orders.is_hidden',
                 't_orders.preceded_by_order_id',
+                't_orders.variant_name',
             ])
             ->addSelect(['request_is_hidden' => DB::table('t_job_latest_state', 's_s')
                 ->selectRaw("count(*) as request_is_hidden")
@@ -57,6 +58,7 @@ class OrdersListQuery extends QueryBuilder
                 'ocrRequest.latestOcrRequestStatus:id,status,status_metadata',
                 'billToAddress:id,location_name',
                 'locks',
+                'company:id,name',
                 'tmsTemplate:id,item_key,item_display_name',
             ]);
 

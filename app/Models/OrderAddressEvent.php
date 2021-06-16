@@ -12,7 +12,6 @@ use App\Models\Traits\VerifiesUserSelectedAttributes;
 /**
  * @property \App\Models\Address $address
  * @property \App\Models\Order $order
- * @property string $address_schedule_description
  * @property integer $t_order_id
  * @property integer $t_address_id
  * @property boolean $t_address_verified
@@ -24,10 +23,6 @@ use App\Models\Traits\VerifiesUserSelectedAttributes;
  * @property boolean $is_dismount_event
  * @property boolean $is_drop_event
  * @property boolean $is_pickup_event
- * @property boolean $call_for_appointment
- * @property string $delivery_window_from_localtime
- * @property string $delivery_window_to_localtime
- * @property string delivery_instructions
  * @property string $unparsed_event_type
  */
 class OrderAddressEvent extends Model implements Auditable
@@ -45,11 +40,6 @@ class OrderAddressEvent extends Model implements Auditable
     protected $dates = ['deleted_at'];
 
     public $fillable = [
-        'address_schedule_description',
-        'call_for_appointment',
-        'delivery_instructions',
-        'delivery_window_from_localtime',
-        'delivery_window_to_localtime',
         'event_number',
         'is_deliver_event',
         'is_dismount_event',
@@ -69,7 +59,6 @@ class OrderAddressEvent extends Model implements Auditable
      * The attributes that should be casted to native types.
      */
     protected $casts = [
-        'address_schedule_description' => 'string',
         't_address_verified' => 'boolean',
         'event_number' => 'integer',
         'is_hook_event' => 'boolean',
@@ -78,7 +67,6 @@ class OrderAddressEvent extends Model implements Auditable
         'is_dismount_event' => 'boolean',
         'is_drop_event' => 'boolean',
         'is_pickup_event' => 'boolean',
-        'call_for_appointment' => 'boolean',
     ];
 
     /**
