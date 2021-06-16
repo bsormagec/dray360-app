@@ -28,7 +28,7 @@
         >
           <v-select
             v-model="filters.companyId"
-            :items="companies"
+            :items="filteredCompanies"
             item-value="id"
             item-text="name"
             name="company_id"
@@ -74,6 +74,7 @@
                 color="primary"
                 v-bind="attrs"
                 v-on="on"
+                @click="resetFilters"
               >
                 <v-icon dense>
                   mdi-reload
@@ -93,8 +94,8 @@
         </v-col>
         <v-col cols="auto">
           <OptionList
-            v-model="filters.showOnlyBilable"
-            :options="metrics"
+            v-model="billable"
+            :options="billableOptions"
             icon="mdi-filter-variant"
           />
         </v-col>
@@ -102,6 +103,7 @@
           <v-btn
             color="primary"
             small
+            :href="fileURL"
           >
             export
             <v-icon
@@ -125,7 +127,9 @@ import DateRange from './DateRange'
 import OptionList from './OptionList'
 import SidebarNavigationButton from '@/components/General/SidebarNavigationButton'
 
+import { metrics } from '@/enums/app_objects_types'
 import { metricsLabels } from '../enums/metrics_labels'
+import toParams from '@/utils/to_params'
 
 export default {
   name: 'Filters',
@@ -144,10 +148,15 @@ export default {
       required: true,
       default: () => ({
         dateRange: [],
-        companyId: null,
+        companyId: [],
       })
     },
-    hiddenCols: {
+    selectedHeaders: {
+      type: Array,
+      required: true,
+      default: () => ([])
+    },
+    onlyBillable: {
       type: Array,
       required: true,
       default: () => ([])
@@ -159,9 +168,10 @@ export default {
       dateRange: vm.initialFilters.dateRange,
       companyId: vm.initialFilters.companyId,
     },
-    cols: vm.hiddenCols,
-    metrics: [
-      { name: 'Show only bilable metrics' },
+    cols: vm.selectedHeaders,
+    billable: vm.onlyBillable,
+    billableOptions: [
+      { name: 'Show only billable metrics', value: true },
     ],
   }),
 
@@ -171,6 +181,24 @@ export default {
       delete labels.company_name
       return Object.keys(metricsLabels)
         .map(key => ({ name: metricsLabels[key].name, value: key }))
+    },
+
+    fileURL () {
+      const { dateRange, companyId } = this.filters
+      const params = toParams({
+        metric: metrics.companyDaily,
+        'filter[company_id]': companyId ? companyId.join(',') : null,
+        start_date: dateRange[0],
+        end_date: dateRange[1],
+        to_export: this.cols ? this.cols.join(',') : null
+      })
+      return `${process.env.VUE_APP_APP_URL}/api/metrics-export?${params}`
+    },
+
+    filteredCompanies () {
+      return this.companies.filter(
+        ({ name }) => !name.toLowerCase().includes('onboarding') && !name.toLowerCase().includes('demo')
+      )
     }
   },
 
@@ -184,14 +212,33 @@ export default {
 
     cols: function (newColArray) {
       this.$emit('colChange', newColArray)
+    },
+
+    billable: function (newVal) {
+      this.$emit('billableChange', newVal)
+    },
+
+    selectedHeaders: function (newVal) {
+      this.cols = newVal
+    },
+
+    onlyBillable: function (newVal) {
+      this.billable = newVal
     }
   },
 
   async beforeMount () {
     if (this.canViewOtherCompanies()) {
-      await this.fetchCompanies()
+      await this.fetchCompanies(true)
     }
   },
+
+  methods: {
+    resetFilters () {
+      this.$emit('resetFilters')
+      this.filters = this.initialFilters
+    }
+  }
 }
 </script>
 

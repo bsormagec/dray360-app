@@ -10,21 +10,27 @@
         class="audits__list pa-0"
       >
         <v-data-table
-          class="fixed-table"
-          :headers="tableHeaders"
-          :items="metrics"
+          :header-props="{ sortIcon: 'mdi-chevron-up'}"
+          :headers="displayCols"
           :items-per-page="metrics.length"
-          :hide-default-footer="true"
+          :items="metrics"
           :loading="loading"
+          :options.sync="options"
+          :server-items-length="metrics.length"
+          class="fixed-table"
           height="100%"
+          hide-default-footer
           loading-text="Loading... Please wait"
         >
           <template v-slot:top>
             <Filters
               :initial-filters="filters"
-              :hidden-cols="hiddenCols"
+              :selected-headers="selectedHeaders"
+              :only-billable="onlyBillable"
               @change="filtersChanged"
               @colChange="colChanged"
+              @billableChange="billableChange"
+              @resetFilters="resetFilters"
             />
           </template>
           <template
@@ -115,9 +121,15 @@ export default {
       dateRange: [],
       companyId: [],
     },
-    hiddenCols: [],
+    options: {
+      sortBy: ['company_name'],
+      sortDesc: [false]
+    },
+    sort: 'company_name',
     loading: false,
     metrics: [],
+    selectedHeaders: [],
+    onlyBillable: [],
   }),
 
   computed: {
@@ -125,21 +137,11 @@ export default {
       return Object.keys(metricsLabels).map(key => ({
         text: metricsLabels[key].name,
         align: 'start',
-        sortable: false,
         value: key,
         width: '220px',
-        formula: metricsLabels[key]?.formula ?? null
+        formula: metricsLabels[key]?.formula ?? null,
+        billable: metricsLabels[key]?.billable ?? null
       }))
-    },
-
-    areBilables () {
-      const arrayToReturn = []
-      Object.keys(metricsLabels).map((key) => {
-        if (metricsLabels[key]?.bilable) {
-          arrayToReturn.push(key)
-        }
-      })
-      return arrayToReturn
     },
 
     hasFormula () {
@@ -154,13 +156,23 @@ export default {
 
     colsTotal () {
       const obj = cloneDeep(this.metrics)
-      const arrayToReturn = []
-      Object.keys(metricsLabels).map(key => {
-        if (key !== 'company_name') {
-          arrayToReturn.push(obj.reduce((t, cur) => t + Number(cur[key]), 0))
-        }
-      })
-      return arrayToReturn
+      return this.displayCols
+        .filter(o => o.value !== 'company_name')
+        .map(col => obj.reduce((t, cur) => t + Number(cur[col.value]), 0))
+    },
+
+    displayCols () {
+      return [
+        {
+          text: 'Company Name',
+          align: 'start',
+          value: 'company_name',
+          width: '220px',
+          formula: null,
+          billable: null
+        },
+        ...this.tableHeaders.filter(o => this.selectedHeaders.indexOf(o.value) > -1)
+      ]
     }
   },
 
@@ -173,8 +185,34 @@ export default {
       }
     },
 
+    options: {
+      handler () {
+        const sortCol = this.options.sortBy.join()
+        const sortDesc = (this.options.sortDesc.join() === 'true')
+
+        this.sort = `${sortDesc ? '-' : ''}${sortCol !== '' ? sortCol : ''}`
+
+        if (sortCol === '') {
+          return
+        }
+
+        this.searchMetrics()
+      },
+      deep: true
+    },
+
     filters: {
       handler () {
+        const sortCol = this.options.sortBy.join()
+        // eslint-disable-next-line eqeqeq
+        const sortDesc = this.options.sortDesc.join() == 'true'
+
+        this.sort = `${sortDesc ? '-' : ''}${sortCol !== '' ? sortCol : ''}`
+
+        if (sortCol === '') {
+          return
+        }
+
         this.searchMetrics()
       },
       deep: true
@@ -191,6 +229,12 @@ export default {
     return this.setSidebar({ show: false })
   },
 
+  created () {
+    this.selectedHeaders = this.tableHeaders
+      .filter(o => o.value !== 'company_name')
+      .map(s => s.value)
+  },
+
   methods: {
     ...mapActions(utils.moduleName, [actionTypes.setSidebar]),
 
@@ -199,7 +243,26 @@ export default {
     },
 
     colChanged (newCols) {
-      this.hiddenCols = newCols
+      this.selectedHeaders = newCols
+    },
+
+    billableChange (newVal) {
+      this.onlyBillable = newVal
+      this.selectedHeaders = this.tableHeaders
+        .filter(o => newVal.length ? o.billable : o.value !== 'company_name')
+        .map(s => s.value)
+    },
+
+    resetFilters () {
+      this.filters.dateRange = this.getDefaultDateRange()
+      this.filters.companyId = []
+      this.onlyBillable = []
+      this.selectedHeaders = this.tableHeaders
+        .filter(o => o.value !== 'company_name')
+        .map(s => s.value)
+      this.options.sortBy = ['company_name']
+      this.options.sortDesc = [false]
+      this.sort = 'company_name'
     },
 
     getDefaultDateRange () {
@@ -210,13 +273,15 @@ export default {
     },
 
     async searchMetrics () {
+      this.metrics = []
       const { dateRange, companyId } = this.filters
       this.loading = true
       const [error, data] = await getAccountingMetrics({
         metric: metrics.companyDaily,
         'filter[company_id]': companyId ? companyId.join(',') : null,
         start_date: dateRange[0],
-        end_date: dateRange[1]
+        end_date: dateRange[1],
+        sort: this.sort
       })
       this.loading = false
       if (error !== undefined) {
@@ -224,7 +289,6 @@ export default {
         return
       }
       this.metrics = data.data
-      return { ...data }
     }
   }
 }
