@@ -19,41 +19,39 @@
             >
               <v-autocomplete
                 auto-select-first
-                :items="company_list()"
+                :items="companies"
                 item-text="name"
                 item-value="id"
-                label="Select Company"
-                solo
+                label="Company"
                 clearable
                 return-object
-                @change="(name)=> updateSelectedCompany(name)"
+                @change="companyChanged"
               />
               <v-autocomplete
                 auto-select-first
-                :items="variant_list()"
+                :items="variants"
                 item-text="abbyy_variant_name"
                 item-value="id"
-                label="Select Variant"
-                solo
+                label="Variant"
                 clearable
                 return-object
-                @change="(abbyy_variant_name)=> updateSelectedVariant(abbyy_variant_name)"
+                @change="variantChanged"
               />
-              <v-card
-                class="ma-auto"
-                tile
-              >
+              <v-card class="ma-auto">
                 <v-list>
-                  <v-subheader>{{ company_name }} - {{ variant_name }}</v-subheader>
-                  <v-list-item-group color="primary">
+                  <v-subheader>{{ company.name }} - {{ variant.abbyy_variant_name }}</v-subheader>
+                  <v-list-item-group
+                    color="primary"
+                    :value="companyVariantRuleToEdit"
+                    @change="item => ruleSelectedToEdit('company-variant', item)"
+                  >
                     <draggable
-                      v-model="draggable_rules"
+                      :value="companyVariantRules"
                       group="rules"
-                      @start="drag=true"
-                      @end="drag=false"
+                      @change="value => dragEnded('company-variant', value)"
                     >
                       <v-list-item
-                        v-for="(rule, i) in draggable_rules"
+                        v-for="(rule, i) in companyVariantRules"
                         :key="i"
                       >
                         <v-list-item-content class="draggable-item">
@@ -64,7 +62,7 @@
                           :disabled="!hasPermission('rules-editor-assign')"
                           color="primary"
                           :ripple="false"
-                          @click="removeFromCompanyVariant(i)"
+                          @click="removeFromCompanyVariant(rule)"
                         >
                           <v-icon>mdi-window-close</v-icon>
                         </v-btn>
@@ -72,26 +70,71 @@
                     </draggable>
                   </v-list-item-group>
                 </v-list>
+                <v-btn
+                  color="success"
+                  :disabled="!companyVariantSelected || !hasPermission('rules-editor-assign')"
+                  class="ma-4"
+                  @click="saveAssignment({ companyId: company.id, variantId: variant.id })"
+                >
+                  Save
+                </v-btn>
+                <v-btn
+                  :disabled="!companyVariantSelected"
+                  class="ma-4"
+                  @click="getCompanyVariantRules()"
+                >
+                  Cancel
+                </v-btn>
               </v-card>
-              <div class="card">
-                <div class="card-header">
-                  <v-btn
-                    color="success"
-                    :disabled="!companyVariantSelected || !hasPermission('rules-editor-assign')"
-                    class="ma-4"
-                    @click="saveRuleSequence()"
+              <v-card class="mt-8">
+                <v-list>
+                  <v-subheader>All Companies - {{ variant.abbyy_variant_name }}</v-subheader>
+                  <v-list-item-group
+                    color="primary"
+                    :value="variantRuleToEdit"
+                    @change="item => ruleSelectedToEdit('variant', item)"
                   >
-                    Save Variant
-                  </v-btn>
-                  <v-btn
-                    :disabled="!companyVariantSelected"
-                    class="ma-4"
-                    @click="cancelSequenceEdition()"
-                  >
-                    Cancel
-                  </v-btn>
-                </div>
-              </div>
+                    <draggable
+                      :value="variantRules"
+                      group="rules"
+                      @change="value => dragEnded('variant', value)"
+                    >
+                      <v-list-item
+                        v-for="(rule, i) in variantRules"
+                        :key="i"
+                      >
+                        <v-list-item-content class="draggable-item">
+                          <v-list-item-title v-text="rule.name" />
+                        </v-list-item-content>
+                        <v-btn
+                          icon
+                          :disabled="!hasPermission('rules-editor-assign')"
+                          color="primary"
+                          :ripple="false"
+                          @click="removeFromVariant(rule)"
+                        >
+                          <v-icon>mdi-window-close</v-icon>
+                        </v-btn>
+                      </v-list-item>
+                    </draggable>
+                  </v-list-item-group>
+                </v-list>
+                <v-btn
+                  color="success"
+                  :disabled="!variant.id || !hasPermission('rules-editor-assign')"
+                  class="ma-4"
+                  @click="saveAssignment({ companyId: null, variantId: variant.id })"
+                >
+                  Save
+                </v-btn>
+                <v-btn
+                  :disabled="!companyVariantSelected"
+                  class="ma-4"
+                  @click="getVariantRules()"
+                >
+                  Cancel
+                </v-btn>
+              </v-card>
             </v-col>
             <v-col
               cols="1"
@@ -107,11 +150,10 @@
                     height="600"
                     color="black"
                   >
-                    <div v-if="company_variant_rules().length">
+                    <div v-if="ruleToEdit">
                       <codemirror
                         ref="cmEditor"
-
-                        v-model="company_variant_rules()[selected_rule_index].code"
+                        v-model="ruleToEdit.code"
                         :options="cmOptions"
                       />
                     </div>
@@ -122,39 +164,10 @@
                 <v-col
                   cols="4"
                   sm="4"
-                >
-                  <v-menu
-                    v-if="company_variant_rules().length > 0"
-                    offset-y
-                  >
-                    <template v-slot:activator="{ on }">
-                      <v-btn
-                        color="primary"
-                        dark
-                        class="ml-12 mx-auto"
-                        v-on="on"
-                      >
-                        Select Rule to Edit
-                      </v-btn>
-                    </template>
-                    <v-list>
-                      <v-list-item
-                        v-for="(rule, index) in company_variant_rules()"
-                        :key="index"
-                        @click="updateSelectedIndex(index)"
-                      >
-                        <v-list-item-title>{{ rule.name }}</v-list-item-title>
-                      </v-list-item>
-                    </v-list>
-                  </v-menu>
-                </v-col>
-                <v-col
-                  cols="4"
-                  sm="4"
                   class="d-flex"
                 >
                   <v-text-field
-                    v-if="company_variant_rules().length > 0"
+                    v-if="ruleToEdit"
                     v-model="testOrderId"
                     placeholder="Order Id"
                     type="number"
@@ -164,11 +177,11 @@
                     hide-details
                   />
                   <v-btn
-                    v-if="company_variant_rules().length > 0"
+                    v-if="ruleToEdit"
                     :disabled="!testOrderId"
                     class="ml-4"
                     color="default"
-                    @click="testSingleRule(selected_rule_index)"
+                    @click="testSingleRule"
                   >
                     Test Rule
                   </v-btn>
@@ -178,18 +191,17 @@
                   sm="4"
                 >
                   <v-btn
-                    v-if="company_variant_rules().length > 0"
+                    v-if="ruleToEdit"
                     :disabled="!hasPermission('rules-editor-edit')"
                     color="success"
                     class="mr-4"
-                    @click="editRule(selected_rule_index)"
+                    @click="updateRule"
                   >
                     Save Rule
                   </v-btn>
                   <v-btn
-                    v-if="company_variant_rules().length > 0"
-                    disabled
-                    @click="cancelRuleEdition(selected_rule_index)"
+                    v-if="ruleToEdit"
+                    @click="cancelRuleEdit"
                   >
                     Cancel
                   </v-btn>
@@ -214,7 +226,7 @@
                   sm="6"
                 >
                   <v-tabs
-                    v-if="testing_output"
+                    v-if="testOutput"
                     grow
                   >
                     <v-tab>
@@ -229,7 +241,7 @@
                       :reverse-transition="false"
                     >
                       <v-btn
-                        v-if="testing_output"
+                        v-if="testOutput"
                         v-clipboard:copy="pasteAbleInput"
                         v-clipboard:success="onCopy"
                         v-clipboard:error="onError"
@@ -240,10 +252,10 @@
                         Copy to Clipboard
                       </v-btn>
                       <vue-json-pretty
-                        v-if="testing_output"
+                        v-if="testOutput"
                         :depth="0"
                         :path="'res'"
-                        :data="testing_output.input.original_fields"
+                        :data="testOutput.input.original_fields"
                         class="font-weight-black"
                       />
                     </v-tab-item>
@@ -253,7 +265,7 @@
                       :reverse-transition="false"
                     >
                       <v-btn
-                        v-if="testing_output"
+                        v-if="testOutput"
                         v-clipboard:copy="pasteAbleInput"
                         v-clipboard:success="onCopy"
                         v-clipboard:error="onError"
@@ -264,10 +276,10 @@
                         Copy to Clipboard
                       </v-btn>
                       <vue-json-pretty
-                        v-if="testing_output"
+                        v-if="testOutput"
                         :depth="0"
                         :path="'res'"
-                        :data="testing_output.input.original_output"
+                        :data="testOutput.input.original_output"
                         class="font-weight-black"
                       />
                     </v-tab-item>
@@ -282,7 +294,7 @@
                     class="px-2"
                   >
                     <v-row
-                      v-if="testing_output"
+                      v-if="testOutput"
                     >
                       <v-col
                         cols="1"
@@ -294,30 +306,30 @@
                         cols="1"
                         sm="2"
                       >
-                        <h6> {{ testing_output.status }} </h6>
+                        <h6> {{ testOutput.status }} </h6>
                       </v-col>
                       <v-col
                         cols="1"
                         sm="7"
                       >
-                        <h6> {{ testing_output.statusText }} </h6>
+                        <h6> {{ testOutput.statusText }} </h6>
                       </v-col>
                     </v-row>
                   </v-card>
 
                   <v-card
-                    v-if="testing_output"
+                    v-if="testOutput"
                     elevation="2"
                     class="pa-2 my-4"
                   >
                     <h6>JSON Data:</h6>
                     <vue-json-pretty
-                      v-if="testing_output"
-                      :data="testing_output.output"
-                      :show-length="showLength"
-                      :show-line="showLine"
-                      :collapsed-on-click-brackets="collapsedOnClickBrackets"
+                      v-if="testOutput"
                       class="font-weight-black"
+                      :data="testOutput.output"
+                      :show-length="false"
+                      show-line
+                      collapsed-on-click-brackets
                       @click="handleClick(...arguments, 'complexTree')"
                       @change="handleChange"
                     />
@@ -342,7 +354,7 @@
                 class="mx-auto"
                 color="yellow"
                 :disabled="!hasPermission('rules-editor-create')"
-                @click="addRuleToLibrary()"
+                @click="addNewRule"
               >
                 New Rule
               </v-btn>
@@ -353,7 +365,7 @@
             >
               <v-card-text>
                 <v-treeview
-                  :items="rulesList"
+                  :items="groupedRules"
                   activatable
                   :open-on-click="true"
                   transition
@@ -364,13 +376,24 @@
                     >
                       mdi-folder-network
                     </v-icon>
-                    <v-icon
-                      v-else
+                    <v-btn
+                      v-if="!item.index && companyVariantSelected"
+                      icon
+                      small
                       :disabled="!hasPermission('rules-editor-assign')"
-                      @click="addToCompanyVariant(item.id)"
+                      @click="assignTo('company-variant', item)"
                     >
-                      mdi-chevron-left
-                    </v-icon>
+                      <v-icon>mdi-chevron-left</v-icon>
+                    </v-btn>
+                    <v-btn
+                      v-if="!item.index && variant.id"
+                      small
+                      icon
+                      :disabled="!hasPermission('rules-editor-assign')"
+                      @click="assignTo('variant', item)"
+                    >
+                      <v-icon>mdi-chevron-double-left</v-icon>
+                    </v-btn>
                   </template>
 
                   <template v-slot:label="{ item }">
@@ -394,8 +417,7 @@
   </v-row>
 </template>
 <script>
-import { mapState, mapActions } from 'vuex'
-import { reqStatus } from '@/enums/req_status'
+import { mapState, mapActions, mapGetters } from 'vuex'
 import draggable from 'vuedraggable'
 import { codemirror } from 'vue-codemirror'
 import 'codemirror/lib/codemirror.css'
@@ -405,11 +427,13 @@ import 'codemirror/addon/selection/active-line.js'
 import 'codemirror/addon/edit/closebrackets.js'
 import 'vue-json-pretty/lib/styles.css'
 import VueJsonPretty from 'vue-json-pretty'
-import rulesLibrary, { types } from '@/store/modules/rules_editor'
+import rulesEditor, { actionTypes as rulesEditorActionsTypes } from '@/store/modules/rules_editor'
+import cloneDeep from 'lodash/cloneDeep'
 import get from 'lodash/get'
-import groupBy from 'lodash/groupBy'
 import utils, { actionTypes } from '@/store/modules/utils'
 import permissions from '@/mixins/permissions'
+import allCompanies from '@/mixins/all_companies'
+import { uuid } from '@/utils/uuid_valid_id'
 
 export default {
   name: 'RulesEditor',
@@ -420,19 +444,10 @@ export default {
     VueJsonPretty
   },
 
-  mixins: [permissions],
+  mixins: [permissions, allCompanies],
 
   data: () => ({
     testOrderId: null,
-    collapsedOnClickBrackets: true,
-    showLength: false,
-    showLine: true,
-    ...mapState(rulesLibrary.moduleName, {
-      company_variant_rules: state => state.company_variant_rules,
-      company_list: state => state.company_list,
-      variant_list: state => state.variant_list
-    }),
-
     cmOptions: {
       autoCloseBrackets: true,
       tabSize: 4,
@@ -445,54 +460,56 @@ export default {
       styleActiveLine: true,
     },
     draggable_rules: [],
-    selected_rule_index: 0,
-    company_id: null,
-    variant_id: null,
-    company_name: '',
-    variant_name: ''
+    companyVariantRuleToEdit: undefined,
+    variantRuleToEdit: undefined,
+    ruleToEdit: undefined,
+    company: { name: '', id: null },
+    variant: { name: '', id: null },
   }),
+
   computed: {
-    ...mapState(rulesLibrary.moduleName, {
-      testing_output: state => state.testing_output,
-      rules_library: state => state.rules_library
+    ...mapGetters(rulesEditor.moduleName, ['groupedRules']),
+    ...mapState(rulesEditor.moduleName, {
+      rules: state => state.rules,
+      variants: state => state.variants,
+      companyVariantRules: state => state.companyVariantRules,
+      variantRules: state => state.variantRules,
+      testOutput: state => state.testOutput,
     }),
+
     companyVariantSelected () {
-      return this.company_id !== null && this.variant_id !== null
+      return !!(this.company.id && this.variant.id)
     },
+
     pasteAbleInput: function () {
-      return this.testing_output ? JSON.stringify(get(this.testing_output, 'input.original_fields', {})).replace(/\n/g, '\\n') : ''
+      return this.testOutput ? JSON.stringify(get(this.testOutput, 'input.original_fields', {})).replace(/\n/g, '\\n') : ''
     },
-    codemirror () {
-      return this.$refs.cmEditor.codemirror
-    },
-    rulesList () {
-      const grouped = groupBy(this.rules_library, 'description')
-      const mappedRules = []
-
-      for (const key in grouped) {
-        mappedRules.push({ index: key, children: grouped[key], name: key })
-      }
-
-      return mappedRules
-    }
   },
+
   async beforeMount () {
     await this.fetchRules()
+    await this.fetchVariants()
+    await this.fetchCompanies()
+
     return this.setSidebar({ show: false })
   },
+
   methods: {
-    ...mapActions(rulesLibrary.moduleName,
-      [
-        types.getLibrary, types.getCompanyVariantRules,
-        types.setSequence, types.setRule, types.addRule,
-        types.setRuleCode, types.getTestingOutput,
-        types.getCompanyList, types.getVariantList
-      ]),
-    ...mapActions(utils.moduleName, {
-      setSidebar: actionTypes.setSidebar,
-      setConfirmationDialog: actionTypes.setConfirmationDialog,
-    }),
-    ...mapActions(utils.moduleName, [actionTypes.setSnackbar]),
+    ...mapActions(rulesEditor.moduleName, [
+      rulesEditorActionsTypes.fetchRules,
+      rulesEditorActionsTypes.fetchVariants,
+      rulesEditorActionsTypes.fetchCompanyVariantRules,
+      rulesEditorActionsTypes.fetchVariantRules,
+      rulesEditorActionsTypes.setCompanyVariantRules,
+      rulesEditorActionsTypes.setVariantRules,
+      rulesEditorActionsTypes.createRule,
+      rulesEditorActionsTypes.editRule,
+      rulesEditorActionsTypes.saveRulesAssigment,
+      rulesEditorActionsTypes.testRule,
+    ]),
+
+    ...mapActions(utils.moduleName, [actionTypes.setSnackbar, actionTypes.setSidebar, actionTypes.setConfirmationDialog]),
+
     onCopy: function (e) {
       console.log('copied')
     },
@@ -501,208 +518,191 @@ export default {
       console.log('Failed to copy texts')
     },
 
-    async fetchRulesLibrary () {
-      const status = await this[types.getLibrary]()
-
-      if (status === reqStatus.success) {
-        console.log('fetchRulesLibrary')
-      } else {
-        console.log('fetchRulesLibrary error')
-      }
-    },
-
-    async fetchCompanyList () {
-      const status = await this[types.getCompanyList]()
-
-      if (status === reqStatus.success) {
-        console.log('fetchCompanyList')
-      } else {
-        console.log('fetchCompanyList error')
-      }
-    },
-
-    async fetchVariantList () {
-      const status = await this[types.getVariantList]()
-      if (status === reqStatus.success) {
-        console.log('fetchVariantList')
-      } else {
-        console.log('fetchVariantList error')
-      }
-    },
-
-    async fetchVariantName () {
-      const status = await this[types.getVariantName](this.variant_id)
-
-      if (status === reqStatus.success) {
-        console.log('fetchVariantName')
-      } else {
-        console.log('fetchVariantName error')
-      }
-    },
-
-    async fetchCompanyVariantRules () {
-      this.updateSelectedIndex(0)
-      if (
-        this.company_id === null ||
-        this.variant_id === null ||
-        this.company_id === undefined ||
-        this.variant_id === undefined
-      ) {
+    ruleSelectedToEdit (type, item) {
+      if (item === undefined) {
+        this.variantRuleToEdit = undefined
+        this.companyVariantRuleToEdit = undefined
+        this.ruleToEdit = undefined
         return
       }
 
-      const pairIds = {
-        company_id: this.company_id,
-        variant_id: this.variant_id
-      }
+      let ruleId = null
 
-      const status = await this[types.getCompanyVariantRules](pairIds)
-
-      this.draggable_rules = this.company_variant_rules()
-
-      if (status === reqStatus.success) {
-        console.log('fetchCompanyVariantRules')
+      if (type === 'company-variant') {
+        this.companyVariantRuleToEdit = item
+        this.variantRuleToEdit = undefined
+        ruleId = this.companyVariantRules[this.companyVariantRuleToEdit].id
       } else {
-        console.log('fetchCompanyVariantRules error')
+        this.companyVariantRuleToEdit = undefined
+        this.variantRuleToEdit = item
+        ruleId = this.variantRules[this.variantRuleToEdit].id
       }
+      this.ruleToEdit = cloneDeep(this.rules.find(rule => rule.id === ruleId))
     },
 
-    async editRule (index) {
-      console.log('ruleId' + this.company_variant_rules()[index].id)
-      const ruleId = this.company_variant_rules()[index].id
-      const ruleName = this.company_variant_rules()[index].name
-      const ruleDescription = this.company_variant_rules()[index].description
-
-      const ruleData = {
-        code: this.company_variant_rules()[index].code,
-        description: ruleDescription,
-        id: ruleId,
-        name: ruleName
-      }
-
-      const status = await this[types.setRule](ruleData)
-
-      if (status === reqStatus.success) {
-        console.log('editRule')
-      } else {
-        console.log('editRule error')
-      }
-    },
-
-    async saveRuleSequence () {
-      const idsToSave = []
-      this.draggable_rules.forEach(rule => idsToSave.push(rule.id))
-
-      const sequenceData = {
-        company_id: this.company_id,
-        variant_id: this.variant_id,
-        rules: idsToSave
-      }
-
-      const status = await this[types.setSequence](sequenceData)
-
-      if (status === reqStatus.success) {
-        console.log('saveSequence')
-      } else {
-        console.log('saveSequence error')
-      }
-    },
-
-    async addRuleToLibrary () {
-      const newName = prompt('Please type the name of the new rule')
-      const newDescription = prompt('Rule description: events, direction, utility, etc.')
-
-      let newCode = null
-      if (newName !== null) {
-        newCode = prompt('Please paste the code for the rule')
-      }
-
-      const ruleData = {
-        name: newName,
-        description: newDescription,
-        code: newCode,
-        id: (this.rules_library.length + 1)
-      }
-
-      const status = await this[types.addRule](ruleData)
-
-      if (status === reqStatus.success) {
-        console.log('addRuleToLibrary')
-      } else {
-        console.log('addRuleToLibrary error')
-      }
-    },
-
-    addToCompanyVariant (ruleId) {
-      if (this.company_id === null || this.variant_id === null) {
-        this.setSnackbar({ message: 'Please select a company/variant pair first.' })
+    async getCompanyVariantRules () {
+      if (!this.companyVariantSelected) {
         return
       }
-      const rule = this.rules_library.find(rule => rule.id === ruleId)
 
+      const [error] = await this.fetchCompanyVariantRules({
+        company_id: this.company.id,
+        variant_id: this.variant.id,
+      })
+
+      if (error) {
+        this.setSnackbar({ message: 'There was an error while fetching the company variant rules' })
+      }
+    },
+
+    async getVariantRules () {
+      if (!this.variant.id) {
+        return
+      }
+
+      const [error] = await this.fetchVariantRules({ variant_id: this.variant.id })
+
+      if (error) {
+        this.setSnackbar({ message: 'There was an error while fetching the variant rules' })
+      }
+    },
+
+    async updateRule () {
+      if (!this.ruleToEdit) {
+        return
+      }
+
+      const [error] = await this.editRule(this.ruleToEdit)
+
+      if (error) {
+        this.setSnackbar({ message: 'There was an error updating the rule' })
+        return
+      }
+      this.setSnackbar({ message: 'Rule updated successfully' })
+    },
+
+    cancelRuleEdit () {
+      this.ruleToEdit = cloneDeep(this.rules.find(rule => rule.id === this.ruleToEdit.id))
+    },
+
+    async addNewRule () {
+      const name = prompt('Please type the name of the new rule')
+      if (name === null) {
+        return
+      }
+      const description = prompt('Rule description: events, direction, utility, etc.')
+      const code = prompt('Please paste the code for the rule')
+
+      const [error] = await this.createRule({
+        name,
+        description,
+        code,
+        id: uuid()
+      })
+
+      if (error) {
+        this.setSnackbar({ message: 'There was an error creating the rule' })
+        return
+      }
+      this.setSnackbar({ message: 'Rule created successfully' })
+    },
+
+    async saveAssignment (data) {
+      const [error] = await this.saveRulesAssigment(data)
+
+      if (error) {
+        this.setSnackbar({ message: 'There was an error saving the rules assignment' })
+        return
+      }
+      this.setSnackbar({ message: 'Rules assignment saved successfully' })
+    },
+
+    assignTo (type, rule) {
       this.setConfirmationDialog({
         open: true,
-        title: 'Add rule to company-variant',
-        text: `Do you want to add the rule '${rule.name}' to the selected company-variant?`,
+        title: `Add rule to ${type}`,
+        text: `Do you want to add the rule '${rule.name}' to the selected ${type}?`,
         confirmText: 'Add',
         cancelText: 'Cancel',
-        onConfirm: () => { this.draggable_rules.push(rule) },
+        onConfirm: () => {
+          const propertyName = type === 'company-variant' ? 'companyVariantRules' : 'variantRules'
+          const methodName = type === 'company-variant' ? 'setCompanyVariantRules' : 'setVariantRules'
+          const newAssignment = cloneDeep(this[propertyName])
+
+          newAssignment.push(rule)
+          this[methodName](newAssignment)
+        },
         onCancel: () => {}
       })
     },
 
-    removeFromCompanyVariant (i) {
-      if (this.draggable_rules.length >= 1) {
-        this.draggable_rules.splice(i, 1)
-        this.updateSelectedIndex(0)
-      } else {
+    dragEnded (type, { moved }) {
+      const propertyName = type === 'company-variant' ? 'companyVariantRules' : 'variantRules'
+      const methodName = type === 'company-variant' ? 'setCompanyVariantRules' : 'setVariantRules'
+      const newAssignment = cloneDeep(this[propertyName])
+      const temp = newAssignment[moved.newIndex]
+      newAssignment[moved.newIndex] = newAssignment[moved.oldIndex]
+      newAssignment[moved.oldIndex] = temp
+
+      this[methodName](newAssignment)
+    },
+
+    removeFromCompanyVariant (rule) {
+      if (this.companyVariantRules.length === 1) {
         this.setSnackbar({ message: 'There must be at least 1 rule' })
+        return
+      }
+
+      const index = this.companyVariantRules.findIndex(item => item.id === rule.id)
+
+      if (index === -1) return
+      const newAssignment = cloneDeep(this.companyVariantRules)
+      newAssignment.splice(index, 1)
+      this.setCompanyVariantRules(newAssignment)
+    },
+
+    removeFromVariant (variant) {
+      if (this.variantRules.length === 1) {
+        this.setSnackbar({ message: 'There must be at least 1 rule' })
+        return
+      }
+
+      const index = this.variantRules.findIndex(item => item.id === variant.id)
+
+      if (index === -1) return
+      const newAssignment = cloneDeep(this.variantRules)
+      newAssignment.splice(index, 1)
+      this.setVariantRules(newAssignment)
+    },
+
+    companyChanged (company) {
+      if (!company) {
+        this.company = { name: '', id: null }
+        this.setCompanyVariantRules([])
+        this.ruleSelectedToEdit('company-variant', undefined)
+      } else {
+        this.company = company
+      }
+
+      this.getCompanyVariantRules()
+    },
+
+    variantChanged (variant) {
+      if (!variant) {
+        this.variant = { abbyy_variant_name: '', id: null }
+        this.ruleSelectedToEdit('variant', undefined)
+        this.setCompanyVariantRules([])
+        this.setVariantRules([])
+      } else {
+        this.variant = variant
+        this.getCompanyVariantRules()
+        this.getVariantRules()
       }
     },
 
-    updateSelectedIndex (i) {
-      this.selected_rule_index = i
-      console.log('selected index: ' + i)
-    },
-
-    updateSelectedCompany (company) {
-      if (company !== undefined) {
-        this.company_name = company.name
-        this.company_id = company.id
-        this.fetchRules()
-      }
-    },
-
-    updateSelectedVariant (variant) {
-      if (variant !== undefined) {
-        this.variant_name = variant.abbyy_variant_name
-        this.variant_id = variant.id
-        this.fetchRules()
-      }
-    },
-
-    fetchRules () {
-      this.fetchRulesLibrary()
-      this.fetchCompanyVariantRules()
-      this.fetchCompanyList()
-      this.fetchVariantList()
-    },
-
-    async testSingleRule (index) {
-      const ruleToTest = this.draggable_rules[index]
-      const dataObject = { orderId: this.testOrderId, ruleToTest }
-      const status = await this[types.getTestingOutput](dataObject)
-      if (status === reqStatus.success) {
-        console.log('testSingleRule success')
-      }
-    },
-
-    async cancelRuleEdition (index) {
-      this.draggable_rules[index].code = await this[types.setRuleCode](index)
-    },
-
-    cancelSequenceEdition () {
-      this.fetchCompanyVariantRules()
+    async testSingleRule () {
+      const dataObject = { orderId: this.testOrderId, ruleToTest: this.ruleToEdit }
+      await this.testRule(dataObject)
     },
 
     handleClick (path, data, treeName = '') {

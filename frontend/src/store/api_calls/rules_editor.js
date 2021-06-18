@@ -1,31 +1,21 @@
 import axios from '@/store/api_calls/config/axios'
+import toParams from '@/utils/to_params'
 
-export const getLibrary = async () => axios.get('/api/ocr/rules')
-  .then(function (data) {
-    // console.log('data.data: ', data.data)
-    data = [undefined, data.data]
-    return data
-  })
-//   .then(data => [undefined, data.data])
-  .catch(e => [e])
+export const getRules = async () => axios.get('/api/ocr/rules').then(data => [undefined, data.data]).catch(e => [e])
 
-export const getCompanyVariantRules = async (companyId, variantId) => axios.get('/api/ocr/rules-assignment?company_id=' + companyId + '&variant_id=' + variantId).then(data => [undefined, data.data]).catch(e => [e])
+export const getCompanyVariantRules = async (params) => axios.get(`/api/ocr/rules-assignment?${toParams(params)}`).then(data => [undefined, data.data]).catch(e => [e])
 
 export const putEditRule = async (ruleData) => axios.put('/api/ocr/rules/' + ruleData.id, ruleData).then(data => [undefined, data.data]).catch(e => [e])
 
-export const postSaveRuleSequence = async (sequenceData) => axios.post('/api/ocr/rules-assignment', sequenceData).then(data => [undefined, data.data]).catch(e => [e])
+export const saveRulesAssigment = async (rulesAssignment) => axios.post('/api/ocr/rules-assignment', rulesAssignment).then(data => [undefined, data.data]).catch(e => [e])
 
-export const postAddRule = async (ruleData) => axios.post('/api/ocr/rules', ruleData).then(data => [undefined, data.data]).catch(e => [e])
-
-export const getRuleCode = async (index, companyId, variantId) => axios.get('/api/ocr/rules-assignment?company_id=' + companyId + '&variant_id=' + variantId, index).then(data => [undefined, data.data]).catch(e => [e])
-
-export const getCompanyList = async () => axios.get('/api/companies').then(data => [undefined, data.data.data]).catch(e => [e])
+export const createRule = async (rule) => axios.post('/api/ocr/rules', rule).then(data => [undefined, data.data]).catch(e => [e])
 
 // sort in alphabetical order is temporary.
 // will need a better way to classify and display separately
-export const getVariantList = async (params = {}) => axios.get('/api/ocr/variants?sort=abbyy_variant_name', { params }).then(data => [undefined, data.data.data]).catch(e => [e])
+export const getVariants = async (params = {}) => axios.get('/api/ocr/variants?sort=abbyy_variant_name', { params }).then(data => [undefined, data.data.data]).catch(e => [e])
 
-export const getTestingOutput = async (orderId, singleCompanyVariantRule) => axios.get('/api/orders/' + orderId)
+export const testRule = async (orderId, singleCompanyVariantRule) => axios.get('/api/orders/' + orderId)
   .then(function (response) {
     let testingOutput = null
 

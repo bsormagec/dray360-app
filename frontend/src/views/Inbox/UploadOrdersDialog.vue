@@ -109,7 +109,7 @@
 import UploadOrdersFileFields from './UploadOrdersFileFields'
 
 import { postUploadRequestFile } from '@/store/api_calls/requests'
-import { getVariantList } from '@/store/api_calls/rules_editor'
+import { getVariants } from '@/store/api_calls/rules_editor'
 import utils, { actionTypes as utilsActionTypes } from '@/store/modules/utils'
 import auth from '@/store/modules/auth'
 import { mapActions, mapState } from 'vuex'
@@ -258,7 +258,7 @@ export default {
         return
       }
 
-      const [, data] = await getVariantList({
+      const [, data] = await getVariants({
         'filter[company_id]': companyId,
         'filter[variant_type]': uniq(types).join(','),
         sort: 'description'
