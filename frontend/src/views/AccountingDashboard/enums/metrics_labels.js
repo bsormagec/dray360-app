@@ -30,7 +30,7 @@ export const metricsLabels = {
     billable: true,
     formula: '(Number of orders from datafile - number of orders that were updated before (with existing reference number) ) - number of datafile requests (excluding requests where all orders are updates)'
   },
-  J_pdf_orders_updateprior: { name: 'Additional CSV / Tabular Orders', billable: true, formula: 'Number pdf of orders with prior updates' },
+  J_pdf_orders_updateprior: { name: 'PDF Order Revisions', billable: true, formula: 'Number pdf of orders with prior updates' },
   K_datafile_orders_updateprior: { name: 'CSV/Tabular Order Revisions', billable: true, formula: 'Number datafile of orders with prior updates' },
   L_pdf_pages_overages: { name: 'PDF Pages Overages', billable: true, formula: 'Number of pdf pages  - (number of all pdf orders x 2)' },
   M_tms_shipments: { name: 'Number of TMS Shipments', formula: 'All TMS Shipments for the Company' },

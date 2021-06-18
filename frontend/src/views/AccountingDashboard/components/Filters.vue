@@ -190,7 +190,7 @@ export default {
         'filter[company_id]': companyId ? companyId.join(',') : null,
         start_date: dateRange[0],
         end_date: dateRange[1],
-        to_export: this.cols ? this.cols.join(',') : null
+        to_export: this.cols ? ['company_name'].concat(this.cols).join(',') : null
       })
       return `${process.env.VUE_APP_APP_URL}/api/metrics-export?${params}`
     },

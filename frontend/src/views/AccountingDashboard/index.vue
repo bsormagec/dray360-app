@@ -58,9 +58,14 @@
                 outlined
               >
                 <v-card-title color="primary">
-                  <span class="text-body-1">
-                    Formula
-                  </span>
+                  <div>
+                    <div class="text-body-1">
+                      Formula
+                    </div>
+                    <div class="text-caption">
+                      {{ header.value }}
+                    </div>
+                  </div>
                   <v-spacer />
                   <v-icon>mdi-puzzle</v-icon>
                 </v-card-title>
