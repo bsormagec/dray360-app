@@ -55,6 +55,11 @@ class OcrVariant extends Resource
             Text::make('Variant Type', 'variant_type')->sortable(),
             Text::make('Classifier', 'classifier')->sortable(),
             Text::make('Parser', 'parser')->sortable(),
+            Text::make('Abbyy Label 1', 'abbyy_label1')->sortable(),
+            Text::make('Abbyy Label 2', 'abbyy_label2')->sortable(),
+            Text::make('Abbyy Label 3', 'abbyy_label3')->sortable(),
+            Text::make('Abbyy Label 4', 'abbyy_label4')->sortable(),
+            Text::make('Abbyy Label 5', 'abbyy_label5')->sortable(),
             Code::make('Mapping', 'mapping')->json()->rules(['nullable', 'json']),
             Code::make('Company ID List (csv/edi uploads)', 'company_id_list')->json()->rules(['nullable', 'json']),
             // Code::make('Company ID List (enable admin review)', 'admin_review_company_id_list')->json()->rules(['nullable', 'json']), // no longer using the column
