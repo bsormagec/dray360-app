@@ -18,6 +18,7 @@
           :options.sync="options"
           :server-items-length="metrics.length"
           class="fixed-table"
+          calculate-widths
           height="100%"
           hide-default-footer
           loading-text="Loading... Please wait"
@@ -111,6 +112,7 @@ import Filters from './components/Filters'
 import { getAccountingMetrics } from '@/store/api_calls/accounting_metrics'
 import { metrics } from '@/enums/app_objects_types'
 import { metricsLabels } from './enums/metrics_labels'
+import { de } from 'date-fns/locale'
 
 export default {
   name: 'AccountingDashboard',
@@ -143,20 +145,18 @@ export default {
         text: metricsLabels[key].name,
         align: 'start',
         value: key,
-        width: '220px',
+        width: 'max-content',
         formula: metricsLabels[key]?.formula ?? null,
         billable: metricsLabels[key]?.billable ?? null
       }))
     },
 
     hasFormula () {
-      const arrayToReturn = []
-      Object.keys(metricsLabels).map((key) => {
-        if (metricsLabels[key]?.formula) {
-          arrayToReturn.push(key)
-        }
-      })
-      return arrayToReturn
+      return Object.keys(metricsLabels).filter((key) => metricsLabels[key]?.formula)
+    },
+
+    areBilable () {
+      return Object.keys(metricsLabels).filter(key => metricsLabels[key]?.billable)
     },
 
     colsTotal () {
@@ -249,6 +249,13 @@ export default {
 
     colChanged (newCols) {
       this.selectedHeaders = newCols
+      const a = cloneDeep(newCols)
+      const b = cloneDeep(this.areBilable)
+      if (a.sort().join(',') !== b.sort().join(',')) {
+        this.onlyBillable = []
+      } else {
+        this.onlyBillable = [true]
+      }
     },
 
     billableChange (newVal) {
@@ -313,6 +320,13 @@ export default {
     left: 0;
   }
 
+  table > thead > tr {
+    position: sticky;
+    top: 0;
+    z-index: 1;
+    background-color: var(--v-primary-base);
+  }
+
   table {
     height: 100%;
     background-color: rgba(var(--v-primary-base-rgb), .1);
@@ -321,6 +335,9 @@ export default {
         background-color: rgba(white, 0);
         color: white;
         transition: color .3s ease, background-color .3s ease;
+        i {
+          color: white;
+        }
       }
     }
     tbody > tr {
@@ -352,8 +369,7 @@ export default {
   }
 
   table > thead > tr > th {
-    padding-top: rem(32);
-    padding-bottom: rem(16);
+    height: rem(72);
     background-color: rgba(white, .95);
     border-right: thin solid #d6d6d6;
     border-bottom: none !important;
