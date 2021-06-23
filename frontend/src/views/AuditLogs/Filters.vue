@@ -90,7 +90,7 @@ import permissions from '@/mixins/permissions'
 import allCompanies from '@/mixins/all_companies'
 
 import { getUsers } from '@/store/api_calls/users'
-import { getVariantList } from '@/store/api_calls/rules_editor'
+import { getVariants } from '@/store/api_calls/rules_editor'
 
 import DateRange from '@/components/DateRange'
 
@@ -165,7 +165,7 @@ export default {
       this.users = data.data
     },
     async fetchVariants () {
-      const [error, data] = await getVariantList({
+      const [error, data] = await getVariants({
         'fields[t_ocrvariants]': 'abbyy_variant_name'
       })
 

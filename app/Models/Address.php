@@ -29,6 +29,14 @@ use Illuminate\Database\Eloquent\SoftDeletes;
  * @property string $address_concatenated_text
  * @property bool $is_terminal
  * @property bool $is_billable
+ * @property bool $is_cc_payor
+ * @property bool $is_cc_customer
+ * @property bool $is_cc_ssrr
+ * @property bool $is_cc_carrier
+ * @property bool $is_cc_consignee
+ * @property bool $is_cc_driver
+ * @property bool $is_cc_shipper
+ * @property bool $is_cc_vendor
  */
 class Address extends Model
 {
@@ -56,6 +64,14 @@ class Address extends Model
         'location_phone',
         'is_terminal',
         'is_billable',
+        'is_cc_payor',
+        'is_cc_customer',
+        'is_cc_ssrr',
+        'is_cc_carrier',
+        'is_cc_consignee',
+        'is_cc_driver',
+        'is_cc_shipper',
+        'is_cc_vendor',
     ];
 
     /**
@@ -66,17 +82,18 @@ class Address extends Model
     protected $casts = [
         'id' => 'integer',
         'latitude' => 'float',
-       'longitude' => 'float',
-       'is_billable' => 'boolean',
-       'is_terminal' => 'boolean',
+        'longitude' => 'float',
+        'is_billable' => 'boolean',
+        'is_terminal' => 'boolean',
+        'is_cc_payor' => 'boolean',
+        'is_cc_customer' => 'boolean',
+        'is_cc_ssrr' => 'boolean',
+        'is_cc_carrier' => 'boolean',
+        'is_cc_consignee' => 'boolean',
+        'is_cc_driver' => 'boolean',
+        'is_cc_shipper' => 'boolean',
+        'is_cc_vendor' => 'boolean',
     ];
-
-    /**
-     * Validation rules
-     *
-     * @var array
-     */
-    public static $rules = [];
 
     public function companies()
     {
@@ -135,6 +152,7 @@ class Address extends Model
                     'is_terminal' => strtoupper($data['terminationlocation']) == 'T',
                 ];
             case 'compcare':
+                $entityTypes = collect(Arr::get($data, 'Entity.EntityTypes'))->pluck('EntityType');
                 return [
                     'address_line_1' => $data['AddressLine1'],
                     'address_line_2' => $data['AddressLine2'],
@@ -146,6 +164,14 @@ class Address extends Model
                     'location_phone' => null,
                     'is_billable' => 0,
                     'is_terminal' => 0,
+                    'is_cc_payor' => $entityTypes->contains('Payor'),
+                    'is_cc_customer' => $entityTypes->contains('Customer'),
+                    'is_cc_ssrr' => $entityTypes->contains('SSRR'),
+                    'is_cc_carrier' => $entityTypes->contains('Carrier'),
+                    'is_cc_consignee' => $entityTypes->contains('Consignee'),
+                    'is_cc_driver' => $entityTypes->contains('Driver'),
+                    'is_cc_shipper' => $entityTypes->contains('Shipper'),
+                    'is_cc_vendor' => $entityTypes->contains('Vendor'),
                 ];
             case 'itg-cargowise':
                 return [
@@ -178,6 +204,7 @@ class Address extends Model
                 $this->is_billable == (strtoupper($address['co_allow_billing']) == 'T') &&
                 $this->is_terminal == (strtoupper($address['co_allow_billing']) == 'T');
             case 'compcare':
+                $entityTypes = collect(Arr::get($address, 'Entity.EntityTypes'))->pluck('EntityType');
                 return $this->address_line_1 == $address['AddressLine1'] &&
                 $this->address_line_2 == $address['AddressLine2'] &&
                 $this->city == (Arr::get($address, 'City.CityName') ?? $address['CityName']) &&
@@ -187,7 +214,15 @@ class Address extends Model
                 $this->location_name == null &&
                 $this->location_phone == null &&
                 $this->is_billable == 0 &&
-                $this->is_terminal == 0;
+                $this->is_terminal == 0 &&
+                $this->is_cc_payor == $entityTypes->contains('Payor') &&
+                $this->is_cc_customer == $entityTypes->contains('Customer') &&
+                $this->is_cc_ssrr == $entityTypes->contains('SSRR') &&
+                $this->is_cc_carrier == $entityTypes->contains('Carrier') &&
+                $this->is_cc_consignee == $entityTypes->contains('Consignee') &&
+                $this->is_cc_driver == $entityTypes->contains('Driver') &&
+                $this->is_cc_shipper == $entityTypes->contains('Shipper') &&
+                $this->is_cc_vendor == $entityTypes->contains('Vendor');
             case 'itg-cargowise':
                 return $this->address_line_1 == $address['address_line_1'] &&
                 $this->address_line_2 == $address['address_line_2'] &&

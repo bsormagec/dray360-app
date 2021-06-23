@@ -49,12 +49,17 @@ class OcrVariant extends Resource
     {
         return [
             ID::make(__('ID'), 'id')->sortable(),
-            Text::make('Abbyy variant id', 'abbyy_variant_id')->sortable(),
-            Text::make('Abbyy variant name', 'abbyy_variant_name')->sortable(),
-            Text::make('Description', 'description')->sortable(),
+            Text::make('Abbyy variant id', 'abbyy_variant_id')->sortable()->rules(['required']),
+            Text::make('Abbyy variant name', 'abbyy_variant_name')->sortable()->rules(['required']),
+            Text::make('Description', 'description')->sortable()->rules(['required']),
             Text::make('Variant Type', 'variant_type')->sortable(),
             Text::make('Classifier', 'classifier')->sortable(),
             Text::make('Parser', 'parser')->sortable(),
+            Text::make('Abbyy Label 1', 'abbyy_label1')->sortable(),
+            Text::make('Abbyy Label 2', 'abbyy_label2')->sortable(),
+            Text::make('Abbyy Label 3', 'abbyy_label3')->sortable(),
+            Text::make('Abbyy Label 4', 'abbyy_label4')->sortable(),
+            Text::make('Abbyy Label 5', 'abbyy_label5')->sortable(),
             Code::make('Mapping', 'mapping')->json()->rules(['nullable', 'json']),
             Code::make('Company ID List (csv/edi uploads)', 'company_id_list')->json()->rules(['nullable', 'json']),
             // Code::make('Company ID List (enable admin review)', 'admin_review_company_id_list')->json()->rules(['nullable', 'json']), // no longer using the column

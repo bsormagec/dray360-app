@@ -60,11 +60,20 @@ class CompanyOCRVariantOCRRule extends Model
         return $this->belongsTo(OCRVariant::class, 't_ocrvariant_id');
     }
 
-    public function scopeAssignedTo(Builder $query, int $companyId, int $variantId): Builder
+    public function scopeAssignedTo(Builder $query, ?int $companyId, int $variantId): Builder
     {
-        return $query->where([
-            't_company_id' => $companyId,
-            't_ocrvariant_id' => $variantId,
-        ]);
+        return $query->when(
+            $companyId,
+            function ($query) use ($companyId, $variantId) {
+                return $query->where([
+                    't_company_id' => $companyId,
+                    't_ocrvariant_id' => $variantId,
+                ]);
+            },
+            function ($query) use ($variantId) {
+                return $query->whereNull('t_company_id')
+                    ->where('t_ocrvariant_id', $variantId);
+            }
+        );
     }
 }

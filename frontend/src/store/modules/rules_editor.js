@@ -1,135 +1,179 @@
+import cloneDeep from 'lodash/cloneDeep'
 import { reqStatus } from '@/enums/req_status'
-import { getLibrary, getCompanyVariantRules, putEditRule, postSaveRuleSequence, postAddRule, getRuleCode, getTestingOutput, getVariantList, getCompanyList } from '@/store/api_calls/rules_editor'
+import groupBy from 'lodash/groupBy'
+import { getRules, getCompanyVariantRules, putEditRule, saveRulesAssigment, createRule, testRule, getVariants } from '@/store/api_calls/rules_editor'
 
-export const types = {
-  setLibrary: 'SET_LIBRARY',
-  getLibrary: 'GET_LIBRARY',
-  getCompanyVariantRules: 'GET_COMPANY_VARIANT_RULES',
-  setCompanyVariantRules: 'SET_COMPANY_VARIANT_RULES',
+export const mutationTypes = {
+  setRules: 'SET_RULES',
   setRule: 'SET_RULE',
-  setSequence: 'SET_SEQUENCE',
-  addRule: 'ADD_RULE',
-  setRuleCode: 'SET_RULE_CODE',
-  getTestingOutput: 'GET_TESTING_OUTPUT',
-  setTestingOutput: 'SET_TESTING_OUTPUT',
-  getCompanyList: 'GET_COMPANY_LIST',
-  setCompanyList: 'SET_COMPANY_LIST',
-  getVariantList: 'GET_VARIANT_LIST',
-  setVariantList: 'SET_VARIANT_LIST'
+  setCompanyVariantRules: 'SET_COMPANY_VARIANT_RULES',
+  setVariantRules: 'SET_VARIANT_RULES',
+  setVariants: 'SET_VARIANTS',
+  setTestOutput: 'SET_TEST_OUTPUT',
+}
+
+export const actionTypes = {
+  fetchRules: 'fetchRules',
+  fetchVariants: 'fetchVariants',
+  fetchCompanyVariantRules: 'fetchCompanyVariantRules',
+  fetchVariantRules: 'fetchVariantRules',
+  setCompanyVariantRules: 'setCompanyVariantRules',
+  setVariantRules: 'setVariantRules',
+  createRule: 'createRule',
+  editRule: 'editRule',
+  saveRulesAssigment: 'saveRulesAssigment',
+  testRule: 'testRule',
 }
 
 const initialState = {
-  rules_library: [],
-  company_variant_rules: [],
-  testing_output: null,
-  company_list: [],
-  variant_list: []
+  rules: [],
+  companyVariantRules: [],
+  variantRules: [],
+  variants: [],
+  testOutput: null,
 }
 
 const mutations = {
-  [types.setLibrary] (state, { libraryData }) {
-    state.rules_library = libraryData
+  [mutationTypes.setRules] (state, { rules }) {
+    state.rules = rules
   },
-  [types.setCompanyVariantRules] (state, { companyVariantData }) {
-    console.log('setCompanyVariantRules')
-    state.company_variant_rules = companyVariantData
+  [mutationTypes.setRule] (state, { rule }) {
+    const index = state.rules.findIndex(item => item.id === rule.id)
+    const newRules = cloneDeep(state.rules)
+
+    if (index === -1) {
+      newRules.push(rule)
+    } else {
+      newRules[index] = rule
+    }
+
+    state.rules = newRules
   },
-  [types.setRule] (state, { ruleData, i }) {
-    state.company_variant_rules[i] = ruleData
+  [mutationTypes.setCompanyVariantRules] (state, { companyVariantRules }) {
+    state.companyVariantRules = companyVariantRules
   },
-  [types.setSequence] (state, { sequenceData }) {
-    state.company_variant_rules = sequenceData
+  [mutationTypes.setVariantRules] (state, { variantRules }) {
+    state.variantRules = variantRules
   },
-  [types.addRule] (state, { ruleData }) {
-    state.rules_library.push(ruleData)
+  [mutationTypes.setVariants] (state, { variants }) {
+    state.variants = variants
   },
-  [types.setTestingOutput] (state, { testingOutput }) {
-    state.testing_output = testingOutput
+  [mutationTypes.setTestOutput] (state, { testOutput }) {
+    state.testOutput = testOutput
   },
-  [types.setCompanyList] (state, { companyList }) {
-    state.company_list = companyList
-  },
-  [types.setVariantList] (state, { variantList }) {
-    state.variant_list = variantList
-  }
 }
 
 const actions = {
-  async [types.getLibrary] ({ commit }) {
-    const [error, data] = await getLibrary()
+  async [actionTypes.fetchRules] ({ commit }) {
+    const [error, data] = await getRules()
 
-    if (error) return reqStatus.error
+    if (!error) {
+      commit(mutationTypes.setRules, { rules: data.data })
+    }
 
-    commit(types.setLibrary, { libraryData: data.data })
+    return [error, data]
+  },
+
+  async [actionTypes.fetchVariants] ({ commit }) {
+    const [error, data] = await getVariants()
+
+    if (!error) {
+      commit(mutationTypes.setVariants, { variants: data })
+    }
+
+    return [error, data]
+  },
+
+  async [actionTypes.createRule] ({ commit }, ruleData) {
+    const [error, data] = await createRule(ruleData)
+
+    if (!error) {
+      commit(mutationTypes.setRule, { rule: data })
+    }
+
+    return [error, data]
+  },
+
+  async [actionTypes.fetchCompanyVariantRules] ({ commit }, params) {
+    const [error, data] = await getCompanyVariantRules(params)
+
+    if (!error) {
+      commit(mutationTypes.setCompanyVariantRules, { companyVariantRules: data.data })
+    }
+
+    return [error, data]
+  },
+
+  async [actionTypes.fetchVariantRules] ({ commit }, params) {
+    const [error, data] = await getCompanyVariantRules(params)
+
+    if (!error) {
+      commit(mutationTypes.setVariantRules, { variantRules: data.data })
+    }
+
+    return [error, data]
+  },
+
+  async [actionTypes.editRule] ({ commit }, rule) {
+    const [error] = await putEditRule(rule)
+
+    if (!error) {
+      commit(mutationTypes.setRule, { rule })
+    }
+
+    return [error]
+  },
+
+  async [actionTypes.saveRulesAssigment] ({ state }, { companyId, variantId }) {
+    let dataToUse = null
+    if (companyId && variantId) {
+      dataToUse = state.companyVariantRules
+    } else if (!companyId && variantId) {
+      dataToUse = state.variantRules
+    }
+
+    const [error, data] = await saveRulesAssigment({
+      company_id: companyId,
+      variant_id: variantId,
+      rules: dataToUse.map(item => item.id)
+    })
+
+    return [error, data]
+  },
+
+  [actionTypes.setCompanyVariantRules] ({ commit }, companyVariantRules) {
+    commit(mutationTypes.setCompanyVariantRules, { companyVariantRules })
+  },
+
+  [actionTypes.setVariantRules] ({ commit }, variantRules) {
+    commit(mutationTypes.setVariantRules, { variantRules })
+  },
+
+  async [actionTypes.testRule] ({ commit }, dataObject) {
+    const testOutput = await testRule(dataObject.orderId, dataObject.ruleToTest)
+    commit(mutationTypes.setTestOutput, { testOutput })
     return reqStatus.success
   },
-  async [types.getCompanyVariantRules] ({ commit }, pairIds) {
-    const [error, data] = await getCompanyVariantRules(pairIds.company_id, pairIds.variant_id)
+}
 
-    if (error) return reqStatus.error
+const getters = {
+  groupedRules (state) {
+    const grouped = groupBy(state.rules, 'description')
+    const mappedRules = []
 
-    commit(types.setCompanyVariantRules, { companyVariantData: data.data })
-    return reqStatus.success
+    for (const key in grouped) {
+      mappedRules.push({ index: key, children: grouped[key], name: key })
+    }
+
+    return mappedRules
   },
-  async [types.setRule] ({ commit }, ruleData) {
-    const [error] = await putEditRule(ruleData)
-
-    if (error) return reqStatus.error
-
-    commit(types.setRule, { ruleData })
-    return reqStatus.success
-  },
-  async [types.setRuleCode] ({ commit }, i) {
-    const ruleCodeData = await getRuleCode(i)
-
-    const data = ruleCodeData[1].data[i].code
-    console.log('data to commit:', data)
-
-    return data
-  },
-  async [types.setSequence] ({ commit }, sequenceData) {
-    const [error] = await postSaveRuleSequence(sequenceData)
-
-    if (error) return reqStatus.error
-
-    commit(types.setSequence, { sequenceData })
-
-    return reqStatus.success
-  },
-  async [types.addRule] ({ commit }, ruleData) {
-    const [error, data] = await postAddRule(ruleData)
-
-    if (error) return reqStatus.error
-
-    commit(types.addRule, { ruleData: data })
-    return reqStatus.success
-  },
-  async [types.getTestingOutput] ({ commit }, dataObject) {
-    const data = await getTestingOutput(dataObject.orderId, dataObject.ruleToTest)
-    commit(types.setTestingOutput, { testingOutput: data })
-    return reqStatus.success
-  },
-  async [types.getCompanyList] ({ commit }) {
-    const [error, data] = await getCompanyList()
-    if (error) return error.message
-
-    commit(types.setCompanyList, { companyList: data })
-    return reqStatus.success
-  },
-  async [types.getVariantList] ({ commit }) {
-    const [error, data] = await getVariantList()
-
-    if (error) return error.message
-
-    commit(types.setVariantList, { variantList: data })
-    return reqStatus.success
-  }
 }
 
 export default {
   moduleName: 'RULES_LIBRARY',
   namespaced: true,
   state: initialState,
+  getters,
   mutations,
   actions
 }

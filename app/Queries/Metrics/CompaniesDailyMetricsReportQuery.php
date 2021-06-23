@@ -154,7 +154,7 @@ class CompaniesDailyMetricsReportQuery extends QueryBuilder
                 'N_requests_deleted' => 'Deleted Requests',
                 'O_pdf_orders_including_deleted' => 'Total Number of PDF Orders',
                 'P_datafile_orders_including_deleted' => 'Total Number of CSV Orders',
-                'Q_pdf_pages_including_deleted' => 'Total Number of PDF Pages Formula',
+                'Q_pdf_pages_including_deleted' => 'Total Number of PDF Pages',
             ];
 
             return collect($model->toArray())

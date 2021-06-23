@@ -64,7 +64,7 @@ import { mapActions, mapState } from 'vuex'
 import fieldMaps, { types as fieldMapsTypes } from '@/store/modules/field_maps'
 import orders, { types as ordersTypes } from '@/store/modules/orders'
 
-import { getVariantList } from '@/store/api_calls/rules_editor'
+import { getVariants } from '@/store/api_calls/rules_editor'
 import { getTmsProviders } from '@/store/api_calls/tms_providers'
 
 export default {
@@ -147,7 +147,7 @@ export default {
     },
 
     async fetchOcrVariants () {
-      const [error, data] = await getVariantList()
+      const [error, data] = await getVariants()
 
       if (error !== undefined) {
         return
