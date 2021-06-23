@@ -35,7 +35,7 @@
             />
           </template>
           <template
-            v-for="(i,item) in hasFormula"
+            v-for="(item, i) in hasFormula"
             v-slot:[`header.${item}`]="{ header }"
           >
             <span :key="i">{{ header.text }}</span>
