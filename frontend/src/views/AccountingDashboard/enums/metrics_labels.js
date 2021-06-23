@@ -21,7 +21,7 @@ export const metricsLabels = {
   F_requests_rejected: { name: 'Rejected Requests', formula: 'Sum of all rejected requests for the company' },
   G_requests: { name: 'Total Number of Requests', formula: 'All requests for the company. Formerly called <strong>“Number of requests”</strong>' },
   H_pdf_orders_less_requests_anyupdateprior: {
-    name: 'Total Number of Requests',
+    name: 'Additional PDF Orders',
     billable: true,
     formula: '(Number of orders from pdf - number of orders that were updated before (with existing reference number) ) - number of pdf requests (excluding requests where all orders are updates)'
   },

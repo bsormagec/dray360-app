@@ -35,10 +35,10 @@
             />
           </template>
           <template
-            v-for="item in hasFormula"
+            v-for="(i,item) in hasFormula"
             v-slot:[`header.${item}`]="{ header }"
           >
-            {{ header.text }}
+            <span :key="i">{{ header.text }}</span>
             <v-menu
               :key="item.value"
               open-on-hover
@@ -145,7 +145,7 @@ export default {
         text: metricsLabels[key].name,
         align: 'start',
         value: key,
-        width: 'max-content',
+        width: '220px',
         formula: metricsLabels[key]?.formula ?? null,
         billable: metricsLabels[key]?.billable ?? null
       }))
@@ -376,6 +376,18 @@ export default {
     color: var(--v-dark-base);
     font-weight: 400;
     position: relative;
+
+    & > span {
+      display: inline-flex;
+      padding-right: rem(22);
+    }
+
+    & > i {
+      position: absolute;
+      right: rem(17);
+      top: 50%;
+      transform: translateY(-50%);
+    }
 
     &:nth-child(1) {
       background-color: var(--v-accent-lighten4);
