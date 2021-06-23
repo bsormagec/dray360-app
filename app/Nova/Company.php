@@ -59,7 +59,10 @@ class Company extends Resource
     {
         return [
             ID::make('Id', 'id')->sortable(),
-            Text::make('Name'),
+            Text::make('Name')->rules([
+                'required',
+                'alpha_num',
+            ]),
             Text::make('Intake Email', 'email_intake_address')
                 ->readonly(function ($request) {
                     return $request->isCreateOrAttachRequest();

@@ -10,6 +10,7 @@ use Laravel\Nova\Fields\Select;
 use App\Models\User as UserModel;
 use Laravel\Nova\Fields\BelongsTo;
 use App\Models\Company as CompanyModel;
+use App\Nova\Filters\DictionaryItemTypeFilter;
 use App\Models\TMSProvider as TmsProviderModel;
 use App\Nova\Filters\BelongsTo as BelongsToFilter;
 
@@ -94,6 +95,7 @@ class DictionaryItem extends Resource
             new BelongsToFilter('Company', 'company', CompanyModel::class, 'name'),
             new BelongsToFilter('Tms Provider', 'tmsProvider', TmsProviderModel::class, 'name'),
             new BelongsToFilter('User', 'user', UserModel::class, 'name'),
+            new DictionaryItemTypeFilter(),
         ];
     }
 

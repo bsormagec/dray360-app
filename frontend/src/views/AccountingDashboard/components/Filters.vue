@@ -86,17 +86,19 @@
         </v-col>
         <v-col cols="auto">
           <OptionList
-            v-model="cols"
+            :value="selectedHeaders"
             :options="computedColumns"
             icon="mdi-view-column"
             title="Show and hide columns"
+            @input="newVal => $emit('colChange', newVal)"
           />
         </v-col>
         <v-col cols="auto">
           <OptionList
-            v-model="billable"
+            :value="onlyBillable"
             :options="billableOptions"
             icon="mdi-filter-variant"
+            @input="newVal => $emit('billableChange', newVal)"
           />
         </v-col>
         <v-col cols="auto">
@@ -168,8 +170,6 @@ export default {
       dateRange: vm.initialFilters.dateRange,
       companyId: vm.initialFilters.companyId,
     },
-    cols: vm.selectedHeaders,
-    billable: vm.onlyBillable,
     billableOptions: [
       { name: 'Show only billable metrics', value: true },
     ],
@@ -190,7 +190,7 @@ export default {
         'filter[company_id]': companyId ? companyId.join(',') : null,
         start_date: dateRange[0],
         end_date: dateRange[1],
-        to_export: this.cols ? this.cols.join(',') : null
+        to_export: this.selectedHeaders ? ['company_name'].concat(this.selectedHeaders).join(',') : null
       })
       return `${process.env.VUE_APP_APP_URL}/api/metrics-export?${params}`
     },
@@ -210,21 +210,6 @@ export default {
       deep: true,
     },
 
-    cols: function (newColArray) {
-      this.$emit('colChange', newColArray)
-    },
-
-    billable: function (newVal) {
-      this.$emit('billableChange', newVal)
-    },
-
-    selectedHeaders: function (newVal) {
-      this.cols = newVal
-    },
-
-    onlyBillable: function (newVal) {
-      this.billable = newVal
-    }
   },
 
   async beforeMount () {

@@ -50,13 +50,43 @@ class OCRRulesAssignmentControllerTest extends TestCase
     }
 
     /** @test */
+    public function it_should_update_the_rules_associated_with_only_variant()
+    {
+        $this->seed(OCRRulesAssignmentSeed::class);
+        $ocrVariant = OCRVariant::first(['id']);
+        $ocrRules = OCRRule::all(['id']);
+
+        $ocrRuleAssignment = new CompanyOCRVariantOCRRule();
+        $ocrRuleAssignment->ocrRule()->associate($ocrRules->first());
+        $ocrRuleAssignment->ocrVariant()->associate($ocrVariant);
+        $ocrRuleAssignment->rule_sequence = 0;
+        $ocrRuleAssignment->save();
+
+        $this->postJson(route('ocr.rules-assignment.store'), [
+                'variant_id' => $ocrVariant->id,
+                'rules' => $ocrRules->pluck('id'),
+            ])
+            ->assertStatus(Response::HTTP_CREATED)
+            ->assertJsonCount($ocrRules->count(), 'data');
+
+        $this->assertCount($ocrRules->count(), CompanyOCRVariantOCRRule::assignedTo(
+            null,
+            $ocrVariant->id
+        )->get());
+        $this->assertNotNull(CompanyOCRVariantOCRRule::assignedTo(
+            null,
+            $ocrVariant->id
+        )->first()->created_at);
+    }
+
+    /** @test */
     public function it_should_fail_validation()
     {
         $this->seed(OCRRulesAssignmentSeed::class);
         $ocrVariant = OCRVariant::first(['id']);
         $company = Company::first(['id']);
         $ocrRules = OCRRule::all(['id']);
-        $toValidate = ['variant_id', 'company_id', 'rules'];
+        $toValidate = ['variant_id', 'rules'];
 
         foreach ($toValidate as $fieldToValidate) {
             $data = [
@@ -110,6 +140,24 @@ class OCRRulesAssignmentControllerTest extends TestCase
             ->orderBy('rule_sequence')
             ->get()
             ->pluck('ocrRule');
+        $ocrRule = OCRRule::first(['id']);
+        $ocrRuleAssignment = new CompanyOCRVariantOCRRule();
+        $ocrRuleAssignment->ocrRule()->associate($ocrRule);
+        $ocrRuleAssignment->ocrVariant()->associate($ocrVariant);
+        $ocrRuleAssignment->rule_sequence = 0;
+        $ocrRuleAssignment->save();
+
+        $this->getJson(route('ocr.rules-assignment.index', [
+                'variant_id' => $ocrVariant->id,
+            ]))
+            ->assertStatus(200)
+            ->assertJsonCount(1, 'data')
+            ->assertJsonStructure([
+                'data' => [
+                    '*' => ['name', 'code', 'description']
+                ]
+            ])
+            ->assertJsonPath('data.0.id', $ocrRule->id);
 
         $this->getJson(route('ocr.rules-assignment.index', [
                 'company_id' => $companies->first()->id,

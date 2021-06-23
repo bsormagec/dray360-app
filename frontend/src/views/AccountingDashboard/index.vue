@@ -18,6 +18,7 @@
           :options.sync="options"
           :server-items-length="metrics.length"
           class="fixed-table"
+          calculate-widths
           height="100%"
           hide-default-footer
           loading-text="Loading... Please wait"
@@ -34,10 +35,10 @@
             />
           </template>
           <template
-            v-for="item in hasFormula"
+            v-for="(i,item) in hasFormula"
             v-slot:[`header.${item}`]="{ header }"
           >
-            {{ header.text }}
+            <span :key="i">{{ header.text }}</span>
             <v-menu
               :key="item.value"
               open-on-hover
@@ -58,9 +59,14 @@
                 outlined
               >
                 <v-card-title color="primary">
-                  <span class="text-body-1">
-                    Formula
-                  </span>
+                  <div>
+                    <div class="text-body-1">
+                      Formula
+                    </div>
+                    <div class="text-caption">
+                      {{ header.value }}
+                    </div>
+                  </div>
                   <v-spacer />
                   <v-icon>mdi-puzzle</v-icon>
                 </v-card-title>
@@ -106,6 +112,7 @@ import Filters from './components/Filters'
 import { getAccountingMetrics } from '@/store/api_calls/accounting_metrics'
 import { metrics } from '@/enums/app_objects_types'
 import { metricsLabels } from './enums/metrics_labels'
+import { de } from 'date-fns/locale'
 
 export default {
   name: 'AccountingDashboard',
@@ -145,13 +152,11 @@ export default {
     },
 
     hasFormula () {
-      const arrayToReturn = []
-      Object.keys(metricsLabels).map((key) => {
-        if (metricsLabels[key]?.formula) {
-          arrayToReturn.push(key)
-        }
-      })
-      return arrayToReturn
+      return Object.keys(metricsLabels).filter((key) => metricsLabels[key]?.formula)
+    },
+
+    areBilable () {
+      return Object.keys(metricsLabels).filter(key => metricsLabels[key]?.billable)
     },
 
     colsTotal () {
@@ -244,6 +249,13 @@ export default {
 
     colChanged (newCols) {
       this.selectedHeaders = newCols
+      const a = cloneDeep(newCols)
+      const b = cloneDeep(this.areBilable)
+      if (a.sort().join(',') !== b.sort().join(',')) {
+        this.onlyBillable = []
+      } else {
+        this.onlyBillable = [true]
+      }
     },
 
     billableChange (newVal) {
@@ -308,6 +320,13 @@ export default {
     left: 0;
   }
 
+  table > thead > tr {
+    position: sticky;
+    top: 0;
+    z-index: 1;
+    background-color: var(--v-primary-base);
+  }
+
   table {
     height: 100%;
     background-color: rgba(var(--v-primary-base-rgb), .1);
@@ -316,6 +335,9 @@ export default {
         background-color: rgba(white, 0);
         color: white;
         transition: color .3s ease, background-color .3s ease;
+        i {
+          color: white;
+        }
       }
     }
     tbody > tr {
@@ -347,14 +369,25 @@ export default {
   }
 
   table > thead > tr > th {
-    padding-top: rem(32);
-    padding-bottom: rem(16);
+    height: rem(72);
     background-color: rgba(white, .95);
     border-right: thin solid #d6d6d6;
     border-bottom: none !important;
     color: var(--v-dark-base);
     font-weight: 400;
     position: relative;
+
+    & > span {
+      display: inline-flex;
+      padding-right: rem(22);
+    }
+
+    & > i {
+      position: absolute;
+      right: rem(17);
+      top: 50%;
+      transform: translateY(-50%);
+    }
 
     &:nth-child(1) {
       background-color: var(--v-accent-lighten4);

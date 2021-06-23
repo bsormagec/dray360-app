@@ -21,7 +21,7 @@ class ImportCompcareAddress extends ImportAddressBase implements ShouldQueue
 
     public function __construct($address, $tmsProviderId, Company $company)
     {
-        $this->addressCode = $address['AddressId'];
+        $this->addressCode = $address['EntityId'];
         $this->address = $address;
         $this->companyId = $company->id;
         $this->companyName = $company->name;

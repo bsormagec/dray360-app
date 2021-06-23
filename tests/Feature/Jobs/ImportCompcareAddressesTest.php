@@ -38,12 +38,12 @@ class ImportCompcareAddressesTest extends TestCase
             ])
             ->push([
                 'success' => true,
-                'data' => [['AddressId' => 1]],
+                'data' => [['EntityId' => 1]],
                 'count' => 2
             ])
             ->push([
                 'success' => true,
-                'data' => [['AddressId' => 2]],
+                'data' => [['EntityId' => 2]],
                 'count' => 2
             ])
             ->push([
@@ -68,7 +68,55 @@ class ImportCompcareAddressesTest extends TestCase
     }
 
     /** @test */
-    public function it_should_only_queue_the_job_for_the_companies_addresses_that_doesnt_exist()
+    public function it_should_filter_the_secondary_addresses_from_the_addresses_to_import()
+    {
+        Queue::fake();
+        $this->clearTokenCache();
+        Http::fakeSequence()
+            ->push([
+                'success' => true,
+                'data' => ['token' => 'test1']
+            ])
+            ->push([
+                'success' => true,
+                'data' => [[
+                    'EntityId' => 1,
+                    'LocationType' => ['LocationTypeCode' => "S"],
+                ]],
+                'count' => 2
+            ])
+            ->push([
+                'success' => true,
+                'data' => [[
+                    'EntityId' => 1,
+                    'LocationType' => ['LocationTypeCode' => "P"],
+                ]],
+                'count' => 2
+            ])
+            ->push([
+                'success' => true,
+                'data' => [],
+                'count' => 2
+            ]);
+
+        (new ImportCompcareAddresses(
+            CompaniesSeeder::getTestTradelink(),
+            TMSProvider::getCompcare()
+        ))->handle();
+
+        Queue::assertPushed(ImportCompcareAddress::class, 1);
+        Queue::assertPushedOn(
+            'imports',
+            ImportCompcareAddress::class,
+            function (ImportCompcareAddress $job) {
+                return $job->addressCode == 1
+                    && $job->address['LocationType']['LocationTypeCode'] == 'P';
+            }
+        );
+    }
+
+    /** @test */
+    public function it_should_only_queue_the_job_for_the_companies_addresses_that_dont_exist()
     {
         $this->seed(CompcareTradelinkAddressesSeeder::class);
         Queue::fake();
@@ -81,8 +129,8 @@ class ImportCompcareAddressesTest extends TestCase
             ->push([
                 'success' => true,
                 'data' => [
-                    ['AddressId' => 1],
-                    ['AddressId' => 2],
+                    ['EntityId' => 1],
+                    ['EntityId' => 2],
                 ],
                 'count' => 2
             ])
@@ -115,7 +163,7 @@ class ImportCompcareAddressesTest extends TestCase
             ])
             ->push([
                 'success' => true,
-                'data' => [['AddressId' => 2]],
+                'data' => [['EntityId' => 2]],
                 'count' => 1
             ])
             ->push(['success' => true, 'data' => [], 'count' => 2]);
