@@ -27,7 +27,7 @@ class ImportCompcareAddressTest extends TestCase
     /** @test */
     public function it_inserts_a_new_address_if_it_doesnt_find_an_existing_one()
     {
-        $addresses = $this->getBaseAddresses();
+        $addresses = CompcareTradelinkAddressesSeeder::getBaseAddresses();
         $company = CompaniesSeeder::getTestTradelink();
         $tmsProvider = TMSProvider::getCompcare();
 
@@ -46,19 +46,28 @@ class ImportCompcareAddressTest extends TestCase
             'location_phone' => null,
             'is_terminal' => 0,
             'is_billable' => 0,
+            'is_cc_payor' => 0,
+            'is_cc_customer' => 0,
+            'is_cc_ssrr' => 0,
+            'is_cc_carrier' => 0,
+            'is_cc_consignee' => 1,
+            'is_cc_driver' => 0,
+            'is_cc_shipper' => 1,
+            'is_cc_vendor' => 0,
         ]);
     }
 
     /** @test */
     public function it_creates_a_new_entry_for_updated_addresses()
     {
-        $modifiedAddress = $this->getBaseAddresses()[1];
-        $modifiedAddress['AddressId'] = 1;
+        $addresses = CompcareTradelinkAddressesSeeder::getBaseAddresses();
+        $modifiedAddress = $addresses[1];
+        $modifiedAddress['EntityId'] = 1;
         $company = CompaniesSeeder::getTestTradelink();
         $tmsProvider = TMSProvider::getCompcare();
         $addressCount = Address::count();
 
-        (new ImportCompcareAddress($this->getBaseAddresses()[0], $tmsProvider->id, $company))->handle();
+        (new ImportCompcareAddress($addresses[0], $tmsProvider->id, $company))->handle();
         (new ImportCompcareAddress($modifiedAddress, $tmsProvider->id, $company))->handle();
 
         $this->assertEquals(1, CompanyAddressTMSCode::count());
@@ -74,43 +83,14 @@ class ImportCompcareAddressTest extends TestCase
             'location_phone' => null,
             'is_terminal' => 0,
             'is_billable' => 0,
+            'is_cc_payor' => 0,
+            'is_cc_customer' => 0,
+            'is_cc_ssrr' => 0,
+            'is_cc_carrier' => 0,
+            'is_cc_consignee' => 1,
+            'is_cc_driver' => 0,
+            'is_cc_shipper' => 1,
+            'is_cc_vendor' => 0,
         ]);
-    }
-
-    protected function getBaseAddresses()
-    {
-        return  [
-            [
-                'AddressId' => 1,
-                'ExternalSystemAddressId' => '10308835',
-                'AddressLine1' => '4912 RAILROAD STREET',
-                'AddressLine2' => '',
-                'CityName' => 'LAPORTE',
-                'City' => null,
-                'PostalCode' => '77571',
-                'Country' => [
-                    'CountryCode' => 'USA',
-                ],
-                'State' => [
-                    'StateCode' => 'TX',
-                ]
-            ], [
-                'AddressId' => 2,
-                'ExternalSystemAddressId' => '10308836',
-                'AddressLine1' => '1234 EASY ST',
-                'AddressLine2' => '1234 Easy test',
-                'CityName' => 'Abbeville',
-                'PostalCode' => '77571',
-                'City' => [
-                    'CityName' => 'Abbeville',
-                ],
-                'Country' => [
-                    'CountryCode' => 'USA',
-                ],
-                'State' => [
-                    'StateCode' => 'CA',
-                ]
-            ]
-        ];
     }
 }

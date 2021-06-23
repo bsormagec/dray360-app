@@ -4,6 +4,7 @@ namespace App\Jobs;
 
 use App\Models\Company;
 use App\Models\TMSProvider;
+use Illuminate\Support\Arr;
 use Illuminate\Support\Str;
 use App\Services\Apis\Compcare;
 use Illuminate\Support\Collection;
@@ -44,7 +45,10 @@ class ImportCompcareAddresses implements ShouldQueue
         set_time_limit($this->timeout);
         $company = Company::find($this->companyId);
         $compcareApi = (new Compcare($company))->getToken();
-        $addresses = collect($compcareApi->getAllAddresses());
+        $addresses = collect($compcareApi->getAllAddresses())
+            ->reject(function ($address) {
+                return strtoupper(Arr::get($address, 'LocationType.LocationTypeCode', '')) == 'S';
+            });
 
         if ($addresses->count() == 0) {
             Log::channel('imports')
@@ -56,7 +60,7 @@ class ImportCompcareAddresses implements ShouldQueue
             ->info("ImportCompcareAddresses-{$company->name}: Endpoint returned ".$addresses->count().' addresses');
 
         $this->deleteAddressesRemovedInTheResponse(
-            $addresses->pluck('AddressId'),
+            $addresses->pluck('EntityId'),
             $this->companyId,
             $this->tmsProviderId
         );
@@ -66,7 +70,7 @@ class ImportCompcareAddresses implements ShouldQueue
                 $existingCodes = CompanyAddressTMSCode::query()
                     ->forCompanyTmsProvider($this->companyId, $this->tmsProviderId)
                     ->pluck('company_address_tms_code');
-                return $companies->whereNotIn('AddressId', $existingCodes->toArray());
+                return $companies->whereNotIn('EntityId', $existingCodes->toArray());
             })
             ->each(function ($address) use ($company) {
                 ImportCompcareAddress::dispatch($address, $this->tmsProviderId, $company);
