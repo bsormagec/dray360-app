@@ -288,7 +288,6 @@ class EquipmentTypesSeeder extends Seeder
      * there is usually no reason to re-import more than once.
      */
     const TO_BE_IMPORTED = [
-        'K1Logistics' => self::ALL_COMPANIES['K1Logistics'],
         'PFS' => self::ALL_COMPANIES['PFS']
     ];
 
