@@ -106,15 +106,12 @@ export default {
   async created () {
     await this.getTenantConfig()
   },
-  beforeMount () {
-    this.setSidebar({ show: false })
-  },
   mounted () {
     if (this.loggedIn) this.$router.push('/inbox')
   },
 
   methods: {
-    ...mapActions(utils.moduleName, [actionTypes.getTenantConfig, actionTypes.setSidebar]),
+    ...mapActions(utils.moduleName, [actionTypes.getTenantConfig]),
 
     async login () {
       this.loginError = false

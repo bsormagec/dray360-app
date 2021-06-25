@@ -14,13 +14,6 @@
         dense
       >
         <v-col
-          class="d-md-none d-lg-none d-xl-none"
-          cols="12"
-          md="auto"
-        >
-          <SidebarNavigationButton class="mb-2" />
-        </v-col>
-        <v-col
           cols="12"
           sm="3"
           md="2"
@@ -127,7 +120,6 @@ import allCompanies from '@/mixins/all_companies'
 
 import DateRange from './DateRange'
 import OptionList from './OptionList'
-import SidebarNavigationButton from '@/components/General/SidebarNavigationButton'
 
 import { metrics } from '@/enums/app_objects_types'
 import { metricsLabels } from '../enums/metrics_labels'
@@ -139,7 +131,6 @@ export default {
   components: {
     DateRange,
     OptionList,
-    SidebarNavigationButton
   },
 
   mixins: [permissions, allCompanies],

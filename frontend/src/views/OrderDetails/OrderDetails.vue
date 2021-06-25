@@ -62,7 +62,6 @@
 </template>
 
 <script>
-import isMobile from '@/mixins/is_mobile'
 import permissions from '@/mixins/permissions'
 import locks from '@/mixins/locks'
 
@@ -95,7 +94,7 @@ export default {
     ContainerNotFound
   },
 
-  mixins: [isMobile, permissions, locks],
+  mixins: [permissions, locks],
 
   props: {
     orderId: {
@@ -164,10 +163,14 @@ export default {
       return this.loaded &&
         !this.hasPermission('admin-review-view') &&
         isInAdminReview(this.order?.ocr_request?.latest_ocr_request_status?.status)
-    }
+    },
+    isMobile () {
+      return this.$vuetify.breakpoint.mobile
+    },
   },
   watch: {
     async orderId (newOrderId) {
+      // eslint-disable-next-line eqeqeq
       if (newOrderId == this.orderIdToLoad) {
         return
       }
@@ -183,10 +186,6 @@ export default {
   },
 
   async beforeMount () {
-    if (!this.isMobile) {
-      this.setSidebar({ show: true })
-    }
-
     await this.fetchFormData()
   },
 
@@ -203,7 +202,7 @@ export default {
   },
 
   methods: {
-    ...mapActions(utils.moduleName, [utilsActionTypes.setConfirmationDialog, utilsActionTypes.setSidebar]),
+    ...mapActions(utils.moduleName, [utilsActionTypes.setConfirmationDialog]),
     ...mapActions(orders.moduleName, [types.getOrderDetail]),
     ...mapActions(orderForm.moduleName, {
       setFormOrder: orderFormTypes.setFormOrder,
@@ -482,8 +481,9 @@ export default {
 <style lang="scss" scoped>
 .details {
   width: 100%;
-  height: 100%;
+  height: calc(100vh - 40px);
   display: flex;
+  overflow: hidden;
 
   &.mobile {
     padding-left: unset;

@@ -1,7 +1,8 @@
 <template>
   <v-app :style="cssVars">
-    <SidebarNavigation />
-    <v-main :style="sidebarStyles">
+    <NewSideBarNavigation v-if="!isException" />
+    <AppBar v-if="!isException && !isInbox" />
+    <v-main>
       <v-container
         pa-0
         fluid
@@ -21,28 +22,25 @@
 </template>
 
 <script>
+import AppBar from '@/components/General/AppBar'
+import NewSideBarNavigation from '@/components/General/NewSideBarNavigation'
 import Snackbar from '@/components/General/Snackbar'
 import ConfirmationDialog from '@/components/General/ConfirmationDialog'
 import PtImageUploadDialog from '@/components/PtImageUploadDialog'
-import SidebarNavigation from '@/components/General/SidebarNavigation'
 import { hexToRgb } from '@/utils/hex_to_rgb'
-import utils from '@/store/modules/utils'
-import { mapState } from 'vuex'
-import isMobile from '@/mixins/is_mobile'
 
 export default {
   name: 'App',
+
   components: {
+    AppBar,
+    NewSideBarNavigation,
     Snackbar,
     ConfirmationDialog,
     PtImageUploadDialog,
-    SidebarNavigation
   },
-  mixins: [isMobile],
+
   computed: {
-    ...mapState(utils.moduleName, {
-      Sidebar: state => state.sidebar.show
-    }),
     cssVars () {
       const cssVars = {}
       for (const key in this.$vuetify.theme.themes.light) {
@@ -51,12 +49,15 @@ export default {
       }
       return cssVars
     },
-    sidebarStyles () {
-      if (this.isMobile && this.Sidebar) return 'left: 196px; position: relative; overflow: hidden;'
-      return ''
-    }
-  }
 
+    isException () {
+      return ['Login', 'Not Authorized', 'Not Found'].includes(this.$route.name)
+    },
+
+    isInbox () {
+      return ['Inbox', 'Field Mapping'].includes(this.$route.name)
+    }
+  },
 }
 </script>
 

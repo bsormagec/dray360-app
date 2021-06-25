@@ -490,8 +490,6 @@ export default {
     await this.fetchRules()
     await this.fetchVariants()
     await this.fetchCompanies()
-
-    return this.setSidebar({ show: false })
   },
 
   methods: {
@@ -508,7 +506,7 @@ export default {
       rulesEditorActionsTypes.testRule,
     ]),
 
-    ...mapActions(utils.moduleName, [actionTypes.setSnackbar, actionTypes.setSidebar, actionTypes.setConfirmationDialog]),
+    ...mapActions(utils.moduleName, [actionTypes.setSnackbar, actionTypes.setConfirmationDialog]),
 
     onCopy: function (e) {
       console.log('copied')

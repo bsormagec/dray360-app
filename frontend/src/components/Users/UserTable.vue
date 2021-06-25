@@ -14,7 +14,6 @@
     >
       <template v-slot:top>
         <h6 class="user__list-heading">
-          <SidebarNavigationButton :dark="false" />
           {{ tableTitle }} ({{ userList.length }})
         </h6>
         <v-toolbar
@@ -124,7 +123,6 @@
 </template>
 <script>
 import DateRangeCalendar from '@/components/Orders/DateRangeCalendar'
-import SidebarNavigationButton from '@/components/General/SidebarNavigationButton'
 import permissions from '@/mixins/permissions'
 import Pagination from '@/components/OrderTable/components/Pagination'
 import { getUsers } from '@/store/api_calls/users'
@@ -135,7 +133,6 @@ export default {
   components: {
     DateRangeCalendar,
     Pagination,
-    SidebarNavigationButton
   },
 
   mixins: [permissions],

@@ -6,7 +6,6 @@
     >
       <div class="row no-gutters">
         <div class="col-12 audits__list">
-          <SidebarNavigationButton />
           <Filters
             :initial-filters="filters"
             @change="filtersChanged"
@@ -81,7 +80,6 @@
 </template>
 
 <script>
-import isMobile from '@/mixins/is_mobile'
 import permissions from '@/mixins/permissions'
 import { flatMapAudits } from '@/utils/flatmap_audits'
 import { formatDate } from '@/utils/dates'
@@ -91,7 +89,6 @@ import utils, { actionTypes } from '@/store/modules/utils'
 import { getAuditLogsDashboard } from '@/store/api_calls/utils'
 
 import Filters from './Filters'
-import SidebarNavigationButton from '@/components/General/SidebarNavigationButton'
 import AuditLogsTable from '@/components/AuditLogsTable'
 import Pagination from '@/components/OrderTable/components/Pagination'
 
@@ -102,10 +99,9 @@ export default {
     Filters,
     Pagination,
     AuditLogsTable,
-    SidebarNavigationButton,
   },
 
-  mixins: [isMobile, permissions],
+  mixins: [permissions],
 
   data: () => ({
     filters: {
@@ -128,13 +124,6 @@ export default {
   }),
 
   watch: {
-    isMobile: function (newVal, oldVal) {
-      if (newVal) {
-        this.setSidebar({ show: false })
-      } else {
-        this.setSidebar({ show: true })
-      }
-    },
     options: {
       handler () {
         const sortCol = this.options.sortBy.join()
@@ -153,18 +142,10 @@ export default {
     },
   },
 
-  async beforeMount () {
-    if (!this.isMobile) {
-      return this.setSidebar({ show: true })
-    }
-
-    return this.setSidebar({ show: false })
-  },
-
   methods: {
     formatDate,
 
-    ...mapActions(utils.moduleName, [actionTypes.setSnackbar, actionTypes.setSidebar]),
+    ...mapActions(utils.moduleName, [actionTypes.setSnackbar]),
 
     filtersChanged (newFilters) {
       this.filters = { ...newFilters }
@@ -225,7 +206,7 @@ export default {
 
 <style lang="scss" scoped>
 .audits__list {
-  height: 100vh;
+  height: calc(100% - 48px);
   overflow-y: auto;
   padding: rem(14) rem(28) 0 rem(28);
 }
