@@ -46,6 +46,11 @@
               :loading="loading"
               show-expand
             >
+              <template v-slot:[`item.id`]="{ item }">
+                <router-link :to="`/order/${item.id}`">
+                  {{ item.id }}
+                </router-link>
+              </template>
               <template v-slot:[`item.changes_count`]="{ item }">
                 {{ item.audits.length }}
               </template>
@@ -205,9 +210,12 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.audits__list {
-  height: calc(100% - 48px);
+.wrapper {
+  height: calc(100vh - 40px);
   overflow-y: auto;
+}
+.audits__list {
+  height: 100%;
   padding: rem(14) rem(28) 0 rem(28);
 }
 </style>
