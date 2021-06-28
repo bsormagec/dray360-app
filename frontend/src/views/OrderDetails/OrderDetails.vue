@@ -481,7 +481,7 @@ export default {
 <style lang="scss" scoped>
 .details {
   width: 100%;
-  height: calc(100vh - 40px);
+  height: 100vh;
   display: flex;
   overflow: hidden;
 

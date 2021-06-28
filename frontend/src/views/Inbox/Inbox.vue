@@ -94,8 +94,14 @@
               width="20%"
             >
             <span class="primary--text font-weight-light h6 mt-8">
-              {{ emptyRequestText }}
+              {{ emptyRequestText.text }}
             </span>
+            <p
+              v-if="emptyRequestText.errorMessage"
+              class="primary--text font-weight-light h6 mt-8 text-center error-message"
+            >
+              {{ emptyRequestText.errorMessage }}
+            </p>
           </div>
           <div
             v-else-if="request.orders_count > 1 || request.first_order_id === null"
@@ -228,12 +234,15 @@ export default {
         case statuses.intakeRejected:
         case statuses.ocrPostProcessingError:
         case statuses.ocrTimedout:
-          return 'The request has been rejected'
+          return {
+            text: 'The request has been rejected',
+            errorMessage: get(this.request, 'latest_ocr_request_status.display_message'),
+          }
         case statuses.intakeException:
         case statuses.processOcrOutputFileError:
-          return 'There was an error processing the request'
+          return { text: 'There was an error processing the request' }
         default:
-          return 'The request is being processed'
+          return { text: 'The request is being processed' }
       }
     },
     currentRequestIsPtImageUpload () {
@@ -368,6 +377,10 @@ export default {
   flex-direction: column;
   justify-content: center;
   align-items: center;
+
+  & .error-message {
+    width: 70%;
+  }
 }
 
 .request__filters {
