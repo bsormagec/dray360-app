@@ -1,7 +1,7 @@
 <template>
   <v-app :style="cssVars">
-    <NewSideBarNavigation v-if="!isException" />
-    <AppBar v-if="!isException && !isInbox" />
+    <NewSideBarNavigation v-if="!sideBarException" />
+    <AppBar v-if="!sideBarException && !topBarException" />
     <v-main>
       <v-container
         pa-0
@@ -50,11 +50,11 @@ export default {
       return cssVars
     },
 
-    isException () {
-      return ['Login', 'Not Authorized', 'Not Found'].includes(this.$route.name)
+    sideBarException () {
+      return ['Login', 'Not Authorized', 'Not Found', 'RulesEditor'].includes(this.$route.name)
     },
 
-    isInbox () {
+    topBarException () {
       return ['Inbox', 'Field Mapping'].includes(this.$route.name)
     }
   },
