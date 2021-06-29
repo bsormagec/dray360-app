@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Console\Commands;
+namespace App\Console\Commands\Imports;
 
 use App\Models\Company;
 use App\Models\TMSProvider;

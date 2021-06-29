@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Console\Commands;
+namespace App\Console\Commands\Imports;
 
 use App\Models\Company;
 use App\Models\TMSProvider;
@@ -9,8 +9,8 @@ use Illuminate\Support\Collection;
 use App\Exceptions\RipCmsException;
 use Illuminate\Support\Facades\Log;
 use App\Models\CompanyAddressTMSCode;
-use App\Jobs\ImportProfitToolsAddress;
 use App\Traits\DeletesRemovedAddresses;
+use App\Jobs\Imports\ImportProfitToolsAddress;
 
 class ImportProfitToolsAddresses extends ImportAddressesBaseCommand
 {

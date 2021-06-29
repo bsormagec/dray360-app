@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Jobs;
+namespace App\Jobs\Imports;
 
 use App\Models\Company;
 use App\Models\TMSProvider;

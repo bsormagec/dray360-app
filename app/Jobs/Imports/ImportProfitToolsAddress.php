@@ -1,15 +1,17 @@
 <?php
 
-namespace App\Jobs;
+namespace App\Jobs\Imports;
 
 use App\Models\Company;
+use App\Models\TMSProvider;
 use Illuminate\Support\Str;
+use App\Services\Apis\RipCms;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
 use Spatie\RateLimitedMiddleware\RateLimited;
 
-class ImportItgCargoWiseAddress extends ImportAddressBase implements ShouldQueue
+class ImportProfitToolsAddress extends ImportAddressBase implements ShouldQueue
 {
     use Dispatchable;
     use InteractsWithQueue;
@@ -19,23 +21,25 @@ class ImportItgCargoWiseAddress extends ImportAddressBase implements ShouldQueue
     public $timeout = 15;
     public $maxExceptions = 3;
 
-    public function __construct($address, $tmsProviderId, Company $company)
+    public function __construct($companyAddress, Company $company, TMSProvider $tmsProvider)
     {
-        $this->addressCode = $address['org_code'];
-        $this->address = $address;
+        $this->addressCode = $companyAddress['id'];
         $this->companyId = $company->id;
         $this->companyName = $company->name;
-        $this->tmsProviderId = $tmsProviderId;
+        $this->tmsProviderId = $tmsProvider->id;
     }
 
     protected function getAddressData()
     {
-        return $this->address;
+        $company = Company::find($this->companyId);
+        return (new RipCms($company))
+            ->getToken()
+            ->getCompany($this->addressCode);
     }
 
     protected function getTmsProviderCode(): string
     {
-        return 'itg-cargowise';
+        return 'ripcms';
     }
 
     /**
@@ -44,7 +48,7 @@ class ImportItgCargoWiseAddress extends ImportAddressBase implements ShouldQueue
     public function middleware(): array
     {
         $rateLimited = (new RateLimited())
-            ->allow(10000)
+            ->allow(1000)
             ->everySeconds(60)
             ->releaseAfterOneMinute();
 
@@ -62,7 +66,7 @@ class ImportItgCargoWiseAddress extends ImportAddressBase implements ShouldQueue
     public function tags(): array
     {
         return [
-            'import:itg-cargowise',
+            'import:profit-tools-addresses',
             'import-address-'.Str::snake($this->companyName),
         ];
     }

@@ -1,13 +1,13 @@
 <?php
 
-namespace App\Console\Commands;
+namespace App\Console\Commands\Imports;
 
 use App\Models\Company;
 use App\Models\TMSProvider;
 use Illuminate\Support\Str;
 use App\Imports\ItgAddressesFileRead;
 use Illuminate\Support\Facades\Storage;
-use App\Jobs\ImportItgCargoWiseAddresses;
+use App\Jobs\Imports\ImportItgCargoWiseAddresses;
 
 class ImportCargoWiseAddresses extends ImportAddressesBaseCommand
 {
