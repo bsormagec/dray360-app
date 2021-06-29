@@ -20,6 +20,17 @@ class EquipmentTypesSeeder extends Seeder
      * add the specific companies to actually import.
      */
     const ALL_COMPANIES = [
+        'K1Logistics' => [
+            'file' => 'seeders/K1Logistics_EquipmentLeaseTypes.20210622.xlsx',
+            'columns' => [
+                'tms_equipment_id' => 'id',
+                'equipment_owner' => 'line',
+                'equipment_type_and_size' => 'type',
+                'equipment_size' => 'equipmentlength',
+                'scac' => 'scac',
+                'line_prefix_list' => 'lineprefix',
+            ],
+        ],
         'Mercer' => [
             'file' => 'seeders/Mercer_EquipmentLeaseTypes.20210514.xlsx',
             'columns' => [
@@ -277,8 +288,7 @@ class EquipmentTypesSeeder extends Seeder
      * there is usually no reason to re-import more than once.
      */
     const TO_BE_IMPORTED = [
-        'Mercer' => self::ALL_COMPANIES['Mercer'],
-        'PFS' => self::ALL_COMPANIES['PFS'],
+        'PFS' => self::ALL_COMPANIES['PFS']
     ];
 
     /**
