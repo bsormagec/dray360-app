@@ -47,6 +47,9 @@ class Kernel extends ConsoleKernel
             ])
             ->hourly();
 
+        // Dictionary Items Sync
+        $schedule->command('import:dictionary-items')->hourly();
+
         $schedule->command('horizon:snapshot')->everyFiveMinutes();
     }
 

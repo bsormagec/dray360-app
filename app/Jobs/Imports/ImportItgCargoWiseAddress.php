@@ -1,17 +1,15 @@
 <?php
 
-namespace App\Jobs;
+namespace App\Jobs\Imports;
 
 use App\Models\Company;
-use App\Models\TMSProvider;
 use Illuminate\Support\Str;
-use App\Services\Apis\RipCms;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
 use Spatie\RateLimitedMiddleware\RateLimited;
 
-class ImportProfitToolsAddress extends ImportAddressBase implements ShouldQueue
+class ImportItgCargoWiseAddress extends ImportAddressBase implements ShouldQueue
 {
     use Dispatchable;
     use InteractsWithQueue;
@@ -21,25 +19,23 @@ class ImportProfitToolsAddress extends ImportAddressBase implements ShouldQueue
     public $timeout = 15;
     public $maxExceptions = 3;
 
-    public function __construct($companyAddress, Company $company, TMSProvider $tmsProvider)
+    public function __construct($address, $tmsProviderId, Company $company)
     {
-        $this->addressCode = $companyAddress['id'];
+        $this->addressCode = $address['org_code'];
+        $this->address = $address;
         $this->companyId = $company->id;
         $this->companyName = $company->name;
-        $this->tmsProviderId = $tmsProvider->id;
+        $this->tmsProviderId = $tmsProviderId;
     }
 
     protected function getAddressData()
     {
-        $company = Company::find($this->companyId);
-        return (new RipCms($company))
-            ->getToken()
-            ->getCompany($this->addressCode);
+        return $this->address;
     }
 
     protected function getTmsProviderCode(): string
     {
-        return 'ripcms';
+        return 'itg-cargowise';
     }
 
     /**
@@ -48,7 +44,7 @@ class ImportProfitToolsAddress extends ImportAddressBase implements ShouldQueue
     public function middleware(): array
     {
         $rateLimited = (new RateLimited())
-            ->allow(1000)
+            ->allow(10000)
             ->everySeconds(60)
             ->releaseAfterOneMinute();
 
@@ -66,7 +62,7 @@ class ImportProfitToolsAddress extends ImportAddressBase implements ShouldQueue
     public function tags(): array
     {
         return [
-            'import:profit-tools-addresses',
+            'import:itg-cargowise',
             'import-address-'.Str::snake($this->companyName),
         ];
     }

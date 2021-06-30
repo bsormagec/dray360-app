@@ -35,6 +35,10 @@ return [
         'url' => 'https://www.ripcms.com/',
     ],
 
+    'blackfly' => [
+        'url' => env('BLACKFLY_URL'),
+    ],
+
     'compcare' => [
         'identity_url' => env('COMPCARE_IDENTITY_URL'),
         'entities_url' => env('COMPCARE_ENTITIES_URL'),

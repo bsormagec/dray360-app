@@ -1,7 +1,6 @@
 <template>
   <div class="pa-4">
     <h6 class="password-change__label">
-      <SidebarNavigationButton :dark="false" />
       Change Password
     </h6>
     <v-row>
@@ -73,16 +72,11 @@
 </template>
 
 <script>
-import SidebarNavigationButton from '@/components/General/SidebarNavigationButton'
 import profile, { types } from '@/store/modules/profile'
 import { mapActions } from 'vuex'
 import utils, { actionTypes } from '@/store/modules/utils'
-import isMobile from '@/mixins/is_mobile'
-import isMedium from '@/mixins/is_medium'
 
 export default {
-  components: { SidebarNavigationButton },
-  mixins: [isMobile, isMedium],
   data () {
     return {
       old_password: '',
@@ -91,23 +85,9 @@ export default {
       error: false
     }
   },
-  watch: {
-    isMedium: function (newVal, oldVal) {
-      if (!newVal) this.setSidebar({ show: true })
-    },
-    isMobile: function (newVal, oldVal) {
-      if (newVal) this.setSidebar({ show: false })
-      else this.setSidebar({ show: true })
-    }
-  },
 
-  beforeMount () {
-    if (!this.isMobile) return this.setSidebar({ show: true })
-    return this.setSidebar({ show: false })
-  },
   methods: {
     ...mapActions(profile.moduleName, [types.changePassword]),
-    ...mapActions(utils.moduleName, { setSidebar: actionTypes.setSidebar }),
     ...mapActions(utils.moduleName, [actionTypes.setSnackbar]),
     async save () {
       const status = await this[types.changePassword](

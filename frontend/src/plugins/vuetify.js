@@ -1,5 +1,7 @@
 import Vue from 'vue'
 import Vuetify from 'vuetify/lib'
+import PoweredByD360Icon from '../components/Icons/PoweredByD360'
+import EnvaseIcon from '../components/Icons/EnvaseLogo'
 
 Vue.use(Vuetify)
 
@@ -25,5 +27,15 @@ export default new Vuetify({
     options: {
       customProperties: true
     }
-  }
+  },
+  icons: {
+    values: {
+      poweredBy360: {
+        component: PoweredByD360Icon,
+      },
+      envase: {
+        component: EnvaseIcon,
+      },
+    },
+  },
 })

@@ -6,7 +6,6 @@
     >
       <div class="row no-gutters">
         <div class="col-12 orders__list">
-          <SidebarNavigationButton />
           <OrderTable
             :headers="[
               { text: 'Date', value: 'created_at' },
@@ -29,47 +28,21 @@
 </template>
 <script>
 import OrderTable from '@/components/OrderTable'
-import SidebarNavigationButton from '@/components/General/SidebarNavigationButton'
-
-import { mapActions } from 'vuex'
 import permissions from '@/mixins/permissions'
-import utils, { actionTypes } from '@/store/modules/utils'
-import isMobile from '@/mixins/is_mobile'
 
 export default {
   name: 'RequestsOrdersCombined',
+
   components: {
     OrderTable,
-    SidebarNavigationButton
-  },
-  mixins: [permissions, isMobile],
-  data: () => ({}),
-
-  watch: {
-    isMobile: function (newVal, oldVal) {
-      if (newVal) {
-        this.setSidebar({ show: false })
-      } else {
-        this.setSidebar({ show: true })
-      }
-    }
-  },
-  beforeMount () {
-    if (!this.isMobile) {
-      return this.setSidebar({ show: true })
-    }
-
-    return this.setSidebar({ show: false })
   },
 
-  methods: {
-    ...mapActions(utils.moduleName, [actionTypes.setSidebar])
-  }
+  mixins: [permissions],
 }
 </script>
 <style lang="scss" scoped>
 .orders__list {
-    height: 100vh;
+    height: calc(100vh - 40px);
     overflow-y: auto;
     padding: rem(14) rem(28) 0 rem(28);
   }

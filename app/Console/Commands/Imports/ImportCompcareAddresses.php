@@ -1,10 +1,10 @@
 <?php
 
-namespace App\Console\Commands;
+namespace App\Console\Commands\Imports;
 
 use App\Models\Company;
 use App\Models\TMSProvider;
-use App\Jobs\ImportCompcareAddresses as ImportCompcareAddressesJob;
+use App\Jobs\Imports\ImportCompcareAddresses as ImportCompcareAddressesJob;
 
 class ImportCompcareAddresses extends ImportAddressesBaseCommand
 {

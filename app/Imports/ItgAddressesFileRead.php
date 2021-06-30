@@ -5,7 +5,7 @@ namespace App\Imports;
 use Illuminate\Support\Str;
 use Rap2hpoutre\FastExcel\FastExcel;
 use Illuminate\Support\Facades\Storage;
-use App\Jobs\ImportItgCargoWiseAddresses;
+use App\Jobs\Imports\ImportItgCargoWiseAddresses;
 
 class ItgAddressesFileRead
 {

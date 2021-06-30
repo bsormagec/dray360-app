@@ -6,7 +6,6 @@
     <v-row no-gutters>
       <v-col md="4">
         <div class="text-h6 mb-4 user-edit__heading">
-          <SidebarNavigationButton :dark="false" />
           {{ edit ? 'Edit User' : 'Add User' }}
         </div>
         <v-text-field
@@ -129,7 +128,6 @@ import { mapActions } from 'vuex'
 import utils, { actionTypes } from '@/store/modules/utils'
 import { getUser, getRoles, changeUserStatus, editUser, deleteUser, addUser } from '@/store/api_calls/users'
 import ContainerNotFound from '@/views/ContainerNotFound'
-import SidebarNavigationButton from '@/components/General/SidebarNavigationButton'
 
 import get from 'lodash/get'
 
@@ -138,7 +136,6 @@ export default {
 
   components: {
     ContainerNotFound,
-    SidebarNavigationButton
   },
 
   mixins: [permissions, allCompanies],

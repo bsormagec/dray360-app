@@ -94,8 +94,14 @@
               width="20%"
             >
             <span class="primary--text font-weight-light h6 mt-8">
-              {{ emptyRequestText }}
+              {{ emptyRequestText.text }}
             </span>
+            <p
+              v-if="emptyRequestText.errorMessage"
+              class="primary--text font-weight-light h6 mt-8 text-center error-message"
+            >
+              {{ emptyRequestText.errorMessage }}
+            </p>
           </div>
           <div
             v-else-if="request.orders_count > 1 || request.first_order_id === null"
@@ -168,19 +174,16 @@
 <script>
 import RequestItemMenu from '@/components/RequestItemMenu'
 import OrderTable from '@/components/OrderTable'
+import SidebarNavigationButton from '@/components/General/SidebarNavigationButton.vue'
 import RequestsList from './RequestsList'
 import OrderDetails from '@/views/OrderDetails/OrderDetails'
 import UploadOrdersDialog from './UploadOrdersDialog'
 import PtImageRequestDetails from './PtImageRequestDetails'
-import SidebarNavigationButton from '@/components/General/SidebarNavigationButton'
 
 import { mapState, mapActions } from 'vuex'
 import permissions from '@/mixins/permissions'
-import utils, { actionTypes as utilsActionTypes } from '@/store/modules/utils'
 import auth from '@/store/modules/auth'
 import orders, { types as ordersTypes } from '@/store/modules/orders'
-import isMobile from '@/mixins/is_mobile'
-import isMedium from '@/mixins/is_medium'
 import get from 'lodash/get'
 import { statuses } from '@/enums/app_objects_types'
 import { isInAdminReview, isPtImageUpload } from '@/utils/status_helpers'
@@ -189,14 +192,14 @@ export default {
   name: 'Inbox',
   components: {
     OrderTable,
+    SidebarNavigationButton,
     OrderDetails,
     RequestsList,
     UploadOrdersDialog,
     RequestItemMenu,
     PtImageRequestDetails,
-    SidebarNavigationButton,
   },
-  mixins: [permissions, isMobile, isMedium],
+  mixins: [permissions],
   data () {
     return {
       compressed: true,
@@ -221,9 +224,6 @@ export default {
     }
   },
   computed: {
-    ...mapState(utils.moduleName, {
-      showingSidebar: state => state.sidebar.show
-    }),
     ...mapState(auth.moduleName, {
       currentUser: state => state.currentUser
     }),
@@ -234,32 +234,31 @@ export default {
         case statuses.intakeRejected:
         case statuses.ocrPostProcessingError:
         case statuses.ocrTimedout:
-          return 'The request has been rejected'
+          return {
+            text: 'The request has been rejected',
+            errorMessage: get(this.request, 'latest_ocr_request_status.display_message'),
+          }
         case statuses.intakeException:
         case statuses.processOcrOutputFileError:
-          return 'There was an error processing the request'
+          return { text: 'There was an error processing the request' }
         default:
-          return 'The request is being processed'
+          return { text: 'The request is being processed' }
       }
     },
     currentRequestIsPtImageUpload () {
       return isPtImageUpload(this.request?.latest_ocr_request_status?.status)
-    }
+    },
+    isMobile () {
+      return this.$vuetify.breakpoint.mobile
+    },
   },
   watch: {
-    isMedium: function (newVal, oldVal) {
-      if (!newVal) {
-        this.setSidebar({ show: true })
-      }
-    },
     isMobile: function (newVal, oldVal) {
       if (newVal) {
-        this.setSidebar({ show: false })
         this.displayStatus.requestList = true
         this.displayStatus.orderDetail = false
         this.compressed = false
       } else {
-        this.setSidebar({ show: true })
         this.displayStatus.requestList = true
         this.displayStatus.orderDetail = true
         this.compressed = true
@@ -268,14 +267,12 @@ export default {
   },
   beforeMount () {
     if (!this.isMobile) {
-      return this.setSidebar({ show: true })
+      return
     }
     this.displayStatus.orderDetail = false
-    return this.setSidebar({ show: false })
   },
 
   methods: {
-    ...mapActions(utils.moduleName, [utilsActionTypes.setSidebar]),
     ...mapActions(orders.moduleName, {
       setReloadRequests: ordersTypes.setReloadRequests
     }),
@@ -380,6 +377,10 @@ export default {
   flex-direction: column;
   justify-content: center;
   align-items: center;
+
+  & .error-message {
+    width: 70%;
+  }
 }
 
 .request__filters {

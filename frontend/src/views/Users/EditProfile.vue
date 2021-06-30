@@ -2,7 +2,6 @@
   <div class="pa-5">
     <template>
       <h6 class="edit-profile-headline">
-        <SidebarNavigationButton :dark="false" />
         Edit Profile
       </h6>
     </template>
@@ -109,13 +108,8 @@ import { reqStatus } from '@/enums/req_status'
 import utils, { actionTypes } from '@/store/modules/utils'
 import users, { types } from '@/store/modules/users'
 import auth from '@/store/modules/auth'
-import isMobile from '@/mixins/is_mobile'
-import isMedium from '@/mixins/is_medium'
-import SidebarNavigationButton from '@/components/General/SidebarNavigationButton'
 
 export default {
-  components: { SidebarNavigationButton },
-  mixins: [isMobile, isMedium],
   data () {
     return {
       name: '',
@@ -127,25 +121,12 @@ export default {
   computed: {
     ...mapState(auth.moduleName, { currentUser: state => state.currentUser })
   },
-  watch: {
-    isMedium: function (newVal, oldVal) {
-      if (!newVal) this.setSidebar({ show: true })
-    },
-    isMobile: function (newVal, oldVal) {
-      if (newVal) this.setSidebar({ show: false })
-      else this.setSidebar({ show: true })
-    }
-  },
-  beforeMount () {
-    if (!this.isMobile) return this.setSidebar({ show: true })
-    return this.setSidebar({ show: false })
-  },
+
   mounted () {
     this.getUserData()
   },
   methods: {
     ...mapActions(users.moduleName, [types.editUser]),
-    ...mapActions(utils.moduleName, { setSidebar: actionTypes.setSidebar }),
     ...mapActions(utils.moduleName, [actionTypes.setSnackbar]),
     ...mapActions(auth.moduleName, ['getCurrentUser']),
     getUserData () {

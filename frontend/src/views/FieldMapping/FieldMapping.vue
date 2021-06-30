@@ -10,7 +10,7 @@
       md="2"
       class="field-mapping__filters"
     >
-      <div class="primary pa-2 d-flex align-center justify-center">
+      <div class="primary pa-2 d-flex align-center justify-md-center">
         <SidebarNavigationButton />
         <h1 class="subtitle-2 text-center text-uppercase white--text">
           mapping admin panel
@@ -67,13 +67,11 @@
 </template>
 
 <script>
-import SidebarNavigationButton from '@/components/General/SidebarNavigationButton'
 import FieldMappingFilters from './FieldMappingFilters'
 import FieldMappingList from './FieldMappingList'
 import FieldMappingForm from './FieldMappingForm'
-
+import SidebarNavigationButton from '@/components/General/SidebarNavigationButton.vue'
 import permissions from '@/mixins/permissions'
-import isMobile from '@/mixins/is_mobile'
 
 import { mapActions, mapState } from 'vuex'
 import utils, { actionTypes as utilsActionTypes } from '@/store/modules/utils'
@@ -85,13 +83,13 @@ export default {
   name: 'FieldMapping',
 
   components: {
-    SidebarNavigationButton,
     FieldMappingFilters,
     FieldMappingList,
     FieldMappingForm,
+    SidebarNavigationButton,
   },
 
-  mixins: [permissions, isMobile],
+  mixins: [permissions],
 
   data: () => ({
     loading: false,
@@ -130,23 +128,7 @@ export default {
     }
   },
 
-  watch: {
-    isMobile: function (newVal, oldVal) {
-      if (newVal) {
-        this.setSidebar({ show: false })
-        return
-      }
-      this.setSidebar({ show: true })
-    }
-  },
-
   async beforeMount () {
-    if (!this.isMobile) {
-      this.setSidebar({ show: true })
-    } else {
-      this.setSidebar({ show: false })
-    }
-
     this.loading = true
     await this.getFieldMaps({})
     this.loading = false
@@ -154,7 +136,6 @@ export default {
 
   methods: {
     ...mapActions(utils.moduleName, [
-      utilsActionTypes.setSidebar,
       utilsActionTypes.setSnackbar,
       utilsActionTypes.setConfirmationDialog,
     ]),

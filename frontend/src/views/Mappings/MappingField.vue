@@ -1,7 +1,6 @@
 <template>
   <div class="mapping__panel">
     <h6 class="mapping__heading">
-      <SidebarNavigationButton :dark="false" />
       Profit tools mapping admin panel
     </h6>
     <v-row>
@@ -166,18 +165,13 @@
 </template>
 
 <script>
-import SidebarNavigationButton from '@/components/General/SidebarNavigationButton'
 import { mapActions, mapState } from 'vuex'
 import companies, { types } from '@/store/modules/companies'
 import { reqStatus } from '@/enums/req_status'
 import utils, { actionTypes as utilsActionTypes } from '@/store/modules/utils'
 import { getCompanies } from '@/store/api_calls/companies'
-import isMobile from '@/mixins/is_mobile'
-import isMedium from '@/mixins/is_medium'
 
 export default {
-  components: { SidebarNavigationButton },
-  mixins: [isMobile, isMedium],
   data () {
     return {
       items: [
@@ -248,21 +242,8 @@ export default {
   computed: {
     ...mapState(companies.moduleName, { company: state => state.company })
   },
-  watch: {
-    isMedium: function (newVal, oldVal) {
-      if (!newVal) this.setSidebar({ show: true })
-    },
-    isMobile: function (newVal, oldVal) {
-      if (newVal) this.setSidebar({ show: false })
-      else this.setSidebar({ show: true })
-    }
-  },
   created () {
     this.clearFields()
-  },
-  beforeMount () {
-    if (!this.isMobile) return this.setSidebar({ show: true })
-    return this.setSidebar({ show: false })
   },
   mounted () {
     this.getNames()
@@ -270,7 +251,6 @@ export default {
   },
   methods: {
     ...mapActions(companies.moduleName, [types.updateCompaniesMappingField, types.getCompany]),
-    ...mapActions(utils.moduleName, { setSidebar: utilsActionTypes.setSidebar }),
     ...mapActions(utils.moduleName, [utilsActionTypes.setSnackbar]),
     getNames () {
       Object.values(this.mappings).forEach(key => {

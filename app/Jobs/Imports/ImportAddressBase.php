@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Jobs;
+namespace App\Jobs\Imports;
 
 use App\Models\Address;
 use App\Models\CompanyAddressTMSCode;

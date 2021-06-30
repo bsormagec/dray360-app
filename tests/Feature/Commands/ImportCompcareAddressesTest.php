@@ -4,8 +4,8 @@ namespace Tests\Feature\Commands;
 
 use Tests\TestCase;
 use Tests\Seeds\CompaniesSeeder;
-use App\Jobs\ImportCompcareAddresses;
 use Illuminate\Support\Facades\Queue;
+use App\Jobs\Imports\ImportCompcareAddresses;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
 
 class ImportCompcareAddressesTest extends TestCase

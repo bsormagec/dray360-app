@@ -6,9 +6,9 @@ use Tests\TestCase;
 use Tests\Seeds\CompaniesSeeder;
 use App\Models\CompanyAddressTMSCode;
 use Illuminate\Support\Facades\Queue;
-use App\Jobs\ImportItgCargoWiseAddress;
 use Illuminate\Support\Facades\Storage;
 use Tests\Seeds\CargoWiseItgAddressesSeeder;
+use App\Jobs\Imports\ImportItgCargoWiseAddress;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
 
 class ImportCargoWiseAddressesTest extends TestCase

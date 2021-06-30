@@ -735,7 +735,6 @@
 </template>
 
 <script>
-import isMobile from '@/mixins/is_mobile'
 import { scrollTo } from '@/utils/scroll_to'
 import permissions from '@/mixins/permissions'
 import { mapState, mapActions, mapGetters } from 'vuex'
@@ -788,7 +787,7 @@ export default {
     ManagedByTemplateSection,
     StatusHistoryDialog
   },
-  mixins: [isMobile, permissions],
+  mixins: [permissions],
   props: {
     backButton: {
       type: Boolean,
@@ -975,21 +974,11 @@ export default {
 
       return changes
     },
+    isMobile () {
+      return this.$vuetify.breakpoint.sm
+    },
   },
 
-  watch: {
-    isMobile (newValue) {
-      if (!newValue && this.backButton) {
-        return this.setSidebar({ show: true })
-      }
-    }
-  },
-
-  beforeMount () {
-    if (!this.isMobile) {
-      return this.setSidebar({ show: true })
-    }
-  },
   mounted () {
     if (this.editMode) this.toggleEdit()
   },
@@ -997,7 +986,6 @@ export default {
     ...mapActions(utils.moduleName, [
       utilsActionTypes.setSnackbar,
       utilsActionTypes.setConfirmationDialog,
-      utilsActionTypes.setSidebar
     ]),
     ...mapActions(orderForm.moduleName, {
       updateOrder: orderFormTypes.updateOrder,
