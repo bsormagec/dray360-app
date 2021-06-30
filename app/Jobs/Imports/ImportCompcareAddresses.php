@@ -30,14 +30,24 @@ class ImportCompcareAddresses implements ShouldQueue
     public int $companyId;
     public string $companyName;
     public int $tmsProviderId;
+    public int $page;
+    public int $limit = 500;
+    public array $apiAddresses;
     protected $logger;
 
-    public function __construct(Company $company, TMSProvider $tmsProvider, bool $insertOnly = false)
-    {
+    public function __construct(
+        Company $company,
+        TMSProvider $tmsProvider,
+        bool $insertOnly = false,
+        int $page = 1,
+        array $apiAddresses = []
+    ) {
         $this->insertOnly = $insertOnly;
         $this->companyId = $company->id;
         $this->companyName = $company->name;
         $this->tmsProviderId = $tmsProvider->id;
+        $this->page = $page;
+        $this->apiAddresses = $apiAddresses;
     }
 
     public function handle()
@@ -45,49 +55,56 @@ class ImportCompcareAddresses implements ShouldQueue
         set_time_limit($this->timeout);
         $company = Company::find($this->companyId);
         $compcareApi = (new Compcare($company))->getToken();
+        $response = $compcareApi->getAddresses($this->page, $this->limit);
+        $responseIsEmpty = count($response['data']) === 0;
 
-        $page = 1;
-        $limit = 100;
-        $response = $compcareApi->getAddresses($page, $limit);
-        $addressesTmsCodes = collect([]);
-
-        while (count($response['data']) !== 0) {
-            $addresses = collect($response['data'])
-                ->reject(function ($address) {
-                    return strtoupper(Arr::get($address, 'LocationType.LocationTypeCode', '')) == 'S';
-                });
-
-            if ($addresses->count() != 0) {
-                $addressesTmsCodes = $addressesTmsCodes->merge(collect($addresses)->pluck('EntityId'));
-            }
-
-            $addresses
-                ->when($this->insertOnly, function (Collection $addresses) {
-                    $existingCodes = CompanyAddressTMSCode::query()
-                        ->forCompanyTmsProvider($this->companyId, $this->tmsProviderId)
-                        ->pluck('company_address_tms_code');
-                    return $addresses->whereNotIn('EntityId', $existingCodes->toArray());
-                })
-                ->each(function ($address) use ($company) {
-                    ImportCompcareAddress::dispatch($address, $this->tmsProviderId, $company);
-                });
-
-            $response = $compcareApi->getAddresses(++$page, $limit);
-        }
-
-        if ($addressesTmsCodes->count() == 0) {
+        if ($responseIsEmpty && count($this->apiAddresses) == 0) {
             Log::channel('imports')
                 ->info("ImportCompcareAddresses-{$company->name}: Aborting addresses import because addresses list is empty");
             return;
         }
 
-        Log::channel('imports')
-            ->info("ImportCompcareAddresses-{$company->name}: Endpoint returned ".$addressesTmsCodes->count().' addresses');
+        if ($responseIsEmpty && count($this->apiAddresses) > 0) {
+            Log::channel('imports')
+                ->info("ImportCompcareAddresses-{$company->name}: Endpoint returned ".count($this->apiAddresses).' addresses');
 
-        $this->deleteAddressesRemovedInTheResponse(
-            $addressesTmsCodes,
-            $this->companyId,
-            $this->tmsProviderId
+            $this->deleteAddressesRemovedInTheResponse(
+                collect($this->apiAddresses),
+                $this->companyId,
+                $this->tmsProviderId
+            );
+            return;
+        }
+
+
+        $addresses = collect($response['data'])
+            ->reject(function ($address) {
+                return strtoupper(Arr::get($address, 'LocationType.LocationTypeCode', '')) == 'S';
+            });
+
+        if ($addresses->count() != 0) {
+            $this->apiAddresses = collect($this->apiAddresses)
+                ->merge(collect($addresses)->pluck('EntityId'))
+                ->toArray();
+        }
+
+        $addresses
+            ->when($this->insertOnly, function (Collection $addresses) {
+                $existingCodes = CompanyAddressTMSCode::query()
+                    ->forCompanyTmsProvider($this->companyId, $this->tmsProviderId)
+                    ->pluck('company_address_tms_code');
+                return $addresses->whereNotIn('EntityId', $existingCodes->toArray());
+            })
+            ->each(function ($address) use ($company) {
+                ImportCompcareAddress::dispatch($address, $this->tmsProviderId, $company);
+            });
+
+        self::dispatch(
+            $company,
+            TMSProvider::find($this->tmsProviderId),
+            $this->insertOnly,
+            ++$this->page,
+            $this->apiAddresses
         );
     }
 
