@@ -8,8 +8,8 @@ use App\Models\TMSProvider;
 use Tests\Seeds\CompaniesSeeder;
 use App\Models\CompanyAddressTMSCode;
 use Illuminate\Support\Facades\Queue;
-use App\Jobs\ImportItgCargoWiseAddress;
 use Tests\Seeds\CargoWiseItgAddressesSeeder;
+use App\Jobs\Imports\ImportItgCargoWiseAddress;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
 
 class ImportItgCargoWiseAddressTest extends TestCase

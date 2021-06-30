@@ -3,9 +3,9 @@
 namespace App\Imports;
 
 use Illuminate\Support\Collection;
-use App\Jobs\ImportItgCargoWiseAddresses;
 use Maatwebsite\Excel\Concerns\ToCollection;
 use Maatwebsite\Excel\Concerns\WithHeadingRow;
+use App\Jobs\Imports\ImportItgCargoWiseAddresses;
 
 class ItgAllAddressesSheet implements ToCollection, WithHeadingRow
 {

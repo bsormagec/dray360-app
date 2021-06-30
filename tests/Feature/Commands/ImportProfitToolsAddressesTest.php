@@ -9,7 +9,7 @@ use Illuminate\Support\Facades\Http;
 use App\Models\CompanyAddressTMSCode;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Queue;
-use App\Jobs\ImportProfitToolsAddress;
+use App\Jobs\Imports\ImportProfitToolsAddress;
 use Tests\Seeds\ProfitToolsCushingAddressesSeeder;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
 

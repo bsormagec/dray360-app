@@ -101,18 +101,13 @@
 import format from 'date-fns/format'
 import cloneDeep from 'lodash/cloneDeep'
 
-import isMobile from '@/mixins/is_mobile'
 import permissions from '@/mixins/permissions'
-
-import { mapActions } from 'vuex'
-import utils, { actionTypes } from '@/store/modules/utils'
 
 import Filters from './components/Filters'
 
 import { getAccountingMetrics } from '@/store/api_calls/accounting_metrics'
 import { metrics } from '@/enums/app_objects_types'
 import { metricsLabels } from './enums/metrics_labels'
-import { de } from 'date-fns/locale'
 
 export default {
   name: 'AccountingDashboard',
@@ -121,7 +116,7 @@ export default {
     Filters
   },
 
-  mixins: [permissions, isMobile],
+  mixins: [permissions],
 
   data: () => ({
     filters: {
@@ -182,14 +177,6 @@ export default {
   },
 
   watch: {
-    isMobile: function (newVal, oldVal) {
-      if (newVal) {
-        this.setSidebar({ show: false })
-      } else {
-        this.setSidebar({ show: true })
-      }
-    },
-
     options: {
       handler () {
         const sortCol = this.options.sortBy.join()
@@ -226,12 +213,6 @@ export default {
 
   async beforeMount () {
     this.filters.dateRange = this.getDefaultDateRange()
-
-    if (!this.isMobile) {
-      return this.setSidebar({ show: true })
-    }
-
-    return this.setSidebar({ show: false })
   },
 
   created () {
@@ -241,8 +222,6 @@ export default {
   },
 
   methods: {
-    ...mapActions(utils.moduleName, [actionTypes.setSidebar]),
-
     filtersChanged (newFilters) {
       this.filters = { ...newFilters }
     },
@@ -308,7 +287,7 @@ export default {
 
 <style lang="scss" scoped>
 .audits__list {
-  height: 100vh;
+  height: calc(100vh - 40px);
   overflow-y: auto;
 }
 

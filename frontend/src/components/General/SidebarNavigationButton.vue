@@ -14,10 +14,8 @@
 import auth from '@/store/modules/auth'
 import { mapState, mapActions } from 'vuex'
 import utils, { actionTypes } from '@/store/modules/utils'
-import isMobile from '@/mixins/is_mobile'
 
 export default {
-  mixins: [isMobile],
   props: {
     dark: {
       type: Boolean,
@@ -45,7 +43,10 @@ export default {
     ...mapState(auth.moduleName, { currentUser: state => state.currentUser }),
     ...mapState(utils.moduleName, {
       showSidebar: state => state.sidebar.show
-    })
+    }),
+    isMobile () {
+      return this.$vuetify.breakpoint.mobile
+    },
   },
   methods: {
     ...mapActions(utils.moduleName, [actionTypes.setSidebar]),
@@ -55,7 +56,3 @@ export default {
   }
 }
 </script>
-
-<style lang="sass" scoped>
-
-</style>

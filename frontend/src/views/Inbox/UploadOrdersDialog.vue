@@ -48,7 +48,7 @@
                     :items="variants"
                     item-value="abbyy_variant_name"
                     item-text="description"
-                    label="Mapping Template"
+                    label="Mapping Template Variant"
                     outlined
                     clearable
                     dense

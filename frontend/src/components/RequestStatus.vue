@@ -1,5 +1,32 @@
 <template>
   <div
+    v-if="isRejected"
+    :class="{
+      'status__indicator': true,
+      [statusClass]: true,
+      'd-flex': true,
+      'align-center': true,
+    }"
+  >
+    <v-tooltip
+      attach
+      nudge-bottom="36"
+    >
+      <template v-slot:activator="{on, attrs}">
+        <span
+          v-bind="attrs"
+          v-on="on"
+        >
+          {{ status.display_status.trim() }}
+        </span>
+      </template>
+      <span class="text-caption">
+        {{ status.display_message }}
+      </span>
+    </v-tooltip>
+  </div>
+  <div
+    v-else
     :class="{
       'status__indicator': true,
       [statusClass]: true,
@@ -9,30 +36,15 @@
   >
     {{ status.display_status.trim() }}
   </div>
-  <!-- <span
-          v-if="item.latest_ocr_request_status.display_status.toLowerCase() === 'processed'"
-          class="processed-status"
-        >
-          {{ item.latest_ocr_request_status.display_status }}
-        </span>
-        <Chip
-          v-else
-          x-small
-          v-bind="getStatusChip(item)"
-        >
-          {{ item.latest_ocr_request_status.display_status }}
-        </Chip> -->
 </template>
 
 <script>
-import Chip from '@/components/Chip'
-
 import permissions from '@/mixins/permissions'
 import { cleanStrForId } from '@/utils/clean_str_for_id'
+import { displayStatuses } from '@/enums/app_objects_types'
 
 export default {
   name: 'RequestStatus',
-  components: { Chip },
   mixins: [permissions],
 
   props: {
@@ -45,6 +57,9 @@ export default {
   computed: {
     statusClass () {
       return cleanStrForId(this.status.display_status.replace('(update)', ''))
+    },
+    isRejected () {
+      return this.status.display_status === displayStatuses.rejected
     }
   }
 }

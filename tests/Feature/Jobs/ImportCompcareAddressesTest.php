@@ -6,12 +6,12 @@ use Tests\TestCase;
 use App\Models\TMSProvider;
 use App\Services\Apis\RipCms;
 use Tests\Seeds\CompaniesSeeder;
-use App\Jobs\ImportCompcareAddress;
 use Illuminate\Support\Facades\Http;
-use App\Jobs\ImportCompcareAddresses;
 use App\Models\CompanyAddressTMSCode;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Queue;
+use App\Jobs\Imports\ImportCompcareAddress;
+use App\Jobs\Imports\ImportCompcareAddresses;
 use Tests\Seeds\CompcareTradelinkAddressesSeeder;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
 

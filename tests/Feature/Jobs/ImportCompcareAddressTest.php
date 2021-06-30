@@ -6,9 +6,9 @@ use Tests\TestCase;
 use App\Models\Address;
 use App\Models\TMSProvider;
 use Tests\Seeds\CompaniesSeeder;
-use App\Jobs\ImportCompcareAddress;
 use App\Models\CompanyAddressTMSCode;
 use Illuminate\Support\Facades\Queue;
+use App\Jobs\Imports\ImportCompcareAddress;
 use Tests\Seeds\CompcareTradelinkAddressesSeeder;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
 

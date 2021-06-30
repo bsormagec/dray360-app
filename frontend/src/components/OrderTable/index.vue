@@ -175,7 +175,7 @@
               class="py-6 mt-4"
             >
               <h6>
-                <strong>No Data<strong /></strong>
+                <strong>No Data</strong>
               </h6>
               <div class="mt-5 py-5">
                 <v-btn

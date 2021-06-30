@@ -23,41 +23,24 @@ import { mapState, mapActions } from 'vuex'
 import userDashboard, { types } from '@/store/modules/users'
 import utils, { actionTypes } from '@/store/modules/utils'
 import { deleteUser } from '@/store/api_calls/users'
-import isMobile from '@/mixins/is_mobile'
-import isMedium from '@/mixins/is_medium'
 
 export default {
   components: {
     UserTable
   },
 
-  mixins: [isMobile, isMedium],
-
   computed: {
     ...mapState(userDashboard.moduleName, {
       users: state => state.users
-    })
-  },
-
-  watch: {
-    isMedium: function (newVal, oldVal) {
-      if (!newVal) this.setSidebar({ show: true })
+    }),
+    isMobile () {
+      return this.$vuetify.breakpoint.mobile
     },
-    isMobile: function (newVal, oldVal) {
-      if (newVal) this.setSidebar({ show: false })
-      else this.setSidebar({ show: true })
-    }
-  },
-
-  beforeMount () {
-    if (!this.isMobile) return this.setSidebar({ show: true })
-    return this.setSidebar({ show: false })
   },
 
   methods: {
     ...mapActions(userDashboard.moduleName, [types.getUsers]),
     ...mapActions(utils.moduleName, {
-      setSidebar: actionTypes.setSidebar,
       setConfirmationDialog: actionTypes.setConfirmationDialog,
     }),
     ...mapActions(utils.moduleName, [actionTypes.setSnackbar]),

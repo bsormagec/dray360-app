@@ -190,6 +190,7 @@ export default {
         return {}
       }
 
+      // eslint-disable-next-line camelcase
       const { status_metadata, start_date, company_id } = status
 
       return { start_date, company_id, status_metadata }
