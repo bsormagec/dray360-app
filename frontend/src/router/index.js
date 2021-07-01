@@ -6,7 +6,6 @@ import Inbox from '@/views/Inbox/Inbox'
 import Search from '@/views/Search/Search'
 import RulesEditor from '@/views/RulesEditor/RulesEditor'
 import auth from '@/router/middleware/auth'
-import superadmin from '@/router/middleware/superadmin'
 import permission from '@/router/middleware/permissions'
 import dev from '@/router/middleware/dev'
 import StyleGuide from '@/views/StyleGuide'
@@ -53,7 +52,7 @@ const routes = [
   },
   {
     path: '/user/dashboard',
-    name: 'Dashboard',
+    name: 'Manage Users',
     meta: {
       middleware: [auth, permission('users-view')]
     },
@@ -69,7 +68,7 @@ const routes = [
   },
   {
     path: '/user/dashboard/add-user',
-    name: 'AddUser',
+    name: 'Add User',
     meta: {
       middleware: [auth, permission('users-view')]
     },
@@ -77,7 +76,7 @@ const routes = [
   },
   {
     path: '/user/dashboard/edit-user/:id',
-    name: 'EditUser',
+    name: 'Edit User',
     meta: {
       middleware: [auth, permission('users-view')]
     },
@@ -85,7 +84,7 @@ const routes = [
   },
   {
     path: '/user/edit-profile',
-    name: 'EditProfile',
+    name: 'Edit Profile',
     meta: {
       middleware: [auth]
     },
@@ -93,7 +92,7 @@ const routes = [
   },
   {
     path: '/user/dashboard/change-password',
-    name: 'ChangePassword',
+    name: 'Change Password',
     meta: {
       middleware: [auth]
     },
@@ -101,7 +100,7 @@ const routes = [
   },
   {
     path: '/styleguide',
-    name: 'StyleGuide',
+    name: 'Style Guide',
     meta: {
       middleware: [auth, dev]
     },
@@ -109,7 +108,7 @@ const routes = [
   },
   {
     path: '/order/:id',
-    name: 'OrderDetails',
+    name: 'Order Details',
     meta: {
       middleware: [auth]
     },
@@ -126,7 +125,7 @@ const routes = [
   },
   {
     path: '/rules-editor',
-    name: 'RulesEditor',
+    name: 'Rules Editor',
     meta: {
       middleware: [auth, permission('rules-editor-view')]
     },

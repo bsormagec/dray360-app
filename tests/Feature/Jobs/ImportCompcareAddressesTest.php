@@ -27,7 +27,7 @@ class ImportCompcareAddressesTest extends TestCase
     }
 
     /** @test */
-    public function it_should_queue_a_job_for_each_address_from_the_endpoint()
+    public function it_should_requeue_itself_with_the_next_page()
     {
         Queue::fake();
         $this->clearTokenCache();
@@ -40,15 +40,96 @@ class ImportCompcareAddressesTest extends TestCase
                 'success' => true,
                 'data' => [['EntityId' => 1]],
                 'count' => 2
+            ]);
+
+        (new ImportCompcareAddresses(
+            CompaniesSeeder::getTestTradelink(),
+            TMSProvider::getCompcare()
+        ))->handle();
+
+        Queue::assertPushed(
+            ImportCompcareAddresses::class,
+            function (ImportCompcareAddresses $job) {
+                return $job->page == 2
+                    && $job->apiAddresses[0] == 1
+                    && ! $job->insertOnly
+                    && $job->tmsProviderId == TMSProvider::getCompcare()->id
+                    && $job->companyId == CompaniesSeeder::getTestTradelink()->id;
+            }
+        );
+    }
+
+    /** @test */
+    public function it_should_only_delete_addresses_if_response_is_empty_and_the_api_addresses_has_values()
+    {
+        $this->seed(CompcareTradelinkAddressesSeeder::class);
+        Queue::fake();
+        $this->clearTokenCache();
+        Http::fakeSequence()
+            ->push([
+                'success' => true,
+                'data' => ['token' => 'test1']
+            ])
+            ->push(['success' => true, 'data' => [], 'count' => 2]);
+        $companyAddress = CompanyAddressTMSCode::with('address:id')->first();
+        $anotherCompany = factory(CompanyAddressTMSCode::class)->create();
+
+        (new ImportCompcareAddresses(
+            CompaniesSeeder::getTestTradelink(),
+            TMSProvider::getCompcare(),
+            true, //insert-only,
+            2, // page 2
+            [2] // EntityId 2
+        ))->handle();
+
+        $this->assertSoftDeleted($companyAddress);
+        $anotherCompany->fresh(['address']);
+        $this->assertNull($anotherCompany->deleted_at);
+        Queue::assertNothingPushed();
+    }
+
+    /** @test */
+    public function it_should_not_do_anything_if_the_addresses_is_empty_and_response_is_empty()
+    {
+        $this->seed(CompcareTradelinkAddressesSeeder::class);
+        Queue::fake();
+        $this->clearTokenCache();
+        Http::fakeSequence()
+            ->push([
+                'success' => true,
+                'data' => ['token' => 'test1']
+            ])
+            ->push(['success' => true, 'data' => [], 'count' => 2]);
+        $companyAddress = CompanyAddressTMSCode::with('address:id')->first();
+        factory(CompanyAddressTMSCode::class)->create();
+
+        (new ImportCompcareAddresses(
+            CompaniesSeeder::getTestTradelink(),
+            TMSProvider::getCompcare(),
+            true //insert-only
+        ))->handle();
+
+        $this->assertDatabaseHas('t_company_address_tms_code', ['id' => $companyAddress->id, 'deleted_at' => null]);
+        $this->assertDatabaseHas('t_addresses', ['id' => $companyAddress->address->id, 'deleted_at' => null]);
+        Queue::assertNothingPushed();
+    }
+
+    /** @test */
+    public function it_should_queue_a_job_for_each_address_from_the_endpoint()
+    {
+        Queue::fake();
+        $this->clearTokenCache();
+        Http::fakeSequence()
+            ->push([
+                'success' => true,
+                'data' => ['token' => 'test1']
             ])
             ->push([
                 'success' => true,
-                'data' => [['EntityId' => 2]],
-                'count' => 2
-            ])
-            ->push([
-                'success' => true,
-                'data' => [],
+                'data' => [
+                    ['EntityId' => 1],
+                    ['EntityId' => 2]
+                ],
                 'count' => 2
             ]);
 
@@ -79,23 +160,15 @@ class ImportCompcareAddressesTest extends TestCase
             ])
             ->push([
                 'success' => true,
-                'data' => [[
-                    'EntityId' => 1,
-                    'LocationType' => ['LocationTypeCode' => "S"],
-                ]],
-                'count' => 2
-            ])
-            ->push([
-                'success' => true,
-                'data' => [[
-                    'EntityId' => 1,
-                    'LocationType' => ['LocationTypeCode' => "P"],
-                ]],
-                'count' => 2
-            ])
-            ->push([
-                'success' => true,
-                'data' => [],
+                'data' => [
+                    [
+                        'EntityId' => 1,
+                        'LocationType' => ['LocationTypeCode' => "S"],
+                    ], [
+                        'EntityId' => 1,
+                        'LocationType' => ['LocationTypeCode' => "P"],
+                    ]
+                ],
                 'count' => 2
             ]);
 
@@ -148,64 +221,6 @@ class ImportCompcareAddressesTest extends TestCase
             ImportCompcareAddress::class,
             fn (ImportCompcareAddress $job) => $job->addressCode == 2
         );
-    }
-
-    /** @test */
-    public function it_should_delete_the_addresses_that_dont_come_in_the_api_response()
-    {
-        $this->seed(CompcareTradelinkAddressesSeeder::class);
-        Queue::fake();
-        $this->clearTokenCache();
-        Http::fakeSequence()
-            ->push([
-                'success' => true,
-                'data' => ['token' => 'test1']
-            ])
-            ->push([
-                'success' => true,
-                'data' => [['EntityId' => 2]],
-                'count' => 1
-            ])
-            ->push(['success' => true, 'data' => [], 'count' => 2]);
-        $companyAddress = CompanyAddressTMSCode::with('address:id')->first();
-        $anotherCompany = factory(CompanyAddressTMSCode::class)->create();
-
-        (new ImportCompcareAddresses(
-            CompaniesSeeder::getTestTradelink(),
-            TMSProvider::getCompcare(),
-            true //insert-only
-        ))->handle();
-
-        $this->assertSoftDeleted($companyAddress);
-        // $this->assertSoftDeleted($companyAddress->address);
-        $anotherCompany->fresh(['address']);
-        $this->assertNull($anotherCompany->deleted_at);
-        // $this->assertNull($anotherCompany->address->deleted_at);
-    }
-
-    /** @test */
-    public function it_should_fail_if_the_list_of_addresses_is_empty()
-    {
-        $this->seed(CompcareTradelinkAddressesSeeder::class);
-        Queue::fake();
-        $this->clearTokenCache();
-        Http::fakeSequence()
-            ->push([
-                'success' => true,
-                'data' => ['token' => 'test1']
-            ])
-            ->push(['success' => true, 'data' => [], 'count' => 2]);
-        $companyAddress = CompanyAddressTMSCode::with('address:id')->first();
-        factory(CompanyAddressTMSCode::class)->create();
-
-        (new ImportCompcareAddresses(
-            CompaniesSeeder::getTestTradelink(),
-            TMSProvider::getCompcare(),
-            true //insert-only
-        ))->handle();
-
-        $this->assertDatabaseHas('t_company_address_tms_code', ['id' => $companyAddress->id, 'deleted_at' => null]);
-        $this->assertDatabaseHas('t_addresses', ['id' => $companyAddress->address->id, 'deleted_at' => null]);
     }
 
     protected function clearTokenCache()

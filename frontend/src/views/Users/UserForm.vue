@@ -5,9 +5,6 @@
   >
     <v-row no-gutters>
       <v-col md="4">
-        <div class="text-h6 mb-4 user-edit__heading">
-          {{ edit ? 'Edit User' : 'Add User' }}
-        </div>
         <v-text-field
           v-model="name"
           data-cy="name-input"

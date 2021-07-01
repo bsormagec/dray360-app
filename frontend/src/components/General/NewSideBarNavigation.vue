@@ -240,7 +240,7 @@ $sidebarbackground: url("../../assets/images/sidebarbackground.png");
           }
 
           .v-list-item__icon {
-            background-color: #33638D;
+            background-color: var(--v-primary-lighten1);
           }
 
           .v-icon {
@@ -330,7 +330,7 @@ $sidebarbackground: url("../../assets/images/sidebarbackground.png");
         opacity: 1;
       }
       .v-list-item__icon {
-        background-color: #33638D;
+        background-color: var(--v-primary-lighten1);
       }
       .v-icon {
         opacity: 1;
