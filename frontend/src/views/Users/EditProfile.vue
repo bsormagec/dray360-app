@@ -1,11 +1,6 @@
 <template>
   <div class="pa-5">
     <template>
-      <h6 class="edit-profile-headline">
-        Edit Profile
-      </h6>
-    </template>
-    <template>
       <v-row>
         <v-col md="6">
           <v-text-field

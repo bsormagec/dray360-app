@@ -1,8 +1,5 @@
 <template>
   <div class="pa-4">
-    <h6 class="password-change__label">
-      Change Password
-    </h6>
     <v-row>
       <v-col md="4">
         <v-text-field
