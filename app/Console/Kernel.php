@@ -24,33 +24,49 @@ class Kernel extends ConsoleKernel
      */
     protected function schedule(Schedule $schedule)
     {
+        // Profit Tools Imports
         $schedule
             ->command('import:profit-tools-addresses')
             ->weeklyOn(7)
-            ->onOneServer();
-        $schedule
-            ->command('import:cargowise-addresses')
-            ->dailyAt('03:00')
             ->onOneServer();
         $schedule
             ->command('import:profit-tools-addresses', ['--insert-only'])
             ->hourly()
             ->onOneServer();
 
+        // Cargo Wise Imports
+        $schedule
+            ->command('import:cargowise-addresses')
+            ->dailyAt('03:00')
+            ->onOneServer();
+
+        // Compcare Imports
+        $schedule
+            ->command('import:compcare-addresses')
+            ->weeklyOn(6, '03:00')
+            ->onOneServer();
+
+        // Metrics
         $schedule
             ->command('metrics:companies-daily')
-            ->dailyAt('06:00');
+            ->dailyAt('06:00')
+            ->onOneServer();
         $schedule
             ->command('metrics:companies-daily', [
                 '--from' => now()->toDateString(),
                 '--to' => now()->toDateString(),
             ])
-            ->hourly();
+            ->hourly()
+            ->onOneServer();
 
         // Dictionary Items Sync
-        $schedule->command('import:dictionary-items')->hourly();
+        $schedule->command('import:dictionary-items')
+            ->hourly()
+            ->onOneServer();
 
-        $schedule->command('horizon:snapshot')->everyFiveMinutes();
+        $schedule->command('horizon:snapshot')
+            ->everyFiveMinutes()
+            ->onOneServer();
     }
 
     /**

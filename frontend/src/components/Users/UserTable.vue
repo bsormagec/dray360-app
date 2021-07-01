@@ -13,13 +13,11 @@
       :class="{'table': true, 'loading': loading}"
     >
       <template v-slot:top>
-        <h6 class="user__list-heading">
-          {{ tableTitle }} ({{ userList.length }})
-        </h6>
         <v-toolbar
           flat
           color="white"
           height="auto"
+          class="mb-2"
         >
           <DateRangeCalendar
             v-if="hasCalendar"

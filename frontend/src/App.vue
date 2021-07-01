@@ -51,7 +51,7 @@ export default {
     },
 
     sideBarException () {
-      return ['Login', 'Not Authorized', 'Not Found', 'RulesEditor'].includes(this.$route.name)
+      return ['Login', 'Not Authorized', 'Not Found', 'Rules Editor'].includes(this.$route.name)
     },
 
     topBarException () {
