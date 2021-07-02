@@ -78,6 +78,6 @@ describe('Sorts columns', function () {
 
     cy.get('div>div>i').eq(4).click({ force: true })
 
-    cy.get('thead>tr>th>span').should('have.length', 5)
+    cy.get('thead>tr>th>span').should('have.length', 6)
   })
 })
