@@ -4173,7 +4173,7 @@
 					}
 				],
 				"url": {
-					"raw": "{{server}}/api/audit-logs-dashboard?start_date=2021-04-07&end_date=2021-04-07&user_id=29",
+					"raw": "{{server}}/api/audit-logs-dashboard?start_date=2021-04-07&end_date=2021-04-07",
 					"host": [
 						"{{server}}"
 					],
@@ -4197,11 +4197,22 @@
 						},
 						{
 							"key": "user_id",
-							"value": "29"
+							"value": "29",
+							"disabled": true
 						},
 						{
 							"key": "variant_name",
 							"value": "",
+							"disabled": true
+						},
+						{
+							"key": "per_page",
+							"value": "15",
+							"disabled": true
+						},
+						{
+							"key": "page",
+							"value": "1",
 							"disabled": true
 						}
 					]
