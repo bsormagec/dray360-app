@@ -7,6 +7,7 @@ use App\Http\Controllers\Api\OrdersController;
 use App\Http\Controllers\Api\OCRRulesController;
 use App\Http\Controllers\Api\AuditLogsController;
 use App\Http\Controllers\Api\CompaniesController;
+use App\Http\Controllers\Api\FeedbacksController;
 use App\Http\Controllers\Api\FieldMapsController;
 use App\Http\Controllers\Api\SendToTmsController;
 use App\Http\Controllers\CurrentTenantController;
@@ -129,6 +130,10 @@ Route::group(['middleware' => ['auth:sanctum', 'impersonate', 'tenant-aware']], 
 
     // Orders management
     Route::apiResource('dictionary-items', DictionaryItemsController::class)
+        ->only(['index', 'store']);
+
+    // Feedbacks management
+    Route::apiResource('feedbacks', FeedbacksController::class)
         ->only(['index', 'store']);
 
     // Companies management

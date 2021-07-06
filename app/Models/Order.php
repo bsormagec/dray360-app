@@ -342,6 +342,11 @@ class Order extends Model implements Auditable
         return $this->hasMany(self::class, 'request_id', 'request_id');
     }
 
+    public function comments()
+    {
+        return $this->morphMany(FeedbackComment::class, 'commentable');
+    }
+
     public static function getBasicOrderForSideBySide($orderId): self
     {
         return Order::query()
