@@ -29,6 +29,10 @@ abstract class DictionaryItemsImporter
             return;
         }
 
-        DictionaryItem::whereNotIn('id', $ids)->delete();
+        DictionaryItem::query()
+            ->where('t_company_id', $this->company->id)
+            ->where('item_type', $this->itemType)
+            ->whereNotIn('id', $ids)
+            ->delete();
     }
 }
