@@ -158,6 +158,9 @@ class Order extends Model implements Auditable
         'carrier_dictid_verified',
         'vessel_dictid',
         'vessel_dictid_verified',
+        'cc_loadtype',
+        'cc_loadtype_dictid',
+        'cc_loadtype_dictid_verified',
     ];
 
     /**
@@ -184,6 +187,7 @@ class Order extends Model implements Auditable
         'carrier_dictid_verified' => 'boolean',
         'vessel_dictid_verified' => 'boolean',
         'container_dictid_verified' => 'boolean',
+        'cc_loadtype_dictid_verified' => 'boolean',
     ];
 
     /**
@@ -260,6 +264,8 @@ class Order extends Model implements Auditable
         'carrier_dictid_verified' => 'sometimes|nullable',
         'vessel_dictid' => 'sometimes|nullable',
         'vessel_dictid_verified' => 'sometimes|nullable',
+        'cc_loadtype_dictid' => 'sometimes|nullable',
+        'cc_loadtype_dictid_verified' => 'sometimes|nullable',
     ];
 
     /**
@@ -271,6 +277,7 @@ class Order extends Model implements Auditable
         'carrier_dictid_verified' => AttributeVerified::class,
         'vessel_dictid_verified' => AttributeVerified::class,
         'container_dictid_verified' => AttributeVerified::class,
+        'cc_loadtype_dictid_verified' => AttributeVerified::class,
     ];
 
     protected $objectLockType = ObjectLock::REQUEST_OBJECT;
@@ -335,6 +342,11 @@ class Order extends Model implements Auditable
     public function container()
     {
         return $this->belongsTo(DictionaryItem::class, 'container_dictid');
+    }
+
+    public function ccLoadtype()
+    {
+        return $this->belongsTo(DictionaryItem::class, 'cc_loadtype_dictid');
     }
 
     public function siblings()

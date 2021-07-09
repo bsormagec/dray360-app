@@ -43,6 +43,7 @@ class ImportDictionaryItems extends Command
                 return $collection->filter(fn ($item) => $item['item_type'] === $this->option('item-type'));
             })
             ->each(function ($itemPerCompany) {
+                $this->info("Queueing import of '{$itemPerCompany['item_type']}' for " . $itemPerCompany['company']->name);
                 ImportDictionaryItemsJob::dispatch($itemPerCompany['company'], $itemPerCompany);
             });
     }

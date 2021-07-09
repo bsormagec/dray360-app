@@ -13,11 +13,7 @@
             :back-button="backButton"
             :virtual-back-button="isMobile && !backButton"
             :redirect-back="redirectBack"
-            :tms-templates="tmsTemplates"
-            :itg-containers="itgContainers"
-            :carrier-items="carrierItems"
-            :vessel-items="vesselItems"
-            :options="{...formOptions}"
+            :options="formOptions"
             :refresh-lock="refreshLock"
             @order-deleted="$emit('order-deleted')"
             @go-back="$emit('go-back')"
@@ -69,10 +65,8 @@ import OrderDetailsForm from '@/views/OrderDetails/OrderDetailsForm'
 import OrderDetailsDocument from '@/views/OrderDetails/OrderDetailsDocument'
 import ContainerNotFound from '@/views/ContainerNotFound'
 import { reqStatus } from '@/enums/req_status'
-import { dictionaryItemsTypes, objectLocks } from '@/enums/app_objects_types'
+import { objectLocks } from '@/enums/app_objects_types'
 import events from '@/enums/events'
-
-import { getDictionaryItems } from '@/store/api_calls/dictionary_items'
 
 import ContentLoading from '@/components/ContentLoading'
 import orders, { types } from '@/store/modules/orders'
@@ -125,10 +119,6 @@ export default {
     startPos: 0,
     loaded: false,
     redirectBack: false,
-    tmsTemplates: [],
-    itgContainers: [],
-    carrierItems: [],
-    vesselItems: [],
     orderIdToLoad: vm.orderId || vm.$route.params.id,
     formOptions: {
       hidden: [],
@@ -213,19 +203,6 @@ export default {
       await this.requestOrderDetail()
       this.initializeFormOptions()
       await this.initializeLock()
-
-      if (this.formOptions.extra.profit_tools_enable_templates) {
-        await this.fetchTmsTemplates(this.currentOrder.company.id)
-      }
-      if (this.formOptions.extra.itg_enable_containers) {
-        await this.fetchItgContainers(this.currentOrder.company.id)
-      }
-      if (this.formOptions.extra.enable_dictionary_items_carrier) {
-        await this.fetchCarrierItems(this.currentOrder.company.id)
-      }
-      if (this.formOptions.extra.enable_dictionary_items_vessel) {
-        await this.getchVesselItems(this.currentOrder.company.id)
-      }
     },
 
     initializeLockingListeners () {
@@ -372,56 +349,6 @@ export default {
       })
     },
 
-    async fetchTmsTemplates (companyId) {
-      const [error, data] = await getDictionaryItems({
-        'filter[company_id]': companyId,
-        'filter[item_type]': dictionaryItemsTypes.template
-      })
-
-      if (error !== undefined) {
-        this.tmsTemplates = []
-      }
-
-      this.tmsTemplates = data.data
-    },
-
-    async fetchItgContainers (companyId) {
-      const [error, data] = await getDictionaryItems({
-        'filter[company_id]': companyId,
-        'filter[item_type]': dictionaryItemsTypes.itgContainer
-      })
-
-      if (error !== undefined) {
-        this.itgContainers = []
-      }
-
-      this.itgContainers = data.data
-    },
-    async fetchCarrierItems (companyId) {
-      const [error, data] = await getDictionaryItems({
-        'filter[company_id]': companyId,
-        'filter[item_type]': dictionaryItemsTypes.carrier
-      })
-
-      if (error !== undefined) {
-        this.carrierItems = []
-      }
-
-      this.carrierItems = data.data
-    },
-    async getchVesselItems (companyId) {
-      const [error, data] = await getDictionaryItems({
-        'filter[company_id]': companyId,
-        'filter[item_type]': dictionaryItemsTypes.vessel
-      })
-
-      if (error !== undefined) {
-        this.vesselItems = []
-      }
-
-      this.vesselItems = data.data
-    },
-
     initializeFormOptions () {
       for (const key in this.companyConfiguration) {
         if (key.startsWith('hide_field_name_') && this.companyConfiguration[key]) {
@@ -438,6 +365,8 @@ export default {
 
         this.formOptions.field_maps = this.currentOrder.field_maps
       }
+
+      this.formOptions = { ...this.formOptions }
     },
 
     async requestOrderDetail () {

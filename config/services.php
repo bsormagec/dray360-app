@@ -42,6 +42,7 @@ return [
     'compcare' => [
         'identity_url' => env('COMPCARE_IDENTITY_URL'),
         'entities_url' => env('COMPCARE_ENTITIES_URL'),
+        'orders_url' => env('COMPCARE_ORDERS_URL'),
     ],
 
     'search-address' => [

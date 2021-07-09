@@ -13,6 +13,7 @@ class Compcare
 {
     protected string $identityUrl;
     protected string $entitiesUrl;
+    protected string $ordersUrl;
 
     protected $apiKey;
     protected $token;
@@ -22,6 +23,7 @@ class Compcare
     {
         $this->identityUrl = Str::finish(config('services.compcare.identity_url'), '/api/');
         $this->entitiesUrl = Str::finish(config('services.compcare.entities_url'), '/api/');
+        $this->ordersUrl = Str::finish(config('services.compcare.orders_url'), '/api/');
 
         $this->company = $company;
         $this->token = Cache::get(self::getTokenCacheKeyFor($this->company));
@@ -76,6 +78,18 @@ class Compcare
         }
 
         return $data;
+    }
+
+    public function getLoadTypes(): array
+    {
+        $response = Http::withToken($this->token)
+            ->get("{$this->ordersUrl}LoadTypes/GetLoadTypes");
+
+        if ($response->failed() || ! is_array($response->json()) || $response['success'] == false) {
+            throw new CompcareException('LoadTypes/GetLoadTypes', $response->body(), $response->status());
+        }
+
+        return $response->json();
     }
 
     public static function getTokenCacheKeyFor(Company $company): string
