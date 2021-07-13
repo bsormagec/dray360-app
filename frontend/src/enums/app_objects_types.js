@@ -149,3 +149,8 @@ export const abbySourceFileds = {
     'terminal_location'
   ],
 }
+
+export const commentableTypes = {
+  order: 'order',
+  request: 'request',
+}

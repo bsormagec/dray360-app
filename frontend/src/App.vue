@@ -17,6 +17,7 @@
       <Snackbar />
       <ConfirmationDialog />
       <PtImageUploadDialog />
+      <OrderCommentDialog />
     </v-main>
   </v-app>
 </template>
@@ -27,6 +28,7 @@ import NewSideBarNavigation from '@/components/General/NewSideBarNavigation'
 import Snackbar from '@/components/General/Snackbar'
 import ConfirmationDialog from '@/components/General/ConfirmationDialog'
 import PtImageUploadDialog from '@/components/PtImageUploadDialog'
+import OrderCommentDialog from '@/components/OrderCommentDialog'
 import { hexToRgb } from '@/utils/hex_to_rgb'
 
 export default {
@@ -38,6 +40,7 @@ export default {
     Snackbar,
     ConfirmationDialog,
     PtImageUploadDialog,
+    OrderCommentDialog,
   },
 
   computed: {

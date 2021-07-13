@@ -122,7 +122,8 @@
           { title: 'Release edit-lock', action: () => $emit('lock-released', order), hidden: !refreshLock|| !hasPermission('object-locks-create') || order.ocr_request_is_locked || order.is_locked || supervise},
           { title: 'Upload PT Image', action: openUploadPTImage, hidden: order.t_tms_provider_id !== 1 || !hasPermission('pt-images-create') || isLocked },
           { title: 'Take edit-lock', action: () => $emit('lock-requested', order), hidden: !refreshLock|| !hasPermission('object-locks-create') || (!order.ocr_request_is_locked && !order.is_locked) || supervise},
-          { title: 'View audit info', action: () => openAuditDialog = true, hidden: !hasPermission('audit-logs-view')}
+          { title: 'View audit info', action: () => openAuditDialog = true, hidden: !hasPermission('audit-logs-view')},
+          { title: 'Add an order comment', action: openOrderCommentDialog, hidden: !hasPermission('feedbacks-create')},
         ]"
         :loading="loading"
       />
@@ -753,7 +754,7 @@ import { scrollTo } from '@/utils/scroll_to'
 import permissions from '@/mixins/permissions'
 import { mapState, mapActions, mapGetters } from 'vuex'
 import get from 'lodash/get'
-import { statuses, dictionaryItemsTypes } from '@/enums/app_objects_types'
+import { statuses, dictionaryItemsTypes, commentableTypes } from '@/enums/app_objects_types'
 import events from '@/enums/events'
 
 import { getOrderDetail, postSendToTms, delDeleteOrder, postSendToClient, replicateOrder } from '@/store/api_calls/orders'
@@ -1222,6 +1223,15 @@ export default {
           await this.setSnackbar({ show: true, message: 'TMS ID added' })
         },
         onCancel: () => { this.loading = false }
+      })
+    },
+
+    openOrderCommentDialog () {
+      this.$root.$emit(events.openOrderCommentDialog, {
+        commentableType: commentableTypes.order,
+        commentableId: this.order.id,
+        label: `Order #${this.order.id} Feedbak`
+
       })
     },
   }
