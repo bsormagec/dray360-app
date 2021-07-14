@@ -161,6 +161,9 @@ class Order extends Model implements Auditable
         'cc_loadtype',
         'cc_loadtype_dictid',
         'cc_loadtype_dictid_verified',
+        'cc_orderstatus',
+        'cc_orderstatus_dictid',
+        'cc_orderstatus_dictid_verified',
     ];
 
     /**
@@ -188,6 +191,7 @@ class Order extends Model implements Auditable
         'vessel_dictid_verified' => 'boolean',
         'container_dictid_verified' => 'boolean',
         'cc_loadtype_dictid_verified' => 'boolean',
+        'cc_orderstatus_dictid_verified' => 'boolean',
     ];
 
     /**
@@ -266,6 +270,8 @@ class Order extends Model implements Auditable
         'vessel_dictid_verified' => 'sometimes|nullable',
         'cc_loadtype_dictid' => 'sometimes|nullable',
         'cc_loadtype_dictid_verified' => 'sometimes|nullable',
+        'cc_orderstatus_dictid' => 'sometimes|nullable',
+        'cc_orderstatus_dictid_verified' => 'sometimes|nullable',
     ];
 
     /**
@@ -278,6 +284,7 @@ class Order extends Model implements Auditable
         'vessel_dictid_verified' => AttributeVerified::class,
         'container_dictid_verified' => AttributeVerified::class,
         'cc_loadtype_dictid_verified' => AttributeVerified::class,
+        'cc_orderstatus_dictid_verified' => AttributeVerified::class,
     ];
 
     protected $objectLockType = ObjectLock::REQUEST_OBJECT;
@@ -347,6 +354,11 @@ class Order extends Model implements Auditable
     public function ccLoadtype()
     {
         return $this->belongsTo(DictionaryItem::class, 'cc_loadtype_dictid');
+    }
+
+    public function ccOrderStatus()
+    {
+        return $this->belongsTo(DictionaryItem::class, 'cc_orderstatus_dictid');
     }
 
     public function siblings()

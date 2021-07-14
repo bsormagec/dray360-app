@@ -14,7 +14,8 @@ class DictionaryItem extends Model
         VESSEL_TYPE = 'vessel',
         CARRIER_TYPE = 'carrier',
         PT_IMAGETYPE_TYPE = 'pt-imagetype',
-        CC_LOADTYPE_TYPE = 'cc-loadtype'
+        CC_LOADTYPE_TYPE = 'cc-loadtype',
+        CC_ORDERSTATUS_TYPE = 'cc-orderstatus'
         ;
 
     const TYPES_LIST = [
@@ -24,6 +25,7 @@ class DictionaryItem extends Model
         self::CARRIER_TYPE,
         self::PT_IMAGETYPE_TYPE,
         self::CC_LOADTYPE_TYPE,
+        self::CC_ORDERSTATUS_TYPE,
     ];
 
     const TYPES_LIST_OPTIONS = [
@@ -33,6 +35,7 @@ class DictionaryItem extends Model
         self::VESSEL_TYPE => 'Vessel',
         self::PT_IMAGETYPE_TYPE => 'PT Image Type',
         self::CC_LOADTYPE_TYPE => 'CC Load Type',
+        self::CC_ORDERSTATUS_TYPE => 'CC Order Status',
     ];
 
     public $table = 't_dictionary_items';

@@ -11,6 +11,7 @@ use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
 use App\Services\DictionaryItemsImporters\TemplatesImporter;
 use App\Services\DictionaryItemsImporters\CcLoadTypesImporter;
+use App\Services\DictionaryItemsImporters\CcOrderStatusesImporter;
 use App\Services\DictionaryItemsImporters\DictionaryItemsImporter;
 
 class ImportDictionaryItems implements ShouldQueue
@@ -56,6 +57,7 @@ class ImportDictionaryItems implements ShouldQueue
         $defaultImporters = [
             DictionaryItem::TEMPLATE_TYPE => $this->defaultTemplatesImporter(),
             DictionaryItem::CC_LOADTYPE_TYPE => $this->defaultccLoadTypesImporter(),
+            DictionaryItem::CC_ORDERSTATUS_TYPE => $this->defaultccOrderStatusesImporter(),
         ];
 
         $company = Company::find($this->companyId);
@@ -89,5 +91,10 @@ class ImportDictionaryItems implements ShouldQueue
     protected function defaultccLoadTypesImporter(): string
     {
         return CcLoadTypesImporter::class;
+    }
+
+    protected function defaultccOrderStatusesImporter(): string
+    {
+        return CcOrderStatusesImporter::class;
     }
 }

@@ -348,6 +348,18 @@
           :edit-mode="editMode"
           @change="event => handleChange({ path:'cc_loadtype_dictid', ...event })"
         /> -->
+        <!-- <FormFieldDictionaryItem
+          v-if="!fieldShouldBeShown('cc_orderstatus_dictid')"
+          references="cc_orderstatus_dictid"
+          :label="options.labels.cc_orderstatus_dictid || 'Order Status'"
+          :value="order.cc_orderstatus_dictid"
+          item-text="item_display_name"
+          item-value="id"
+          :item-type="dictionaryItemsTypes.ccOrderStatus"
+          :company-id="order.t_company_id"
+          :edit-mode="editMode"
+          @change="event => handleChange({ path:'cc_orderstatus_dictid', ...event })"
+        /> -->
       </div>
 
       <div class="form__sub-section">
