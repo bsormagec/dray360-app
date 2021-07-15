@@ -6,6 +6,7 @@ export const dictionaryItemsTypes = {
   ptImageType: 'pt-imagetype',
   ccLoadType: 'cc-loadtype',
   ccOrderStatus: 'cc-orderstatus',
+  ccHaulClass: 'cc-haulclass',
 }
 
 export const objectLocks = {

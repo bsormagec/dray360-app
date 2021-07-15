@@ -99,6 +99,16 @@ class Compcare
         return $response->json();
     }
 
+    public function getHaulClasses(): array
+    {
+        $response = Http::withToken($this->token)
+            ->get("{$this->ordersUrl}HaulClasses/GetHaulClasses");
+
+        $this->validateResponse($response, 'HaulClasses/GetHaulClasses');
+
+        return $response->json();
+    }
+
     /**
      * @throws CompcareException
      */

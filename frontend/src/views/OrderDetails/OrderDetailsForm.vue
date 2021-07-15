@@ -360,6 +360,18 @@
           :edit-mode="editMode"
           @change="event => handleChange({ path:'cc_orderstatus_dictid', ...event })"
         /> -->
+        <!-- <FormFieldDictionaryItem
+          v-if="!fieldShouldBeShown('cc_haulclass_dictid')"
+          references="cc_haulclass_dictid"
+          :label="options.labels.cc_haulclass_dictid || 'Haul Class'"
+          :value="order.cc_haulclass_dictid"
+          item-text="item_display_name"
+          item-value="id"
+          :item-type="dictionaryItemsTypes.ccHaulClass"
+          :company-id="order.t_company_id"
+          :edit-mode="editMode"
+          @change="event => handleChange({ path:'cc_haulclass_dictid', ...event })"
+        /> -->
       </div>
 
       <div class="form__sub-section">
