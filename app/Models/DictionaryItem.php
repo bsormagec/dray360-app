@@ -17,7 +17,8 @@ class DictionaryItem extends Model
         CC_LOADTYPE_TYPE = 'cc-loadtype',
         CC_ORDERSTATUS_TYPE = 'cc-orderstatus',
         CC_HAULCLASS_TYPE = 'cc-haulclass',
-        CC_ORDERCLASS_TYPE = 'cc-orderclass'
+        CC_ORDERCLASS_TYPE = 'cc-orderclass',
+        CC_LOADEDEMPTY_TYPE = 'cc-loadedempty'
         ;
 
     const TYPES_LIST = [
@@ -30,6 +31,7 @@ class DictionaryItem extends Model
         self::CC_ORDERSTATUS_TYPE,
         self::CC_HAULCLASS_TYPE,
         self::CC_ORDERCLASS_TYPE,
+        self::CC_LOADEDEMPTY_TYPE,
     ];
 
     const TYPES_LIST_OPTIONS = [
@@ -42,6 +44,7 @@ class DictionaryItem extends Model
         self::CC_ORDERSTATUS_TYPE => 'CC Order Status',
         self::CC_HAULCLASS_TYPE => 'CC Haul Class',
         self::CC_ORDERCLASS_TYPE => 'CC Order Class',
+        self::CC_LOADEDEMPTY_TYPE => 'CC Loaded Emtty',
     ];
 
     public $table = 't_dictionary_items';

@@ -384,6 +384,18 @@
           :edit-mode="editMode"
           @change="event => handleChange({ path:'cc_orderclass_dictid', ...event })"
         /> -->
+        <!-- <FormFieldDictionaryItem
+          v-if="!fieldShouldBeShown('cc_loadedempty_dictid')"
+          references="cc_loadedempty_dictid"
+          :label="options.labels.cc_loadedempty_dictid || 'Loaded Emty'"
+          :value="order.cc_loadedempty_dictid"
+          item-text="item_display_name"
+          item-value="id"
+          :item-type="dictionaryItemsTypes.ccLoadedEmpty"
+          :tms-provider-id="order.t_tms_provider_id"
+          :edit-mode="editMode"
+          @change="event => handleChange({ path:'cc_loadedempty_dictid', ...event })"
+        /> -->
       </div>
 
       <div class="form__sub-section">

@@ -32,7 +32,8 @@ export default {
     itemValue: { type: String, required: false, default: 'id' },
     itemText: { required: false, default: 'name' },
     itemType: { type: String, required: true },
-    companyId: { type: Number, required: true },
+    companyId: { type: Number, required: false, default: null },
+    tmsProviderId: { type: Number, required: false, default: null },
     editMode: { type: Boolean, required: true },
     displayKeyValue: { type: Boolean, required: false, default: false },
     managedByTemplate: { type: Boolean, required: false, default: false },
@@ -50,6 +51,7 @@ export default {
     async fetchDictionaryItems () {
       const [error, data] = await getDictionaryItems({
         'filter[company_id]': this.companyId,
+        'filter[tms_provider_id]': this.tmsProviderId,
         'filter[item_type]': this.itemType
       })
 

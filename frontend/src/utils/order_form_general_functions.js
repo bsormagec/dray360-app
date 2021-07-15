@@ -64,6 +64,7 @@ export function keyShouldBeParsed (key) {
     'cc_orderstatus_dictid',
     'cc_haulclass_dictid',
     'cc_orderclass_dictid',
+    'cc_loadedempty_dictid',
   ]
 
   if (shouldNotBeIgnored.includes(key)) {
@@ -163,6 +164,10 @@ export function parseChanges ({ path, value, originalOrder }) {
     {
       field: 'cc_orderclass_dictid',
       boolean_field: 'cc_orderclass_dictid_verified'
+    },
+    {
+      field: 'cc_loadedempty_dictid',
+      boolean_field: 'cc_loadedempty_dictid_verified'
     },
   ]
 
