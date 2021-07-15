@@ -72,6 +72,11 @@ class OCRRequestStatus extends Model
     UNTRIED_IMAGEUPLOADING_TO_BLACKFLY = 'untried-imageuploding-to-blackfl',
 
     SENDING_TO_COMPCARE = 'sending-to-compcare',
+    AUTO_SENDING_TO_COMPCARE = 'auto-sending-to-compcare',
+    SUCCESS_SENDING_TO_COMPCARE = 'success-sending-to-compcare',
+    FAILURE_SENDING_TO_COMPCARE = 'failure-sending-to-compcare',
+    SHIPMENT_CREATED_BY_COMPCARE = 'shipment-created-by-compcare',
+    SHIPMENT_NOT_CREATED_BY_COMPCARE = 'shipment-not-created-by-compcare',
 
     INTAKE_FILE_INGESTION = 'intake-file-ingestion'
     ;
