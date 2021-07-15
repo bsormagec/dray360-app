@@ -23,6 +23,7 @@ class CreateOrUpdateCacheEntry implements ShouldQueue
         'cc_loadtype_dictid_verified' => DictionaryItem::CC_LOADTYPE_TYPE,
         'cc_orderstatus_dictid_verified' => DictionaryItem::CC_ORDERSTATUS_TYPE,
         'cc_haulclass_dictid_verified' => DictionaryItem::CC_HAULCLASS_TYPE,
+        'cc_orderclass_dictid_verified' => DictionaryItem::CC_ORDERCLASS_TYPE,
     ];
 
     protected $verifiableColumn;

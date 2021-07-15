@@ -109,6 +109,16 @@ class Compcare
         return $response->json();
     }
 
+    public function getOrderClasses(): array
+    {
+        $response = Http::withToken($this->token)
+            ->get("{$this->ordersUrl}OrderClasses/GetOrderClasses");
+
+        $this->validateResponse($response, 'OrderClasses/GetOrderClasses');
+
+        return $response->json();
+    }
+
     /**
      * @throws CompcareException
      */

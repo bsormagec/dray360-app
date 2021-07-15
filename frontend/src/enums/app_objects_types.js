@@ -7,6 +7,7 @@ export const dictionaryItemsTypes = {
   ccLoadType: 'cc-loadtype',
   ccOrderStatus: 'cc-orderstatus',
   ccHaulClass: 'cc-haulclass',
+  ccOrderClass: 'cc-orderclass',
 }
 
 export const objectLocks = {
