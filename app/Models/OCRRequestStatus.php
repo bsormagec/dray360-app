@@ -132,16 +132,20 @@ class OCRRequestStatus extends Model
         self::UPDATING_TO_WINT => 'Sending to TMS',
         self::SENDING_TO_CHAINIO => 'Sending to TMS',
         self::AUTO_SENDING_TO_CHAINIO => 'Sending to TMS',
+        self::SENDING_TO_COMPCARE => 'Sending to TMS',
+        self::AUTO_SENDING_TO_COMPCARE => 'Sending to TMS',
 
         self::SUCCESS_SENDING_TO_WINT => 'Sent to TMS',
         self::SUCCESS_UPDATING_TO_WINT => 'Sent to TMS',
         self::SUCCESS_SENDING_TO_CHAINIO => 'Sent to TMS',
+        self::SUCCESS_SENDING_TO_COMPCARE => 'Sent to TMS',
 
         self::SHIPMENT_CREATED_BY_WINT => 'Accepted by TMS',
         self::SHIPMENT_UPDATED_BY_WINT => 'Accepted by TMS',
         self::SUCCESS_IMAGEUPLOADING_TO_BLACKFLY => 'Accepted by TMS',
         self::UNTRIED_IMAGEUPLOADING_TO_BLACKFLY => 'Accepted by TMS',
         self::SHIPMENT_CREATED_BY_CHAINIO => 'Accepted by TMS',
+        self::SHIPMENT_CREATED_BY_COMPCARE => 'Accepted by TMS',
 
         self::SHIPMENT_NOT_UPDATED_BY_WINT => 'TMS Warning',
         self::FAILURE_UPDATING_TO_WINT => 'TMS Warning',
@@ -151,6 +155,8 @@ class OCRRequestStatus extends Model
         self::FAILURE_SENDING_TO_WINT => 'TMS Error',
         self::SHIPMENT_NOT_CREATED_BY_CHAINIO => 'TMS Error',
         self::FAILURE_SENDING_TO_CHAINIO => 'TMS Error',
+        self::SHIPMENT_NOT_CREATED_BY_COMPCARE => 'TMS Error',
+        self::FAILURE_SENDING_TO_COMPCARE => 'TMS Error',
     ];
 
     public $table = 't_job_state_changes';
