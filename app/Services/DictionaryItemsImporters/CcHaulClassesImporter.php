@@ -6,8 +6,8 @@ class CcHaulClassesImporter extends CcGenericImporter
 {
     public function run(): void
     {
-        $this->itemKey = 'HaulClassId';
-        $this->itemDisplayName = 'HaulClassCode';
+        $this->itemKey = 'HaulClassCode';
+        $this->itemDisplayName = 'HaulClassDescription';
         $this->apiMethod = 'getHaulClasses';
 
         parent::run();

@@ -71,18 +71,18 @@ class CcHaulClassesImporterTest extends TestCase
         $this->assertDatabaseHas('t_dictionary_items', [
             't_company_id' => $this->company->id,
             'item_type' => DictionaryItem::CC_HAULCLASS_TYPE,
-            'item_key' => '1',
+            'item_key' => 'HC',
             'item_display_name' => 'HC',
-            'item_value->HaulClassId' => 1,
-            'item_value->HaulClassCode' => 'HC'
+            'item_value->HaulClassCode' => 'HC',
+            'item_value->HaulClassDescription' => 'HC'
         ]);
         $this->assertDatabaseHas('t_dictionary_items', [
             't_company_id' => $this->company->id,
             'item_type' => DictionaryItem::CC_HAULCLASS_TYPE,
-            'item_key' => '2',
+            'item_key' => 'BR',
             'item_display_name' => 'BR',
-            'item_value->HaulClassId' => 2,
-            'item_value->HaulClassCode' => 'BR'
+            'item_value->HaulClassCode' => 'BR',
+            'item_value->HaulClassDescription' => 'BR'
         ]);
     }
 
@@ -92,7 +92,7 @@ class CcHaulClassesImporterTest extends TestCase
         DictionaryItem::create([
             't_company_id' => $this->company->id,
             'item_type' => DictionaryItem::CC_HAULCLASS_TYPE,
-            'item_key' => '1',
+            'item_key' => 'HC',
             'item_display_name' => 'HC',
             'item_value' => [
                 'HaulClassId' => 1,
@@ -117,9 +117,9 @@ class CcHaulClassesImporterTest extends TestCase
                     [
                         'HaulClassId' => 1,
                         'OrganizationId' => 4,
-                        'HaulClassCode' => 'HC UPDATED',
+                        'HaulClassCode' => 'HC',
                         'HaulClass' => 'HC',
-                        'HaulClassDescription' => 'HC',
+                        'HaulClassDescription' => 'HC UPDATED',
                         'InsertedUserId' => 0,
                         'InsertedDate' => '2021-01-07T21:39:00',
                         'UpdatedUserId' => null,
@@ -139,10 +139,10 @@ class CcHaulClassesImporterTest extends TestCase
         $this->assertDatabaseHas('t_dictionary_items', [
             't_company_id' => $this->company->id,
             'item_type' => DictionaryItem::CC_HAULCLASS_TYPE,
-            'item_key' => '1',
+            'item_key' => 'HC',
             'item_display_name' => 'HC UPDATED',
-            'item_value->HaulClassId' => 1,
-            'item_value->HaulClassCode' => 'HC UPDATED'
+            'item_value->HaulClassCode' => 'HC',
+            'item_value->HaulClassDescription' => 'HC UPDATED'
         ]);
     }
 
@@ -152,7 +152,7 @@ class CcHaulClassesImporterTest extends TestCase
         DictionaryItem::create([
             't_company_id' => $this->company->id,
             'item_type' => DictionaryItem::CC_HAULCLASS_TYPE,
-            'item_key' => '1',
+            'item_key' => 'HC',
             'item_display_name' => 'HC',
             'item_value' => [
                 'HaulClassId' => 1,
@@ -197,10 +197,10 @@ class CcHaulClassesImporterTest extends TestCase
         $this->assertSoftDeleted('t_dictionary_items', [
             't_company_id' => $this->company->id,
             'item_type' => DictionaryItem::CC_HAULCLASS_TYPE,
-            'item_key' => '1',
+            'item_key' => 'HC',
             'item_display_name' => 'HC',
-            'item_value->HaulClassId' => 1,
-            'item_value->HaulClassCode' => 'HC'
+            'item_value->HaulClassCode' => 'HC',
+            'item_value->HaulClassDescription' => 'HC'
         ]);
     }
 
@@ -210,7 +210,7 @@ class CcHaulClassesImporterTest extends TestCase
         DictionaryItem::create([
             't_company_id' => $this->company->id,
             'item_type' => DictionaryItem::CC_HAULCLASS_TYPE,
-            'item_key' => '1',
+            'item_key' => 'HC',
             'item_display_name' => 'HC',
             'item_value' => [
                 'HaulClassId' => 1,
@@ -256,10 +256,10 @@ class CcHaulClassesImporterTest extends TestCase
         $this->assertDatabaseHas('t_dictionary_items', [
             't_company_id' => $this->company->id,
             'item_type' => DictionaryItem::CC_HAULCLASS_TYPE,
-            'item_key' => '1',
+            'item_key' => 'HC',
             'item_display_name' => 'HC',
-            'item_value->HaulClassId' => 1,
             'item_value->HaulClassCode' => 'HC',
+            'item_value->HaulClassDescription' => 'HC',
             'deleted_at' => null,
         ]);
     }

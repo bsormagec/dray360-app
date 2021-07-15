@@ -71,18 +71,18 @@ class CcOrderClassesImporterTest extends TestCase
         $this->assertDatabaseHas('t_dictionary_items', [
             't_company_id' => $this->company->id,
             'item_type' => DictionaryItem::CC_ORDERCLASS_TYPE,
-            'item_key' => '1',
+            'item_key' => 'OC',
             'item_display_name' => 'OC',
-            'item_value->OrderClassId' => 1,
-            'item_value->OrderClassCode' => 'OC'
+            'item_value->OrderClassCode' => 'OC',
+            'item_value->OrderClassDescription' => 'OC'
         ]);
         $this->assertDatabaseHas('t_dictionary_items', [
             't_company_id' => $this->company->id,
             'item_type' => DictionaryItem::CC_ORDERCLASS_TYPE,
-            'item_key' => '2',
+            'item_key' => 'L',
             'item_display_name' => 'L',
-            'item_value->OrderClassId' => 2,
-            'item_value->OrderClassCode' => 'L'
+            'item_value->OrderClassCode' => 'L',
+            'item_value->OrderClassDescription' => 'L'
         ]);
     }
 
@@ -92,7 +92,7 @@ class CcOrderClassesImporterTest extends TestCase
         DictionaryItem::create([
             't_company_id' => $this->company->id,
             'item_type' => DictionaryItem::CC_ORDERCLASS_TYPE,
-            'item_key' => '1',
+            'item_key' => 'OC',
             'item_display_name' => 'OC',
             'item_value' => [
                 'OrderClassId' => 1,
@@ -117,9 +117,9 @@ class CcOrderClassesImporterTest extends TestCase
                     [
                         'OrderClassId' => 1,
                         'OrganizationId' => 4,
-                        'OrderClassCode' => 'OC UPDATED',
+                        'OrderClassCode' => 'OC',
                         'OrderClass' => 'OC',
-                        'OrderClassDescription' => 'OC',
+                        'OrderClassDescription' => 'OC UPDATED',
                         'InsertedUserId' => 0,
                         'InsertedDate' => '2021-01-07T21:39:00',
                         'UpdatedUserId' => null,
@@ -139,10 +139,10 @@ class CcOrderClassesImporterTest extends TestCase
         $this->assertDatabaseHas('t_dictionary_items', [
             't_company_id' => $this->company->id,
             'item_type' => DictionaryItem::CC_ORDERCLASS_TYPE,
-            'item_key' => '1',
+            'item_key' => 'OC',
             'item_display_name' => 'OC UPDATED',
-            'item_value->OrderClassId' => 1,
-            'item_value->OrderClassCode' => 'OC UPDATED'
+            'item_value->OrderClassCode' => 'OC',
+            'item_value->OrderClassDescription' => 'OC UPDATED'
         ]);
     }
 
@@ -152,7 +152,7 @@ class CcOrderClassesImporterTest extends TestCase
         DictionaryItem::create([
             't_company_id' => $this->company->id,
             'item_type' => DictionaryItem::CC_ORDERCLASS_TYPE,
-            'item_key' => '1',
+            'item_key' => 'OC',
             'item_display_name' => 'OC',
             'item_value' => [
                 'OrderClassId' => 1,
@@ -197,10 +197,10 @@ class CcOrderClassesImporterTest extends TestCase
         $this->assertSoftDeleted('t_dictionary_items', [
             't_company_id' => $this->company->id,
             'item_type' => DictionaryItem::CC_ORDERCLASS_TYPE,
-            'item_key' => '1',
+            'item_key' => 'OC',
             'item_display_name' => 'OC',
-            'item_value->OrderClassId' => 1,
-            'item_value->OrderClassCode' => 'OC'
+            'item_value->OrderClassCode' => 'OC',
+            'item_value->OrderClassDescription' => 'OC'
         ]);
     }
 
@@ -210,7 +210,7 @@ class CcOrderClassesImporterTest extends TestCase
         DictionaryItem::create([
             't_company_id' => $this->company->id,
             'item_type' => DictionaryItem::CC_ORDERCLASS_TYPE,
-            'item_key' => '1',
+            'item_key' => 'OC',
             'item_display_name' => 'OC',
             'item_value' => [
                 'OrderClassId' => 1,
@@ -256,10 +256,10 @@ class CcOrderClassesImporterTest extends TestCase
         $this->assertDatabaseHas('t_dictionary_items', [
             't_company_id' => $this->company->id,
             'item_type' => DictionaryItem::CC_ORDERCLASS_TYPE,
-            'item_key' => '1',
+            'item_key' => 'OC',
             'item_display_name' => 'OC',
-            'item_value->OrderClassId' => 1,
             'item_value->OrderClassCode' => 'OC',
+            'item_value->OrderClassDescription' => 'OC',
             'deleted_at' => null,
         ]);
     }

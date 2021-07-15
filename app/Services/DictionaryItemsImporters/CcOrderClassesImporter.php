@@ -6,8 +6,8 @@ class CcOrderClassesImporter extends CcGenericImporter
 {
     public function run(): void
     {
-        $this->itemKey = 'OrderClassId';
-        $this->itemDisplayName = 'OrderClassCode';
+        $this->itemKey = 'OrderClassCode';
+        $this->itemDisplayName = 'OrderClassDescription';
         $this->apiMethod = 'getOrderClasses';
 
         parent::run();

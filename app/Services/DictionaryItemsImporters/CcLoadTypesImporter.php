@@ -6,8 +6,8 @@ class CcLoadTypesImporter extends CcGenericImporter
 {
     public function run(): void
     {
-        $this->itemKey = 'LoadTypeId';
-        $this->itemDisplayName = 'LoadTypeCode';
+        $this->itemKey = 'LoadTypeCode';
+        $this->itemDisplayName = 'LoadTypeDescription';
         $this->apiMethod = 'getLoadTypes';
 
         parent::run();

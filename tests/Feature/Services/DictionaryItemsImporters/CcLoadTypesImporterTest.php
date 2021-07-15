@@ -71,18 +71,18 @@ class CcLoadTypesImporterTest extends TestCase
         $this->assertDatabaseHas('t_dictionary_items', [
             't_company_id' => $this->company->id,
             'item_type' => DictionaryItem::CC_LOADTYPE_TYPE,
-            'item_key' => '1',
+            'item_key' => 'LT',
             'item_display_name' => 'LT',
-            'item_value->LoadTypeId' => 1,
-            'item_value->LoadTypeCode' => 'LT'
+            'item_value->LoadTypeCode' => 'LT',
+            'item_value->LoadTypeDescription' => 'LT'
         ]);
         $this->assertDatabaseHas('t_dictionary_items', [
             't_company_id' => $this->company->id,
             'item_type' => DictionaryItem::CC_LOADTYPE_TYPE,
-            'item_key' => '2',
+            'item_key' => 'DP',
             'item_display_name' => 'DP',
-            'item_value->LoadTypeId' => 2,
-            'item_value->LoadTypeCode' => 'DP'
+            'item_value->LoadTypeCode' => 'DP',
+            'item_value->LoadTypeDescription' => 'DP'
         ]);
     }
 
@@ -92,7 +92,7 @@ class CcLoadTypesImporterTest extends TestCase
         DictionaryItem::create([
             't_company_id' => $this->company->id,
             'item_type' => DictionaryItem::CC_LOADTYPE_TYPE,
-            'item_key' => '1',
+            'item_key' => 'LT',
             'item_display_name' => 'LT',
             'item_value' => [
                 'LoadTypeId' => 1,
@@ -117,9 +117,9 @@ class CcLoadTypesImporterTest extends TestCase
                     [
                         'LoadTypeId' => 1,
                         'OrganizationId' => 4,
-                        'LoadTypeCode' => 'LT UPDATED',
+                        'LoadTypeCode' => 'LT',
                         'LoadType' => 'LT',
-                        'LoadTypeDescription' => 'LT',
+                        'LoadTypeDescription' => 'LT UPDATED',
                         'InsertedUserId' => 0,
                         'InsertedDate' => '2021-01-07T21:39:00',
                         'UpdatedUserId' => null,
@@ -139,10 +139,10 @@ class CcLoadTypesImporterTest extends TestCase
         $this->assertDatabaseHas('t_dictionary_items', [
             't_company_id' => $this->company->id,
             'item_type' => DictionaryItem::CC_LOADTYPE_TYPE,
-            'item_key' => '1',
+            'item_key' => 'LT',
             'item_display_name' => 'LT UPDATED',
-            'item_value->LoadTypeId' => 1,
-            'item_value->LoadTypeCode' => 'LT UPDATED'
+            'item_value->LoadTypeCode' => 'LT',
+            'item_value->LoadTypeDescription' => 'LT UPDATED'
         ]);
     }
 
@@ -152,7 +152,7 @@ class CcLoadTypesImporterTest extends TestCase
         DictionaryItem::create([
             't_company_id' => $this->company->id,
             'item_type' => DictionaryItem::CC_LOADTYPE_TYPE,
-            'item_key' => '1',
+            'item_key' => 'LT',
             'item_display_name' => 'LT',
             'item_value' => [
                 'LoadTypeId' => 1,
@@ -197,10 +197,10 @@ class CcLoadTypesImporterTest extends TestCase
         $this->assertSoftDeleted('t_dictionary_items', [
             't_company_id' => $this->company->id,
             'item_type' => DictionaryItem::CC_LOADTYPE_TYPE,
-            'item_key' => '1',
+            'item_key' => 'LT',
             'item_display_name' => 'LT',
-            'item_value->LoadTypeId' => 1,
-            'item_value->LoadTypeCode' => 'LT'
+            'item_value->LoadTypeCode' => 'LT',
+            'item_value->LoadTypeDescription' => 'LT'
         ]);
     }
 
@@ -210,7 +210,7 @@ class CcLoadTypesImporterTest extends TestCase
         DictionaryItem::create([
             't_company_id' => $this->company->id,
             'item_type' => DictionaryItem::CC_LOADTYPE_TYPE,
-            'item_key' => '1',
+            'item_key' => 'LT',
             'item_display_name' => 'LT',
             'item_value' => [
                 'LoadTypeId' => 1,
@@ -256,10 +256,10 @@ class CcLoadTypesImporterTest extends TestCase
         $this->assertDatabaseHas('t_dictionary_items', [
             't_company_id' => $this->company->id,
             'item_type' => DictionaryItem::CC_LOADTYPE_TYPE,
-            'item_key' => '1',
+            'item_key' => 'LT',
             'item_display_name' => 'LT',
-            'item_value->LoadTypeId' => 1,
             'item_value->LoadTypeCode' => 'LT',
+            'item_value->LoadTypeDescription' => 'LT',
             'deleted_at' => null,
         ]);
     }

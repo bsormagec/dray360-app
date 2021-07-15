@@ -71,18 +71,18 @@ class CcOrderStatusesImporterTest extends TestCase
         $this->assertDatabaseHas('t_dictionary_items', [
             't_company_id' => $this->company->id,
             'item_type' => DictionaryItem::CC_ORDERSTATUS_TYPE,
-            'item_key' => '1',
+            'item_key' => 'OS',
             'item_display_name' => 'OS',
-            'item_value->OrderStatusId' => 1,
-            'item_value->OrderStatusCode' => 'OS'
+            'item_value->OrderStatusCode' => 'OS',
+            'item_value->OrderStatusDescription' => 'OS'
         ]);
         $this->assertDatabaseHas('t_dictionary_items', [
             't_company_id' => $this->company->id,
             'item_type' => DictionaryItem::CC_ORDERSTATUS_TYPE,
-            'item_key' => '2',
+            'item_key' => 'DSFY',
             'item_display_name' => 'DSFY',
-            'item_value->OrderStatusId' => 2,
-            'item_value->OrderStatusCode' => 'DSFY'
+            'item_value->OrderStatusCode' => 'DSFY',
+            'item_value->OrderStatusDescription' => 'DSFY'
         ]);
     }
 
@@ -92,7 +92,7 @@ class CcOrderStatusesImporterTest extends TestCase
         DictionaryItem::create([
             't_company_id' => $this->company->id,
             'item_type' => DictionaryItem::CC_ORDERSTATUS_TYPE,
-            'item_key' => '1',
+            'item_key' => 'OS',
             'item_display_name' => 'OS',
             'item_value' => [
                 'OrderStatusId' => 1,
@@ -117,9 +117,9 @@ class CcOrderStatusesImporterTest extends TestCase
                     [
                         'OrderStatusId' => 1,
                         'OrganizationId' => 4,
-                        'OrderStatusCode' => 'OS UPDATED',
+                        'OrderStatusCode' => 'OS',
                         'OrderStatus' => 'OS',
-                        'OrderStatusDescription' => 'OS',
+                        'OrderStatusDescription' => 'OS UPDATED',
                         'InsertedUserId' => 0,
                         'InsertedDate' => '2021-01-07T21:39:00',
                         'UpdatedUserId' => null,
@@ -139,10 +139,10 @@ class CcOrderStatusesImporterTest extends TestCase
         $this->assertDatabaseHas('t_dictionary_items', [
             't_company_id' => $this->company->id,
             'item_type' => DictionaryItem::CC_ORDERSTATUS_TYPE,
-            'item_key' => '1',
+            'item_key' => 'OS',
             'item_display_name' => 'OS UPDATED',
-            'item_value->OrderStatusId' => 1,
-            'item_value->OrderStatusCode' => 'OS UPDATED'
+            'item_value->OrderStatusCode' => 'OS',
+            'item_value->OrderStatusDescription' => 'OS UPDATED'
         ]);
     }
 
@@ -152,7 +152,7 @@ class CcOrderStatusesImporterTest extends TestCase
         DictionaryItem::create([
             't_company_id' => $this->company->id,
             'item_type' => DictionaryItem::CC_ORDERSTATUS_TYPE,
-            'item_key' => '1',
+            'item_key' => 'OS',
             'item_display_name' => 'OS',
             'item_value' => [
                 'OrderStatusId' => 1,
@@ -197,10 +197,10 @@ class CcOrderStatusesImporterTest extends TestCase
         $this->assertSoftDeleted('t_dictionary_items', [
             't_company_id' => $this->company->id,
             'item_type' => DictionaryItem::CC_ORDERSTATUS_TYPE,
-            'item_key' => '1',
+            'item_key' => 'OS',
             'item_display_name' => 'OS',
-            'item_value->OrderStatusId' => 1,
-            'item_value->OrderStatusCode' => 'OS'
+            'item_value->OrderStatusCode' => 'OS',
+            'item_value->OrderStatusDescription' => 'OS'
         ]);
     }
 
@@ -210,7 +210,7 @@ class CcOrderStatusesImporterTest extends TestCase
         DictionaryItem::create([
             't_company_id' => $this->company->id,
             'item_type' => DictionaryItem::CC_ORDERSTATUS_TYPE,
-            'item_key' => '1',
+            'item_key' => 'OS',
             'item_display_name' => 'OS',
             'item_value' => [
                 'OrderStatusId' => 1,
@@ -256,10 +256,10 @@ class CcOrderStatusesImporterTest extends TestCase
         $this->assertDatabaseHas('t_dictionary_items', [
             't_company_id' => $this->company->id,
             'item_type' => DictionaryItem::CC_ORDERSTATUS_TYPE,
-            'item_key' => '1',
+            'item_key' => 'OS',
             'item_display_name' => 'OS',
-            'item_value->OrderStatusId' => 1,
             'item_value->OrderStatusCode' => 'OS',
+            'item_value->OrderStatusDescription' => 'OS',
             'deleted_at' => null,
         ]);
     }
