@@ -31,7 +31,7 @@ class ImportDictionaryItemsTest extends TestCase
         $mock->itemType = DictionaryItem::TEMPLATE_TYPE;
 
         $mock->shouldAllowMockingProtectedMethods();
-        $mock->shouldReceive('defaultTemplatesImporter')
+        $mock->shouldReceive('getDefaultImporter')
             ->andReturns(MockDictionaryItemImporter::class)
             ->once();
 

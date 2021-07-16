@@ -49,12 +49,7 @@ class DictionaryCacheEntry extends Resource
             BelongsTo::make('Dictionary Item', 'dictionaryItem', DictionaryItem::class)->searchable()->nullable(),
             BelongsTo::make('Company', 'company', Company::class)->nullable(),
             Select::make('Cache Type', 'cache_type')
-                ->options([
-                    \App\Models\DictionaryItem::TEMPLATE_TYPE => 'Template',
-                    \App\Models\DictionaryItem::ITGCONTAINER_TYPE => 'ITG Container',
-                    \App\Models\DictionaryItem::CARRIER_TYPE => 'Carrier',
-                    \App\Models\DictionaryItem::VESSEL_TYPE => 'Vessel',
-                ])
+                ->options(\App\Models\DictionaryItem::TYPES_LIST_OPTIONS)
                 ->rules([
                     'required',
                     'in:template',

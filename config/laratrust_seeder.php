@@ -45,6 +45,7 @@ return [
             'pt-images' => 'c',
             'field-maps' => 'c,v',
             'metrics' => 'v',
+            'feedbacks' => 'c,v',
         ],
         'order-review' => [
             'rules-editor' => 'v',
@@ -72,6 +73,7 @@ return [
             'auto-lock-processing' => 'c',
             'supervise' => 'v',
             'pt-images' => 'c',
+            'feedbacks' => 'c,v',
         ],
         'customer-admin' => [
             'orders' => 'e,v,c,r',
@@ -85,6 +87,7 @@ return [
             'pt-images' => 'c',
             'object-locks' => 'c,e',
             'auto-lock-not-processing' => 'c',
+            'feedbacks' => 'c',
         ],
         'customer-user' => [
             'ocr-requests' => 'c,v',
@@ -93,6 +96,7 @@ return [
             'dictionary-items' => 'v,c',
             'object-locks' => 'c,e',
             'auto-lock-not-processing' => 'c',
+            'feedbacks' => 'c',
         ],
     ],
 

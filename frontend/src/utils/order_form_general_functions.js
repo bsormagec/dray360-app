@@ -59,7 +59,12 @@ export function keyShouldBeParsed (key) {
     'tms_template_dictid',
     'container_dictid',
     'carrier_dictid',
-    'vessel_dictid'
+    'vessel_dictid',
+    'cc_loadtype_dictid',
+    'cc_orderstatus_dictid',
+    'cc_haulclass_dictid',
+    'cc_orderclass_dictid',
+    'cc_loadedempty_dictid',
   ]
 
   if (shouldNotBeIgnored.includes(key)) {
@@ -143,7 +148,27 @@ export function parseChanges ({ path, value, originalOrder }) {
     {
       field: 'vessel_dictid',
       boolean_field: 'vessel_dictid_verified'
-    }
+    },
+    {
+      field: 'cc_loadtype_dictid',
+      boolean_field: 'cc_loadtype_dictid_verified'
+    },
+    {
+      field: 'cc_orderstatus_dictid',
+      boolean_field: 'cc_orderstatus_dictid_verified'
+    },
+    {
+      field: 'cc_haulclass_dictid',
+      boolean_field: 'cc_haulclass_dictid_verified'
+    },
+    {
+      field: 'cc_orderclass_dictid',
+      boolean_field: 'cc_orderclass_dictid_verified'
+    },
+    {
+      field: 'cc_loadedempty_dictid',
+      boolean_field: 'cc_loadedempty_dictid_verified'
+    },
   ]
 
   if (path === 'bill_to_address') {

@@ -37,7 +37,8 @@ class Company extends Model
     use SoftDeletes;
     use EncryptsAttributes;
 
-    const FOREIGN_KEY = 't_company_id';
+    const FOREIGN_KEY = 't_company_id',
+        TCOMPANIES_DEMO_ID = 2;
 
     public $table = 't_companies';
 

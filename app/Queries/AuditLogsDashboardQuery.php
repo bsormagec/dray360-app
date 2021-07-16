@@ -4,6 +4,7 @@ namespace App\Queries;
 
 use Closure;
 use App\Models\Order;
+use App\Models\Company;
 use App\Models\OrderLineItem;
 use Illuminate\Support\Carbon;
 use App\Models\OrderAddressEvent;
@@ -17,6 +18,7 @@ class AuditLogsDashboardQuery extends QueryBuilder
     public function __construct(array $filters)
     {
         $auditsFilterQuery = $this->getAuditsFilterQuery($filters);
+        $tcompaniesDemoId = Company::TCOMPANIES_DEMO_ID;
 
         $query = Order::query()
             ->select([
@@ -27,7 +29,8 @@ class AuditLogsDashboardQuery extends QueryBuilder
                 't_orders.created_at',
                 't_orders.updated_at',
             ])
-            ->addSelect(['changes_count' => DB::raw("
+            ->addSelect([
+                'changes_count' => DB::raw("
                     (select coalesce(sum(
                         if(json_length(old_values) = 0, json_length(new_values), json_length(old_values))
                     ), 0)
@@ -53,7 +56,67 @@ class AuditLogsDashboardQuery extends QueryBuilder
                         and t_order_address_events.t_order_id = t_orders.id
                     where audits.auditable_type = '". str_replace('\\', '\\\\', OrderAddressEvent::class) ."'
                     ) as changes_count
-            ")
+                "),
+                't_companies_changes_count' => DB::raw("
+                    (select coalesce(sum(
+                        if(json_length(old_values) = 0, json_length(new_values), json_length(old_values))
+                    ), 0)
+                    from audits
+                    join users on users.id = user_id and t_company_id = {$tcompaniesDemoId}
+                    where audits.auditable_type = '". str_replace('\\', '\\\\', Order::class) ."'
+                    and audits.auditable_id = t_orders.id
+                    )
+                    +
+                    (select coalesce(sum(
+                        if(json_length(old_values) = 0, json_length(new_values), json_length(old_values))
+                    ), 0)
+                    from audits
+                    join users on users.id = user_id and t_company_id = {$tcompaniesDemoId}
+                    join t_order_line_items on audits.auditable_id = t_order_line_items.id
+                        and t_order_line_items.t_order_id = t_orders.id
+                    where audits.auditable_type = '". str_replace('\\', '\\\\', OrderLineItem::class) ."'
+                    )
+                    +
+                    (select coalesce(sum(
+                        if(json_length(old_values) = 0, json_length(new_values), json_length(old_values))
+                    ),0)
+                    from audits
+                    join users on users.id = user_id and t_company_id = {$tcompaniesDemoId}
+                    join t_order_address_events on audits.auditable_id = t_order_address_events.id
+                        and t_order_address_events.t_order_id = t_orders.id
+                    where audits.auditable_type = '". str_replace('\\', '\\\\', OrderAddressEvent::class) ."'
+                    ) as t_companies_changes_count
+                "),
+                'client_changes_count' => DB::raw("
+                    (select coalesce(sum(
+                        if(json_length(old_values) = 0, json_length(new_values), json_length(old_values))
+                    ), 0)
+                    from audits
+                    join users on users.id = user_id and t_company_id != {$tcompaniesDemoId}
+                    where audits.auditable_type = '". str_replace('\\', '\\\\', Order::class) ."'
+                    and audits.auditable_id = t_orders.id
+                    )
+                    +
+                    (select coalesce(sum(
+                        if(json_length(old_values) = 0, json_length(new_values), json_length(old_values))
+                    ), 0)
+                    from audits
+                    join users on users.id = user_id and t_company_id != {$tcompaniesDemoId}
+                    join t_order_line_items on audits.auditable_id = t_order_line_items.id
+                        and t_order_line_items.t_order_id = t_orders.id
+                    where audits.auditable_type = '". str_replace('\\', '\\\\', OrderLineItem::class) ."'
+                    )
+                    +
+                    (select coalesce(sum(
+                        if(json_length(old_values) = 0, json_length(new_values), json_length(old_values))
+                    ),0)
+                    from audits
+                    join users on users.id = user_id and t_company_id != {$tcompaniesDemoId}
+                    join t_order_address_events on audits.auditable_id = t_order_address_events.id
+                        and t_order_address_events.t_order_id = t_orders.id
+                    where audits.auditable_type = '". str_replace('\\', '\\\\', OrderAddressEvent::class) ."'
+                    ) as client_changes_count
+                "),
             ])
             ->with([
                 'audits.user',
