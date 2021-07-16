@@ -32,6 +32,7 @@ class AuthServiceProvider extends ServiceProvider
         \OwenIt\Auditing\Models\Audit::class => \App\Policies\AuditLogPolicy::class,
         \App\Models\ObjectLock::class => \App\Policies\ObjectLockPolicy::class,
         \App\Models\FieldMap::class => \App\Policies\FieldMapPolicy::class,
+        \App\Models\FeedbackComment::class => \App\Policies\FeedbackCommentPolicy::class,
     ];
 
     /**

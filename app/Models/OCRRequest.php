@@ -57,4 +57,9 @@ class OCRRequest extends Model
     {
         return $this->belongsTo(OCRRequestStatus::class, 't_job_state_changes_id');
     }
+
+    public function comments()
+    {
+        return $this->morphMany(FeedbackComment::class, 'commentable');
+    }
 }

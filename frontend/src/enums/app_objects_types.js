@@ -4,6 +4,11 @@ export const dictionaryItemsTypes = {
   carrier: 'carrier',
   vessel: 'vessel',
   ptImageType: 'pt-imagetype',
+  ccLoadType: 'cc-loadtype',
+  ccOrderStatus: 'cc-orderstatus',
+  ccHaulClass: 'cc-haulclass',
+  ccOrderClass: 'cc-orderclass',
+  ccLoadedEmpty: 'cc-loadedempty',
 }
 
 export const objectLocks = {
@@ -147,4 +152,9 @@ export const abbySourceFileds = {
     'empty_location',
     'terminal_location'
   ],
+}
+
+export const commentableTypes = {
+  order: 'order',
+  request: 'request',
 }

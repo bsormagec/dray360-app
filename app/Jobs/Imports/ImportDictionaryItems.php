@@ -10,6 +10,10 @@ use Illuminate\Queue\SerializesModels;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
 use App\Services\DictionaryItemsImporters\TemplatesImporter;
+use App\Services\DictionaryItemsImporters\CcLoadTypesImporter;
+use App\Services\DictionaryItemsImporters\CcHaulClassesImporter;
+use App\Services\DictionaryItemsImporters\CcOrderClassesImporter;
+use App\Services\DictionaryItemsImporters\CcOrderStatusesImporter;
 use App\Services\DictionaryItemsImporters\DictionaryItemsImporter;
 
 class ImportDictionaryItems implements ShouldQueue
@@ -52,13 +56,9 @@ class ImportDictionaryItems implements ShouldQueue
 
     protected function getImporter(): DictionaryItemsImporter
     {
-        $defaultImporters = [
-            DictionaryItem::TEMPLATE_TYPE => $this->defaultTemplatesImporter(),
-        ];
-
         $company = Company::find($this->companyId);
         $customHandler = $this->syncSettings['alternate_handler'] ?? null;
-        $defaultHandler = $defaultImporters[$this->itemType] ?? null;
+        $defaultHandler = $this->getDefaultImporter();
 
         if ($customHandler) {
             throw_if(
@@ -79,8 +79,16 @@ class ImportDictionaryItems implements ShouldQueue
         return new $defaultHandler($company, $this->syncSettings);
     }
 
-    protected function defaultTemplatesImporter(): string
+    protected function getDefaultImporter(): ?string
     {
-        return TemplatesImporter::class;
+        $defaultImporters = [
+            DictionaryItem::TEMPLATE_TYPE => TemplatesImporter::class,
+            DictionaryItem::CC_LOADTYPE_TYPE => CcLoadTypesImporter::class,
+            DictionaryItem::CC_ORDERSTATUS_TYPE => CcOrderStatusesImporter::class,
+            DictionaryItem::CC_HAULCLASS_TYPE => CcHaulClassesImporter::class,
+            DictionaryItem::CC_ORDERCLASS_TYPE => CcOrderClassesImporter::class,
+        ];
+
+        return $defaultImporters[$this->itemType] ?? null;
     }
 }

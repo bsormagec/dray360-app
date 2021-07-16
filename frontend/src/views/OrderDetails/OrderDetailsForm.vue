@@ -122,7 +122,8 @@
           { title: 'Release edit-lock', action: () => $emit('lock-released', order), hidden: !refreshLock|| !hasPermission('object-locks-create') || order.ocr_request_is_locked || order.is_locked || supervise},
           { title: 'Upload PT Image', action: openUploadPTImage, hidden: order.t_tms_provider_id !== 1 || !hasPermission('pt-images-create') || isLocked },
           { title: 'Take edit-lock', action: () => $emit('lock-requested', order), hidden: !refreshLock|| !hasPermission('object-locks-create') || (!order.ocr_request_is_locked && !order.is_locked) || supervise},
-          { title: 'View audit info', action: () => openAuditDialog = true, hidden: !hasPermission('audit-logs-view')}
+          { title: 'View audit info', action: () => openAuditDialog = true, hidden: !hasPermission('audit-logs-view')},
+          { title: 'Add an order comment', action: openOrderCommentDialog, hidden: !hasPermission('feedbacks-create')},
         ]"
         :loading="loading"
       />
@@ -283,15 +284,15 @@
       </div>
 
       <div class="section__rootfields">
-        <FormFieldInputAutocomplete
+        <FormFieldDictionaryItem
           v-if="!!options.extra.profit_tools_enable_templates"
           references="tms_template_dictid"
           :label="options.labels.tms_template_dictid || 'TMS Template'"
           :value="order.tms_template_dictid"
-          :autocomplete-items="tmsTemplates"
           item-text="item_display_name"
           item-value="id"
-          :display-value="value => dictionaryItemDisplayValue(value, tmsTemplates)"
+          :item-type="dictionaryItemsTypes.template"
+          :company-id="order.t_company_id"
           :edit-mode="editMode"
           @change="event => handleChange({ path:'tms_template_dictid', ...event })"
         />
@@ -335,6 +336,66 @@
           :edit-mode="editMode"
           @change="event => handleChange({ path:'hazardous', ...event})"
         />
+        <!-- <FormFieldDictionaryItem
+          v-if="!fieldShouldBeShown('cc_loadtype_dictid')"
+          references="cc_loadtype_dictid"
+          :label="options.labels.cc_loadtype_dictid || 'Load Type'"
+          :value="order.cc_loadtype_dictid"
+          item-text="item_display_name"
+          item-value="id"
+          :item-type="dictionaryItemsTypes.ccLoadType"
+          :company-id="order.t_company_id"
+          :edit-mode="editMode"
+          @change="event => handleChange({ path:'cc_loadtype_dictid', ...event })"
+        /> -->
+        <!-- <FormFieldDictionaryItem
+          v-if="!fieldShouldBeShown('cc_orderstatus_dictid')"
+          references="cc_orderstatus_dictid"
+          :label="options.labels.cc_orderstatus_dictid || 'Order Status'"
+          :value="order.cc_orderstatus_dictid"
+          item-text="item_display_name"
+          item-value="id"
+          :item-type="dictionaryItemsTypes.ccOrderStatus"
+          :company-id="order.t_company_id"
+          :edit-mode="editMode"
+          @change="event => handleChange({ path:'cc_orderstatus_dictid', ...event })"
+        /> -->
+        <!-- <FormFieldDictionaryItem
+          v-if="!fieldShouldBeShown('cc_haulclass_dictid')"
+          references="cc_haulclass_dictid"
+          :label="options.labels.cc_haulclass_dictid || 'Haul Class'"
+          :value="order.cc_haulclass_dictid"
+          item-text="item_display_name"
+          item-value="id"
+          :item-type="dictionaryItemsTypes.ccHaulClass"
+          :company-id="order.t_company_id"
+          :edit-mode="editMode"
+          @change="event => handleChange({ path:'cc_haulclass_dictid', ...event })"
+        /> -->
+        <!-- <FormFieldDictionaryItem
+          v-if="!fieldShouldBeShown('cc_orderclass_dictid')"
+          references="cc_orderclass_dictid"
+          :label="options.labels.cc_orderclass_dictid || 'Order Class'"
+          :value="order.cc_orderclass_dictid"
+          item-text="item_display_name"
+          item-value="id"
+          :item-type="dictionaryItemsTypes.ccOrderClass"
+          :company-id="order.t_company_id"
+          :edit-mode="editMode"
+          @change="event => handleChange({ path:'cc_orderclass_dictid', ...event })"
+        /> -->
+        <!-- <FormFieldDictionaryItem
+          v-if="!fieldShouldBeShown('cc_loadedempty_dictid')"
+          references="cc_loadedempty_dictid"
+          :label="options.labels.cc_loadedempty_dictid || 'Loaded Emty'"
+          :value="order.cc_loadedempty_dictid"
+          item-text="item_display_name"
+          item-value="id"
+          :item-type="dictionaryItemsTypes.ccLoadedEmpty"
+          :tms-provider-id="order.t_tms_provider_id"
+          :edit-mode="editMode"
+          @change="event => handleChange({ path:'cc_loadedempty_dictid', ...event })"
+        /> -->
       </div>
 
       <div class="form__sub-section">
@@ -344,16 +405,17 @@
           </h3>
         </div>
         <div class="section__rootfields">
-          <FormFieldInputAutocomplete
+          <FormFieldDictionaryItem
             v-if="!!options.extra.itg_enable_containers"
             references="container_dictid"
             :label="options.labels.container_dictid || 'ITG Container Size/Type'"
             :value="order.container_dictid"
-            :autocomplete-items="itgContainers"
             :item-text="item => `${item.item_display_name} (${item.item_key})`"
             item-value="id"
-            :display-value="(value)=> dictionaryItemDisplayKeyValue(value, itgContainers)"
+            :item-type="dictionaryItemsTypes.itgContainer"
+            :company-id="order.t_company_id"
             :edit-mode="editMode"
+            display-key-value
             @change="event => handleChange({ path:'container_dictid', ...event})"
           />
           <FormFieldEquipmentType
@@ -446,16 +508,17 @@
             :edit-mode="editMode"
             @change="event => handleChange({ path:'pickup_number', ...event})"
           />
-          <FormFieldInputAutocomplete
+          <FormFieldDictionaryItem
             v-if="!!options.extra.enable_dictionary_items_carrier"
             references="carrier_dictid"
             :label="options.labels.carrier_dictid || 'SSL'"
             :value="order.carrier_dictid"
-            :autocomplete-items="carrierItems"
             :item-text="item => `${item.item_display_name} (${item.item_key})`"
             item-value="id"
-            :display-value="(value)=> dictionaryItemDisplayKeyValue(value, carrierItems)"
+            :item-type="dictionaryItemsTypes.carrier"
+            :company-id="order.t_company_id"
             :edit-mode="editMode"
+            display-key-value
             @change="event => handleChange({ path:'carrier_dictid', ...event})"
           />
           <FormFieldInput
@@ -466,15 +529,15 @@
             :edit-mode="editMode"
             @change="event => handleChange({ path:'vessel', ...event})"
           />
-          <FormFieldInputAutocomplete
+          <FormFieldDictionaryItem
             v-if="!!options.extra.enable_dictionary_items_vessel"
             references="vessel_dictid"
             :label="options.labels.vessel || 'Vessel'"
             :value="order.vessel_dictid"
-            :autocomplete-items="vesselItems"
             item-text="item_display_name"
             item-value="id"
-            :display-value="(value)=> dictionaryItemDisplayValue(value, vesselItems)"
+            :item-type="dictionaryItemsTypes.vessel"
+            :company-id="order.t_company_id"
             :edit-mode="editMode"
             @change="event => handleChange({ path:'vessel_dictid', ...event})"
           />
@@ -739,7 +802,7 @@ import { scrollTo } from '@/utils/scroll_to'
 import permissions from '@/mixins/permissions'
 import { mapState, mapActions, mapGetters } from 'vuex'
 import get from 'lodash/get'
-import { statuses } from '@/enums/app_objects_types'
+import { statuses, dictionaryItemsTypes, commentableTypes } from '@/enums/app_objects_types'
 import events from '@/enums/events'
 
 import { getOrderDetail, postSendToTms, delDeleteOrder, postSendToClient, replicateOrder } from '@/store/api_calls/orders'
@@ -754,13 +817,13 @@ import FormFieldTimeMask from '@/components/FormFields/FormFieldTimeMask'
 import FormFieldInput from '@/components/FormFields/FormFieldInput'
 import FormFieldSwitch from '@/components/FormFields/FormFieldSwitch'
 import FormFieldTextArea from '@/components/FormFields/FormFieldTextArea'
+import FormFieldDictionaryItem from '@/components/FormFields/FormFieldDictionaryItem'
 import FormFieldAddressSwitchVerify from '@/components/FormFields/FormFieldAddressSwitchVerify'
 import FormFieldItineraryEdit from '@/components/FormFields/FormFieldItineraryEdit'
 import FormFieldEquipmentType from '@/components/FormFields/FormFieldEquipmentType'
 import OutlinedButtonGroup from '@/components/General/OutlinedButtonGroup'
 import FormFieldSelectDivisionCodes from '@/components/FormFields/FormFieldSelectDivisionCodes'
 import FormFieldSelect from '@/components/FormFields/FormFieldSelect'
-import FormFieldInputAutocomplete from '@/components/FormFields/FormFieldInputAutocomplete'
 import RequestStatus from '@/components/RequestStatus'
 import StatusHistoryDialog from './StatusHistoryDialog'
 import ManagedByTemplateSection from './ManagedByTemplateSection'
@@ -781,8 +844,8 @@ export default {
     FormFieldEquipmentType,
     OutlinedButtonGroup,
     FormFieldSelect,
-    FormFieldInputAutocomplete,
     FormFieldSelectDivisionCodes,
+    FormFieldDictionaryItem,
     RequestStatus,
     ManagedByTemplateSection,
     StatusHistoryDialog
@@ -813,26 +876,6 @@ export default {
       type: Object,
       required: false,
       default: () => ({ hidden: [], extra: {}, address_search: {}, labels: {} })
-    },
-    tmsTemplates: {
-      type: Array,
-      required: false,
-      default: () => []
-    },
-    itgContainers: {
-      type: Array,
-      required: false,
-      default: () => []
-    },
-    carrierItems: {
-      type: Array,
-      required: false,
-      default: () => []
-    },
-    vesselItems: {
-      type: Array,
-      required: false,
-      default: () => []
     }
   },
   data () {
@@ -847,7 +890,8 @@ export default {
         { id: 'export', name: 'Export' },
         { id: 'oneway', name: 'One way' },
         { id: 'crosstown', name: 'Crosstown' }
-      ]
+      ],
+      dictionaryItemsTypes,
     }
   },
   computed: {
@@ -1229,15 +1273,15 @@ export default {
         onCancel: () => { this.loading = false }
       })
     },
-    dictionaryItemDisplayKeyValue (value, items) {
-      const result = items.filter(el => el.id === value)
-      return result.length > 0 ? `${result[0].item_display_name} (${result[0].item_key})` : value
-    },
-    dictionaryItemDisplayValue (value, items) {
-      const result = items.filter(el => el.id === value)
-      return result.length > 0 ? result[0].item_display_name : value
-    }
 
+    openOrderCommentDialog () {
+      this.$root.$emit(events.openOrderCommentDialog, {
+        commentableType: commentableTypes.order,
+        commentableId: this.order.id,
+        label: `Order #${this.order.id} Feedbak`
+
+      })
+    },
   }
 }
 </script>

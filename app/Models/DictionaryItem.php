@@ -13,7 +13,13 @@ class DictionaryItem extends Model
         ITGCONTAINER_TYPE = 'itgcontainer',
         VESSEL_TYPE = 'vessel',
         CARRIER_TYPE = 'carrier',
-        PT_IMAGETYPE_TYPE = 'pt-imagetype';
+        PT_IMAGETYPE_TYPE = 'pt-imagetype',
+        CC_LOADTYPE_TYPE = 'cc-loadtype',
+        CC_ORDERSTATUS_TYPE = 'cc-orderstatus',
+        CC_HAULCLASS_TYPE = 'cc-haulclass',
+        CC_ORDERCLASS_TYPE = 'cc-orderclass',
+        CC_LOADEDEMPTY_TYPE = 'cc-loadedempty'
+        ;
 
     const TYPES_LIST = [
         self::TEMPLATE_TYPE,
@@ -21,6 +27,11 @@ class DictionaryItem extends Model
         self::VESSEL_TYPE,
         self::CARRIER_TYPE,
         self::PT_IMAGETYPE_TYPE,
+        self::CC_LOADTYPE_TYPE,
+        self::CC_ORDERSTATUS_TYPE,
+        self::CC_HAULCLASS_TYPE,
+        self::CC_ORDERCLASS_TYPE,
+        self::CC_LOADEDEMPTY_TYPE,
     ];
 
     const TYPES_LIST_OPTIONS = [
@@ -29,6 +40,11 @@ class DictionaryItem extends Model
         self::CARRIER_TYPE => 'Carrier',
         self::VESSEL_TYPE => 'Vessel',
         self::PT_IMAGETYPE_TYPE => 'PT Image Type',
+        self::CC_LOADTYPE_TYPE => 'CC Load Type',
+        self::CC_ORDERSTATUS_TYPE => 'CC Order Status',
+        self::CC_HAULCLASS_TYPE => 'CC Haul Class',
+        self::CC_ORDERCLASS_TYPE => 'CC Order Class',
+        self::CC_LOADEDEMPTY_TYPE => 'CC Loaded Emtty',
     ];
 
     public $table = 't_dictionary_items';

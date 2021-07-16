@@ -21,6 +21,7 @@ class AuditLogsDashboardController extends Controller
             'user_id' => 'sometimes|string',
             'filter.company_id' => 'sometimes|string',
             'filter.variant_name' => 'sometimes|string',
+            'per_page' => 'sometimes|nullable|integer'
         ]);
 
         return JsonResource::collection($this->getAuditLogData($filters));
@@ -28,7 +29,7 @@ class AuditLogsDashboardController extends Controller
 
     protected function getAuditLogData(array $filters)
     {
-        $paginator = (new AuditLogsDashboardQuery($filters))->paginate();
+        $paginator = (new AuditLogsDashboardQuery($filters))->paginate($filters['per_page'] ?? null);
 
         $items = collect($paginator->items())->map(function ($order) {
             return [

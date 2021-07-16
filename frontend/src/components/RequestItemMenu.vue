@@ -77,6 +77,11 @@
           @click="openStatusHistoryDialog = true"
           v-text="'Show request history'"
         />
+        <v-list-item
+          v-if="hasPermission('feedbacks-create')"
+          @click="openOrderCommentDialog"
+          v-text="'Add a request comment'"
+        />
       </v-list>
     </v-menu>
     <RequestStatusHistoryDialog
@@ -109,7 +114,7 @@ import {
 } from '@/store/api_calls/requests'
 import RequestStatusHistoryDialog from './RequestStatusHistoryDialog'
 import RequestEmailDialog from './RequestEmailDialog'
-import { objectLocks, statuses } from '@/enums/app_objects_types'
+import { objectLocks, commentableTypes } from '@/enums/app_objects_types'
 import events from '@/enums/events'
 import { isPtImageUpload } from '@/utils/status_helpers'
 
@@ -320,7 +325,15 @@ export default {
       this.setSnackbar({ message: `Request marked as ${this.doneText} successfully` })
       this.loading = false
       this.$emit('request-deleted')
-    }
+    },
+
+    openOrderCommentDialog () {
+      this.$root.$emit(events.openOrderCommentDialog, {
+        commentableType: commentableTypes.request,
+        commentableId: this.request.request_id,
+        label: `Request #${this.request.id} Feedbak`
+      })
+    },
   }
 }
 </script>

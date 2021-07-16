@@ -5,6 +5,7 @@ namespace App\Services\Apis;
 use App\Models\Company;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Str;
+use Illuminate\Http\Client\Response;
 use Illuminate\Support\Facades\Http;
 use App\Exceptions\CompcareException;
 use Illuminate\Support\Facades\Cache;
@@ -13,6 +14,7 @@ class Compcare
 {
     protected string $identityUrl;
     protected string $entitiesUrl;
+    protected string $ordersUrl;
 
     protected $apiKey;
     protected $token;
@@ -22,6 +24,7 @@ class Compcare
     {
         $this->identityUrl = Str::finish(config('services.compcare.identity_url'), '/api/');
         $this->entitiesUrl = Str::finish(config('services.compcare.entities_url'), '/api/');
+        $this->ordersUrl = Str::finish(config('services.compcare.orders_url'), '/api/');
 
         $this->company = $company;
         $this->token = Cache::get(self::getTokenCacheKeyFor($this->company));
@@ -56,9 +59,7 @@ class Compcare
                 ['page' => $page, 'limit' => $limit]
             );
 
-        if ($response->failed() || ! is_array($response->json()) || $response['success'] == false) {
-            throw new CompcareException('Addresses/GetAddresses', $response->body(), $response->status());
-        }
+        $this->validateResponse($response, 'Addresses/GetAddresses');
 
         return $response->json();
     }
@@ -76,6 +77,57 @@ class Compcare
         }
 
         return $data;
+    }
+
+    public function getLoadTypes(): array
+    {
+        $response = Http::withToken($this->token)
+            ->get("{$this->ordersUrl}LoadTypes/GetLoadTypes");
+
+        $this->validateResponse($response, 'LoadTypes/GetLoadTypes');
+
+        return $response->json();
+    }
+
+    public function getOrderStatuses(): array
+    {
+        $response = Http::withToken($this->token)
+            ->get("{$this->ordersUrl}OrderStatuses/GetOrderStatuses");
+
+        $this->validateResponse($response, 'OrderStatuses/GetOrderStatuses');
+
+        return $response->json();
+    }
+
+    public function getHaulClasses(): array
+    {
+        $response = Http::withToken($this->token)
+            ->get("{$this->ordersUrl}HaulClasses/GetHaulClasses");
+
+        $this->validateResponse($response, 'HaulClasses/GetHaulClasses');
+
+        return $response->json();
+    }
+
+    public function getOrderClasses(): array
+    {
+        $response = Http::withToken($this->token)
+            ->get("{$this->ordersUrl}OrderClasses/GetOrderClasses");
+
+        $this->validateResponse($response, 'OrderClasses/GetOrderClasses');
+
+        return $response->json();
+    }
+
+    /**
+     * @throws CompcareException
+     */
+    protected function validateResponse(Response $response, string $endpoint): void
+    {
+        throw_if(
+            $response->failed() || ! is_array($response->json()) || $response['success'] == false,
+            new CompcareException($endpoint, $response->body(), $response->status())
+        );
     }
 
     public static function getTokenCacheKeyFor(Company $company): string
