@@ -72,7 +72,14 @@ export const statuses = {
   updatedBySubsequentOrder: 'updated-by-subsequent-order',
   successImageuplodingToBlackfl: 'success-imageuploding-to-blackfl',
   failureImageuplodingToBlackfl: 'failure-imageuploding-to-blackfl',
-  untriedImageuplodingToBlackfl: 'untried-imageuploding-to-blackfl'
+  untriedImageuplodingToBlackfl: 'untried-imageuploding-to-blackfl',
+
+  sendingToCompcare: 'sending-to-compcare',
+  autoSendingToCompcare: 'auto-sending-to-compcare',
+  successSendingToCompcare: 'success-sending-to-compcare',
+  failureSendingToCompcare: 'failure-sending-to-compcare',
+  shipmentCreatedByCompcare: 'shipment-created-by-compcare',
+  shipmentNotCreatedByCompcare: 'shipment-not-created-by-compcare'
 }
 
 export const displayStatuses = {
