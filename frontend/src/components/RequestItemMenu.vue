@@ -37,7 +37,7 @@
           v-text="'Release edit-lock'"
         />
         <v-list-item
-          v-if="!isPtImageUpload"
+          v-if="!isPtImageUpload && canDownloadSourceFile"
           @click="downloadSourceFile"
           v-text="'Download source file'"
         />
@@ -114,7 +114,7 @@ import {
 } from '@/store/api_calls/requests'
 import RequestStatusHistoryDialog from './RequestStatusHistoryDialog'
 import RequestEmailDialog from './RequestEmailDialog'
-import { objectLocks, commentableTypes } from '@/enums/app_objects_types'
+import { objectLocks, commentableTypes, displayStatuses } from '@/enums/app_objects_types'
 import events from '@/enums/events'
 import { isPtImageUpload } from '@/utils/status_helpers'
 
@@ -158,6 +158,9 @@ export default {
     },
     isPtImageUpload () {
       return isPtImageUpload(this.request.latest_ocr_request_status?.status)
+    },
+    canDownloadSourceFile () {
+      return this.request.display_status !== displayStatuses.rejected && this.request.has_upload_requested
     }
   },
   methods: {
@@ -234,7 +237,7 @@ export default {
       if (error === undefined) {
         downloadFile(data.data)
       } else {
-        await this.setSnackbar({ message: error })
+        await this.setSnackbar({ message: error.response?.data?.message })
       }
     },
 
@@ -331,7 +334,7 @@ export default {
       this.$root.$emit(events.openOrderCommentDialog, {
         commentableType: commentableTypes.request,
         commentableId: this.request.request_id,
-        label: `Request #${this.request.id} Feedbak`
+        label: `Request #${this.request.id} Feedback`
       })
     },
   }

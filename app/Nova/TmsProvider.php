@@ -4,6 +4,7 @@ namespace App\Nova;
 
 use Laravel\Nova\Fields\ID;
 use Illuminate\Http\Request;
+use Laravel\Nova\Fields\Code;
 use Laravel\Nova\Fields\Text;
 
 class TmsProvider extends Resource
@@ -42,6 +43,14 @@ class TmsProvider extends Resource
         return [
             ID::make(__('ID'), 'id')->sortable(),
             Text::make('Name'),
+            Code::make('Configuration', 'configuration')
+                ->json()
+                ->hideFromIndex()
+                ->rules(['nullable', 'json'])
+                ->resolveUsing(function ($configuration) {
+                    $json = json_decode($configuration, true);
+                    return collect($json)->sortKeys()->toJson(JSON_PRETTY_PRINT);
+                }),
         ];
     }
 

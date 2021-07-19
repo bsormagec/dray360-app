@@ -313,7 +313,8 @@
           references="shipment_direction"
           :label="options.labels.shipment_direction || 'Shipment direction'"
           :value="order.shipment_direction"
-          :items="shipmentDirection"
+          :items="shipmentDirectionFromConfig"
+          :display-value="shipmentDirectionDisplayValue"
           item-text="name"
           item-value="id"
           :edit-mode="editMode"
@@ -906,6 +907,16 @@ export default {
       sections: state => state.sections
     }),
 
+    shipmentDirectionFromConfig () {
+      const configShipmentDirections = get(this.order.company, 'configuration.shipment_directions')
+
+      if (!configShipmentDirections) {
+        return this.shipmentDirection
+      }
+
+      return configShipmentDirections.map(item => ({ id: item.d3code, name: item.display }))
+    },
+
     addressSearchProps () {
       return {
         'enable-address-filters': get(this.options, 'address_search.address_filters', true),
@@ -1046,6 +1057,14 @@ export default {
         !!this.options.extra.profit_tools_enable_templates &&
         get(this.options.field_maps, `${field}.use_template_value`) &&
         get(this.options.field_maps, `${field}.templateable`)
+    },
+
+    shipmentDirectionDisplayValue (value) {
+      if (!value) {
+        return '--'
+      }
+
+      return this.shipmentDirectionFromConfig.find(item => item.id === value).name
     },
 
     formatDate,
@@ -1278,7 +1297,7 @@ export default {
       this.$root.$emit(events.openOrderCommentDialog, {
         commentableType: commentableTypes.order,
         commentableId: this.order.id,
-        label: `Order #${this.order.id} Feedbak`
+        label: `Order #${this.order.id} Feedback`
 
       })
     },

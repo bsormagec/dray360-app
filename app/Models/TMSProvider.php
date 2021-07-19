@@ -22,7 +22,15 @@ class TMSProvider extends Model
 
     public $fillable = [
         'name',
-        't_fieldmap_id'
+        't_fieldmap_id',
+        'configuration',
+    ];
+
+    /**
+     * The attributes that should be casted to native types.
+     */
+    protected $casts = [
+        'configuration' => 'json',
     ];
 
     public function fieldMap()
