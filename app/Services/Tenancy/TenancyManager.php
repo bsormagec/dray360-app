@@ -114,9 +114,11 @@ class TenancyManager
         }
 
         $companyTenant = $company->domain->tenant ?? null;
+        $tmsProvider = $company->defaultTmsProvider ?? null;
 
         return collect(Tenant::getDefaultTenant()->configuration ?? [])
             ->merge($companyTenant->configuration ?? [])
+            ->merge($tmsProvider->configuration ?? [])
             ->merge($company->configuration ?? [])
             ->toArray();
     }
