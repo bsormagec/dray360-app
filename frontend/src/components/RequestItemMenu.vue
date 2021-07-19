@@ -331,7 +331,7 @@ export default {
       this.$root.$emit(events.openOrderCommentDialog, {
         commentableType: commentableTypes.request,
         commentableId: this.request.request_id,
-        label: `Request #${this.request.id} Feedbak`
+        label: `Request #${this.request.id} Feedback`
       })
     },
   }
