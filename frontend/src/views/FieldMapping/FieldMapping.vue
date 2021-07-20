@@ -1,76 +1,53 @@
 <template>
-  <!-- <v-container> -->
-  <v-row
-    no-gutters
-
-    class="field-mapping__container"
-  >
-    <v-col
-      cols="12"
-      md="2"
-      class="field-mapping__filters"
+  <v-sheet class="field-mapping__container">
+    <FieldMappingFilters
+      :loading="loading"
+      @fetching="loading = true"
+      @done-fetching="clearSelection"
+    />
+    <v-container
+      fluid
+      class="pa-0"
     >
-      <div class="primary pa-2 d-flex align-center justify-md-center">
-        <SidebarNavigationButton />
-        <h1 class="subtitle-2 text-center text-uppercase white--text">
-          mapping admin panel
-        </h1>
-      </div>
-      <div class="pa-5">
-        <FieldMappingFilters
-          :loading="loading"
-          @fetching="loading = true"
-          @done-fetching="clearSelection"
-        />
-      </div>
-    </v-col>
-    <v-col
-      cols="12"
-      md="3"
-      class="field-mapping__fields px-5"
-    >
-      <div class="mt-4 mb-3 d-flex justify-space-between">
-        <h3 class="h6 pa-0 ma-0 text-left primary--text">
-          Order AI Fields
-        </h3>
-        <v-btn
-          v-if="isDefaultFieldMap"
-          color="primary"
-          :loading="loading"
-          @click="addNewFieldMap"
-        >
-          Add
-        </v-btn>
-      </div>
-      <div>
-        <FieldMappingList
-          :selected-field="selectedField"
-          :loading="loading"
-          @change="fieldMapSelected"
-        />
-      </div>
-    </v-col>
-    <v-col
-      cols="12"
-      md="7"
-      class="field-mapping__form px-5"
-    >
-      <FieldMappingForm
-        :selected-field="selectedField"
-        :loading="loading"
-        @reset="resetFieldMaps"
-        @save="saveFieldMap"
-      />
-    </v-col>
-  </v-row>
-  <!-- </v-container> -->
+      <v-row no-gutters>
+        <v-col cols="5">
+          <h2 class="h6 d-flex ma-3 primary--text">
+            Order AI Fields
+            <v-btn
+              v-if="isDefaultFieldMap"
+              class="ml-auto"
+              color="primary"
+              text
+              small
+              :loading="loading"
+              @click="addNewFieldMap"
+            >
+              Add
+            </v-btn>
+          </h2>
+          <FieldMappingList
+            :selected-field="selectedField"
+            :loading="loading"
+            @change="fieldMapSelected"
+          />
+        </v-col>
+        <v-col cols="7">
+          <FieldMappingForm
+            :selected-field="selectedField"
+            :loading="loading"
+            @reset="resetFieldMaps"
+            @save="saveFieldMap"
+          />
+        </v-col>
+      </v-row>
+    </v-container>
+  </v-sheet>
 </template>
 
 <script>
 import FieldMappingFilters from './FieldMappingFilters'
 import FieldMappingList from './FieldMappingList'
 import FieldMappingForm from './FieldMappingForm'
-import SidebarNavigationButton from '@/components/General/SidebarNavigationButton.vue'
 import permissions from '@/mixins/permissions'
 
 import { mapActions, mapState } from 'vuex'
@@ -86,7 +63,6 @@ export default {
     FieldMappingFilters,
     FieldMappingList,
     FieldMappingForm,
-    SidebarNavigationButton,
   },
 
   mixins: [permissions],
@@ -199,22 +175,9 @@ export default {
   }
 }
 </script>
+
 <style lang="scss" scoped>
-.field-mapping__container {
-  height: 100vh;
-  overflow: hidden;
-  .field-mapping__fields, .field-mapping__form {
-    height: 100vh;
-    overflow-y: auto;
-  }
-}
-
-.field-mapping__fields, .field-mapping__filters {
-  border-right: rem(1) solid rgba(var(--v-slate-gray-base-rgb), 15%);
-}
-
-.field-mapping__item {
-  min-height: rem(60);
-  box-shadow: 0 3px 1px -2px rgb(0 0 0 / 5%), 0 2px 2px 0 rgb(0 0 0 / 14%), 0 1px 5px 0 rgb(0 0 0 / 12%);
+.field-mapping__container::v-deep {
+  height: calc(100vh - #{rem(40)});
 }
 </style>
