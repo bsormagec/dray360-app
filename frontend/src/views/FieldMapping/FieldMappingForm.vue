@@ -17,7 +17,7 @@
         small
         color="primary"
         :loading="loading"
-        @click="$emit('save', {field: selectedField, fieldMap: formFieldMap })"
+        @click="$emit('save', { field: selectedField, fieldMap: formFieldMap })"
       >
         Save
       </v-btn>
@@ -251,6 +251,16 @@ export default {
 
   watch: {
     selectedField () {
+      this.selectedFieldUpdated()
+    }
+  },
+
+  beforeMount () {
+    this.selectedFieldUpdated()
+  },
+
+  methods: {
+    selectedFieldUpdated () {
       this.formFieldMap = { ...cloneDeep(this.fieldMaps[this.selectedField]) }
       if (abbySourceFileds.old_fields.indexOf(this.selectedField) > -1) {
         this.abbySourceFieldFilter.old = true
@@ -259,10 +269,8 @@ export default {
         this.abbySourceFieldFilter.old = false
         this.abbySourceFieldFilter.new = true
       }
-    }
-  },
+    },
 
-  methods: {
     getColor (key) {
       return this.hasChanged(key)
         ? 'orange-changes lighten-5'

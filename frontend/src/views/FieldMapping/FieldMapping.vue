@@ -6,6 +6,35 @@
       @done-fetching="clearSelection"
     />
     <v-container
+      v-if="isDefaultFieldMap && customMapping"
+      fluid
+      fill-height
+    >
+      <v-row
+        align="center"
+        justify="center"
+        fill-height
+      >
+        <v-col
+          cols="6"
+          align-content="center"
+        >
+          <img
+            class="d-block mx-auto mb-3"
+            src="@/assets/images/application_downtime.png"
+            alt="No filter selected"
+          >
+          <h1 class="h6 primary--text text-center mb-3">
+            Configuration Page not selected
+          </h1>
+          <p class="text-center">
+            Select the custom configuration parameters at the top of the page before making changes to the fields.
+          </p>
+        </v-col>
+      </v-row>
+    </v-container>
+    <v-container
+      v-else
       fluid
       class="pa-0"
     >
@@ -32,7 +61,27 @@
           />
         </v-col>
         <v-col cols="7">
+          <template
+            v-if="!selectedField"
+          >
+            <div
+              class="mx-auto placeholder-container"
+            >
+              <img
+                class="d-block mx-auto mb-3"
+                src="@/assets/images/application_downtime.png"
+                alt="No filter selected"
+              >
+              <h1 class="h6 primary--text text-center mb-3">
+                No field selected
+              </h1>
+              <p class="text-center">
+                To start making edits to this mapping configuration, find the field you wish to customize in the list of all Order AI fields on the left and click on that field to select it.
+              </p>
+            </div>
+          </template>
           <FieldMappingForm
+            v-else
             :selected-field="selectedField"
             :loading="loading"
             @reset="resetFieldMaps"
@@ -97,11 +146,12 @@ export default {
     ...mapState(fieldMaps.moduleName, {
       fieldMaps: state => state.fieldMaps,
       filters: state => state.filters,
+      customMapping: state => state.customMapping,
     }),
 
     isDefaultFieldMap () {
       return !this.filters?.companyId && !this.filters?.variantId && !this.filters?.tmsProviderId
-    }
+    },
   },
 
   async beforeMount () {
@@ -139,11 +189,25 @@ export default {
       this.loading = false
     },
 
-    saveFieldMap ({ field, fieldMap }) {
-      this.loading = true
-      this.setFieldMap({ field, fieldMap })
-      this.saveFieldMapsChanges()
-      this.loading = false
+    async saveFieldMap ({ field, fieldMap }) {
+      const saveFieldMap = () => {
+        this.loading = true
+        this.setFieldMap({ field, fieldMap })
+        this.saveFieldMapsChanges()
+        this.loading = false
+      }
+
+      if (!this.isDefaultFieldMap) {
+        saveFieldMap()
+        return
+      }
+
+      this.setConfirmationDialog({
+        title: 'System-wide defaults fields will change',
+        text: 'Are you sure you want to change the system-wide defaults? This will affect every order in the system that uses the modified fields.',
+        onConfirm: saveFieldMap,
+        onCancel: () => {}
+      })
     },
 
     async saveFieldMapsChanges () {
@@ -179,5 +243,13 @@ export default {
 <style lang="scss" scoped>
 .field-mapping__container::v-deep {
   height: calc(100vh - #{rem(40)});
+}
+
+.placeholder-container {
+  max-width: 70%;
+  height: calc(100vh - #{rem(40)});
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
 }
 </style>

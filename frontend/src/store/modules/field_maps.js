@@ -10,6 +10,7 @@ export const types = {
   RESET_FIELD_MAP: 'RESET_FIELD_MAP',
   SET_FIELD_MAPS_FILTERS: 'SET_FIELD_MAPS_FILTERS',
   SAVE_FIELD_MAPS: 'SAVE_FIELD_MAPS',
+  SET_CUSTOM_MAPPING: 'SET_CUSTOM_MAPPING',
   UPDATE_DEFAULT_FIELD_MAPS: 'UPDATE_DEFAULT_FIELD_MAPS',
 }
 
@@ -21,7 +22,8 @@ const initialState = {
     companyId: null,
     tmsProviderId: null,
     variantId: null,
-  }
+  },
+  customMapping: null,
 }
 
 const mutations = {
@@ -48,7 +50,11 @@ const mutations = {
 
   [types.UPDATE_DEFAULT_FIELD_MAPS] (state, { fieldMaps }) {
     state.defaultFieldMaps = { ...cloneDeep(fieldMaps) }
-  }
+  },
+
+  [types.SET_CUSTOM_MAPPING] (state, { customMapping = false }) {
+    state.customMapping = customMapping
+  },
 }
 
 const actions = {
@@ -115,6 +121,9 @@ const actions = {
     return await createFieldMaps(createData)
   },
 
+  [types.SET_CUSTOM_MAPPING] ({ commit, state }, { customMapping }) {
+    commit(types.SET_CUSTOM_MAPPING, { customMapping })
+  },
 }
 
 const getters = {

@@ -111,12 +111,14 @@ export default {
     orderId: null,
     variants: [],
     tmsProviders: [],
-    customMapping: false,
   }),
 
   computed: {
     ...mapState(orders.moduleName, {
       orders: state => state.list,
+    }),
+    ...mapState(fieldMaps.moduleName, {
+      customMapping: state => state.customMapping,
     }),
   },
 
@@ -137,6 +139,7 @@ export default {
   },
 
   async beforeMount () {
+    this.setCustomMapping({ customMapping: false })
     this.$emit('fetching')
     if (this.canViewOtherCompanies()) {
       await this.fetchCompanies()
@@ -151,6 +154,7 @@ export default {
     ...mapActions(fieldMaps.moduleName, {
       getFieldMaps: fieldMapsTypes.GET_FIELD_MAPS,
       setFieldMapsFilters: fieldMapsTypes.SET_FIELD_MAPS_FILTERS,
+      setCustomMapping: fieldMapsTypes.SET_CUSTOM_MAPPING,
     }),
     ...mapActions(orders.moduleName, {
       getOrders: ordersTypes.getOrders,
@@ -170,7 +174,7 @@ export default {
         data.variantId = this.variantId
       }
       if (!this.companyId && !this.tmsProviderId && !this.variantId) {
-        this.customMapping = false
+        this.setCustomMapping({ customMapping: false })
       }
       this.$emit('fetching')
       await this.getFieldMaps(data)
@@ -207,7 +211,7 @@ export default {
         this.variantId = null
         this.getFilteredFieldMaps()
       }
-      this.customMapping = value
+      this.setCustomMapping({ customMapping: value })
     }
   }
 }
