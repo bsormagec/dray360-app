@@ -388,7 +388,7 @@
         <FormFieldDictionaryItem
           v-if="fieldShouldBeShown('cc_loadedempty_dictid')"
           references="cc_loadedempty_dictid"
-          :label="options.labels.cc_loadedempty_dictid || 'Loaded Emty'"
+          :label="options.labels.cc_loadedempty_dictid || 'Loaded Empty'"
           :value="order.cc_loadedempty_dictid"
           item-text="item_display_name"
           item-value="id"
