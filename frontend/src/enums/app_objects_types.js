@@ -9,6 +9,9 @@ export const dictionaryItemsTypes = {
   ccHaulClass: 'cc-haulclass',
   ccOrderClass: 'cc-orderclass',
   ccLoadedEmpty: 'cc-loadedempty',
+  termdiv: 'termdiv',
+  ccContainerSize: 'cc-containersize',
+  ccContainerType: 'cc-containertype',
 }
 
 export const objectLocks = {

@@ -24,6 +24,13 @@
     </h3>
     <div class="field-mapping-form px-3 pb-3">
       <v-switch
+        v-model="formFieldMap.screen_hide"
+        :class="{'field-mapping-form-field__changed': hasChanged('screen_hide')}"
+        label="Screen Hide"
+        dense
+        v-bind="fieldChangedAttributes('screen_hide')"
+      />
+      <v-switch
         v-model="formFieldMap.templateable"
         class="mt-0"
         :class="{'field-mapping-form-field__changed': hasChanged('templateable')}"
@@ -167,13 +174,6 @@
         hide-details
         disabled
         v-bind="fieldChangedAttributes('profittools_destination')"
-      />
-      <v-switch
-        v-model="formFieldMap.screen_hide"
-        :class="{'field-mapping-form-field__changed': hasChanged('screen_hide')}"
-        label="Screen Hide"
-        disabled
-        dense
       />
       <v-text-field
         v-model="formFieldMap.screen_name"

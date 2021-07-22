@@ -31,17 +31,17 @@ class PopulateCacheEntries extends Command
     {
         $orders = Order::where('created_at', '>=', now()->subMonth())
             ->where(function ($query) {
-                $query->orWhereNotNull('container_dictid')
+                $query->orWhereNotNull('itgcontainer_dictid')
                     ->orWhereNotNull('carrier_dictid')
                     ->orWhereNotNull('tms_template_dictid')
                     ->orWhereNotNull('vessel_dictid');
             })
             ->whereNotNull('tms_shipment_id')
-            ->get(['id', 'container_dictid', 'carrier_dictid', 'vessel_dictid', 'tms_template_dictid']);
+            ->get(['id', 'itgcontainer_dictid', 'carrier_dictid', 'vessel_dictid', 'tms_template_dictid']);
 
         foreach ($orders as $order) {
             $this->info("Queueing AttributeVerified events for order {$order->id}");
-            AttributeVerified::dispatchIf($order->container_dictid, $order, 'container_dictid_verified');
+            AttributeVerified::dispatchIf($order->itgcontainer_dictid, $order, 'itgcontainer_dictid_verified');
             AttributeVerified::dispatchIf($order->carrier_dictid, $order, 'carrier_dictid_verified');
             AttributeVerified::dispatchIf($order->vessel_dictid, $order, 'vessel_dictid_verified');
             AttributeVerified::dispatchIf($order->tms_template_dictid, $order, 'tms_template_dictid_verified');

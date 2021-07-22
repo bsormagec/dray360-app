@@ -351,9 +351,7 @@ export default {
 
     initializeFormOptions () {
       for (const key in this.companyConfiguration) {
-        if (key.startsWith('hide_field_name_') && this.companyConfiguration[key]) {
-          this.formOptions.hidden.push(key.replace('hide_field_name_', ''))
-        } else if (key.startsWith('label_field_name_') && this.companyConfiguration[key]) {
+        if (key.startsWith('label_field_name_') && this.companyConfiguration[key]) {
           const newKey = key.replace('label_field_name_', '')
           this.formOptions.labels[newKey] = this.companyConfiguration[key]
         } else if (key.startsWith('address_search_')) {
@@ -362,8 +360,15 @@ export default {
         } else {
           this.formOptions.extra[key] = this.companyConfiguration[key]
         }
+      }
 
-        this.formOptions.field_maps = this.currentOrder.field_maps
+      this.formOptions.field_maps = this.currentOrder.field_maps
+
+      const { field_maps: fieldMaps } = this.currentOrder
+      for (const key in fieldMaps) {
+        if (fieldMaps[key].screen_hide) {
+          this.formOptions.hidden.push(key)
+        }
       }
 
       this.formOptions = { ...this.formOptions }
