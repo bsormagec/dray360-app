@@ -189,7 +189,7 @@ export default {
       this.loading = false
     },
 
-    async saveFieldMap ({ field, fieldMap }) {
+    async saveFieldMap ({ field, fieldMap, newFieldMap = false }) {
       const saveFieldMap = () => {
         this.loading = true
         this.setFieldMap({ field, fieldMap })
@@ -197,7 +197,7 @@ export default {
         this.loading = false
       }
 
-      if (!this.isDefaultFieldMap) {
+      if (!this.isDefaultFieldMap || newFieldMap) {
         saveFieldMap()
         return
       }
@@ -231,7 +231,7 @@ export default {
         cancelText: 'Cancel',
         onConfirm: d3CanonName => {
           const fieldMap = cloneDeep({ ...this.emptyFormFieldMap, d3canon_name: d3CanonName })
-          this.saveFieldMap({ field: d3CanonName, fieldMap })
+          this.saveFieldMap({ field: d3CanonName, fieldMap, newFieldMap: true })
         },
         onCancel: () => {}
       })
