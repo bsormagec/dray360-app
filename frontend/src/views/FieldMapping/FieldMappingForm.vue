@@ -9,7 +9,7 @@
         text
         small
         :loading="loading"
-        @click="$emit('reset', selectedField)"
+        @click="resetFieldMaps"
       >
         Reset
       </v-btn>
@@ -237,6 +237,7 @@ export default {
 
     ...mapState(fieldMaps.moduleName, {
       fieldMaps: state => state.fieldMaps,
+      defaultFieldMaps: state => state.defaultFieldMaps,
     }),
 
     abbySourceField () {
@@ -286,6 +287,11 @@ export default {
       return {
         dense: false,
       }
+    },
+
+    resetFieldMaps () {
+      this.$emit('reset', this.selectedField)
+      this.formFieldMap = { ...cloneDeep(this.defaultFieldMaps[this.selectedField]) }
     }
   }
 }
