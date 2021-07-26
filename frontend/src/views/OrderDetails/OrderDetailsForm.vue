@@ -285,7 +285,6 @@
 
       <div class="section__rootfields">
         <FormFieldDictionaryItem
-          v-if="showPTET"
           references="tms_template_dictid"
           :label="options.labels.tms_template_dictid || 'TMS Template'"
           :value="order.tms_template_dictid"
