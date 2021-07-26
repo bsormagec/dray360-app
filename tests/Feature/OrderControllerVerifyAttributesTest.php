@@ -46,7 +46,7 @@ class OrderControllerVerifyAttributesTest extends TestCase
             'carrier_dictid_verified' => false,
             'vessel_dictid_verified' => false,
             'bill_to_address_verified' => false,
-            'container_dictid_verified' => false,
+            'itgcontainer_dictid_verified' => false,
             't_company_id' => $company->id,
             't_tms_provider_id' => $tmsProvider->id,
         ]);
@@ -56,7 +56,7 @@ class OrderControllerVerifyAttributesTest extends TestCase
                 'bill_to_address_verified' => true,
                 'carrier_dictid_verified' => true,
                 'vessel_dictid_verified' => true,
-                'container_dictid_verified' => true,
+                'itgcontainer_dictid_verified' => true,
                 'order_address_events' => [
                     $orderAddressEvent->setAttribute('t_address_verified', true)->toArray()
                 ],
@@ -71,7 +71,7 @@ class OrderControllerVerifyAttributesTest extends TestCase
                 'tms_template_dictid_verified',
                 'carrier_dictid_verified',
                 'vessel_dictid_verified',
-                'container_dictid_verified',
+                'itgcontainer_dictid_verified',
             ]);
 
             if ($wasTriggered) {

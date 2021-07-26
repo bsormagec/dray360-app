@@ -58,7 +58,7 @@ export default {
     },
 
     topBarException () {
-      return ['Inbox', 'Field Mapping'].includes(this.$route.name)
+      return ['Inbox'].includes(this.$route.name)
     }
   },
 }

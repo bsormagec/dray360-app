@@ -297,7 +297,7 @@
           @change="event => handleChange({ path:'tms_template_dictid', ...event })"
         />
         <FormFieldSelectDivisionCodes
-          v-if="!!options.extra.enable_divisions"
+          v-if="fieldShouldBeShown('division_code')"
           references="division_code"
           :label="options.labels.division_code || 'Division'"
           :value="order.division_code"
@@ -313,7 +313,8 @@
           references="shipment_direction"
           :label="options.labels.shipment_direction || 'Shipment direction'"
           :value="order.shipment_direction"
-          :items="shipmentDirection"
+          :items="shipmentDirectionFromConfig"
+          :display-value="shipmentDirectionDisplayValue"
           item-text="name"
           item-value="id"
           :edit-mode="editMode"
@@ -336,8 +337,8 @@
           :edit-mode="editMode"
           @change="event => handleChange({ path:'hazardous', ...event})"
         />
-        <!-- <FormFieldDictionaryItem
-          v-if="!fieldShouldBeShown('cc_loadtype_dictid')"
+        <FormFieldDictionaryItem
+          v-if="fieldShouldBeShown('cc_loadtype_dictid')"
           references="cc_loadtype_dictid"
           :label="options.labels.cc_loadtype_dictid || 'Load Type'"
           :value="order.cc_loadtype_dictid"
@@ -347,9 +348,9 @@
           :company-id="order.t_company_id"
           :edit-mode="editMode"
           @change="event => handleChange({ path:'cc_loadtype_dictid', ...event })"
-        /> -->
-        <!-- <FormFieldDictionaryItem
-          v-if="!fieldShouldBeShown('cc_orderstatus_dictid')"
+        />
+        <FormFieldDictionaryItem
+          v-if="fieldShouldBeShown('cc_orderstatus_dictid')"
           references="cc_orderstatus_dictid"
           :label="options.labels.cc_orderstatus_dictid || 'Order Status'"
           :value="order.cc_orderstatus_dictid"
@@ -359,9 +360,9 @@
           :company-id="order.t_company_id"
           :edit-mode="editMode"
           @change="event => handleChange({ path:'cc_orderstatus_dictid', ...event })"
-        /> -->
-        <!-- <FormFieldDictionaryItem
-          v-if="!fieldShouldBeShown('cc_haulclass_dictid')"
+        />
+        <FormFieldDictionaryItem
+          v-if="fieldShouldBeShown('cc_haulclass_dictid')"
           references="cc_haulclass_dictid"
           :label="options.labels.cc_haulclass_dictid || 'Haul Class'"
           :value="order.cc_haulclass_dictid"
@@ -371,9 +372,9 @@
           :company-id="order.t_company_id"
           :edit-mode="editMode"
           @change="event => handleChange({ path:'cc_haulclass_dictid', ...event })"
-        /> -->
-        <!-- <FormFieldDictionaryItem
-          v-if="!fieldShouldBeShown('cc_orderclass_dictid')"
+        />
+        <FormFieldDictionaryItem
+          v-if="fieldShouldBeShown('cc_orderclass_dictid')"
           references="cc_orderclass_dictid"
           :label="options.labels.cc_orderclass_dictid || 'Order Class'"
           :value="order.cc_orderclass_dictid"
@@ -383,11 +384,11 @@
           :company-id="order.t_company_id"
           :edit-mode="editMode"
           @change="event => handleChange({ path:'cc_orderclass_dictid', ...event })"
-        /> -->
-        <!-- <FormFieldDictionaryItem
-          v-if="!fieldShouldBeShown('cc_loadedempty_dictid')"
+        />
+        <FormFieldDictionaryItem
+          v-if="fieldShouldBeShown('cc_loadedempty_dictid')"
           references="cc_loadedempty_dictid"
-          :label="options.labels.cc_loadedempty_dictid || 'Loaded Emty'"
+          :label="options.labels.cc_loadedempty_dictid || 'Loaded Empty'"
           :value="order.cc_loadedempty_dictid"
           item-text="item_display_name"
           item-value="id"
@@ -395,7 +396,43 @@
           :tms-provider-id="order.t_tms_provider_id"
           :edit-mode="editMode"
           @change="event => handleChange({ path:'cc_loadedempty_dictid', ...event })"
-        /> -->
+        />
+        <FormFieldDictionaryItem
+          v-if="fieldShouldBeShown('termdiv_dictid')"
+          references="termdiv_dictid"
+          :label="options.labels.termdiv_dictid || 'Terminal/Division'"
+          :value="order.termdiv_dictid"
+          item-text="item_display_name"
+          item-value="id"
+          :item-type="dictionaryItemsTypes.termdiv"
+          :company-id="order.t_company_id"
+          :edit-mode="editMode"
+          @change="event => handleChange({ path:'termdiv_dictid', ...event })"
+        />
+        <FormFieldDictionaryItem
+          v-if="fieldShouldBeShown('cc_containersize_dictid')"
+          references="cc_containersize_dictid"
+          :label="options.labels.cc_containersize_dictid || 'Container Size'"
+          :value="order.cc_containersize_dictid"
+          item-text="item_display_name"
+          item-value="id"
+          :item-type="dictionaryItemsTypes.ccContainerSize"
+          :company-id="order.t_company_id"
+          :edit-mode="editMode"
+          @change="event => handleChange({ path:'cc_containersize_dictid', ...event })"
+        />
+        <FormFieldDictionaryItem
+          v-if="fieldShouldBeShown('cc_containertype_dictid')"
+          references="cc_containertype_dictid"
+          :label="options.labels.cc_containertype_dictid || 'Container Type'"
+          :value="order.cc_containertype_dictid"
+          item-text="item_display_name"
+          item-value="id"
+          :item-type="dictionaryItemsTypes.ccContainerType"
+          :company-id="order.t_company_id"
+          :edit-mode="editMode"
+          @change="event => handleChange({ path:'cc_containertype_dictid', ...event })"
+        />
       </div>
 
       <div class="form__sub-section">
@@ -406,20 +443,20 @@
         </div>
         <div class="section__rootfields">
           <FormFieldDictionaryItem
-            v-if="!!options.extra.itg_enable_containers"
-            references="container_dictid"
-            :label="options.labels.container_dictid || 'ITG Container Size/Type'"
-            :value="order.container_dictid"
+            v-if="fieldShouldBeShown('itgcontainer_dictid')"
+            references="itgcontainer_dictid"
+            :label="options.labels.itgcontainer_dictid || 'ITG Container Size/Type'"
+            :value="order.itgcontainer_dictid"
             :item-text="item => `${item.item_display_name} (${item.item_key})`"
             item-value="id"
             :item-type="dictionaryItemsTypes.itgContainer"
             :company-id="order.t_company_id"
             :edit-mode="editMode"
             display-key-value
-            @change="event => handleChange({ path:'container_dictid', ...event})"
+            @change="event => handleChange({ path:'itgcontainer_dictid', ...event})"
           />
           <FormFieldEquipmentType
-            v-else
+            v-if="fieldShouldBeShown('equipment_type')"
             :label="options.labels.t_equipment_type_id || 'Equipment Type'"
             references="t_equipment_type_id"
             :company-id="order.t_company_id"
@@ -509,7 +546,7 @@
             @change="event => handleChange({ path:'pickup_number', ...event})"
           />
           <FormFieldDictionaryItem
-            v-if="!!options.extra.enable_dictionary_items_carrier"
+            v-if="fieldShouldBeShown('carrier')"
             references="carrier_dictid"
             :label="options.labels.carrier_dictid || 'SSL'"
             :value="order.carrier_dictid"
@@ -522,7 +559,7 @@
             @change="event => handleChange({ path:'carrier_dictid', ...event})"
           />
           <FormFieldInput
-            v-if="fieldShouldBeShown('vessel') && !options.extra.enable_dictionary_items_vessel"
+            v-if="fieldShouldBeShown('vessel')"
             references="vessel"
             :label="options.labels.vessel || 'Vessel'"
             :value="order.vessel"
@@ -530,7 +567,7 @@
             @change="event => handleChange({ path:'vessel', ...event})"
           />
           <FormFieldDictionaryItem
-            v-if="!!options.extra.enable_dictionary_items_vessel"
+            v-if="fieldShouldBeShown('vessel_dictid')"
             references="vessel_dictid"
             :label="options.labels.vessel || 'Vessel'"
             :value="order.vessel_dictid"
@@ -550,7 +587,7 @@
             @change="event => handleChange({ path:'voyage', ...event})"
           />
           <FormFieldDate
-            v-if="fieldShouldBeShown('pickup_by_date')"
+            v-if="fieldShouldBeShown('appointment_date')"
             references="pickup_by_date"
             :label="options.labels.pickup_by_date || 'Pickup by date'"
             :value="order.pickup_by_date"
@@ -558,7 +595,7 @@
             @change="event => handleChange({ path:'pickup_by_date', ...event})"
           />
           <FormFieldTimeMask
-            v-if="fieldShouldBeShown('pickup_by_time')"
+            v-if="fieldShouldBeShown('appointment_time')"
             references="pickup_by_time"
             :label="options.labels.pickup_by_time || 'Pickup by time'"
             :value="order.pickup_by_time"
@@ -618,6 +655,7 @@
         </div>
         <div class="section__rootfields">
           <FormFieldAddressSwitchVerify
+            v-if="fieldShouldBeShown('bill_to_address')"
             :recognized-text="order.bill_to_address_raw_text || 'Address not recognized'"
             :verified="order.bill_to_address_verified"
             :matched-address="order.bill_to_address"
@@ -708,6 +746,7 @@
             :key="`${index}${orderAddressEvent.id}`"
           >
             <FormFieldItineraryEdit
+              v-if="fieldShouldBeShown(`event${index+1}_location`) && fieldShouldBeShown(`event${index+1}_note`) && fieldShouldBeShown(`event${index+1}_type`)"
               :order-address-event="orderAddressEvent"
               :current-index="index+1"
               :references="`order_address_events.${index}`"
@@ -765,6 +804,7 @@
           </div>
           <div class="section__rootfields">
             <FormFieldTextArea
+              v-if="fieldShouldBeShown('contents')"
               :references="`order_line_items.${item.real_index}.contents`"
               :label="options.labels.order_line_item_contents || 'Contents'"
               :value="item.contents"
@@ -773,6 +813,7 @@
               @change="event => handleChange({ path:`order_line_items.${item.real_index}.contents`, ...event})"
             />
             <FormFieldInput
+              v-if="fieldShouldBeShown('quantity')"
               type="number"
               :references="`order_line_items.${item.real_index}.quantity`"
               :label="options.labels.order_line_item_quantity || 'Quantity'"
@@ -782,6 +823,7 @@
               @change="event => handleChange({ path:`order_line_items.${item.real_index}.quantity`, ...event})"
             />
             <FormFieldInput
+              v-if="fieldShouldBeShown('weight')"
               type="number"
               :references="`order_line_items.${item.real_index}.weight`"
               :label="options.labels.order_line_item_weight || 'Weight'"
@@ -905,6 +947,16 @@ export default {
       highlights: state => state.highlights,
       sections: state => state.sections
     }),
+
+    shipmentDirectionFromConfig () {
+      const configShipmentDirections = get(this.order.company, 'configuration.shipment_directions')
+
+      if (!configShipmentDirections) {
+        return this.shipmentDirection
+      }
+
+      return configShipmentDirections.map(item => ({ id: item.d3code, name: item.display }))
+    },
 
     addressSearchProps () {
       return {
@@ -1046,6 +1098,14 @@ export default {
         !!this.options.extra.profit_tools_enable_templates &&
         get(this.options.field_maps, `${field}.use_template_value`) &&
         get(this.options.field_maps, `${field}.templateable`)
+    },
+
+    shipmentDirectionDisplayValue (value) {
+      if (!value) {
+        return '--'
+      }
+
+      return this.shipmentDirectionFromConfig.find(item => item.id === value).name
     },
 
     formatDate,
@@ -1278,7 +1338,7 @@ export default {
       this.$root.$emit(events.openOrderCommentDialog, {
         commentableType: commentableTypes.order,
         commentableId: this.order.id,
-        label: `Order #${this.order.id} Feedbak`
+        label: `Order #${this.order.id} Feedback`
 
       })
     },

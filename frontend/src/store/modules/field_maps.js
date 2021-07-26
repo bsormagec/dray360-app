@@ -10,6 +10,8 @@ export const types = {
   RESET_FIELD_MAP: 'RESET_FIELD_MAP',
   SET_FIELD_MAPS_FILTERS: 'SET_FIELD_MAPS_FILTERS',
   SAVE_FIELD_MAPS: 'SAVE_FIELD_MAPS',
+  SET_CUSTOM_MAPPING: 'SET_CUSTOM_MAPPING',
+  UPDATE_DEFAULT_FIELD_MAPS: 'UPDATE_DEFAULT_FIELD_MAPS',
 }
 
 const initialState = {
@@ -20,7 +22,8 @@ const initialState = {
     companyId: null,
     tmsProviderId: null,
     variantId: null,
-  }
+  },
+  customMapping: null,
 }
 
 const mutations = {
@@ -43,6 +46,14 @@ const mutations = {
 
   [types.SET_FIELD_MAPS_FILTERS] (state, { filters = {} }) {
     state.filters = { ...filters }
+  },
+
+  [types.UPDATE_DEFAULT_FIELD_MAPS] (state, { fieldMaps }) {
+    state.defaultFieldMaps = { ...cloneDeep(fieldMaps) }
+  },
+
+  [types.SET_CUSTOM_MAPPING] (state, { customMapping = false }) {
+    state.customMapping = customMapping
   },
 }
 
@@ -79,7 +90,7 @@ const actions = {
     commit(types.SET_FIELD_MAPS_FILTERS, { filters })
   },
 
-  async [types.SAVE_FIELD_MAPS] ({ state }) {
+  async [types.SAVE_FIELD_MAPS] ({ commit, state }) {
     const {
       companyId: company_id = null,
       tmsProviderId: tms_provider_id = null,
@@ -101,10 +112,18 @@ const actions = {
     if (!tms_provider_id) {
       delete createData.tms_provider_id
     }
+    if (!tms_provider_id && !company_id && !variant_id) {
+      commit(types.UPDATE_DEFAULT_FIELD_MAPS, {
+        fieldMaps: createData.fieldmap_config
+      })
+    }
 
     return await createFieldMaps(createData)
   },
 
+  [types.SET_CUSTOM_MAPPING] ({ commit, state }, { customMapping }) {
+    commit(types.SET_CUSTOM_MAPPING, { customMapping })
+  },
 }
 
 const getters = {

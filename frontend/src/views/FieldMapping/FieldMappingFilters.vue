@@ -1,59 +1,87 @@
 <template>
-  <div>
-    <v-autocomplete
-      v-model="tmsProviderId"
-      :items="tmsProviders"
-      label="TMS Provider"
-      placeholder="Select TMS Provider"
-      item-value="id"
-      item-text="name"
-      dense
-      outlined
-      clearable
-    />
-    <v-autocomplete
-      v-model="variantId"
-      :items="variants"
-      label="Variant"
-      placeholder="Select Variant"
-      item-value="id"
-      item-text="abbyy_variant_name"
-      dense
-      outlined
-      clearable
-    />
-    <v-autocomplete
-      v-model="companyId"
-      :items="companies"
-      label="Company"
-      placeholder="Select Company"
-      item-value="id"
-      item-text="name"
-      dense
-      outlined
-      clearable
-    />
-    <!-- <v-autocomplete
-      v-if="companyId"
-      v-model="orderId"
-      :items="orders"
-      label="Order Id"
-      placeholder="Select Order Id"
-      item-value="id"
-      item-text="id"
-      dense
-      outlined
-      clearable
-    /> -->
-    <v-btn
-      color="primary"
-      width="100%"
-      :loading="loading"
-      @click="getFilteredFieldMaps"
+  <v-toolbar
+    class="field-mapping__filters"
+    color="white"
+    elevation="1"
+    tile
+    height="auto"
+  >
+    <v-container
+      fluid
+      class="px-3 py-0"
     >
-      Show options
-    </v-btn>
-  </div>
+      <v-row
+        align="center"
+        dense
+      >
+        <v-col cols="5">
+          <v-radio-group
+            :value="customMapping"
+            row
+            dense
+            hide-details
+            @change="onFilterChange"
+          >
+            <v-radio
+              label="System-wide Mapping"
+              :value="false"
+            />
+            <v-radio
+              label="Custom Mapping"
+              :value="true"
+            />
+          </v-radio-group>
+        </v-col>
+        <v-divider vertical />
+        <v-col>
+          <v-autocomplete
+            v-model="tmsProviderId"
+            :items="tmsProviders"
+            label="TMS Provider"
+            placeholder="Select TMS Provider"
+            item-value="id"
+            item-text="name"
+            dense
+            clearable
+            hide-details
+            :disabled="!customMapping"
+            @change="getFilteredFieldMaps"
+          />
+        </v-col>
+        <v-col>
+          <v-autocomplete
+            v-model="variantId"
+            :items="variants"
+            label="Variant"
+            placeholder="Select Variant"
+            item-value="id"
+            item-text="abbyy_variant_name"
+            dense
+            clearable
+            hide-details
+            :disabled="!customMapping"
+            @change="getFilteredFieldMaps"
+          />
+        </v-col>
+        <v-col>
+          <v-autocomplete
+            v-model="companyId"
+            :items="companies"
+            label="Company"
+            placeholder="Select Company"
+            item-value="id"
+            item-text="name"
+            dense
+            clearable
+            hide-details
+            :disabled="!customMapping"
+            @change="getFilteredFieldMaps"
+          />
+        </v-col>
+        <v-spacer />
+      </v-row>
+    </v-container>
+  </v-toolbar>
 </template>
 
 <script>
@@ -89,6 +117,9 @@ export default {
     ...mapState(orders.moduleName, {
       orders: state => state.list,
     }),
+    ...mapState(fieldMaps.moduleName, {
+      customMapping: state => state.customMapping,
+    }),
   },
 
   watch: {
@@ -108,6 +139,7 @@ export default {
   },
 
   async beforeMount () {
+    this.setCustomMapping({ customMapping: false })
     this.$emit('fetching')
     if (this.canViewOtherCompanies()) {
       await this.fetchCompanies()
@@ -122,6 +154,7 @@ export default {
     ...mapActions(fieldMaps.moduleName, {
       getFieldMaps: fieldMapsTypes.GET_FIELD_MAPS,
       setFieldMapsFilters: fieldMapsTypes.SET_FIELD_MAPS_FILTERS,
+      setCustomMapping: fieldMapsTypes.SET_CUSTOM_MAPPING,
     }),
     ...mapActions(orders.moduleName, {
       getOrders: ordersTypes.getOrders,
@@ -139,6 +172,9 @@ export default {
       }
       if (this.variantId) {
         data.variantId = this.variantId
+      }
+      if (!this.companyId && !this.tmsProviderId && !this.variantId) {
+        this.setCustomMapping({ customMapping: false })
       }
       this.$emit('fetching')
       await this.getFieldMaps(data)
@@ -167,8 +203,27 @@ export default {
 
       this.tmsProviders = data.data
     },
+
+    onFilterChange (value) {
+      if (!value) {
+        this.companyId = null
+        this.tmsProviderId = null
+        this.variantId = null
+        this.getFilteredFieldMaps()
+      }
+      this.setCustomMapping({ customMapping: value })
+    }
   }
 }
 </script>
+
 <style lang="scss" scoped>
+.field-mapping__filters::v-deep {
+  .v-toolbar__content {
+    padding: 0;
+    .v-select {
+      margin: rem(16) 0 rem(8) rem(8);
+    }
+  }
+}
 </style>

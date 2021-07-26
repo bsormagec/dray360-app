@@ -17,7 +17,7 @@ class CreateOrUpdateCacheEntry implements ShouldQueue
 
     const VERIFIED_TO_ITEM_TYPE_MAP = [
         'tms_template_dictid_verified' => DictionaryItem::TEMPLATE_TYPE,
-        'container_dictid_verified' => DictionaryItem::ITGCONTAINER_TYPE,
+        'itgcontainer_dictid_verified' => DictionaryItem::ITGCONTAINER_TYPE,
         'carrier_dictid_verified' => DictionaryItem::CARRIER_TYPE,
         'vessel_dictid_verified' => DictionaryItem::VESSEL_TYPE,
         'cc_loadtype_dictid_verified' => DictionaryItem::CC_LOADTYPE_TYPE,
@@ -25,6 +25,9 @@ class CreateOrUpdateCacheEntry implements ShouldQueue
         'cc_haulclass_dictid_verified' => DictionaryItem::CC_HAULCLASS_TYPE,
         'cc_orderclass_dictid_verified' => DictionaryItem::CC_ORDERCLASS_TYPE,
         'cc_loadedempty_dictid_verified' => DictionaryItem::CC_LOADEDEMPTY_TYPE,
+        'termdiv_dictid_verified' => DictionaryItem::TERMDIV_TYPE,
+        'cc_containersize_dictid_verified' => DictionaryItem::CC_CONTAINERSIZE_TYPE,
+        'cc_containertype_dictid_verified' => DictionaryItem::CC_CONTAINERTYPE_TYPE,
     ];
 
     protected $verifiableColumn;
@@ -47,7 +50,7 @@ class CreateOrUpdateCacheEntry implements ShouldQueue
                 'carrier',
                 'shipment_direction',
                 'tms_template_dictid',
-                'container_dictid',
+                'itgcontainer_dictid',
                 'carrier_dictid',
                 'vessel_dictid',
             ])

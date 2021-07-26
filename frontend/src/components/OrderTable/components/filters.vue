@@ -403,6 +403,13 @@ export default {
         { text: statuses.shipmentCreatedByChainio, value: statuses.shipmentCreatedByChainio },
         { text: statuses.shipmentNotCreatedByChainio, value: statuses.shipmentNotCreatedByChainio },
 
+        { text: statuses.sendingToCompcare, value: statuses.sendingToCompcare },
+        { text: statuses.autoSendingToCompcare, value: statuses.autoSendingToCompcare },
+        { text: statuses.failureSendingToCompcare, value: statuses.failureSendingToCompcare },
+        { text: statuses.successSendingToCompcare, value: statuses.successSendingToCompcare },
+        { text: statuses.shipmentCreatedByCompcare, value: statuses.shipmentCreatedByCompcare },
+        { text: statuses.shipmentNotCreatedByCompcare, value: statuses.shipmentNotCreatedByCompcare },
+
         { text: statuses.updatesPriorOrder, value: statuses.updatesPriorOrder },
         { text: statuses.requestMarkedDone, value: statuses.requestMarkedDone },
         { text: statuses.requestMarkedUndone, value: statuses.requestMarkedUndone },

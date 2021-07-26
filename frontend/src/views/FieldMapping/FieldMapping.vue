@@ -1,76 +1,102 @@
 <template>
-  <!-- <v-container> -->
-  <v-row
-    no-gutters
-
-    class="field-mapping__container"
-  >
-    <v-col
-      cols="12"
-      md="2"
-      class="field-mapping__filters"
+  <v-sheet class="field-mapping__container">
+    <FieldMappingFilters
+      :loading="loading"
+      @fetching="loading = true"
+      @done-fetching="clearSelection"
+    />
+    <v-container
+      v-if="isDefaultFieldMap && customMapping"
+      fluid
+      fill-height
     >
-      <div class="primary pa-2 d-flex align-center justify-md-center">
-        <SidebarNavigationButton />
-        <h1 class="subtitle-2 text-center text-uppercase white--text">
-          mapping admin panel
-        </h1>
-      </div>
-      <div class="pa-5">
-        <FieldMappingFilters
-          :loading="loading"
-          @fetching="loading = true"
-          @done-fetching="clearSelection"
-        />
-      </div>
-    </v-col>
-    <v-col
-      cols="12"
-      md="3"
-      class="field-mapping__fields px-5"
-    >
-      <div class="mt-4 mb-3 d-flex justify-space-between">
-        <h3 class="h6 pa-0 ma-0 text-left primary--text">
-          Order AI Fields
-        </h3>
-        <v-btn
-          v-if="isDefaultFieldMap"
-          color="primary"
-          :loading="loading"
-          @click="addNewFieldMap"
+      <v-row
+        align="center"
+        justify="center"
+        fill-height
+      >
+        <v-col
+          cols="6"
+          align-content="center"
         >
-          Add
-        </v-btn>
-      </div>
-      <div>
-        <FieldMappingList
-          :selected-field="selectedField"
-          :loading="loading"
-          @change="fieldMapSelected"
-        />
-      </div>
-    </v-col>
-    <v-col
-      cols="12"
-      md="7"
-      class="field-mapping__form px-5"
+          <img
+            class="d-block mx-auto mb-3"
+            src="@/assets/images/application_downtime.png"
+            alt="No filter selected"
+          >
+          <h1 class="h6 primary--text text-center mb-3">
+            Configuration Page not selected
+          </h1>
+          <p class="text-center">
+            Select the custom configuration parameters at the top of the page before making changes to the fields.
+          </p>
+        </v-col>
+      </v-row>
+    </v-container>
+    <v-container
+      v-else
+      fluid
+      class="pa-0"
     >
-      <FieldMappingForm
-        :selected-field="selectedField"
-        :loading="loading"
-        @reset="resetFieldMaps"
-        @save="saveFieldMap"
-      />
-    </v-col>
-  </v-row>
-  <!-- </v-container> -->
+      <v-row no-gutters>
+        <v-col cols="5">
+          <h2 class="h6 d-flex ma-3 primary--text">
+            Order AI Fields
+            <v-btn
+              v-if="isDefaultFieldMap"
+              class="ml-auto"
+              color="primary"
+              text
+              small
+              :loading="loading"
+              @click="addNewFieldMap"
+            >
+              Add
+            </v-btn>
+          </h2>
+          <FieldMappingList
+            :selected-field="selectedField"
+            :loading="loading"
+            @change="fieldMapSelected"
+          />
+        </v-col>
+        <v-col cols="7">
+          <template
+            v-if="!selectedField"
+          >
+            <div
+              class="mx-auto placeholder-container"
+            >
+              <img
+                class="d-block mx-auto mb-3"
+                src="@/assets/images/application_downtime.png"
+                alt="No filter selected"
+              >
+              <h1 class="h6 primary--text text-center mb-3">
+                No field selected
+              </h1>
+              <p class="text-center">
+                To start making edits to this mapping configuration, find the field you wish to customize in the list of all Order AI fields on the left and click on that field to select it.
+              </p>
+            </div>
+          </template>
+          <FieldMappingForm
+            v-else
+            :selected-field="selectedField"
+            :loading="loading"
+            @reset="resetFieldMaps"
+            @save="saveFieldMap"
+          />
+        </v-col>
+      </v-row>
+    </v-container>
+  </v-sheet>
 </template>
 
 <script>
 import FieldMappingFilters from './FieldMappingFilters'
 import FieldMappingList from './FieldMappingList'
 import FieldMappingForm from './FieldMappingForm'
-import SidebarNavigationButton from '@/components/General/SidebarNavigationButton.vue'
 import permissions from '@/mixins/permissions'
 
 import { mapActions, mapState } from 'vuex'
@@ -86,7 +112,6 @@ export default {
     FieldMappingFilters,
     FieldMappingList,
     FieldMappingForm,
-    SidebarNavigationButton,
   },
 
   mixins: [permissions],
@@ -121,11 +146,12 @@ export default {
     ...mapState(fieldMaps.moduleName, {
       fieldMaps: state => state.fieldMaps,
       filters: state => state.filters,
+      customMapping: state => state.customMapping,
     }),
 
     isDefaultFieldMap () {
       return !this.filters?.companyId && !this.filters?.variantId && !this.filters?.tmsProviderId
-    }
+    },
   },
 
   async beforeMount () {
@@ -163,11 +189,25 @@ export default {
       this.loading = false
     },
 
-    saveFieldMap ({ field, fieldMap }) {
-      this.loading = true
-      this.setFieldMap({ field, fieldMap })
-      this.saveFieldMapsChanges()
-      this.loading = false
+    async saveFieldMap ({ field, fieldMap, newFieldMap = false }) {
+      const saveFieldMap = () => {
+        this.loading = true
+        this.setFieldMap({ field, fieldMap })
+        this.saveFieldMapsChanges()
+        this.loading = false
+      }
+
+      if (!this.isDefaultFieldMap || newFieldMap) {
+        saveFieldMap()
+        return
+      }
+
+      this.setConfirmationDialog({
+        title: 'System-wide defaults fields will change',
+        text: 'Are you sure you want to change the system-wide defaults? This will affect every order in the system that uses the modified fields.',
+        onConfirm: saveFieldMap,
+        onCancel: () => {}
+      })
     },
 
     async saveFieldMapsChanges () {
@@ -191,7 +231,7 @@ export default {
         cancelText: 'Cancel',
         onConfirm: d3CanonName => {
           const fieldMap = cloneDeep({ ...this.emptyFormFieldMap, d3canon_name: d3CanonName })
-          this.saveFieldMap({ field: d3CanonName, fieldMap })
+          this.saveFieldMap({ field: d3CanonName, fieldMap, newFieldMap: true })
         },
         onCancel: () => {}
       })
@@ -199,22 +239,17 @@ export default {
   }
 }
 </script>
+
 <style lang="scss" scoped>
-.field-mapping__container {
-  height: 100vh;
-  overflow: hidden;
-  .field-mapping__fields, .field-mapping__form {
-    height: 100vh;
-    overflow-y: auto;
-  }
+.field-mapping__container::v-deep {
+  height: calc(100vh - #{rem(40)});
 }
 
-.field-mapping__fields, .field-mapping__filters {
-  border-right: rem(1) solid rgba(var(--v-slate-gray-base-rgb), 15%);
-}
-
-.field-mapping__item {
-  min-height: rem(60);
-  box-shadow: 0 3px 1px -2px rgb(0 0 0 / 5%), 0 2px 2px 0 rgb(0 0 0 / 14%), 0 1px 5px 0 rgb(0 0 0 / 12%);
+.placeholder-container {
+  max-width: 70%;
+  height: calc(100vh - #{rem(40)});
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
 }
 </style>

@@ -23,7 +23,7 @@ class AddCompcareLoadedEmptyColumns extends Migration
             $table->foreign('cc_loadedempty_dictid')->references('id')->on('t_dictionary_items');
         });
 
-        if (app()->environment('testing')) {
+        if (app()->environment('testing') || app()->environment('test')) {
             return;
         }
 

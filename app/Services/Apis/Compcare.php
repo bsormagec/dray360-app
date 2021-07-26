@@ -119,6 +119,46 @@ class Compcare
         return $response->json();
     }
 
+    public function getTerminals(): array
+    {
+        $response = Http::withToken($this->token)
+            ->get("{$this->ordersUrl}Terminals/GetTerminals");
+
+        $this->validateResponse($response, 'Terminals/GetTerminals');
+
+        return $response->json();
+    }
+
+    public function getCarriers(): array
+    {
+        $response = Http::withToken($this->token)
+            ->get("{$this->ordersUrl}Carriers/GetCarriers");
+
+        $this->validateResponse($response, 'Carriers/GetCarriers');
+
+        return $response->json();
+    }
+
+    public function getContainerSizes(): array
+    {
+        $response = Http::withToken($this->token)
+            ->get("{$this->ordersUrl}ContainerSizes/GetContainerSizes");
+
+        $this->validateResponse($response, 'ContainerSizes/GetContainerSizes');
+
+        return $response->json();
+    }
+
+    public function getContainerTypes(): array
+    {
+        $response = Http::withToken($this->token)
+            ->get("{$this->ordersUrl}ContainerTypes/GetContainerTypes");
+
+        $this->validateResponse($response, 'ContainerTypes/GetContainerTypes');
+
+        return $response->json();
+    }
+
     /**
      * @throws CompcareException
      */

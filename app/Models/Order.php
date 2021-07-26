@@ -150,8 +150,8 @@ class Order extends Model implements Auditable
         'interchange_err_count',
         'tms_template_id',
         'tms_template_dictid',
-        'container_dictid',
-        'container_dictid_verified',
+        'itgcontainer_dictid',
+        'itgcontainer_dictid_verified',
         'tms_template_dictid_verified',
         'is_hidden',
         'carrier_dictid',
@@ -173,6 +173,15 @@ class Order extends Model implements Auditable
         'cc_loadedempty',
         'cc_loadedempty_dictid',
         'cc_loadedempty_dictid_verified',
+        'termdiv',
+        'termdiv_dictid',
+        'termdiv_dictid_verified',
+        'cc_containersize',
+        'cc_containersize_dictid',
+        'cc_containersize_dictid_verified',
+        'cc_containertype',
+        'cc_containertype_dictid',
+        'cc_containertype_dictid_verified',
     ];
 
     /**
@@ -198,12 +207,15 @@ class Order extends Model implements Auditable
         'is_hidden' => 'boolean',
         'carrier_dictid_verified' => 'boolean',
         'vessel_dictid_verified' => 'boolean',
-        'container_dictid_verified' => 'boolean',
+        'itgcontainer_dictid_verified' => 'boolean',
         'cc_loadtype_dictid_verified' => 'boolean',
         'cc_orderstatus_dictid_verified' => 'boolean',
         'cc_haulclass_dictid_verified' => 'boolean',
         'cc_orderclass_dictid_verified' => 'boolean',
         'cc_loadedempty_dictid_verified' => 'boolean',
+        'termdiv_dictid_verified' => 'boolean',
+        'cc_containersize_dictid_verified' => 'boolean',
+        'cc_containertype_dictid_verified' => 'boolean',
     ];
 
     /**
@@ -272,8 +284,8 @@ class Order extends Model implements Auditable
         'interchange_err_count' => 'sometimes|nullable',
         'tms_template_id' => 'sometimes|nullable',
         'tms_template_dictid' => 'sometimes|nullable',
-        'container_dictid' => 'sometimes|nullable',
-        'container_dictid_verified' => 'sometimes|nullable',
+        'itgcontainer_dictid' => 'sometimes|nullable',
+        'itgcontainer_dictid_verified' => 'sometimes|nullable',
         'tms_template_dictid_verified' => 'sometimes|nullable',
         'is_hidden' => 'sometimes|nullable',
         'carrier_dictid' => 'sometimes|nullable',
@@ -290,6 +302,12 @@ class Order extends Model implements Auditable
         'cc_orderclass_dictid_verified' => 'sometimes|nullable',
         'cc_loadedempty_dictid' => 'sometimes|nullable',
         'cc_loadedempty_dictid_verified' => 'sometimes|nullable',
+        'termdiv_dictid' => 'sometimes|nullable',
+        'termdiv_dictid_verified' => 'sometimes|nullable',
+        'cc_containersize_dictid' => 'sometimes|nullable',
+        'cc_containersize_dictid_verified' => 'sometimes|nullable',
+        'cc_containertype_dictid' => 'sometimes|nullable',
+        'cc_containertype_dictid_verified' => 'sometimes|nullable',
     ];
 
     /**
@@ -300,12 +318,15 @@ class Order extends Model implements Auditable
         'tms_template_dictid_verified' => AttributeVerified::class,
         'carrier_dictid_verified' => AttributeVerified::class,
         'vessel_dictid_verified' => AttributeVerified::class,
-        'container_dictid_verified' => AttributeVerified::class,
+        'itgcontainer_dictid_verified' => AttributeVerified::class,
         'cc_loadtype_dictid_verified' => AttributeVerified::class,
         'cc_orderstatus_dictid_verified' => AttributeVerified::class,
         'cc_haulclass_dictid_verified' => AttributeVerified::class,
         'cc_orderclass_dictid_verified' => AttributeVerified::class,
         'cc_loadedempty_dictid_verified' => AttributeVerified::class,
+        'termdiv_dictid_verified' => AttributeVerified::class,
+        'cc_containersize_dictid_verified' => AttributeVerified::class,
+        'cc_containertype_dictid_verified' => AttributeVerified::class,
     ];
 
     protected $objectLockType = ObjectLock::REQUEST_OBJECT;
@@ -369,7 +390,7 @@ class Order extends Model implements Auditable
 
     public function container()
     {
-        return $this->belongsTo(DictionaryItem::class, 'container_dictid');
+        return $this->belongsTo(DictionaryItem::class, 'itgcontainer_dictid');
     }
 
     public function ccLoadtype()
@@ -390,6 +411,21 @@ class Order extends Model implements Auditable
     public function ccOrderClass()
     {
         return $this->belongsTo(DictionaryItem::class, 'cc_orderclass_dictid');
+    }
+
+    public function termdiv()
+    {
+        return $this->belongsTo(DictionaryItem::class, 'termdiv_dictid');
+    }
+
+    public function ccContainerSize()
+    {
+        return $this->belongsTo(DictionaryItem::class, 'cc_containersize_dictid');
+    }
+
+    public function ccContainerType()
+    {
+        return $this->belongsTo(DictionaryItem::class, 'cc_containertype_dictid');
     }
 
     public function ccLoadedEmpty()

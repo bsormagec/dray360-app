@@ -1,5 +1,8 @@
 <template>
-  <ContentLoading :loaded="!loading">
+  <ContentLoading
+    class="field-mapping__list-container px-3"
+    :loaded="!loading"
+  >
     <v-list
       nav
       class="px-0 pt-0"
@@ -36,7 +39,7 @@
                 >
                   Edited
                 </span>
-                <v-icon>
+                <v-icon small>
                   mdi-chevron-right
                 </v-icon>
               </v-list-item-action>
@@ -99,22 +102,15 @@ export default {
   }
 }
 </script>
-<style lang="scss" scoped>
-.field-mapping__container {
-  height: 100vh;
-  overflow: hidden;
-  .field-mapping__fields, .field-mapping__form {
-    height: 100vh;
-    overflow-y: auto;
-  }
-}
 
-.field-mapping__fields, .field-mapping__filters {
-  border-right: rem(1) solid rgba(var(--v-slate-gray-base-rgb), 15%);
+<style lang="scss" scoped>
+.field-mapping__list-container {
+  height: 100%;
+  max-height: calc(100vh - #{rem(152)});
+  overflow-y: auto;
 }
 
 .field-mapping__item {
-  min-height: rem(60);
   box-shadow: 0 3px 1px -2px rgb(0 0 0 / 5%), 0 2px 2px 0 rgb(0 0 0 / 14%), 0 1px 5px 0 rgb(0 0 0 / 12%);
 }
 

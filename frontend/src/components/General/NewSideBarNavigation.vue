@@ -142,7 +142,7 @@ export default {
         { name: 'Usage Stats', href: '/nova/usage-metrics', hasPermission: this.hasPermission('nova-view') },
         { name: 'Audit Logs', path: '/audit-logs', target: '_self', hasPermission: this.hasPermission('audit-logs-view') },
         { name: 'RefsCustoms Mapping', href: '/companies/refs-custom-mapping', hasPermission: this.hasPermission('nova-view') },
-        { name: 'Field Mapping', path: '/field-mapping', target: '_self', hasPermission: this.hasPermission('field-maps-view') },
+        { name: 'Field Mapping Portal', path: '/field-mapping', target: '_self', hasPermission: this.hasPermission('field-maps-view') },
       ].filter((item) => item.hasPermission)
     },
 
