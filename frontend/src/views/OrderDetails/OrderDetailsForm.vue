@@ -285,7 +285,7 @@
 
       <div class="section__rootfields">
         <FormFieldDictionaryItem
-          v-if="!!options.extra.profit_tools_enable_templates"
+          v-if="showPTET"
           references="tms_template_dictid"
           :label="options.labels.tms_template_dictid || 'TMS Template'"
           :value="order.tms_template_dictid"
@@ -394,6 +394,7 @@
           item-value="id"
           :item-type="dictionaryItemsTypes.ccLoadedEmpty"
           :tms-provider-id="order.t_tms_provider_id"
+          :company-id="order.t_company_id"
           :edit-mode="editMode"
           @change="event => handleChange({ path:'cc_loadedempty_dictid', ...event })"
         />
@@ -1072,6 +1073,9 @@ export default {
     },
     isMobile () {
       return this.$vuetify.breakpoint.sm
+    },
+    showPTET () {
+      return this.options?.extra?.profit_tools_enable_templates ?? false
     },
   },
 
