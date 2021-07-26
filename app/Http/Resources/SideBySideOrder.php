@@ -62,7 +62,7 @@ class SideBySideOrder extends JsonResource
 
     protected function loadOrderCompanyConfiguration()
     {
-        $this->resource->load(['company:id,configuration,name,t_domain_id']);
+        $this->resource->load(['company:id,configuration,name,t_domain_id,default_tms_provider_id']);
 
         if (! $this->resource->company) {
             return;

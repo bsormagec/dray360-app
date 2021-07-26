@@ -10,11 +10,15 @@ use Illuminate\Queue\SerializesModels;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
 use App\Services\DictionaryItemsImporters\TemplatesImporter;
+use App\Services\DictionaryItemsImporters\CcCarriersImporter;
 use App\Services\DictionaryItemsImporters\CcLoadTypesImporter;
+use App\Services\DictionaryItemsImporters\CcTerminalsImporter;
 use App\Services\DictionaryItemsImporters\CcHaulClassesImporter;
 use App\Services\DictionaryItemsImporters\CcOrderClassesImporter;
 use App\Services\DictionaryItemsImporters\CcOrderStatusesImporter;
 use App\Services\DictionaryItemsImporters\DictionaryItemsImporter;
+use App\Services\DictionaryItemsImporters\CcContainerSizesImporter;
+use App\Services\DictionaryItemsImporters\CcContainerTypesImporter;
 
 class ImportDictionaryItems implements ShouldQueue
 {
@@ -87,6 +91,10 @@ class ImportDictionaryItems implements ShouldQueue
             DictionaryItem::CC_ORDERSTATUS_TYPE => CcOrderStatusesImporter::class,
             DictionaryItem::CC_HAULCLASS_TYPE => CcHaulClassesImporter::class,
             DictionaryItem::CC_ORDERCLASS_TYPE => CcOrderClassesImporter::class,
+            DictionaryItem::TERMDIV_TYPE => CcTerminalsImporter::class,
+            DictionaryItem::CARRIER_TYPE => CcCarriersImporter::class,
+            DictionaryItem::CC_CONTAINERSIZE_TYPE => CcContainerSizesImporter::class,
+            DictionaryItem::CC_CONTAINERTYPE_TYPE => CcContainerTypesImporter::class,
         ];
 
         return $defaultImporters[$this->itemType] ?? null;

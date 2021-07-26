@@ -28,6 +28,11 @@ class SendRequestOrdersToTmsController extends Controller
         OCRRequestStatus::SUCCESS_SENDING_TO_CHAINIO,
         OCRRequestStatus::SHIPMENT_CREATED_BY_CHAINIO,
 
+        OCRRequestStatus::SENDING_TO_COMPCARE,
+        OCRRequestStatus::AUTO_SENDING_TO_COMPCARE,
+        OCRRequestStatus::SUCCESS_SENDING_TO_COMPCARE,
+        OCRRequestStatus::SHIPMENT_CREATED_BY_COMPCARE,
+
         OCRRequestStatus::UPDATED_BY_SUBSEQUENT_ORDER,
         OCRRequestStatus::SUCCESS_IMAGEUPLOADING_TO_BLACKFLY,
         OCRRequestStatus::FAILURE_IMAGEUPLOADING_TO_BLACKFLY,

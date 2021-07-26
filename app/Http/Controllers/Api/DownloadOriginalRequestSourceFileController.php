@@ -22,7 +22,12 @@ class DownloadOriginalRequestSourceFileController extends Controller
             ->first();
 
         if (! $status || ! isset($status->status_metadata['document_archive_location'])) {
-            abort(404, 'No file was found for the given order.');
+            $status = OCRRequestStatus::query()
+                ->where('request_id', $requestId)
+                ->where('status', OCRRequestStatus::UPLOAD_REQUESTED)
+                ->first();
+
+            abort_if(! $status, 404, 'No file was found for the given order.');
         }
 
         $this->authorize('downloadSourceFile', $status);
@@ -35,9 +40,16 @@ class DownloadOriginalRequestSourceFileController extends Controller
 
     protected function getTemporaryDownloadUrl(OCRRequestStatus $status): string
     {
+        $bucketName = $status->status == OCRRequestStatus::UPLOAD_REQUESTED
+            ? s3_bucket_from_url($status->status_metadata['upload_uri'])
+            : s3_bucket_from_url($status->status_metadata['document_archive_location']);
+        $filePath = $status->status == OCRRequestStatus::UPLOAD_REQUESTED
+            ? $status->status_metadata['uploading_filename']
+            : s3_file_name_from_url($status->status_metadata['document_archive_location']);
+
         return (new PresignImageUrl())(
-            s3_bucket_from_url($status->status_metadata['document_archive_location']),
-            s3_file_name_from_url($status->status_metadata['document_archive_location']),
+            $bucketName,
+            $filePath,
             [
                 'ResponseContentType' => 'application/octet-stream',
                 'ResponseContentDisposition' => HeaderUtils::makeDisposition(

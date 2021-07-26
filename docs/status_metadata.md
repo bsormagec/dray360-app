@@ -9,31 +9,49 @@ Each status is very carefully defined, here is a complete list (as of 11/27/2020
 | Code module | Triggered by status | Issues statuses |
 | :---------- | :------------------ | :-------------- |
 | app/Http/Controllers/Api/SendToTmsController.php <br> _(laravel-api controller)_ | _user clicks [Send to TMS] button_ | [`sending-to-wint`](./status_metadata.md#sending-to-wint-status_metadata) <br> [`sending-to-chainio`](./status_metadata.md#sending-to-chainio-status_metadata) |
-| processonefile.py | _order is auto-submitted_ | `auto-sending-to-wint` <br> `auto-sending-to-chainio` |
+| processonefile.py | _order is auto-submitted_ | `auto-sending-to-wint` <br> `auto-sending-to-chainio` <br> `auto-sending-to-compcare` |
 | app/Http/Controllers/Api/ReplicateOrdersController.php <br> _(laravel-api controller)_ | _user clicks [Replicate Order] button_ | [`replicated-from-existing-order`](./status_metadata.md#replicated-from-existing-order-status_metadata) |
 | postprocessingqueue.py | `ocr-completed` | `ocr-post-processing-autosubmited` <br> [`ocr-post-processing-error`](./status_metadata.md#ocr-post-processing-error-status_metadata) <br> [`ocr-post-processing-review`](./status_metadata.md#ocr-post-processing-complete-and-ocr-post-processing-review-status_metadata)  <br> [`ocr-post-processing-complete`](./status_metadata.md#ocr-post-processing-complete-and-ocr-post-processing-review-status_metadata) |
 | processonefile.py | `ocr-completed` <br> _called by postprocessingqueue.py_ | [`process-ocr-output-file-error`](./status_metadata.md#process-ocr-output-file-error-status_metadata) <br> [`process-ocr-output-file-review`](./status_metadata.md#process-ocr-output-file-complete-and-process-ocr-output-file-review-status_metadata) <br> [`process-ocr-output-file-complete`](./status_metadata.md#process-ocr-output-file-complete-and-process-ocr-output-file-review-status_metadata)|
-| need | need | `failure-imageuploding-to-blackfl` |
-| need | need | `failure-sending-to-wint` |
 | `./intakefilter/intakefilter.py` | _user emails PDF, or_<br>_uploads document_ | `intake-accepted-datafile` |
 | `./intakefilter/intakefilter.py` | _user emails PDF, or_<br>_uploads document_ | `intake-accepted` |
 | `./intakefilter/intakefilter.py` | _user emails PDF, or_<br>_uploads document_ | `intake-exception` |
 | `./intakefilter/intakefilter.py` | _user emails PDF, or_<br>_uploads document_ | `intake-rejected` |
 | `./intakefilter/intakefilter.py` | _user emails PDF, or_<br>_uploads document_ | `intake-started` |
 | `./intakefilter/intakefilter.py` | _file-ingestion email received_ | `intake-file-ingestion` |
+| | | |
 | need | need | `ocr-timedout` |
 | need | need | `ocr-waiting` |
 | need | need | `shipment-created-by-wint` |
 | need | need | `shipment-not-created-by-wint` |
 | need | need | `shipment-not-updated-by-wint` |
 | need | need | `shipment-updated-by-wint` |
-| need | need | `success-imageuploding-to-blackfl` |
 | need | need | `success-sending-to-wint` |
 | need | need | `success-updating-to-wint` |
+| need | need | `failure-sending-to-wint` |
+| | | |
+| need | need | `failure-imageuploding-to-blackfl` |
+| need | need | `success-imageuploding-to-blackfl` |
+| | | |
+| need | need | `sending-to-chainio` |
+| need | need | `auto-sending-to-chainio` |
+| need | need | `success-sending-to-chainio` |
+| need | need | `failure-sending-to-chainio` |
+| need | need | `shipment-created-by-chainio` |
+| need | need | `shipment-not-created-by-chainio` |
+| | | |
+| need | need | `sending-to-compcareo` |
+| need | need | `auto-sending-to-compcareo` |
+| need | need | `success-sending-to-compcareo` |
+| need | need | `failure-sending-to-compcareo` |
+| need | need | `shipment-created-by-compcareo` |
+| need | need | `shipment-not-created-by-compcare` |
+| | | |
 | need | need | `untried-imageuploding-to-blackfl` |
 | need | need | `updated-by-subsequent-order` |
 | need | need | `updates-prior-order` |
 | need | need | `upload-requested` |
+| | | |
 | _app/Http/Controllers/Api/OcrRequestDoneStatusController(laravel-api controller)_ | _user clicks [Mark as done]_ | [`request-marked-done`](./status_metadata.md#request-marked-done-and-request-marked-undone-status-metadata) |
 | _app/Http/Controllers/Api/OcrRequestDoneStatusController(laravel-api controller)_ | _user clicks [Mark as undone]_ | [`request-marked-undone`](./status_metadata.md#request-marked-done-and-request-marked-undone-status-metadata) |
 

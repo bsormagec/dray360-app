@@ -57,7 +57,7 @@ export function keyShouldBeParsed (key) {
   const shouldNotBeIgnored = [
     't_equipment_type_id',
     'tms_template_dictid',
-    'container_dictid',
+    'itgcontainer_dictid',
     'carrier_dictid',
     'vessel_dictid',
     'cc_loadtype_dictid',
@@ -65,6 +65,9 @@ export function keyShouldBeParsed (key) {
     'cc_haulclass_dictid',
     'cc_orderclass_dictid',
     'cc_loadedempty_dictid',
+    'termdiv_dictid',
+    'cc_containersize_dictid',
+    'cc_containertype_dictid',
   ]
 
   if (shouldNotBeIgnored.includes(key)) {
@@ -168,6 +171,18 @@ export function parseChanges ({ path, value, originalOrder }) {
     {
       field: 'cc_loadedempty_dictid',
       boolean_field: 'cc_loadedempty_dictid_verified'
+    },
+    {
+      field: 'termdiv_dictid',
+      boolean_field: 'termdiv_dictid_verified'
+    },
+    {
+      field: 'cc_containersize_dictid',
+      boolean_field: 'cc_containersize_dictid_verified'
+    },
+    {
+      field: 'cc_containertype_dictid',
+      boolean_field: 'cc_containertype_dictid_verified'
     },
   ]
 

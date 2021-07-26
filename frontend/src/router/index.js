@@ -141,7 +141,7 @@ const routes = [
   },
   {
     path: '/field-mapping',
-    name: 'Field Mapping',
+    name: 'Field Mapping Portal',
     component: FieldMapping,
     meta: {
       middleware: [auth, permission('field-maps-view')]

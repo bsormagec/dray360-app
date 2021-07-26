@@ -207,7 +207,7 @@ As of the initial implementation, Feb 2021, these are the in-use cache types
 | :----------     | :--------------                 | :------------                 |
 | `vessel`        | `t_orders.vessel_dictid`        | variant<br>vessel             |
 | `carrier`       | `t_orders.carrier_dictid`       | variant<br>carrier            |
-| `itgcontainer`  | `t_orders.container_dictid`     | variant<br>template<br>equipment_size    |
+| `itgcontainer`  | `t_orders.itgcontainer_dictid`     | variant<br>template<br>equipment_size    |
 | `template`      | `t_orders.tms_template_dictid`  | use_bill_to_address_raw_text<br>use_carrier<br>use_equipment_size<br>use_event(1/2/3)_address_raw_text<br>use_hazardous<br>use_shipment_direction<br>use_template<br>use_variant_name<br>use_vessel |
 
 
