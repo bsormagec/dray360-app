@@ -164,7 +164,6 @@ export default {
       if (newOrderId == this.orderIdToLoad) {
         return
       }
-      this.loaded = false
       this.orderIdToLoad = this.orderId
 
       await this.fetchFormData()
@@ -200,8 +199,10 @@ export default {
     }),
 
     async fetchFormData () {
+      this.loaded = false
       await this.requestOrderDetail()
       this.initializeFormOptions()
+      this.loaded = true
       await this.initializeLock()
     },
 
@@ -379,11 +380,9 @@ export default {
 
       if (status === reqStatus.success) {
         this.setFormOrder(this.currentOrder)
-        this.loaded = true
         return
       }
       this.has404 = true
-      this.loaded = true
       console.log('error')
     },
 
