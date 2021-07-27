@@ -77,6 +77,14 @@ import { mapState, mapActions } from 'vuex'
 import { isInAdminReview } from '@/utils/status_helpers'
 
 import get from 'lodash/get'
+import cloneDeep from 'lodash/cloneDeep'
+
+const defaultFormOptions = {
+  hidden: [],
+  address_search: {},
+  extra: {},
+  labels: {}
+}
 
 export default {
   name: 'OrderDetails',
@@ -120,12 +128,7 @@ export default {
     loaded: false,
     redirectBack: false,
     orderIdToLoad: vm.orderId || vm.$route.params.id,
-    formOptions: {
-      hidden: [],
-      address_search: {},
-      extra: {},
-      labels: {}
-    },
+    formOptions: cloneDeep(defaultFormOptions),
     has404: false
   }),
 
@@ -351,28 +354,29 @@ export default {
     },
 
     initializeFormOptions () {
+      const newFormOptions = cloneDeep(defaultFormOptions)
       for (const key in this.companyConfiguration) {
         if (key.startsWith('label_field_name_') && this.companyConfiguration[key]) {
           const newKey = key.replace('label_field_name_', '')
-          this.formOptions.labels[newKey] = this.companyConfiguration[key]
+          newFormOptions.labels[newKey] = this.companyConfiguration[key]
         } else if (key.startsWith('address_search_')) {
           const newKey = key.replace('address_search_', '')
-          this.formOptions.address_search[newKey] = this.companyConfiguration[key]
+          newFormOptions.address_search[newKey] = this.companyConfiguration[key]
         } else {
-          this.formOptions.extra[key] = this.companyConfiguration[key]
+          newFormOptions.extra[key] = this.companyConfiguration[key]
         }
       }
 
-      this.formOptions.field_maps = this.currentOrder.field_maps
+      newFormOptions.field_maps = this.currentOrder.field_maps
 
       const { field_maps: fieldMaps } = this.currentOrder
       for (const key in fieldMaps) {
         if (fieldMaps[key].screen_hide) {
-          this.formOptions.hidden.push(key)
+          newFormOptions.hidden.push(key)
         }
       }
 
-      this.formOptions = { ...this.formOptions }
+      this.formOptions = newFormOptions
     },
 
     async requestOrderDetail () {
