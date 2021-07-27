@@ -285,6 +285,7 @@
 
       <div class="section__rootfields">
         <FormFieldDictionaryItem
+          v-if="enablePtTemplates"
           references="tms_template_dictid"
           :label="options.labels.tms_template_dictid || 'TMS Template'"
           :value="order.tms_template_dictid"
@@ -393,7 +394,6 @@
           item-value="id"
           :item-type="dictionaryItemsTypes.ccLoadedEmpty"
           :tms-provider-id="order.t_tms_provider_id"
-          :company-id="order.t_company_id"
           :edit-mode="editMode"
           @change="event => handleChange({ path:'cc_loadedempty_dictid', ...event })"
         />
@@ -1073,8 +1073,8 @@ export default {
     isMobile () {
       return this.$vuetify.breakpoint.sm
     },
-    showPTET () {
-      return this.options?.extra?.profit_tools_enable_templates ?? false
+    enablePtTemplates () {
+      return this.options.extra.profit_tools_enable_templates ?? false
     },
   },
 
@@ -1098,7 +1098,7 @@ export default {
 
     managedByTemplate (field) {
       return this.order.tms_template_dictid !== null &&
-        !!this.options.extra.profit_tools_enable_templates &&
+        this.enablePtTemplates &&
         get(this.options.field_maps, `${field}.use_template_value`) &&
         get(this.options.field_maps, `${field}.templateable`)
     },
