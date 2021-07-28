@@ -11,7 +11,7 @@
     <div class="pa-2">
       <div class="d-flex align-center">
         <div class="form-field__label">
-          SSL Container Type
+          {{ label }}
         </div>
 
         <div class="ml-auto text-right">
@@ -262,6 +262,7 @@ export default {
     companyId: { type: Number, required: true },
     tmsProviderId: { type: Number, required: true },
     carrier: { type: String, required: false, default: '' },
+    label: { type: String, required: false, default: 'SSL Container Type' },
     equipmentSize: { type: String, required: false, default: '' },
     equipmentType: { type: Object, required: false, default: () => ({}) },
     unitNumber: { type: String, required: false, default: '' },
