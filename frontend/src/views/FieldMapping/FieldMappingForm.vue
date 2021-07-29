@@ -19,7 +19,7 @@
         color="primary"
         :loading="loading"
         :disabled="!formIsDirty"
-        @click="$emit('save', { field: selectedField, fieldMap: formFieldMap })"
+        @click="saveFieldMap"
       >
         Save
       </v-btn>
@@ -315,6 +315,11 @@ export default {
       return {
         dense: false,
       }
+    },
+
+    saveFieldMap () {
+      this.$emit('save', { field: this.selectedField, fieldMap: this.formFieldMap })
+      this.formIsDirty = false
     },
 
     resetFieldMaps () {
