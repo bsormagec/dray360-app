@@ -169,16 +169,18 @@ export default {
   },
 
   beforeRouteLeave (to, from, next) {
-    if (this.formChanged) {
-      this.setConfirmationDialog({
-        title: 'Unsaved changes detected',
-        text: 'Are you sure you want to leave this page without saving? Your changes will be lost.',
-        onConfirm: () => {
-          next()
-        },
-        onCancel: () => {}
-      })
+    if (!this.formChanged) {
+      next()
+      return
     }
+    this.setConfirmationDialog({
+      title: 'Unsaved changes detected',
+      text: 'Are you sure you want to leave this page without saving? Your changes will be lost.',
+      onConfirm: () => {
+        next()
+      },
+      onCancel: () => {}
+    })
   },
 
   methods: {
