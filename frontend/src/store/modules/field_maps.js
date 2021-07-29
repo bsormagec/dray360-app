@@ -39,13 +39,13 @@ const mutations = {
   [types.SET_FIELD_MAP] (state, { field, fieldMap }) {
     const newFieldMaps = { ...cloneDeep(state.fieldMaps) }
 
-    newFieldMaps[field] = fieldMap
+    newFieldMaps[field] = cloneDeep(fieldMap)
 
     state.fieldMaps = newFieldMaps
   },
 
   [types.SET_FIELD_MAPS_FILTERS] (state, { filters = {} }) {
-    state.filters = { ...filters }
+    state.filters = { ...cloneDeep(filters) }
   },
 
   [types.UPDATE_DEFAULT_FIELD_MAPS] (state, { fieldMaps }) {

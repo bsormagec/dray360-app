@@ -9,6 +9,7 @@
         text
         small
         :loading="loading"
+        :disabled="!formIsDirty"
         @click="resetFieldMaps"
       >
         Reset
@@ -17,7 +18,8 @@
         small
         color="primary"
         :loading="loading"
-        @click="$emit('save', { field: selectedField, fieldMap: formFieldMap })"
+        :disabled="!formIsDirty"
+        @click="saveFieldMap"
       >
         Save
       </v-btn>
@@ -191,9 +193,8 @@
 <script>
 import { mapState, mapGetters } from 'vuex'
 import fieldMaps from '@/store/modules/field_maps'
-
+import deepDiff from 'deep-diff'
 import cloneDeep from 'lodash/cloneDeep'
-
 import { abbySourceFileds } from '@/enums/app_objects_types'
 
 export default {
@@ -229,7 +230,8 @@ export default {
     abbySourceFieldFilter: {
       old: false,
       new: false
-    }
+    },
+    formIsDirty: false,
   }),
 
   computed: {
@@ -252,6 +254,24 @@ export default {
   watch: {
     selectedField () {
       this.selectedFieldUpdated()
+    },
+
+    formFieldMap: {
+      handler: function (newVal) {
+        const changes = (deepDiff(this.fieldMaps[this.selectedField], newVal) || [])
+          .filter(change => {
+            if (
+              (change.lhs === null && change.rhs === '') ||
+              (change.lhs === '' && change.rhs === null)
+            ) {
+              return false
+            }
+            return change.kind !== 'D'
+          })
+        this.formIsDirty = changes.length > 0
+        this.$emit('form-changed', this.formIsDirty)
+      },
+      deep: true
     }
   },
 
@@ -295,6 +315,11 @@ export default {
       return {
         dense: false,
       }
+    },
+
+    saveFieldMap () {
+      this.$emit('save', { field: this.selectedField, fieldMap: this.formFieldMap })
+      this.formIsDirty = false
     },
 
     resetFieldMaps () {

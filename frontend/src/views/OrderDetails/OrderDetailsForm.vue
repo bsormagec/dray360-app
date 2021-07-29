@@ -457,7 +457,7 @@
           />
           <FormFieldEquipmentType
             v-if="fieldShouldBeShown('equipment_type')"
-            :label="options.labels.t_equipment_type_id || 'Equipment Type'"
+            :label="options.labels.t_equipment_type_id || 'SSL Container Type'"
             references="t_equipment_type_id"
             :company-id="order.t_company_id"
             :tms-provider-id="order.t_tms_provider_id"
@@ -468,6 +468,20 @@
             :unit-number="order.unit_number"
             :verified="order.equipment_type_verified"
             @change="event => handleChange({ path:'t_equipment_type_id', ...event})"
+          />
+          <FormFieldEquipmentType
+            v-if="fieldShouldBeShown('chassis_equipment_type')"
+            :label="options.labels.chassis_equipment_type || 'Chassis Equipment Type'"
+            references="chassis_equipment_type_id"
+            :company-id="order.t_company_id"
+            :tms-provider-id="order.t_tms_provider_id"
+            :carrier="order.carrier"
+            :equipment-size="order.equipment_size"
+            :equipment-type="order.chassis_equipment_type"
+            :recognized-text="order.equipment_type_raw_text"
+            :unit-number="order.unit_number"
+            :verified="order.chassis_equipment_type_verified"
+            @change="event => handleChange({ path:'chassis_equipment_type_id', ...event})"
           />
 
           <FormFieldInput
