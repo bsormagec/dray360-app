@@ -141,7 +141,9 @@ class Order extends Model implements Auditable
         't_tms_provider_id',
         'division_code',
         't_equipment_type_id',
+        'chassis_equipment_type_id',
         'equipment_type_verified',
+        'chassis_equipment_type_verified',
         'preceded_by_order_id',
         'succeded_by_order_id',
         'tms_submission_datetime',
@@ -200,6 +202,7 @@ class Order extends Model implements Auditable
         'pickup_by_date' => 'datetime:Y-m-d',
         'cutoff_date' => 'datetime:Y-m-d',
         'equipment_type_verified' => 'boolean',
+        'chassis_equipment_type_verified' => 'boolean',
         'tms_submission_datetime' => 'datetime',
         'tms_cancelled_datetime' => 'datetime',
         'submitted_date' => 'datetime',
@@ -277,7 +280,9 @@ class Order extends Model implements Auditable
         'ship_comment' => 'sometimes|nullable',
         'division_code' => 'sometimes|nullable',
         't_equipment_type_id' => 'sometimes|nullable|exists:t_equipment_types,id',
+        'chassis_equipment_type_id' => 'sometimes|nullable|exists:t_equipment_types,id',
         'equipment_type_verified' => 'sometimes|nullable',
+        'chassis_equipment_type_verified' => 'sometimes|nullable',
         'tms_submission_datetime' => 'sometimes|nullable',
         'tms_cancelled_datetime' => 'sometimes|nullable',
         'interchange_count' => 'sometimes|nullable',
@@ -376,6 +381,11 @@ class Order extends Model implements Auditable
     public function equipmentType()
     {
         return $this->belongsTo(EquipmentType::class, 't_equipment_type_id');
+    }
+
+    public function chassisEquipmentType()
+    {
+        return $this->belongsTo(EquipmentType::class, 'chassis_equipment_type_id');
     }
 
     public function tmsProvider()
@@ -534,6 +544,7 @@ class Order extends Model implements Auditable
             'orderAddressEvents',
             'orderAddressEvents.address',
             'equipmentType',
+            'chassisEquipmentType',
             'tmsTemplate:id,item_key,item_display_name',
         ]);
     }

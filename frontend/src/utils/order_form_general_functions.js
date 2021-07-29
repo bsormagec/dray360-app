@@ -56,6 +56,7 @@ export function baseHighlight (ocrData) {
 export function keyShouldBeParsed (key) {
   const shouldNotBeIgnored = [
     't_equipment_type_id',
+    'chassis_equipment_type_id',
     'tms_template_dictid',
     'itgcontainer_dictid',
     'carrier_dictid',
@@ -139,6 +140,10 @@ export function parseChanges ({ path, value, originalOrder }) {
     {
       field: 't_equipment_type_id',
       boolean_field: 'equipment_type_verified'
+    },
+    {
+      field: 'chassis_equipment_type_id',
+      boolean_field: 'chassis_equipment_type_verified'
     },
     {
       field: 'tms_template_dictid',

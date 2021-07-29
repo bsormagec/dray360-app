@@ -86,6 +86,7 @@
             :loading="loading"
             @reset="resetFieldMaps"
             @save="saveFieldMap"
+            @form-changed="setFormChanged"
           />
         </v-col>
       </v-row>
@@ -140,6 +141,7 @@ export default {
       templateable: false,
       use_template_value: false,
     },
+    formChanged: false
   }),
 
   computed: {
@@ -158,6 +160,25 @@ export default {
     this.loading = true
     await this.getFieldMaps({})
     this.loading = false
+
+    window.addEventListener('beforeunload', this.preventNav)
+  },
+
+  beforeDestroy () {
+    window.removeEventListener('beforeunload', this.preventNav)
+  },
+
+  beforeRouteLeave (to, from, next) {
+    if (this.formChanged) {
+      this.setConfirmationDialog({
+        title: 'Unsaved changes detected',
+        text: 'Are you sure you want to leave this page without saving? Your changes will be lost.',
+        onConfirm: () => {
+          next()
+        },
+        onCancel: () => {}
+      })
+    }
   },
 
   methods: {
@@ -235,6 +256,16 @@ export default {
         },
         onCancel: () => {}
       })
+    },
+
+    setFormChanged (newValue) {
+      this.formChanged = newValue
+    },
+
+    preventNav (event) {
+      if (!this.formChanged) return
+      event.preventDefault()
+      event.returnValue = ''
     }
   }
 }
