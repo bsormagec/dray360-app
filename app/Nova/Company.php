@@ -2,6 +2,7 @@
 
 namespace App\Nova;
 
+use stdClass;
 use Laravel\Nova\Fields\ID;
 use Illuminate\Http\Request;
 use Laravel\Nova\Fields\Code;
@@ -89,6 +90,11 @@ class Company extends Resource
                 ->rules(['nullable', 'json'])
                 ->resolveUsing(function ($configuration) {
                     $json = json_decode($configuration, true);
+
+                    if (empty($json)) {
+                        return json_encode(new stdClass());
+                    }
+
                     return collect($json)->sortKeys()->toJson(JSON_PRETTY_PRINT);
                 }),
             Code::make('Company Configuration', 'company_config')->json()->hideFromIndex()->rules(['nullable', 'json']),

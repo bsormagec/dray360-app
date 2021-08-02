@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use stdClass;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Database\Eloquent\Model;
@@ -116,6 +117,16 @@ class Company extends Model
 
             $uuid = str_replace('-', '', Str::uuid()->toString());
             $company->email_onboarding_address = "{$env}+{$companyName}_onboarding_{$uuid}@in.dray360.com";
+
+            if (empty($company->configuration)) {
+                $company->configuration = new stdClass();
+            }
+        });
+
+        static::saving(function ($company) {
+            if (empty($company->configuration)) {
+                $company->configuration = new stdClass();
+            }
         });
     }
 
