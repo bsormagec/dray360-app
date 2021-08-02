@@ -616,6 +616,13 @@ export default {
     },
 
     assignTo (type, rule) {
+      const propertyName = type === 'company-variant' ? 'companyVariantRules' : 'variantRules'
+
+      if (this[propertyName].findIndex(item => item.id === rule.id) !== -1) {
+        this.setSnackbar({ message: 'Rule is already applied' })
+        return
+      }
+
       this.setConfirmationDialog({
         open: true,
         title: `Add rule to ${type}`,
@@ -623,7 +630,6 @@ export default {
         confirmText: 'Add',
         cancelText: 'Cancel',
         onConfirm: () => {
-          const propertyName = type === 'company-variant' ? 'companyVariantRules' : 'variantRules'
           const methodName = type === 'company-variant' ? 'setCompanyVariantRules' : 'setVariantRules'
           const newAssignment = cloneDeep(this[propertyName])
 
@@ -646,11 +652,6 @@ export default {
     },
 
     removeFromCompanyVariant (rule) {
-      if (this.companyVariantRules.length === 1) {
-        this.setSnackbar({ message: 'There must be at least 1 rule' })
-        return
-      }
-
       const index = this.companyVariantRules.findIndex(item => item.id === rule.id)
 
       if (index === -1) return
@@ -660,11 +661,6 @@ export default {
     },
 
     removeFromVariant (variant) {
-      if (this.variantRules.length === 1) {
-        this.setSnackbar({ message: 'There must be at least 1 rule' })
-        return
-      }
-
       const index = this.variantRules.findIndex(item => item.id === variant.id)
 
       if (index === -1) return
