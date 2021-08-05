@@ -108,4 +108,9 @@ class User extends Authenticatable
     {
         return static::whereIn('id', $ids)->update(['deactivated_at' => null]);
     }
+
+    public function isActive(): bool
+    {
+        return ! $this->deactivated_at;
+    }
 }
