@@ -409,30 +409,6 @@
           :edit-mode="editMode"
           @change="event => handleChange({ path:'termdiv_dictid', ...event })"
         />
-        <FormFieldDictionaryItem
-          v-if="fieldShouldBeShown('cc_containersize_dictid')"
-          references="cc_containersize_dictid"
-          :label="options.labels.cc_containersize_dictid || 'Container Size'"
-          :value="order.cc_containersize_dictid"
-          item-text="item_display_name"
-          item-value="id"
-          :item-type="dictionaryItemsTypes.ccContainerSize"
-          :company-id="order.t_company_id"
-          :edit-mode="editMode"
-          @change="event => handleChange({ path:'cc_containersize_dictid', ...event })"
-        />
-        <FormFieldDictionaryItem
-          v-if="fieldShouldBeShown('cc_containertype_dictid')"
-          references="cc_containertype_dictid"
-          :label="options.labels.cc_containertype_dictid || 'Container Type'"
-          :value="order.cc_containertype_dictid"
-          item-text="item_display_name"
-          item-value="id"
-          :item-type="dictionaryItemsTypes.ccContainerType"
-          :company-id="order.t_company_id"
-          :edit-mode="editMode"
-          @change="event => handleChange({ path:'cc_containertype_dictid', ...event })"
-        />
       </div>
 
       <div class="form__sub-section">
@@ -500,6 +476,30 @@
             :value="order.seal_number"
             :edit-mode="editMode"
             @change="event => handleChange({ path:'seal_number', ...event})"
+          />
+          <FormFieldDictionaryItem
+            v-if="fieldShouldBeShown('cc_containersize_dictid')"
+            references="cc_containersize_dictid"
+            :label="options.labels.cc_containersize_dictid || 'Container Size'"
+            :value="order.cc_containersize_dictid"
+            item-text="item_display_name"
+            item-value="id"
+            :item-type="dictionaryItemsTypes.ccContainerSize"
+            :company-id="order.t_company_id"
+            :edit-mode="editMode"
+            @change="event => handleChange({ path:'cc_containersize_dictid', ...event })"
+          />
+          <FormFieldDictionaryItem
+            v-if="fieldShouldBeShown('cc_containertype_dictid')"
+            references="cc_containertype_dictid"
+            :label="options.labels.cc_containertype_dictid || 'Container Type'"
+            :value="order.cc_containertype_dictid"
+            item-text="item_display_name"
+            item-value="id"
+            :item-type="dictionaryItemsTypes.ccContainerType"
+            :company-id="order.t_company_id"
+            :edit-mode="editMode"
+            @change="event => handleChange({ path:'cc_containertype_dictid', ...event })"
           />
         </div>
       </div>
