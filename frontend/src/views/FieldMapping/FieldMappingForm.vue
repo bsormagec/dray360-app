@@ -67,6 +67,14 @@
         clearable
         v-bind="fieldChangedAttributes('d3canon_column')"
       />
+      <v-text-field
+        v-model="formFieldMap.screen_name"
+        :class="{'field-mapping-form-field__changed': hasChanged('screen_name')}"
+        label="Screen Name"
+        clearable
+        hide-details
+        v-bind="fieldChangedAttributes('screen_name')"
+      />
       <v-textarea
         v-model="formFieldMap.notes"
         :class="{'field-mapping-form-field__changed': hasChanged('notes')}"
@@ -176,15 +184,6 @@
         hide-details
         disabled
         v-bind="fieldChangedAttributes('profittools_destination')"
-      />
-      <v-text-field
-        v-model="formFieldMap.screen_name"
-        :class="{'field-mapping-form-field__changed': hasChanged('screen_name')}"
-        label="Screen Name"
-        clearable
-        hide-details
-        disabled
-        v-bind="fieldChangedAttributes('screen_name')"
       />
     </div>
   </div>
@@ -320,6 +319,7 @@ export default {
     saveFieldMap () {
       this.$emit('save', { field: this.selectedField, fieldMap: this.formFieldMap })
       this.formIsDirty = false
+      this.$emit('form-changed', this.formIsDirty)
     },
 
     resetFieldMaps () {

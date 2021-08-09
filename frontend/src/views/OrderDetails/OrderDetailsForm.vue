@@ -409,30 +409,6 @@
           :edit-mode="editMode"
           @change="event => handleChange({ path:'termdiv_dictid', ...event })"
         />
-        <FormFieldDictionaryItem
-          v-if="fieldShouldBeShown('cc_containersize_dictid')"
-          references="cc_containersize_dictid"
-          :label="options.labels.cc_containersize_dictid || 'Container Size'"
-          :value="order.cc_containersize_dictid"
-          item-text="item_display_name"
-          item-value="id"
-          :item-type="dictionaryItemsTypes.ccContainerSize"
-          :company-id="order.t_company_id"
-          :edit-mode="editMode"
-          @change="event => handleChange({ path:'cc_containersize_dictid', ...event })"
-        />
-        <FormFieldDictionaryItem
-          v-if="fieldShouldBeShown('cc_containertype_dictid')"
-          references="cc_containertype_dictid"
-          :label="options.labels.cc_containertype_dictid || 'Container Type'"
-          :value="order.cc_containertype_dictid"
-          item-text="item_display_name"
-          item-value="id"
-          :item-type="dictionaryItemsTypes.ccContainerType"
-          :company-id="order.t_company_id"
-          :edit-mode="editMode"
-          @change="event => handleChange({ path:'cc_containertype_dictid', ...event })"
-        />
       </div>
 
       <div class="form__sub-section">
@@ -457,7 +433,7 @@
           />
           <FormFieldEquipmentType
             v-if="fieldShouldBeShown('equipment_type')"
-            :label="options.labels.t_equipment_type_id || 'SSL Container Type'"
+            :label="options.labels.t_equipment_type || 'SSL Container Type'"
             references="t_equipment_type_id"
             :company-id="order.t_company_id"
             :tms-provider-id="order.t_tms_provider_id"
@@ -500,6 +476,30 @@
             :value="order.seal_number"
             :edit-mode="editMode"
             @change="event => handleChange({ path:'seal_number', ...event})"
+          />
+          <FormFieldDictionaryItem
+            v-if="fieldShouldBeShown('cc_containersize_dictid')"
+            references="cc_containersize_dictid"
+            :label="options.labels.cc_containersize_dictid || 'Container Size'"
+            :value="order.cc_containersize_dictid"
+            item-text="item_display_name"
+            item-value="id"
+            :item-type="dictionaryItemsTypes.ccContainerSize"
+            :company-id="order.t_company_id"
+            :edit-mode="editMode"
+            @change="event => handleChange({ path:'cc_containersize_dictid', ...event })"
+          />
+          <FormFieldDictionaryItem
+            v-if="fieldShouldBeShown('cc_containertype_dictid')"
+            references="cc_containertype_dictid"
+            :label="options.labels.cc_containertype_dictid || 'Container Type'"
+            :value="order.cc_containertype_dictid"
+            item-text="item_display_name"
+            item-value="id"
+            :item-type="dictionaryItemsTypes.ccContainerType"
+            :company-id="order.t_company_id"
+            :edit-mode="editMode"
+            @change="event => handleChange({ path:'cc_containertype_dictid', ...event })"
           />
         </div>
       </div>
@@ -562,7 +562,7 @@
           <FormFieldDictionaryItem
             v-if="fieldShouldBeShown('carrier')"
             references="carrier_dictid"
-            :label="options.labels.carrier_dictid || 'SSL'"
+            :label="options.labels.carrier || 'SSL'"
             :value="order.carrier_dictid"
             :item-text="item => `${item.item_display_name} (${item.item_key})`"
             item-value="id"
@@ -583,7 +583,7 @@
           <FormFieldDictionaryItem
             v-if="fieldShouldBeShown('vessel_dictid')"
             references="vessel_dictid"
-            :label="options.labels.vessel || 'Vessel'"
+            :label="options.labels.vessel_dictid || 'Vessel'"
             :value="order.vessel_dictid"
             item-text="item_display_name"
             item-value="id"
@@ -603,7 +603,7 @@
           <FormFieldDate
             v-if="fieldShouldBeShown('appointment_date')"
             references="pickup_by_date"
-            :label="options.labels.pickup_by_date || 'Pickup by date'"
+            :label="options.labels.appointment_date || 'Pickup by date'"
             :value="order.pickup_by_date"
             :edit-mode="editMode"
             @change="event => handleChange({ path:'pickup_by_date', ...event})"
@@ -611,7 +611,7 @@
           <FormFieldTimeMask
             v-if="fieldShouldBeShown('appointment_time')"
             references="pickup_by_time"
-            :label="options.labels.pickup_by_time || 'Pickup by time'"
+            :label="options.labels.appointment_time || 'Pickup by time'"
             :value="order.pickup_by_time"
             :edit-mode="editMode"
             @change="event => handleChange({ path:'pickup_by_time', ...event})"
@@ -664,7 +664,7 @@
       >
         <div class="form__section-title">
           <h3 :id="sections.bill_to.id">
-            {{ sections.bill_to.label }}
+            {{ options.labels.bill_to_address|| sections.bill_to.label }}
           </h3>
         </div>
         <div class="section__rootfields">

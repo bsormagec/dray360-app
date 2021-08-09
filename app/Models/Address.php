@@ -160,7 +160,7 @@ class Address extends Model
                     'state' => Arr::get($data, 'State.StateCode'),
                     'postal_code' => Arr::get($data, 'PostalCodeNavigation.PostalCode') ?? $data['PostalCode'],
                     'country' => Arr::get($data, 'Country.CountryCode'),
-                    'location_name' => null,
+                    'location_name' => Arr::get($data, 'Entity.EntityName'),
                     'location_phone' => null,
                     'is_billable' => 0,
                     'is_terminal' => 0,
@@ -211,7 +211,7 @@ class Address extends Model
                 $this->state == Arr::get($address, 'State.StateCode') &&
                 $this->postal_code == (Arr::get($address, 'PostalCodeNavigation.PostalCode') ?? $address['PostalCode']) &&
                 $this->country == Arr::get($address, 'Country.CountryCode') &&
-                $this->location_name == null &&
+                $this->location_name == Arr::get($address, 'Entity.EntityName') &&
                 $this->location_phone == null &&
                 $this->is_billable == 0 &&
                 $this->is_terminal == 0 &&

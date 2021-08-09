@@ -143,6 +143,18 @@
                   />
                 </td>
               </tr>
+              <tr>
+                <td>Required Equipment</td>
+                <td>
+                  <v-select
+                    v-model="ds_equip_req"
+                    :items="fieldNames"
+                    item-text="value"
+                    item-value="field_name"
+                    :clearable="true"
+                  />
+                </td>
+              </tr>
             </tbody>
           </template>
         </v-simple-table>
@@ -180,6 +192,7 @@ export default {
           path: '/mapping'
         }
       ],
+      ds_equip_req: '',
       ds_ref2_text: '',
       ds_ref2_type: '',
       ds_ref3_text: '',
@@ -282,6 +295,7 @@ export default {
       this.ds_ref2_type = ''
       this.ds_ref3_text = ''
       this.ds_ref3_type = ''
+      this.ds_equip_req = ''
     },
     changeRef2 (value) {
       if (value === 'other_value') {
@@ -309,6 +323,7 @@ export default {
       if (this.ds_ref3_type !== undefined && this.ds_ref3_type !== '') { jsondata.ds_ref3_type = { value: this.ds_ref3_type } }
       if (this.ds_ref2_text !== undefined && this.ds_ref2_text !== '') { jsondata.ds_ref2_text = { [this.objectNameRef1]: this.ds_ref2_text } }
       if (this.ds_ref3_text !== undefined && this.ds_ref3_text !== '') { jsondata.ds_ref3_text = { [this.objectNameRef2]: this.ds_ref3_text } }
+      if (this.ds_equip_req !== undefined && this.ds_equip_req !== '') { jsondata.ds_equip_req = { source: this.ds_equip_req } }
       if (this.billing_notes.length !== 0) { jsondata.bill_comment = { source: this.billing_notes } }
       if (this.shipment_notes.length !== 0) { jsondata.ship_comment = { source: this.shipment_notes } }
 
@@ -364,6 +379,9 @@ export default {
             break
           case 'ds_ref3_type':
             this.ds_ref3_type = value.value
+            break
+          case 'ds_equip_req':
+            this.ds_equip_req = value.source
             break
           case 'bill_comment':
             this.billing_notes = value.source
