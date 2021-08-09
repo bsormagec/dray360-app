@@ -41,16 +41,19 @@ class OCRRulesAssignmentController extends Controller
         $companyId = $data['company_id'] ?? null;
         $variantId = $data['variant_id'];
 
-        $data = collect($data['rules'])->map(function ($rule, $key) use ($companyId, $variantId) {
-            return [
-                't_company_id' => $companyId,
-                't_ocrvariant_id' => $variantId,
-                't_ocrrule_id' => $rule,
-                'rule_sequence' => $companyId ? $key + 1 : -1000 + $key ,
-                'created_at' => now(),
-                'updated_at' => now(),
-            ];
-        })->toArray();
+        $data = collect($data['rules'])
+            ->unique()
+            ->map(function ($rule, $key) use ($companyId, $variantId) {
+                return [
+                    't_company_id' => $companyId,
+                    't_ocrvariant_id' => $variantId,
+                    't_ocrrule_id' => $rule,
+                    'rule_sequence' => $companyId ? $key + 1 : -1000 + $key ,
+                    'created_at' => now(),
+                    'updated_at' => now(),
+                ];
+            })
+            ->toArray();
 
         CompanyOCRVariantOCRRule::assignedTo($companyId, $variantId)->delete();
 

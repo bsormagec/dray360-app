@@ -356,10 +356,7 @@ export default {
     initializeFormOptions () {
       const newFormOptions = cloneDeep(defaultFormOptions)
       for (const key in this.companyConfiguration) {
-        if (key.startsWith('label_field_name_') && this.companyConfiguration[key]) {
-          const newKey = key.replace('label_field_name_', '')
-          newFormOptions.labels[newKey] = this.companyConfiguration[key]
-        } else if (key.startsWith('address_search_')) {
+        if (key.startsWith('address_search_')) {
           const newKey = key.replace('address_search_', '')
           newFormOptions.address_search[newKey] = this.companyConfiguration[key]
         } else {
@@ -373,6 +370,9 @@ export default {
       for (const key in fieldMaps) {
         if (fieldMaps[key].screen_hide) {
           newFormOptions.hidden.push(key)
+        }
+        if (fieldMaps[key].screen_name) {
+          newFormOptions.labels[key] = fieldMaps[key].screen_name
         }
       }
 

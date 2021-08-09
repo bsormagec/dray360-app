@@ -34,7 +34,7 @@ class OCRRulesAssignmentControllerTest extends TestCase
         $this->postJson(route('ocr.rules-assignment.store'), [
                 'variant_id' => $ocrVariant->id,
                 'company_id' => $company->id,
-                'rules' => $ocrRules->pluck('id'),
+                'rules' => collect([])->push($ocrRules->first())->merge($ocrRules)->pluck('id'),
             ])
             ->assertStatus(Response::HTTP_CREATED)
             ->assertJsonCount($ocrRules->count(), 'data');

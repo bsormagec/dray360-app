@@ -24,6 +24,10 @@ class ImpersonateUser extends Action
     {
         $user = $models->first();
 
+        if (! $user->isActive()) {
+            return Action::danger('Inactive users can not be impersonated');
+        }
+
         app('impersonate')->startWith($user);
 
         return Action::redirect('/inbox');

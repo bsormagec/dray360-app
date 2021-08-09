@@ -68,6 +68,16 @@ class User extends Authenticatable
         return $this->hasRole('superadmin');
     }
 
+    public function setDeactivatedAtAttribute($value)
+    {
+        if (is_bool($value)) {
+            $this->attributes['deactivated_at'] = $value ? now() : null;
+            return;
+        }
+
+        $this->attributes['deactivated_at'] = $value;
+    }
+
     public function deactivate(bool $save = true): self
     {
         $this->deactivated_at = now();
@@ -107,5 +117,10 @@ class User extends Authenticatable
     public static function bulkActivate(array $ids): bool
     {
         return static::whereIn('id', $ids)->update(['deactivated_at' => null]);
+    }
+
+    public function isActive(): bool
+    {
+        return ! $this->deactivated_at;
     }
 }

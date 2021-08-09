@@ -49,6 +49,11 @@ class LoginController extends Controller
 
         $user = auth()->user();
 
+        if (! $user->isActive()) {
+            Auth::guard('web')->logout();
+            return response()->json(['message' => 'This user is not active in the system'], 401);
+        }
+
         if (! app('tenancy')->isUsingRightDomain($request, $user)) {
             Auth::guard('web')->logout();
             return app('tenancy')->getRedirectErrorResponse($user);
@@ -77,7 +82,7 @@ class LoginController extends Controller
     public function user(Request $request)
     {
         $user = $request->user();
-        if (! is_object($user)) {
+        if (! is_object($user) || ! $user->isActive()) {
             return response()->json(['message' => 'Not authorized'], 401);
         } else {
             $userData = $user->load('company')
