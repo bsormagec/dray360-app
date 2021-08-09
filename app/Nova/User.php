@@ -6,6 +6,7 @@ use Laravel\Nova\Fields\ID;
 use Illuminate\Http\Request;
 use Laravel\Nova\Fields\Code;
 use Laravel\Nova\Fields\Text;
+use Laravel\Nova\Fields\Boolean;
 use Laravel\Nova\Fields\Gravatar;
 use Laravel\Nova\Fields\Password;
 use Laravel\Nova\Fields\BelongsTo;
@@ -70,6 +71,11 @@ class User extends Resource
             Text::make('Original Email')
                 ->sortable()
                 ->rules('nullable', 'email', 'max:254'),
+
+            Boolean::make('Inactive', 'deactivated_at')
+                ->resolveUsing(function ($deactivatedAt) {
+                    return ! ! $deactivatedAt;
+                }),
 
             BelongsTo::make('Company')->nullable(),
             Code::make('Configuration', 'configuration')->json()->rules(['nullable', 'json']),
