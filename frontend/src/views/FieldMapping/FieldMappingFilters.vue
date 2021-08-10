@@ -20,15 +20,17 @@
             row
             dense
             hide-details
-            @change="onFilterChange"
+            @click.prevent=""
           >
             <v-radio
               label="System-wide Mapping"
               :value="false"
+              @mousedown="event => onFilterChange(event, false)"
             />
             <v-radio
               label="Custom Mapping"
               :value="true"
+              @mousedown="event => onFilterChange(event, true)"
             />
           </v-radio-group>
         </v-col>
@@ -89,6 +91,7 @@ import permissions from '@/mixins/permissions'
 import allCompanies from '@/mixins/all_companies'
 
 import { mapActions, mapState } from 'vuex'
+import utils, { actionTypes as utilsActionTypes } from '@/store/modules/utils'
 import fieldMaps, { types as fieldMapsTypes } from '@/store/modules/field_maps'
 import orders, { types as ordersTypes } from '@/store/modules/orders'
 
@@ -102,6 +105,8 @@ export default {
 
   props: {
     loading: { type: Boolean, required: false, default: false },
+    customMapping: { type: Boolean, required: false, default: false },
+    formChanged: { type: Boolean, required: false, default: false },
   },
 
   data: () => ({
@@ -117,29 +122,9 @@ export default {
     ...mapState(orders.moduleName, {
       orders: state => state.list,
     }),
-    ...mapState(fieldMaps.moduleName, {
-      customMapping: state => state.customMapping,
-    }),
-  },
-
-  watch: {
-    // async companyId () {
-    //   if (!this.companyId) {
-    //     this.orderId = null
-    //     return
-    //   }
-    //   await this.getOrders({ 'filter[company_id]': this.companyId })
-    // },
-    // async orderId () {
-    //   if (!this.orderId) {
-    //     this.setCurrentOrder({})
-    //   }
-    //   this.getOrderDetail(this.orderId)
-    // },
   },
 
   async beforeMount () {
-    this.setCustomMapping({ customMapping: false })
     this.$emit('fetching')
     if (this.canViewOtherCompanies()) {
       await this.fetchCompanies()
@@ -154,12 +139,16 @@ export default {
     ...mapActions(fieldMaps.moduleName, {
       getFieldMaps: fieldMapsTypes.GET_FIELD_MAPS,
       setFieldMapsFilters: fieldMapsTypes.SET_FIELD_MAPS_FILTERS,
-      setCustomMapping: fieldMapsTypes.SET_CUSTOM_MAPPING,
     }),
+
     ...mapActions(orders.moduleName, {
       getOrders: ordersTypes.getOrders,
       getOrderDetail: ordersTypes.getOrderDetail,
     }),
+
+    ...mapActions(utils.moduleName, [
+      utilsActionTypes.setConfirmationDialog,
+    ]),
 
     async getFilteredFieldMaps () {
       const data = {}
@@ -174,7 +163,7 @@ export default {
         data.variantId = this.variantId
       }
       if (!this.companyId && !this.tmsProviderId && !this.variantId) {
-        this.setCustomMapping({ customMapping: false })
+        this.$emit('set-custom-mapping', false)
       }
       this.$emit('fetching')
       await this.getFieldMaps(data)
@@ -204,14 +193,33 @@ export default {
       this.tmsProviders = data.data
     },
 
-    onFilterChange (value) {
-      if (!value) {
-        this.companyId = null
-        this.tmsProviderId = null
-        this.variantId = null
-        this.getFilteredFieldMaps()
+    onFilterChange (event, value) {
+      const updateValue = (val) => {
+        if (!val) {
+          this.companyId = null
+          this.tmsProviderId = null
+          this.variantId = null
+          this.getFilteredFieldMaps()
+        }
+        this.$emit('set-custom-mapping', val)
       }
-      this.setCustomMapping({ customMapping: value })
+      if (this.formChanged) {
+        event.preventDefault()
+        this.setConfirmationDialog({
+          title: 'Unsaved changes detected',
+          text: 'Are you sure you want to leave this changes unsaved? this may result in data lost.',
+          onConfirm: () => {
+            updateValue(value)
+            this.$emit('cancel-edit')
+          },
+          onCancel: () => {
+            this.$emit('set-custom-mapping', this.customMapping)
+          }
+        })
+        return
+      }
+      updateValue(value)
+      this.$emit('cancel-edit')
     }
   }
 }

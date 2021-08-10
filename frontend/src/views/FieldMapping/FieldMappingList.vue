@@ -7,46 +7,48 @@
       nav
       class="px-0 pt-0"
     >
-      <v-list-item-group
-        :value="selectedField"
-        @change="newValue => $emit('change', newValue)"
-      >
-        <template v-for="(fieldMap, key) in fieldMaps">
-          <v-list-item
-            :key="key"
-            :value="key"
-            :class="{
-              'field-mapping__item': true,
-              'field-mapping__item-changed': selectedField !== key && hasChanged(key),
-            }"
-            active-class="primary white--text"
-            :ripple="false"
-            outlined
-          >
-            <template v-slot:default="{active}">
-              <v-list-item-content>
-                <v-list-item-title v-text="key" />
-                <v-list-item-subtitle
-                  :class="{'white--text':active}"
-                  v-text="''"
-                />
-              </v-list-item-content>
+      <template v-for="(fieldMap, key) in fieldMaps">
+        <v-list-item
+          :key="key"
+          :value="key"
+          :class="{
+            'field-mapping__item': true,
+            'field-mapping__item-changed': selectedField !== key && hasChanged(key),
+            'field-mapping__item-active': selectedField === key,
+          }"
+          :ripple="false"
+          outlined
+          @click="event => handleFieldChange(event, key)"
+        >
+          <template v-slot:default>
+            <v-list-item-content>
+              <v-list-item-title
+                :class="{'white--text': selectedField === key}"
+                v-text="key"
+              />
+              <v-list-item-subtitle
+                :class="{'white--text': selectedField === key}"
+                v-text="''"
+              />
+            </v-list-item-content>
 
-              <v-list-item-action class="d-flex flex-row align-center justify-end">
-                <span
-                  v-show="hasChanged(key)"
-                  :class="{caption: true, 'white--text':active}"
-                >
-                  Edited
-                </span>
-                <v-icon small>
-                  mdi-chevron-right
-                </v-icon>
-              </v-list-item-action>
-            </template>
-          </v-list-item>
-        </template>
-      </v-list-item-group>
+            <v-list-item-action class="d-flex flex-row align-center justify-end">
+              <span
+                v-show="hasChanged(key)"
+                :class="{caption: true, 'white--text': selectedField === key}"
+              >
+                Edited
+              </span>
+              <v-icon
+                small
+                :class="{'white--text': selectedField === key}"
+              >
+                mdi-chevron-right
+              </v-icon>
+            </v-list-item-action>
+          </template>
+        </v-list-item>
+      </template>
     </v-list>
   </ContentLoading>
 </template>
@@ -55,6 +57,7 @@
 import ContentLoading from '@/components/ContentLoading'
 
 import { mapActions, mapGetters } from 'vuex'
+import utils, { actionTypes as utilsActionTypes } from '@/store/modules/utils'
 import fieldMaps, { types as fieldMapsTypes } from '@/store/modules/field_maps'
 
 export default {
@@ -73,10 +76,14 @@ export default {
       required: true,
       default: false,
     },
+    formChanged: {
+      type: Boolean,
+      required: true,
+      default: false,
+    },
   },
 
   data: () => ({
-
   }),
 
   computed: {
@@ -93,12 +100,33 @@ export default {
       resetFieldMap: fieldMapsTypes.RESET_FIELD_MAP,
     }),
 
+    ...mapActions(utils.moduleName, [
+      utilsActionTypes.setConfirmationDialog,
+    ]),
+
     hasChanged (key) {
       return this.fieldMapsChanges.filter(change => {
         return change.path.includes(key)
       }).length !== 0
     },
 
+    handleFieldChange (event, key) {
+      if (this.formChanged) {
+        event.preventDefault()
+        this.setConfirmationDialog({
+          title: 'Unsaved changes detected',
+          text: 'Are you sure you want to leave this changes unsaved? this may result in data lost.',
+          onConfirm: () => {
+            this.$emit('change', key)
+          },
+          onCancel: () => {
+            this.$emit('change', this.selectedField)
+          }
+        })
+        return
+      }
+      this.$emit('change', key)
+    }
   }
 }
 </script>
@@ -116,5 +144,11 @@ export default {
 
 .field-mapping__item-changed {
   background-color: rgba(var(--v-orange-changes-base-rgb), 0.1);
+}
+
+.field-mapping__item-active {
+  background-color: var(--v-primary-base);
+  color: white;
+  transition: all ease 300ms;
 }
 </style>
