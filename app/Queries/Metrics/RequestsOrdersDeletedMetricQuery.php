@@ -66,7 +66,8 @@ class RequestsOrdersDeletedMetricQuery
             ->selectRaw('count(distinct o.id) as pdf_order_count')
             ->join('t_job_state_changes as s', function ($join) {
                 $join->on('o.request_id', '=', 's.request_id')
-                    ->where('s.status', OCRRequestStatus::INTAKE_ACCEPTED);
+                    ->whereIn('s.status', [OCRRequestStatus::INTAKE_ACCEPTED, OCRRequestStatus::INTAKE_ACCEPTED_DATAFILE])
+                    ->whereRaw("lower(json_unquote(json_extract(s.status_metadata, '$.original_filename'))) like '%pdf'");
             })
             ->first();
 
@@ -166,7 +167,8 @@ class RequestsOrdersDeletedMetricQuery
             ->selectRaw('count(distinct ls.id) as pdf_requests_count')
             ->join('t_job_state_changes as s', function ($join) {
                 $join->on('ls.t_job_state_changes_id', '=', 's.id')
-                    ->where('s.status', OCRRequestStatus::INTAKE_ACCEPTED);
+                    ->whereIn('s.status', [OCRRequestStatus::INTAKE_ACCEPTED, OCRRequestStatus::INTAKE_ACCEPTED_DATAFILE])
+                    ->whereRaw("lower(json_unquote(json_extract(s.status_metadata, '$.original_filename'))) like '%pdf'");
             })
             ->where('s.company_id', $this->companyId)
             ->whereDate('ls.created_at', '>=', $this->date)
@@ -183,7 +185,8 @@ class RequestsOrdersDeletedMetricQuery
             ->selectRaw('count(distinct ls.id) as pdf_requests_count')
             ->join('t_job_state_changes as s', function ($join) {
                 $join->on('ls.t_job_state_changes_id', '=', 's.id')
-                    ->where('s.status', OCRRequestStatus::INTAKE_ACCEPTED_DATAFILE);
+                    ->where('s.status', OCRRequestStatus::INTAKE_ACCEPTED_DATAFILE)
+                    ->whereRaw("lower(json_unquote(json_extract(s.status_metadata, '$.original_filename'))) not like '%pdf'");
             })
             ->where('s.company_id', $this->companyId)
             ->whereDate('ls.created_at', '>=', $this->date)
