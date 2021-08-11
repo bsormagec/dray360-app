@@ -46,7 +46,6 @@ class DictionaryCacheDefinition extends Resource
                 ->options(\App\Models\DictionaryItem::TYPES_LIST_OPTIONS)
                 ->rules([
                     'required',
-                    'in:template',
                     ])
                 ->sortable(),
             Boolean::make('Use variant name', 'use_variant_name'),
