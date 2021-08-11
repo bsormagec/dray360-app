@@ -39,21 +39,6 @@ class CreateOrUpdateCacheEntry implements ShouldQueue
     {
         $this->verifiableColumn = $event->verifiableColumn;
         $order = Order::query()
-            ->select([
-                'id',
-                't_company_id',
-                'bill_to_address_raw_text',
-                'variant_name',
-                'hazardous',
-                'equipment_size',
-                'vessel',
-                'carrier',
-                'shipment_direction',
-                'tms_template_dictid',
-                'itgcontainer_dictid',
-                'carrier_dictid',
-                'vessel_dictid',
-            ])
             ->with([
                 'orderAddressEvents:id,t_address_raw_text,t_order_id',
                 'tmsTemplate:id,item_key',
