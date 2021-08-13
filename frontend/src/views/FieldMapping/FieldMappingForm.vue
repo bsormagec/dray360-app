@@ -3,7 +3,7 @@
     v-if="selectedField"
   >
     <h3 class="h6 d-flex ma-3 primary--text">
-      Options
+      {{ selectedField }}
       <v-spacer />
       <v-btn
         text
