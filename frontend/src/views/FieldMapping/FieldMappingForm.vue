@@ -46,7 +46,44 @@
         label="Use Template Value"
         dense
       />
+      <v-select
+        v-if="fieldNameMatch(/event\d+_type/g, true)"
+        v-model="formFieldMap.constant_value"
+        :items="customFieldInput.eventTypes"
+        item-text="name"
+        item-value="value"
+        :class="{'field-mapping-form-field__changed': hasChanged('constant_value')}"
+        label="Constant Value"
+        clearable
+        v-bind="fieldChangedAttributes('constant_value')"
+        @change="value => onCustomInputClear('constant_value', value)"
+      />
+      <v-select
+        v-else-if="fieldNameMatch('shipment_direction')"
+        v-model="formFieldMap.constant_value"
+        :items="customFieldInput.shipmentDirection"
+        item-text="name"
+        item-value="value"
+        :class="{'field-mapping-form-field__changed': hasChanged('constant_value')}"
+        label="Constant Value"
+        clearable
+        v-bind="fieldChangedAttributes('constant_value')"
+        @change="value => onCustomInputClear('constant_value', value)"
+      />
+      <v-select
+        v-else-if="fieldNameMatch(/hazmat|hazardous|expedite/g, true)"
+        v-model="formFieldMap.constant_value"
+        :items="customFieldInput.booleanFields"
+        item-text="name"
+        item-value="value"
+        :class="{'field-mapping-form-field__changed': hasChanged('constant_value')}"
+        label="Constant Value"
+        clearable
+        v-bind="fieldChangedAttributes('constant_value')"
+        @change="value => onCustomInputClear('constant_value', value)"
+      />
       <v-text-field
+        v-else
         v-model="formFieldMap.constant_value"
         :class="{'field-mapping-form-field__changed': hasChanged('constant_value')}"
         label="Constant Value"
@@ -106,6 +143,14 @@
         label="Abbyy Source Field"
         clearable
         v-bind="fieldChangedAttributes('abbyy_source_field')"
+      />
+      <v-text-field
+        v-model="formFieldMap.profittools_destination"
+        :class="{'field-mapping-form-field__changed': hasChanged('profittools_profittools_destinationdestination')}"
+        label="Profittools Destination"
+        clearable
+        hide-details
+        v-bind="fieldChangedAttributes('profittools_destination')"
       />
       <v-divider class="mb-3" />
       <h3 class="h6 pa-0 ma-0 mb-4 text-left primary--text">
@@ -176,15 +221,6 @@
         disabled
         v-bind="fieldChangedAttributes('post_process_source_regex')"
       />
-      <v-text-field
-        v-model="formFieldMap.profittools_destination"
-        :class="{'field-mapping-form-field__changed': hasChanged('profittools_destination')}"
-        label="Profittools Destination"
-        clearable
-        hide-details
-        disabled
-        v-bind="fieldChangedAttributes('profittools_destination')"
-      />
     </div>
   </div>
 </template>
@@ -195,6 +231,7 @@ import fieldMaps from '@/store/modules/field_maps'
 import deepDiff from 'deep-diff'
 import cloneDeep from 'lodash/cloneDeep'
 import { abbySourceFileds } from '@/enums/app_objects_types'
+import { eventTypes, shipmentDirection, booleanFields } from '@/enums/field_type'
 
 export default {
   name: 'FieldMappingForm',
@@ -247,6 +284,14 @@ export default {
         ...this.abbySourceFieldFilter.old ? abbySourceFileds.old_fields : [],
         ...this.abbySourceFieldFilter.new ? abbySourceFileds.new_fields : []
       ]
+    },
+
+    customFieldInput () {
+      return {
+        eventTypes,
+        shipmentDirection,
+        booleanFields,
+      }
     }
   },
 
@@ -325,6 +370,19 @@ export default {
     resetFieldMaps () {
       this.$emit('reset', this.selectedField)
       this.formFieldMap = { ...cloneDeep(this.defaultFieldMaps[this.selectedField]) }
+    },
+
+    fieldNameMatch (stringToMatch, isRegEx) {
+      if (isRegEx) {
+        return this.selectedField.match(stringToMatch) !== null
+      }
+      return this.selectedField === stringToMatch
+    },
+
+    onCustomInputClear (field, value) {
+      if (value === undefined) {
+        this.formFieldMap[field] = null
+      }
     }
   }
 }
