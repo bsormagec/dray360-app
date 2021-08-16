@@ -52,7 +52,6 @@ class DictionaryCacheEntry extends Resource
                 ->options(\App\Models\DictionaryItem::TYPES_LIST_OPTIONS)
                 ->rules([
                     'required',
-                    'in:template',
                     ])
                 ->sortable(),
             Number::make('Verified Count', 'verified_count')->required(),

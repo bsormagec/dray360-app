@@ -18,7 +18,7 @@ select
         ), '')
     ) as document_type
 
-    ,coalesce(nullif((select json_unquote(json_extract(s.status_metadata, '$.pdf_page_count')) from t_job_state_changes as s where ls.request_id = s.request_id and status in ('intake-started', 'intake-accepted') order by s.id asc limit 1), 'null'), '') as pages
+    ,coalesce(nullif((select json_unquote(json_extract(s.status_metadata, '$.pdf_page_count')) from t_job_state_changes as s where ls.request_id = s.request_id and status = 'intake-started' order by s.id asc limit 1), 'null'), '') as pages
 
     ,coalesce((
         select concat(

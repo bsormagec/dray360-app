@@ -3,7 +3,7 @@
     v-if="selectedField"
   >
     <h3 class="h6 d-flex ma-3 primary--text">
-      Options
+      {{ selectedField }} Mapping Options
       <v-spacer />
       <v-btn
         text
@@ -30,13 +30,14 @@
         :class="{'field-mapping-form-field__changed': hasChanged('screen_hide')}"
         label="Screen Hide"
         dense
+        hide-details
         v-bind="fieldChangedAttributes('screen_hide')"
       />
       <v-switch
         v-model="formFieldMap.templateable"
-        class="mt-0"
         :class="{'field-mapping-form-field__changed': hasChanged('templateable')}"
         label="Templateable"
+        dense
         hide-details
         v-bind="fieldChangedAttributes('templateable')"
       />
@@ -45,14 +46,71 @@
         :class="{'field-mapping-form-field__changed': hasChanged('use_template_value')}"
         label="Use Template Value"
         dense
+        hide-details
       />
-      <v-text-field
-        v-model="formFieldMap.constant_value"
-        :class="{'field-mapping-form-field__changed': hasChanged('constant_value')}"
-        label="Constant Value"
-        clearable
-        v-bind="fieldChangedAttributes('constant_value')"
-      />
+      <v-container class="pa-0">
+        <v-row no-gutters>
+          <v-col
+            cols="auto"
+            class="mr-4"
+          >
+            <v-switch
+              v-model="formFieldMap.use_constant_as_default_only"
+              :class="{'field-mapping-form-field__changed': hasChanged('use_constant_as_default_only')}"
+              label="Default only"
+              dense
+              hide-details
+              v-bind="fieldChangedAttributes('use_constant_as_default_only')"
+            />
+          </v-col>
+          <v-col>
+            <v-select
+              v-if="fieldNameMatch(/event\d+_type/g, true)"
+              v-model="formFieldMap.constant_value"
+              :items="customFieldInput.eventTypes"
+              item-text="name"
+              item-value="value"
+              :class="{'field-mapping-form-field__changed': hasChanged('constant_value')}"
+              label="Constant Value"
+              clearable
+              v-bind="fieldChangedAttributes('constant_value')"
+              @change="value => onCustomInputClear('constant_value', value)"
+            />
+            <v-select
+              v-else-if="fieldNameMatch('shipment_direction')"
+              v-model="formFieldMap.constant_value"
+              :items="customFieldInput.shipmentDirection"
+              item-text="name"
+              item-value="value"
+              :class="{'field-mapping-form-field__changed': hasChanged('constant_value')}"
+              label="Constant Value"
+              clearable
+              v-bind="fieldChangedAttributes('constant_value')"
+              @change="value => onCustomInputClear('constant_value', value)"
+            />
+            <v-select
+              v-else-if="fieldNameMatch(/hazmat|hazardous|expedite/g, true)"
+              v-model="formFieldMap.constant_value"
+              :items="customFieldInput.booleanFields"
+              item-text="name"
+              item-value="value"
+              :class="{'field-mapping-form-field__changed': hasChanged('constant_value')}"
+              label="Constant Value"
+              clearable
+              v-bind="fieldChangedAttributes('constant_value')"
+              @change="value => onCustomInputClear('constant_value', value)"
+            />
+            <v-text-field
+              v-else
+              v-model="formFieldMap.constant_value"
+              :class="{'field-mapping-form-field__changed': hasChanged('constant_value')}"
+              label="Constant Value"
+              clearable
+              v-bind="fieldChangedAttributes('constant_value')"
+            />
+          </v-col>
+        </v-row>
+      </v-container>
       <v-text-field
         v-model="formFieldMap.d3canon_table"
         :class="{'field-mapping-form-field__changed': hasChanged('d3canon_table')}"
@@ -72,7 +130,6 @@
         :class="{'field-mapping-form-field__changed': hasChanged('screen_name')}"
         label="Screen Name"
         clearable
-        hide-details
         v-bind="fieldChangedAttributes('screen_name')"
       />
       <v-textarea
@@ -106,6 +163,14 @@
         label="Abbyy Source Field"
         clearable
         v-bind="fieldChangedAttributes('abbyy_source_field')"
+      />
+      <v-text-field
+        v-model="formFieldMap.profittools_destination"
+        :class="{'field-mapping-form-field__changed': hasChanged('profittools_profittools_destinationdestination')}"
+        label="Profittools Destination"
+        clearable
+        hide-details
+        v-bind="fieldChangedAttributes('profittools_destination')"
       />
       <v-divider class="mb-3" />
       <h3 class="h6 pa-0 ma-0 mb-4 text-left primary--text">
@@ -176,15 +241,6 @@
         disabled
         v-bind="fieldChangedAttributes('post_process_source_regex')"
       />
-      <v-text-field
-        v-model="formFieldMap.profittools_destination"
-        :class="{'field-mapping-form-field__changed': hasChanged('profittools_destination')}"
-        label="Profittools Destination"
-        clearable
-        hide-details
-        disabled
-        v-bind="fieldChangedAttributes('profittools_destination')"
-      />
     </div>
   </div>
 </template>
@@ -195,6 +251,7 @@ import fieldMaps from '@/store/modules/field_maps'
 import deepDiff from 'deep-diff'
 import cloneDeep from 'lodash/cloneDeep'
 import { abbySourceFileds } from '@/enums/app_objects_types'
+import { eventTypes, shipmentDirection, booleanFields } from '@/enums/field_type'
 
 export default {
   name: 'FieldMappingForm',
@@ -225,6 +282,7 @@ export default {
       screen_name: 'Bill To',
       templateable: true,
       use_template_value: true,
+      use_constant_as_default_only: false,
     },
     abbySourceFieldFilter: {
       old: false,
@@ -247,6 +305,14 @@ export default {
         ...this.abbySourceFieldFilter.old ? abbySourceFileds.old_fields : [],
         ...this.abbySourceFieldFilter.new ? abbySourceFileds.new_fields : []
       ]
+    },
+
+    customFieldInput () {
+      return {
+        eventTypes,
+        shipmentDirection,
+        booleanFields,
+      }
     }
   },
 
@@ -325,6 +391,19 @@ export default {
     resetFieldMaps () {
       this.$emit('reset', this.selectedField)
       this.formFieldMap = { ...cloneDeep(this.defaultFieldMaps[this.selectedField]) }
+    },
+
+    fieldNameMatch (stringToMatch, isRegEx) {
+      if (isRegEx) {
+        return this.selectedField.match(stringToMatch) !== null
+      }
+      return this.selectedField === stringToMatch
+    },
+
+    onCustomInputClear (field, value) {
+      if (value === undefined) {
+        this.formFieldMap[field] = null
+      }
     }
   }
 }
