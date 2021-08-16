@@ -2,8 +2,12 @@
   <v-sheet class="field-mapping__container">
     <FieldMappingFilters
       :loading="loading"
+      :form-changed="formChanged"
+      :custom-mapping="customMapping"
       @fetching="loading = true"
       @done-fetching="clearSelection"
+      @cancel-edit="cancelEdit"
+      @set-custom-mapping="setCustomMapping"
     />
     <v-container
       v-if="isDefaultFieldMap && customMapping"
@@ -57,6 +61,7 @@
           <FieldMappingList
             :selected-field="selectedField"
             :loading="loading"
+            :form-changed="formChanged"
             @change="fieldMapSelected"
           />
         </v-col>
@@ -140,15 +145,16 @@ export default {
       screen_name: null,
       templateable: false,
       use_template_value: false,
+      use_constant_as_default_only: false,
     },
-    formChanged: false
+    formChanged: false,
+    customMapping: false,
   }),
 
   computed: {
     ...mapState(fieldMaps.moduleName, {
       fieldMaps: state => state.fieldMaps,
       filters: state => state.filters,
-      customMapping: state => state.customMapping,
     }),
 
     isDefaultFieldMap () {
@@ -212,6 +218,11 @@ export default {
       this.loading = false
     },
 
+    cancelEdit () {
+      this.clearSelection()
+      this.formChanged = false
+    },
+
     async saveFieldMap ({ field, fieldMap, newFieldMap = false }) {
       const saveFieldMap = () => {
         this.loading = true
@@ -228,7 +239,9 @@ export default {
       this.setConfirmationDialog({
         title: 'System-wide defaults fields will change',
         text: 'Are you sure you want to change the system-wide defaults? This will affect every order in the system that uses the modified fields.',
-        onConfirm: saveFieldMap,
+        onConfirm: () => {
+          saveFieldMap()
+        },
         onCancel: () => {}
       })
     },
@@ -262,6 +275,10 @@ export default {
 
     setFormChanged (newValue) {
       this.formChanged = newValue
+    },
+
+    setCustomMapping (newValue) {
+      this.customMapping = newValue
     },
 
     preventNav (event) {
