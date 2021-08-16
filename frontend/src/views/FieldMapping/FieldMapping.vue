@@ -145,6 +145,7 @@ export default {
       screen_name: null,
       templateable: false,
       use_template_value: false,
+      use_constant_as_default_only: false,
     },
     formChanged: false,
     customMapping: false,

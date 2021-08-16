@@ -30,13 +30,14 @@
         :class="{'field-mapping-form-field__changed': hasChanged('screen_hide')}"
         label="Screen Hide"
         dense
+        hide-details
         v-bind="fieldChangedAttributes('screen_hide')"
       />
       <v-switch
         v-model="formFieldMap.templateable"
-        class="mt-0"
         :class="{'field-mapping-form-field__changed': hasChanged('templateable')}"
         label="Templateable"
+        dense
         hide-details
         v-bind="fieldChangedAttributes('templateable')"
       />
@@ -45,51 +46,71 @@
         :class="{'field-mapping-form-field__changed': hasChanged('use_template_value')}"
         label="Use Template Value"
         dense
+        hide-details
       />
-      <v-select
-        v-if="fieldNameMatch(/event\d+_type/g, true)"
-        v-model="formFieldMap.constant_value"
-        :items="customFieldInput.eventTypes"
-        item-text="name"
-        item-value="value"
-        :class="{'field-mapping-form-field__changed': hasChanged('constant_value')}"
-        label="Constant Value"
-        clearable
-        v-bind="fieldChangedAttributes('constant_value')"
-        @change="value => onCustomInputClear('constant_value', value)"
-      />
-      <v-select
-        v-else-if="fieldNameMatch('shipment_direction')"
-        v-model="formFieldMap.constant_value"
-        :items="customFieldInput.shipmentDirection"
-        item-text="name"
-        item-value="value"
-        :class="{'field-mapping-form-field__changed': hasChanged('constant_value')}"
-        label="Constant Value"
-        clearable
-        v-bind="fieldChangedAttributes('constant_value')"
-        @change="value => onCustomInputClear('constant_value', value)"
-      />
-      <v-select
-        v-else-if="fieldNameMatch(/hazmat|hazardous|expedite/g, true)"
-        v-model="formFieldMap.constant_value"
-        :items="customFieldInput.booleanFields"
-        item-text="name"
-        item-value="value"
-        :class="{'field-mapping-form-field__changed': hasChanged('constant_value')}"
-        label="Constant Value"
-        clearable
-        v-bind="fieldChangedAttributes('constant_value')"
-        @change="value => onCustomInputClear('constant_value', value)"
-      />
-      <v-text-field
-        v-else
-        v-model="formFieldMap.constant_value"
-        :class="{'field-mapping-form-field__changed': hasChanged('constant_value')}"
-        label="Constant Value"
-        clearable
-        v-bind="fieldChangedAttributes('constant_value')"
-      />
+      <v-container class="pa-0">
+        <v-row no-gutters>
+          <v-col
+            cols="auto"
+            class="mr-4"
+          >
+            <v-switch
+              v-model="formFieldMap.use_constant_as_default_only"
+              :class="{'field-mapping-form-field__changed': hasChanged('use_constant_as_default_only')}"
+              label="Default only"
+              dense
+              hide-details
+              v-bind="fieldChangedAttributes('use_constant_as_default_only')"
+            />
+          </v-col>
+          <v-col>
+            <v-select
+              v-if="fieldNameMatch(/event\d+_type/g, true)"
+              v-model="formFieldMap.constant_value"
+              :items="customFieldInput.eventTypes"
+              item-text="name"
+              item-value="value"
+              :class="{'field-mapping-form-field__changed': hasChanged('constant_value')}"
+              label="Constant Value"
+              clearable
+              v-bind="fieldChangedAttributes('constant_value')"
+              @change="value => onCustomInputClear('constant_value', value)"
+            />
+            <v-select
+              v-else-if="fieldNameMatch('shipment_direction')"
+              v-model="formFieldMap.constant_value"
+              :items="customFieldInput.shipmentDirection"
+              item-text="name"
+              item-value="value"
+              :class="{'field-mapping-form-field__changed': hasChanged('constant_value')}"
+              label="Constant Value"
+              clearable
+              v-bind="fieldChangedAttributes('constant_value')"
+              @change="value => onCustomInputClear('constant_value', value)"
+            />
+            <v-select
+              v-else-if="fieldNameMatch(/hazmat|hazardous|expedite/g, true)"
+              v-model="formFieldMap.constant_value"
+              :items="customFieldInput.booleanFields"
+              item-text="name"
+              item-value="value"
+              :class="{'field-mapping-form-field__changed': hasChanged('constant_value')}"
+              label="Constant Value"
+              clearable
+              v-bind="fieldChangedAttributes('constant_value')"
+              @change="value => onCustomInputClear('constant_value', value)"
+            />
+            <v-text-field
+              v-else
+              v-model="formFieldMap.constant_value"
+              :class="{'field-mapping-form-field__changed': hasChanged('constant_value')}"
+              label="Constant Value"
+              clearable
+              v-bind="fieldChangedAttributes('constant_value')"
+            />
+          </v-col>
+        </v-row>
+      </v-container>
       <v-text-field
         v-model="formFieldMap.d3canon_table"
         :class="{'field-mapping-form-field__changed': hasChanged('d3canon_table')}"
@@ -109,7 +130,6 @@
         :class="{'field-mapping-form-field__changed': hasChanged('screen_name')}"
         label="Screen Name"
         clearable
-        hide-details
         v-bind="fieldChangedAttributes('screen_name')"
       />
       <v-textarea
@@ -262,6 +282,7 @@ export default {
       screen_name: 'Bill To',
       templateable: true,
       use_template_value: true,
+      use_constant_as_default_only: false,
     },
     abbySourceFieldFilter: {
       old: false,
