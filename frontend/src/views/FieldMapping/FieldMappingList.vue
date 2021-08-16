@@ -115,7 +115,7 @@ export default {
         event.preventDefault()
         this.setConfirmationDialog({
           title: 'Unsaved changes detected',
-          text: 'Are you sure you want to leave this changes unsaved? this may result in data lost.',
+          text: 'Are you sure you want to leave this page without saving? Your changes will be lost.',
           onConfirm: () => {
             this.$emit('change', key)
           },
