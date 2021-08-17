@@ -119,8 +119,10 @@ import { formatDate } from '@/utils/dates'
 import permissions from '@/mixins/permissions'
 import locks from '@/mixins/locks'
 import isMobile from '@/mixins/is_mobile'
+import statusUpdatesSubscribe from '@/mixins/status_updates_subscribe'
 import { objectLocks } from '@/enums/app_objects_types'
 import events from '@/enums/events'
+import cloneDeep from 'lodash/cloneDeep'
 
 export default {
   name: 'RequestList',
@@ -129,7 +131,7 @@ export default {
     RequestItem,
     LockButtonEnabler,
   },
-  mixins: [permissions, isMobile, locks],
+  mixins: [permissions, isMobile, locks, statusUpdatesSubscribe],
   data () {
     return {
       bottom: false,
@@ -207,6 +209,7 @@ export default {
     this.initialTotalMeta = this.meta.total
     this.startPolling()
     this.initializeLockingListeners()
+    this.initializeStateUpdatesListeners()
 
     if (this.requestIdSelected) {
       this.handleChange({ ...this.requestSelected })
@@ -216,6 +219,7 @@ export default {
     this.stopPolling()
     this.stopRefreshingLock()
     this.$echo.leave('object-locking')
+    this.leaveRequestStatusUpdatesChannel()
     this.releaseLockRequest({ requestId: this.requestIdSelected })
     this.resetPagination()
   },
@@ -228,6 +232,7 @@ export default {
     ...mapActions(requestsList.moduleName, {
       setRequests: requestsListTypes.setRequests,
       appendRequests: requestsListTypes.appendRequests,
+      updateRequestStatus: requestsListTypes.updateRequestStatus,
     }),
     formatDate,
     clearFilters () {
@@ -249,6 +254,27 @@ export default {
     },
     initializeFilters () {
       this.filters = [...this.$refs.requestFilters.getActiveFilters()]
+    },
+    initializeStateUpdatesListeners () {
+      this.listenToRequestStatusUpdates(({ latestStatus, requestId } = {}) => {
+        if (latestStatus.order_id) {
+          return
+        }
+
+        this.updateRequestStatus({ latestStatus })
+
+        if (requestId !== this.requestIdSelected) {
+          return
+        }
+
+        const index = this.items.findIndex(item => item.request_id === this.requestIdSelected)
+
+        if (index === -1) {
+          return
+        }
+
+        this.handleChange(cloneDeep(this.items[index]))
+      })
     },
     initializeLockingListeners () {
       this.$root.$on(events.lockClaimed, request => this.startRefreshingLock(request.request_id))

@@ -58,6 +58,7 @@
 </template>
 
 <script>
+import statusUpdatesSubscribe from '@/mixins/status_updates_subscribe'
 import permissions from '@/mixins/permissions'
 import locks from '@/mixins/locks'
 
@@ -96,7 +97,7 @@ export default {
     ContainerNotFound
   },
 
-  mixins: [permissions, locks],
+  mixins: [permissions, locks, statusUpdatesSubscribe],
 
   props: {
     orderId: {
@@ -183,6 +184,7 @@ export default {
 
   mounted () {
     this.initializeLockingListeners()
+    this.initializeStateUpdatesListeners()
   },
 
   async beforeDestroy () {
@@ -191,6 +193,7 @@ export default {
       this.releaseLockRequest({ requestId: this.order.request_id })
       this.$echo.leave('object-locking')
     }
+    this.leaveRequestStatusUpdatesChannel()
   },
 
   methods: {
@@ -199,6 +202,7 @@ export default {
     ...mapActions(orderForm.moduleName, {
       setFormOrder: orderFormTypes.setFormOrder,
       setOrderLock: orderFormTypes.setOrderLock,
+      updateOrderStatus: orderFormTypes.updateOrderStatus,
     }),
 
     async fetchFormData () {
@@ -377,6 +381,16 @@ export default {
       }
 
       this.formOptions = newFormOptions
+    },
+
+    initializeStateUpdatesListeners () {
+      this.listenToRequestStatusUpdates(({ latestStatus, requestId } = {}) => {
+        if (!latestStatus.order_id || latestStatus.order_id !== this.order.id) {
+          return
+        }
+
+        this.updateOrderStatus({ latestStatus })
+      })
     },
 
     async requestOrderDetail () {

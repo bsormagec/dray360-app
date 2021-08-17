@@ -20,3 +20,11 @@ use Illuminate\Support\Facades\Broadcast;
 Broadcast::channel('object-locking', function ($user) {
     return $user ? true : false;
 });
+
+Broadcast::channel('request-status-updated', function ($user) {
+    return $user->isAbleTo('all-companies-view');
+});
+
+Broadcast::channel('request-status-updated-company{companyId}', function ($user, $companyId) {
+    return $user->getCompanyId() == $companyId;
+});

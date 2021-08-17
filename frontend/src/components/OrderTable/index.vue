@@ -224,6 +224,7 @@ import Pagination from './components/Pagination'
 import RequestStatus from '@/components/RequestStatus'
 
 import hasPermission from '@/mixins/permissions'
+import statusUpdatesSubscribe from '@/mixins/status_updates_subscribe'
 import { formatDate } from '@/utils/dates'
 import utils, { actionTypes as utilsActionTypes } from '@/store/modules/utils'
 import { getOrders, delDeleteOrder, updateOrderDetail, replicateOrder } from '@/store/api_calls/orders'
@@ -232,6 +233,7 @@ import { getRequestFilters } from '@/utils/filters_handling'
 import { mapState, mapActions } from 'vuex'
 import OutlinedButtonGroup from '@/components/General/OutlinedButtonGroup'
 import StatusHistoryDialog from '@/views/OrderDetails/StatusHistoryDialog'
+import cloneDeep from 'lodash/cloneDeep'
 
 export default {
   name: 'OrderTable',
@@ -242,7 +244,7 @@ export default {
     Filters,
     StatusHistoryDialog
   },
-  mixins: [hasPermission],
+  mixins: [hasPermission, statusUpdatesSubscribe],
   props: {
     activePage: {
       type: Number,
@@ -407,6 +409,7 @@ export default {
   },
 
   mounted () {
+    this.initializeStateUpdatesListeners()
     if (this.waitForRequestId) {
       return
     }
@@ -418,6 +421,7 @@ export default {
   },
 
   beforeDestroy () {
+    this.leaveRequestStatusUpdatesChannel()
     if (this.waitForRequestId) {
       return
     }
@@ -682,7 +686,21 @@ export default {
       this.page = pageIndex
       this.setURLParams()
       this.getOrderData()
-    }
+    },
+
+    initializeStateUpdatesListeners () {
+      this.listenToRequestStatusUpdates(({ latestStatus } = {}) => {
+        const index = this.orders.findIndex(item => item.id === latestStatus.order_id)
+        if (index === -1) {
+          return
+        }
+
+        const order = cloneDeep(this.orders[index])
+        order.latest_ocr_request_status = latestStatus
+
+        this.orders.splice(index, 1, order)
+      })
+    },
 
   }
 }
