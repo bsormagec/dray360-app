@@ -32,6 +32,7 @@ class RequestStatusUpdatesController extends Controller
         abort_if(
             $data['token'] != config('services.dray360-api.webhook_key'),
             Response::HTTP_UNAUTHORIZED,
+            'Unauthorized'
         );
 
         unset($data['token']);

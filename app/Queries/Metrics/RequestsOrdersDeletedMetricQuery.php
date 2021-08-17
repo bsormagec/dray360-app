@@ -10,11 +10,15 @@ use Illuminate\Database\Query\Builder;
 class RequestsOrdersDeletedMetricQuery
 {
     protected Carbon $date;
+    protected $startDate;
+    protected $endDate;
     protected int $companyId;
 
     public function __invoke(Carbon $date, int $companyId)
     {
         $this->date = $date;
+        $this->startDate = $this->date->clone()->startOfDay()->toDateTimeString();
+        $this->endDate = $this->date->clone()->endOfDay()->toDateTimeString();
         $this->companyId = $companyId;
 
         $data = [
@@ -44,8 +48,8 @@ class RequestsOrdersDeletedMetricQuery
     {
         return DB::table('t_orders', 'o')
             ->where('o.t_company_id', $this->companyId)
-            ->whereDate('o.created_at', '>=', $this->date)
-            ->whereDate('o.created_at', '<=', $this->date)
+            ->where('o.created_at', '>=', $this->startDate)
+            ->where('o.created_at', '<=', $this->endDate)
             ->when($onlyDeleted, function (Builder $query) {
                 return $query->whereNotNull('o.deleted_at');
             });
@@ -94,8 +98,8 @@ class RequestsOrdersDeletedMetricQuery
             ->selectRaw('count(distinct request_id) as rejected_request_count')
             ->where('status', OCRRequestStatus::INTAKE_REJECTED)
             ->where('company_id', $this->companyId)
-            ->whereDate('created_at', '>=', $this->date)
-            ->whereDate('created_at', '<=', $this->date)
+            ->where('created_at', '>=', $this->startDate)
+            ->where('created_at', '<=', $this->endDate)
             ->first();
 
         return $response->rejected_request_count;
@@ -153,8 +157,8 @@ class RequestsOrdersDeletedMetricQuery
             ->selectRaw('count(distinct ls.request_id) as requests_count')
             ->join('t_job_state_changes as sc', 'sc.id', '=', 'ls.t_job_state_changes_id')
             ->where('sc.company_id', $this->companyId)
-            ->whereDate('ls.created_at', '>=', $this->date)
-            ->whereDate('ls.created_at', '<=', $this->date)
+            ->where('ls.created_at', '>=', $this->startDate)
+            ->where('ls.created_at', '<=', $this->endDate)
             ->whereNotNull('ls.deleted_at')
             ->first();
 
@@ -171,8 +175,8 @@ class RequestsOrdersDeletedMetricQuery
                     ->whereRaw("lower(json_unquote(json_extract(s.status_metadata, '$.original_filename'))) like '%pdf'");
             })
             ->where('s.company_id', $this->companyId)
-            ->whereDate('ls.created_at', '>=', $this->date)
-            ->whereDate('ls.created_at', '<=', $this->date)
+            ->where('ls.created_at', '>=', $this->startDate)
+            ->where('ls.created_at', '<=', $this->endDate)
             ->whereNotNull('ls.deleted_at')
             ->first();
 
@@ -189,8 +193,8 @@ class RequestsOrdersDeletedMetricQuery
                     ->whereRaw("lower(json_unquote(json_extract(s.status_metadata, '$.original_filename'))) not like '%pdf'");
             })
             ->where('s.company_id', $this->companyId)
-            ->whereDate('ls.created_at', '>=', $this->date)
-            ->whereDate('ls.created_at', '<=', $this->date)
+            ->where('ls.created_at', '>=', $this->startDate)
+            ->where('ls.created_at', '<=', $this->endDate)
             ->whereNotNull('ls.deleted_at')
             ->first();
 
