@@ -35,6 +35,7 @@ class RequestStatusUpdatesController extends Controller
         );
 
         unset($data['token']);
+        $data['display_status'] = OCRRequestStatus::STATUS_MAP[$data['status']] ?? '-';
 
         broadcast(new RequestStatusUpdated($data))->toOthers();
     }
