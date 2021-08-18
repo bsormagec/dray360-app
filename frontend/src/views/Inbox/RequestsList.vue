@@ -244,6 +244,7 @@ export default {
       this.resetPagination()
       this.setURLParams()
       await this.fetchRequests()
+      this.handleChange({ request_id: null, lock: null })
     },
     async refreshRequests () {
       this.$root.$emit(events.requestsRefreshed)
@@ -419,6 +420,8 @@ export default {
         this.startRefreshingLock(newRequest.request_id)
         return
       }
+
+      if (newRequest.request_id === null) return
 
       this.attemptToLockRequest({
         requestId: newRequest.request_id,
