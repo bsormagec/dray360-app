@@ -477,6 +477,23 @@
             :edit-mode="editMode"
             @change="event => handleChange({ path:'seal_number', ...event})"
           />
+          <FormFieldInput
+            v-if="fieldShouldBeShown('temperature')"
+            references="temperature"
+            :label="options.labels.temperature || 'Temperature'"
+            :value="order.temperature"
+            :edit-mode="editMode"
+            type="number"
+            @change="event => handleChange({ path:'temperature', ...event})"
+          />
+          <FormFieldInput
+            v-if="fieldShouldBeShown('required_equipment')"
+            references="required_equipment"
+            :label="options.labels.required_equipment || 'Required Equipment'"
+            :value="order.required_equipment"
+            :edit-mode="editMode"
+            @change="event => handleChange({ path:'required_equipment', ...event})"
+          />
           <FormFieldDictionaryItem
             v-if="fieldShouldBeShown('cc_containersize_dictid')"
             references="cc_containersize_dictid"
@@ -599,6 +616,22 @@
             :value="order.voyage"
             :edit-mode="editMode"
             @change="event => handleChange({ path:'voyage', ...event})"
+          />
+          <FormFieldDate
+            v-if="fieldShouldBeShown('eta_date')"
+            references="eta_date"
+            :label="options.labels.eta_date || 'ETA Date'"
+            :value="order.eta_date"
+            :edit-mode="editMode"
+            @change="event => handleChange({ path: 'eta_date', ...event })"
+          />
+          <FormFieldTimeMask
+            v-if="fieldShouldBeShown('eta_time')"
+            references="eta_time"
+            :label="options.labels.eta_time || 'ETA Time'"
+            :value="order.eta_time"
+            :edit-mode="editMode"
+            @change="event => handleChange({ path:'eta_time', ...event })"
           />
           <FormFieldDate
             v-if="fieldShouldBeShown('appointment_date')"

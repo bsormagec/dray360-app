@@ -184,6 +184,10 @@ class Order extends Model implements Auditable
         'cc_containertype',
         'cc_containertype_dictid',
         'cc_containertype_dictid_verified',
+        'eta_date',
+        'eta_time',
+        'temperature',
+        'required_equipment',
     ];
 
     /**
@@ -219,6 +223,7 @@ class Order extends Model implements Auditable
         'termdiv_dictid_verified' => 'boolean',
         'cc_containersize_dictid_verified' => 'boolean',
         'cc_containertype_dictid_verified' => 'boolean',
+        'eta_date' => 'date',
     ];
 
     /**
@@ -313,6 +318,10 @@ class Order extends Model implements Auditable
         'cc_containersize_dictid_verified' => 'sometimes|nullable',
         'cc_containertype_dictid' => 'sometimes|nullable',
         'cc_containertype_dictid_verified' => 'sometimes|nullable',
+        'eta_date' => 'sometimes|nullable',
+        'eta_time' => 'sometimes|nullable',
+        'temperature' => 'sometimes|nullable',
+        'required_equipment' => 'sometimes|nullable',
     ];
 
     /**
