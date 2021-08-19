@@ -25,6 +25,14 @@ Broadcast::channel('request-status-updated', function ($user) {
     return $user->isAbleTo('all-companies-view');
 });
 
+Broadcast::channel('request-status-updated-order{orderId}', function ($user, $orderId) {
+    return $user->isAbleTo('all-companies-view');
+});
+
 Broadcast::channel('request-status-updated-company{companyId}', function ($user, $companyId) {
+    return $user->getCompanyId() == $companyId;
+});
+
+Broadcast::channel('request-status-updated-company{companyId}-order{orderId}', function ($user, $companyId, $orderId) {
     return $user->getCompanyId() == $companyId;
 });

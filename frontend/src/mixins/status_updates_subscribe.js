@@ -17,12 +17,12 @@ export default {
   },
 
   methods: {
-    listenToRequestStatusUpdates (handler) {
-      this.$echo.private(this.channel).listen(events.requestStatusUpdated, handler)
+    listenToRequestStatusUpdates (handler, extraChannelInformation = '') {
+      this.$echo.private(`${this.channel}${extraChannelInformation}`).listen(events.requestStatusUpdated, handler)
     },
 
-    leaveRequestStatusUpdatesChannel () {
-      this.$echo.leave(this.channel)
+    leaveRequestStatusUpdatesChannel (extraChannelInformation = '') {
+      this.$echo.leave(`${this.channel}${extraChannelInformation}`)
     }
   }
 }

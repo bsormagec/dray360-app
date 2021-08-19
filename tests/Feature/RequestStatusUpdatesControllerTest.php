@@ -29,7 +29,7 @@ class RequestStatusUpdatesControllerTest extends TestCase
             'status' => $request->latestOcrRequestStatus->status,
             'status_metadata' => $request->latestOcrRequestStatus->status_metadata,
             'company_id' => $request->latestOcrRequestStatus->company_id,
-            'order_id' => $request->latestOcrRequestStatus->order_id,
+            'order_id' => null,
         ]);
 
         Event::assertDispatched(RequestStatusUpdated::class, 1);
@@ -38,6 +38,33 @@ class RequestStatusUpdatesControllerTest extends TestCase
                 && $event->latestStatus['status'] == $request->latestOcrRequestStatus->status
                 && $event->broadcastOn()[0] == 'private-request-status-updated'
                 && $event->broadcastOn()[1] == ('private-request-status-updated-company'.$request->latestOcrRequestStatus->company_id);
+        });
+    }
+
+    /** @test */
+    public function it_should_broadcast_a_notification_to_the_request_status_update_to_company_order_channel()
+    {
+        $requestId = (new OcrRequestSeeder())->seedOcrJob_ocrWaiting();
+        $request = OCRRequest::where('request_id', $requestId)->whereNull('order_id')->first();
+        Event::fake();
+        Config::set('services.dray360-api.webhook_key', 'thetoken');
+
+        $this->postJson(route('request-status-updates.store'), [
+            'token' => 'thetoken',
+            'request_id' => $requestId,
+            'status_date' => $request->latestOcrRequestStatus->created_at,
+            'status' => $request->latestOcrRequestStatus->status,
+            'status_metadata' => $request->latestOcrRequestStatus->status_metadata,
+            'company_id' => $request->latestOcrRequestStatus->company_id,
+            'order_id' => 1234,
+        ]);
+
+        Event::assertDispatched(RequestStatusUpdated::class, 1);
+        Event::assertDispatched(function (RequestStatusUpdated $event) use ($request) {
+            return $event->requestId == $request->request_id
+                && $event->latestStatus['status'] == $request->latestOcrRequestStatus->status
+                && $event->broadcastOn()[0] == ('private-request-status-updated-company' . $request->latestOcrRequestStatus->company_id . '-orders')
+                && $event->broadcastOn()[1] == ('private-request-status-updated-company' . $request->latestOcrRequestStatus->company_id . '-order1234');
         });
     }
 }

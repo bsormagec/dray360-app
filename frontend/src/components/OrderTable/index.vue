@@ -374,8 +374,10 @@ export default {
       },
       deep: true
     },
-    requestId () {
-      this.getOrderData()
+    async requestId () {
+      this.leaveRequestStatusUpdatesChannel('-orders')
+      await this.getOrderData()
+      this.initializeStateUpdatesListeners()
     }
   },
 
@@ -421,7 +423,7 @@ export default {
   },
 
   beforeDestroy () {
-    this.leaveRequestStatusUpdatesChannel()
+    this.leaveRequestStatusUpdatesChannel('-orders')
     if (this.waitForRequestId) {
       return
     }
@@ -699,7 +701,7 @@ export default {
         order.latest_ocr_request_status = latestStatus
 
         this.orders.splice(index, 1, order)
-      })
+      }, '-orders')
     },
 
   }

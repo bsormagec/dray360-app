@@ -33,6 +33,15 @@ class RequestStatusUpdated implements ShouldBroadcast
      */
     public function broadcastOn()
     {
+        if ($this->latestStatus['order_id']) {
+            return [
+                new PrivateChannel('request-status-updated-company'.$this->latestStatus['company_id'].'-orders'),
+                new PrivateChannel('request-status-updated-company'.$this->latestStatus['company_id'].'-order'.$this->latestStatus['order_id']),
+                new PrivateChannel('request-status-updated-orders'),
+                new PrivateChannel('request-status-updated-order'.$this->latestStatus['order_id']),
+            ];
+        }
+
         return [
             new PrivateChannel('request-status-updated'),
             new PrivateChannel('request-status-updated-company'.$this->latestStatus['company_id']),

@@ -168,9 +168,11 @@ export default {
       if (newOrderId == this.orderIdToLoad) {
         return
       }
+      this.leaveRequestStatusUpdatesChannel(`-order${this.orderIdToLoad}`)
       this.orderIdToLoad = this.orderId
 
       await this.fetchFormData()
+      this.initializeStateUpdatesListeners()
     },
     startingSize: function (newVal, oldVal) {
       this.resizeDiff = newVal
@@ -180,11 +182,11 @@ export default {
 
   async beforeMount () {
     await this.fetchFormData()
+    this.initializeStateUpdatesListeners()
   },
 
   mounted () {
     this.initializeLockingListeners()
-    this.initializeStateUpdatesListeners()
   },
 
   async beforeDestroy () {
@@ -193,7 +195,7 @@ export default {
       this.releaseLockRequest({ requestId: this.order.request_id })
       this.$echo.leave('object-locking')
     }
-    this.leaveRequestStatusUpdatesChannel()
+    this.leaveRequestStatusUpdatesChannel(`-order${this.order.id}`)
   },
 
   methods: {
@@ -384,13 +386,13 @@ export default {
     },
 
     initializeStateUpdatesListeners () {
-      this.listenToRequestStatusUpdates(({ latestStatus, requestId } = {}) => {
+      this.listenToRequestStatusUpdates(({ latestStatus } = {}) => {
         if (!latestStatus.order_id || latestStatus.order_id !== this.order.id) {
           return
         }
 
         this.updateOrderStatus({ latestStatus })
-      })
+      }, `-order${this.order.id}`)
     },
 
     async requestOrderDetail () {
