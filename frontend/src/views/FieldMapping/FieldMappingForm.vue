@@ -169,6 +169,14 @@
         clearable
         v-bind="fieldChangedAttributes('abbyy_source_field')"
       />
+      <v-text-field
+        v-model="formFieldMap.profittools_destination"
+        :class="{'field-mapping-form-field__changed': hasChanged('profittools_profittools_destinationdestination')}"
+        label="Profittools Destination"
+        clearable
+        hide-details
+        v-bind="fieldChangedAttributes('profittools_destination')"
+      />
       <v-textarea
         v-model="formFieldMap.notes"
         :class="{'field-mapping-form-field__changed': hasChanged('notes')}"
@@ -181,15 +189,6 @@
       <h3 class="h6 pa-0 mb-4 mt-16 text-left primary--text">
         To be implemented...
       </h3>
-      <v-text-field
-        v-model="formFieldMap.profittools_destination"
-        :class="{'field-mapping-form-field__changed': hasChanged('profittools_profittools_destinationdestination')}"
-        label="Profittools Destination"
-        clearable
-        hide-details
-        disabled
-        v-bind="fieldChangedAttributes('profittools_destination')"
-      />
       <v-text-field
         v-model="formFieldMap.d3canon_table"
         :class="{'field-mapping-form-field__changed': hasChanged('d3canon_table')}"
