@@ -178,11 +178,8 @@
         v-bind="fieldChangedAttributes('notes')"
       />
 
-      <h3 class="h6 pa-0 ma-0 mb-4 text-left primary--text">
-        <br>
-        <br>
-        <br>
-        To be implemented
+      <h3 class="h6 pa-0 mb-4 mt-16 text-left primary--text">
+        To be implemented...
       </h3>
       <v-text-field
         v-model="formFieldMap.profittools_destination"
