@@ -515,6 +515,7 @@ export default {
       this.onFiltersChange()
     },
     getFilterColor (filter) {
+      // eslint-disable-next-line no-prototype-builtins
       return this.chipColors.hasOwnProperty(filter.type) ? this.chipColors[filter.type] : this.chipColors.default
     },
     setActiveFilters () {

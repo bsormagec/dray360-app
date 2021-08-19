@@ -371,14 +371,34 @@ export default {
       }
 
       newFormOptions.field_maps = this.currentOrder.field_maps
-
       const { field_maps: fieldMaps } = this.currentOrder
-      for (const key in fieldMaps) {
-        if (fieldMaps[key].screen_hide) {
-          newFormOptions.hidden.push(key)
+
+      const getMapForCanonAndDirection = (d3CanonName, shipmentDirection) => {
+        shipmentDirection = (shipmentDirection || '').trim() || 'empty'
+        const fieldmapByShipdir = {}
+        for (const key in fieldMaps) {
+          if (fieldMaps[key].d3canon_name === d3CanonName) {
+            const shipmentDirectionFilter = (fieldMaps[key].shipment_direction_filter || '').trim() || 'empty'
+            fieldmapByShipdir[shipmentDirectionFilter] = fieldMaps[key]
+          }
         }
-        if (fieldMaps[key].screen_name) {
-          newFormOptions.labels[key] = fieldMaps[key].screen_name
+        // get the best fieldmap match for the order's shipmentDirection
+        const shipdirKeys = Object.keys(fieldmapByShipdir)
+        const index = shipdirKeys.findIndex(item => item.includes(shipmentDirection))
+        if (index === -1) {
+          return fieldmapByShipdir.empty
+        }
+        return fieldmapByShipdir[shipdirKeys[index]]
+      }
+
+      for (const key in fieldMaps) {
+        const d3CanonName = fieldMaps[key].d3canon_name
+        const bestFieldMap = getMapForCanonAndDirection(d3CanonName, this.currentOrder.shipment_direction)
+        if (bestFieldMap.screen_hide) {
+          newFormOptions.hidden.push(d3CanonName)
+        }
+        if (bestFieldMap.screen_name) {
+          newFormOptions.labels[d3CanonName] = bestFieldMap.screen_name
         }
       }
 

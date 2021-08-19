@@ -1,4 +1,3 @@
-import { reqStatus } from '@/enums/req_status'
 import { updateOrderDetail, updateAllOrders } from '@/store/api_calls/orders'
 import { getHighlights, parseChanges, baseHighlight } from '@/utils/order_form_general_functions'
 import cloneDeep from 'lodash/cloneDeep'

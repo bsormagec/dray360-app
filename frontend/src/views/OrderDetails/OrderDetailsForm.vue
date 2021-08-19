@@ -1146,8 +1146,7 @@ export default {
     managedByTemplate (field) {
       return this.order.tms_template_dictid !== null &&
         this.enablePtTemplates &&
-        get(this.options.field_maps, `${field}.use_template_value`) &&
-        get(this.options.field_maps, `${field}.templateable`)
+        get(this.options.field_maps, `${field}.use_template_value`)
     },
 
     shipmentDirectionDisplayValue (value) {
@@ -1348,6 +1347,7 @@ export default {
     moveObjectPositionInArray (id, direction) {
       const arr = this.order.order_address_events
       if (direction === 'up') {
+        // eslint-disable-next-line eqeqeq
         const index = arr.findIndex(e => e.id == id)
         if (index > 0) {
           const el = arr[index]
@@ -1355,6 +1355,7 @@ export default {
           arr[index - 1] = el
         }
       } else if (direction === 'down') {
+        // eslint-disable-next-line eqeqeq
         const index = arr.findIndex(e => e.id == id)
         if (index !== -1 && index < arr.length - 1) {
           const el = arr[index]

@@ -3,7 +3,7 @@
     v-if="selectedField"
   >
     <h3 class="h6 d-flex ma-3 primary--text">
-      {{ selectedField }} Mapping Options
+      Mapping Options for "{{ selectedField }}"
       <v-spacer />
       <v-btn
         text
@@ -25,29 +25,33 @@
       </v-btn>
     </h3>
     <div class="field-mapping-form px-3 pb-3">
-      <v-switch
-        v-model="formFieldMap.screen_hide"
-        :class="{'field-mapping-form-field__changed': hasChanged('screen_hide')}"
-        label="Screen Hide"
-        dense
-        hide-details
-        v-bind="fieldChangedAttributes('screen_hide')"
-      />
-      <v-switch
-        v-model="formFieldMap.templateable"
-        :class="{'field-mapping-form-field__changed': hasChanged('templateable')}"
-        label="Templateable"
-        dense
-        hide-details
-        v-bind="fieldChangedAttributes('templateable')"
-      />
-      <v-switch
-        v-model="formFieldMap.use_template_value"
-        :class="{'field-mapping-form-field__changed': hasChanged('use_template_value')}"
-        label="Use Template Value"
-        dense
-        hide-details
-      />
+      <v-container class="pa-0">
+        <v-row no-gutters>
+          <v-col
+            cols="auto"
+            class="mr-4"
+          >
+            <v-switch
+              v-model="formFieldMap.screen_hide"
+              :class="{'field-mapping-form-field__changed': hasChanged('screen_hide')}"
+              label="Screen Hide"
+              dense
+              hide-details
+              v-bind="fieldChangedAttributes('screen_hide')"
+            />
+          </v-col>
+          <v-col>
+            <v-text-field
+              v-model="formFieldMap.screen_name"
+              :class="{'field-mapping-form-field__changed': hasChanged('screen_name')}"
+              label="Screen Name"
+              clearable
+              v-bind="fieldChangedAttributes('screen_name')"
+              hide-details
+            />
+          </v-col>
+        </v-row>
+      </v-container>
       <v-container class="pa-0">
         <v-row no-gutters>
           <v-col
@@ -111,36 +115,37 @@
           </v-col>
         </v-row>
       </v-container>
-      <v-text-field
-        v-model="formFieldMap.d3canon_table"
-        :class="{'field-mapping-form-field__changed': hasChanged('d3canon_table')}"
-        label="D3canon Table"
-        clearable
-        v-bind="fieldChangedAttributes('d3canon_table')"
+      <v-switch
+        v-model="formFieldMap.available"
+        :class="{'field-mapping-form-field__changed': hasChanged('available')}"
+        label="Available"
+        dense
+        hide-details
+        v-bind="fieldChangedAttributes('available')"
+      />
+      <v-switch
+        v-model="formFieldMap.use_template_value"
+        :class="{'field-mapping-form-field__changed': hasChanged('use_template_value')}"
+        label="Use Template Value"
+        dense
+        v-bind="fieldChangedAttributes('use_template_value')"
       />
       <v-text-field
-        v-model="formFieldMap.d3canon_column"
-        :class="{'field-mapping-form-field__changed': hasChanged('d3canon_column')}"
-        label="D3canon Column"
+        v-model="formFieldMap.shipment_direction_filter"
+        :class="{'field-mapping-form-field__changed': hasChanged('shipment_direction_filter')}"
+        label="Shipment Direction Filter"
         clearable
-        v-bind="fieldChangedAttributes('d3canon_column')"
+        v-bind="fieldChangedAttributes('shipment_direction_filter')"
       />
       <v-text-field
-        v-model="formFieldMap.screen_name"
-        :class="{'field-mapping-form-field__changed': hasChanged('screen_name')}"
-        label="Screen Name"
+        v-model="formFieldMap.d3canon_name"
+        :class="{'field-mapping-form-field__changed': hasChanged('d3canon_name')}"
+        label="D3canon Name"
         clearable
-        v-bind="fieldChangedAttributes('screen_name')"
+        v-bind="fieldChangedAttributes('d3canon_name')"
+        hide-details
       />
-      <v-textarea
-        v-model="formFieldMap.notes"
-        :class="{'field-mapping-form-field__changed': hasChanged('notes')}"
-        rows="3"
-        label="Notes"
-        clearable
-        v-bind="fieldChangedAttributes('notes')"
-      />
-      <v-row>
+      <!-- <v-row>
         <v-checkbox
           v-model="abbySourceFieldFilter.old"
           label="Old Fields"
@@ -155,7 +160,7 @@
           dense
           hide-details
         />
-      </v-row>
+      </v-row> -->
       <v-autocomplete
         v-model="formFieldMap.abbyy_source_field"
         :class="{'field-mapping-form-field__changed': hasChanged('abbyy_source_field')}"
@@ -164,18 +169,43 @@
         clearable
         v-bind="fieldChangedAttributes('abbyy_source_field')"
       />
+      <v-textarea
+        v-model="formFieldMap.notes"
+        :class="{'field-mapping-form-field__changed': hasChanged('notes')}"
+        rows="3"
+        label="Notes"
+        clearable
+        v-bind="fieldChangedAttributes('notes')"
+      />
+
+      <h3 class="h6 pa-0 mb-4 mt-16 text-left primary--text">
+        To be implemented...
+      </h3>
       <v-text-field
         v-model="formFieldMap.profittools_destination"
         :class="{'field-mapping-form-field__changed': hasChanged('profittools_profittools_destinationdestination')}"
         label="Profittools Destination"
         clearable
         hide-details
+        disabled
         v-bind="fieldChangedAttributes('profittools_destination')"
       />
-      <v-divider class="mb-3" />
-      <h3 class="h6 pa-0 ma-0 mb-4 text-left primary--text">
-        To be implemented
-      </h3>
+      <v-text-field
+        v-model="formFieldMap.d3canon_table"
+        :class="{'field-mapping-form-field__changed': hasChanged('d3canon_table')}"
+        label="D3canon Table"
+        clearable
+        disabled
+        v-bind="fieldChangedAttributes('d3canon_table')"
+      />
+      <v-text-field
+        v-model="formFieldMap.d3canon_column"
+        :class="{'field-mapping-form-field__changed': hasChanged('d3canon_column')}"
+        label="D3canon Column"
+        clearable
+        disabled
+        v-bind="fieldChangedAttributes('d3canon_column')"
+      />
       <v-text-field
         v-model="formFieldMap.abbyy_source_regex"
         :class="{'field-mapping-form-field__changed': hasChanged('abbyy_source_regex')}"
@@ -200,14 +230,6 @@
         hide-details
         disabled
         v-bind="fieldChangedAttributes('adminreview_validation_regex')"
-      />
-      <v-switch
-        v-model="formFieldMap.available"
-        :class="{'field-mapping-form-field__changed': hasChanged('available')}"
-        label="Available"
-        filled
-        dense
-        disabled
       />
       <v-text-field
         v-model="formFieldMap.cargowise_destination"
@@ -263,7 +285,7 @@ export default {
 
   data: () => ({
     formFieldMap: {
-      abbyy_source_field: 'order_info.bill_to_address',
+      abbyy_source_field: null,
       abbyy_source_regex: null,
       adminreview_if_missing: false,
       adminreview_validation_regex: null,
@@ -271,16 +293,16 @@ export default {
       cargowise_destination: null,
       compcare_destination: null,
       constant_value: null,
-      d3canon_name: 'bill_to_address_code',
-      d3canon_table: 't_company_address_tms_code',
-      d3canon_column: 'company_address_tms_code',
+      d3canon_name: null,
+      d3canon_table: null,
+      d3canon_column: null,
       notes: null,
       post_process_source_field: null,
       post_process_source_regex: null,
-      profittools_destination: 'ds_ship_type',
+      profittools_destination: null,
       screen_hide: false,
-      screen_name: 'Bill To',
-      templateable: true,
+      screen_name: null,
+      shipment_direction_filter: null,
       use_template_value: true,
       use_constant_as_default_only: false,
     },
