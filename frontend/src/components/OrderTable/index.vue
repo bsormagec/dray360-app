@@ -360,6 +360,7 @@ export default {
         }
         let sortCol = this.sortColumnDefault
 
+        // eslint-disable-next-line no-prototype-builtins
         if (sortColumnMap.hasOwnProperty(this.options.sortBy.join())) {
           sortCol = sortColumnMap[this.options.sortBy.join()]
         } else if (this.options.sortBy.join() !== '') {
