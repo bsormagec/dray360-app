@@ -91,9 +91,9 @@ class Company extends Resource
                 ->resolveUsing(function ($configuration) {
                     $json = json_decode($configuration, true);
 
-                    if (empty($json)) {
-                        return json_encode(new stdClass());
-                    }
+                    // if (empty($json)) {
+                    //     return json_encode(new stdClass());
+                    // }
 
                     return collect($json)->sortKeys()->toJson(JSON_PRETTY_PRINT);
                 }),
