@@ -47,7 +47,7 @@
           <h2 class="h6 d-flex ma-3 primary--text">
             Order AI Fields
             <v-btn
-              v-if="isDefaultFieldMap"
+              v-if="isDefaultFieldMap | true"
               class="ml-auto"
               color="primary"
               text
