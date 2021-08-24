@@ -59,7 +59,7 @@ export default {
 .action-btns {
   display: flex;
   align-items: center;
-  flex: 0 0 rem(46);
+  flex-basis: rem(46);
 
   .btn:last-child {
     border-radius: 0 rem(4) rem(4) 0;

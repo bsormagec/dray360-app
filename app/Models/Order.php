@@ -223,7 +223,7 @@ class Order extends Model implements Auditable
         'termdiv_dictid_verified' => 'boolean',
         'cc_containersize_dictid_verified' => 'boolean',
         'cc_containertype_dictid_verified' => 'boolean',
-        'eta_date' => 'date',
+        'eta_date' => 'date:Y-m-d',
     ];
 
     /**
