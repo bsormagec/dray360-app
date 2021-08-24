@@ -1219,6 +1219,7 @@ export default {
       if (this.isSuperadmin()) {
         await this.setConfirmationDialog({
           title: 'Are you sure you want to send this order to the TMS?',
+          noWrap: true,
           onConfirm,
           onCancel: () => { this.loading = false }
         })
