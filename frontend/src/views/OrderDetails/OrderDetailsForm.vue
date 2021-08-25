@@ -349,17 +349,14 @@
           :edit-mode="editMode"
           @change="event => handleChange({ path:'cc_loadtype_dictid', ...event })"
         />
-        <FormFieldDictionaryItem
-          v-if="fieldShouldBeShown('cc_orderstatus_dictid')"
-          references="cc_orderstatus_dictid"
-          :label="options.labels.cc_orderstatus_dictid || 'Order Status'"
-          :value="order.cc_orderstatus_dictid"
-          item-text="item_display_name"
-          item-value="id"
-          :item-type="dictionaryItemsTypes.ccOrderStatus"
-          :company-id="order.t_company_id"
+        <FormFieldInput
+          v-if="fieldShouldBeShown('cc_orderstatus')"
+          references="cc_orderstatus"
+          :label="options.labels.cc_orderstatus || 'Order Status'"
+          :value="order.cc_orderstatus"
           :edit-mode="editMode"
-          @change="event => handleChange({ path:'cc_orderstatus_dictid', ...event })"
+          :managed-by-template="managedByTemplate('cc_orderstatus')"
+          @change="event => handleChange({ path:'cc_orderstatus', ...event})"
         />
         <FormFieldDictionaryItem
           v-if="fieldShouldBeShown('cc_haulclass_dictid')"

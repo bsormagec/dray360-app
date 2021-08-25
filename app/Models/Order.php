@@ -164,8 +164,6 @@ class Order extends Model implements Auditable
         'cc_loadtype_dictid',
         'cc_loadtype_dictid_verified',
         'cc_orderstatus',
-        'cc_orderstatus_dictid',
-        'cc_orderstatus_dictid_verified',
         'cc_haulclass',
         'cc_haulclass_dictid',
         'cc_haulclass_dictid_verified',
@@ -216,7 +214,6 @@ class Order extends Model implements Auditable
         'vessel_dictid_verified' => 'boolean',
         'itgcontainer_dictid_verified' => 'boolean',
         'cc_loadtype_dictid_verified' => 'boolean',
-        'cc_orderstatus_dictid_verified' => 'boolean',
         'cc_haulclass_dictid_verified' => 'boolean',
         'cc_orderclass_dictid_verified' => 'boolean',
         'cc_loadedempty_dictid_verified' => 'boolean',
@@ -304,8 +301,7 @@ class Order extends Model implements Auditable
         'vessel_dictid_verified' => 'sometimes|nullable',
         'cc_loadtype_dictid' => 'sometimes|nullable',
         'cc_loadtype_dictid_verified' => 'sometimes|nullable',
-        'cc_orderstatus_dictid' => 'sometimes|nullable',
-        'cc_orderstatus_dictid_verified' => 'sometimes|nullable',
+        'cc_orderstatus' => 'sometimes|nullable',
         'cc_haulclass_dictid' => 'sometimes|nullable',
         'cc_haulclass_dictid_verified' => 'sometimes|nullable',
         'cc_orderclass_dictid' => 'sometimes|nullable',
@@ -334,7 +330,6 @@ class Order extends Model implements Auditable
         'vessel_dictid_verified' => AttributeVerified::class,
         'itgcontainer_dictid_verified' => AttributeVerified::class,
         'cc_loadtype_dictid_verified' => AttributeVerified::class,
-        'cc_orderstatus_dictid_verified' => AttributeVerified::class,
         'cc_haulclass_dictid_verified' => AttributeVerified::class,
         'cc_orderclass_dictid_verified' => AttributeVerified::class,
         'cc_loadedempty_dictid_verified' => AttributeVerified::class,
@@ -415,11 +410,6 @@ class Order extends Model implements Auditable
     public function ccLoadtype()
     {
         return $this->belongsTo(DictionaryItem::class, 'cc_loadtype_dictid');
-    }
-
-    public function ccOrderStatus()
-    {
-        return $this->belongsTo(DictionaryItem::class, 'cc_orderstatus_dictid');
     }
 
     public function ccHaulClass()

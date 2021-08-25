@@ -21,7 +21,6 @@ class CreateOrUpdateCacheEntry implements ShouldQueue
         'carrier_dictid_verified' => DictionaryItem::CARRIER_TYPE,
         'vessel_dictid_verified' => DictionaryItem::VESSEL_TYPE,
         'cc_loadtype_dictid_verified' => DictionaryItem::CC_LOADTYPE_TYPE,
-        'cc_orderstatus_dictid_verified' => DictionaryItem::CC_ORDERSTATUS_TYPE,
         'cc_haulclass_dictid_verified' => DictionaryItem::CC_HAULCLASS_TYPE,
         'cc_orderclass_dictid_verified' => DictionaryItem::CC_ORDERCLASS_TYPE,
         'cc_loadedempty_dictid_verified' => DictionaryItem::CC_LOADEDEMPTY_TYPE,
