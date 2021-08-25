@@ -192,8 +192,8 @@ export default {
   },
 
   beforeMount () {
-    this.$root.$on(events.orderReplicated, () => this.refreshRequests())
-    this.$root.$on(events.orderDeleted, () => this.filtersUpdated([]))
+    this.$root.$on(events.orderReplicated, this.refreshRequests)
+    this.$root.$on(events.orderDeleted, this.orderDeleted)
   },
 
   async mounted () {
@@ -220,6 +220,7 @@ export default {
     this.leaveRequestStatusUpdatesChannel()
     this.releaseLockRequest({ requestId: this.requestIdSelected })
     this.resetPagination()
+    this.removeRootListeners()
   },
 
   methods: {
@@ -231,6 +232,18 @@ export default {
       updateRequestStatus: requestsListTypes.updateRequestStatus,
     }),
     formatDate,
+
+    removeRootListeners () {
+      this.$root.$off(events.orderReplicated, this.refreshRequests)
+      this.$root.$off(events.orderDeleted, this.orderDeleted)
+      this.$root.$off(events.lockClaimed, this.lockClaimed)
+      this.$root.$off(events.lockReleased, this.stopRefreshingLock)
+      this.$root.$off(events.lockRefreshFailed, this.stopRefreshingLock)
+    },
+
+    orderDeleted () {
+      this.filtersUpdated([])
+    },
 
     clearFilters () {
       this.$refs.requestFilters.clearFilters()
@@ -291,10 +304,14 @@ export default {
       })
     },
 
+    lockClaimed (request) {
+      this.startRefreshingLock(request.request_id)
+    },
+
     initializeLockingListeners () {
-      this.$root.$on(events.lockClaimed, request => this.startRefreshingLock(request.request_id))
-      this.$root.$on(events.lockReleased, request => this.stopRefreshingLock())
-      this.$root.$on(events.lockRefreshFailed, request => this.stopRefreshingLock())
+      this.$root.$on(events.lockClaimed, this.lockClaimed)
+      this.$root.$on(events.lockReleased, this.stopRefreshingLock)
+      this.$root.$on(events.lockRefreshFailed, this.stopRefreshingLock)
       if (!this.hasPermission('object-locks-create')) {
         return
       }

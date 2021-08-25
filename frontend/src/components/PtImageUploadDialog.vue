@@ -193,6 +193,10 @@ export default {
     }
   },
 
+  beforeDestroy () {
+    this.$root.$off(events.openPtFileUploadDialog, this.handleOpen)
+  },
+
   created () {
     this.$root.$on(events.openPtFileUploadDialog, this.handleOpen)
   },

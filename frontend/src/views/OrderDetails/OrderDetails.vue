@@ -202,6 +202,7 @@ export default {
       this.$echo.leave('object-locking')
     }
     this.leaveRequestStatusUpdatesChannel(`-order${this.order.id}`)
+    this.removeRootListeners()
   },
 
   methods: {
@@ -221,40 +222,61 @@ export default {
       await this.initializeLock()
     },
 
+    async refreshOrderFromRequest (request) {
+      if (this.refreshLock) return
+
+      this.orderIdToLoad = request.first_order_id
+      await this.fetchFormData()
+    },
+
+    lockReleased (request) {
+      this.setOrderLock({ locked: true, ocrRequestLocked: false, lock: null })
+    },
+
+    lockClaimed (request) {
+      if (request.request_id !== this.order.request_id) {
+        return
+      }
+
+      this.setOrderLock({ locked: false, ocrRequestLocked: false, lock: null })
+    },
+
+    objectLocked (e) {
+      const { objectLock: lock = undefined } = e
+
+      if (lock.object_id !== this.order.request_id) {
+        return
+      }
+
+      this.setOrderLock({ locked: true, ocrRequestLocked: true, lock })
+    },
+
+    objectUnlocked (e) {
+      const { objectLock: lock = undefined } = e
+
+      if (lock.object_id !== this.order.request_id) {
+        return
+      }
+
+      this.setOrderLock({ locked: true, ocrRequestLocked: false, lock: null })
+    },
+
+    removeRootListeners () {
+      this.$root.$off(events.requestsRefreshed, this.refreshOrderFromRequest)
+      this.$root.$off(events.lockReleased, this.lockReleased)
+      this.$root.$off(events.lockRefreshFailed, this.stopRefreshingLock)
+      this.$root.$off(events.lockClaimed, this.lockClaimed)
+      this.$root.$off(events.objectLocked, this.objectLocked)
+      this.$root.$off(events.objectUnlocked, this.objectUnlocked)
+    },
+
     initializeLockingListeners () {
-      this.$root.$on(events.requestsRefreshed, async (request) => {
-        if (this.refreshLock) return
-
-        this.orderIdToLoad = request.first_order_id
-        await this.fetchFormData()
-      })
-      this.$root.$on(events.lockReleased, request => this.setOrderLock({ locked: true, ocrRequestLocked: false, lock: null }))
-      this.$root.$on(events.lockRefreshFailed, () => this.stopRefreshingLock())
-      this.$root.$on(events.lockClaimed, request => {
-        if (request.request_id !== this.order.request_id) {
-          return
-        }
-
-        this.setOrderLock({ locked: false, ocrRequestLocked: false, lock: null })
-      })
-      this.$root.$on(events.objectLocked, e => {
-        const { objectLock: lock = undefined } = e
-
-        if (lock.object_id !== this.order.request_id) {
-          return
-        }
-
-        this.setOrderLock({ locked: true, ocrRequestLocked: true, lock })
-      })
-      this.$root.$on(events.objectUnlocked, e => {
-        const { objectLock: lock = undefined } = e
-
-        if (lock.object_id !== this.order.request_id) {
-          return
-        }
-
-        this.setOrderLock({ locked: true, ocrRequestLocked: false, lock: null })
-      })
+      this.$root.$on(events.requestsRefreshed, this.refreshOrderFromRequest)
+      this.$root.$on(events.lockReleased, this.lockReleased)
+      this.$root.$on(events.lockRefreshFailed, this.stopRefreshingLock)
+      this.$root.$on(events.lockClaimed, this.lockClaimed)
+      this.$root.$on(events.objectLocked, this.objectLocked)
+      this.$root.$on(events.objectUnlocked, this.objectUnlocked)
 
       if (!this.refreshLock || this.supervise || !this.hasPermission('object-locks-create')) {
         return
