@@ -1443,18 +1443,30 @@ export default {
       this.loading = true
       await this.setConfirmationDialog({
         title: 'Are you sure you want to replicate this order?',
-        onConfirm: async () => {
+        text: 'How many new additional orders need to be created?',
+        hasInputValue: true,
+        inputProps: {
+          type: 'number',
+          min: 1,
+          max: 50,
+          'hide-details': false,
+        },
+        validate: true,
+        onConfirm: async (userInput) => {
           this.loading = true
-          const [error] = await replicateOrder(orderId)
+          let counter = 0
           let message = ''
-
-          if (!error) {
+          const maxCounter = !!Number(userInput) && Number(userInput)
+          if (maxCounter) {
+            this.setSnackbar({ message: 'Processing the order(s), please wait...', timeout: -1 })
+            for (let i = 0; i < maxCounter; i++) {
+              const [error] = await replicateOrder(orderId)
+              if (!error) counter++
+            }
+            message = `${counter} of ${maxCounter} order(s) replicated successfully`
             this.loading = false
-            message = 'Order replicated'
-          } else {
-            message = 'Error trying to replicate the order'
+            await this.setSnackbar({ message })
           }
-          await this.setSnackbar({ message })
         },
         onCancel: () => {
           this.loading = false
