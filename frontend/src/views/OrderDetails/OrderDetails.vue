@@ -15,7 +15,7 @@
             :redirect-back="redirectBack"
             :options="formOptions"
             :refresh-lock="refreshLock"
-            @order-deleted="$emit('order-deleted')"
+            @order-deleted="$emit(events.orderDeleted)"
             @order-replicated="$emit(events.orderReplicated)"
             @go-back="$emit('go-back')"
             @refresh="fetchFormData"
