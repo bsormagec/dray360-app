@@ -48,7 +48,8 @@
             :request="request"
             :active="requestIdSelected === request.request_id"
             @change="handleChange"
-            @deleteRequest="refreshRequests"
+            @request-deleted="requestDeleted"
+            @reload-request="refreshRequests"
           />
           <v-divider />
         </div>
@@ -199,6 +200,7 @@ export default {
     this.initFilters.updateType = params.updateType
     this.requestIdSelected = params.selected || null
   },
+
   async mounted () {
     this.addScrollEventToFetchMoreRequests()
     this.startLoading()
@@ -215,6 +217,7 @@ export default {
       this.handleChange({ ...this.requestSelected })
     }
   },
+
   beforeDestroy () {
     this.stopPolling()
     this.stopRefreshingLock()
@@ -235,9 +238,11 @@ export default {
       updateRequestStatus: requestsListTypes.updateRequestStatus,
     }),
     formatDate,
+
     clearFilters () {
       this.$refs.requestFilters.clearFilters()
     },
+
     async filtersUpdated (filters) {
       this.filters = [...filters]
       this.startLoading()
@@ -246,6 +251,12 @@ export default {
       await this.fetchRequests()
       this.handleChange({ request_id: null, lock: null })
     },
+
+    async requestDeleted () {
+      await this.refreshRequests()
+      this.handleChange({ request_id: null, lock: null })
+    },
+
     async refreshRequests () {
       this.$root.$emit(events.requestsRefreshed)
       this.startLoading()
@@ -253,9 +264,11 @@ export default {
       this.setURLParams()
       await this.fetchRequests()
     },
+
     initializeFilters () {
       this.filters = [...this.$refs.requestFilters.getActiveFilters()]
     },
+
     initializeStateUpdatesListeners () {
       this.listenToRequestStatusUpdates(({ latestStatus, requestId } = {}) => {
         if (latestStatus.order_id) {
@@ -277,6 +290,7 @@ export default {
         this.handleChange(cloneDeep(this.items[index]))
       })
     },
+
     initializeLockingListeners () {
       this.$root.$on(events.lockClaimed, request => this.startRefreshingLock(request.request_id))
       this.$root.$on(events.lockReleased, request => this.stopRefreshingLock())
@@ -345,11 +359,13 @@ export default {
           })
         })
     },
+
     addScrollEventToFetchMoreRequests () {
       this.$refs.virtualScroll.$el.addEventListener('scroll', () => {
         this.bottom = this.isBottomVisible()
       })
     },
+
     isBottomVisible () {
       const element = this.$refs.virtualScroll.$el
       const visible = element.clientHeight
@@ -357,6 +373,7 @@ export default {
       const bottomOfPage = visible + element.scrollTop >= pageHeight
       return bottomOfPage || pageHeight < visible
     },
+
     async fetchRequests () {
       const [error, data] = await getRequests(this.getRequestFilters())
 
@@ -368,6 +385,7 @@ export default {
       this.meta = data.meta
       this.loading = false
     },
+
     getRequestFilters () {
       const filterKeyMap = {
         request_id: 'filter[request_id]',
@@ -384,6 +402,7 @@ export default {
 
       return getRequestFilters(this.getFilters(), filterKeyMap)
     },
+
     getFilters () {
       return [
         ...this.filters,
@@ -391,6 +410,7 @@ export default {
         { type: 'selected', value: this.requestIdSelected }
       ]
     },
+
     setURLParams () {
       const filters = [...this.getFilters()].filter(item => item.type !== 'page')
       const filterState = filters.reduce((o, element) => ({ ...o, [element.type]: Array.isArray(element.value) ? element.value.join(',') : element.value }), {})
@@ -433,6 +453,7 @@ export default {
     startLoading () {
       this.loading = true
     },
+
     resetPagination () {
       this.page = 1
       this.setRequests([])
@@ -470,8 +491,7 @@ export default {
     reloadPage () {
       this.changesDetected = false
       this.refreshRequests()
-    }
-
+    },
   }
 }
 </script>
