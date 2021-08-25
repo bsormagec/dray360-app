@@ -406,6 +406,134 @@
           :edit-mode="editMode"
           @change="event => handleChange({ path:'termdiv_dictid', ...event })"
         />
+        <FormFieldInput
+          v-if="fieldShouldBeShown('custom1')"
+          references="custom1"
+          :label="options.labels.custom1 || 'Custom 1'"
+          :value="order.custom1"
+          :edit-mode="editMode"
+          @change="event => handleChange({ path:'custom1', ...event})"
+        />
+        <FormFieldInput
+          v-if="fieldShouldBeShown('custom2')"
+          references="custom2"
+          :label="options.labels.custom2 || 'Custom 2'"
+          :value="order.custom2"
+          :edit-mode="editMode"
+          @change="event => handleChange({ path:'custom2', ...event})"
+        />
+        <FormFieldInput
+          v-if="fieldShouldBeShown('custom3')"
+          references="custom3"
+          :label="options.labels.custom3 || 'Custom 3'"
+          :value="order.custom3"
+          :edit-mode="editMode"
+          @change="event => handleChange({ path:'custom3', ...event})"
+        />
+        <FormFieldInput
+          v-if="fieldShouldBeShown('custom4')"
+          references="custom4"
+          :label="options.labels.custom4 || 'Custom 4'"
+          :value="order.custom4"
+          :edit-mode="editMode"
+          @change="event => handleChange({ path:'custom4', ...event})"
+        />
+        <FormFieldInput
+          v-if="fieldShouldBeShown('custom5')"
+          references="custom5"
+          :label="options.labels.custom5 || 'Custom 5'"
+          :value="order.custom5"
+          :edit-mode="editMode"
+          @change="event => handleChange({ path:'custom5', ...event})"
+        />
+        <FormFieldInput
+          v-if="fieldShouldBeShown('custom6')"
+          references="custom6"
+          :label="options.labels.custom6 || 'Custom 6'"
+          :value="order.custom6"
+          :edit-mode="editMode"
+          @change="event => handleChange({ path:'custom6', ...event})"
+        />
+        <FormFieldInput
+          v-if="fieldShouldBeShown('custom7')"
+          references="custom7"
+          :label="options.labels.custom7 || 'Custom 7'"
+          :value="order.custom7"
+          :edit-mode="editMode"
+          @change="event => handleChange({ path:'custom7', ...event})"
+        />
+        <FormFieldInput
+          v-if="fieldShouldBeShown('custom8')"
+          references="custom8"
+          :label="options.labels.custom8 || 'Custom 8'"
+          :value="order.custom8"
+          :edit-mode="editMode"
+          @change="event => handleChange({ path:'custom8', ...event})"
+        />
+        <FormFieldInput
+          v-if="fieldShouldBeShown('custom9')"
+          references="custom9"
+          :label="options.labels.custom9 || 'Custom 9'"
+          :value="order.custom9"
+          :edit-mode="editMode"
+          @change="event => handleChange({ path:'custom9', ...event})"
+        />
+        <FormFieldInput
+          v-if="fieldShouldBeShown('custom10')"
+          references="custom10"
+          :label="options.labels.custom10 || 'Custom 10'"
+          :value="order.custom10"
+          :edit-mode="editMode"
+          @change="event => handleChange({ path:'custom10', ...event})"
+        />
+        <FormFieldInput
+          v-if="fieldShouldBeShown('pt_ref1_text')"
+          references="pt_ref1_text"
+          :label="options.labels.pt_ref1_text || 'PT ref1 text'"
+          :value="order.pt_ref1_text"
+          :edit-mode="editMode"
+          @change="event => handleChange({ path:'pt_ref1_text', ...event})"
+        />
+        <FormFieldInput
+          v-if="fieldShouldBeShown('pt_ref1_type')"
+          references="pt_ref1_type"
+          :label="options.labels.pt_ref1_type || 'Pt ref1 type'"
+          :value="order.pt_ref1_type"
+          :edit-mode="editMode"
+          @change="event => handleChange({ path:'pt_ref1_type', ...event})"
+        />
+        <FormFieldInput
+          v-if="fieldShouldBeShown('pt_ref2_text')"
+          references="pt_ref2_text"
+          :label="options.labels.pt_ref2_text || 'PT ref2 text'"
+          :value="order.pt_ref2_text"
+          :edit-mode="editMode"
+          @change="event => handleChange({ path:'pt_ref2_text', ...event})"
+        />
+        <FormFieldInput
+          v-if="fieldShouldBeShown('pt_ref2_type')"
+          references="pt_ref2_type"
+          :label="options.labels.pt_ref2_type || 'Pt ref2 type'"
+          :value="order.pt_ref2_type"
+          :edit-mode="editMode"
+          @change="event => handleChange({ path:'pt_ref2_type', ...event})"
+        />
+        <FormFieldInput
+          v-if="fieldShouldBeShown('pt_ref3_text')"
+          references="pt_ref3_text"
+          :label="options.labels.pt_ref3_text || 'PT ref3 text'"
+          :value="order.pt_ref3_text"
+          :edit-mode="editMode"
+          @change="event => handleChange({ path:'pt_ref3_text', ...event})"
+        />
+        <FormFieldInput
+          v-if="fieldShouldBeShown('pt_ref3_type')"
+          references="pt_ref3_type"
+          :label="options.labels.pt_ref3_type || 'Pt ref3 type'"
+          :value="order.pt_ref3_type"
+          :edit-mode="editMode"
+          @change="event => handleChange({ path:'pt_ref3_type', ...event})"
+        />
       </div>
 
       <div class="form__sub-section">
