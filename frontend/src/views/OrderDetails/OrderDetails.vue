@@ -16,6 +16,7 @@
             :options="formOptions"
             :refresh-lock="refreshLock"
             @order-deleted="$emit('order-deleted')"
+            @order-replicated="$emit(events.orderReplicated)"
             @go-back="$emit('go-back')"
             @refresh="fetchFormData"
             @lock-requested="handleClaimLock"
@@ -150,6 +151,11 @@ export default {
     ...mapState(orderForm.moduleName, {
       order: state => state.order
     }),
+
+    events () {
+      return events
+    },
+
     companyConfiguration () {
       return get(this.currentOrder, 'company.configuration', {})
     },
@@ -216,7 +222,12 @@ export default {
     },
 
     initializeLockingListeners () {
-      this.$root.$on(events.requestsRefreshed, () => !this.refreshLock && this.fetchFormData())
+      this.$root.$on(events.requestsRefreshed, async (request) => {
+        if (this.refreshLock) return
+
+        this.orderIdToLoad = request.first_order_id
+        await this.fetchFormData()
+      })
       this.$root.$on(events.lockReleased, request => this.setOrderLock({ locked: true, ocrRequestLocked: false, lock: null }))
       this.$root.$on(events.lockRefreshFailed, () => this.stopRefreshingLock())
       this.$root.$on(events.lockClaimed, request => {
