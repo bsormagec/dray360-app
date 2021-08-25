@@ -258,11 +258,11 @@ export default {
     },
 
     async refreshRequests () {
-      this.$root.$emit(events.requestsRefreshed)
       this.startLoading()
       this.resetPagination()
       this.setURLParams()
       await this.fetchRequests()
+      this.$root.$emit(events.requestsRefreshed)
     },
 
     initializeFilters () {
