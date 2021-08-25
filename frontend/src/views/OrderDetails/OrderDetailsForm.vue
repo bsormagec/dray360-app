@@ -822,7 +822,7 @@
       >
         <div class="form__section-title">
           <h3 :id="sections.bill_to.id">
-            {{ options.labels.bill_to_address|| sections.bill_to.label }}
+            {{ options.labels.bill_to_address || sections.bill_to.label }}
           </h3>
         </div>
         <div class="section__rootfields">
@@ -852,6 +852,29 @@
         :section-name="sections.bill_to.label"
         :section-id="sections.bill_to.id"
       />
+      <div
+        v-if="fieldShouldBeShown('ssrr_location_address')"
+        class="form__sub-section"
+      >
+        <div class="form__section-title">
+          <h3 :id="sections.ssrr_location_address.id">
+            {{ options.labels.ssrr_location_address || sections.ssrr_location_address.label }}
+          </h3>
+        </div>
+        <div class="section__rootfields">
+          <FormFieldAddressSwitchVerify
+            v-if="fieldShouldBeShown('ssrr_location_address')"
+            :recognized-text="order.ssrr_location_address_raw_text || 'Address not recognized'"
+            :verified="order.ssrr_location_address_verified"
+            :matched-address="order.ssrr_location_address"
+            references="ssrr_location_address"
+            :edit-mode="false"
+            ssrr
+            v-bind="{...addressSearchProps}"
+            @change="event => handleChange({ path:'ssrr_location_address', value: event, saveAll: event.saveAll })"
+          />
+        </div>
+      </div>
       <div class="form__sub-section">
         <div class="form__section-title">
           <h3 :id="sections.charges.id">

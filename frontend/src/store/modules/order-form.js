@@ -38,7 +38,8 @@ const initialState = {
     // pickup: { id: 'pickup-section', label: 'Pickup', subsection: false },
     itinerary: { id: 'itinerary-section', label: 'Itinerary', subsection: false },
     notes: { id: 'notes-section', label: 'Notes', subsection: false },
-    inventory: { id: 'inventory-section', label: 'Inventory', subsection: false }
+    inventory: { id: 'inventory-section', label: 'Inventory', subsection: false },
+    ssrr_location_address: { id: 'ssrr-location-section', label: 'SSRR Location', subsection: true, parent: 'shipment' }
   }
 }
 

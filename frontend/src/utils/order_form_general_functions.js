@@ -191,6 +191,11 @@ export function parseChanges ({ path, value, originalOrder }) {
       bill_to_address_id: value.id,
       bill_to_address_verified: true
     }
+  } else if (path === 'ssrr_location_address') {
+    changes = {
+      ssrr_location_address_id: value.id,
+      ssrr_location_address_verified: true
+    }
   } else if (path.includes('order_address_events.')) {
     const index = path.split('.')[1]
     // eslint-disable-next-line camelcase

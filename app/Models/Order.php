@@ -186,6 +186,9 @@ class Order extends Model implements Auditable
         'eta_time',
         'temperature',
         'required_equipment',
+        'ssrr_location_address_id',
+        'ssrr_location_address_verified',
+        'ssrr_location_address_raw_text',
         'custom1',
         'custom2',
         'custom3',
@@ -237,6 +240,7 @@ class Order extends Model implements Auditable
         'cc_containersize_dictid_verified' => 'boolean',
         'cc_containertype_dictid_verified' => 'boolean',
         'eta_date' => 'date:Y-m-d',
+        'ssrr_location_address_verified' => 'boolean',
     ];
 
     /**
@@ -334,6 +338,8 @@ class Order extends Model implements Auditable
         'eta_time' => 'sometimes|nullable',
         'temperature' => 'sometimes|nullable',
         'required_equipment' => 'sometimes|nullable',
+        'ssrr_location_address_id' => 'sometimes|nullable',
+        'ssrr_location_address_verified' => 'sometimes|nullable',
         'custom1' => 'sometimes|nullable',
         'custom2' => 'sometimes|nullable',
         'custom3' => 'sometimes|nullable',
@@ -368,6 +374,7 @@ class Order extends Model implements Auditable
         'termdiv_dictid_verified' => AttributeVerified::class,
         'cc_containersize_dictid_verified' => AttributeVerified::class,
         'cc_containertype_dictid_verified' => AttributeVerified::class,
+        'ssrr_location_address_verified' => AddressVerified::class,
     ];
 
     protected $objectLockType = ObjectLock::REQUEST_OBJECT;
@@ -402,6 +409,11 @@ class Order extends Model implements Auditable
     public function billToAddress()
     {
         return $this->belongsTo(Address::class, 'bill_to_address_id');
+    }
+
+    public function ssrrLocationAddress()
+    {
+        return $this->belongsTo(Address::class, 'ssrr_location_address_id');
     }
 
     public function portRampOfOriginAddress()
@@ -572,6 +584,7 @@ class Order extends Model implements Auditable
             'ocrRequest.latestOcrRequestStatus',
             'orderLineItems',
             'billToAddress',
+            'ssrrLocationAddress',
             'orderAddressEvents',
             'orderAddressEvents.address',
             'equipmentType',

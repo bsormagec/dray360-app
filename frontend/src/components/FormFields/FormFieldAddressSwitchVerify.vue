@@ -116,6 +116,7 @@ export default {
     matchedAddress: { required: true },
     terminal: { type: Boolean, required: false, default: false },
     billable: { type: Boolean, required: false, default: false },
+    ssrr: { type: Boolean, required: false, default: false },
     editMode: { required: true, type: Boolean },
     enableAddressFilters: { type: Boolean, required: false, default: true },
     enableSearch: { type: Boolean, required: false, default: false },
@@ -130,7 +131,8 @@ export default {
       tms_provider_id: null,
       rawtext: '',
       is_terminal_address: vm.terminal,
-      is_billable_address: vm.billable
+      is_billable_address: vm.billable,
+      is_ssrr_address: vm.ssrr,
     }
   }),
 
