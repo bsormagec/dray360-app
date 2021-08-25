@@ -1466,6 +1466,7 @@ export default {
             message = `${counter} of ${maxCounter} order(s) replicated successfully`
             this.loading = false
             await this.setSnackbar({ message })
+            this.$emit(events.orderReplicated)
           }
         },
         onCancel: () => {

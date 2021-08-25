@@ -229,6 +229,7 @@ import { formatDate } from '@/utils/dates'
 import utils, { actionTypes as utilsActionTypes } from '@/store/modules/utils'
 import { getOrders, delDeleteOrder, updateOrderDetail, replicateOrder } from '@/store/api_calls/orders'
 import { getRequestFilters } from '@/utils/filters_handling'
+import events from '@/enums/events'
 
 import { mapState, mapActions } from 'vuex'
 import OutlinedButtonGroup from '@/components/General/OutlinedButtonGroup'
@@ -494,9 +495,7 @@ export default {
             this.loading = false
             message = 'Order deleted'
             this.resetFilters()
-            if (this.orders.length <= 2) {
-              this.$emit('order-deleted')
-            }
+            this.$emit('order-deleted')
           } else {
             message = 'Error trying to delete the order'
           }
@@ -534,7 +533,7 @@ export default {
             }
             message = `${counter} of ${maxCounter} order(s) replicated successfully`
             this.resetFilters()
-            this.$emit('order-deleted')
+            this.$emit(events.orderReplicated)
             this.loading = false
             await this.setSnackbar({ message })
           }

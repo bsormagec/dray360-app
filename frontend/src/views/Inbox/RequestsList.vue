@@ -109,7 +109,6 @@ import RequestItem from './RequestItem'
 import LockButtonEnabler from '@/components/LockButtonEnabler'
 
 import { mapActions, mapState } from 'vuex'
-import orders, { types as ordersTypes } from '@/store/modules/orders'
 import requestsList, { types as requestsListTypes } from '@/store/modules/requests-list'
 import utils, { actionTypes as utilsActionTypes } from '@/store/modules/utils'
 
@@ -158,9 +157,6 @@ export default {
     }
   },
   computed: {
-    ...mapState(orders.moduleName, {
-      reloadRequests: state => state.reloadRequests
-    }),
     ...mapState(requestsList.moduleName, {
       items: state => state.requests,
       supervise: state => state.supervise,
@@ -178,12 +174,6 @@ export default {
       this.startLoading()
       this.fetchRequests()
     },
-    reloadRequests () {
-      if (this.reloadRequests) {
-        this.filtersUpdated([])
-        this.setReloadRequests(false)
-      }
-    }
   },
   created () {
     const params = this.$route.query
@@ -199,6 +189,11 @@ export default {
       .filter(item => !isNaN(item))
     this.initFilters.updateType = params.updateType
     this.requestIdSelected = params.selected || null
+  },
+
+  beforeMount () {
+    this.$root.$on(events.orderReplicated, this.refreshRequests)
+    this.$root.$on(events.orderDeleted, this.orderDeleted)
   },
 
   async mounted () {
@@ -225,19 +220,30 @@ export default {
     this.leaveRequestStatusUpdatesChannel()
     this.releaseLockRequest({ requestId: this.requestIdSelected })
     this.resetPagination()
+    this.removeRootListeners()
   },
 
   methods: {
     ...mapActions(utils.moduleName, [utilsActionTypes.setConfirmationDialog]),
-    ...mapActions(orders.moduleName, {
-      setReloadRequests: ordersTypes.setReloadRequests,
-    }),
+
     ...mapActions(requestsList.moduleName, {
       setRequests: requestsListTypes.setRequests,
       appendRequests: requestsListTypes.appendRequests,
       updateRequestStatus: requestsListTypes.updateRequestStatus,
     }),
     formatDate,
+
+    removeRootListeners () {
+      this.$root.$off(events.orderReplicated, this.refreshRequests)
+      this.$root.$off(events.orderDeleted, this.orderDeleted)
+      this.$root.$off(events.lockClaimed, this.lockClaimed)
+      this.$root.$off(events.lockReleased, this.stopRefreshingLock)
+      this.$root.$off(events.lockRefreshFailed, this.stopRefreshingLock)
+    },
+
+    orderDeleted () {
+      this.filtersUpdated([])
+    },
 
     clearFilters () {
       this.$refs.requestFilters.clearFilters()
@@ -262,7 +268,14 @@ export default {
       this.resetPagination()
       this.setURLParams()
       await this.fetchRequests()
-      this.$root.$emit(events.requestsRefreshed)
+
+      const index = this.items.findIndex(item => item.request_id === this.requestIdSelected)
+
+      if (index === -1) return
+
+      const currentRequest = cloneDeep(this.items[index])
+      this.$root.$emit(events.requestsRefreshed, currentRequest)
+      this.handleChange(currentRequest)
     },
 
     initializeFilters () {
@@ -291,10 +304,14 @@ export default {
       })
     },
 
+    lockClaimed (request) {
+      this.startRefreshingLock(request.request_id)
+    },
+
     initializeLockingListeners () {
-      this.$root.$on(events.lockClaimed, request => this.startRefreshingLock(request.request_id))
-      this.$root.$on(events.lockReleased, request => this.stopRefreshingLock())
-      this.$root.$on(events.lockRefreshFailed, request => this.stopRefreshingLock())
+      this.$root.$on(events.lockClaimed, this.lockClaimed)
+      this.$root.$on(events.lockReleased, this.stopRefreshingLock)
+      this.$root.$on(events.lockRefreshFailed, this.stopRefreshingLock)
       if (!this.hasPermission('object-locks-create')) {
         return
       }
