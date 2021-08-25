@@ -1442,8 +1442,8 @@ export default {
     async replicateOrder (orderId) {
       this.loading = true
       await this.setConfirmationDialog({
-        title: 'Are you sure you want to replicate this order?',
-        text: 'How many new additional orders need to be created?',
+        title: 'Replicate Order',
+        text: 'How many additional orders need to be created?',
         hasInputValue: true,
         inputProps: {
           type: 'number',
