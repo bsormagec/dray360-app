@@ -109,6 +109,10 @@ export default {
     }
   },
 
+  beforeDestroy () {
+    this.$root.$off(events.openOrderCommentDialog, this.handleOpen)
+  },
+
   created () {
     this.$root.$on(events.openOrderCommentDialog, this.handleOpen)
   },

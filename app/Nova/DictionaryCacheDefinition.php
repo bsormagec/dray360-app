@@ -44,9 +44,7 @@ class DictionaryCacheDefinition extends Resource
             ID::make(__('ID'), 'id')->sortable(),
             Select::make('Cache Type', 'cache_type')
                 ->options(\App\Models\DictionaryItem::TYPES_LIST_OPTIONS)
-                ->rules([
-                    'required',
-                    ])
+                ->rules(['required'])
                 ->sortable(),
             Boolean::make('Use variant name', 'use_variant_name'),
             Boolean::make('Use bill to address raw text', 'use_bill_to_address_raw_text'),

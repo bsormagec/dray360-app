@@ -1,4 +1,3 @@
-import { reqStatus } from '@/enums/req_status'
 import { updateOrderDetail, updateAllOrders } from '@/store/api_calls/orders'
 import { getHighlights, parseChanges, baseHighlight } from '@/utils/order_form_general_functions'
 import cloneDeep from 'lodash/cloneDeep'
@@ -19,7 +18,8 @@ export const types = {
   stopFieldEdit: 'STOP_FIELD_EDIT',
   addHighlight: 'ADD_HIGHLIGHT',
   setBackupOrder: 'SET_BACKUP_ORDER',
-  cancelEdit: 'CANCEL_EDIT'
+  cancelEdit: 'CANCEL_EDIT',
+  updateOrderStatus: 'UPDATE_ORDER_STATUS',
 }
 
 const initialState = {
@@ -38,7 +38,8 @@ const initialState = {
     // pickup: { id: 'pickup-section', label: 'Pickup', subsection: false },
     itinerary: { id: 'itinerary-section', label: 'Itinerary', subsection: false },
     notes: { id: 'notes-section', label: 'Notes', subsection: false },
-    inventory: { id: 'inventory-section', label: 'Inventory', subsection: false }
+    inventory: { id: 'inventory-section', label: 'Inventory', subsection: false },
+    ssrr_location_address: { id: 'ssrr-location-section', label: 'SSRR Location', subsection: true, parent: 'shipment' }
   }
 }
 
@@ -75,7 +76,18 @@ const mutations = {
     if (ocrRequestLocked !== undefined) {
       state.order.ocr_request_is_locked = ocrRequestLocked
     }
-  }
+  },
+  [types.updateOrderStatus] (state, { latestStatus }) {
+    if (state.order.id !== latestStatus.order_id) {
+      return
+    }
+
+    const order = cloneDeep(state.order)
+    order.ocr_request.latest_ocr_request_status = latestStatus
+
+    state.order = order
+    state.backupOrder = cloneDeep(order)
+  },
 }
 
 const actions = {
@@ -174,7 +186,10 @@ const actions = {
   },
   [types.setOrderLock] ({ commit, state }, { locked, lock, ocrRequestLocked }) {
     commit(types.setOrderLock, { locked, lock, ocrRequestLocked })
-  }
+  },
+  [types.updateOrderStatus] ({ commit }, { latestStatus }) {
+    commit(types.updateOrderStatus, { latestStatus })
+  },
 }
 
 const getters = {

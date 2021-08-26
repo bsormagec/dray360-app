@@ -47,7 +47,6 @@
           <h2 class="h6 d-flex ma-3 primary--text">
             Order AI Fields
             <v-btn
-              v-if="isDefaultFieldMap"
               class="ml-auto"
               color="primary"
               text
@@ -130,7 +129,7 @@ export default {
       abbyy_source_regex: null,
       adminreview_if_missing: false,
       adminreview_validation_regex: null,
-      available: false,
+      available: true,
       cargowise_destination: null,
       compcare_destination: null,
       constant_value: null,
@@ -143,8 +142,8 @@ export default {
       profittools_destination: null,
       screen_hide: false,
       screen_name: null,
-      templateable: false,
-      use_template_value: false,
+      shipment_direction_filter: null,
+      use_template_value: true,
       use_constant_as_default_only: false,
     },
     formChanged: false,
@@ -261,7 +260,7 @@ export default {
       this.setConfirmationDialog({
         open: true,
         title: 'Add new field map',
-        text: 'Please specify the D3 canon name',
+        text: 'Please specify the new property name (usually the same as the d3canon name)',
         hasInputValue: true,
         confirmText: 'Add',
         cancelText: 'Cancel',

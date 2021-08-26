@@ -61,9 +61,7 @@ class DictionaryItem extends Resource
             Code::make('Item Value', 'item_value')->json()->rules(['nullable', 'json']),
             Select::make('Item Type', 'item_type')
                 ->options(\App\Models\DictionaryItem::TYPES_LIST_OPTIONS)
-                ->rules([
-                    'required',
-                ])
+                ->rules(['required'])
                 ->sortable(),
             BelongsTo::make('Company', 'company', Company::class)->nullable(),
             BelongsTo::make('Tms Provider', 'tmsProvider', TmsProvider::class)->nullable(),

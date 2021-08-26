@@ -68,6 +68,8 @@ class RequestsOrdersSharedMetricsQuery
 
     protected function getBaseData(): Collection
     {
+        $startDate = $this->date->clone()->startOfDay()->toDateTimeString();
+        $endDate = $this->date->clone()->endOfDay()->toDateTimeString();
         return DB::table('t_orders ', 'o')
             ->select(['o.request_id'])
             ->addSelect(DB::raw("sum(1) as orders"))
@@ -90,8 +92,8 @@ class RequestsOrdersSharedMetricsQuery
                     ->whereNotNull('l.deleted_at');
             })
             ->whereNull('o.deleted_at')
-            ->whereDate('o.created_at', '>=', $this->date)
-            ->whereDate('o.created_at', '<=', $this->date)
+            ->where('o.created_at', '>=', $startDate)
+            ->where('o.created_at', '<=', $endDate)
             ->where('o.t_company_id', $this->companyId)
             ->groupBy('o.request_id')
             ->get();

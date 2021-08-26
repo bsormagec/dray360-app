@@ -3,8 +3,11 @@ export default {
   lockRefreshFailed: 'lock-refresh-failed',
   lockReleased: 'lock-released',
   requestsRefreshed: 'requests-refresed',
+  orderReplicated: 'order-replicated',
+  orderDeleted: 'order-deleted',
   objectLocked: 'ObjectLocked',
   objectUnlocked: 'ObjectUnlocked',
   openPtFileUploadDialog: 'open-pt-image-upload',
   openOrderCommentDialog: 'open-order-comment-dialog',
+  requestStatusUpdated: 'RequestStatusUpdated',
 }

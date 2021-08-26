@@ -15,14 +15,15 @@
         {{ confirmationDialog.text }}
       </v-card-text>
       <v-card-text v-show="confirmationDialog.hasInputValue">
-        <v-text-field
-          v-model="inputValue"
-          dense
-          flat
-          outlined
-          solo
-          hide-details="true"
-        />
+        <v-form ref="form">
+          <v-text-field
+            ref="userInput"
+            v-model="inputValue"
+            :v-bind="inputFieldAttributes"
+            :type="inputFieldAttributes.type"
+            :rules="rules"
+          />
+        </v-form>
       </v-card-text>
       <v-card-actions>
         <v-spacer />
@@ -37,6 +38,7 @@
         <v-btn
           color="primary"
           text
+          :disabled="confirmationDialog.validate ? !isValid : false"
           @click="acceptDialog"
         >
           {{ confirmationDialog.confirmText }}
@@ -47,19 +49,64 @@
 </template>
 
 <script>
-
-import utils, { actionTypes } from '@/store/modules/utils'
 import { mapActions, mapState } from 'vuex'
+import utils, { actionTypes } from '@/store/modules/utils'
+
 export default {
   name: 'ConfirmationDialog',
-  data () {
-    return {
-      inputValue: ''
+
+  data: () => ({
+    inputValue: '',
+    isValid: false,
+    defaultProps: {
+      type: 'text',
+      dense: true,
+      flat: true,
+      outlined: true,
+      solor: true,
+      'hide-details': true
+    }
+  }),
+
+  computed: {
+    ...mapState(utils.moduleName, { confirmationDialog: state => state.confirmationDialog }),
+
+    inputFieldAttributes () {
+      return {
+        ...this.defaultProps,
+        ...this.confirmationDialog.inputProps,
+      }
+    },
+
+    rules () {
+      const props = this.confirmationDialog.inputProps
+      const rules = []
+
+      if (props.type === 'number') {
+        const number = v => !!Number(v) || 'Value should be a valid number'
+        rules.push(number)
+      }
+
+      if (props.min) {
+        const min = v => {
+          return !(Number(v) < props.min) || `Value should be greater than ${props.min}`
+        }
+        rules.push(min)
+      }
+
+      if (props.max) {
+        const max = v => !(Number(v) > props.max) || `Value should not be greater than ${props.max}`
+        rules.push(max)
+      }
+
+      return rules
     }
   },
-  computed: {
-    ...mapState(utils.moduleName, { confirmationDialog: state => state.confirmationDialog })
+
+  watch: {
+    inputValue: 'validateField',
   },
+
   methods: {
     ...mapActions(utils.moduleName, {
       accept: actionTypes.acceptConfirmationDialog,
@@ -69,6 +116,11 @@ export default {
     acceptDialog () {
       this.accept(this.inputValue)
       this.inputValue = ''
+    },
+
+    validateField () {
+      this.$refs.form.validate()
+      this.isValid = this.$refs.userInput.valid
     }
   }
 }

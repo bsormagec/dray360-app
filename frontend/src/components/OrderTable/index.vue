@@ -224,14 +224,17 @@ import Pagination from './components/Pagination'
 import RequestStatus from '@/components/RequestStatus'
 
 import hasPermission from '@/mixins/permissions'
+import statusUpdatesSubscribe from '@/mixins/status_updates_subscribe'
 import { formatDate } from '@/utils/dates'
 import utils, { actionTypes as utilsActionTypes } from '@/store/modules/utils'
 import { getOrders, delDeleteOrder, updateOrderDetail, replicateOrder } from '@/store/api_calls/orders'
 import { getRequestFilters } from '@/utils/filters_handling'
+import events from '@/enums/events'
 
 import { mapState, mapActions } from 'vuex'
 import OutlinedButtonGroup from '@/components/General/OutlinedButtonGroup'
 import StatusHistoryDialog from '@/views/OrderDetails/StatusHistoryDialog'
+import cloneDeep from 'lodash/cloneDeep'
 
 export default {
   name: 'OrderTable',
@@ -242,7 +245,7 @@ export default {
     Filters,
     StatusHistoryDialog
   },
-  mixins: [hasPermission],
+  mixins: [hasPermission, statusUpdatesSubscribe],
   props: {
     activePage: {
       type: Number,
@@ -358,6 +361,7 @@ export default {
         }
         let sortCol = this.sortColumnDefault
 
+        // eslint-disable-next-line no-prototype-builtins
         if (sortColumnMap.hasOwnProperty(this.options.sortBy.join())) {
           sortCol = sortColumnMap[this.options.sortBy.join()]
         } else if (this.options.sortBy.join() !== '') {
@@ -372,8 +376,10 @@ export default {
       },
       deep: true
     },
-    requestId () {
-      this.getOrderData()
+    async requestId () {
+      this.leaveRequestStatusUpdatesChannel('-orders')
+      await this.getOrderData()
+      this.initializeStateUpdatesListeners()
     }
   },
 
@@ -407,6 +413,7 @@ export default {
   },
 
   mounted () {
+    this.initializeStateUpdatesListeners()
     if (this.waitForRequestId) {
       return
     }
@@ -418,6 +425,7 @@ export default {
   },
 
   beforeDestroy () {
+    this.leaveRequestStatusUpdatesChannel('-orders')
     if (this.waitForRequestId) {
       return
     }
@@ -487,9 +495,7 @@ export default {
             this.loading = false
             message = 'Order deleted'
             this.resetFilters()
-            if (this.orders.length <= 2) {
-              this.$emit('order-deleted')
-            }
+            this.$emit('order-deleted')
           } else {
             message = 'Error trying to delete the order'
           }
@@ -504,21 +510,33 @@ export default {
     async replicateOrder (item) {
       this.loading = true
       await this.setConfirmationDialog({
-        title: 'Are you sure you want to replicate this order?',
-        onConfirm: async () => {
+        title: 'Replicate Order',
+        text: 'How many additional orders need to be created?',
+        hasInputValue: true,
+        inputProps: {
+          type: 'number',
+          min: 1,
+          max: 50,
+          'hide-details': false,
+        },
+        validate: true,
+        onConfirm: async (userInput) => {
           this.loading = true
-          const [error] = await replicateOrder(item.id)
+          let counter = 0
           let message = ''
-
-          if (!error) {
-            this.loading = false
-            message = 'Order replicated'
+          const maxCounter = !!Number(userInput) && Number(userInput)
+          if (maxCounter) {
+            this.setSnackbar({ message: 'Processing the order(s), please wait...', timeout: -1 })
+            for (let i = 0; i < maxCounter; i++) {
+              const [error] = await replicateOrder(item.id)
+              if (!error) counter++
+            }
+            message = `${counter} of ${maxCounter} order(s) replicated successfully`
             this.resetFilters()
-            this.$emit('order-deleted')
-          } else {
-            message = 'Error trying to replicate the order'
+            this.$emit(events.orderReplicated)
+            this.loading = false
+            await this.setSnackbar({ message })
           }
-          await this.setSnackbar({ message })
         },
         onCancel: () => {
           this.loading = false
@@ -682,7 +700,21 @@ export default {
       this.page = pageIndex
       this.setURLParams()
       this.getOrderData()
-    }
+    },
+
+    initializeStateUpdatesListeners () {
+      this.listenToRequestStatusUpdates(({ latestStatus } = {}) => {
+        const index = this.orders.findIndex(item => item.id === latestStatus.order_id)
+        if (index === -1) {
+          return
+        }
+
+        const order = cloneDeep(this.orders[index])
+        order.latest_ocr_request_status = latestStatus
+
+        this.orders.splice(index, 1, order)
+      }, '-orders')
+    },
 
   }
 }
