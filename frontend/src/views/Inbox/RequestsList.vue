@@ -48,7 +48,8 @@
             :request="request"
             :active="requestIdSelected === request.request_id"
             @change="handleChange"
-            @deleteRequest="refreshRequests"
+            @request-deleted="requestDeleted"
+            @reload-request="refreshRequests"
           />
           <v-divider />
         </div>
@@ -108,7 +109,6 @@ import RequestItem from './RequestItem'
 import LockButtonEnabler from '@/components/LockButtonEnabler'
 
 import { mapActions, mapState } from 'vuex'
-import orders, { types as ordersTypes } from '@/store/modules/orders'
 import requestsList, { types as requestsListTypes } from '@/store/modules/requests-list'
 import utils, { actionTypes as utilsActionTypes } from '@/store/modules/utils'
 
@@ -119,8 +119,10 @@ import { formatDate } from '@/utils/dates'
 import permissions from '@/mixins/permissions'
 import locks from '@/mixins/locks'
 import isMobile from '@/mixins/is_mobile'
+import statusUpdatesSubscribe from '@/mixins/status_updates_subscribe'
 import { objectLocks } from '@/enums/app_objects_types'
 import events from '@/enums/events'
+import cloneDeep from 'lodash/cloneDeep'
 
 export default {
   name: 'RequestList',
@@ -129,7 +131,7 @@ export default {
     RequestItem,
     LockButtonEnabler,
   },
-  mixins: [permissions, isMobile, locks],
+  mixins: [permissions, isMobile, locks, statusUpdatesSubscribe],
   data () {
     return {
       bottom: false,
@@ -155,9 +157,6 @@ export default {
     }
   },
   computed: {
-    ...mapState(orders.moduleName, {
-      reloadRequests: state => state.reloadRequests
-    }),
     ...mapState(requestsList.moduleName, {
       items: state => state.requests,
       supervise: state => state.supervise,
@@ -175,12 +174,6 @@ export default {
       this.startLoading()
       this.fetchRequests()
     },
-    reloadRequests () {
-      if (this.reloadRequests) {
-        this.filtersUpdated([])
-        this.setReloadRequests(false)
-      }
-    }
   },
   created () {
     const params = this.$route.query
@@ -197,6 +190,12 @@ export default {
     this.initFilters.updateType = params.updateType
     this.requestIdSelected = params.selected || null
   },
+
+  beforeMount () {
+    this.$root.$on(events.orderReplicated, this.refreshRequests)
+    this.$root.$on(events.orderDeleted, this.orderDeleted)
+  },
+
   async mounted () {
     this.addScrollEventToFetchMoreRequests()
     this.startLoading()
@@ -207,53 +206,112 @@ export default {
     this.initialTotalMeta = this.meta.total
     this.startPolling()
     this.initializeLockingListeners()
+    this.initializeStateUpdatesListeners()
 
     if (this.requestIdSelected) {
       this.handleChange({ ...this.requestSelected })
     }
   },
+
   beforeDestroy () {
     this.stopPolling()
     this.stopRefreshingLock()
     this.$echo.leave('object-locking')
+    this.leaveRequestStatusUpdatesChannel()
     this.releaseLockRequest({ requestId: this.requestIdSelected })
     this.resetPagination()
+    this.removeRootListeners()
   },
 
   methods: {
     ...mapActions(utils.moduleName, [utilsActionTypes.setConfirmationDialog]),
-    ...mapActions(orders.moduleName, {
-      setReloadRequests: ordersTypes.setReloadRequests,
-    }),
+
     ...mapActions(requestsList.moduleName, {
       setRequests: requestsListTypes.setRequests,
       appendRequests: requestsListTypes.appendRequests,
+      updateRequestStatus: requestsListTypes.updateRequestStatus,
     }),
     formatDate,
+
+    removeRootListeners () {
+      this.$root.$off(events.orderReplicated, this.refreshRequests)
+      this.$root.$off(events.orderDeleted, this.orderDeleted)
+      this.$root.$off(events.lockClaimed, this.lockClaimed)
+      this.$root.$off(events.lockReleased, this.stopRefreshingLock)
+      this.$root.$off(events.lockRefreshFailed, this.stopRefreshingLock)
+    },
+
+    orderDeleted () {
+      this.filtersUpdated([])
+    },
+
     clearFilters () {
       this.$refs.requestFilters.clearFilters()
     },
+
     async filtersUpdated (filters) {
       this.filters = [...filters]
       this.startLoading()
       this.resetPagination()
       this.setURLParams()
       await this.fetchRequests()
+      this.handleChange({ request_id: null, lock: null })
     },
+
+    async requestDeleted () {
+      await this.refreshRequests()
+      this.handleChange({ request_id: null, lock: null })
+    },
+
     async refreshRequests () {
-      this.$root.$emit(events.requestsRefreshed)
       this.startLoading()
       this.resetPagination()
       this.setURLParams()
       await this.fetchRequests()
+
+      const index = this.items.findIndex(item => item.request_id === this.requestIdSelected)
+
+      if (index === -1) return
+
+      const currentRequest = cloneDeep(this.items[index])
+      this.$root.$emit(events.requestsRefreshed, currentRequest)
+      this.handleChange(currentRequest)
     },
+
     initializeFilters () {
       this.filters = [...this.$refs.requestFilters.getActiveFilters()]
     },
+
+    initializeStateUpdatesListeners () {
+      this.listenToRequestStatusUpdates(({ latestStatus, requestId } = {}) => {
+        if (latestStatus.order_id) {
+          return
+        }
+
+        this.updateRequestStatus({ latestStatus })
+
+        if (requestId !== this.requestIdSelected) {
+          return
+        }
+
+        const index = this.items.findIndex(item => item.request_id === this.requestIdSelected)
+
+        if (index === -1) {
+          return
+        }
+
+        this.handleChange(cloneDeep(this.items[index]))
+      })
+    },
+
+    lockClaimed (request) {
+      this.startRefreshingLock(request.request_id)
+    },
+
     initializeLockingListeners () {
-      this.$root.$on(events.lockClaimed, request => this.startRefreshingLock(request.request_id))
-      this.$root.$on(events.lockReleased, request => this.stopRefreshingLock())
-      this.$root.$on(events.lockRefreshFailed, request => this.stopRefreshingLock())
+      this.$root.$on(events.lockClaimed, this.lockClaimed)
+      this.$root.$on(events.lockReleased, this.stopRefreshingLock)
+      this.$root.$on(events.lockRefreshFailed, this.stopRefreshingLock)
       if (!this.hasPermission('object-locks-create')) {
         return
       }
@@ -318,11 +376,13 @@ export default {
           })
         })
     },
+
     addScrollEventToFetchMoreRequests () {
       this.$refs.virtualScroll.$el.addEventListener('scroll', () => {
         this.bottom = this.isBottomVisible()
       })
     },
+
     isBottomVisible () {
       const element = this.$refs.virtualScroll.$el
       const visible = element.clientHeight
@@ -330,6 +390,7 @@ export default {
       const bottomOfPage = visible + element.scrollTop >= pageHeight
       return bottomOfPage || pageHeight < visible
     },
+
     async fetchRequests () {
       const [error, data] = await getRequests(this.getRequestFilters())
 
@@ -341,6 +402,7 @@ export default {
       this.meta = data.meta
       this.loading = false
     },
+
     getRequestFilters () {
       const filterKeyMap = {
         request_id: 'filter[request_id]',
@@ -357,6 +419,7 @@ export default {
 
       return getRequestFilters(this.getFilters(), filterKeyMap)
     },
+
     getFilters () {
       return [
         ...this.filters,
@@ -364,6 +427,7 @@ export default {
         { type: 'selected', value: this.requestIdSelected }
       ]
     },
+
     setURLParams () {
       const filters = [...this.getFilters()].filter(item => item.type !== 'page')
       const filterState = filters.reduce((o, element) => ({ ...o, [element.type]: Array.isArray(element.value) ? element.value.join(',') : element.value }), {})
@@ -394,6 +458,8 @@ export default {
         return
       }
 
+      if (newRequest.request_id === null) return
+
       this.attemptToLockRequest({
         requestId: newRequest.request_id,
         lockType: objectLocks.lockTypes.selectRequest,
@@ -404,6 +470,7 @@ export default {
     startLoading () {
       this.loading = true
     },
+
     resetPagination () {
       this.page = 1
       this.setRequests([])
@@ -441,8 +508,7 @@ export default {
     reloadPage () {
       this.changesDetected = false
       this.refreshRequests()
-    }
-
+    },
   }
 }
 </script>

@@ -235,7 +235,8 @@ export default {
         tms_provider_id: null,
         rawtext: '',
         is_terminal_address: false,
-        is_billable_address: false
+        is_billable_address: false,
+        is_ssrr_address: false,
       })
     },
     enableSearch: {

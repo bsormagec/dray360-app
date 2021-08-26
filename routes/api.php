@@ -39,6 +39,7 @@ use App\Http\Controllers\Api\OCRRulesAssignmentController;
 use App\Http\Controllers\Api\Auth\ForgotPasswordController;
 use App\Http\Controllers\Api\OcrRequestReprocessController;
 use App\Http\Controllers\Api\MetricsReportsExportController;
+use App\Http\Controllers\Api\RequestStatusUpdatesController;
 use App\Http\Controllers\Api\OcrRequestsDoneStatusController;
 use App\Http\Controllers\Api\SendRequestOrdersToTmsController;
 use App\Http\Controllers\Api\EquipmentTypesSelectValuesController;
@@ -69,6 +70,10 @@ Route::post('password/reset', [ResetPasswordController::class, 'reset'])
 Route::get('current-tenant', CurrentTenantController::class)
     ->middleware('tenant-aware')
     ->name('current-tenant');
+
+Route::post('request-status-updates', [RequestStatusUpdatesController::class, 'store'])
+    ->withoutMiddleware(\Laravel\Sanctum\Http\Middleware\EnsureFrontendRequestsAreStateful::class)
+    ->name('request-status-updates.store');
 
 // Sanctum Authenticated Routes
 Route::group(['middleware' => ['auth:sanctum', 'impersonate', 'tenant-aware']], function () {

@@ -168,7 +168,7 @@ export default {
     }),
     cleanStrForId,
     handleStartEdit () {
-      if (this.isLocked) {
+      if (this.isLocked || this.onlyHover) {
         return
       }
 
@@ -215,13 +215,16 @@ export default {
       padding-right: rem(12);
 
     }
+
     &:focus {
       outline: var(--v-primary-base) auto 1px;
     }
+
     &.hover-paddingless {
       background-color: rgba($blue--lt, 0.4);
     }
   }
+
   .only-hover {
     width: 100%;
   }

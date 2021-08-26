@@ -257,7 +257,7 @@ export default {
 
           this.setSnackbar({ message: 'Request sent for reprocessing' })
           this.loading = false
-          this.$emit('request-deleted')
+          this.$emit('reload-request')
         }
       })
     },
@@ -278,7 +278,7 @@ export default {
 
           this.setSnackbar({ message: 'Request sent for reimporting' })
           this.loading = false
-          this.$emit('request-deleted')
+          this.$emit('reload-request')
         }
       })
     },
@@ -309,7 +309,7 @@ export default {
           console.log(counters.messages)
 
           this.loading = false
-          this.$emit('request-deleted')
+          this.$emit('reload-request')
         }
       })
     },

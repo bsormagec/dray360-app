@@ -34,7 +34,8 @@
       <RequestItemMenu
         :active="active"
         :request="request"
-        @request-deleted="() => this.$emit('deleteRequest')"
+        @request-deleted="() => this.$emit('request-deleted')"
+        @reload-request="() => this.$emit('reload-request')"
       />
     </div>
     <div class="text-body-2">

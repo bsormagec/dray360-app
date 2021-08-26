@@ -106,7 +106,7 @@
                 </label>
               </v-col>
               <v-col cols="8">
-                <v-select
+                <v-autocomplete
                   v-model="filters.status"
                   :items="statuses"
                   outlined
@@ -128,7 +128,7 @@
                       (+{{ filters.status.length - 1 }} others)
                     </span>
                   </template>
-                </v-select>
+                </v-autocomplete>
               </v-col>
             </v-row>
             <v-row v-if="hasPermission('system-status-filter')">
@@ -142,7 +142,7 @@
                 </label>
               </v-col>
               <v-col cols="8">
-                <v-select
+                <v-autocomplete
                   v-model="filters.system_status"
                   :items="system_statuses"
                   outlined
@@ -164,7 +164,7 @@
                       (+{{ filters.system_status.length - 1 }} others)
                     </span>
                   </template>
-                </v-select>
+                </v-autocomplete>
               </v-col>
             </v-row>
             <v-row v-if="canViewOtherCompanies()">
@@ -178,7 +178,7 @@
                 </label>
               </v-col>
               <v-col cols="8">
-                <v-select
+                <v-autocomplete
                   v-model="filters.company_id"
                   :items="companies"
                   item-value="id"
@@ -202,7 +202,7 @@
                       (+{{ filters.company_id.length - 1 }} others)
                     </span>
                   </template>
-                </v-select>
+                </v-autocomplete>
               </v-col>
             </v-row>
             <v-row v-if="hiddenItemsFilter">
@@ -515,6 +515,7 @@ export default {
       this.onFiltersChange()
     },
     getFilterColor (filter) {
+      // eslint-disable-next-line no-prototype-builtins
       return this.chipColors.hasOwnProperty(filter.type) ? this.chipColors[filter.type] : this.chipColors.default
     },
     setActiveFilters () {

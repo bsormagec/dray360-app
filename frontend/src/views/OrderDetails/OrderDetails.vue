@@ -15,7 +15,8 @@
             :redirect-back="redirectBack"
             :options="formOptions"
             :refresh-lock="refreshLock"
-            @order-deleted="$emit('order-deleted')"
+            @order-deleted="$emit(events.orderDeleted)"
+            @order-replicated="$emit(events.orderReplicated)"
             @go-back="$emit('go-back')"
             @refresh="fetchFormData"
             @lock-requested="handleClaimLock"
@@ -58,6 +59,7 @@
 </template>
 
 <script>
+import statusUpdatesSubscribe from '@/mixins/status_updates_subscribe'
 import permissions from '@/mixins/permissions'
 import locks from '@/mixins/locks'
 
@@ -96,7 +98,7 @@ export default {
     ContainerNotFound
   },
 
-  mixins: [permissions, locks],
+  mixins: [permissions, locks, statusUpdatesSubscribe],
 
   props: {
     orderId: {
@@ -149,6 +151,11 @@ export default {
     ...mapState(orderForm.moduleName, {
       order: state => state.order
     }),
+
+    events () {
+      return events
+    },
+
     companyConfiguration () {
       return get(this.currentOrder, 'company.configuration', {})
     },
@@ -167,9 +174,11 @@ export default {
       if (newOrderId == this.orderIdToLoad) {
         return
       }
+      this.leaveRequestStatusUpdatesChannel(`-order${this.orderIdToLoad}`)
       this.orderIdToLoad = this.orderId
 
       await this.fetchFormData()
+      this.initializeStateUpdatesListeners()
     },
     startingSize: function (newVal, oldVal) {
       this.resizeDiff = newVal
@@ -179,6 +188,7 @@ export default {
 
   async beforeMount () {
     await this.fetchFormData()
+    this.initializeStateUpdatesListeners()
   },
 
   mounted () {
@@ -191,6 +201,8 @@ export default {
       this.releaseLockRequest({ requestId: this.order.request_id })
       this.$echo.leave('object-locking')
     }
+    this.leaveRequestStatusUpdatesChannel(`-order${this.order.id}`)
+    this.removeRootListeners()
   },
 
   methods: {
@@ -199,6 +211,7 @@ export default {
     ...mapActions(orderForm.moduleName, {
       setFormOrder: orderFormTypes.setFormOrder,
       setOrderLock: orderFormTypes.setOrderLock,
+      updateOrderStatus: orderFormTypes.updateOrderStatus,
     }),
 
     async fetchFormData () {
@@ -209,35 +222,61 @@ export default {
       await this.initializeLock()
     },
 
+    async refreshOrderFromRequest (request) {
+      if (this.refreshLock) return
+
+      this.orderIdToLoad = request.first_order_id
+      await this.fetchFormData()
+    },
+
+    lockReleased (request) {
+      this.setOrderLock({ locked: true, ocrRequestLocked: false, lock: null })
+    },
+
+    lockClaimed (request) {
+      if (request.request_id !== this.order.request_id) {
+        return
+      }
+
+      this.setOrderLock({ locked: false, ocrRequestLocked: false, lock: null })
+    },
+
+    objectLocked (e) {
+      const { objectLock: lock = undefined } = e
+
+      if (lock.object_id !== this.order.request_id) {
+        return
+      }
+
+      this.setOrderLock({ locked: true, ocrRequestLocked: true, lock })
+    },
+
+    objectUnlocked (e) {
+      const { objectLock: lock = undefined } = e
+
+      if (lock.object_id !== this.order.request_id) {
+        return
+      }
+
+      this.setOrderLock({ locked: true, ocrRequestLocked: false, lock: null })
+    },
+
+    removeRootListeners () {
+      this.$root.$off(events.requestsRefreshed, this.refreshOrderFromRequest)
+      this.$root.$off(events.lockReleased, this.lockReleased)
+      this.$root.$off(events.lockRefreshFailed, this.stopRefreshingLock)
+      this.$root.$off(events.lockClaimed, this.lockClaimed)
+      this.$root.$off(events.objectLocked, this.objectLocked)
+      this.$root.$off(events.objectUnlocked, this.objectUnlocked)
+    },
+
     initializeLockingListeners () {
-      this.$root.$on(events.requestsRefreshed, () => !this.refreshLock && this.fetchFormData())
-      this.$root.$on(events.lockReleased, request => this.setOrderLock({ locked: true, ocrRequestLocked: false, lock: null }))
-      this.$root.$on(events.lockRefreshFailed, () => this.stopRefreshingLock())
-      this.$root.$on(events.lockClaimed, request => {
-        if (request.request_id !== this.order.request_id) {
-          return
-        }
-
-        this.setOrderLock({ locked: false, ocrRequestLocked: false, lock: null })
-      })
-      this.$root.$on(events.objectLocked, e => {
-        const { objectLock: lock = undefined } = e
-
-        if (lock.object_id !== this.order.request_id) {
-          return
-        }
-
-        this.setOrderLock({ locked: true, ocrRequestLocked: true, lock })
-      })
-      this.$root.$on(events.objectUnlocked, e => {
-        const { objectLock: lock = undefined } = e
-
-        if (lock.object_id !== this.order.request_id) {
-          return
-        }
-
-        this.setOrderLock({ locked: true, ocrRequestLocked: false, lock: null })
-      })
+      this.$root.$on(events.requestsRefreshed, this.refreshOrderFromRequest)
+      this.$root.$on(events.lockReleased, this.lockReleased)
+      this.$root.$on(events.lockRefreshFailed, this.stopRefreshingLock)
+      this.$root.$on(events.lockClaimed, this.lockClaimed)
+      this.$root.$on(events.objectLocked, this.objectLocked)
+      this.$root.$on(events.objectUnlocked, this.objectUnlocked)
 
       if (!this.refreshLock || this.supervise || !this.hasPermission('object-locks-create')) {
         return
@@ -365,18 +404,48 @@ export default {
       }
 
       newFormOptions.field_maps = this.currentOrder.field_maps
-
       const { field_maps: fieldMaps } = this.currentOrder
-      for (const key in fieldMaps) {
-        if (fieldMaps[key].screen_hide) {
-          newFormOptions.hidden.push(key)
+
+      const getMapForCanonAndDirection = (d3CanonName, shipmentDirection) => {
+        shipmentDirection = (shipmentDirection || '').trim() || 'empty'
+        const fieldmapByShipdir = {}
+        for (const key in fieldMaps) {
+          if (fieldMaps[key].d3canon_name === d3CanonName) {
+            const shipmentDirectionFilter = (fieldMaps[key].shipment_direction_filter || '').trim() || 'empty'
+            fieldmapByShipdir[shipmentDirectionFilter] = fieldMaps[key]
+          }
         }
-        if (fieldMaps[key].screen_name) {
-          newFormOptions.labels[key] = fieldMaps[key].screen_name
+        // get the best fieldmap match for the order's shipmentDirection
+        const shipdirKeys = Object.keys(fieldmapByShipdir)
+        const index = shipdirKeys.findIndex(item => item.includes(shipmentDirection))
+        if (index === -1) {
+          return fieldmapByShipdir.empty
+        }
+        return fieldmapByShipdir[shipdirKeys[index]]
+      }
+
+      for (const key in fieldMaps) {
+        const d3CanonName = fieldMaps[key].d3canon_name
+        const bestFieldMap = getMapForCanonAndDirection(d3CanonName, this.currentOrder.shipment_direction)
+        if (bestFieldMap.screen_hide) {
+          newFormOptions.hidden.push(d3CanonName)
+        }
+        if (bestFieldMap.screen_name) {
+          newFormOptions.labels[d3CanonName] = bestFieldMap.screen_name
         }
       }
 
       this.formOptions = newFormOptions
+    },
+
+    initializeStateUpdatesListeners () {
+      this.listenToRequestStatusUpdates(({ latestStatus } = {}) => {
+        if (!latestStatus.order_id || latestStatus.order_id !== this.order.id) {
+          return
+        }
+
+        this.updateOrderStatus({ latestStatus })
+      }, `-order${this.order.id}`)
     },
 
     async requestOrderDetail () {

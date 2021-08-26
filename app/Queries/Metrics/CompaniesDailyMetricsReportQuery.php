@@ -2,6 +2,7 @@
 
 namespace App\Queries\Metrics;
 
+use Illuminate\Support\Carbon;
 use App\Models\CompanyDailyMetric;
 use Illuminate\Support\Facades\DB;
 use Spatie\QueryBuilder\QueryBuilder;
@@ -14,6 +15,9 @@ class CompaniesDailyMetricsReportQuery extends QueryBuilder
 
     public function __construct(array $filters)
     {
+        $startDate = Carbon::createFromDate($filters['start_date'])->startOfDay()->toDateTimeString();
+        $endDate = Carbon::createFromDate($filters['end_date'])->endOfDay()->toDateTimeString();
+
         $query = CompanyDailyMetric::query()
             ->select([
                 'c.name as company_name',
@@ -60,8 +64,8 @@ class CompaniesDailyMetricsReportQuery extends QueryBuilder
                 DB::raw("sum(datafile_requests_deleted) as datafile_requests_deleted"),
                 DB::raw("sum(orders) as orders"),
             ])
-            ->whereDate('metric_date', '>=', $filters['start_date'])
-            ->whereDate('metric_date', '<=', $filters['end_date'])
+            ->where('metric_date', '>=', $startDate)
+            ->where('metric_date', '<=', $endDate)
             ->where([
                 ['c.name', 'not like', '%onboarding%'],
                 ['c.name', 'not like', '%demo%'],

@@ -3,6 +3,7 @@
 namespace App\Queries;
 
 use App\Models\OCRRequest;
+use Illuminate\Support\Carbon;
 use App\Models\FeedbackComment;
 use Spatie\QueryBuilder\AllowedSort;
 use Spatie\QueryBuilder\QueryBuilder;
@@ -59,10 +60,12 @@ class FeedbacksListQuery extends QueryBuilder
                 return $query->where('commentable_type', FeedbackComment::CLASSES_MAP[$value]);
             }),
             AllowedFilter::callback('start_date', function ($query, $value) {
-                return $query->whereDate('t_feedback_comments.created_at', '>=', $value);
+                $date = Carbon::createFromDate($value)->startOfDay()->toDateTimeString();
+                return $query->where('t_feedback_comments.created_at', '>=', $date);
             }),
             AllowedFilter::callback('end_date', function ($query, $value) {
-                return $query->whereDate('t_feedback_comments.created_at', '<=', $value);
+                $date = Carbon::createFromDate($value)->endOfDay()->toDateTimeString();
+                return $query->where('t_feedback_comments.created_at', '<=', $date);
             }),
         ])
         ->defaultSort('-t_feedback_comments.created_at', '-t_feedback_comments.id')

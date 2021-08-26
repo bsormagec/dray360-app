@@ -130,7 +130,7 @@
               </h5>
               <RequestItemMenu
                 :request="request"
-                @request-deleted="() => setReloadRequests(true)"
+                @request-deleted="$root.$emit(events.orderDeleted)"
               />
             </div>
             <OrderTable
@@ -149,7 +149,8 @@
                 { text: 'Direction', value: 'shipment_direction', align: 'center' },
                 { text: 'Actions', value: 'actions', sortable: false, align: 'center' }
               ]"
-              @order-deleted="() => setReloadRequests(true)"
+              @order-replicated="$root.$emit(events.orderReplicated)"
+              @order-deleted="$root.$emit(events.orderReplicated)"
             />
           </div>
           <OrderDetails
@@ -158,7 +159,8 @@
             :refresh-lock="false"
             :order-id="request.first_order_id"
             :starting-size="compressed ? 35 : 35"
-            @order-deleted="() => setReloadRequests(true)"
+            @order-deleted="$root.$emit(events.orderDeleted)"
+            @order-replicated="$root.$emit(events.orderReplicated)"
             @go-back="toggleMobileView"
           />
         </div>
@@ -180,13 +182,13 @@ import OrderDetails from '@/views/OrderDetails/OrderDetails'
 import UploadOrdersDialog from './UploadOrdersDialog'
 import PtImageRequestDetails from './PtImageRequestDetails'
 
-import { mapState, mapActions } from 'vuex'
+import { mapState } from 'vuex'
 import permissions from '@/mixins/permissions'
 import auth from '@/store/modules/auth'
-import orders, { types as ordersTypes } from '@/store/modules/orders'
 import get from 'lodash/get'
 import { statuses } from '@/enums/app_objects_types'
 import { isInAdminReview, isPtImageUpload } from '@/utils/status_helpers'
+import events from '@/enums/events'
 
 export default {
   name: 'Inbox',
@@ -227,6 +229,11 @@ export default {
     ...mapState(auth.moduleName, {
       currentUser: state => state.currentUser
     }),
+
+    events () {
+      return events
+    },
+
     emptyRequestText () {
       const requestStatus = get(this.request, 'latest_ocr_request_status.status')
 
@@ -273,9 +280,6 @@ export default {
   },
 
   methods: {
-    ...mapActions(orders.moduleName, {
-      setReloadRequests: ordersTypes.setReloadRequests
-    }),
     shouldShowEmptyProcessingRequest (request) {
       return request.orders_count === 0 ||
         (
@@ -284,7 +288,7 @@ export default {
         )
     },
     handleFilesUploaded () {
-      this.setReloadRequests(true)
+      this.$root.$emit(events.orderDeleted)
       this.openUploadOrdersDialog = false
     },
     requestChanged (request) {

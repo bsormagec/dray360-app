@@ -349,17 +349,14 @@
           :edit-mode="editMode"
           @change="event => handleChange({ path:'cc_loadtype_dictid', ...event })"
         />
-        <FormFieldDictionaryItem
-          v-if="fieldShouldBeShown('cc_orderstatus_dictid')"
-          references="cc_orderstatus_dictid"
-          :label="options.labels.cc_orderstatus_dictid || 'Order Status'"
-          :value="order.cc_orderstatus_dictid"
-          item-text="item_display_name"
-          item-value="id"
-          :item-type="dictionaryItemsTypes.ccOrderStatus"
-          :company-id="order.t_company_id"
+        <FormFieldInput
+          v-if="fieldShouldBeShown('cc_orderstatus')"
+          references="cc_orderstatus"
+          :label="options.labels.cc_orderstatus || 'Order Status'"
+          :value="order.cc_orderstatus"
           :edit-mode="editMode"
-          @change="event => handleChange({ path:'cc_orderstatus_dictid', ...event })"
+          :managed-by-template="managedByTemplate('cc_orderstatus')"
+          @change="event => handleChange({ path:'cc_orderstatus', ...event})"
         />
         <FormFieldDictionaryItem
           v-if="fieldShouldBeShown('cc_haulclass_dictid')"
@@ -408,6 +405,134 @@
           :company-id="order.t_company_id"
           :edit-mode="editMode"
           @change="event => handleChange({ path:'termdiv_dictid', ...event })"
+        />
+        <FormFieldInput
+          v-if="fieldShouldBeShown('custom1')"
+          references="custom1"
+          :label="options.labels.custom1 || 'Custom 1'"
+          :value="order.custom1"
+          :edit-mode="editMode"
+          @change="event => handleChange({ path:'custom1', ...event})"
+        />
+        <FormFieldInput
+          v-if="fieldShouldBeShown('custom2')"
+          references="custom2"
+          :label="options.labels.custom2 || 'Custom 2'"
+          :value="order.custom2"
+          :edit-mode="editMode"
+          @change="event => handleChange({ path:'custom2', ...event})"
+        />
+        <FormFieldInput
+          v-if="fieldShouldBeShown('custom3')"
+          references="custom3"
+          :label="options.labels.custom3 || 'Custom 3'"
+          :value="order.custom3"
+          :edit-mode="editMode"
+          @change="event => handleChange({ path:'custom3', ...event})"
+        />
+        <FormFieldInput
+          v-if="fieldShouldBeShown('custom4')"
+          references="custom4"
+          :label="options.labels.custom4 || 'Custom 4'"
+          :value="order.custom4"
+          :edit-mode="editMode"
+          @change="event => handleChange({ path:'custom4', ...event})"
+        />
+        <FormFieldInput
+          v-if="fieldShouldBeShown('custom5')"
+          references="custom5"
+          :label="options.labels.custom5 || 'Custom 5'"
+          :value="order.custom5"
+          :edit-mode="editMode"
+          @change="event => handleChange({ path:'custom5', ...event})"
+        />
+        <FormFieldInput
+          v-if="fieldShouldBeShown('custom6')"
+          references="custom6"
+          :label="options.labels.custom6 || 'Custom 6'"
+          :value="order.custom6"
+          :edit-mode="editMode"
+          @change="event => handleChange({ path:'custom6', ...event})"
+        />
+        <FormFieldInput
+          v-if="fieldShouldBeShown('custom7')"
+          references="custom7"
+          :label="options.labels.custom7 || 'Custom 7'"
+          :value="order.custom7"
+          :edit-mode="editMode"
+          @change="event => handleChange({ path:'custom7', ...event})"
+        />
+        <FormFieldInput
+          v-if="fieldShouldBeShown('custom8')"
+          references="custom8"
+          :label="options.labels.custom8 || 'Custom 8'"
+          :value="order.custom8"
+          :edit-mode="editMode"
+          @change="event => handleChange({ path:'custom8', ...event})"
+        />
+        <FormFieldInput
+          v-if="fieldShouldBeShown('custom9')"
+          references="custom9"
+          :label="options.labels.custom9 || 'Custom 9'"
+          :value="order.custom9"
+          :edit-mode="editMode"
+          @change="event => handleChange({ path:'custom9', ...event})"
+        />
+        <FormFieldInput
+          v-if="fieldShouldBeShown('custom10')"
+          references="custom10"
+          :label="options.labels.custom10 || 'Custom 10'"
+          :value="order.custom10"
+          :edit-mode="editMode"
+          @change="event => handleChange({ path:'custom10', ...event})"
+        />
+        <FormFieldInput
+          v-if="fieldShouldBeShown('pt_ref1_text')"
+          references="pt_ref1_text"
+          :label="options.labels.pt_ref1_text || 'PT ref1 text'"
+          :value="order.pt_ref1_text"
+          :edit-mode="editMode"
+          @change="event => handleChange({ path:'pt_ref1_text', ...event})"
+        />
+        <FormFieldInput
+          v-if="fieldShouldBeShown('pt_ref1_type')"
+          references="pt_ref1_type"
+          :label="options.labels.pt_ref1_type || 'Pt ref1 type'"
+          :value="order.pt_ref1_type"
+          :edit-mode="editMode"
+          @change="event => handleChange({ path:'pt_ref1_type', ...event})"
+        />
+        <FormFieldInput
+          v-if="fieldShouldBeShown('pt_ref2_text')"
+          references="pt_ref2_text"
+          :label="options.labels.pt_ref2_text || 'PT ref2 text'"
+          :value="order.pt_ref2_text"
+          :edit-mode="editMode"
+          @change="event => handleChange({ path:'pt_ref2_text', ...event})"
+        />
+        <FormFieldInput
+          v-if="fieldShouldBeShown('pt_ref2_type')"
+          references="pt_ref2_type"
+          :label="options.labels.pt_ref2_type || 'Pt ref2 type'"
+          :value="order.pt_ref2_type"
+          :edit-mode="editMode"
+          @change="event => handleChange({ path:'pt_ref2_type', ...event})"
+        />
+        <FormFieldInput
+          v-if="fieldShouldBeShown('pt_ref3_text')"
+          references="pt_ref3_text"
+          :label="options.labels.pt_ref3_text || 'PT ref3 text'"
+          :value="order.pt_ref3_text"
+          :edit-mode="editMode"
+          @change="event => handleChange({ path:'pt_ref3_text', ...event})"
+        />
+        <FormFieldInput
+          v-if="fieldShouldBeShown('pt_ref3_type')"
+          references="pt_ref3_type"
+          :label="options.labels.pt_ref3_type || 'Pt ref3 type'"
+          :value="order.pt_ref3_type"
+          :edit-mode="editMode"
+          @change="event => handleChange({ path:'pt_ref3_type', ...event})"
         />
       </div>
 
@@ -476,6 +601,23 @@
             :value="order.seal_number"
             :edit-mode="editMode"
             @change="event => handleChange({ path:'seal_number', ...event})"
+          />
+          <FormFieldInput
+            v-if="fieldShouldBeShown('temperature')"
+            references="temperature"
+            :label="options.labels.temperature || 'Temperature'"
+            :value="order.temperature"
+            :edit-mode="editMode"
+            type="number"
+            @change="event => handleChange({ path:'temperature', ...event})"
+          />
+          <FormFieldInput
+            v-if="fieldShouldBeShown('required_equipment')"
+            references="required_equipment"
+            :label="options.labels.required_equipment || 'Required Equipment'"
+            :value="order.required_equipment"
+            :edit-mode="editMode"
+            @change="event => handleChange({ path:'required_equipment', ...event})"
           />
           <FormFieldDictionaryItem
             v-if="fieldShouldBeShown('cc_containersize_dictid')"
@@ -601,6 +743,22 @@
             @change="event => handleChange({ path:'voyage', ...event})"
           />
           <FormFieldDate
+            v-if="fieldShouldBeShown('eta_date')"
+            references="eta_date"
+            :label="options.labels.eta_date || 'ETA Date'"
+            :value="order.eta_date"
+            :edit-mode="editMode"
+            @change="event => handleChange({ path: 'eta_date', ...event })"
+          />
+          <FormFieldTimeMask
+            v-if="fieldShouldBeShown('eta_time')"
+            references="eta_time"
+            :label="options.labels.eta_time || 'ETA Time'"
+            :value="order.eta_time"
+            :edit-mode="editMode"
+            @change="event => handleChange({ path:'eta_time', ...event })"
+          />
+          <FormFieldDate
             v-if="fieldShouldBeShown('appointment_date')"
             references="pickup_by_date"
             :label="options.labels.appointment_date || 'Pickup by date'"
@@ -664,7 +822,7 @@
       >
         <div class="form__section-title">
           <h3 :id="sections.bill_to.id">
-            {{ options.labels.bill_to_address|| sections.bill_to.label }}
+            {{ options.labels.bill_to_address || sections.bill_to.label }}
           </h3>
         </div>
         <div class="section__rootfields">
@@ -694,6 +852,29 @@
         :section-name="sections.bill_to.label"
         :section-id="sections.bill_to.id"
       />
+      <div
+        v-if="fieldShouldBeShown('ssrr_location_address')"
+        class="form__sub-section"
+      >
+        <div class="form__section-title">
+          <h3 :id="sections.ssrr_location_address.id">
+            {{ options.labels.ssrr_location_address || sections.ssrr_location_address.label }}
+          </h3>
+        </div>
+        <div class="section__rootfields">
+          <FormFieldAddressSwitchVerify
+            v-if="fieldShouldBeShown('ssrr_location_address')"
+            :recognized-text="order.ssrr_location_address_raw_text || 'Address not recognized'"
+            :verified="order.ssrr_location_address_verified"
+            :matched-address="order.ssrr_location_address"
+            references="ssrr_location_address"
+            :edit-mode="false"
+            ssrr
+            v-bind="{...addressSearchProps}"
+            @change="event => handleChange({ path:'ssrr_location_address', value: event, saveAll: event.saveAll })"
+          />
+        </div>
+      </div>
       <div class="form__sub-section">
         <div class="form__section-title">
           <h3 :id="sections.charges.id">
@@ -1113,8 +1294,7 @@ export default {
     managedByTemplate (field) {
       return this.order.tms_template_dictid !== null &&
         this.enablePtTemplates &&
-        get(this.options.field_maps, `${field}.use_template_value`) &&
-        get(this.options.field_maps, `${field}.templateable`)
+        get(this.options.field_maps, `${field}.use_template_value`)
     },
 
     shipmentDirectionDisplayValue (value) {
@@ -1187,6 +1367,7 @@ export default {
       if (this.isSuperadmin()) {
         await this.setConfirmationDialog({
           title: 'Are you sure you want to send this order to the TMS?',
+          noWrap: true,
           onConfirm,
           onCancel: () => { this.loading = false }
         })
@@ -1261,19 +1442,32 @@ export default {
     async replicateOrder (orderId) {
       this.loading = true
       await this.setConfirmationDialog({
-        title: 'Are you sure you want to replicate this order?',
-        onConfirm: async () => {
+        title: 'Replicate Order',
+        text: 'How many additional orders need to be created?',
+        hasInputValue: true,
+        inputProps: {
+          type: 'number',
+          min: 1,
+          max: 50,
+          'hide-details': false,
+        },
+        validate: true,
+        onConfirm: async (userInput) => {
           this.loading = true
-          const [error] = await replicateOrder(orderId)
+          let counter = 0
           let message = ''
-
-          if (!error) {
+          const maxCounter = !!Number(userInput) && Number(userInput)
+          if (maxCounter) {
+            this.setSnackbar({ message: 'Processing the order(s), please wait...', timeout: -1 })
+            for (let i = 0; i < maxCounter; i++) {
+              const [error] = await replicateOrder(orderId)
+              if (!error) counter++
+            }
+            message = `${counter} of ${maxCounter} order(s) replicated successfully`
             this.loading = false
-            message = 'Order replicated'
-          } else {
-            message = 'Error trying to replicate the order'
+            await this.setSnackbar({ message })
+            this.$emit(events.orderReplicated)
           }
-          await this.setSnackbar({ message })
         },
         onCancel: () => {
           this.loading = false
@@ -1315,6 +1509,7 @@ export default {
     moveObjectPositionInArray (id, direction) {
       const arr = this.order.order_address_events
       if (direction === 'up') {
+        // eslint-disable-next-line eqeqeq
         const index = arr.findIndex(e => e.id == id)
         if (index > 0) {
           const el = arr[index]
@@ -1322,6 +1517,7 @@ export default {
           arr[index - 1] = el
         }
       } else if (direction === 'down') {
+        // eslint-disable-next-line eqeqeq
         const index = arr.findIndex(e => e.id == id)
         if (index !== -1 && index < arr.length - 1) {
           const el = arr[index]

@@ -62,7 +62,6 @@ export function keyShouldBeParsed (key) {
     'carrier_dictid',
     'vessel_dictid',
     'cc_loadtype_dictid',
-    'cc_orderstatus_dictid',
     'cc_haulclass_dictid',
     'cc_orderclass_dictid',
     'cc_loadedempty_dictid',
@@ -162,10 +161,6 @@ export function parseChanges ({ path, value, originalOrder }) {
       boolean_field: 'cc_loadtype_dictid_verified'
     },
     {
-      field: 'cc_orderstatus_dictid',
-      boolean_field: 'cc_orderstatus_dictid_verified'
-    },
-    {
       field: 'cc_haulclass_dictid',
       boolean_field: 'cc_haulclass_dictid_verified'
     },
@@ -195,6 +190,11 @@ export function parseChanges ({ path, value, originalOrder }) {
     changes = {
       bill_to_address_id: value.id,
       bill_to_address_verified: true
+    }
+  } else if (path === 'ssrr_location_address') {
+    changes = {
+      ssrr_location_address_id: value.id,
+      ssrr_location_address_verified: true
     }
   } else if (path.includes('order_address_events.')) {
     const index = path.split('.')[1]

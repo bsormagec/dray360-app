@@ -6,6 +6,7 @@ use stdClass;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Database\Eloquent\Model;
+use OwenIt\Auditing\Contracts\Auditable;
 use App\Models\Traits\EncryptsAttributes;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
@@ -33,8 +34,9 @@ use Illuminate\Database\Eloquent\SoftDeletes;
  * @property boolean sync_addresses
  * @property string $name
  */
-class Company extends Model
+class Company extends Model implements Auditable
 {
+    use \OwenIt\Auditing\Auditable;
     use SoftDeletes;
     use EncryptsAttributes;
 
@@ -118,16 +120,16 @@ class Company extends Model
             $uuid = str_replace('-', '', Str::uuid()->toString());
             $company->email_onboarding_address = "{$env}+{$companyName}_onboarding_{$uuid}@in.dray360.com";
 
-            if (empty($company->configuration)) {
-                $company->configuration = new stdClass();
-            }
+            // if (empty($company->configuration)) {
+            //     $company->configuration = new stdClass();
+            // }
         });
-
-        static::saving(function ($company) {
-            if (empty($company->configuration)) {
-                $company->configuration = new stdClass();
-            }
-        });
+        // Commented to check if these lines are the ones causing the company config becoming empty
+        // static::saving(function ($company) {
+        //     if (empty($company->configuration)) {
+        //         $company->configuration = new stdClass();
+        //     }
+        // });
     }
 
     public function address()

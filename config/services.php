@@ -57,6 +57,7 @@ return [
     'dray360-api' => [
         'url' => env('DRAY360_API_URL', ''),
         'api_key' => env('DRAY360_API_KEY', ''),
-    ]
+        'webhook_key' => env('D3APP_WEBHOOK_KEY', ''),
+    ],
 
 ];

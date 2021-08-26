@@ -50,9 +50,7 @@ class DictionaryCacheEntry extends Resource
             BelongsTo::make('Company', 'company', Company::class)->nullable(),
             Select::make('Cache Type', 'cache_type')
                 ->options(\App\Models\DictionaryItem::TYPES_LIST_OPTIONS)
-                ->rules([
-                    'required',
-                    ])
+                ->rules(['required'])
                 ->sortable(),
             Number::make('Verified Count', 'verified_count')->required(),
             Text::make('Cached variant name', 'cached_variant_name')->sortable()->hideFromIndex(),

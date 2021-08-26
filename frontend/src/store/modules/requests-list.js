@@ -1,6 +1,7 @@
 import { postLockObject, deleteReleaseLock } from '@/store/api_calls/object_locks'
 import { objectLocks } from '@/enums/app_objects_types'
 import toBool from '@/utils/to_bool'
+import cloneDeep from 'lodash/cloneDeep'
 
 export const types = {
   setRequests: 'SET_REQUESTS',
@@ -11,6 +12,7 @@ export const types = {
   wsReleaseLockRequest: 'WS_RELEASE_LOCK_REQUEST',
   toggleSupervise: 'TOGGLE_SUPERVISE',
   setSupervise: 'SET_SUPERVISE',
+  updateRequestStatus: 'UPDATE_REQUEST_STATUS',
 }
 
 const initialState = {
@@ -52,7 +54,18 @@ const mutations = {
   },
   [types.setSupervise] (state, value) {
     state.supervise = value
-  }
+  },
+  [types.updateRequestStatus] (state, { latestStatus }) {
+    const index = state.requests.findIndex(item => item.request_id === latestStatus.request_id)
+    if (index === -1) {
+      return
+    }
+
+    const newRequest = cloneDeep(state.requests[index])
+    newRequest.latest_ocr_request_status = latestStatus
+
+    state.requests.splice(index, 1, newRequest)
+  },
 }
 
 const actions = {
@@ -116,7 +129,10 @@ const actions = {
   [types.setSupervise] ({ commit }, value) {
     localStorage.setItem(types.toggleSupervise, value)
     commit(types.setSupervise, value)
-  }
+  },
+  [types.updateRequestStatus] ({ commit }, { latestStatus }) {
+    commit(types.updateRequestStatus, { latestStatus })
+  },
 }
 
 const getters = {

@@ -164,8 +164,6 @@ class Order extends Model implements Auditable
         'cc_loadtype_dictid',
         'cc_loadtype_dictid_verified',
         'cc_orderstatus',
-        'cc_orderstatus_dictid',
-        'cc_orderstatus_dictid_verified',
         'cc_haulclass',
         'cc_haulclass_dictid',
         'cc_haulclass_dictid_verified',
@@ -184,6 +182,29 @@ class Order extends Model implements Auditable
         'cc_containertype',
         'cc_containertype_dictid',
         'cc_containertype_dictid_verified',
+        'eta_date',
+        'eta_time',
+        'temperature',
+        'required_equipment',
+        'ssrr_location_address_id',
+        'ssrr_location_address_verified',
+        'ssrr_location_address_raw_text',
+        'custom1',
+        'custom2',
+        'custom3',
+        'custom4',
+        'custom5',
+        'custom6',
+        'custom7',
+        'custom8',
+        'custom9',
+        'custom10',
+        'pt_ref1_text',
+        'pt_ref2_text',
+        'pt_ref3_text',
+        'pt_ref1_type',
+        'pt_ref2_type',
+        'pt_ref3_type',
     ];
 
     /**
@@ -212,13 +233,14 @@ class Order extends Model implements Auditable
         'vessel_dictid_verified' => 'boolean',
         'itgcontainer_dictid_verified' => 'boolean',
         'cc_loadtype_dictid_verified' => 'boolean',
-        'cc_orderstatus_dictid_verified' => 'boolean',
         'cc_haulclass_dictid_verified' => 'boolean',
         'cc_orderclass_dictid_verified' => 'boolean',
         'cc_loadedempty_dictid_verified' => 'boolean',
         'termdiv_dictid_verified' => 'boolean',
         'cc_containersize_dictid_verified' => 'boolean',
         'cc_containertype_dictid_verified' => 'boolean',
+        'eta_date' => 'date:Y-m-d',
+        'ssrr_location_address_verified' => 'boolean',
     ];
 
     /**
@@ -299,8 +321,7 @@ class Order extends Model implements Auditable
         'vessel_dictid_verified' => 'sometimes|nullable',
         'cc_loadtype_dictid' => 'sometimes|nullable',
         'cc_loadtype_dictid_verified' => 'sometimes|nullable',
-        'cc_orderstatus_dictid' => 'sometimes|nullable',
-        'cc_orderstatus_dictid_verified' => 'sometimes|nullable',
+        'cc_orderstatus' => 'sometimes|nullable',
         'cc_haulclass_dictid' => 'sometimes|nullable',
         'cc_haulclass_dictid_verified' => 'sometimes|nullable',
         'cc_orderclass_dictid' => 'sometimes|nullable',
@@ -313,6 +334,28 @@ class Order extends Model implements Auditable
         'cc_containersize_dictid_verified' => 'sometimes|nullable',
         'cc_containertype_dictid' => 'sometimes|nullable',
         'cc_containertype_dictid_verified' => 'sometimes|nullable',
+        'eta_date' => 'sometimes|nullable',
+        'eta_time' => 'sometimes|nullable',
+        'temperature' => 'sometimes|nullable',
+        'required_equipment' => 'sometimes|nullable',
+        'ssrr_location_address_id' => 'sometimes|nullable',
+        'ssrr_location_address_verified' => 'sometimes|nullable',
+        'custom1' => 'sometimes|nullable',
+        'custom2' => 'sometimes|nullable',
+        'custom3' => 'sometimes|nullable',
+        'custom4' => 'sometimes|nullable',
+        'custom5' => 'sometimes|nullable',
+        'custom6' => 'sometimes|nullable',
+        'custom7' => 'sometimes|nullable',
+        'custom8' => 'sometimes|nullable',
+        'custom9' => 'sometimes|nullable',
+        'custom10' => 'sometimes|nullable',
+        'pt_ref1_text' => 'sometimes|nullable',
+        'pt_ref2_text' => 'sometimes|nullable',
+        'pt_ref3_text' => 'sometimes|nullable',
+        'pt_ref1_type' => 'sometimes|nullable',
+        'pt_ref2_type' => 'sometimes|nullable',
+        'pt_ref3_type' => 'sometimes|nullable',
     ];
 
     /**
@@ -325,13 +368,13 @@ class Order extends Model implements Auditable
         'vessel_dictid_verified' => AttributeVerified::class,
         'itgcontainer_dictid_verified' => AttributeVerified::class,
         'cc_loadtype_dictid_verified' => AttributeVerified::class,
-        'cc_orderstatus_dictid_verified' => AttributeVerified::class,
         'cc_haulclass_dictid_verified' => AttributeVerified::class,
         'cc_orderclass_dictid_verified' => AttributeVerified::class,
         'cc_loadedempty_dictid_verified' => AttributeVerified::class,
         'termdiv_dictid_verified' => AttributeVerified::class,
         'cc_containersize_dictid_verified' => AttributeVerified::class,
         'cc_containertype_dictid_verified' => AttributeVerified::class,
+        'ssrr_location_address_verified' => AddressVerified::class,
     ];
 
     protected $objectLockType = ObjectLock::REQUEST_OBJECT;
@@ -366,6 +409,11 @@ class Order extends Model implements Auditable
     public function billToAddress()
     {
         return $this->belongsTo(Address::class, 'bill_to_address_id');
+    }
+
+    public function ssrrLocationAddress()
+    {
+        return $this->belongsTo(Address::class, 'ssrr_location_address_id');
     }
 
     public function portRampOfOriginAddress()
@@ -406,11 +454,6 @@ class Order extends Model implements Auditable
     public function ccLoadtype()
     {
         return $this->belongsTo(DictionaryItem::class, 'cc_loadtype_dictid');
-    }
-
-    public function ccOrderStatus()
-    {
-        return $this->belongsTo(DictionaryItem::class, 'cc_orderstatus_dictid');
     }
 
     public function ccHaulClass()
@@ -541,6 +584,7 @@ class Order extends Model implements Auditable
             'ocrRequest.latestOcrRequestStatus',
             'orderLineItems',
             'billToAddress',
+            'ssrrLocationAddress',
             'orderAddressEvents',
             'orderAddressEvents.address',
             'equipmentType',
