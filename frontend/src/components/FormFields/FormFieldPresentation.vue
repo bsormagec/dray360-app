@@ -168,7 +168,7 @@ export default {
     }),
     cleanStrForId,
     handleStartEdit () {
-      if (this.isLocked) {
+      if (this.isLocked || this.onlyHover) {
         return
       }
 
