@@ -9,6 +9,7 @@ use App\Models\TMSProvider;
 use Illuminate\Http\Request;
 use App\Models\CompanyOcrVariant;
 use App\Http\Controllers\Controller;
+use App\Http\Requests\StoreFieldMapRequest;
 use Illuminate\Http\Resources\Json\JsonResource;
 
 class FieldMapsController extends Controller
@@ -40,15 +41,9 @@ class FieldMapsController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(StoreFieldMapRequest $request)
     {
-        $this->authorize('create', FieldMap::class);
-        $data = $request->validate([
-            'company_id' => 'sometimes|nullable|exists:t_companies,id',
-            'variant_id' => 'sometimes|nullable|exists:t_ocrvariants,id',
-            'tms_provider_id' => 'sometimes|nullable|exists:t_tms_providers,id',
-            'fieldmap_config' => 'required|array'
-        ]);
+        $data = $request->validated();
 
         $relatedObject = null;
         $companyId = $data['company_id'] ?? null;

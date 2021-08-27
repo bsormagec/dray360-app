@@ -120,16 +120,22 @@ class Company extends Model implements Auditable
             $uuid = str_replace('-', '', Str::uuid()->toString());
             $company->email_onboarding_address = "{$env}+{$companyName}_onboarding_{$uuid}@in.dray360.com";
 
-            // if (empty($company->configuration)) {
-            //     $company->configuration = new stdClass();
-            // }
+            if (empty($company->configuration)) {
+                $company->configuration = new stdClass();
+            }
         });
-        // Commented to check if these lines are the ones causing the company config becoming empty
-        // static::saving(function ($company) {
-        //     if (empty($company->configuration)) {
-        //         $company->configuration = new stdClass();
-        //     }
-        // });
+
+        static::saving(function ($company) {
+            $configurationLoaded = collect($company->getAttributes())->keys()->contains('configuration');
+
+            if (! $configurationLoaded) {
+                return;
+            }
+
+            if (empty($company->configuration)) {
+                $company->configuration = new stdClass();
+            }
+        });
     }
 
     public function address()

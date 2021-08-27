@@ -291,6 +291,26 @@ class FieldMapsControllerTest extends TestCase
     }
 
     /** @test */
+    public function it_doesnt_delete_the_company_configuration_when_saving_the_field_maps()
+    {
+        $this->company->update(['configuration' => ['test']]);
+        $this->company->refresh();
+        $this->postJson(route('field-maps.store'), [
+                'company_id' => $this->company->id,
+                'fieldmap_config' => FieldMap::getFrom(['tms_provider_id' => $this->company->default_tms_provider_id]),
+            ])
+            ->assertStatus(Response::HTTP_CREATED)
+            ->assertJsonFragment(['fieldmap_config' => []])
+            ->assertJsonStructure([
+                'created_at',
+                'fieldmap_config',
+            ]);
+
+        $this->company->refresh();
+        $this->assertEquals(json_encode(['test']), json_encode($this->company->configuration));
+    }
+
+    /** @test */
     public function it_only_saves_the_difference_from_the_previous_level_when_only_variant_id()
     {
         $this->ocrVariant->refresh();
