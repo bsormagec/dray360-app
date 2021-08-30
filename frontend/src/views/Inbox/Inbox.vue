@@ -192,6 +192,7 @@ import events from '@/enums/events'
 
 export default {
   name: 'Inbox',
+
   components: {
     OrderTable,
     SidebarNavigationButton,
@@ -201,7 +202,9 @@ export default {
     RequestItemMenu,
     PtImageRequestDetails,
   },
+
   mixins: [permissions],
+
   data () {
     return {
       compressed: true,
@@ -225,6 +228,7 @@ export default {
       }
     }
   },
+
   computed: {
     ...mapState(auth.moduleName, {
       currentUser: state => state.currentUser
@@ -252,13 +256,16 @@ export default {
           return { text: 'The request is being processed' }
       }
     },
+
     currentRequestIsPtImageUpload () {
       return isPtImageUpload(this.request?.latest_ocr_request_status?.status)
     },
+
     isMobile () {
       return this.$vuetify.breakpoint.mobile
     },
   },
+
   watch: {
     isMobile: function (newVal, oldVal) {
       if (newVal) {
@@ -272,6 +279,7 @@ export default {
       }
     }
   },
+
   beforeMount () {
     if (!this.isMobile) {
       return
@@ -287,10 +295,12 @@ export default {
           !this.hasPermission('admin-review-view')
         )
     },
-    handleFilesUploaded () {
-      this.$root.$emit(events.orderDeleted)
+
+    handleFilesUploaded (requestsList) {
+      this.$root.$emit(events.requestUploaded, requestsList)
       this.openUploadOrdersDialog = false
     },
+
     requestChanged (request) {
       this.request = request
       if (!this.firstLoad && this.isMobile) {
@@ -299,17 +309,20 @@ export default {
       }
       this.firstLoad = false
     },
+
     toggleMobileView () {
       this.firstLoad = true
       this.displayStatus.orderDetail = false
       this.displayStatus.requestList = true
     },
+
     toggleCompress () {
       this.compressed = !this.compressed
     }
   }
 }
 </script>
+
 <style lang="scss" scoped>
 .no-gutters > .col, .no-gutters > [class*=c-] {
     padding: 0;

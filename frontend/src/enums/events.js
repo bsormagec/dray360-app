@@ -3,6 +3,7 @@ export default {
   lockRefreshFailed: 'lock-refresh-failed',
   lockReleased: 'lock-released',
   requestsRefreshed: 'requests-refresed',
+  requestUploaded: 'request-uploaded',
   orderReplicated: 'order-replicated',
   orderDeleted: 'order-deleted',
   objectLocked: 'ObjectLocked',

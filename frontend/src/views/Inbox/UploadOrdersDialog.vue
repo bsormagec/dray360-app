@@ -221,20 +221,23 @@ export default {
         return
       }
 
-      let error = false
+      let failed = false
+      const requestsList = []
       for (let index = 0; index < this.files.length; index++) {
-        const success = await this.uploadFile(this.files[index])
-        if (!success) {
-          error = true
+        const [error, data] = await this.uploadFile(this.files[index])
+        if (error !== undefined) {
+          failed = true
+        } else {
+          requestsList.push(data)
         }
       }
 
       this.setSnackbar({
-        message: error ? 'There was an error uploading the file(s)' : 'File(s) uploaded successfully',
+        message: failed ? 'There was an error uploading the file(s)' : 'File(s) uploaded successfully',
       })
       this.variantName = null
       this.files = []
-      this.$emit('uploaded')
+      this.$emit('uploaded', requestsList)
     },
 
     async uploadFile (file) {
@@ -242,8 +245,9 @@ export default {
       if (this.canViewOtherCompanies()) {
         params.company_id = this.company_id
       }
-      const [error] = await postUploadRequestFile(file, params)
-      return error === undefined
+      const [error, data] = await postUploadRequestFile(file, params)
+
+      return [error, data]
     },
 
     async fetchVariantsForFiles () {
