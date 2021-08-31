@@ -140,6 +140,7 @@
             :back-button="false"
             :refresh-lock="false"
             :order-id="request.first_order_id"
+            :details-only="displayStatus.requestList"
             @order-deleted="$root.$emit(events.orderDeleted)"
             @order-replicated="$root.$emit(events.orderReplicated)"
             @go-back="toggleMobileView"

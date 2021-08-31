@@ -1,7 +1,11 @@
 <template>
   <div
     v-if="hasImageFile"
-    :class="`document ${loadedImages === pages.length ? 'loaded' : ''}`"
+    :class="{
+      'document': true,
+      'loaded': loadedImages === pages.length,
+      'details-only': !detailsOnly
+    }"
   >
     <div
       v-for="(page, index) in pages"
@@ -84,6 +88,14 @@ export default {
   name: 'OrderDetailsDocument',
 
   mixins: [isMobile],
+
+  props: {
+    detailsOnly: {
+      type: Boolean,
+      required: false,
+      default: false
+    }
+  },
 
   data: () => ({
     loadedImages: 0
@@ -202,6 +214,10 @@ export default {
     & .document__page {
       min-width: 100%;
     }
+  }
+
+  &.details-only {
+    height: calc(100vh - #{rem(40)});
   }
 }
 
