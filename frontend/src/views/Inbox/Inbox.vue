@@ -9,28 +9,11 @@
           v-if="displayStatus.requestList"
           :class="{
             'requests__section': true,
-            'c-2': compressed,
-            'col-3': !compressed,
+            'c-2': !isMobile,
             'col-12': isMobile,
           }"
         >
           <div class="inbox__title">
-            <v-btn
-              v-if="!isMobile"
-              icon
-              dense
-              small
-              dark
-              class="requests__section_collapse"
-              @click="toggleCompress"
-            >
-              <v-icon
-                medium
-                white
-              >
-                {{ !compressed ? 'mdi-unfold-less-vertical' : 'mdi-unfold-more-vertical' }}
-              </v-icon>
-            </v-btn>
             <SidebarNavigationButton />
             <div class="inbox__title_description">
               Requests Inbox
@@ -61,8 +44,7 @@
           v-if="displayStatus.orderDetail"
           :class="{
             'request__orders':true,
-            'col-9': !compressed,
-            'c-10': compressed,
+            'c-10': !isMobile,
             'col-12': isMobile,
           }"
         >
@@ -158,7 +140,6 @@
             :back-button="false"
             :refresh-lock="false"
             :order-id="request.first_order_id"
-            :starting-size="compressed ? 35 : 35"
             @order-deleted="$root.$emit(events.orderDeleted)"
             @order-replicated="$root.$emit(events.orderReplicated)"
             @go-back="toggleMobileView"
@@ -207,7 +188,6 @@ export default {
 
   data () {
     return {
-      compressed: true,
       openUploadOrdersDialog: false,
       request: {
         first_order_id: null,
@@ -271,11 +251,9 @@ export default {
       if (newVal) {
         this.displayStatus.requestList = true
         this.displayStatus.orderDetail = false
-        this.compressed = false
       } else {
         this.displayStatus.requestList = true
         this.displayStatus.orderDetail = true
-        this.compressed = true
       }
     }
   },
@@ -314,10 +292,6 @@ export default {
       this.firstLoad = true
       this.displayStatus.orderDetail = false
       this.displayStatus.requestList = true
-    },
-
-    toggleCompress () {
-      this.compressed = !this.compressed
     }
   }
 }

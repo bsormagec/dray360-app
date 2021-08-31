@@ -115,16 +115,11 @@ export default {
       type: Boolean,
       required: false,
       default: true
-    },
-    startingSize: {
-      type: Number,
-      required: false,
-      default: 35
     }
   },
 
   data: (vm) => ({
-    resizeDiff: vm.startingSize,
+    resizeDiff: 35,
     minSize: 30,
     startPos: 0,
     loaded: false,
@@ -179,11 +174,7 @@ export default {
 
       await this.fetchFormData()
       this.initializeStateUpdatesListeners()
-    },
-    startingSize: function (newVal, oldVal) {
-      this.resizeDiff = newVal
     }
-
   },
 
   async beforeMount () {
