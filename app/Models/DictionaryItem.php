@@ -21,7 +21,8 @@ class DictionaryItem extends Model
         CC_LOADEDEMPTY_TYPE = 'cc-loadedempty',
         TERMDIV_TYPE = 'termdiv',
         CC_CONTAINERSIZE_TYPE = 'cc-containersize',
-        CC_CONTAINERTYPE_TYPE = 'cc-containertype'
+        CC_CONTAINERTYPE_TYPE = 'cc-containertype',
+        PT_EQUIPMENTTYPE_TYPE = 'pt-equipmenttype'
         ;
 
     const TYPES_LIST = [
@@ -38,6 +39,7 @@ class DictionaryItem extends Model
         self::TERMDIV_TYPE,
         self::CC_CONTAINERSIZE_TYPE,
         self::CC_CONTAINERTYPE_TYPE,
+        self::PT_EQUIPMENTTYPE_TYPE,
     ];
 
     const TYPES_LIST_OPTIONS = [
@@ -46,6 +48,7 @@ class DictionaryItem extends Model
         self::CARRIER_TYPE => 'Carrier',
         self::VESSEL_TYPE => 'Vessel',
         self::PT_IMAGETYPE_TYPE => 'PT Image Type',
+        self::PT_EQUIPMENTTYPE_TYPE => 'PT Equipment Type',
         self::CC_LOADTYPE_TYPE => 'CC Load Type',
         self::CC_ORDERSTATUS_TYPE => 'CC Order Status',
         self::CC_HAULCLASS_TYPE => 'CC Haul Class',

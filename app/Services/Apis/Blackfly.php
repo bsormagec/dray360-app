@@ -38,4 +38,9 @@ class Blackfly
     {
         return $this->executeSql("select ds_id, ds_ref1_text from dba.disp_ship where ds_status='A' and ds_ref1_text>'' order by ds_id");
     }
+
+    public function getEquipmentTypes(): array
+    {
+        return $this->executeSql("select 'id' = Id, 'line' = Line, 'type' = Type, 'equipmentlength' = equipmentlength, 'scac' = scac, 'lineprefix' = lineprefix from dba.EquipmentLeaseType where leasestatus = '1' order by Id");
+    }
 }
