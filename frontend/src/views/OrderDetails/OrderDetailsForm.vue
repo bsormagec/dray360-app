@@ -223,6 +223,10 @@
         >{{ formatDate(order.submitted_date, { timeZone: true }) }}</span>
         <br>
         {{ `by ${userWhoUploadedTheRequest ? userWhoUploadedTheRequest :''}` }}
+        <span v-if="canViewOtherCompanies()">
+          <br>
+          {{ `for ${order.company.name}` }}
+        </span>
       </p>
       <p
         v-if="order.ocr_request.sent_to_tms"

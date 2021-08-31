@@ -77,6 +77,9 @@
           {{ item.request_id.substring(0,8).toUpperCase() }}
         </router-link>
       </template>
+      <template v-slot:[`item.company`]="{ item }">
+        {{ item.company.name }}
+      </template>
       <template v-slot:[`item.id`]="{ item }">
         <router-link :to="`/order/${item.id}`">
           {{ item.id }}

@@ -129,7 +129,7 @@
                 { text: 'Container', value: 'unit_number' },
                 { text: 'Bill To/Template', sortable: false, value: 'bill_to_or_template' },
                 { text: 'Direction', value: 'shipment_direction', align: 'center' },
-                { text: 'Actions', value: 'actions', sortable: false, align: 'center' }
+                { text: 'Actions', value: 'actions', sortable: false, align: 'center' },
               ]"
               @order-replicated="$root.$emit(events.orderReplicated)"
               @order-deleted="$root.$emit(events.orderReplicated)"
