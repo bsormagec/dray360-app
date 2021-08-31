@@ -26,6 +26,7 @@
     </v-container>
   </div>
 </template>
+
 <script>
 import OrderTable from '@/components/OrderTable'
 import permissions from '@/mixins/permissions'
@@ -40,10 +41,11 @@ export default {
   mixins: [permissions],
 }
 </script>
+
 <style lang="scss" scoped>
 .orders__list {
-    height: calc(100vh - 40px);
-    overflow-y: auto;
-    padding: rem(14) rem(28) 0 rem(28);
-  }
+  height: calc(100vh - 40px);
+  overflow-y: auto;
+  padding: rem(14) rem(28) 0 rem(28);
+}
 </style>

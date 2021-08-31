@@ -238,6 +238,7 @@ import cloneDeep from 'lodash/cloneDeep'
 
 export default {
   name: 'OrderTable',
+
   components: {
     Pagination,
     OutlinedButtonGroup,
@@ -245,7 +246,9 @@ export default {
     Filters,
     StatusHistoryDialog
   },
+
   mixins: [hasPermission, statusUpdatesSubscribe],
+
   props: {
     activePage: {
       type: Number,
@@ -290,6 +293,7 @@ export default {
       default: ''
     }
   },
+
   data () {
     return {
       // polling stuff
@@ -334,6 +338,7 @@ export default {
       meta: null
     }
   },
+
   computed: {
     ...mapState(auth.moduleName, { currentUser: state => state.currentUser }),
     showHeaders () {
@@ -344,6 +349,7 @@ export default {
       })
     }
   },
+
   watch: {
     headers () {
       this.selectedHeaders = Object.values(this.headers)
@@ -376,6 +382,7 @@ export default {
       },
       deep: true
     },
+
     async requestId () {
       this.leaveRequestStatusUpdatesChannel('-orders')
       await this.getOrderData()
@@ -438,6 +445,7 @@ export default {
 
   methods: {
     formatDate,
+
     initialize () {
       // if there are init filters set from get params grab the active filters from the filters component before querying the DB
       if (Object.keys(this.initFilters).some(key => this.initFilters[key] && this.initFilters[key].length > 0)) {
@@ -721,93 +729,92 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-    .table-root {
-      .processed-status {
-        &:before {
-          content: '';
-          display: inline-block;
-          width: rem(10);
-          height: rem(10);
-          border-radius: 50%;
-          background: #77C19A;
-          margin-right: rem(5);
-        }
-      }
+.table-root {
+  position: relative;
+  .processed-status {
+    &:before {
+      content: '';
+      display: inline-block;
+      width: rem(10);
+      height: rem(10);
+      border-radius: 50%;
+      background: #77C19A;
+      margin-right: rem(5);
     }
-    .table.loading::v-deep tbody {
-      opacity: 0.5;
-      transition: opacity 0.3s linear;
-    }
-    .table::v-deep tbody {
-        tr:nth-of-type(even) {
-            background-color: rgba(0, 0, 0, .05);
-            background-color: #F5F6F7;
-        }
-    }
-    .table::v-deep .v-data-table__wrapper {
-        border: solid 1px #E6ECF1;
-        border-radius: 5px;
-    }
-    .table::v-deep th {
-        height: rem(40);
-    }
-    .table::v-deep th.sortable .v-icon {
-        position: absolute;
-    }
-    .table::v-deep .v-data-table-header th {
-        background-color: #F5F6F7 !important;
-    }
-    .table-tools::v-deep .v-toolbar__content {
-      padding-left: 0;
-      padding-right: 0;
-    }
-    .table::v-deep .v-data-table__empty-wrapper {
-      margin-top:rem(46);
-    }
-    .table-column-filter {
-      max-width:rem(100);
-      font-size: rem(12);
-      margin-bottom: rem(8);
-      margin-left: auto;
-    }
-    .table-column-filter::v-deep .v-icon {
-      margin-top: -6px !important;
-      font-weight: bold;
-      transform: scale(1.2);
-    }
-    .table-column-filter::v-deep .v-text-field__details {
-      padding: 0 10px;
-    }
-    .table-column-filter::v-deep .v-list-item__action {
-      margin-right: 13px !important;
-      transform: scale(0.7) !important;
-    }
-
-    .table-column-filter::v-deep .v-input__slot,
-    .table-column-filter::v-deep .v-select__slot {
-      min-height: rem(20) !important;
-      height: rem(32);
-
-    }
-    .table-column-filter::v-deep .v-input__append-inner {
-      margin-top: 0;
-    }
-    .column-selector-menu {
-      background: black;
-    }
-    .column-selector-menu::v-deep .v-list-item__action {
-      margin-right: 13px !important;
-      transform: scale(0.7) !important;
-    }
-    .refresh-msg {
-      width: 100%;
-      p { margin: 0; }
-    }
-  .v-icon {
-    vertical-align: baseline;
-    color: #7BAFD4 !important;
   }
-  .v-icon:hover {
-    color: #326295 !important;
+}
+.table.loading::v-deep tbody {
+  opacity: 0.5;
+  transition: opacity 0.3s linear;
+}
+.table::v-deep tbody {
+  tr:nth-of-type(even) {
+    background-color: rgba(0, 0, 0, .05);
+    background-color: #F5F6F7;
   }
+}
+.table::v-deep .v-data-table__wrapper {
+  border: solid 1px #E6ECF1;
+  border-radius: 5px;
+}
+.table::v-deep th {
+  height: rem(40);
+}
+.table::v-deep th.sortable .v-icon {
+  position: absolute;
+}
+.table::v-deep .v-data-table-header th {
+  background-color: #F5F6F7 !important;
+}
+.table-tools::v-deep .v-toolbar__content {
+  padding-left: 0;
+  padding-right: 0;
+}
+.table::v-deep .v-data-table__empty-wrapper {
+  margin-top:rem(46);
+}
+.table-column-filter {
+  max-width:rem(100);
+  font-size: rem(12);
+  margin-bottom: rem(8);
+  margin-left: auto;
+}
+.table-column-filter::v-deep .v-icon {
+  margin-top: -6px !important;
+  font-weight: bold;
+  transform: scale(1.2);
+}
+.table-column-filter::v-deep .v-text-field__details {
+  padding: 0 10px;
+}
+.table-column-filter::v-deep .v-list-item__action {
+  margin-right: 13px !important;
+  transform: scale(0.7) !important;
+}
+.table-column-filter::v-deep .v-input__slot,
+.table-column-filter::v-deep .v-select__slot {
+  min-height: rem(20) !important;
+  height: rem(32);
+}
+.table-column-filter::v-deep .v-input__append-inner {
+  margin-top: 0;
+}
+.column-selector-menu {
+  background: black;
+}
+.column-selector-menu::v-deep .v-list-item__action {
+  margin-right: 13px !important;
+  transform: scale(0.7) !important;
+}
+.refresh-msg {
+  width: 100%;
+  p { margin: 0; }
+}
+.v-icon {
+  vertical-align: baseline;
+  color: #7BAFD4 !important;
+}
+.v-icon:hover {
+  color: #326295 !important;
+}
 </style>

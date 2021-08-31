@@ -365,7 +365,15 @@ export default {
       position: absolute;
       right: rem(17);
       top: 50%;
-      transform: translateY(-50%);
+      transform: translateY(-50%) rotate(0deg);
+    }
+
+    &.asc > i {
+      transform: translateY(-50%) rotate(180deg);
+    }
+
+    &.desc > i {
+      transform: translateY(-50%) rotate(0deg);
     }
 
     &:nth-child(1) {
