@@ -478,7 +478,7 @@ export default {
     }),
 
     companyVariantSelected () {
-      return !!(this.company.id && this.variant.id)
+      return !!this.company.id
     },
 
     pasteAbleInput: function () {
@@ -687,6 +687,7 @@ export default {
         this.ruleSelectedToEdit('variant', undefined)
         this.setCompanyVariantRules([])
         this.setVariantRules([])
+        this.getCompanyVariantRules()
       } else {
         this.variant = variant
         this.getCompanyVariantRules()

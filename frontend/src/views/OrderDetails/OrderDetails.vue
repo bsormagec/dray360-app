@@ -1,7 +1,12 @@
 <template>
   <div
     v-if="!has404 && !orderInReview"
-    :class="`details ${loaded && 'loaded'} ${isMobile && 'mobile'}`"
+    :class="{
+      'details': true,
+      'loaded': loaded,
+      'mobile': isMobile,
+      'details-only': !detailsOnly
+    }"
   >
     <ContentLoading :loaded="loaded">
       <div :class="`details__content ${isMobile && 'mobile'}`">
@@ -15,6 +20,7 @@
             :redirect-back="redirectBack"
             :options="formOptions"
             :refresh-lock="refreshLock"
+            :details-only="detailsOnly"
             @order-deleted="$emit(events.orderDeleted)"
             @order-replicated="$emit(events.orderReplicated)"
             @go-back="$emit('go-back')"
@@ -32,6 +38,7 @@
 
         <OrderDetailsDocument
           v-if="!has404"
+          :details-only="detailsOnly"
           :class="`${isMobile && 'mobile'}`"
         />
       </div>
@@ -116,15 +123,15 @@ export default {
       required: false,
       default: true
     },
-    startingSize: {
-      type: Number,
+    detailsOnly: {
+      type: Boolean,
       required: false,
-      default: 35
+      default: false
     }
   },
 
   data: (vm) => ({
-    resizeDiff: vm.startingSize,
+    resizeDiff: 35,
     minSize: 30,
     startPos: 0,
     loaded: false,
@@ -179,11 +186,7 @@ export default {
 
       await this.fetchFormData()
       this.initializeStateUpdatesListeners()
-    },
-    startingSize: function (newVal, oldVal) {
-      this.resizeDiff = newVal
     }
-
   },
 
   async beforeMount () {
@@ -486,14 +489,18 @@ export default {
 
 <style lang="scss" scoped>
 .details {
-  width: 100%;
   height: 100vh;
+  width: 100%;
   display: flex;
   overflow: hidden;
 
   &.mobile {
     padding-left: unset;
     overflow-x: hidden;
+  }
+
+  &.details-only {
+    height: calc(100vh - #{rem(40)});
   }
 }
 
