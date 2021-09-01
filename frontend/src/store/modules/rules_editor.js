@@ -126,7 +126,7 @@ const actions = {
 
   async [actionTypes.saveRulesAssigment] ({ state }, { companyId, variantId }) {
     let dataToUse = null
-    if (companyId && variantId) {
+    if (companyId) {
       dataToUse = state.companyVariantRules
     } else if (!companyId && variantId) {
       dataToUse = state.variantRules

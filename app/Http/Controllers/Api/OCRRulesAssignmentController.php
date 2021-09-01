@@ -15,17 +15,20 @@ class OCRRulesAssignmentController extends Controller
     {
         $this->authorize('viewAny', OCRRule::class);
         $filters = $request->validate([
-            'company_id' => 'sometimes|nullable|integer',
-            'variant_id' => 'required|integer',
+            'company_id' => 'required_without:variant_id|nullable|integer',
+            'variant_id' => 'required_without:company_id|nullable|integer',
         ]);
 
         return new ResourcesOCRRule(
-            CompanyOCRVariantOCRRule::assignedTo($filters['company_id'] ?? null, $filters['variant_id'])
-                ->has('ocrRule')
-                ->with('ocrRule')
-                ->orderBy('rule_sequence')
-                ->get()
-                ->pluck('ocrRule')
+            CompanyOCRVariantOCRRule::assignedTo(
+                $filters['company_id'] ?? null,
+                $filters['variant_id'] ?? null
+            )
+            ->has('ocrRule')
+            ->with('ocrRule')
+            ->orderBy('rule_sequence')
+            ->get()
+            ->pluck('ocrRule')
         );
     }
 
@@ -33,13 +36,13 @@ class OCRRulesAssignmentController extends Controller
     {
         $this->authorize('assign', OCRRule::class);
         $data = $request->validate([
-            'company_id' => 'sometimes|nullable|integer|exists:t_companies,id',
-            'variant_id' => 'required|integer|exists:t_ocrvariants,id',
+            'company_id' => 'required_without:variant_id|nullable|integer|exists:t_companies,id',
+            'variant_id' => 'required_without:company_id|nullable|integer|exists:t_ocrvariants,id',
             'rules' => 'present|array',
             'rules.*' => 'integer|exists:t_ocrrules,id',
         ]);
         $companyId = $data['company_id'] ?? null;
-        $variantId = $data['variant_id'];
+        $variantId = $data['variant_id'] ?? null;
 
         $data = collect($data['rules'])
             ->unique()
