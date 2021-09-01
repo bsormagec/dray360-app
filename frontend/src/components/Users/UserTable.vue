@@ -11,6 +11,7 @@
       :hide-default-footer="true"
       :header-props="{ sortIcon: 'mdi-chevron-down'}"
       :class="{'table': true, 'loading': loading}"
+      :options.sync="options"
     >
       <template v-slot:top>
         <v-toolbar
@@ -76,10 +77,11 @@
           </v-btn>
         </v-toolbar>
       </template>
-      <template
-        v-slot:[`item.email`]="{ item }"
-      >
+      <template v-slot:[`item.email`]="{ item }">
         <span class="text-decoration-underline primary--text">{{ item.email }}</span>
+      </template>
+      <template v-slot:[`item.company`]="{ item }">
+        {{ item.company.name }}
       </template>
       <template v-slot:[`item.deactivated_at`]="{ item }">
         <span>{{ item.deactivated_at === null ? 'Active' : 'Inactive' }}</span>
@@ -119,6 +121,7 @@
     </v-data-table>
   </div>
 </template>
+
 <script>
 import DateRangeCalendar from '@/components/Orders/DateRangeCalendar'
 import permissions from '@/mixins/permissions'
@@ -180,38 +183,59 @@ export default {
       dateRange: [],
       userList: [],
       selected: [],
-      headers: [
-        { text: 'Name', value: 'name' },
-        { text: 'Email', value: 'email' },
-        { text: 'Org', value: 'company.name' },
-        { text: 'Permission', value: 'roles[0].name' },
-        { text: 'Status', value: 'deactivated_at' },
-        { text: 'Actions', value: 'actions', sortable: false }
-      ],
       selectedHeaders: [],
       loading: false,
       // pagination links
       total: 1,
       meta: null,
-      links: null
+      links: null,
+      sort: 'name',
+      options: {
+        sortBy: ['name'],
+        sordDesc: [false]
+      }
     }
   },
 
   computed: {
+    headers () {
+      return [
+        { text: 'Name', value: 'name', hasPermission: true },
+        { text: 'Email', value: 'email', hasPermission: true },
+        { text: 'Org', value: 'company', hasPermission: this.canViewOtherCompanies() },
+        { text: 'Permission', value: 'roles[0].name', sortable: false, hasPermission: true },
+        { text: 'Status', value: 'deactivated_at', hasPermission: true },
+        { text: 'Actions', value: 'actions', sortable: false, hasPermission: true }
+      ].filter(item => item.hasPermission)
+    },
+
     showHeaders () {
       return this.headers.filter(s => this.selectedHeaders.includes(s))
     }
   },
-  created () {
-    if (!this.canViewOtherCompanies()) {
-      this.headers.splice(2, 1)
+
+  watch: {
+    options: {
+      handler () {
+        const sortCol = this.options.sortBy.join()
+        const sortDesc = (this.options.sortDesc.join()) === 'true'
+
+        this.sort = `${sortDesc ? '-' : ''}${sortCol !== '' ? sortCol : ''}`
+
+        if (sortCol === '') return
+
+        this.fetchUsers()
+      },
+      deep: true
     }
+  },
+
+  created () {
     this.selectedHeaders = this.headers
     this.fetchUsers()
   },
 
   methods: {
-
     handleSearch (e) {
       this.searchQuery = this.search || e
       // cancel pending call
@@ -222,6 +246,7 @@ export default {
         this.fetchUsers()
       }, 500)
     },
+
     handleLocationUrl () {
       const newUrl = `?searchQuery=${this.searchQuery}`
 
@@ -245,24 +270,30 @@ export default {
     editItem (item) {
       this.$router.push(`/user/dashboard/edit-user/${item.id}`)
     },
+
     onPageIndexChange (pageIndex) {
       this.page = pageIndex
       this.fetchUsers()
     },
+
     async fetchUsers () {
-      const [error, data] = await getUsers({ page: this.page, 'filter[name]': this.search })
+      const [error, data] = await getUsers(
+        {
+          page: this.page,
+          'filter[query]': this.search,
+          sort: this.sort
+        })
       if (error === undefined) {
         this.userList = data.data
         this.links = data.links
         this.meta = data.meta
         this.total = data.meta.total
-        console.log('success')
       }
     }
-
   }
 }
 </script>
+
 <style lang="scss" scoped>
 .user__list {
   &::v-deep .v-toolbar__content {
