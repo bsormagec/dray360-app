@@ -2,7 +2,11 @@
   <div
     id="order-form"
     ref="orderForm"
-    :class="`form ${isMobile && 'mobile'}`"
+    :class="{
+      'form': true,
+      'mobile': isMobile,
+      'details-only': !detailsOnly
+    }"
   >
     <div
       ref="orderHeading"
@@ -219,6 +223,10 @@
         >{{ formatDate(order.submitted_date, { timeZone: true }) }}</span>
         <br>
         {{ `by ${userWhoUploadedTheRequest ? userWhoUploadedTheRequest :''}` }}
+        <span v-if="canViewOtherCompanies()">
+          <br>
+          {{ `for ${order.company.name}` }}
+        </span>
       </p>
       <p
         v-if="order.ocr_request.sent_to_tms"
@@ -1113,6 +1121,11 @@ export default {
       type: Object,
       required: false,
       default: () => ({ hidden: [], extra: {}, address_search: {}, labels: {} })
+    },
+    detailsOnly: {
+      type: Boolean,
+      required: false,
+      default: false
     }
   },
   data () {
@@ -1571,6 +1584,10 @@ export default {
     height: 50vh;
     padding-bottom: rem(70);
     padding: 0 rem(16) rem(16) rem(16);
+  }
+
+  &.details-only {
+    height: calc(100vh - #{rem(40)});
   }
 }
 

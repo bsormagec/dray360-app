@@ -9,6 +9,7 @@ use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Validation\Rule;
 use App\Http\Controllers\Controller;
+use Spatie\QueryBuilder\AllowedSort;
 use Spatie\QueryBuilder\QueryBuilder;
 use Spatie\QueryBuilder\AllowedFilter;
 use Illuminate\Http\Resources\Json\JsonResource;
@@ -25,6 +26,7 @@ class UsersController extends Controller
         $this->authorize('viewAny', User::class);
 
         $query = User::query()
+            ->select(['users.*'])
             ->when(! auth()->user()->isAbleTo('all-companies-view'), function ($query) {
                 return $query->forCurrentCompany()
                     ->where(function ($query) {
@@ -34,14 +36,34 @@ class UsersController extends Controller
                             });
                     });
             })
+            ->leftJoin('t_companies', 't_companies.id', '=', 'users.t_company_id')
             ->with([
                 'company:id,name',
                 'roles:id,name'
             ]);
 
         $users = QueryBuilder::for($query)
-            ->allowedFilters(['name', 'email', 'id', AllowedFilter::scope('active')])
-            ->allowedSorts(['name'])
+            ->allowedFilters([
+                AllowedFilter::partial('name', 'users.name', false),
+                AllowedFilter::partial('email', 'users.email', false),
+                AllowedFilter::partial('company_id', 'users.t_company_id', false),
+                AllowedFilter::partial('id', 'users.id', false),
+                AllowedFilter::scope('active'),
+                AllowedFilter::callback('query', function ($query, $value) {
+                    $query->where(function ($query) use ($value) {
+                        $query->orWhere('users.name', 'like', "{$value}%")
+                            ->orWhere('users.email', 'like', "{$value}%")
+                            ->orWhere('t_companies.name', 'like', "{$value}%")
+                            ->orWhereHas('roles', fn ($q) => $q->where('name', 'like', "{$value}%"));
+                    });
+                }),
+            ])
+            ->allowedSorts([
+                AllowedSort::field('name', 'users.name'),
+                AllowedSort::field('email', 'users.email'),
+                AllowedSort::field('company', 't_companies.name'),
+                AllowedSort::field('deactivated_at', 'users.deactivated_at'),
+            ])
             ->paginate($request->get('perPage', 10));
 
         return JsonResource::collection($users);

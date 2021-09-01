@@ -80,26 +80,40 @@ class OCRRulesAssignmentControllerTest extends TestCase
     }
 
     /** @test */
+    public function it_should_update_the_rules_associated_with_only_company()
+    {
+        $this->seed(OCRRulesAssignmentSeed::class);
+        $company = Company::first(['id']);
+        $ocrRules = OCRRule::all(['id']);
+
+        $this->postJson(route('ocr.rules-assignment.store'), [
+                'company_id' => $company->id,
+                'rules' => collect([])->push($ocrRules->first())->merge($ocrRules)->pluck('id'),
+            ])
+            ->assertStatus(Response::HTTP_CREATED)
+            ->assertJsonCount($ocrRules->count(), 'data');
+
+        $this->assertCount($ocrRules->count(), CompanyOCRVariantOCRRule::assignedTo($company->id)->get());
+        $this->assertNotNull(CompanyOCRVariantOCRRule::assignedTo($company->id)->first()->created_at);
+    }
+
+    /** @test */
     public function it_should_fail_validation()
     {
         $this->seed(OCRRulesAssignmentSeed::class);
         $ocrVariant = OCRVariant::first(['id']);
         $company = Company::first(['id']);
         $ocrRules = OCRRule::all(['id']);
-        $toValidate = ['variant_id', 'rules'];
 
-        foreach ($toValidate as $fieldToValidate) {
-            $data = [
-                'variant_id' => $ocrVariant->id,
-                'company_id' => $company->id,
-                'rules' => $ocrRules->pluck('id'),
-            ];
-            $data[$fieldToValidate] = null;
+        $data = [
+            'variant_id' => null,
+            'company_id' => null,
+            'rules' => $ocrRules->pluck('id'),
+        ];
 
-            $this->postJson(route('ocr.rules-assignment.store'), $data)
-                ->assertStatus(Response::HTTP_UNPROCESSABLE_ENTITY)
-                ->assertJsonValidationErrors($fieldToValidate);
-        }
+        $this->postJson(route('ocr.rules-assignment.store'), $data)
+            ->assertStatus(Response::HTTP_UNPROCESSABLE_ENTITY)
+            ->assertJsonValidationErrors(['variant_id', 'company_id']);
     }
 
     /** @test */

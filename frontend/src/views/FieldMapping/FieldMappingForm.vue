@@ -6,6 +6,7 @@
       Mapping Options for "{{ selectedField }}"
       <v-spacer />
       <v-btn
+        v-if="!viewOnly"
         text
         small
         :loading="loading"
@@ -15,6 +16,7 @@
         Reset
       </v-btn>
       <v-btn
+        v-if="!viewOnly"
         small
         color="primary"
         :loading="loading"
@@ -34,6 +36,7 @@
             <v-switch
               v-model="formFieldMap.screen_hide"
               :class="{'field-mapping-form-field__changed': hasChanged('screen_hide')}"
+              :disabled="viewOnly"
               label="Screen Hide"
               dense
               hide-details
@@ -44,6 +47,7 @@
             <v-text-field
               v-model="formFieldMap.screen_name"
               :class="{'field-mapping-form-field__changed': hasChanged('screen_name')}"
+              :disabled="viewOnly"
               label="Screen Name"
               clearable
               v-bind="fieldChangedAttributes('screen_name')"
@@ -61,6 +65,7 @@
             <v-switch
               v-model="formFieldMap.use_constant_as_default_only"
               :class="{'field-mapping-form-field__changed': hasChanged('use_constant_as_default_only')}"
+              :disabled="viewOnly"
               label="Default only"
               dense
               hide-details
@@ -72,6 +77,7 @@
               v-if="fieldNameMatch(/event\d+_type/g, true)"
               v-model="formFieldMap.constant_value"
               :items="customFieldInput.eventTypes"
+              :disabled="viewOnly"
               item-text="name"
               item-value="value"
               :class="{'field-mapping-form-field__changed': hasChanged('constant_value')}"
@@ -83,6 +89,7 @@
             <v-select
               v-else-if="fieldNameMatch('shipment_direction')"
               v-model="formFieldMap.constant_value"
+              :disabled="viewOnly"
               :items="customFieldInput.shipmentDirection"
               item-text="name"
               item-value="value"
@@ -95,6 +102,7 @@
             <v-select
               v-else-if="fieldNameMatch(/hazmat|hazardous|expedite/g, true)"
               v-model="formFieldMap.constant_value"
+              :disabled="viewOnly"
               :items="customFieldInput.booleanFields"
               item-text="name"
               item-value="value"
@@ -107,6 +115,7 @@
             <v-text-field
               v-else
               v-model="formFieldMap.constant_value"
+              :disabled="viewOnly"
               :class="{'field-mapping-form-field__changed': hasChanged('constant_value')}"
               label="Constant Value"
               clearable
@@ -118,6 +127,7 @@
       <v-switch
         v-model="formFieldMap.available"
         :class="{'field-mapping-form-field__changed': hasChanged('available')}"
+        :disabled="viewOnly"
         label="Available"
         dense
         hide-details
@@ -126,6 +136,7 @@
       <v-switch
         v-model="formFieldMap.use_template_value"
         :class="{'field-mapping-form-field__changed': hasChanged('use_template_value')}"
+        :disabled="viewOnly"
         label="Use Template Value"
         dense
         v-bind="fieldChangedAttributes('use_template_value')"
@@ -133,6 +144,7 @@
       <v-text-field
         v-model="formFieldMap.shipment_direction_filter"
         :class="{'field-mapping-form-field__changed': hasChanged('shipment_direction_filter')}"
+        :disabled="viewOnly"
         label="Shipment Direction Filter"
         clearable
         v-bind="fieldChangedAttributes('shipment_direction_filter')"
@@ -140,6 +152,7 @@
       <v-text-field
         v-model="formFieldMap.d3canon_name"
         :class="{'field-mapping-form-field__changed': hasChanged('d3canon_name')}"
+        :disabled="viewOnly"
         label="D3canon Name"
         clearable
         v-bind="fieldChangedAttributes('d3canon_name')"
@@ -164,6 +177,7 @@
       <v-autocomplete
         v-model="formFieldMap.abbyy_source_field"
         :class="{'field-mapping-form-field__changed': hasChanged('abbyy_source_field')}"
+        :disabled="viewOnly"
         :items="abbySourceField"
         label="Abbyy Source Field"
         clearable
@@ -172,6 +186,7 @@
       <v-text-field
         v-model="formFieldMap.profittools_destination"
         :class="{'field-mapping-form-field__changed': hasChanged('profittools_profittools_destinationdestination')}"
+        :disabled="viewOnly"
         label="Profittools Destination"
         clearable
         hide-details
@@ -180,6 +195,7 @@
       <v-textarea
         v-model="formFieldMap.notes"
         :class="{'field-mapping-form-field__changed': hasChanged('notes')}"
+        :disabled="viewOnly"
         rows="3"
         label="Notes"
         clearable
@@ -278,6 +294,7 @@ export default {
   name: 'FieldMappingForm',
 
   props: {
+    viewOnly: { type: Boolean, required: false, default: false },
     loading: { type: Boolean, required: false, default: false },
     selectedField: { type: String, required: false, default: null },
   },

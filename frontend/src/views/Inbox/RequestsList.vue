@@ -102,8 +102,8 @@
     </v-snackbar>
   </div>
 </template>
-<script>
 
+<script>
 import Filters from '@/components/OrderTable/components/filters'
 import RequestItem from './RequestItem'
 import LockButtonEnabler from '@/components/LockButtonEnabler'
@@ -126,12 +126,15 @@ import cloneDeep from 'lodash/cloneDeep'
 
 export default {
   name: 'RequestList',
+
   components: {
     Filters,
     RequestItem,
     LockButtonEnabler,
   },
+
   mixins: [permissions, isMobile, locks, statusUpdatesSubscribe],
+
   data () {
     return {
       bottom: false,
@@ -156,6 +159,7 @@ export default {
       initialTotalItems: 0
     }
   },
+
   computed: {
     ...mapState(requestsList.moduleName, {
       items: state => state.requests,
@@ -165,6 +169,7 @@ export default {
       return this.items.filter(item => item.request_id === this.requestIdSelected)[0] || {}
     }
   },
+
   watch: {
     bottom (isBottom) {
       if (this.loading || !isBottom || this.page === this.meta.last_page) {
@@ -175,6 +180,7 @@ export default {
       this.fetchRequests()
     },
   },
+
   created () {
     const params = this.$route.query
 
@@ -194,6 +200,7 @@ export default {
   beforeMount () {
     this.$root.$on(events.orderReplicated, this.refreshRequests)
     this.$root.$on(events.orderDeleted, this.orderDeleted)
+    this.$root.$on(events.requestUploaded, this.requestUploaded)
   },
 
   async mounted () {
@@ -231,6 +238,7 @@ export default {
       appendRequests: requestsListTypes.appendRequests,
       updateRequestStatus: requestsListTypes.updateRequestStatus,
     }),
+
     formatDate,
 
     removeRootListeners () {
@@ -239,6 +247,7 @@ export default {
       this.$root.$off(events.lockClaimed, this.lockClaimed)
       this.$root.$off(events.lockReleased, this.stopRefreshingLock)
       this.$root.$off(events.lockRefreshFailed, this.stopRefreshingLock)
+      this.$root.$off(events.requestUploaded, this.requestUploaded)
     },
 
     orderDeleted () {
@@ -276,6 +285,18 @@ export default {
       const currentRequest = cloneDeep(this.items[index])
       this.$root.$emit(events.requestsRefreshed, currentRequest)
       this.handleChange(currentRequest)
+    },
+
+    async requestUploaded (requestsList) {
+      this.requestIdSelected = null
+      await this.filtersUpdated([])
+
+      const lastItem = requestsList.length - 1
+      const index = this.items.findIndex(item => requestsList[lastItem].request_id === item.request_id)
+
+      if (index === -1) return
+
+      this.handleChange(cloneDeep(this.items[index]))
     },
 
     initializeFilters () {
@@ -512,6 +533,7 @@ export default {
   }
 }
 </script>
+
 <style lang="scss" scoped>
 .requests__list__wrapper {
   position: relative;

@@ -19,6 +19,7 @@ use App\Services\DictionaryItemsImporters\CcOrderStatusesImporter;
 use App\Services\DictionaryItemsImporters\DictionaryItemsImporter;
 use App\Services\DictionaryItemsImporters\CcContainerSizesImporter;
 use App\Services\DictionaryItemsImporters\CcContainerTypesImporter;
+use App\Services\DictionaryItemsImporters\PtEquipmentTypesImporter;
 
 class ImportDictionaryItems implements ShouldQueue
 {
@@ -87,6 +88,7 @@ class ImportDictionaryItems implements ShouldQueue
     {
         $defaultImporters = [
             DictionaryItem::TEMPLATE_TYPE => TemplatesImporter::class,
+            DictionaryItem::PT_EQUIPMENTTYPE_TYPE => PtEquipmentTypesImporter::class,
             DictionaryItem::CC_LOADTYPE_TYPE => CcLoadTypesImporter::class,
             DictionaryItem::CC_ORDERSTATUS_TYPE => CcOrderStatusesImporter::class,
             DictionaryItem::CC_HAULCLASS_TYPE => CcHaulClassesImporter::class,

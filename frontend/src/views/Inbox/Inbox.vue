@@ -9,28 +9,11 @@
           v-if="displayStatus.requestList"
           :class="{
             'requests__section': true,
-            'c-2': compressed,
-            'col-3': !compressed,
+            'c-2': !isMobile,
             'col-12': isMobile,
           }"
         >
           <div class="inbox__title">
-            <v-btn
-              v-if="!isMobile"
-              icon
-              dense
-              small
-              dark
-              class="requests__section_collapse"
-              @click="toggleCompress"
-            >
-              <v-icon
-                medium
-                white
-              >
-                {{ !compressed ? 'mdi-unfold-less-vertical' : 'mdi-unfold-more-vertical' }}
-              </v-icon>
-            </v-btn>
             <SidebarNavigationButton />
             <div class="inbox__title_description">
               Requests Inbox
@@ -61,8 +44,7 @@
           v-if="displayStatus.orderDetail"
           :class="{
             'request__orders':true,
-            'col-9': !compressed,
-            'c-10': compressed,
+            'c-10': !isMobile,
             'col-12': isMobile,
           }"
         >
@@ -147,7 +129,7 @@
                 { text: 'Container', value: 'unit_number' },
                 { text: 'Bill To/Template', sortable: false, value: 'bill_to_or_template' },
                 { text: 'Direction', value: 'shipment_direction', align: 'center' },
-                { text: 'Actions', value: 'actions', sortable: false, align: 'center' }
+                { text: 'Actions', value: 'actions', sortable: false, align: 'center' },
               ]"
               @order-replicated="$root.$emit(events.orderReplicated)"
               @order-deleted="$root.$emit(events.orderReplicated)"
@@ -158,7 +140,7 @@
             :back-button="false"
             :refresh-lock="false"
             :order-id="request.first_order_id"
-            :starting-size="compressed ? 35 : 35"
+            :details-only="displayStatus.requestList"
             @order-deleted="$root.$emit(events.orderDeleted)"
             @order-replicated="$root.$emit(events.orderReplicated)"
             @go-back="toggleMobileView"
@@ -192,6 +174,7 @@ import events from '@/enums/events'
 
 export default {
   name: 'Inbox',
+
   components: {
     OrderTable,
     SidebarNavigationButton,
@@ -201,10 +184,11 @@ export default {
     RequestItemMenu,
     PtImageRequestDetails,
   },
+
   mixins: [permissions],
+
   data () {
     return {
-      compressed: true,
       openUploadOrdersDialog: false,
       request: {
         first_order_id: null,
@@ -225,6 +209,7 @@ export default {
       }
     }
   },
+
   computed: {
     ...mapState(auth.moduleName, {
       currentUser: state => state.currentUser
@@ -252,26 +237,28 @@ export default {
           return { text: 'The request is being processed' }
       }
     },
+
     currentRequestIsPtImageUpload () {
       return isPtImageUpload(this.request?.latest_ocr_request_status?.status)
     },
+
     isMobile () {
       return this.$vuetify.breakpoint.mobile
     },
   },
+
   watch: {
     isMobile: function (newVal, oldVal) {
       if (newVal) {
         this.displayStatus.requestList = true
         this.displayStatus.orderDetail = false
-        this.compressed = false
       } else {
         this.displayStatus.requestList = true
         this.displayStatus.orderDetail = true
-        this.compressed = true
       }
     }
   },
+
   beforeMount () {
     if (!this.isMobile) {
       return
@@ -287,10 +274,12 @@ export default {
           !this.hasPermission('admin-review-view')
         )
     },
-    handleFilesUploaded () {
-      this.$root.$emit(events.orderDeleted)
+
+    handleFilesUploaded (requestsList) {
+      this.$root.$emit(events.requestUploaded, requestsList)
       this.openUploadOrdersDialog = false
     },
+
     requestChanged (request) {
       this.request = request
       if (!this.firstLoad && this.isMobile) {
@@ -299,17 +288,16 @@ export default {
       }
       this.firstLoad = false
     },
+
     toggleMobileView () {
       this.firstLoad = true
       this.displayStatus.orderDetail = false
       this.displayStatus.requestList = true
-    },
-    toggleCompress () {
-      this.compressed = !this.compressed
     }
   }
 }
 </script>
+
 <style lang="scss" scoped>
 .no-gutters > .col, .no-gutters > [class*=c-] {
     padding: 0;

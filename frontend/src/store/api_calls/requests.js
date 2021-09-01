@@ -22,7 +22,7 @@ export const changeRequestDoneStatus = async (requestId, data) => axios.put(`/ap
 export const getPtImageRequestDetails = async (requestId) => axios.get(`/api/upload-pt-images/${requestId}`).then(data => [undefined, data.data]).catch(e => [e])
 
 export const postUploadRequestFile = async (file, params) => axios.post('/api/ocr/requests', { filename: file.name, withCredentials: false, ...params })
-  .then(response => {
+  .then(apiResponse => {
     const config = {
       withCredentials: false,
       headers: {
@@ -31,7 +31,7 @@ export const postUploadRequestFile = async (file, params) => axios.post('/api/oc
       }
     }
 
-    return axios.put(response.data.upload_uri, file, config).then(response => [undefined, response.data])
+    return axios.put(apiResponse.data.upload_uri, file, config).then(() => [undefined, apiResponse.data])
       .catch(e => [e])
   })
   .catch(e => [e])

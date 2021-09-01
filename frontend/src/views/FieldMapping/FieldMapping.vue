@@ -47,6 +47,7 @@
           <h2 class="h6 d-flex ma-3 primary--text">
             Order AI Fields
             <v-btn
+              v-if="canAddFieldMaps"
               class="ml-auto"
               color="primary"
               text
@@ -86,6 +87,7 @@
           </template>
           <FieldMappingForm
             v-else
+            :view-only="!canAddFieldMaps"
             :selected-field="selectedField"
             :loading="loading"
             @reset="resetFieldMaps"
@@ -159,6 +161,24 @@ export default {
     isDefaultFieldMap () {
       return !this.filters?.companyId && !this.filters?.variantId && !this.filters?.tmsProviderId
     },
+
+    canAddFieldMaps () {
+      const { companyId = null, variantId = null, tmsProviderId = null } = this.filters
+
+      if (!companyId && !variantId && !tmsProviderId) {
+        return this.hasPermission('field-maps-create')
+      } else if (variantId && companyId) {
+        return this.hasPermission('company-field-maps-create')
+      } else if (companyId) {
+        return this.hasPermission('company-field-maps-create')
+      } else if (variantId) {
+        return this.hasPermission('variant-field-maps-create')
+      } else if (tmsProviderId) {
+        return this.hasPermission('tms-field-maps-create')
+      }
+
+      return false
+    }
   },
 
   async beforeMount () {

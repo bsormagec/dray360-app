@@ -2642,12 +2642,23 @@
 							],
 							"query": [
 								{
+									"key": "filter[query]",
+									"value": "",
+									"description": "It searches by user name, email and company name",
+									"disabled": true
+								},
+								{
 									"key": "filter[name]",
 									"value": "",
 									"disabled": true
 								},
 								{
 									"key": "filter[email]",
+									"value": "",
+									"disabled": true
+								},
+								{
+									"key": "filter[company_id]",
 									"value": "",
 									"disabled": true
 								},
@@ -2659,6 +2670,12 @@
 								{
 									"key": "filter[active]",
 									"value": "0",
+									"disabled": true
+								},
+								{
+									"key": "sort",
+									"value": "",
+									"description": "Available: name, email, company, deactivated_at",
 									"disabled": true
 								},
 								{
