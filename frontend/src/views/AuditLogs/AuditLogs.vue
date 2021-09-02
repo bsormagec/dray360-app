@@ -227,4 +227,26 @@ export default {
   height: 100%;
   padding: rem(14) rem(28) 0 rem(28);
 }
+.table-root::v-deep {
+  table > thead > tr > th {
+    position: relative;
+    & > span {
+      display: inline-block;
+      width: 100%;
+      padding-right: rem(18);
+    }
+    & > .v-icon.v-icon {
+      position: absolute;
+      top: 50%;
+      right: 0;
+      transform: translateY(-50%) rotate(0deg);
+    }
+    &.asc > .v-icon.v-icon {
+      transform: translateY(-50%)rotate(180deg);
+    }
+    &.desc > .v-icon.v-icon {
+      transform: translateY(-50%) rotate(0deg);
+    }
+  }
+}
 </style>
