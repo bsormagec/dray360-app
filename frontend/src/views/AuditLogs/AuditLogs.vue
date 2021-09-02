@@ -3,85 +3,92 @@
     <v-container
       fluid
       pa-0
+      no-gutter
     >
-      <div class="row no-gutters">
-        <div class="col-12 audits__list">
-          <Filters
-            :initial-filters="filters"
-            @change="filtersChanged"
-          />
-          <v-row>
-            <v-col cols="1 d-flex align-center">
-              <v-btn
-                color="primary"
-                primary
-                :loading="loading"
-                @click="searchAudits"
+      <v-col cols="12">
+        <div class="table-root">
+          <v-data-table
+            :headers="[
+              {
+                text: 'ID', value: 'id',
+              },
+              { text: 'Request ID', value: 'request_id' },
+              { text: 'Company', value: 'company.name' },
+              { text: 'Variant Name', value: 'variant_name' },
+              { text: 'Created At', value: 'created_at' },
+              { text: 'Updated At', value: 'updated_at' },
+              { text: 'Changes', value: 'changes_count' },
+              { text: 'Client changes', value: 'client_changes_count' },
+              { text: 'Reviewer changes', value: 't_companies_changes_count' },
+              { text: '', sortable: false, value: 'data-table-expand' },
+            ]"
+            item-key="id"
+            :items="orders"
+            :single-expand="false"
+            :options.sync="options"
+            :server-items-length="meta.total"
+            :header-props="{ sortIcon: 'mdi-chevron-up'}"
+            hide-default-footer
+            :loading="loading"
+            show-expand
+          >
+            <template v-slot:top>
+              <v-row
+                align="center"
+                justify="space-between"
+                dense
               >
-                Search
-              </v-btn>
-            </v-col>
-          </v-row>
-          <div class="table-root">
-            <v-data-table
-              :headers="[
-                {
-                  text: 'ID', value: 'id',
-                },
-                { text: 'Request ID', value: 'request_id' },
-                { text: 'Company', value: 'company.name' },
-                { text: 'Variant Name', value: 'variant_name' },
-                { text: 'Created At', value: 'created_at' },
-                { text: 'Updated At', value: 'updated_at' },
-                { text: 'Changes', value: 'changes_count' },
-                { text: 'Client changes', value: 'client_changes_count' },
-                { text: 'Reviewer changes', value: 't_companies_changes_count' },
-                { text: '', sortable: false, value: 'data-table-expand' },
-              ]"
-              item-key="id"
-              :items="orders"
-              :single-expand="false"
-              :options.sync="options"
-              :server-items-length="meta.total"
-              :header-props="{ sortIcon: 'mdi-chevron-up'}"
-              hide-default-footer
-              :loading="loading"
-              show-expand
-            >
-              <template v-slot:[`item.id`]="{ item }">
-                <router-link :to="`/order/${item.id}`">
-                  {{ item.id }}
-                </router-link>
-              </template>
-              <template v-slot:[`item.changes_count`]="{ item }">
-                {{ item.audits.length }}
-              </template>
-              <template v-slot:[`item.created_at`]="{ item }">
-                {{ formatDate(item.created_at, { timeZone: false, withSeconds: true }) }}
-              </template>
-              <template v-slot:[`item.updated_at`]="{ item }">
-                {{ formatDate(item.updated_at, { timeZone: false, withSeconds: true }) }}
-              </template>
-              <template v-slot:expanded-item="{ headers, item }">
-                <td :colspan="headers.length">
-                  <AuditLogsTable
-                    :audits="item.audits"
-                    height="40vh"
+                <v-col cols="auto">
+                  <Filters
+                    :initial-filters="filters"
+                    @change="filtersChanged"
                   />
-                </td>
-              </template>
-              <template v-slot:footer>
-                <Pagination
-                  :loading="loading"
-                  :page-data="meta"
-                  :links="links"
-                  @pageIndexChange="onPageChange"
+                </v-col>
+                <v-col cols="auto">
+                  <v-btn
+                    color="primary"
+                    primary
+                    :loading="loading"
+                    @click="searchAudits"
+                  >
+                    Search
+                  </v-btn>
+                </v-col>
+              </v-row>
+            </template>
+            <template v-slot:[`item.id`]="{ item }">
+              <router-link :to="`/order/${item.id}`">
+                {{ item.id }}
+              </router-link>
+            </template>
+            <template v-slot:[`item.changes_count`]="{ item }">
+              {{ item.audits.length }}
+            </template>
+            <template v-slot:[`item.created_at`]="{ item }">
+              {{ formatDate(item.created_at, { timeZone: false, withSeconds: true }) }}
+            </template>
+            <template v-slot:[`item.updated_at`]="{ item }">
+              {{ formatDate(item.updated_at, { timeZone: false, withSeconds: true }) }}
+            </template>
+            <template v-slot:expanded-item="{ headers, item }">
+              <td :colspan="headers.length">
+                <AuditLogsTable
+                  :audits="item.audits"
+                  height="40vh"
                 />
-              </template>
-            </v-data-table>
-          </div>
+              </td>
+            </template>
+            <template v-slot:footer>
+              <Pagination
+                :loading="loading"
+                :page-data="meta"
+                :links="links"
+                @pageIndexChange="onPageChange"
+              />
+            </template>
+          </v-data-table>
         </div>
-      </div>
+      </v-col>
     </v-container>
   </div>
 </template>
@@ -112,7 +119,7 @@ export default {
 
   data: () => ({
     filters: {
-      timeRange: null,
+      timeRange: 1,
       dateRange: [],
       companyId: null,
       variantName: null,

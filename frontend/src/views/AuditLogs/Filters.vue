@@ -1,28 +1,45 @@
 <template>
-  <div>
-    <v-row>
-      <v-col cols="2">
-        <v-autocomplete
-          v-model="filters.timeRange"
-          :items="timeSpans"
-          item-value="hours"
-          item-text="label"
-          name="time_range"
-          label="*Time Span"
-          class="mb-4"
-          outlined
-          clearable
+  <v-container
+    fluid
+    class="pa-0 pb-4"
+  >
+    <v-row
+      align="center"
+      dense
+    >
+      <v-col cols="auto">
+        <v-row
+          class="py-0"
+          align="center"
           dense
-          hide-details
-        />
-        <DateRange
-          v-if="filters.timeRange === -1"
-          v-model="filters.dateRange"
-          label="*Custom Date Range"
-          prepend-icon=""
-        />
+        >
+          <v-col cols="auto">
+            <v-autocomplete
+              v-model="filters.timeRange"
+              :items="timeSpans"
+              item-value="hours"
+              item-text="label"
+              name="time_range"
+              label="*Time Span"
+              clearable
+              dense
+              hide-details
+            />
+          </v-col>
+          <v-col cols="auto">
+            <v-expand-x-transition>
+              <DateRange
+                v-show="filters.timeRange === -1"
+                v-model="filters.dateRange"
+                label="*Custom Date Range"
+                prepend-icon=""
+                :input-attributes="{ outlined: false }"
+              />
+            </v-expand-x-transition>
+          </v-col>
+        </v-row>
       </v-col>
-      <v-col cols="3">
+      <v-col cols="auto">
         <v-autocomplete
           v-model="filters.variantName"
           :items="variants"
@@ -30,18 +47,34 @@
           item-text="abbyy_variant_name"
           name="variant_name"
           label="Variant name"
-          outlined
           clearable
           dense
           chips
           deletable-chips
           multiple
           small-chips
-        />
+          hide-details
+        >
+          <template v-slot:selection="{ item, index }">
+            <v-chip
+              v-if="index === 0"
+              close
+              @click:close="handleFilterDeletion(item.abbyy_variant_name, 'variantName')"
+            >
+              <span>{{ item.abbyy_variant_name }}</span>
+            </v-chip>
+            <span
+              v-if="index === 1"
+              class="grey--text caption"
+            >
+              (+{{ filters.variantName.length - 1 }} others)
+            </span>
+          </template>
+        </v-autocomplete>
       </v-col>
       <v-col
         v-if="canViewOtherCompanies()"
-        cols="3"
+        cols="auto"
       >
         <v-autocomplete
           v-model="filters.companyId"
@@ -50,7 +83,6 @@
           item-text="name"
           name="company_id"
           label="Company"
-          outlined
           clearable
           dense
           chips
@@ -58,11 +90,27 @@
           multiple
           small-chips
           hide-details
-        />
+        >
+          <template v-slot:selection="{ item, index }">
+            <v-chip
+              v-if="index === 0"
+              close
+              @click:close="handleFilterDeletion(item.id, 'companyId')"
+            >
+              <span>{{ item.name }}</span>
+            </v-chip>
+            <span
+              v-if="index === 1"
+              class="grey--text caption"
+            >
+              (+{{ filters.companyId.length - 1 }} others)
+            </span>
+          </template>
+        </v-autocomplete>
       </v-col>
       <v-col
         v-if="canViewOtherCompanies()"
-        cols="3"
+        cols="auto"
       >
         <v-autocomplete
           v-model="filters.userId"
@@ -71,7 +119,6 @@
           item-text="name"
           name="user_id"
           label="User"
-          outlined
           clearable
           dense
           chips
@@ -79,10 +126,26 @@
           multiple
           small-chips
           hide-details
-        />
+        >
+          <template v-slot:selection="{ item, index }">
+            <v-chip
+              v-if="index === 0"
+              close
+              @click:close="handleFilterDeletion(item.id, 'userId')"
+            >
+              <span>{{ item.name }}</span>
+            </v-chip>
+            <span
+              v-if="index === 1"
+              class="grey--text caption"
+            >
+              (+{{ filters.userId.length - 1 }} others)
+            </span>
+          </template>
+        </v-autocomplete>
       </v-col>
     </v-row>
-  </div>
+  </v-container>
 </template>
 
 <script>
@@ -133,6 +196,7 @@ export default {
       companyId: vm.initialFilters.companyId,
       userId: vm.initialFilters.userId,
       variantName: vm.initialFilters.variantName,
+      timeRange: vm.initialFilters.timeRange
     }
   }),
 
@@ -164,6 +228,7 @@ export default {
 
       this.users = data.data
     },
+
     async fetchVariants () {
       const [error, data] = await getVariants({
         'fields[t_ocrvariants]': 'abbyy_variant_name'
@@ -175,6 +240,10 @@ export default {
 
       this.variants = data
     },
+
+    handleFilterDeletion (item, filter) {
+      this.filters[filter] = this.filters[filter].filter(s => s !== item)
+    }
   }
 }
 </script>
