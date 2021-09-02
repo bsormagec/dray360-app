@@ -78,7 +78,7 @@
         </router-link>
       </template>
       <template v-slot:[`item.company`]="{ item }">
-        {{ item.company.name }}
+        {{ item.company }}
       </template>
       <template v-slot:[`item.id`]="{ item }">
         <router-link :to="`/order/${item.id}`">
@@ -109,7 +109,7 @@
         {{
           item.tms_template
             ? item.tms_template.item_display_name
-            : item.bill_to_address ? item.bill_to_address.location_name : ''
+            : item.bill_to_address_name
         }}
       </template>
       <template v-slot:[`item.tms_shipment_id`]="{ item }">
@@ -270,7 +270,7 @@ export default {
         { text: 'Order ID', sortable: false, value: 'id' },
         { text: 'Update Status', value: 'latest_ocr_request_status.display_status', align: 'center' },
         { text: 'Container', sortable: false, value: 'unit_number' },
-        { text: 'Bill To', value: 'bill_to_address.location_name' },
+        { text: 'Bill To', value: 'bill_to_address_name' },
         { text: 'Direction', value: 'shipment_direction', align: 'center' },
         { text: 'Actions', value: 'actions', sortable: false, align: 'center' }
       ]
@@ -365,7 +365,7 @@ export default {
 
         const sortColumnMap = {
           shipment_direction: 'order.shipment_direction',
-          'bill_to_address.location_name': 'order.bill_to_address',
+          bill_to_address_name: 'order.bill_to_address',
           'latest_ocr_request_status.display_status': 'status'
         }
         let sortCol = this.sortColumnDefault

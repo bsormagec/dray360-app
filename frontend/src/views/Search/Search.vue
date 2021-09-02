@@ -32,7 +32,7 @@ export default {
         { text: 'Date', value: 'created_at', hasPermission: true },
         { text: 'Order ID', value: 'id', hasPermission: true },
         { text: 'Request ID', value: 'request_id', hasPermission: true },
-        { text: 'Company', value: 'company', sortable: false, align: 'center', hasPermission: this.canViewOtherCompanies() },
+        { text: 'Company', value: 'company', align: 'center', hasPermission: this.canViewOtherCompanies() },
         { text: 'Update Status', value: 'latest_ocr_request_status.display_status', align: 'center', hasPermission: true },
         { text: 'TMS ID', value: 'tms_shipment_id', align: 'center', hasPermission: true },
         { text: 'Last Update', value: 'updated_at', align: 'center', hasPermission: true },
