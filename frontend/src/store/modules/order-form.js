@@ -1,6 +1,7 @@
 import { updateOrderDetail, updateAllOrders } from '@/store/api_calls/orders'
 import { getHighlights, parseChanges, baseHighlight } from '@/utils/order_form_general_functions'
 import cloneDeep from 'lodash/cloneDeep'
+import get from 'lodash/get'
 import requestList from './requests-list'
 
 export const types = {
@@ -84,6 +85,11 @@ const mutations = {
 
     const order = cloneDeep(state.order)
     order.ocr_request.latest_ocr_request_status = latestStatus
+
+    const tmsShipmentId = get(latestStatus, 'status_metadata.tms_shipment_id', null)
+    if (!order.tms_shipment_id && tmsShipmentId) {
+      order.tms_shipment_id = tmsShipmentId
+    }
 
     state.order = order
     state.backupOrder = cloneDeep(order)

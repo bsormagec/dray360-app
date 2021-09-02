@@ -238,6 +238,7 @@ import { mapState, mapActions } from 'vuex'
 import OutlinedButtonGroup from '@/components/General/OutlinedButtonGroup'
 import StatusHistoryDialog from '@/views/OrderDetails/StatusHistoryDialog'
 import cloneDeep from 'lodash/cloneDeep'
+import get from 'lodash/get'
 
 export default {
   name: 'OrderTable',
@@ -722,6 +723,11 @@ export default {
 
         const order = cloneDeep(this.orders[index])
         order.latest_ocr_request_status = latestStatus
+
+        const tmsShipmentId = get(latestStatus, 'status_metadata.tms_shipment_id', null)
+        if (!order.tms_shipment_id && tmsShipmentId) {
+          order.tms_shipment_id = tmsShipmentId
+        }
 
         this.orders.splice(index, 1, order)
       }, '-orders')
