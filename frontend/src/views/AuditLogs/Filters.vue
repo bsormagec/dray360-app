@@ -4,42 +4,34 @@
     class="pa-0 pb-4"
   >
     <v-row
-      align="center"
+      align="start"
       dense
     >
-      <v-col cols="auto">
-        <v-row
-          class="py-0"
-          align="center"
+      <v-col cols="2">
+        <v-autocomplete
+          v-model="filters.timeRange"
+          :items="timeSpans"
+          item-value="hours"
+          item-text="label"
+          name="time_range"
+          label="*Time Span"
+          clearable
           dense
-        >
-          <v-col cols="auto">
-            <v-autocomplete
-              v-model="filters.timeRange"
-              :items="timeSpans"
-              item-value="hours"
-              item-text="label"
-              name="time_range"
-              label="*Time Span"
-              clearable
-              dense
-              hide-details
-            />
-          </v-col>
-          <v-col cols="auto">
-            <v-expand-x-transition>
-              <DateRange
-                v-show="filters.timeRange === -1"
-                v-model="filters.dateRange"
-                label="*Custom Date Range"
-                prepend-icon=""
-                :input-attributes="{ outlined: false }"
-              />
-            </v-expand-x-transition>
-          </v-col>
-        </v-row>
+          hide-details
+        />
       </v-col>
       <v-col cols="auto">
+        <v-expand-x-transition>
+          <DateRange
+            v-show="filters.timeRange === -1"
+            v-model="filters.dateRange"
+            label="*Custom Date Range"
+            prepend-icon=""
+            :input-attributes="{ outlined: false }"
+          />
+        </v-expand-x-transition>
+      </v-col>
+      <v-col cols="2">
         <v-autocomplete
           v-model="filters.variantName"
           :items="variants"
@@ -59,6 +51,7 @@
             <v-chip
               v-if="index === 0"
               close
+              small
               @click:close="handleFilterDeletion(item.abbyy_variant_name, 'variantName')"
             >
               <span>{{ item.abbyy_variant_name }}</span>
@@ -74,7 +67,7 @@
       </v-col>
       <v-col
         v-if="canViewOtherCompanies()"
-        cols="auto"
+        cols="2"
       >
         <v-autocomplete
           v-model="filters.companyId"
@@ -95,6 +88,7 @@
             <v-chip
               v-if="index === 0"
               close
+              small
               @click:close="handleFilterDeletion(item.id, 'companyId')"
             >
               <span>{{ item.name }}</span>
@@ -110,7 +104,7 @@
       </v-col>
       <v-col
         v-if="canViewOtherCompanies()"
-        cols="auto"
+        cols="2"
       >
         <v-autocomplete
           v-model="filters.userId"
@@ -131,6 +125,7 @@
             <v-chip
               v-if="index === 0"
               close
+              small
               @click:close="handleFilterDeletion(item.id, 'userId')"
             >
               <span>{{ item.name }}</span>

@@ -33,6 +33,22 @@
             />
           </v-form>
 
+          <div
+            v-if="defaultItemsPerPage.length"
+            class="page-selector"
+          >
+            <v-select
+              v-model="itemsPerPageSelected"
+              class="page-selector__input"
+              outlined
+              hide-details
+              height="30"
+              dense
+              :items="itemsPerPage"
+              @change="handleItemsPerPageChange"
+            />
+          </div>
+
           <div class="page-links">
             <v-btn
               class="pagination-btn"
@@ -69,35 +85,51 @@
         </v-col>
       </v-row>
     </v-container>
-    </v-container-fluid>
   </footer>
 </template>
 <script>
 
 export default {
   name: 'TablePagination',
+
   components: {
   },
+
   props: {
     pageData: {
       type: Object,
-      required: false
+      required: false,
+      default: () => ({})
     },
     links: {
       type: Object,
-      required: false
+      required: false,
+      default: () => ({})
     },
     loading: {
       type: Boolean,
-      required: false
+      required: false,
+      default: false
+    },
+    defaultItemsPerPage: {
+      type: Array,
+      required: false,
+      default: () => []
+    },
+    defaultItemsPerPageSelected: {
+      type: String,
+      required: false,
+      default: null
     }
   },
-  data () {
-    return {
-      linkLimit: 3,
-      pageIndexTarget: null
-    }
-  },
+
+  data: (vm) => ({
+    linkLimit: 3,
+    pageIndexTarget: null,
+    itemsPerPage: vm.defaultItemsPerPage,
+    itemsPerPageSelected: vm.defaultItemsPerPageSelected
+  }),
+
   computed: {
     pageIndexes () {
       if (this.pageData) {
@@ -119,28 +151,29 @@ export default {
       }
       return []
     },
+
     total () {
       return this.pageData ? this.pageData.total : 0
     },
+
     from () {
       return this.pageData ? this.pageData.from : 0
     },
+
     to () {
       return this.pageData ? this.pageData.to : 0
     }
-  },
-
-  created () {
-
   },
 
   methods: {
     goToFirstPage () {
       this.goToPage(1)
     },
+
     goToLastPage () {
       this.goToPage(this.pageData.last_page)
     },
+
     goToPage (pageIndex) {
       // only emit event if the target page index is different from current_page
       if (this.pageData.current_page !== pageIndex && pageIndex <= this.pageData.last_page && pageIndex > 0) {
@@ -148,64 +181,84 @@ export default {
         // reset this so the field doesn't show the current page number
         this.pageIndexTarget = null
       }
+    },
+
+    handleItemsPerPageChange (value) {
+      this.$emit('itemsPerPageChange', value)
     }
   }
 }
 </script>
 
 <style lang="scss" scoped>
-  .loading {
-    opacity: 0.5;
-    transition: opacity 0.3s linear;
+.loading {
+  opacity: 0.5;
+  transition: opacity 0.3s linear;
+}
+.page-links {
+  display: flex;
+}
+.pagination-btn {
+  margin: 0 rem(10);
+  &:last-child {
+    margin: 0;
   }
-  .page-links {
-    display: flex;
+  & ~ .page-indexes {
+    margin-right: rem(10);
   }
-    .pagination-btn {
-        margin: 0 rem(10);
-        &:last-child {
-          margin-right: 0;
-        }
-    }
-    .page-index-btn {
-      border-radius: 0 !important;
-      padding: 0 !important;
-      min-width: rem(50) !important;
-      &:first-child {
-        border-top-left-radius: 4px !important;
-        border-bottom-left-radius: 4px !important;
-        border-right: none;
-      }
-      &:last-child {
-        border-top-right-radius: 4px !important;
-        border-bottom-right-radius: 4px !important;
-        border-left: none;
-      }
-    }
+}
+.page-index-btn {
+  border-radius: 0 !important;
+  padding: 0 !important;
+  min-width: rem(50) !important;
+  &:first-child {
+    border-top-left-radius: 4px !important;
+    border-bottom-left-radius: 4px !important;
+    border-right: none;
+  }
+  &:last-child {
+    border-top-right-radius: 4px !important;
+    border-bottom-right-radius: 4px !important;
+    border-left: none;
+  }
+}
+.pagination-btn::v-deep .v-btn__content, .page-index-btn::v-deep .v-btn__content {
+  font-size: rem(10);
 
-    .pagination-btn::v-deep .v-btn__content, .page-index-btn::v-deep .v-btn__content {
-      font-size: rem(10);
-
+}
+.pagination-info {
+  font-size: rem(10);
+  font-weight: 500;
+  letter-spacing: rem(1);
+}
+.page-jump {
+  label {
+    margin-right:rem(10);
+    font-size: rem(10);
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: rem(1);
+  }
+  margin-right: rem(10);
+  .page-number {
+    max-width: rem(60);
+  }
+  .page-number::v-deep .v-input__slot {
+    min-height: auto;
+  }
+}
+.page-selector {
+  max-width: rem(90);
+  & > &__input.v-select::v-deep {
+    min-height: auto;
+    height: rem(30);
+    .input__control, .v-input__slot {
+      height: rem(30);
+      min-height: auto;
     }
-    .pagination-info {
-      font-size: rem(10);
-      font-weight: 500;
-      letter-spacing: rem(1);
+    .v-input__append-inner {
+      margin-top: rem(3);
     }
-    .page-jump {
-        label {
-            margin-right:rem(10);
-            font-size: rem(10);
-            font-weight: 500;
-            text-transform: uppercase;
-            letter-spacing: rem(1);
-        }
-        margin-right: rem(10);
-        .page-number {
-            max-width: rem(60);
-        }
-        .page-number::v-deep .v-input__slot {
-            min-height: auto;
-        }
-    }
+  }
+}
 </style>

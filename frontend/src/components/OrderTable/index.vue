@@ -738,8 +738,28 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.table-root {
+.table-root::v-deep {
   position: relative;
+  table > thead > tr > th {
+    position: relative;
+    & > span {
+      display: inline-block;
+      width: 100%;
+      padding-right: rem(18);
+    }
+    & > .v-icon.v-icon {
+      position: absolute;
+      top: 50%;
+      right: 0;
+      transform: translateY(-50%) rotate(0deg);
+    }
+    &.asc > .v-icon.v-icon {
+      transform: translateY(-50%)rotate(180deg);
+    }
+    &.desc > .v-icon.v-icon {
+      transform: translateY(-50%) rotate(0deg);
+    }
+  }
   .processed-status {
     &:before {
       content: '';

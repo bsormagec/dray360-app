@@ -168,3 +168,7 @@ export const commentableTypes = {
   order: 'order',
   request: 'request',
 }
+
+export const localStorageTypes = {
+  auditsLogsDashboardOptions: 'audits-logs-dashboard-options'
+}

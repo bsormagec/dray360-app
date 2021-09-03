@@ -9,9 +9,7 @@
         <div class="table-root">
           <v-data-table
             :headers="[
-              {
-                text: 'ID', value: 'id',
-              },
+              { text: 'ID', value: 'id' },
               { text: 'Request ID', value: 'request_id' },
               { text: 'Company', value: 'company.name' },
               { text: 'Variant Name', value: 'variant_name' },
@@ -34,11 +32,11 @@
           >
             <template v-slot:top>
               <v-row
-                align="center"
+                align="start"
                 justify="space-between"
                 dense
               >
-                <v-col cols="auto">
+                <v-col cols="11">
                   <Filters
                     :initial-filters="filters"
                     @change="filtersChanged"
@@ -83,7 +81,10 @@
                 :loading="loading"
                 :page-data="meta"
                 :links="links"
+                :default-items-per-page="itemsPerPage"
+                :default-items-per-page-selected="userOptions.itemsPerPageSelected"
                 @pageIndexChange="onPageChange"
+                @itemsPerPageChange="onItemsPerPageChange"
               />
             </template>
           </v-data-table>
@@ -106,6 +107,8 @@ import Filters from './Filters'
 import AuditLogsTable from '@/components/AuditLogsTable'
 import Pagination from '@/components/OrderTable/components/Pagination'
 
+import { localStorageTypes } from '@/enums/app_objects_types'
+
 export default {
   name: 'AuditsLog',
 
@@ -127,6 +130,7 @@ export default {
     },
     orders: [],
     page: 1,
+    itemsPerPage: ['10', '25', '50', '100'],
     meta: {},
     links: {},
     options: {
@@ -135,6 +139,9 @@ export default {
     },
     sort: '-id',
     loading: false,
+    userOptions: {
+      itemsPerPageSelected: '10'
+    }
   }),
 
   watch: {
@@ -154,6 +161,24 @@ export default {
       },
       deep: true
     },
+
+    userOptions: {
+      handler () {
+        localStorage.setItem(localStorageTypes.auditsLogsDashboardOptions, JSON.stringify(this.userOptions))
+      },
+      deep: true
+    }
+  },
+
+  created () {
+    const userOptions = localStorage.getItem(localStorageTypes.auditsLogsDashboardOptions)
+    if (userOptions) {
+      const options = JSON.parse(userOptions)
+      this.userOptions = { ...this.userOptions, ...options }
+    } else {
+      const options = JSON.stringify(this.userOptions)
+      localStorage.setItem(localStorageTypes.auditsLogsDashboardOptions, options)
+    }
   },
 
   methods: {
@@ -165,6 +190,7 @@ export default {
       this.filters = { ...newFilters }
       this.page = 1
     },
+
     async searchAudits () {
       const { timeRange, dateRange, userId, companyId, variantName } = this.filters
 
@@ -182,6 +208,7 @@ export default {
         'filter[variant_name]': variantName ? variantName.join(',') : null,
         page: this.page,
         sort: this.sort,
+        per_page: this.userOptions.itemsPerPageSelected
       })
       this.loading = false
 
@@ -210,8 +237,14 @@ export default {
         return { ...order.model, audits }
       })
     },
+
     onPageChange (newPage) {
       this.page = newPage
+      this.searchAudits()
+    },
+
+    onItemsPerPageChange (newValue) {
+      this.userOptions.itemsPerPageSelected = newValue
       this.searchAudits()
     }
   }
