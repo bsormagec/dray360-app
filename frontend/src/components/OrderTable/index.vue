@@ -724,7 +724,9 @@ export default {
         const order = cloneDeep(this.orders[index])
         order.latest_ocr_request_status = latestStatus
 
-        const tmsShipmentId = get(latestStatus, 'status_metadata.tms_shipment_id', null)
+        let tmsShipmentId = get(latestStatus, 'status_metadata.tms_shipment_id', null)
+        tmsShipmentId = get(latestStatus, 'status_metadata.shipment_id', tmsShipmentId)
+
         if (!order.tms_shipment_id && tmsShipmentId) {
           order.tms_shipment_id = tmsShipmentId
         }
