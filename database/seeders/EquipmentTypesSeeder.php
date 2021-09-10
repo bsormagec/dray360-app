@@ -20,6 +20,17 @@ class EquipmentTypesSeeder extends Seeder
      * add the specific companies to actually import.
      */
     const ALL_COMPANIES = [
+        'MutualExpress' => [
+            'file' => 'seeders/MutualExpress_EquipmentLeaseTypes.20210910.xlsx',
+            'columns' => [
+                'tms_equipment_id' => 'id',
+                'equipment_owner' => 'line',
+                'equipment_type_and_size' => 'type',
+                'equipment_size' => 'equipmentlength',
+                'scac' => 'scac',
+                'line_prefix_list' => 'lineprefix',
+            ],
+        ],
         'TTWTransport' => [
             'file' => 'seeders/TTWTransport_EquipmentLeaseTypes.20210811.xlsx',
             'columns' => [
@@ -310,7 +321,7 @@ class EquipmentTypesSeeder extends Seeder
      * there is usually no reason to re-import more than once.
      */
     const TO_BE_IMPORTED = [
-        'TTWTransport' => self::ALL_COMPANIES['TTWTransport']
+        'MutualExpress' => self::ALL_COMPANIES['MutualExpress']
     ];
 
     /**
