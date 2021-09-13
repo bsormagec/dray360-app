@@ -85,7 +85,11 @@ const mutations = {
       statuses.uploadRequested
     ].includes(latestStatus.status)
 
-    if (!hasNewRequestStatus || state.newRequestIds.includes(latestStatus.request_id)) {
+    if (
+      !hasNewRequestStatus ||
+      state.newRequestIds.includes(latestStatus.request_id) ||
+      state.requests.findIndex(item => item.request_id === latestStatus.request_id) !== -1
+    ) {
       return
     }
 
