@@ -318,6 +318,7 @@ export default {
 
         this.updateRequestStatus({ latestStatus })
         this.checkIfRequestMatchesFilters(latestStatus)
+        this.$root.$emit(events.requestStatusUpdated, latestStatus)
 
         if (requestId !== this.requestIdSelected) {
           return

@@ -1,4 +1,6 @@
 import format from 'date-fns/format'
+import intervalToDuration from 'date-fns/intervalToDuration'
+import formatDuration from 'date-fns/formatDuration'
 
 export const formatDate = (
   stringDate,
@@ -34,4 +36,17 @@ const getTimeZoneName = () => {
   offset = 'UTC' + (offset >= 0 ? '+' + offset : offset)
   timezone = timezonenames[offset]
   return timezone
+}
+
+export const diffForHumans = (a, b) => {
+  const start = a instanceof Date ? a : (new Date(a))
+  const end = b instanceof Date ? b : (new Date(b))
+
+  const duration = intervalToDuration({ start, end })
+
+  return formatDuration(duration)
+    .replace('weeks', 'w')
+    .replace('hours', 'h')
+    .replace('minutes', 'm')
+    .replace('seconds', 's')
 }

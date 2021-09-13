@@ -11,4 +11,5 @@ export default {
   openPtFileUploadDialog: 'open-pt-image-upload',
   openOrderCommentDialog: 'open-order-comment-dialog',
   requestStatusUpdated: 'RequestStatusUpdated',
+  orderStatusUpdated: 'OrderStatusUpdated',
 }

@@ -448,6 +448,7 @@ export default {
         }
 
         this.updateOrderStatus({ latestStatus })
+        this.$root.$emit(events.orderStatusUpdated, latestStatus)
       }, `-order${this.order.id}`)
     },
 

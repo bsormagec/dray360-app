@@ -692,6 +692,8 @@ export default {
           return
         }
 
+        this.$root.$emit(events.orderStatusUpdated, latestStatus)
+
         const order = cloneDeep(this.orders[index])
         order.latest_ocr_request_status = latestStatus
 
