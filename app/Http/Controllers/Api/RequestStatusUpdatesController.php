@@ -4,7 +4,6 @@ namespace App\Http\Controllers\Api;
 
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
-use Illuminate\Validation\Rule;
 use App\Models\OCRRequestStatus;
 use App\Events\RequestStatusUpdated;
 use App\Http\Controllers\Controller;
@@ -22,10 +21,10 @@ class RequestStatusUpdatesController extends Controller
         $data = $request->validate([
             'token' => ['required', 'alpha_dash'],
             'request_id' => ['required', 'exists:t_job_latest_state,request_id'],
-            'status' => ['required', Rule::in(array_keys(OCRRequestStatus::STATUS_MAP))],
+            'status' => ['required', 'string'],
             'status_date' => ['required'],
             'status_metadata' => ['required', 'array'],
-            'company_id' => ['required', 'exists:t_companies,id'],
+            'company_id' => ['required', 'integer'],
             'order_id' => ['nullable'],
         ]);
 
