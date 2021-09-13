@@ -101,7 +101,7 @@ class OrdersListQuery extends QueryBuilder
             AllowedSort::field('id', 't_orders.id'),
             AllowedSort::field('tms_shipment_id', 't_orders.tms_shipment_id'),
             AllowedSort::field('request_id', 't_orders.request_id'),
-            AllowedSort::field('created_at', 't_orders.created_at'),
+            AllowedSort::field('created_at', 't_orders.id'),
             AllowedSort::field('updated_at', 't_orders.updated_at'),
             AllowedSort::field('reference_number', 't_orders.reference_number'),
             AllowedSort::field('unit_number', 't_orders.unit_number'),
