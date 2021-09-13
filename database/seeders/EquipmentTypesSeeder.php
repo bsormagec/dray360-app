@@ -76,7 +76,7 @@ class EquipmentTypesSeeder extends Seeder
             ],
         ],
         'PFS' => [
-            'file' => 'seeders/PFS_EquipmentLeaseTypes.20210514.xlsx',
+            'file' => 'seeders/PFS_EquipmentLeaseTypes.20210913.xlsx',
             'columns' => [
                 'tms_equipment_id' => 'id',
                 'equipment_owner' => 'line',
@@ -321,7 +321,7 @@ class EquipmentTypesSeeder extends Seeder
      * there is usually no reason to re-import more than once.
      */
     const TO_BE_IMPORTED = [
-        'MutualExpress' => self::ALL_COMPANIES['MutualExpress']
+        'PFS' => self::ALL_COMPANIES['PFS']
     ];
 
     /**
