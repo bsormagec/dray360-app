@@ -82,6 +82,10 @@ class Company extends Resource
             BelongsTo::make('Domain', 'domain', Domain::class)->sortable()->nullable(),
             Number::make('Automatic address verification threshold', 'automatic_address_verification_threshold'),
             Boolean::make('Sync Addresses', 'sync_addresses'),
+            Boolean::make('Inactive', 'deactivated_at')
+                ->resolveUsing(function ($deactivatedAt) {
+                    return ! ! $deactivatedAt;
+                }),
 
             Code::make('Ref Mapping', 'refs_custom_mapping')->json()->hideFromIndex()->rules(['nullable', 'json']),
             Code::make('Configuration', 'configuration')
