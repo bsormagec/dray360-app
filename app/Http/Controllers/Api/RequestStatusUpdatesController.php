@@ -20,7 +20,7 @@ class RequestStatusUpdatesController extends Controller
     {
         $data = $request->validate([
             'token' => ['required', 'alpha_dash'],
-            'request_id' => ['required', 'exists:t_job_latest_state,request_id'],
+            'request_id' => ['required', 'alpha_dash'],
             'status' => ['required', 'string'],
             'status_date' => ['required'],
             'status_metadata' => ['required', 'array'],

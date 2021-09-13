@@ -14,16 +14,19 @@ export const types = {
   toggleSupervise: 'TOGGLE_SUPERVISE',
   setSupervise: 'SET_SUPERVISE',
   updateRequestStatus: 'UPDATE_REQUEST_STATUS',
+  updateNewRequests: 'UPDATE_NEW_REQUESTS',
 }
 
 const initialState = {
   requests: [],
+  newRequestIds: [],
   supervise: toBool(localStorage.getItem(types.toggleSupervise)) || false,
 }
 
 const mutations = {
   [types.setRequests] (state, { requests }) {
     state.requests = requests
+    state.newRequestIds = []
   },
   [types.appendRequests] (state, { requests }) {
     state.requests = state.requests.concat(requests)
@@ -65,6 +68,7 @@ const mutations = {
     const newRequest = cloneDeep(state.requests[index])
     newRequest.latest_ocr_request_status = latestStatus
 
+    // Check if we have new orders in the latest state to update the respective request
     const orderIdList = get(latestStatus, 'status_metadata.order_id_list', [])
     if (orderIdList.length > 0) {
       newRequest.first_order_id = orderIdList[0]
@@ -72,6 +76,20 @@ const mutations = {
     }
 
     state.requests.splice(index, 1, newRequest)
+  },
+  [types.updateNewRequests] (state, { latestStatus }) {
+    // Check if we have new request in the latest state to show the snackbar and refresh button
+    const hasNewRequestStatus = [
+      statuses.intakeStarted,
+      statuses.intakeRejected,
+      statuses.uploadRequested
+    ].includes(latestStatus.status)
+
+    if (!hasNewRequestStatus || state.newRequestIds.includes(latestStatus.request_id)) {
+      return
+    }
+
+    state.newRequestIds.push(latestStatus.request_id)
   },
 }
 
@@ -139,6 +157,7 @@ const actions = {
   },
   [types.updateRequestStatus] ({ commit }, { latestStatus }) {
     commit(types.updateRequestStatus, { latestStatus })
+    commit(types.updateNewRequests, { latestStatus })
   },
 }
 

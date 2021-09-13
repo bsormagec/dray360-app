@@ -22,6 +22,7 @@
           height="auto"
         >
           <v-btn
+            v-show="newOrders"
             outlined
             dense
             small
@@ -205,14 +206,14 @@
       </template>
     </v-data-table>
     <v-snackbar
-      v-model="changesDetected"
+      v-model="newOrders"
       :timeout="-1"
     >
       <div class="refresh-msg d-flex align-center justify-space-between">
         <p>New orders available.</p>
         <v-btn
           text
-          @click="reloadPage"
+          @click="getOrderData"
         >
           REFRESH
         </v-btn>
@@ -232,6 +233,7 @@ import { formatDate } from '@/utils/dates'
 import utils, { actionTypes as utilsActionTypes } from '@/store/modules/utils'
 import { getOrders, delDeleteOrder, updateOrderDetail, replicateOrder } from '@/store/api_calls/orders'
 import { getRequestFilters } from '@/utils/filters_handling'
+import { statuses } from '@/enums/app_objects_types'
 import events from '@/enums/events'
 
 import { mapState, mapActions } from 'vuex'
@@ -300,11 +302,8 @@ export default {
 
   data () {
     return {
-      // polling stuff
-      pollingInterval: 10000,
-      pollingTimer: null,
       payload: '',
-      changesDetected: false,
+      newOrderIds: [],
       // main filters array
       filters: [],
       dialog: false,
@@ -351,6 +350,9 @@ export default {
           return exists || current.value === s.value
         }, false)
       })
+    },
+    newOrders () {
+      return this.newOrderIds.length > 0
     }
   },
 
@@ -444,7 +446,6 @@ export default {
     if (this.urlFilters) {
       window.onpopstate = null
     }
-    this.stopPolling()
   },
 
   methods: {
@@ -455,44 +456,9 @@ export default {
       if (Object.keys(this.initFilters).some(key => this.initFilters[key] && this.initFilters[key].length > 0)) {
         this.filters = [...this.$refs.orderFilters.getActiveFilters()]
       }
-
-      // get all orders
-      // this.getOrderData()
-
-      this.startPolling()
     },
 
     ...mapActions(utils.moduleName, [utilsActionTypes.setSnackbar, utilsActionTypes.setConfirmationDialog]),
-
-    // polling
-    async startPolling () {
-      this.total = await this.getOrdersTotal()
-      this.pollingTimer = window.setInterval(this.checkForChanges.bind(this), this.pollingInterval)
-    },
-
-    async checkForChanges () {
-      const totalOrders = await this.getOrdersTotal()
-      if (this.total < totalOrders) {
-        this.changesDetected = true
-        this.total = totalOrders
-      }
-      this.total = totalOrders
-    },
-
-    async getOrdersTotal () {
-      const [error, data] = await getOrders([])
-      if (error !== undefined) return this.total
-      return data.meta.total
-    },
-
-    stopPolling () {
-      window.clearInterval(this.pollingTimer)
-    },
-
-    reloadPage () {
-      this.changesDetected = false
-      window.location.reload()
-    },
 
     async deleteOrder (item) {
       this.loading = true
@@ -576,6 +542,7 @@ export default {
     async getOrderData () {
       const startTime = new Date().getTime()
       this.loading = true
+      this.newOrderIds = []
 
       const [error, responseData] = await getOrders(this.getRequestFilters())
 
@@ -716,6 +683,10 @@ export default {
 
     initializeStateUpdatesListeners () {
       this.listenToRequestStatusUpdates(({ latestStatus } = {}) => {
+        if (!this.requestId) {
+          this.checkForNewOrders(latestStatus)
+        }
+
         const index = this.orders.findIndex(item => item.id === latestStatus.order_id)
         if (index === -1) {
           return
@@ -734,6 +705,20 @@ export default {
         this.orders.splice(index, 1, order)
       }, '-orders')
     },
+
+    checkForNewOrders (latestStatus) {
+      const hasNewOrderStatus = [
+        statuses.processOcrOutputFileComplete,
+        statuses.processOcrOutputFileReview,
+        statuses.processOcrOutputFileError,
+      ].includes(latestStatus.status)
+
+      if (!hasNewOrderStatus || this.newOrderIds.includes(latestStatus.order_id)) {
+        return
+      }
+
+      this.newOrderIds.push(latestStatus.order_id)
+    }
 
   }
 }
