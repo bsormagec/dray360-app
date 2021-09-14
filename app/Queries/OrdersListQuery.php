@@ -42,7 +42,16 @@ class OrdersListQuery extends QueryBuilder
                 ->groupBy('s_s.request_id')
                 ->limit(1)
             ])
-            ->leftJoin('t_addresses as bill_to', 'bill_to.id', '=', 't_orders.bill_to_address_id')
+            ->addSelect(['company' => DB::table('t_companies', 'c')
+                ->select(['c.name'])
+                ->whereColumn('c.id', 't_orders.t_company_id')
+                ->limit(1)
+            ])
+            ->addSelect(['bill_to_address_name' => DB::table('t_addresses', 'bill_to')
+                ->select(['bill_to.location_name'])
+                ->whereColumn('bill_to.id', 't_orders.bill_to_address_id')
+                ->limit(1)
+            ])
             ->join('t_job_latest_state as ls_sort', 'ls_sort.order_id', '=', 't_orders.id')
             ->join('t_job_state_changes as s_sort', 's_sort.id', '=', 'ls_sort.t_job_state_changes_id')
             ->when(! auth()->user()->isAbleTo('all-companies-view') && currentCompany(), function ($query) {
@@ -56,9 +65,7 @@ class OrdersListQuery extends QueryBuilder
             ->with([
                 'ocrRequest:order_id,created_at,updated_at,t_job_state_changes_id',
                 'ocrRequest.latestOcrRequestStatus:id,status,status_metadata',
-                'billToAddress:id,location_name',
                 'locks',
-                'company:id,name',
                 'tmsTemplate:id,item_key,item_display_name',
             ]);
 
@@ -80,7 +87,7 @@ class OrdersListQuery extends QueryBuilder
                         ->orWhere('t_orders.tms_shipment_id', 'like', "%{$value}%")
                         ->orWhere('t_orders.unit_number', 'like', "%{$value}%")
                         ->orWhere('t_orders.reference_number', 'like', "%{$value}%")
-                        ->orWhere('bill_to.location_name', 'like', "%{$value}%");
+                        ->orWhereHas('billToAddress', fn ($q) => $q->where('location_name', 'like', "%{$value}%"));
                 });
             }),
             AllowedFilter::callback('hidden', function ($query, $value) {
@@ -94,7 +101,7 @@ class OrdersListQuery extends QueryBuilder
             AllowedSort::field('id', 't_orders.id'),
             AllowedSort::field('tms_shipment_id', 't_orders.tms_shipment_id'),
             AllowedSort::field('request_id', 't_orders.request_id'),
-            AllowedSort::field('created_at', 't_orders.created_at'),
+            AllowedSort::field('created_at', 't_orders.id'),
             AllowedSort::field('updated_at', 't_orders.updated_at'),
             AllowedSort::field('reference_number', 't_orders.reference_number'),
             AllowedSort::field('unit_number', 't_orders.unit_number'),
@@ -102,7 +109,8 @@ class OrdersListQuery extends QueryBuilder
             AllowedSort::field('order.equipment_type_raw_text', 't_orders.equipment_type_raw_text'),
             AllowedSort::field('order.shipment_designation', 't_orders.shipment_designation'),
             AllowedSort::field('order.shipment_direction', 't_orders.shipment_direction'),
-            AllowedSort::field('order.bill_to_address', 'bill_to.location_name'),
+            AllowedSort::field('order.bill_to_address', 'bill_to_address_name'),
+            AllowedSort::field('company', 'company'),
         ]);
     }
 }

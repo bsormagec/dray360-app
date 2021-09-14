@@ -18,7 +18,7 @@
               color="primary"
               class="refresh__button"
               :loading="loading"
-              @click="fetchStatusHistory"
+              @click="fetchHistory"
             >
               <v-icon>mdi-refresh</v-icon>
             </v-btn>
@@ -142,19 +142,20 @@
   </div>
 </template>
 <script>
-import { getStatusHistory } from '@/store/api_calls/utils'
 import { formatDate } from '@/utils/dates'
-import { cleanStrForId } from '@/utils/clean_str_for_id'
 import permissions from '@/mixins/permissions'
+import statusHistoryDialog from '@/mixins/status_history_dialog'
 import 'vue-json-pretty/lib/styles.css'
 import VueJsonPretty from 'vue-json-pretty'
+import events from '@/enums/events'
 
 export default {
   name: 'StatusHistoryDialog',
-  components: {
-    VueJsonPretty
-  },
-  mixins: [permissions],
+
+  components: { VueJsonPretty },
+
+  mixins: [permissions, statusHistoryDialog],
+
   props: {
     open: {
       type: Boolean,
@@ -165,6 +166,7 @@ export default {
       required: true
     }
   },
+
   data: (vm) => ({
     statusHistory: [],
     loading: false,
@@ -175,6 +177,7 @@ export default {
     userWhoUploadedTheRequest () {
       return this.order.upload_user_name ? this.order.upload_user_name : this.order.email_from_address
     },
+
     historyLabels () {
       return {
         companyName: this.order.company?.name || '---',
@@ -185,41 +188,40 @@ export default {
 
   watch: {
     open () {
+      if (this.open) {
+        this.$root.$on(events.orderStatusUpdated, this.orderStatusUpdated)
+      }
+
       if (this.open && this.statusHistory.length > 0) {
         return
       }
 
-      this.fetchStatusHistory()
+      if (!this.open) {
+        this.$root.$off(events.orderStatusUpdated, this.orderStatusUpdated)
+        return
+      }
+
+      this.fetchHistory()
     },
+
     useSystemStatus () {
-      this.fetchStatusHistory()
+      this.fetchHistory()
     }
   },
   methods: {
     formatDate,
-    cleanStrForId,
-    getStatusClass (status) {
-      return cleanStrForId(status)
-    },
-    async fetchStatusHistory () {
-      this.loading = true
-      const [error, data] = await getStatusHistory({ order_id: this.order.id, system_status: this.useSystemStatus })
-      this.loading = false
 
-      if (error !== undefined) {
+    async fetchHistory () {
+      await this.fetchStatusHistory({ order_id: this.order.id })
+    },
+
+    orderStatusUpdated (latestStatus) {
+      if (this.order.id !== latestStatus.order_id) {
         return
       }
-      this.statusHistory = data.data
+
+      this.updateStatusHistory(latestStatus)
     },
-    formatJson (status) {
-      if (status === undefined) {
-        return {}
-      }
-
-      const { status_metadata, start_date, company_id } = status
-
-      return { start_date, company_id, status_metadata }
-    }
   }
 }
 </script>

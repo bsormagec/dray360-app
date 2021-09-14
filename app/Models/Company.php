@@ -5,6 +5,7 @@ namespace App\Models;
 use stdClass;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\DB;
+use App\Models\Traits\Deactivatable;
 use Illuminate\Database\Eloquent\Model;
 use OwenIt\Auditing\Contracts\Auditable;
 use App\Models\Traits\EncryptsAttributes;
@@ -39,6 +40,7 @@ class Company extends Model implements Auditable
     use \OwenIt\Auditing\Auditable;
     use SoftDeletes;
     use EncryptsAttributes;
+    use Deactivatable;
 
     const FOREIGN_KEY = 't_company_id',
         TCOMPANIES_DEMO_ID = 2;
@@ -78,6 +80,7 @@ class Company extends Model implements Auditable
         'chainio_api_key',
         'sync_addresses',
         't_fieldmap_id',
+        'deactivated_at'
     ];
 
     protected $encryptable = [
@@ -99,6 +102,7 @@ class Company extends Model implements Auditable
         'refs_custom_mapping' => 'json',
         'configuration' => 'json',
         'company_config' => 'json',
+        'deactivated_at' => 'datetime',
     ];
 
     /**

@@ -16,6 +16,7 @@
         @change="filtersUpdated"
       />
       <v-btn
+        v-if="showRefreshWheel"
         outlined
         dense
         small
@@ -27,6 +28,10 @@
       >
         <v-icon>mdi-refresh</v-icon>
       </v-btn>
+      <span
+        v-else
+        class="refresh__button"
+      />
       <LockButtonEnabler
         v-if="hasPermission('supervise-view')"
         class-name="mr-2"
@@ -87,14 +92,14 @@
       />
     </v-overlay>
     <v-snackbar
-      v-model="changesDetected"
+      v-model="newRequests"
       :timeout="-1"
     >
       <div class="refresh-msg d-flex align-center justify-space-between">
-        <p>New requests available.</p>
+        New requests available.
         <v-btn
           text
-          @click="reloadPage"
+          @click="refreshRequests"
         >
           REFRESH
         </v-btn>
@@ -152,11 +157,8 @@ export default {
         displayHidden: false,
         updateType: ''
       },
-      // polling stuff
-      pollingInterval: 10000,
-      pollingTimer: null,
-      changesDetected: false,
-      initialTotalItems: 0
+      newRequests: false,
+      showRefreshWheel: false,
     }
   },
 
@@ -164,6 +166,7 @@ export default {
     ...mapState(requestsList.moduleName, {
       items: state => state.requests,
       supervise: state => state.supervise,
+      newRequestIds: state => state.newRequestIds,
     }),
     requestSelected () {
       return this.items.filter(item => item.request_id === this.requestIdSelected)[0] || {}
@@ -179,6 +182,10 @@ export default {
       this.startLoading()
       this.fetchRequests()
     },
+
+    newRequestIds () {
+      this.newRequests = this.newRequestIds.length
+    }
   },
 
   created () {
@@ -211,7 +218,6 @@ export default {
     await this.fetchRequests()
 
     this.initialTotalMeta = this.meta.total
-    this.startPolling()
     this.initializeLockingListeners()
     this.initializeStateUpdatesListeners()
 
@@ -221,7 +227,6 @@ export default {
   },
 
   beforeDestroy () {
-    this.stopPolling()
     this.stopRefreshingLock()
     this.$echo.leave('object-locking')
     this.leaveRequestStatusUpdatesChannel()
@@ -277,6 +282,8 @@ export default {
       this.resetPagination()
       this.setURLParams()
       await this.fetchRequests()
+      this.newRequests = false
+      this.showRefreshWheel = false
 
       const index = this.items.findIndex(item => item.request_id === this.requestIdSelected)
 
@@ -310,6 +317,8 @@ export default {
         }
 
         this.updateRequestStatus({ latestStatus })
+        this.checkIfRequestMatchesFilters(latestStatus)
+        this.$root.$emit(events.requestStatusUpdated, latestStatus)
 
         if (requestId !== this.requestIdSelected) {
           return
@@ -323,6 +332,29 @@ export default {
 
         this.handleChange(cloneDeep(this.items[index]))
       })
+    },
+
+    checkIfRequestMatchesFilters (latestStatus) {
+      const index = this.items.findIndex(item => item.request_id === latestStatus.request_id)
+
+      if (index !== -1) {
+        return
+      }
+
+      const matches = []
+      this.filters.forEach(filter => {
+        if (filter.type === 'status') {
+          matches.push(filter.value.includes(latestStatus.display_status))
+        } else if (filter.type === 'system_status') {
+          matches.push(filter.value.includes(latestStatus.status))
+        } else if (filter.type === 'company_id') {
+          matches.push(filter.value.includes(latestStatus.company_id))
+        } else {
+          matches.push(true)
+        }
+      })
+
+      this.showRefreshWheel = matches.reduce((a, b) => a + b, 0) === this.filters.length
     },
 
     lockClaimed (request) {
@@ -495,40 +527,6 @@ export default {
     resetPagination () {
       this.page = 1
       this.setRequests([])
-    },
-
-    async startPolling () {
-      this.initialTotalItems = await this.getTotalRequests()
-      this.pollingTimer = window.setInterval(this.checkForChanges.bind(this), this.pollingInterval)
-    },
-
-    async checkForChanges () {
-      const totalItems = await this.getTotalRequests()
-      if (this.initialTotalItems < totalItems) {
-        this.changesDetected = true
-        this.initialTotalItems = totalItems
-      } else {
-        this.initialTotalItems = this.totalItems
-      }
-    },
-
-    async getTotalRequests () {
-      const [error, data] = await getRequests([])
-
-      if (error !== undefined) {
-        return this.initialTotalItems
-      }
-
-      return data.meta.total
-    },
-
-    stopPolling () {
-      window.clearInterval(this.pollingTimer)
-    },
-
-    reloadPage () {
-      this.changesDetected = false
-      this.refreshRequests()
     },
   }
 }

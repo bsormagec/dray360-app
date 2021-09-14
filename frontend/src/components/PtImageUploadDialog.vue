@@ -131,7 +131,7 @@
           <v-btn
             text
             color="primary"
-            :loading="loading"
+            :disabled="loading"
             @click="handleClose"
           >
             cancel

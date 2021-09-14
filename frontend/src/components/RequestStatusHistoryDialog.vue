@@ -18,7 +18,7 @@
               color="primary"
               class="refresh__button"
               :loading="loading"
-              @click="fetchStatusHistory"
+              @click="fetchHistory"
             >
               <v-icon>mdi-refresh</v-icon>
             </v-btn>
@@ -122,19 +122,20 @@
   </div>
 </template>
 <script>
-import { getStatusHistory } from '@/store/api_calls/utils'
 import { formatDate } from '@/utils/dates'
-import { cleanStrForId } from '@/utils/clean_str_for_id'
 import permissions from '@/mixins/permissions'
+import statusHistoryDialog from '@/mixins/status_history_dialog'
 import 'vue-json-pretty/lib/styles.css'
 import VueJsonPretty from 'vue-json-pretty'
+import events from '@/enums/events'
 
 export default {
   name: 'RequestStatusHistoryDialog',
-  components: {
-    VueJsonPretty
-  },
-  mixins: [permissions],
+
+  components: { VueJsonPretty },
+
+  mixins: [permissions, statusHistoryDialog],
+
   props: {
     open: {
       type: Boolean,
@@ -145,6 +146,7 @@ export default {
       required: true
     }
   },
+
   data: (vm) => ({
     statusHistory: [],
     loading: false,
@@ -159,42 +161,41 @@ export default {
 
   watch: {
     open () {
+      if (this.open) {
+        this.$root.$on(events.requestStatusUpdated, this.requestStatusUpdated)
+      }
+
       if (this.open && this.statusHistory.length > 0) {
         return
       }
 
-      this.fetchStatusHistory()
-    },
-    useSystemStatus () {
-      this.fetchStatusHistory()
-    }
-  },
-  methods: {
-    formatDate,
-    cleanStrForId,
-    getStatusClass (status) {
-      return cleanStrForId(status)
-    },
-    async fetchStatusHistory () {
-      this.loading = true
-      const [error, data] = await getStatusHistory({ request_id: this.request.request_id, system_status: this.useSystemStatus })
-      this.loading = false
-
-      if (error !== undefined) {
+      if (!this.open) {
+        this.$root.$off(events.requestStatusUpdated, this.requestStatusUpdated)
         return
       }
-      this.statusHistory = data.data
+
+      this.fetchHistory()
     },
-    formatJson (status) {
-      if (status === undefined) {
-        return {}
+
+    useSystemStatus () {
+      this.fetchHistory()
+    }
+  },
+
+  methods: {
+    formatDate,
+
+    async fetchHistory () {
+      await this.fetchStatusHistory({ request_id: this.request.request_id })
+    },
+
+    requestStatusUpdated (latestStatus) {
+      if (this.request.request_id !== latestStatus.request_id) {
+        return
       }
 
-      // eslint-disable-next-line camelcase
-      const { status_metadata, start_date, company_id } = status
-
-      return { start_date, company_id, status_metadata }
-    }
+      this.updateStatusHistory(latestStatus)
+    },
   }
 }
 </script>

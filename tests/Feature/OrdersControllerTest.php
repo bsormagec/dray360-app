@@ -56,9 +56,10 @@ class OrdersControllerTest extends TestCase
                             'shipment_direction',
                             'tms_shipment_id',
                             'bill_to_address_id',
+                            'bill_to_address_name',
                             'unit_number',
                             'reference_number',
-                            'bill_to_address',
+                            'company',
                             'tms_template_dictid',
                             'tms_template',
                             'latest_ocr_request_status' => [

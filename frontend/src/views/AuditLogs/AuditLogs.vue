@@ -3,85 +3,93 @@
     <v-container
       fluid
       pa-0
+      no-gutter
     >
-      <div class="row no-gutters">
-        <div class="col-12 audits__list">
-          <Filters
-            :initial-filters="filters"
-            @change="filtersChanged"
-          />
-          <v-row>
-            <v-col cols="1 d-flex align-center">
-              <v-btn
-                color="primary"
-                primary
-                :loading="loading"
-                @click="searchAudits"
+      <v-col cols="12">
+        <div class="table-root">
+          <v-data-table
+            :headers="[
+              { text: 'ID', value: 'id' },
+              { text: 'Request ID', value: 'request_id' },
+              { text: 'Company', value: 'company.name' },
+              { text: 'Variant Name', value: 'variant_name' },
+              { text: 'Created At', value: 'created_at' },
+              { text: 'Updated At', value: 'updated_at' },
+              { text: 'Changes', value: 'changes_count' },
+              { text: 'Client changes', value: 'client_changes_count' },
+              { text: 'Reviewer changes', value: 't_companies_changes_count' },
+              { text: '', sortable: false, value: 'data-table-expand' },
+            ]"
+            item-key="id"
+            :items="orders"
+            :single-expand="false"
+            :options.sync="options"
+            :server-items-length="meta.total"
+            :header-props="{ sortIcon: 'mdi-chevron-up'}"
+            hide-default-footer
+            :loading="loading"
+            show-expand
+          >
+            <template v-slot:top>
+              <v-row
+                align="start"
+                justify="space-between"
+                dense
               >
-                Search
-              </v-btn>
-            </v-col>
-          </v-row>
-          <div class="table-root">
-            <v-data-table
-              :headers="[
-                {
-                  text: 'ID', value: 'id',
-                },
-                { text: 'Request ID', value: 'request_id' },
-                { text: 'Company', value: 'company.name' },
-                { text: 'Variant Name', value: 'variant_name' },
-                { text: 'Created At', value: 'created_at' },
-                { text: 'Updated At', value: 'updated_at' },
-                { text: 'Changes', value: 'changes_count' },
-                { text: 'Client changes', value: 'client_changes_count' },
-                { text: 'Reviewer changes', value: 't_companies_changes_count' },
-                { text: '', sortable: false, value: 'data-table-expand' },
-              ]"
-              item-key="id"
-              :items="orders"
-              :single-expand="false"
-              :options.sync="options"
-              :server-items-length="meta.total"
-              :header-props="{ sortIcon: 'mdi-chevron-up'}"
-              hide-default-footer
-              :loading="loading"
-              show-expand
-            >
-              <template v-slot:[`item.id`]="{ item }">
-                <router-link :to="`/order/${item.id}`">
-                  {{ item.id }}
-                </router-link>
-              </template>
-              <template v-slot:[`item.changes_count`]="{ item }">
-                {{ item.audits.length }}
-              </template>
-              <template v-slot:[`item.created_at`]="{ item }">
-                {{ formatDate(item.created_at, { timeZone: false, withSeconds: true }) }}
-              </template>
-              <template v-slot:[`item.updated_at`]="{ item }">
-                {{ formatDate(item.updated_at, { timeZone: false, withSeconds: true }) }}
-              </template>
-              <template v-slot:expanded-item="{ headers, item }">
-                <td :colspan="headers.length">
-                  <AuditLogsTable
-                    :audits="item.audits"
-                    height="40vh"
+                <v-col cols="11">
+                  <Filters
+                    :initial-filters="filters"
+                    @change="filtersChanged"
                   />
-                </td>
-              </template>
-              <template v-slot:footer>
-                <Pagination
-                  :loading="loading"
-                  :page-data="meta"
-                  :links="links"
-                  @pageIndexChange="onPageChange"
+                </v-col>
+                <v-col cols="auto">
+                  <v-btn
+                    color="primary"
+                    primary
+                    :loading="loading"
+                    @click="searchAudits"
+                  >
+                    Search
+                  </v-btn>
+                </v-col>
+              </v-row>
+            </template>
+            <template v-slot:[`item.id`]="{ item }">
+              <router-link :to="`/order/${item.id}`">
+                {{ item.id }}
+              </router-link>
+            </template>
+            <template v-slot:[`item.changes_count`]="{ item }">
+              {{ item.audits.length }}
+            </template>
+            <template v-slot:[`item.created_at`]="{ item }">
+              {{ formatDate(item.created_at, { timeZone: false, withSeconds: true }) }}
+            </template>
+            <template v-slot:[`item.updated_at`]="{ item }">
+              {{ formatDate(item.updated_at, { timeZone: false, withSeconds: true }) }}
+            </template>
+            <template v-slot:expanded-item="{ headers, item }">
+              <td :colspan="headers.length">
+                <AuditLogsTable
+                  :audits="item.audits"
+                  height="40vh"
                 />
-              </template>
-            </v-data-table>
-          </div>
+              </td>
+            </template>
+            <template v-slot:footer>
+              <Pagination
+                :loading="loading"
+                :page-data="meta"
+                :links="links"
+                :default-items-per-page="itemsPerPage"
+                :default-items-per-page-selected="userOptions.itemsPerPageSelected"
+                @pageIndexChange="onPageChange"
+                @itemsPerPageChange="onItemsPerPageChange"
+              />
+            </template>
+          </v-data-table>
         </div>
-      </div>
+      </v-col>
     </v-container>
   </div>
 </template>
@@ -99,6 +107,8 @@ import Filters from './Filters'
 import AuditLogsTable from '@/components/AuditLogsTable'
 import Pagination from '@/components/OrderTable/components/Pagination'
 
+import { localStorageTypes } from '@/enums/app_objects_types'
+
 export default {
   name: 'AuditsLog',
 
@@ -112,7 +122,7 @@ export default {
 
   data: () => ({
     filters: {
-      timeRange: null,
+      timeRange: 1,
       dateRange: [],
       companyId: null,
       variantName: null,
@@ -120,6 +130,7 @@ export default {
     },
     orders: [],
     page: 1,
+    itemsPerPage: ['10', '25', '50', '100'],
     meta: {},
     links: {},
     options: {
@@ -128,6 +139,9 @@ export default {
     },
     sort: '-id',
     loading: false,
+    userOptions: {
+      itemsPerPageSelected: '10'
+    }
   }),
 
   watch: {
@@ -147,6 +161,24 @@ export default {
       },
       deep: true
     },
+
+    userOptions: {
+      handler () {
+        localStorage.setItem(localStorageTypes.auditsLogsDashboardOptions, JSON.stringify(this.userOptions))
+      },
+      deep: true
+    }
+  },
+
+  created () {
+    const userOptions = localStorage.getItem(localStorageTypes.auditsLogsDashboardOptions)
+    if (userOptions) {
+      const options = JSON.parse(userOptions)
+      this.userOptions = { ...this.userOptions, ...options }
+    } else {
+      const options = JSON.stringify(this.userOptions)
+      localStorage.setItem(localStorageTypes.auditsLogsDashboardOptions, options)
+    }
   },
 
   methods: {
@@ -158,6 +190,7 @@ export default {
       this.filters = { ...newFilters }
       this.page = 1
     },
+
     async searchAudits () {
       const { timeRange, dateRange, userId, companyId, variantName } = this.filters
 
@@ -175,6 +208,7 @@ export default {
         'filter[variant_name]': variantName ? variantName.join(',') : null,
         page: this.page,
         sort: this.sort,
+        per_page: this.userOptions.itemsPerPageSelected
       })
       this.loading = false
 
@@ -203,8 +237,14 @@ export default {
         return { ...order.model, audits }
       })
     },
+
     onPageChange (newPage) {
       this.page = newPage
+      this.searchAudits()
+    },
+
+    onItemsPerPageChange (newValue) {
+      this.userOptions.itemsPerPageSelected = newValue
       this.searchAudits()
     }
   }
@@ -219,5 +259,27 @@ export default {
 .audits__list {
   height: 100%;
   padding: rem(14) rem(28) 0 rem(28);
+}
+.table-root::v-deep {
+  table > thead > tr > th {
+    position: relative;
+    & > span {
+      display: inline-block;
+      width: 100%;
+      padding-right: rem(18);
+    }
+    & > .v-icon.v-icon {
+      position: absolute;
+      top: 50%;
+      right: 0;
+      transform: translateY(-50%) rotate(0deg);
+    }
+    &.asc > .v-icon.v-icon {
+      transform: translateY(-50%)rotate(180deg);
+    }
+    &.desc > .v-icon.v-icon {
+      transform: translateY(-50%) rotate(0deg);
+    }
+  }
 }
 </style>

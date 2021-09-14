@@ -64,6 +64,23 @@ class LoginControllerTest extends TestCase
     }
 
     /** @test */
+    public function it_should_fail_if_user_company_is_inactive()
+    {
+        $this->user->company->deactivate();
+        $this->post(
+            route('login'),
+            [
+                'email' => $this->user->email,
+                'password' => 'password',
+            ],
+            [
+                'Referer' => $this->user->company->domain->hostname,
+            ]
+        )
+        ->assertStatus(Response::HTTP_UNAUTHORIZED);
+    }
+
+    /** @test */
     public function it_should_fail_if_user_is_inactive()
     {
         $this->user->deactivate();
