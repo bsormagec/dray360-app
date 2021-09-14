@@ -1353,6 +1353,7 @@ export default {
 
     async postSendToTms () {
       const onConfirm = async () => {
+        this.loading = true
         const [error] = await postSendToTms(this.order.id)
         let message = ''
 
@@ -1374,6 +1375,7 @@ export default {
           await this.refreshOrder()
         }
 
+        this.loading = false
         this.setSnackbar({ message })
       }
 
@@ -1391,6 +1393,7 @@ export default {
     },
 
     async postSendToClient () {
+      this.loading = true
       const [error] = await postSendToClient(this.order.id)
       let message = ''
 
@@ -1409,6 +1412,7 @@ export default {
         await this.refreshOrder()
       }
 
+      this.loading = false
       this.setSnackbar({ message })
     },
 

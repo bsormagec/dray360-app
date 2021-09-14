@@ -90,12 +90,14 @@
           <v-btn
             text
             color="primary"
+            :disabled="loading"
             @click="handleClose"
           >
             cancel
           </v-btn>
           <v-btn
             color="primary"
+            :loading="loading"
             @click="createRequests"
           >
             Add to Requests Queue
@@ -140,7 +142,8 @@ export default {
     files: [],
     variantName: null,
     variants: [],
-    company_id: null
+    company_id: null,
+    loading: false,
   }),
   computed: {
     ...mapState(auth.moduleName, { currentUser: state => state.currentUser }),
@@ -222,6 +225,8 @@ export default {
       }
 
       let failed = false
+      this.loading = true
+
       const requestsList = []
       for (let index = 0; index < this.files.length; index++) {
         const [error, data] = await this.uploadFile(this.files[index])
@@ -231,6 +236,7 @@ export default {
           requestsList.push(data)
         }
       }
+      this.loading = false
 
       this.setSnackbar({
         message: failed ? 'There was an error uploading the file(s)' : 'File(s) uploaded successfully',

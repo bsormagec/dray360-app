@@ -15,12 +15,7 @@
           :prepend-icon="prependIcon"
           class="calendar__input"
           :label="label"
-          clearable
-          readonly
-          outlined
-          hide-details
-          dense
-          v-bind="attrs"
+          v-bind="[attrs, computedInputAttributes]"
           v-on="on"
           @click:clear="clear"
         />
@@ -54,25 +49,55 @@
     </v-menu>
   </div>
 </template>
+
 <script>
 export default {
-
   props: {
     value: { type: Array, required: true, default: () => [] },
     label: { type: String, required: false, default: undefined },
     prependIcon: { type: String, required: false, default: 'mdi-calendar-blank' },
+    inputAttributes: {
+      type: Object,
+      required: false,
+      default: () => ({
+        clearable: true,
+        readonly: true,
+        outlined: true,
+        'hide-details': true,
+        dense: true,
+      })
+    }
   },
+
   data () {
     return {
       dates: this.value,
-      menu: false
+      menu: false,
+      defaultInputAttrs: {
+        clearable: true,
+        readonly: true,
+        outlined: true,
+        'hide-details': true,
+        dense: true,
+      }
     }
   },
+
+  computed: {
+    computedInputAttributes () {
+      return {
+        ...this.defaultInputAttrs,
+        ...this.inputAttributes
+      }
+    }
+  },
+
   watch: {
     value (newValue) {
       this.dates = newValue
     }
   },
+
   methods: {
     finishDateSelection () {
       if (this.dates.length === 1) {
@@ -83,16 +108,15 @@ export default {
       this.$refs.menu.save(this.dates)
       this.$emit('input', this.dates)
     },
+
     change (event) {
       this.$emit('change', event)
     },
+
     clear (event) {
       this.dates = []
       this.$emit('input', this.dates)
     }
   }
-
 }
 </script>
-<style lang="scss" scoped>
-</style>

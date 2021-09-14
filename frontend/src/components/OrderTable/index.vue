@@ -22,6 +22,7 @@
           height="auto"
         >
           <v-btn
+            v-show="newOrders"
             outlined
             dense
             small
@@ -78,7 +79,7 @@
         </router-link>
       </template>
       <template v-slot:[`item.company`]="{ item }">
-        {{ item.company.name }}
+        {{ item.company }}
       </template>
       <template v-slot:[`item.id`]="{ item }">
         <router-link :to="`/order/${item.id}`">
@@ -109,7 +110,7 @@
         {{
           item.tms_template
             ? item.tms_template.item_display_name
-            : item.bill_to_address ? item.bill_to_address.location_name : ''
+            : item.bill_to_address_name
         }}
       </template>
       <template v-slot:[`item.tms_shipment_id`]="{ item }">
@@ -205,14 +206,14 @@
       </template>
     </v-data-table>
     <v-snackbar
-      v-model="changesDetected"
+      v-model="newOrders"
       :timeout="-1"
     >
       <div class="refresh-msg d-flex align-center justify-space-between">
         <p>New orders available.</p>
         <v-btn
           text
-          @click="reloadPage"
+          @click="getOrderData"
         >
           REFRESH
         </v-btn>
@@ -232,12 +233,14 @@ import { formatDate } from '@/utils/dates'
 import utils, { actionTypes as utilsActionTypes } from '@/store/modules/utils'
 import { getOrders, delDeleteOrder, updateOrderDetail, replicateOrder } from '@/store/api_calls/orders'
 import { getRequestFilters } from '@/utils/filters_handling'
+import { statuses } from '@/enums/app_objects_types'
 import events from '@/enums/events'
 
 import { mapState, mapActions } from 'vuex'
 import OutlinedButtonGroup from '@/components/General/OutlinedButtonGroup'
 import StatusHistoryDialog from '@/views/OrderDetails/StatusHistoryDialog'
 import cloneDeep from 'lodash/cloneDeep'
+import get from 'lodash/get'
 
 export default {
   name: 'OrderTable',
@@ -270,7 +273,7 @@ export default {
         { text: 'Order ID', sortable: false, value: 'id' },
         { text: 'Update Status', value: 'latest_ocr_request_status.display_status', align: 'center' },
         { text: 'Container', sortable: false, value: 'unit_number' },
-        { text: 'Bill To', value: 'bill_to_address.location_name' },
+        { text: 'Bill To', value: 'bill_to_address_name' },
         { text: 'Direction', value: 'shipment_direction', align: 'center' },
         { text: 'Actions', value: 'actions', sortable: false, align: 'center' }
       ]
@@ -299,11 +302,8 @@ export default {
 
   data () {
     return {
-      // polling stuff
-      pollingInterval: 10000,
-      pollingTimer: null,
       payload: '',
-      changesDetected: false,
+      newOrderIds: [],
       // main filters array
       filters: [],
       dialog: false,
@@ -350,6 +350,9 @@ export default {
           return exists || current.value === s.value
         }, false)
       })
+    },
+    newOrders () {
+      return this.newOrderIds.length > 0
     }
   },
 
@@ -365,7 +368,7 @@ export default {
 
         const sortColumnMap = {
           shipment_direction: 'order.shipment_direction',
-          'bill_to_address.location_name': 'order.bill_to_address',
+          bill_to_address_name: 'order.bill_to_address',
           'latest_ocr_request_status.display_status': 'status'
         }
         let sortCol = this.sortColumnDefault
@@ -443,7 +446,6 @@ export default {
     if (this.urlFilters) {
       window.onpopstate = null
     }
-    this.stopPolling()
   },
 
   methods: {
@@ -454,44 +456,9 @@ export default {
       if (Object.keys(this.initFilters).some(key => this.initFilters[key] && this.initFilters[key].length > 0)) {
         this.filters = [...this.$refs.orderFilters.getActiveFilters()]
       }
-
-      // get all orders
-      // this.getOrderData()
-
-      this.startPolling()
     },
 
     ...mapActions(utils.moduleName, [utilsActionTypes.setSnackbar, utilsActionTypes.setConfirmationDialog]),
-
-    // polling
-    async startPolling () {
-      this.total = await this.getOrdersTotal()
-      this.pollingTimer = window.setInterval(this.checkForChanges.bind(this), this.pollingInterval)
-    },
-
-    async checkForChanges () {
-      const totalOrders = await this.getOrdersTotal()
-      if (this.total < totalOrders) {
-        this.changesDetected = true
-        this.total = totalOrders
-      }
-      this.total = totalOrders
-    },
-
-    async getOrdersTotal () {
-      const [error, data] = await getOrders([])
-      if (error !== undefined) return this.total
-      return data.meta.total
-    },
-
-    stopPolling () {
-      window.clearInterval(this.pollingTimer)
-    },
-
-    reloadPage () {
-      this.changesDetected = false
-      window.location.reload()
-    },
 
     async deleteOrder (item) {
       this.loading = true
@@ -575,6 +542,7 @@ export default {
     async getOrderData () {
       const startTime = new Date().getTime()
       this.loading = true
+      this.newOrderIds = []
 
       const [error, responseData] = await getOrders(this.getRequestFilters())
 
@@ -715,25 +683,72 @@ export default {
 
     initializeStateUpdatesListeners () {
       this.listenToRequestStatusUpdates(({ latestStatus } = {}) => {
+        if (!this.requestId) {
+          this.checkForNewOrders(latestStatus)
+        }
+
         const index = this.orders.findIndex(item => item.id === latestStatus.order_id)
         if (index === -1) {
           return
         }
 
+        this.$root.$emit(events.orderStatusUpdated, latestStatus)
+
         const order = cloneDeep(this.orders[index])
         order.latest_ocr_request_status = latestStatus
+
+        let tmsShipmentId = get(latestStatus, 'status_metadata.tms_shipment_id', null)
+        tmsShipmentId = get(latestStatus, 'status_metadata.shipment_id', tmsShipmentId)
+
+        if (!order.tms_shipment_id && tmsShipmentId) {
+          order.tms_shipment_id = tmsShipmentId
+        }
 
         this.orders.splice(index, 1, order)
       }, '-orders')
     },
+
+    checkForNewOrders (latestStatus) {
+      const hasNewOrderStatus = [
+        statuses.processOcrOutputFileComplete,
+        statuses.processOcrOutputFileReview,
+        statuses.processOcrOutputFileError,
+      ].includes(latestStatus.status)
+
+      if (!hasNewOrderStatus || this.newOrderIds.includes(latestStatus.order_id)) {
+        return
+      }
+
+      this.newOrderIds.push(latestStatus.order_id)
+    }
 
   }
 }
 </script>
 
 <style lang="scss" scoped>
-.table-root {
+.table-root::v-deep {
   position: relative;
+  table > thead > tr > th {
+    position: relative;
+    & > span {
+      display: inline-block;
+      width: 100%;
+      padding-right: rem(18);
+    }
+    & > .v-icon.v-icon {
+      position: absolute;
+      top: 50%;
+      right: 0;
+      transform: translateY(-50%) rotate(0deg);
+    }
+    &.asc > .v-icon.v-icon {
+      transform: translateY(-50%)rotate(180deg);
+    }
+    &.desc > .v-icon.v-icon {
+      transform: translateY(-50%) rotate(0deg);
+    }
+  }
   .processed-status {
     &:before {
       content: '';

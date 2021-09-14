@@ -159,6 +159,8 @@ class AuditLogsDashboardQuery extends QueryBuilder
             AllowedSort::field('created_at', 't_orders.created_at'),
             AllowedSort::field('updated_at', 't_orders.updated_at'),
             AllowedSort::field('changes_count'),
+            AllowedSort::field('client_changes_count'),
+            AllowedSort::field('t_companies_changes_count'),
         ])
         ;
     }

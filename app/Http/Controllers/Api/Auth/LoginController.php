@@ -49,7 +49,7 @@ class LoginController extends Controller
 
         $user = auth()->user();
 
-        if (! $user->isActive()) {
+        if (! $user->isActive() || ! $user->company->isActive()) {
             Auth::guard('web')->logout();
             return response()->json(['message' => 'This user is not active in the system'], 401);
         }
