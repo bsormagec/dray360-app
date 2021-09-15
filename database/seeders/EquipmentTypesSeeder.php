@@ -15,6 +15,10 @@ use Rap2hpoutre\FastExcel\FastExcel;
 
 class EquipmentTypesSeeder extends Seeder
 {
+
+
+
+
     /**
      * List all companies here, and in the TO_BE_IMPORTED section
      * add the specific companies to actually import.
@@ -252,7 +256,7 @@ class EquipmentTypesSeeder extends Seeder
             ],
         ],
         'Zariz' => [
-            'file' => 'seeders/Zariz Equipment Lease Types.xlsx',
+            'file' => 'seeders/Zariz_EquipmentLeaseTypes.20210915.xlsx',
             'sheet' => 1,
             'columns' => [
                 'tms_equipment_id' => 'id',
@@ -332,7 +336,7 @@ class EquipmentTypesSeeder extends Seeder
      * there is usually no reason to re-import more than once.
      */
     const TO_BE_IMPORTED = [
-        'LockeTransportation' => self::ALL_COMPANIES['LockeTransportation']
+        'Zariz' => self::ALL_COMPANIES['Zariz']
     ];
 
     /**
