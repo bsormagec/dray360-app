@@ -9,6 +9,7 @@ use Laravel\Nova\Fields\Code;
 use Laravel\Nova\Fields\Text;
 use Laravel\Nova\Fields\Number;
 use Laravel\Nova\Fields\Boolean;
+use Laravel\Nova\Fields\Textarea;
 use Laravel\Nova\Fields\BelongsTo;
 
 class Company extends Resource
@@ -80,12 +81,13 @@ class Company extends Resource
                 ->help('This email is auto-generated once the company is created'),
             BelongsTo::make('Default TMS Provider', 'defaultTmsProvider', TmsProvider::class)->sortable(),
             BelongsTo::make('Domain', 'domain', Domain::class)->sortable()->nullable(),
-            Number::make('Automatic address verification threshold', 'automatic_address_verification_threshold'),
+            Number::make('Automatic address verification threshold', 'automatic_address_verification_threshold')->hideFromIndex(),
             Boolean::make('Sync Addresses', 'sync_addresses'),
             Boolean::make('Inactive', 'deactivated_at')
                 ->resolveUsing(function ($deactivatedAt) {
                     return ! ! $deactivatedAt;
                 }),
+            Textarea::make('Notes', 'notes')->hideFromIndex(),
 
             Code::make('Ref Mapping', 'refs_custom_mapping')->json()->hideFromIndex()->rules(['nullable', 'json']),
             Code::make('Configuration', 'configuration')
