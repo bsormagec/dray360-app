@@ -7,18 +7,19 @@ set @SHOW_CMDLINE=1;
 set @VARIANTID_REGEX="(?<=\\.v)(\\d{1,6})(?=v\\.[a-zA-Z]{3,4}$)";
 select
     (case
-        when verified_type = ''                                                                                                                                                                       then '<processing>'
-        when verified_type = 'pdftext'                                                                                                                                                                then 'D3-CARGOWISE'
-        when verified_type = 'tabular'                                                                                                                                                                then 'D3-TABULAR'
-        when                                                 lower(download_source)     like '%.v112v.pdf%'                                                                                           then 'D3-MISSING'
-        when lower(download_source) not like '%.vv.pdf%' and lower(download_source) not like '%.v112v.pdf%'                                        and verified_id not in ('', classified_variantid)  then 'D3-WRONG'
-        when lower(download_source)     like '%.vv.pdf%'                                                    and verified_name     like '%unknown%'                                                    then 'AB-BAD'
-        when lower(download_source)     like '%.vv.pdf%'                                                    and verified_name not like '%unknown%'                                                    then 'AB-GOOD'
+        when verified_type = ''                                                                                                                                                      then '<processing>'
+        when verified_type = 'pdftext'                                                                                                                                               then 'D3-CARGOWISE'
+        when verified_type = 'tabular'                                                                                                                                               then 'D3-TABULAR'
+        when                                                 classified_variantid  = '112'                                                                                           then 'D3-MISSING'
+        when lower(download_source) not like '%.vv.pdf%' and classified_variantid != '112'                                        and verified_id not in ('', classified_variantid)  then 'D3-WRONG'
+        when lower(download_source)     like '%.vv.pdf%'                                   and verified_name     like '%unknown%'                                                    then 'AB-BAD'
+        when lower(download_source)     like '%.vv.pdf%'                                   and verified_name not like '%unknown%'                                                    then 'AB-GOOD'
         else 'D3-GOOD'
      end) as class_status
 
     ,subq.created_at
-    ,if (subq.pages = 'null', '', subq.pages) as pdf_pages
+    ,verifier
+    ,coalesce(if (lower(subq.pages) like '%null%', '', subq.pages), '') as pdf_pages
     ,subq.company_name
     ,subq.classified_name_id
     ,if(subq.verified_name = '', '<processing>', subq.verified_name) as verified_name
@@ -51,6 +52,7 @@ from (
         ,coalesce(group_concat(distinct o.id order by o.id), '') as order_id_list
         ,count(distinct o.id) as order_count
         ,max(concat('aws --profile dray360-webapp-user-prod s3 cp ', json_extract(status_metadata, '$.document_archive_location'), ' "./', replace(json_unquote(json_extract(status_metadata, '$.original_filename')), '\r\n', ''), '"')) as download_source
+        ,coalesce(max(json_unquote(json_extract(ocr_data, '$.original_fields.last_editor.value'))), '') as verifier
 
     from t_job_state_changes as s
     join t_companies as c on s.company_id = c.id
@@ -59,9 +61,8 @@ from (
       and date(s.created_at) >= date(@START_DATE)
       and s.created_at <= coalesce(@END_DATE, CURRENT_TIMESTAMP)
     group by c.name, s.request_id
-    order by min(s.id) asc -- in order as received, which created_at doesn't necessarily indicate
+    order by min(s.id) asc
 ) as subq
--- order by class_status, tjsc_id
 order by class_status, created_at
 ;
 
