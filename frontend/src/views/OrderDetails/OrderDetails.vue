@@ -18,6 +18,7 @@
             :back-button="backButton"
             :virtual-back-button="isMobile && !backButton"
             :redirect-back="redirectBack"
+            :redirect-url="redirectUrl"
             :options="formOptions"
             :refresh-lock="refreshLock"
             :details-only="detailsOnly"
@@ -136,6 +137,7 @@ export default {
     startPos: 0,
     loaded: false,
     redirectBack: false,
+    redirectUrl: null,
     orderIdToLoad: vm.orderId || vm.$route.params.id,
     formOptions: cloneDeep(defaultFormOptions),
     has404: false
@@ -143,7 +145,8 @@ export default {
 
   beforeRouteEnter (to, from, next) {
     next(vm => {
-      vm.redirectBack = from.path !== '/' // from.path.includes('/search') || from.path.includes('/inbox')
+      vm.redirectUrl = from.path.includes('/inbox') ? from.fullPath : null
+      vm.redirectBack = from.path !== '/'
       next()
     })
   },
@@ -176,16 +179,11 @@ export default {
     },
   },
   watch: {
-    async orderId (newOrderId) {
-      // eslint-disable-next-line eqeqeq
-      if (newOrderId == this.orderIdToLoad) {
-        return
-      }
-      this.leaveRequestStatusUpdatesChannel(`-order${this.orderIdToLoad}`)
-      this.orderIdToLoad = this.orderId
-
-      await this.fetchFormData()
-      this.initializeStateUpdatesListeners()
+    orderId (newOrderId) {
+      this.handleOrderChange(newOrderId)
+    },
+    $route (to, from) {
+      this.handleOrderChange(to.params?.id)
     }
   },
 
@@ -216,6 +214,19 @@ export default {
       setOrderLock: orderFormTypes.setOrderLock,
       updateOrderStatus: orderFormTypes.updateOrderStatus,
     }),
+
+    async handleOrderChange (newOrderId) {
+      // eslint-disable-next-line eqeqeq
+      if (!newOrderId || newOrderId == this.orderIdToLoad) {
+        return
+      }
+
+      this.leaveRequestStatusUpdatesChannel(`-order${this.orderIdToLoad}`)
+      this.orderIdToLoad = newOrderId
+
+      await this.fetchFormData()
+      this.initializeStateUpdatesListeners()
+    },
 
     async fetchFormData () {
       this.loaded = false
