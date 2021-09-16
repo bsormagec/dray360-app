@@ -116,6 +116,7 @@ return [
         ],
         'customer-admin' => [
             'orders' => 'e,v,c,r',
+            'all-orders' => 'e',
             'ocr-requests' => 'c,v,e',
             'tms' => 's',
             'users' => 'v,c,e,r',
@@ -129,9 +130,10 @@ return [
             'feedbacks' => 'c',
         ],
         'customer-user' => [
+            'orders' => 'v,c,e',
+            'all-orders' => 'e',
             'ocr-requests' => 'c,v',
             'tms' => 's',
-            'orders' => 'v,c,e',
             'ocr-variants' => 'v',
             'dictionary-items' => 'v,c',
             'audit-logs' => 'v',
