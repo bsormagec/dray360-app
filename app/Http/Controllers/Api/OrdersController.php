@@ -3,7 +3,6 @@
 namespace App\Http\Controllers\Api;
 
 use App\Models\Order;
-use App\Models\Company;
 use Illuminate\Http\Request;
 use App\Models\OCRRequestStatus;
 use App\Queries\OrdersListQuery;
@@ -24,10 +23,8 @@ class OrdersController extends Controller
         $perPage = $request->get('perPage', 25);
 
         $orders = (new OrdersListQuery())->paginate($perPage);
-        $companiesWithTemplates = Company::withTemplates();
 
-        return new OrdersJson($orders, $companiesWithTemplates);
-        // return OrdersJson::collection($orders);
+        return new OrdersJson($orders);
     }
 
     /**

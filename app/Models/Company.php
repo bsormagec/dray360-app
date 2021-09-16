@@ -4,7 +4,6 @@ namespace App\Models;
 
 use stdClass;
 use Illuminate\Support\Str;
-use Illuminate\Support\Facades\DB;
 use App\Models\Traits\Deactivatable;
 use Illuminate\Database\Eloquent\Model;
 use OwenIt\Auditing\Contracts\Auditable;
@@ -155,16 +154,5 @@ class Company extends Model implements Auditable
     public function fieldMap()
     {
         return $this->belongsTo(FieldMap::class, 't_fieldmap_id');
-    }
-
-    public static function withTemplates()
-    {
-        return static::query()
-            ->select([
-                'id',
-                DB::raw("json_extract(configuration, '$.profit_tools_template_list') as profit_tools_template_list")
-            ])
-            ->where('configuration->profit_tools_enable_templates', true)
-            ->get();
     }
 }

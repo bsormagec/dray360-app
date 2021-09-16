@@ -41,10 +41,10 @@ trait Deactivatable
     public function scopeActive(Builder $builder, $active = true)
     {
         if ($active) {
-            return $builder->whereNull($this->getTable() . '.deactivated_at');
+            return $builder->whereNull($this->qualifyColumn('deactivated_at'));
         }
 
-        return $builder->whereNotNull($this->getTable() . '.deactivated_at');
+        return $builder->whereNotNull($this->qualifyColumn('deactivated_at'));
     }
 
     public function isActive(): bool
