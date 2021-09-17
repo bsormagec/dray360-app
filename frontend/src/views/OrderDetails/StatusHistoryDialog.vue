@@ -41,18 +41,17 @@
               size="32"
             />
           </v-overlay>
-          <div class="d-flex align-center justify-space-between">
-            <v-switch
-              v-if="hasPermission('system-status-filter')"
-              v-model="useSystemStatus"
-              label="Show system status"
-              :false-value="false"
-              :true-value="true"
-            />
-          </div>
+          <v-switch
+            v-if="hasPermission('system-status-filter')"
+            v-model="useSystemStatus"
+            label="Show system status"
+            hide-details
+            :false-value="false"
+            :true-value="true"
+          />
           <div
             v-if="order.submitted_date"
-            class="caption mb-3"
+            class="caption my-3"
           >
             Submitted {{ formatDate(order.submitted_date, { timeZone: true }) }} in <router-link :to="`/dashboard?selected=${order.request_id}`">
               Request #{{ order.request_id.substring(0,8).toUpperCase() }}
@@ -74,8 +73,11 @@
             <div class="caption mt-3">
               {{ `Company: ${historyLabels.companyName}` }}
             </div>
-            <div class="caption mb-3">
+            <div class="caption">
               {{ `Variant: ${historyLabels.variantName}` }}
+            </div>
+            <div class="caption mb-3">
+              {{ `Last edited by: ${historyLabels.lastEditor}` }}
             </div>
           </div>
           <ul
@@ -182,6 +184,7 @@ export default {
       return {
         companyName: this.order.company?.name || '---',
         variantName: this.order.variant_name || '---',
+        lastEditor: this.order.ocr_data.fields?.last_editor?.value || '---'
       }
     }
   },
