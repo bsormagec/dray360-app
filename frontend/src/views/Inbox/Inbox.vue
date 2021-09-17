@@ -68,6 +68,18 @@
             @go-back="toggleMobileView"
           />
           <div
+            v-else-if="request.orders_count === 0 && request.deleted_orders_count > 0"
+            class="empty__order"
+          >
+            <img
+              src="../../assets/images/emptyRequest.png"
+              width="20%"
+            >
+            <span class="primary--text font-weight-light h6 mt-8">
+              All orders in this request were deleted
+            </span>
+          </div>
+          <div
             v-else-if="shouldShowEmptyProcessingRequest(request)"
             class="empty__order"
           >
@@ -155,6 +167,7 @@
     </v-container>
   </div>
 </template>
+
 <script>
 import RequestItemMenu from '@/components/RequestItemMenu'
 import OrderTable from '@/components/OrderTable'

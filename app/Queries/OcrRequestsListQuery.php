@@ -8,6 +8,7 @@ use Illuminate\Support\Facades\DB;
 use Spatie\QueryBuilder\AllowedSort;
 use Spatie\QueryBuilder\QueryBuilder;
 use Spatie\QueryBuilder\AllowedFilter;
+use Illuminate\Database\Eloquent\Builder;
 use App\Queries\Sorts\OcrRequestStatusSort;
 use App\Queries\Filters\CreatedBetweenFilter;
 use App\Queries\Filters\OcrRequestStatusFilter;
@@ -78,7 +79,10 @@ class OcrRequestsListQuery extends QueryBuilder
                 })
                 ->whereNull('t_job_latest_state.order_id')
                 ->whereNotIn('s.status', OCRRequestStatus::HIDE_FROM_REQUESTS_LIST) // list of statuses to exclude from request list
-                ->withCount('orders')
+                ->withCount([
+                    'orders',
+                    'orders as deleted_orders_count' => fn (Builder $q) => $q->onlyTrashed()
+                ])
                 ->with([
                     'latestOcrRequestStatus:id,status,status_date,status_metadata',
                 ])

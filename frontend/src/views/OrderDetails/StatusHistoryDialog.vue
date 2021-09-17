@@ -184,7 +184,7 @@ export default {
       return {
         companyName: this.order.company?.name || '---',
         variantName: this.order.variant_name || '---',
-        lastEditor: this.order.ocr_data.fields?.last_editor?.value || '---'
+        lastEditor: this.order.ocr_data?.fields?.last_editor?.value || '---'
       }
     }
   },
