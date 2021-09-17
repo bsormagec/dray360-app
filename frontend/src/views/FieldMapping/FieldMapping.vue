@@ -93,6 +93,7 @@
             @reset="resetFieldMaps"
             @save="saveFieldMap"
             @form-changed="setFormChanged"
+            @delete="handleFieldMapDeletion"
           />
         </v-col>
       </v-row>
@@ -217,6 +218,7 @@ export default {
     ...mapActions(fieldMaps.moduleName, {
       getFieldMaps: fieldMapsTypes.GET_FIELD_MAPS,
       setFieldMap: fieldMapsTypes.SET_FIELD_MAP,
+      deleteFieldMap: fieldMapsTypes.DELETE_FIELD_MAP,
       resetFieldMap: fieldMapsTypes.RESET_FIELD_MAP,
       saveFieldMaps: fieldMapsTypes.SAVE_FIELD_MAPS,
     }),
@@ -242,11 +244,43 @@ export default {
       this.formChanged = false
     },
 
-    async saveFieldMap ({ field, fieldMap, newFieldMap = false }) {
-      const saveFieldMap = () => {
+    handleFieldMapDeletion ({ field }) {
+      const fieldMapDeletion = async () => {
+        this.selectedField = null
+        this.loading = true
+        this.deleteFieldMap({ field })
+        await this.saveFieldMapsChanges()
+        this.loading = false
+      }
+      if (!this.isDefaultFieldMap) {
+        this.setConfirmationDialog({
+          noWrap: true,
+          title: 'Are you sure you want to delete this field?',
+          text: `The field <code>'${field}'</code> will be permanently deleted from the system.`,
+          onConfirm: () => {
+            fieldMapDeletion()
+          },
+          onCancel: () => {}
+        })
+        return
+      }
+
+      this.setConfirmationDialog({
+        noWrap: true,
+        title: 'Are you sure you want to delete a system-wide field?',
+        text: `The system-wide field <code>'${field}'</code> will be permanently deleted from the system. this will affect every order in the system that uses the deleted field.`,
+        onConfirm: () => {
+          fieldMapDeletion()
+        },
+        onCancel: () => {}
+      })
+    },
+
+    saveFieldMap ({ field, fieldMap, newFieldMap = false }) {
+      const saveFieldMap = async () => {
         this.loading = true
         this.setFieldMap({ field, fieldMap })
-        this.saveFieldMapsChanges()
+        await this.saveFieldMapsChanges()
         this.loading = false
       }
 
