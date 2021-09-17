@@ -246,7 +246,8 @@ export default {
         { field_name: 'interchange_count', value: 'interchange count' },
         { field_name: 'total_quantity', value: 'total quantity' },
         { field_name: 'total_weight', value: 'total weight' },
-        { field_name: 'other_value', value: 'Other' }
+        { field_name: 'customer_number', value: 'customer number' },
+        { field_name: 'other_value', value: 'custom value' }
       ],
       companyList: [],
       companyId: undefined
