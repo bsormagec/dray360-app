@@ -32,6 +32,7 @@
           >
             <template v-slot:top>
               <v-row
+                class="table__tool-bar"
                 align="start"
                 justify="space-between"
                 dense
@@ -261,6 +262,12 @@ export default {
   padding: rem(14) rem(28) 0 rem(28);
 }
 .table-root::v-deep {
+  .table__tool-bar {
+    position: sticky;
+    top: 0;
+    background-color: #FFFFFF;
+    z-index: 1;
+  }
   table > thead > tr > th {
     position: relative;
     & > span {
