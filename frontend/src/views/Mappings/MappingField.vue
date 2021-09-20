@@ -247,6 +247,7 @@ export default {
         { field_name: 'total_quantity', value: 'total quantity' },
         { field_name: 'total_weight', value: 'total weight' },
         { field_name: 'customer_number', value: 'customer number' },
+        { field_name: 'temperature', value: 'temperature' },
         { field_name: 'other_value', value: 'custom value' }
       ],
       companyList: [],
