@@ -6,7 +6,7 @@
     >
       <div class="row no-gutters">
         <div
-          v-if="displayStatus.requestList"
+          v-show="displayStatus.requestList"
           :class="{
             'requests__section': true,
             'c-2': !isMobile,
@@ -41,7 +41,7 @@
           </div>
         </div>
         <div
-          v-if="displayStatus.orderDetail"
+          v-show="displayStatus.orderDetail"
           :class="{
             'request__orders':true,
             'c-10': !isMobile,
@@ -49,7 +49,7 @@
           }"
         >
           <div
-            v-if="request.request_id === null"
+            v-if="!selectedRequest.request_id"
             style="height:100%"
             class="d-flex align-center justify-center"
           >
@@ -64,11 +64,11 @@
           </div>
           <PtImageRequestDetails
             v-else-if="currentRequestIsPtImageUpload"
-            :request="request"
+            :request="selectedRequest"
             @go-back="toggleMobileView"
           />
           <div
-            v-else-if="request.orders_count === 0 && request.deleted_orders_count > 0"
+            v-else-if="selectedRequest.orders_count === 0 && selectedRequest.deleted_orders_count > 0"
             class="empty__order"
           >
             <img
@@ -80,7 +80,7 @@
             </span>
           </div>
           <div
-            v-else-if="shouldShowEmptyProcessingRequest(request)"
+            v-else-if="shouldShowEmptyProcessingRequest(selectedRequest)"
             class="empty__order"
           >
             <img
@@ -98,7 +98,7 @@
             </p>
           </div>
           <div
-            v-else-if="request.orders_count > 1 || request.first_order_id === null"
+            v-else-if="selectedRequest.orders_count > 1 || !selectedRequest.first_order_id"
             class="pa-5"
           >
             <div
@@ -120,15 +120,15 @@
                 </v-icon>
               </v-btn>
               <h5 class="mr-1">
-                Request # {{ request.request_id.substring(0,8).toUpperCase() }} ({{ request.orders_count }} orders)
+                Request # {{ selectedRequest.request_id.substring(0,8).toUpperCase() }} ({{ selectedRequest.orders_count }} orders)
               </h5>
               <RequestItemMenu
-                :request="request"
+                :request="selectedRequest"
                 @request-deleted="$root.$emit(events.orderDeleted)"
               />
             </div>
             <OrderTable
-              :request-id="request.request_id"
+              :request-id="selectedRequest.request_id"
               :url-filters="false"
               wait-for-request-id
               :headers="[
@@ -148,10 +148,10 @@
             />
           </div>
           <OrderDetails
-            v-else-if="request.orders_count === 1"
+            v-else-if="selectedRequest.orders_count === 1"
             :back-button="false"
             :refresh-lock="false"
-            :order-id="request.first_order_id"
+            :order-id="selectedRequest.first_order_id"
             :details-only="displayStatus.requestList"
             @order-deleted="$root.$emit(events.orderDeleted)"
             @order-replicated="$root.$emit(events.orderReplicated)"
@@ -177,13 +177,16 @@ import OrderDetails from '@/views/OrderDetails/OrderDetails'
 import UploadOrdersDialog from './UploadOrdersDialog'
 import PtImageRequestDetails from './PtImageRequestDetails'
 
-import { mapState } from 'vuex'
-import permissions from '@/mixins/permissions'
+import { mapState, mapGetters } from 'vuex'
+import requestsList from '@/store/modules/requests-list'
 import auth from '@/store/modules/auth'
-import get from 'lodash/get'
-import { statuses } from '@/enums/app_objects_types'
-import { isInAdminReview, isPtImageUpload } from '@/utils/status_helpers'
+
+import permissions from '@/mixins/permissions'
 import events from '@/enums/events'
+import { statuses } from '@/enums/app_objects_types'
+
+import { isInAdminReview, isPtImageUpload } from '@/utils/status_helpers'
+import get from 'lodash/get'
 
 export default {
   name: 'Inbox',
@@ -203,12 +206,6 @@ export default {
   data () {
     return {
       openUploadOrdersDialog: false,
-      request: {
-        first_order_id: null,
-        request_id: null,
-        orders_count: 0,
-        tms_template_name: null
-      },
       filters: {
         search: '',
         dateRange: [],
@@ -227,13 +224,17 @@ export default {
     ...mapState(auth.moduleName, {
       currentUser: state => state.currentUser
     }),
+    ...mapState(requestsList.moduleName, {
+      selectedRequestId: state => state.selectedRequestId
+    }),
+    ...mapGetters(requestsList.moduleName, ['selectedRequest']),
 
     events () {
       return events
     },
 
     emptyRequestText () {
-      const requestStatus = get(this.request, 'latest_ocr_request_status.status')
+      const requestStatus = get(this.selectedRequest, 'latest_ocr_request_status.status')
 
       switch (requestStatus) {
         case statuses.intakeRejected:
@@ -241,7 +242,7 @@ export default {
         case statuses.ocrTimedout:
           return {
             text: 'The request has been rejected',
-            errorMessage: get(this.request, 'latest_ocr_request_status.display_message'),
+            errorMessage: get(this.selectedRequest, 'latest_ocr_request_status.display_message'),
           }
         case statuses.intakeException:
         case statuses.processOcrOutputFileError:
@@ -252,7 +253,7 @@ export default {
     },
 
     currentRequestIsPtImageUpload () {
-      return isPtImageUpload(this.request?.latest_ocr_request_status?.status)
+      return isPtImageUpload(this.selectedRequest?.latest_ocr_request_status?.status)
     },
 
     isMobile () {
@@ -269,7 +270,7 @@ export default {
         this.displayStatus.requestList = true
         this.displayStatus.orderDetail = true
       }
-    }
+    },
   },
 
   beforeMount () {
@@ -293,8 +294,7 @@ export default {
       this.openUploadOrdersDialog = false
     },
 
-    requestChanged (request) {
-      this.request = request
+    requestChanged () {
       if (!this.firstLoad && this.isMobile) {
         this.displayStatus.orderDetail = true
         this.displayStatus.requestList = false
@@ -303,7 +303,6 @@ export default {
     },
 
     toggleMobileView () {
-      this.firstLoad = true
       this.displayStatus.orderDetail = false
       this.displayStatus.requestList = true
     }
