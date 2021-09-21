@@ -1080,7 +1080,7 @@ import events from '@/enums/events'
 
 import { getOrderDetail, postSendToTms, delDeleteOrder, postSendToClient, replicateOrder } from '@/store/api_calls/orders'
 import { getSourceFileDownloadURL } from '@/store/api_calls/requests'
-import orderForm, { types as orderFormTypes } from '@/store/modules/order-form'
+import orderForm, { actionTypes as orderFormActionTypes } from '@/store/modules/order-form'
 import requestsList from '@/store/modules/requests-list'
 import utils, { actionTypes as utilsActionTypes } from '@/store/modules/utils'
 import { downloadFile } from '@/utils/download_file'
@@ -1327,15 +1327,15 @@ export default {
       utilsActionTypes.setSnackbar,
       utilsActionTypes.setConfirmationDialog,
     ]),
-    ...mapActions(orderForm.moduleName, {
-      updateOrder: orderFormTypes.updateOrder,
-      setFormOrder: orderFormTypes.setFormOrder,
-      startHover: orderFormTypes.startHover,
-      stopHover: orderFormTypes.stopHover,
-      toggleEdit: orderFormTypes.toggleEdit,
-      cancelEdit: orderFormTypes.cancelEdit,
-      addHighlight: orderFormTypes.addHighlight,
-    }),
+    ...mapActions(orderForm.moduleName, [
+      orderFormActionTypes.updateOrder,
+      orderFormActionTypes.setFormOrder,
+      orderFormActionTypes.startHover,
+      orderFormActionTypes.stopHover,
+      orderFormActionTypes.toggleEdit,
+      orderFormActionTypes.cancelEdit,
+      orderFormActionTypes.addHighlight,
+    ]),
 
     managedByTemplate (field) {
       return this.order.tms_template_dictid !== null &&

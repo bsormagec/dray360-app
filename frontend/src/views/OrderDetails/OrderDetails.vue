@@ -80,7 +80,7 @@ import events from '@/enums/events'
 
 import ContentLoading from '@/components/ContentLoading'
 import orders, { types } from '@/store/modules/orders'
-import orderForm, { types as orderFormTypes } from '@/store/modules/order-form'
+import orderForm, { actionTypes as orderFormActionTypes } from '@/store/modules/order-form'
 import requestsList from '@/store/modules/requests-list'
 import utils, { actionTypes as utilsActionTypes } from '@/store/modules/utils'
 import { mapState, mapActions } from 'vuex'
@@ -209,11 +209,11 @@ export default {
   methods: {
     ...mapActions(utils.moduleName, [utilsActionTypes.setConfirmationDialog]),
     ...mapActions(orders.moduleName, [types.getOrderDetail]),
-    ...mapActions(orderForm.moduleName, {
-      setFormOrder: orderFormTypes.setFormOrder,
-      setOrderLock: orderFormTypes.setOrderLock,
-      updateOrderStatus: orderFormTypes.updateOrderStatus,
-    }),
+    ...mapActions(orderForm.moduleName, [
+      orderFormActionTypes.setFormOrder,
+      orderFormActionTypes.setOrderLock,
+      orderFormActionTypes.updateOrderStatus,
+    ]),
 
     async handleOrderChange (newOrderId) {
       // eslint-disable-next-line eqeqeq

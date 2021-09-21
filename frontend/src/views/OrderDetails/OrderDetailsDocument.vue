@@ -74,7 +74,7 @@
 </template>
 
 <script>
-import orderForm, { types } from '@/store/modules/order-form'
+import orderForm, { actionTypes } from '@/store/modules/order-form'
 import requestsList from '@/store/modules/requests-list'
 
 import { cleanStrForId } from '@/utils/clean_str_for_id.js'
@@ -138,12 +138,12 @@ export default {
   },
 
   methods: {
-    ...mapActions(orderForm.moduleName, {
-      startHover: types.startHover,
-      stopHover: types.stopHover,
-      startFieldEdit: types.startFieldEdit,
-      setPage: types.setPage
-    }),
+    ...mapActions(orderForm.moduleName, [
+      actionTypes.startHover,
+      actionTypes.stopHover,
+      actionTypes.startFieldEdit,
+      actionTypes.setPage
+    ]),
     safeGet,
     cleanStrForId,
     getHighlightsForPage (pageNumber) {

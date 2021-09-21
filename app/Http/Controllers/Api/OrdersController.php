@@ -10,6 +10,7 @@ use App\Http\Resources\OrdersJson;
 use App\Http\Controllers\Controller;
 use App\Http\Resources\SideBySideOrder;
 use Illuminate\Support\Facades\Storage;
+use App\Http\Requests\UpdateOrderRequest;
 use App\Actions\PublishSnsMessageToUpdateStatus;
 
 class OrdersController extends Controller
@@ -42,10 +43,10 @@ class OrdersController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, Order $order)
+    public function update(UpdateOrderRequest $request, Order $order)
     {
         $this->authorize('update', $order);
-        $orderData = $request->validate(Order::$rules);
+        $orderData = $request->validated();
         $relatedModels = $request->validate([
             'order_line_items' => ['sometimes', 'array'],
             'order_line_items.*.t_order_id' => ['required', "in:{$order->id}"],

@@ -206,6 +206,20 @@ class OrdersControllerTest extends TestCase
     }
 
     /** @test */
+    public function it_should_fail_if_the_unit_number_exists_in_other_order_from_the_same_request()
+    {
+        $this->loginAdmin();
+        $this->seed(OrdersTableSeeder::class);
+        $orders = Order::all();
+        $dataToUpdate = ['unit_number' => 'test123'];
+        $orders->first()->update($dataToUpdate + ['request_id' => $orders->last()->request_id]);
+
+        $this->putJson(route('orders.update', $orders->last()->id), $dataToUpdate)
+            ->assertStatus(Response::HTTP_UNPROCESSABLE_ENTITY)
+            ->assertJsonValidationErrors(['unit_number']);
+    }
+
+    /** @test */
     public function it_should_create_a_new_related_editable_relationships_or_update_them_if_they_already_exists()
     {
         $order = Order::orderByDesc('id')->first();
