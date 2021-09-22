@@ -18,7 +18,7 @@ class FeedbacksController extends Controller
         $this->authorize('viewAny', FeedbackComment::class);
 
         $request->validate([
-            'filter.commentable_type' => ['required_with:filter.commentable_id,filter.company_id', Rule::in(array_keys(FeedbackComment::CLASSES_MAP))],
+            'filter.commentable_type' => ['required_with:filter.commentable_id', Rule::in(array_keys(FeedbackComment::CLASSES_MAP))],
             'filter.start_date' => ['date', 'required_with:filter.end_date'],
             'filter.end_date' => ['after_or_equal:filter.start_date'],
         ]);
