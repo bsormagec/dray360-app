@@ -29,7 +29,7 @@
                   <h6>Dray360 Field</h6>
                 </th>
                 <th>
-                  <h6>Custom value</h6>
+                  <h6>Custom Value</h6>
                 </th>
                 <th>
                   <h6>Ref Type</h6>
@@ -222,33 +222,33 @@ export default {
         { field_name: 'FWDR REF #', value: 22 }
       ],
       fieldNames: [
-        { field_name: 'port_ramp_of_origin_address', value: 'port ramp of origin' },
-        { field_name: 'port_ramp_of_destination_address', value: 'port ramp of destination' },
-        { field_name: 'order_type', value: 'shipment direction' },
-        { field_name: 'master_bol_mawb', value: 'master BOL MAWB' },
-        { field_name: 'house_bol_hawb', value: 'house BOL MAWB' },
-        { field_name: 'reference_number', value: 'reference number' },
-        { field_name: 'purchase_order_number', value: 'purchase order number' },
-        { field_name: 'ship_comment', value: 'shipment notes' },
-        { field_name: 'bill_comment', value: 'billing comments' },
-        { field_name: 'line_haul', value: 'line haul' },
-        { field_name: 'fuel_surcharge', value: 'fsc' },
-        { field_name: 'unit_number', value: 'unit number' },
-        { field_name: 'equipment_size', value: 'size' },
-        { field_name: 'bill_to_address', value: 'bill to' },
-        { field_name: 'equipment_type', value: 'type' },
-        { field_name: 'hazardous', value: 'hazardous' },
-        { field_name: 'one_way', value: 'one way' },
-        { field_name: 'shipment_designation', value: 'shipment designation' },
-        { field_name: 'shipment_direction', value: 'shipment direction' },
-        { field_name: 'vessel', value: 'vessel' },
-        { field_name: 'voyage', value: 'voyage' },
-        { field_name: 'interchange_count', value: 'interchange count' },
-        { field_name: 'total_quantity', value: 'total quantity' },
-        { field_name: 'total_weight', value: 'total weight' },
-        { field_name: 'customer_number', value: 'customer number' },
-        { field_name: 'temperature', value: 'temperature' },
-        { field_name: 'other_value', value: 'custom value' }
+        { field_name: 'other_value', value: 'CUSTOM VALUE' },
+        { field_name: 'bill_comment', value: 'Billing Comments' },
+        { field_name: 'bill_to_address', value: 'Bill To' },
+        { field_name: 'customer_number', value: 'Customer Number' },
+        { field_name: 'all_contents', value: 'Description/Contents' },
+        { field_name: 'fuel_surcharge', value: 'FSC - Fuel Surcharge' },
+        { field_name: 'hazardous', value: 'Hazardous' },
+        { field_name: 'house_bol_hawb', value: 'House BOL MAWB' },
+        { field_name: 'interchange_count', value: 'Interchange Count' },
+        { field_name: 'line_haul', value: 'Line Haul' },
+        { field_name: 'master_bol_mawb', value: 'Master BOL MAWB' },
+        { field_name: 'one_way', value: 'One Way' },
+        { field_name: 'port_ramp_of_origin_address', value: 'Port Ramp of Origin' },
+        { field_name: 'port_ramp_of_destination_address', value: 'Port Ramp of Destination' },
+        { field_name: 'purchase_order_number', value: 'Purchase Order Number' },
+        { field_name: 'reference_number', value: 'Reference Number' },
+        { field_name: 'shipment_designation', value: 'Shipment Designation' },
+        { field_name: 'shipment_direction', value: 'Shipment Direction' },
+        { field_name: 'ship_comment', value: 'Shipment Notes' },
+        { field_name: 'temperature', value: 'Temperature' },
+        { field_name: 'total_quantity', value: 'Total Quantity' },
+        { field_name: 'total_weight', value: 'Total Weight' },
+        { field_name: 'unit_number', value: 'Unit Number' },
+        { field_name: 'equipment_size', value: 'Unit Size' },
+        { field_name: 'equipment_type', value: 'Unit Type' },
+        { field_name: 'vessel', value: 'Vessel' },
+        { field_name: 'voyage', value: 'Voyage' }
       ],
       companyList: [],
       companyId: undefined
