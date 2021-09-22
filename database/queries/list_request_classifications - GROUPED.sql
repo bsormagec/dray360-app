@@ -1,4 +1,4 @@
-set @START_DATE=date_sub(CURRENT_TIMESTAMP, interval 120 hour);
+set @START_DATE=date_sub(CURRENT_TIMESTAMP, interval 192 hour);
 set @END_DATE=null;
 set @MAX_ORDER_LIST_CHARS=23;
 set @SHOW_CMDLINE=1;
@@ -12,6 +12,7 @@ select
 from (
     select
         (case
+            when has_postprocessing_error                                                                                                                                                                 then '<exception>'
             when verified_type = ''                                                                                                                                                                       then '<processing>'
             when verified_type = 'pdftext'                                                                                                                                                                then 'D3-CARGOWISE'
             when verified_type = 'tabular'                                                                                                                                                                then 'D3-TABULAR'
@@ -57,6 +58,7 @@ from (
             ,count(distinct o.id) as order_count
             ,max(concat('aws --profile dray360-webapp-user-prod s3 cp ', json_extract(status_metadata, '$.document_archive_location'), ' "./', replace(json_unquote(json_extract(status_metadata, '$.original_filename')), '\r\n', ''), '"')) as download_source
             ,coalesce(max(json_unquote(json_extract(ocr_data, '$.original_fields.last_editor.value'))), '') as verifier
+            ,exists(select id from t_job_state_changes as s2 where s.request_id = s2.request_id and s2.status = 'ocr-post-processing-error') as has_postprocessing_error
     
         from t_job_state_changes as s
         join t_companies as c on s.company_id = c.id
