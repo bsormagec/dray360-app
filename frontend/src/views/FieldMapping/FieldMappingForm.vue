@@ -278,6 +278,17 @@
         disabled
         v-bind="fieldChangedAttributes('post_process_source_regex')"
       />
+      <v-divider />
+      <h3 class="h6 pa-0 mb-4 mt-4 text-left error--text">
+        Danger Zone
+      </h3>
+      <v-btn
+        color="error"
+        :loading="loading"
+        @click="deleteFieldMap"
+      >
+        Delete this field
+      </v-btn>
     </div>
   </div>
 </template>
@@ -418,6 +429,12 @@ export default {
       return {
         dense: false,
       }
+    },
+
+    deleteFieldMap () {
+      this.$emit('delete', { field: this.selectedField })
+      this.formIsDirty = false
+      this.$emit('form-changed', this.formIsDirty)
     },
 
     saveFieldMap () {

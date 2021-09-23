@@ -35,7 +35,7 @@
 
 <script>
 import { mapActions } from 'vuex'
-import orderForm, { types } from '@/store/modules/order-form'
+import orderForm, { actionTypes as orderFormActionTypes } from '@/store/modules/order-form'
 import utils, { actionTypes as utilsActionTypes } from '@/store/modules/utils'
 import FormFieldPresentation from './FormFieldPresentation'
 import { mask } from 'vue-the-mask'
@@ -64,9 +64,7 @@ export default {
 
   methods: {
     ...mapActions(utils.moduleName, [utilsActionTypes.setSnackbar]),
-    ...mapActions(orderForm.moduleName, {
-      stopFieldEdit: types.stopFieldEdit
-    }),
+    ...mapActions(orderForm.moduleName, [orderFormActionTypes.stopFieldEdit]),
     handleChange (e) {
       this.currentValue = e
       if (this.editMode && this.references) {

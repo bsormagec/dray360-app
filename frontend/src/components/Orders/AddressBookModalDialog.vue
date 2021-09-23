@@ -174,8 +174,8 @@
           v-else
           :key="item.id"
         >
-          <div class="d-flex justify-space-between pa-4 align-center">
-            <div>
+          <div class="d-flex pa-4 align-center">
+            <div class="mr-auto">
               <div class="subtitle-1 secondary--text font-weight-medium">
                 {{ item.location_name }}
               </div>

@@ -1,4 +1,5 @@
 <template>
+  <!--  eslint-disable vue/no-v-html -->
   <v-dialog
     :value="confirmationDialog.open"
     persistent
@@ -11,9 +12,10 @@
       >
         {{ confirmationDialog.title }}
       </v-card-title>
-      <v-card-text v-show="confirmationDialog.text !== ''">
-        {{ confirmationDialog.text }}
-      </v-card-text>
+      <v-card-text
+        v-show="confirmationDialog.text !== ''"
+        v-html="confirmationDialog.text"
+      />
       <v-card-text v-show="confirmationDialog.hasInputValue">
         <v-form ref="form">
           <v-text-field
@@ -49,6 +51,7 @@
 </template>
 
 <script>
+/* eslint-disable vue/no-v-html */
 import { mapActions, mapState } from 'vuex'
 import utils, { actionTypes } from '@/store/modules/utils'
 

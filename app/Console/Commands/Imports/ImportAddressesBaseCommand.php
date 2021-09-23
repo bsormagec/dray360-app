@@ -33,6 +33,7 @@ abstract class ImportAddressesBaseCommand extends Command
     protected function getCompaniesToImport(): Collection
     {
         return Company::query()
+            ->active()
             ->where([
                 'default_tms_provider_id' => $this->tmsProvider->id,
                 'sync_addresses' => true,

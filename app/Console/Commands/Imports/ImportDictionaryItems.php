@@ -30,6 +30,7 @@ class ImportDictionaryItems extends Command
     public function handle()
     {
         Company::query()
+            ->active()
             ->when($this->option('company-id'), fn ($query) => $query->where('id', $this->option('company-id')))
             ->whereJsonLength('configuration->dictionary_items_sync', '>', 0)
             ->get(['id', 'name', 'configuration'])

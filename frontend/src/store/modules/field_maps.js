@@ -6,6 +6,7 @@ import deepDiff from 'deep-diff'
 export const types = {
   SET_FIELD_MAPS: 'SET_FIELD_MAPS',
   SET_FIELD_MAP: 'SET_FIELD_MAP',
+  DELETE_FIELD_MAP: 'DELETE_FIELD_MAP',
   GET_FIELD_MAPS: 'GET_FIELD_MAPS',
   RESET_FIELD_MAP: 'RESET_FIELD_MAP',
   SET_FIELD_MAPS_FILTERS: 'SET_FIELD_MAPS_FILTERS',
@@ -42,6 +43,12 @@ const mutations = {
     state.fieldMaps = newFieldMaps
   },
 
+  [types.DELETE_FIELD_MAP] (state, { field }) {
+    const newFieldMaps = { ...cloneDeep(state.fieldMaps) }
+    delete newFieldMaps[field]
+    state.fieldMaps = newFieldMaps
+  },
+
   [types.SET_FIELD_MAPS_FILTERS] (state, { filters = {} }) {
     state.filters = { ...cloneDeep(filters) }
   },
@@ -73,6 +80,10 @@ const actions = {
 
   [types.SET_FIELD_MAP] ({ commit }, { field, fieldMap }) {
     commit(types.SET_FIELD_MAP, { field, fieldMap })
+  },
+
+  [types.DELETE_FIELD_MAP] ({ commit }, { field }) {
+    commit(types.DELETE_FIELD_MAP, { field })
   },
 
   [types.RESET_FIELD_MAP] ({ commit, state }, { field }) {

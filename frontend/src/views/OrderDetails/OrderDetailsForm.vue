@@ -114,51 +114,79 @@
           </v-tooltip>
         </div>
       </div>
-      <OutlinedButtonGroup
-        v-if="!editMode"
-        :main-action="splitButtonMainAction"
-        :options="[
-          { title: 'Add TMS ID', action: () => addTMSId(order.id), hasPermission: hasPermission('ocr-requests-edit') && isInProcessedState && !isLocked},
-          { title: 'Delete Order', action: () => deleteOrder(order.id), hasPermission: hasPermission('orders-remove') && !isLocked },
-          { title: 'Download Source File', action: () => downloadSourceFile(order.request_id), hasPermission: true },
-          { title: 'Edit Order' , action: toggleEdit, hasPermission: !isLocked },
-          { title: 'Replicate Order', action: () => replicateOrder(order.id), hidden: !hasPermission('admin-review-edit') || isLocked },
-          { title: 'Release edit-lock', action: () => $emit('lock-released', order), hidden: !refreshLock|| !hasPermission('object-locks-create') || order.ocr_request_is_locked || order.is_locked || supervise},
-          { title: 'Upload PT Image', action: openUploadPTImage, hidden: order.t_tms_provider_id !== 1 || !hasPermission('pt-images-create') || isLocked },
-          { title: 'Take edit-lock', action: () => $emit('lock-requested', order), hidden: !refreshLock|| !hasPermission('object-locks-create') || (!order.ocr_request_is_locked && !order.is_locked) || supervise},
-          { title: 'View audit info', action: () => openAuditDialog = true, hidden: !hasPermission('audit-logs-view')},
-          { title: 'Add an order comment', action: openOrderCommentDialog, hidden: !hasPermission('feedbacks-create')},
-        ]"
-        :loading="loading"
-      />
-      <div
-        v-else
-        class="order__title-btn-group"
-      >
-        <v-btn
-          color="primary"
-          small
-          text
-          @click="cancelEdit"
+      <div class="order-form-title-right-section">
+        <div
+          v-if="order.siblings.total > 1"
+          class="d-flex justify-space-between align-center mb-2"
         >
-          Cancel
-        </v-btn>
-        <v-btn
-          color="primary"
-          small
-          @click="toggleEdit"
+          <v-btn
+            small
+            outlined
+            class="ma-0 px-0"
+            color="primary"
+            :disabled="!order.siblings.previous"
+            :to="`/order/${order.siblings.previous}`"
+          >
+            <v-icon>mdi-chevron-left</v-icon>
+          </v-btn>
+          <span class="subtitle-2 primary--text mx-3">{{ order.siblings.current }} OF {{ order.siblings.total }}</span>
+          <v-btn
+            small
+            outlined
+            class="ma-0 px-0"
+            color="primary"
+            :disabled="!order.siblings.next"
+            :to="`/order/${order.siblings.next}`"
+          >
+            <v-icon>mdi-chevron-right</v-icon>
+          </v-btn>
+        </div>
+        <OutlinedButtonGroup
+          v-if="!editMode"
+          :main-action="splitButtonMainAction"
+          :options="[
+            { title: 'Add TMS ID', action: () => addTMSId(order.id), hasPermission: hasPermission('ocr-requests-edit') && isInProcessedState && !isLocked},
+            { title: 'Delete Order', action: () => deleteOrder(order.id), hasPermission: hasPermission('orders-remove') && !isLocked },
+            { title: 'Download Source File', action: () => downloadSourceFile(order.request_id), hasPermission: true },
+            { title: 'Edit Order' , action: toggleEdit, hasPermission: !isLocked },
+            { title: 'Replicate Order', action: () => replicateOrder(order.id), hidden: !hasPermission('admin-review-edit') || isLocked },
+            { title: 'Release edit-lock', action: () => $emit('lock-released', order), hidden: !refreshLock|| !hasPermission('object-locks-create') || order.ocr_request_is_locked || order.is_locked || supervise},
+            { title: 'Upload PT Image', action: openUploadPTImage, hidden: order.t_tms_provider_id !== 1 || !hasPermission('pt-images-create') || isLocked },
+            { title: 'Take edit-lock', action: () => $emit('lock-requested', order), hidden: !refreshLock|| !hasPermission('object-locks-create') || (!order.ocr_request_is_locked && !order.is_locked) || supervise},
+            { title: 'View audit info', action: () => openAuditDialog = true, hidden: !hasPermission('audit-logs-view')},
+            { title: 'Add an order comment', action: openOrderCommentDialog, hidden: !hasPermission('feedbacks-create')},
+          ]"
+          :loading="loading"
+        />
+        <div
+          v-else
+          class="order__title-btn-group"
         >
-          Save
-        </v-btn>
-        <v-btn
-          v-if="isMultiOrderRequest && hasPermission('all-orders-edit')"
-          color="primary"
-          small
-          outlined
-          @click="() => toggleEdit({saveAll: true})"
-        >
-          Save For All
-        </v-btn>
+          <v-btn
+            color="primary"
+            small
+            text
+            @click="cancelEdit"
+          >
+            Cancel
+          </v-btn>
+          <v-btn
+            color="primary"
+            small
+            @click="toggleEdit"
+          >
+            Save
+          </v-btn>
+          <v-btn
+            v-if="isMultiOrderRequest && hasPermission('all-orders-edit')"
+            color="primary"
+            small
+            outlined
+            @click="() => toggleEdit({saveAll: true})"
+          >
+            Save For All
+          </v-btn>
+        </div>
       </div>
     </div>
     <OrderAuditDialog
@@ -1052,7 +1080,7 @@ import events from '@/enums/events'
 
 import { getOrderDetail, postSendToTms, delDeleteOrder, postSendToClient, replicateOrder } from '@/store/api_calls/orders'
 import { getSourceFileDownloadURL } from '@/store/api_calls/requests'
-import orderForm, { types as orderFormTypes } from '@/store/modules/order-form'
+import orderForm, { actionTypes as orderFormActionTypes } from '@/store/modules/order-form'
 import requestsList from '@/store/modules/requests-list'
 import utils, { actionTypes as utilsActionTypes } from '@/store/modules/utils'
 import { downloadFile } from '@/utils/download_file'
@@ -1111,6 +1139,11 @@ export default {
       type: Boolean,
       required: false,
       default: false
+    },
+    redirectUrl: {
+      type: String,
+      required: false,
+      default: null
     },
     refreshLock: {
       type: Boolean,
@@ -1294,15 +1327,15 @@ export default {
       utilsActionTypes.setSnackbar,
       utilsActionTypes.setConfirmationDialog,
     ]),
-    ...mapActions(orderForm.moduleName, {
-      updateOrder: orderFormTypes.updateOrder,
-      setFormOrder: orderFormTypes.setFormOrder,
-      startHover: orderFormTypes.startHover,
-      stopHover: orderFormTypes.stopHover,
-      toggleEdit: orderFormTypes.toggleEdit,
-      cancelEdit: orderFormTypes.cancelEdit,
-      addHighlight: orderFormTypes.addHighlight,
-    }),
+    ...mapActions(orderForm.moduleName, [
+      orderFormActionTypes.updateOrder,
+      orderFormActionTypes.setFormOrder,
+      orderFormActionTypes.startHover,
+      orderFormActionTypes.stopHover,
+      orderFormActionTypes.toggleEdit,
+      orderFormActionTypes.cancelEdit,
+      orderFormActionTypes.addHighlight,
+    ]),
 
     managedByTemplate (field) {
       return this.order.tms_template_dictid !== null &&
@@ -1493,6 +1526,11 @@ export default {
     },
 
     goToOrdersList () {
+      if (this.redirectUrl) {
+        this.$router.push(this.redirectUrl)
+        return
+      }
+
       this.redirectBack ? this.$router.back() : this.$router.push('/inbox')
     },
 
@@ -1655,6 +1693,9 @@ export default {
   }
 
   &::v-deep .split-btn {
+    margin-left: auto;
+  }
+  .order-form-title-right-section {
     margin-left: auto;
   }
 }

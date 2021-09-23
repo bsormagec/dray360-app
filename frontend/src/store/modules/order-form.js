@@ -4,23 +4,33 @@ import cloneDeep from 'lodash/cloneDeep'
 import get from 'lodash/get'
 import requestList from './requests-list'
 
-export const types = {
+const mutationTypes = {
   setFormOrder: 'SET_FORM_ORDER',
-  setHighlights: 'SET_HIGHLIGHTS',
-  setHighlight: 'SET_HIGHLIGHT',
-  setOrderLock: 'SET_ORDER_LOCKED',
-  setPage: 'SET_PAGE',
   updateOrder: 'UPDATE_ORDER',
   toggleEdit: 'TOGGLE_EDIT',
-  loadHighlights: 'LOAD_HIGHLIGHTS',
-  startHover: 'START_HOVER',
-  stopHover: 'STOP_HOVER',
-  startFieldEdit: 'START_FIELD_EDIT',
-  stopFieldEdit: 'STOP_FIELD_EDIT',
-  addHighlight: 'ADD_HIGHLIGHT',
+  setHighlights: 'SET_HIGHLIGHTS',
+  setHighlight: 'SET_HIGHLIGHT',
   setBackupOrder: 'SET_BACKUP_ORDER',
-  cancelEdit: 'CANCEL_EDIT',
+  setPage: 'SET_PAGE',
+  setOrderLock: 'SET_ORDER_LOCKED',
   updateOrderStatus: 'UPDATE_ORDER_STATUS',
+}
+
+export const actionTypes = {
+  addHighlight: 'addHighlight',
+  setFormOrder: 'setFormOrder',
+  updateOrder: 'updateOrder',
+  toggleEdit: 'toggleEdit',
+  cancelEdit: 'cancelEdit',
+  loadHighlights: 'loadHighlights',
+  startHover: 'startHover',
+  stopHover: 'stopHover',
+  startFieldEdit: 'startFieldEdit',
+  stopFieldEdit: 'stopFieldEdit',
+  setPage: 'setPage',
+  setOrderLock: 'setOrderLock',
+  updateOrderStatus: 'updateOrderStatus',
+  clearErrors: 'clearErrors',
 }
 
 const initialState = {
@@ -45,40 +55,48 @@ const initialState = {
 }
 
 const mutations = {
-  [types.setFormOrder] (state, order) {
+  [mutationTypes.setFormOrder] (state, order) {
     state.order = { ...order }
     state.isLocked = false
   },
-  [types.updateOrder] (state, { changes }) {
+
+  [mutationTypes.updateOrder] (state, { changes }) {
     state.order = {
       ...(state.order),
       ...changes
     }
   },
-  [types.toggleEdit] (state) {
+
+  [mutationTypes.toggleEdit] (state) {
     state.editMode = !state.editMode
   },
-  [types.setHighlights] (state, { highlights, pages }) {
+
+  [mutationTypes.setHighlights] (state, { highlights, pages }) {
     state.highlights = highlights
     state.pages = pages
   },
-  [types.setHighlight] (state, { path, highlight }) {
+
+  [mutationTypes.setHighlight] (state, { path, highlight }) {
     state.highlights[path] = { ...state.highlights[path], ...highlight }
   },
-  [types.setBackupOrder] (state, order) {
+
+  [mutationTypes.setBackupOrder] (state, order) {
     state.backupOrder = { ...order }
   },
-  [types.setPage] (state, { index, page }) {
+
+  [mutationTypes.setPage] (state, { index, page }) {
     state.pages[index] = { ...page }
   },
-  [types.setOrderLock] (state, { locked, lock, ocrRequestLocked }) {
+
+  [mutationTypes.setOrderLock] (state, { locked, lock, ocrRequestLocked }) {
     state.order.is_locked = locked
     state.order.lock = lock
     if (ocrRequestLocked !== undefined) {
       state.order.ocr_request_is_locked = ocrRequestLocked
     }
   },
-  [types.updateOrderStatus] (state, { latestStatus }) {
+
+  [mutationTypes.updateOrderStatus] (state, { latestStatus }) {
     if (state.order.id !== latestStatus.order_id) {
       return
     }
@@ -99,14 +117,16 @@ const mutations = {
 }
 
 const actions = {
-  [types.addHighlight] ({ commit }, path) {
-    commit(types.setHighlight, { path, highlight: baseHighlight({}) })
+  [actionTypes.addHighlight] ({ commit }, path) {
+    commit(mutationTypes.setHighlight, { path, highlight: baseHighlight({}) })
   },
-  [types.setFormOrder] ({ commit, dispatch }, order) {
-    commit(types.setFormOrder, order)
-    dispatch(types.loadHighlights, order)
+
+  [actionTypes.setFormOrder] ({ commit, dispatch }, order) {
+    commit(mutationTypes.setFormOrder, order)
+    dispatch(actionTypes.loadHighlights, order)
   },
-  async [types.updateOrder] ({ commit, state }, { path, value, useOrder = false, saveAll = false }) {
+
+  async [actionTypes.updateOrder] ({ commit, state }, { path, value, useOrder = false, saveAll = false }) {
     let changes = {}
 
     if (useOrder) {
@@ -116,11 +136,11 @@ const actions = {
     }
 
     if (!useOrder && state.editMode) {
-      commit(types.updateOrder, { changes })
+      commit(mutationTypes.updateOrder, { changes })
       return [undefined]
     }
 
-    commit(types.setHighlight, { path, highlight: { loading: true } })
+    commit(mutationTypes.setHighlight, { path, highlight: { loading: true } })
 
     let error
     let data
@@ -132,30 +152,35 @@ const actions = {
     }
 
     if (error === undefined) {
-      commit(types.setFormOrder, data)
+      commit(mutationTypes.setFormOrder, data)
     }
 
-    commit(types.setHighlight, { path, highlight: { loading: false } })
+    const errors = get(error, `response.data.errors.${path}`, [])
+    commit(mutationTypes.setHighlight, { path, highlight: { loading: false, errors } })
+
     return [error, data]
   },
-  [types.toggleEdit] ({ commit, dispatch, state }, { saveAll = false } = { saveAll: false }) {
+
+  [actionTypes.toggleEdit] ({ commit, dispatch, state }, { saveAll = false } = { saveAll: false }) {
     const { editMode } = state
-    commit(types.toggleEdit)
+    commit(mutationTypes.toggleEdit)
     const newEditMode = !editMode
 
     if (editMode === true && newEditMode === false) {
-      commit(types.setBackupOrder, {})
-      dispatch(types.updateOrder, { useOrder: true, saveAll })
+      commit(mutationTypes.setBackupOrder, {})
+      dispatch(actionTypes.updateOrder, { useOrder: true, saveAll })
     } else {
-      commit(types.setBackupOrder, { ...cloneDeep(state.order) })
+      commit(mutationTypes.setBackupOrder, { ...cloneDeep(state.order) })
     }
   },
-  [types.cancelEdit] ({ state, commit, dispatch }) {
-    commit(types.toggleEdit)
-    commit(types.setFormOrder, { ...cloneDeep(state.backupOrder) })
-    commit(types.setBackupOrder, {})
+
+  [actionTypes.cancelEdit] ({ state, commit }) {
+    commit(mutationTypes.toggleEdit)
+    commit(mutationTypes.setFormOrder, { ...cloneDeep(state.backupOrder) })
+    commit(mutationTypes.setBackupOrder, {})
   },
-  [types.loadHighlights] ({ commit, state }, order) {
+
+  [actionTypes.loadHighlights] ({ commit, state }, order) {
     const pages = []
     for (const key in order.ocr_data.page_index_filenames.value) {
       pages.push({
@@ -166,37 +191,48 @@ const actions = {
       })
     }
 
-    commit(types.setHighlights, { highlights: getHighlights(order), pages })
+    commit(mutationTypes.setHighlights, { highlights: getHighlights(order), pages })
   },
-  [types.startHover] ({ commit, state }, { path }) {
+
+  [actionTypes.startHover] ({ commit, state }, { path }) {
     if (state.highlights[path].hoverTimeout) clearTimeout(state.highlights[path].hoverTimeout)
 
     const hoverTimeout = setTimeout(() => {
-      commit(types.setHighlight, { path, highlight: { hover: true } })
+      commit(mutationTypes.setHighlight, { path, highlight: { hover: true } })
     }, 200)
-    commit(types.setHighlight, { path, highlight: { hoverTimeout } })
+    commit(mutationTypes.setHighlight, { path, highlight: { hoverTimeout } })
   },
-  [types.stopHover] ({ commit, state }, { path }) {
+
+  [actionTypes.stopHover] ({ commit, state }, { path }) {
     if (state.highlights[path].hoverTimeout) clearTimeout(state.highlights[path].hoverTimeout)
-    commit(types.setHighlight, { path, highlight: { hover: false } })
+    commit(mutationTypes.setHighlight, { path, highlight: { hover: false } })
   },
-  [types.startFieldEdit] ({ commit, state }, { path }) {
+
+  [actionTypes.startFieldEdit] ({ commit, state }, { path }) {
     if (path.includes('bill_to_address') || path.includes('order_address_events')) {
       return
     }
-    commit(types.setHighlight, { path, highlight: { edit: true } })
+    commit(mutationTypes.setHighlight, { path, highlight: { edit: true } })
   },
-  [types.stopFieldEdit] ({ commit, state }, { path }) {
-    commit(types.setHighlight, { path, highlight: { edit: false } })
+
+  [actionTypes.stopFieldEdit] ({ commit, state }, { path }) {
+    commit(mutationTypes.setHighlight, { path, highlight: { edit: false } })
   },
-  [types.setPage] ({ commit, state }, { index, page }) {
-    commit(types.setPage, { index, page: { ...page } })
+
+  [actionTypes.setPage] ({ commit, state }, { index, page }) {
+    commit(mutationTypes.setPage, { index, page: { ...page } })
   },
-  [types.setOrderLock] ({ commit, state }, { locked, lock, ocrRequestLocked }) {
-    commit(types.setOrderLock, { locked, lock, ocrRequestLocked })
+
+  [actionTypes.setOrderLock] ({ commit, state }, { locked, lock, ocrRequestLocked }) {
+    commit(mutationTypes.setOrderLock, { locked, lock, ocrRequestLocked })
   },
-  [types.updateOrderStatus] ({ commit }, { latestStatus }) {
-    commit(types.updateOrderStatus, { latestStatus })
+
+  [actionTypes.updateOrderStatus] ({ commit }, { latestStatus }) {
+    commit(mutationTypes.updateOrderStatus, { latestStatus })
+  },
+
+  [actionTypes.clearErrors] ({ commit }, { path }) {
+    commit(mutationTypes.setHighlight, { path, highlight: { errors: [] } })
   },
 }
 

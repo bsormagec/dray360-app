@@ -1,6 +1,6 @@
 import { mapActions, mapState } from 'vuex'
-import requestsList, { types as requestsListTypes } from '@/store/modules/requests-list'
-import utils, { actionTypes, actionTypes as utilsActionTypes } from '@/store/modules/utils'
+import requestsList, { actionTypes as requestsListActionTypes } from '@/store/modules/requests-list'
+import utils, { actionTypes as utilsActionTypes } from '@/store/modules/utils'
 import { putRefreshLock } from '@/store/api_calls/object_locks'
 import { objectLocks } from '@/enums/app_objects_types'
 import events from '@/enums/events'
@@ -25,12 +25,12 @@ export default {
   },
 
   methods: {
-    ...mapActions(requestsList.moduleName, {
-      lockRequest: requestsListTypes.lockRequest,
-      releaseLockRequest: requestsListTypes.releaseLockRequest,
-      wsLockRequest: requestsListTypes.wsLockRequest,
-      wsReleaseLockRequest: requestsListTypes.wsReleaseLockRequest,
-    }),
+    ...mapActions(requestsList.moduleName, [
+      requestsListActionTypes.lockRequest,
+      requestsListActionTypes.releaseLockRequest,
+      requestsListActionTypes.wsLockRequest,
+      requestsListActionTypes.wsReleaseLockRequest,
+    ]),
 
     ...mapActions(utils.moduleName, [utilsActionTypes.setSnackbar]),
 

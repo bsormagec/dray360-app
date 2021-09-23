@@ -89,6 +89,21 @@
     <slot
       v-else-if="editMode"
     />
+    <v-alert
+      :value="errors.length > 0"
+      dense
+      text
+      dismissible
+      type="error"
+      @input="dismissErrors"
+    >
+      <span
+        v-for="(error, index) in errors"
+        :key="index"
+      >
+        {{ error }}
+      </span>
+    </v-alert>
   </div>
 </template>
 
@@ -99,7 +114,7 @@ import FormFieldManaged from './FormFieldManaged'
 import isMobile from '@/mixins/is_mobile'
 import { mapState, mapActions, mapGetters } from 'vuex'
 import permissions from '@/mixins/permissions'
-import orderForm, { types } from '@/store/modules/order-form'
+import orderForm, { actionTypes } from '@/store/modules/order-form'
 import get from 'lodash/get'
 import { cleanStrForId } from '@/utils/clean_str_for_id.js'
 
@@ -142,6 +157,14 @@ export default {
       return this.allHighlights[this.references]
     },
 
+    errors () {
+      if (!this.highlight) {
+        return []
+      }
+
+      return this.highlight.errors || []
+    },
+
     isHovering () {
       return !this.isEditing && this.highlight.hover
     },
@@ -160,13 +183,20 @@ export default {
   },
 
   methods: {
-    ...mapActions(orderForm.moduleName, {
-      startHover: types.startHover,
-      stopHover: types.stopHover,
-      startFieldEdit: types.startFieldEdit,
-      stopFieldEdit: types.stopFieldEdit
-    }),
+    ...mapActions(orderForm.moduleName, [
+      actionTypes.startHover,
+      actionTypes.stopHover,
+      actionTypes.startFieldEdit,
+      actionTypes.stopFieldEdit,
+      actionTypes.clearErrors,
+    ]),
+
     cleanStrForId,
+
+    dismissErrors () {
+      this.clearErrors({ path: this.references })
+    },
+
     handleStartEdit () {
       if (this.isLocked || this.onlyHover) {
         return
@@ -174,13 +204,16 @@ export default {
 
       this.startFieldEdit({ path: this.references })
     },
+
     verify () {
       this.$emit('accept')
     },
+
     handleAccept (saveAll = false) {
       this.stopFieldEdit({ path: this.references })
       this.$emit(saveAll ? 'accept-all' : 'accept')
     },
+
     handleCancel () {
       this.stopFieldEdit({ path: this.references })
       this.$emit('cancel')

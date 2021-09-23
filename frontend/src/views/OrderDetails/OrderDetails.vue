@@ -18,6 +18,7 @@
             :back-button="backButton"
             :virtual-back-button="isMobile && !backButton"
             :redirect-back="redirectBack"
+            :redirect-url="redirectUrl"
             :options="formOptions"
             :refresh-lock="refreshLock"
             :details-only="detailsOnly"
@@ -79,7 +80,7 @@ import events from '@/enums/events'
 
 import ContentLoading from '@/components/ContentLoading'
 import orders, { types } from '@/store/modules/orders'
-import orderForm, { types as orderFormTypes } from '@/store/modules/order-form'
+import orderForm, { actionTypes as orderFormActionTypes } from '@/store/modules/order-form'
 import requestsList from '@/store/modules/requests-list'
 import utils, { actionTypes as utilsActionTypes } from '@/store/modules/utils'
 import { mapState, mapActions } from 'vuex'
@@ -136,6 +137,7 @@ export default {
     startPos: 0,
     loaded: false,
     redirectBack: false,
+    redirectUrl: null,
     orderIdToLoad: vm.orderId || vm.$route.params.id,
     formOptions: cloneDeep(defaultFormOptions),
     has404: false
@@ -143,7 +145,8 @@ export default {
 
   beforeRouteEnter (to, from, next) {
     next(vm => {
-      vm.redirectBack = from.path !== '/' // from.path.includes('/search') || from.path.includes('/inbox')
+      vm.redirectUrl = from.path.includes('/inbox') ? from.fullPath : null
+      vm.redirectBack = from.path !== '/'
       next()
     })
   },
@@ -176,16 +179,11 @@ export default {
     },
   },
   watch: {
-    async orderId (newOrderId) {
-      // eslint-disable-next-line eqeqeq
-      if (newOrderId == this.orderIdToLoad) {
-        return
-      }
-      this.leaveRequestStatusUpdatesChannel(`-order${this.orderIdToLoad}`)
-      this.orderIdToLoad = this.orderId
-
-      await this.fetchFormData()
-      this.initializeStateUpdatesListeners()
+    orderId (newOrderId) {
+      this.handleOrderChange(newOrderId)
+    },
+    $route (to, from) {
+      this.handleOrderChange(to.params?.id)
     }
   },
 
@@ -211,11 +209,24 @@ export default {
   methods: {
     ...mapActions(utils.moduleName, [utilsActionTypes.setConfirmationDialog]),
     ...mapActions(orders.moduleName, [types.getOrderDetail]),
-    ...mapActions(orderForm.moduleName, {
-      setFormOrder: orderFormTypes.setFormOrder,
-      setOrderLock: orderFormTypes.setOrderLock,
-      updateOrderStatus: orderFormTypes.updateOrderStatus,
-    }),
+    ...mapActions(orderForm.moduleName, [
+      orderFormActionTypes.setFormOrder,
+      orderFormActionTypes.setOrderLock,
+      orderFormActionTypes.updateOrderStatus,
+    ]),
+
+    async handleOrderChange (newOrderId) {
+      // eslint-disable-next-line eqeqeq
+      if (!newOrderId || newOrderId == this.orderIdToLoad) {
+        return
+      }
+
+      this.leaveRequestStatusUpdatesChannel(`-order${this.orderIdToLoad}`)
+      this.orderIdToLoad = newOrderId
+
+      await this.fetchFormData()
+      this.initializeStateUpdatesListeners()
+    },
 
     async fetchFormData () {
       this.loaded = false

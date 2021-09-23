@@ -46,6 +46,7 @@ class SideBySideOrder extends JsonResource
         $this->loadLatestOcrRequestLatestStatus();
         $this->loadUserWhoSentToTms();
         $this->loadLocks();
+        $this->loadSiblingOrdersPagination();
 
         return parent::toArray($request);
     }
@@ -250,6 +251,23 @@ class SideBySideOrder extends JsonResource
         $this->resource
             ->setRelation('precedingOrderChanges', $changedValues)
             ->unsetRelation('precededByOrder');
+    }
+
+    protected function loadSiblingOrdersPagination()
+    {
+        $siblings = Order::query()
+            ->where('request_id', $this->resource->request_id)
+            ->orderByDesc('id')
+            ->whereHas('ocrRequest')
+            ->pluck('id');
+        $current = $siblings->search($this->resource->id);
+
+        $this->resource->siblings = [
+            'previous' => $siblings->get($current - 1),
+            'next' => $siblings->get($current + 1),
+            'current' => $current + 1,
+            'total' => $siblings->count(),
+        ];
     }
 
     protected function relatedItemsAreTheSame(array $current, array $preceding, string $columnToCompare): bool

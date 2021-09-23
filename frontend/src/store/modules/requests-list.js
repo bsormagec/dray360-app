@@ -1,37 +1,57 @@
 import { postLockObject, deleteReleaseLock } from '@/store/api_calls/object_locks'
 import { objectLocks, statuses } from '@/enums/app_objects_types'
 import toBool from '@/utils/to_bool'
+import { requestMatchesFilters } from '@/utils/requests_list'
 import cloneDeep from 'lodash/cloneDeep'
 import get from 'lodash/get'
 
-export const types = {
+const superviseLocaStorageKey = 'TOGGLE_SUPERVISE'
+
+const mutationTypes = {
   setRequests: 'SET_REQUESTS',
   appendRequests: 'APPEND_REQUESTS',
-  lockRequest: 'LOCK_REQUEST',
-  releaseLockRequest: 'RELEASE_LOCK_REQUEST',
-  wsLockRequest: 'WS_LOCK_REQUEST',
-  wsReleaseLockRequest: 'WS_RELEASE_LOCK_REQUEST',
-  toggleSupervise: 'TOGGLE_SUPERVISE',
+  setRequestLock: 'SET_REQUEST_LOCK',
   setSupervise: 'SET_SUPERVISE',
   updateRequestStatus: 'UPDATE_REQUEST_STATUS',
   updateNewRequests: 'UPDATE_NEW_REQUESTS',
+  setSelectedRequest: 'SET_SELECTED_REQUEST',
+  setFilters: 'SET_FILTERS',
+}
+
+export const actionTypes = {
+  setRequests: 'setRequests',
+  appendRequests: 'appendRequests',
+  lockRequest: 'lockRequest',
+  releaseLockRequest: 'releaseLockRequest',
+  wsLockRequest: 'wsLockRequest',
+  wsReleaseLockRequest: 'wsReleaseLockRequest',
+  toggleSupervise: 'toggleSupervise',
+  setSupervise: 'setSupervise',
+  updateRequestStatus: 'updateRequestStatus',
+  updateNewRequests: 'updateNewRequests',
+  selectRequest: 'selectRequest',
+  setFilters: 'setFilters',
 }
 
 const initialState = {
+  filters: [],
   requests: [],
   newRequestIds: [],
-  supervise: toBool(localStorage.getItem(types.toggleSupervise)) || false,
+  selectedRequestId: null,
+  supervise: toBool(localStorage.getItem(superviseLocaStorageKey)) || false,
 }
 
 const mutations = {
-  [types.setRequests] (state, { requests }) {
+  [mutationTypes.setRequests] (state, { requests }) {
     state.requests = requests
     state.newRequestIds = []
   },
-  [types.appendRequests] (state, { requests }) {
+
+  [mutationTypes.appendRequests] (state, { requests }) {
     state.requests = state.requests.concat(requests)
   },
-  [types.lockRequest] (state, { requestId, lock, markAsLocked }) {
+
+  [mutationTypes.setRequestLock] (state, { requestId, lock, markAsLocked }) {
     const newList = state.requests.map(request => {
       if (request.request_id !== requestId) {
         return request
@@ -42,26 +62,20 @@ const mutations = {
 
     state.requests = newList
   },
-  [types.releaseLockRequest] (state, { requestId }) {
-    const newList = state.requests.map(request => {
-      if (request.request_id !== requestId) {
-        return request
-      }
 
-      return { ...request, lock: null, is_locked: false }
-    })
-
-    state.requests = newList
-  },
-  [types.toggleSupervise] (state) {
-    state.supervise = !state.supervise
-  },
-  [types.setSupervise] (state, value) {
+  [mutationTypes.setSupervise] (state, value) {
     state.supervise = value
+    localStorage.setItem(superviseLocaStorageKey, value)
   },
-  [types.updateRequestStatus] (state, { latestStatus }) {
+
+  [mutationTypes.updateRequestStatus] (state, { latestStatus }) {
     const index = state.requests.findIndex(item => item.request_id === latestStatus.request_id)
     if (index === -1) {
+      return
+    }
+
+    if (!requestMatchesFilters(latestStatus, state.filters) && latestStatus.request_id !== state.selectedRequestId) {
+      state.requests.splice(index, 1)
       return
     }
 
@@ -77,7 +91,8 @@ const mutations = {
 
     state.requests.splice(index, 1, newRequest)
   },
-  [types.updateNewRequests] (state, { latestStatus }) {
+
+  [mutationTypes.updateNewRequests] (state, { latestStatus }) {
     // Check if we have new request in the latest state to show the snackbar and refresh button
     const hasNewRequestStatus = [
       statuses.intakeStarted,
@@ -95,16 +110,26 @@ const mutations = {
 
     state.newRequestIds.push(latestStatus.request_id)
   },
+
+  [mutationTypes.setSelectedRequest] (state, { requestId }) {
+    state.selectedRequestId = requestId
+  },
+
+  [mutationTypes.setFilters] (state, { filters }) {
+    state.filters = [...filters]
+  },
 }
 
 const actions = {
-  [types.setRequests] ({ commit }, requests) {
-    commit(types.setRequests, { requests })
+  [actionTypes.setRequests] ({ commit }, requests) {
+    commit(mutationTypes.setRequests, { requests })
   },
-  [types.appendRequests] ({ commit }, requests) {
-    commit(types.appendRequests, { requests })
+
+  [actionTypes.appendRequests] ({ commit }, requests) {
+    commit(mutationTypes.appendRequests, { requests })
   },
-  async [types.lockRequest] ({ commit, state }, { requestId, lockType, updateList = false, markAsLocked = true }) {
+
+  async [actionTypes.lockRequest] ({ commit, state }, { requestId, lockType, updateList = false, markAsLocked = true }) {
     const [error, data] = await postLockObject({
       object_id: requestId,
       lock_type: lockType,
@@ -116,12 +141,13 @@ const actions = {
     }
 
     if (updateList) {
-      commit(types.lockRequest, { requestId, lock: data, markAsLocked })
+      commit(mutationTypes.setRequestLock, { requestId, lock: data, markAsLocked })
     }
 
     return [error, data]
   },
-  async [types.releaseLockRequest] ({ commit, state }, { requestId, updateList = false }) {
+
+  async [actionTypes.releaseLockRequest] ({ commit }, { requestId, updateList = false }) {
     const [error, data] = await deleteReleaseLock({
       object_id: requestId,
       object_type: objectLocks.objectTypes.request
@@ -132,40 +158,58 @@ const actions = {
     }
 
     if (updateList) {
-      commit(types.releaseLockRequest, { requestId })
+      commit(mutationTypes.setRequestLock, { requestId, lock: null, markAsLocked: false })
     }
 
     return [error, data]
   },
-  [types.wsLockRequest] ({ commit, state }, { requestId, lock }) {
+
+  [actionTypes.wsLockRequest] ({ commit }, { requestId, lock }) {
     if (!lock || !lock.object_id) {
       return
     }
 
-    commit(types.lockRequest, { requestId, lock, markAsLocked: true })
+    commit(mutationTypes.setRequestLock, { requestId, lock, markAsLocked: true })
   },
-  async [types.wsReleaseLockRequest] ({ commit, state }, { requestId }) {
+
+  async [actionTypes.wsReleaseLockRequest] ({ commit }, { requestId }) {
     if (!requestId) {
       return
     }
 
-    commit(types.releaseLockRequest, { requestId })
+    commit(mutationTypes.setRequestLock, { requestId, lock: null, markAsLocked: false })
   },
-  [types.toggleSupervise] ({ commit, state }) {
-    localStorage.setItem(types.toggleSupervise, !state.supervise)
-    commit(types.toggleSupervise)
+
+  [actionTypes.toggleSupervise] ({ commit, state }) {
+    commit(mutationTypes.setSupervise, !state.supervise)
   },
-  [types.setSupervise] ({ commit }, value) {
-    localStorage.setItem(types.toggleSupervise, value)
-    commit(types.setSupervise, value)
+
+  [actionTypes.setSupervise] ({ commit }, value) {
+    commit(mutationTypes.setSupervise, value)
   },
-  [types.updateRequestStatus] ({ commit }, { latestStatus }) {
-    commit(types.updateRequestStatus, { latestStatus })
-    commit(types.updateNewRequests, { latestStatus })
+
+  [actionTypes.updateRequestStatus] ({ commit }, { latestStatus }) {
+    commit(mutationTypes.updateRequestStatus, { latestStatus })
+    commit(mutationTypes.updateNewRequests, { latestStatus })
+  },
+
+  [actionTypes.selectRequest] ({ commit }, { requestId }) {
+    commit(mutationTypes.setSelectedRequest, { requestId })
+  },
+
+  [actionTypes.setFilters] ({ commit }, filters) {
+    commit(mutationTypes.setFilters, { filters })
   },
 }
 
 const getters = {
+  selectedRequest (state) {
+    const index = state.requests.findIndex(request => request.request_id === state.selectedRequestId)
+
+    return index === -1
+      ? { orders_count: 0 }
+      : state.requests[index]
+  }
 }
 
 export default {
