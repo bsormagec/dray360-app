@@ -34,7 +34,7 @@
 
 <script>
 import { mapActions } from 'vuex'
-import orderForm, { types } from '@/store/modules/order-form'
+import orderForm, { actionTypes } from '@/store/modules/order-form'
 import FormFieldPresentation from './FormFieldPresentation'
 
 export default {
@@ -59,9 +59,7 @@ export default {
   }),
 
   methods: {
-    ...mapActions(orderForm.moduleName, {
-      stopFieldEdit: types.stopFieldEdit
-    }),
+    ...mapActions(orderForm.moduleName, [actionTypes.stopFieldEdit]),
     handleChange (e) {
       this.currentValue = e
       if (this.editMode && this.references) {

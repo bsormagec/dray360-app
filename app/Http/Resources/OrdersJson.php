@@ -4,20 +4,10 @@ namespace App\Http\Resources;
 
 use Illuminate\Support\Arr;
 use App\Models\OCRRequestStatus;
-use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Http\Resources\Json\ResourceCollection;
 
 class OrdersJson extends ResourceCollection
 {
-    protected Collection $companies;
-
-    public function __construct($resource, Collection $companies)
-    {
-        parent::__construct($resource);
-
-        $this->companies = $companies;
-    }
-
     /**
      * Transform the resource into an array.
      *

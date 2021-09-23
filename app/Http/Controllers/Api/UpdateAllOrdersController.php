@@ -4,9 +4,9 @@ namespace App\Http\Controllers\Api;
 
 use App\Models\Order;
 use Illuminate\Support\Str;
-use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Http\Resources\SideBySideOrder;
+use App\Http\Requests\UpdateOrderRequest;
 
 class UpdateAllOrdersController extends Controller
 {
@@ -15,10 +15,10 @@ class UpdateAllOrdersController extends Controller
         'seal_number',
     ];
 
-    public function __invoke(Request $request, Order $order)
+    public function __invoke(UpdateOrderRequest $request, Order $order)
     {
         $this->authorize('updateAll', $order);
-        $orderData = collect($request->validate(Order::$rules))
+        $orderData = collect($request->validated())
             ->reject(fn ($item, $key) => in_array($key, self::BLACKLISTED_PARAMETERS))
             ->toArray();
         $relatedModels = $request->validate([

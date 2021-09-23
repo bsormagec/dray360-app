@@ -23,7 +23,7 @@
 
 <script>
 import { mapActions, mapState } from 'vuex'
-import requestsList, { types as requestsListTypes } from '@/store/modules/requests-list'
+import requestsList, { actionTypes } from '@/store/modules/requests-list'
 
 export default {
   name: 'LockButtonEnabler',
@@ -36,9 +36,7 @@ export default {
     }),
   },
   methods: {
-    ...mapActions(requestsList.moduleName, {
-      toggleSupervise: requestsListTypes.toggleSupervise,
-    }),
+    ...mapActions(requestsList.moduleName, [actionTypes.toggleSupervise]),
   }
 }
 </script>

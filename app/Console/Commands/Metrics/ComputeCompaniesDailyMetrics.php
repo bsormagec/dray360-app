@@ -15,7 +15,7 @@ class ComputeCompaniesDailyMetrics extends Command
      *
      * @var string
      */
-    protected $signature = 'metrics:companies-daily {--company-id=} {--from= : yyyy-mm-dd date} {--to= : yyyy-mm-dd date}';
+    protected $signature = 'metrics:companies-daily {--company-id=} {--from= : yyyy-mm-dd date} {--to= : yyyy-mm-dd date} {--all}';
 
     /**
      * The console command description.
@@ -39,6 +39,11 @@ class ComputeCompaniesDailyMetrics extends Command
         $startDate = $this->getDate('from');
         $endDate = $this->getDate('to');
         $companies = Company::query()
+            ->when(
+                $this->option('all'),
+                fn ($q) => $q->withTrashed(),
+                fn ($q) => $q->active()
+            )
             ->when($this->option('company-id'), function (Builder $query) {
                 $query->where('id', $this->option('company-id'));
             })

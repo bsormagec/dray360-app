@@ -51,7 +51,7 @@
         >
           <RequestItem
             :request="request"
-            :active="requestIdSelected === request.request_id"
+            :active="selectedRequestId === request.request_id"
             @change="handleChange"
             @request-deleted="requestDeleted"
             @reload-request="refreshRequests"
@@ -92,7 +92,7 @@
       />
     </v-overlay>
     <v-snackbar
-      v-model="newRequests"
+      v-model="newRequestsAvailable"
       :timeout="-1"
     >
       <div class="refresh-msg d-flex align-center justify-space-between">
@@ -113,12 +113,13 @@ import Filters from '@/components/OrderTable/components/filters'
 import RequestItem from './RequestItem'
 import LockButtonEnabler from '@/components/LockButtonEnabler'
 
-import { mapActions, mapState } from 'vuex'
-import requestsList, { types as requestsListTypes } from '@/store/modules/requests-list'
+import { mapActions, mapState, mapGetters } from 'vuex'
+import requestsList, { actionTypes as requestsListActionTypes } from '@/store/modules/requests-list'
 import utils, { actionTypes as utilsActionTypes } from '@/store/modules/utils'
 
 import { getRequests } from '@/store/api_calls/requests'
 import { getRequestFilters } from '@/utils/filters_handling'
+import { requestMatchesFilters } from '@/utils/requests_list'
 
 import { formatDate } from '@/utils/dates'
 import permissions from '@/mixins/permissions'
@@ -143,11 +144,9 @@ export default {
   data () {
     return {
       bottom: false,
-      requestIdSelected: null,
       page: 1,
       meta: {},
       loading: false,
-      filters: [],
       initFilters: {
         search: '',
         dateRange: [],
@@ -157,7 +156,6 @@ export default {
         displayHidden: false,
         updateType: ''
       },
-      newRequests: false,
       showRefreshWheel: false,
     }
   },
@@ -165,11 +163,16 @@ export default {
   computed: {
     ...mapState(requestsList.moduleName, {
       items: state => state.requests,
+      filters: state => state.filters,
       supervise: state => state.supervise,
       newRequestIds: state => state.newRequestIds,
+      selectedRequestId: state => state.selectedRequestId,
     }),
-    requestSelected () {
-      return this.items.filter(item => item.request_id === this.requestIdSelected)[0] || {}
+
+    ...mapGetters(requestsList.moduleName, ['selectedRequest']),
+
+    newRequestsAvailable () {
+      return this.newRequestIds.length > 0
     }
   },
 
@@ -182,10 +185,6 @@ export default {
       this.startLoading()
       this.fetchRequests()
     },
-
-    newRequestIds () {
-      this.newRequests = this.newRequestIds.length
-    }
   },
 
   created () {
@@ -201,7 +200,7 @@ export default {
       .map(item => parseInt(item))
       .filter(item => !isNaN(item))
     this.initFilters.updateType = params.updateType
-    this.requestIdSelected = params.selected || null
+    this.selectRequest({ requestId: params.selected || null })
   },
 
   beforeMount () {
@@ -221,8 +220,8 @@ export default {
     this.initializeLockingListeners()
     this.initializeStateUpdatesListeners()
 
-    if (this.requestIdSelected) {
-      this.handleChange({ ...this.requestSelected })
+    if (this.selectedRequestId) {
+      this.handleChange({ ...this.selectedRequest })
     }
   },
 
@@ -230,7 +229,7 @@ export default {
     this.stopRefreshingLock()
     this.$echo.leave('object-locking')
     this.leaveRequestStatusUpdatesChannel()
-    this.releaseLockRequest({ requestId: this.requestIdSelected })
+    this.releaseLockRequest({ requestId: this.selectedRequestId })
     this.resetPagination()
     this.removeRootListeners()
   },
@@ -238,11 +237,13 @@ export default {
   methods: {
     ...mapActions(utils.moduleName, [utilsActionTypes.setConfirmationDialog]),
 
-    ...mapActions(requestsList.moduleName, {
-      setRequests: requestsListTypes.setRequests,
-      appendRequests: requestsListTypes.appendRequests,
-      updateRequestStatus: requestsListTypes.updateRequestStatus,
-    }),
+    ...mapActions(requestsList.moduleName, [
+      requestsListActionTypes.setRequests,
+      requestsListActionTypes.appendRequests,
+      requestsListActionTypes.updateRequestStatus,
+      requestsListActionTypes.selectRequest,
+      requestsListActionTypes.setFilters,
+    ]),
 
     formatDate,
 
@@ -264,7 +265,7 @@ export default {
     },
 
     async filtersUpdated (filters) {
-      this.filters = [...filters]
+      this.setFilters([...filters])
       this.startLoading()
       this.resetPagination()
       this.setURLParams()
@@ -282,10 +283,9 @@ export default {
       this.resetPagination()
       this.setURLParams()
       await this.fetchRequests()
-      this.newRequests = false
       this.showRefreshWheel = false
 
-      const index = this.items.findIndex(item => item.request_id === this.requestIdSelected)
+      const index = this.items.findIndex(item => item.request_id === this.selectedRequestId)
 
       if (index === -1) return
 
@@ -295,7 +295,7 @@ export default {
     },
 
     async requestUploaded (requestsList) {
-      this.requestIdSelected = null
+      this.selectRequest({ requestId: null })
       await this.filtersUpdated([])
 
       const lastItem = requestsList.length - 1
@@ -307,7 +307,7 @@ export default {
     },
 
     initializeFilters () {
-      this.filters = [...this.$refs.requestFilters.getActiveFilters()]
+      this.setFilters([...this.$refs.requestFilters.getActiveFilters()])
     },
 
     initializeStateUpdatesListeners () {
@@ -320,11 +320,11 @@ export default {
         this.checkIfRequestMatchesFilters(latestStatus)
         this.$root.$emit(events.requestStatusUpdated, latestStatus)
 
-        if (requestId !== this.requestIdSelected) {
+        if (requestId !== this.selectedRequestId) {
           return
         }
 
-        const index = this.items.findIndex(item => item.request_id === this.requestIdSelected)
+        const index = this.items.findIndex(item => item.request_id === this.selectedRequestId)
 
         if (index === -1) {
           return
@@ -341,20 +341,7 @@ export default {
         return
       }
 
-      const matches = []
-      this.filters.forEach(filter => {
-        if (filter.type === 'status') {
-          matches.push(filter.value.includes(latestStatus.display_status))
-        } else if (filter.type === 'system_status') {
-          matches.push(filter.value.includes(latestStatus.status))
-        } else if (filter.type === 'company_id') {
-          matches.push(filter.value.includes(latestStatus.company_id))
-        } else {
-          matches.push(true)
-        }
-      })
-
-      this.showRefreshWheel = matches.reduce((a, b) => a + b, 0) === this.filters.length
+      this.showRefreshWheel = requestMatchesFilters(latestStatus, this.filters)
     },
 
     lockClaimed (request) {
@@ -378,8 +365,8 @@ export default {
 
           if (
             lock.lock_type === objectLocks.lockTypes.claimLock &&
-            lock.object_id === this.requestIdSelected &&
-            !this.requestSelected.is_locked
+            lock.object_id === this.selectedRequestId &&
+            !this.selectedRequest.is_locked
           ) {
             this.setConfirmationDialog({
               title: 'Edit-lock taken for this request',
@@ -405,7 +392,7 @@ export default {
           this.wsReleaseLockRequest({ requestId: lock.object_id })
           this.$root.$emit(events.objectUnlocked, e)
           if (
-            this.requestIdSelected !== lock.object_id ||
+            this.selectedRequestId !== lock.object_id ||
             !this.hasPermission('object-locks-create') ||
             this.supervise
           ) {
@@ -418,12 +405,12 @@ export default {
             noWrap: true,
             onConfirm: () => {
               this.attemptToLockRequest({
-                requestId: this.requestSelected.request_id,
+                requestId: this.selectedRequest.request_id,
                 lockType: objectLocks.lockTypes.selectRequest,
                 updateList: true
               })
-              // this.handleChange({ ...this.requestSelected, lock: null, is_locked: false, })
-              this.$root.$emit(events.lockClaimed, this.requestSelected)
+
+              this.$root.$emit(events.lockClaimed, this.selectedRequest)
             },
             onCancel: () => {}
           })
@@ -463,7 +450,7 @@ export default {
         dateRange: 'filter[created_between]',
         displayHidden: 'filter[show_done]',
         system_status: 'filter[status]',
-        status: 'filter[display_status]', // Processing, Exception, Rejected, Intake, Processed, Sending to TMS, Sent to TMS, Accepted by TMS
+        status: 'filter[display_status]',
         company_id: 'filter[company_id]',
         selected: 'selected',
         page: 'page',
@@ -477,7 +464,7 @@ export default {
       return [
         ...this.filters,
         { type: 'page', value: this.page },
-        { type: 'selected', value: this.requestIdSelected }
+        { type: 'selected', value: this.selectedRequestId }
       ]
     },
 
@@ -489,8 +476,8 @@ export default {
     },
 
     async handleChange (request) {
-      await this.handleRequestLock(this.requestSelected, request)
-      this.requestIdSelected = request.request_id
+      await this.handleRequestLock(this.selectedRequest, request)
+      this.selectRequest({ requestId: request.request_id })
       this.$emit('change', request)
       this.setURLParams()
     },

@@ -2,6 +2,7 @@
 
 namespace App\Queries;
 
+use App\Models\Order;
 use App\Models\OCRRequest;
 use Illuminate\Support\Carbon;
 use App\Models\FeedbackComment;
@@ -14,34 +15,40 @@ class FeedbacksListQuery extends QueryBuilder
     public function __construct(array $filters)
     {
         $query = FeedbackComment::query()
-            ->select(['t_feedback_comments.*'])
+            ->select([
+                't_feedback_comments.*',
+                'c.name as company_name',
+                'c.id as company_id',
+            ])
             ->with([
                 'user:id,name',
                 'user.roles:id,name',
-            ]);
+                'commentable:id,request_id',
+            ])
+            ->join('users', 'users.id', '=', 'user_id')
+            ->leftJoin('t_orders as o', function ($join) {
+                $join->on('o.id', '=', 't_feedback_comments.commentable_id')
+                    ->where('t_feedback_comments.commentable_type', Order::class);
+            })
+            ->leftJoin('t_job_latest_state as lsr', function ($join) {
+                $join->on('lsr.id', '=', 't_feedback_comments.commentable_id')
+                    ->where('t_feedback_comments.commentable_type', OCRRequest::class);
+            })
+            ->leftJoin('t_job_state_changes as sc', function ($join) {
+                $join->on('sc.id', '=', 'lsr.t_job_state_changes_id')
+                    ->where('t_feedback_comments.commentable_type', OCRRequest::class);
+            })
+            ->leftJoin('t_companies as c', function ($join) {
+                $join->on('c.id', '=', 'o.t_company_id')->orWhereColumn('c.id', 'sc.company_id');
+            });
 
         parent::__construct($query);
 
         $this->allowedFilters([
             AllowedFilter::callback('company_id', function ($query, $value) use ($filters) {
-                $class = FeedbackComment::CLASSES_MAP[$filters['filter']['commentable_type']];
+                $method = is_array($value) ? 'whereIn' : 'where';
 
-                if ($class == OCRRequest::class) {
-                    return $query->join('t_job_latest_state', 't_job_latest_state.id', '=', 'commentable_id')
-                        ->join('t_job_state_changes', 't_job_state_changes.id', '=', 't_job_state_changes_id')
-                        ->when(
-                            is_array($value),
-                            fn ($query) => $query->whereIn('company_id', $value),
-                            fn ($query) => $query->where('company_id', $value)
-                        );
-                }
-
-                return $query->join('t_orders', 't_orders.id', '=', 'commentable_id')
-                    ->when(
-                        is_array($value),
-                        fn ($query) => $query->whereIn('t_company_id', $value),
-                        fn ($query) => $query->where('t_company_id', $value)
-                    );
+                return $query->{$method}('c.id', $value);
             }),
             AllowedFilter::callback('commentable_id', function ($query, $value) use ($filters) {
                 $class = FeedbackComment::CLASSES_MAP[$filters['filter']['commentable_type']];
@@ -56,6 +63,9 @@ class FeedbacksListQuery extends QueryBuilder
 
                 return $query->where('commentable_id', $value);
             }),
+            AllowedFilter::callback('role', function ($query, $value) {
+                return $query->whereHas('user', fn ($q) => $q->whereRoleIs($value));
+            }),
             AllowedFilter::callback('commentable_type', function ($query, $value) {
                 return $query->where('commentable_type', FeedbackComment::CLASSES_MAP[$value]);
             }),
@@ -67,6 +77,7 @@ class FeedbacksListQuery extends QueryBuilder
                 $date = Carbon::createFromDate($value)->endOfDay()->toDateTimeString();
                 return $query->where('t_feedback_comments.created_at', '<=', $date);
             }),
+            AllowedFilter::exact('user_id'),
         ])
         ->defaultSort('-t_feedback_comments.created_at', '-t_feedback_comments.id')
         ->allowedSorts([
@@ -75,6 +86,8 @@ class FeedbacksListQuery extends QueryBuilder
             AllowedSort::field('commentable_type', 't_feedback_comments.commentable_type'),
             AllowedSort::field('created_at', 't_feedback_comments.created_at'),
             AllowedSort::field('updated_at', 't_feedback_comments.updated_at'),
+            AllowedSort::field('company', 'company_name'),
+            AllowedSort::field('user', 'users.name'),
         ]);
     }
 }

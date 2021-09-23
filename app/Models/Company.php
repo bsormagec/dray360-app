@@ -4,7 +4,6 @@ namespace App\Models;
 
 use stdClass;
 use Illuminate\Support\Str;
-use Illuminate\Support\Facades\DB;
 use App\Models\Traits\Deactivatable;
 use Illuminate\Database\Eloquent\Model;
 use OwenIt\Auditing\Contracts\Auditable;
@@ -80,7 +79,8 @@ class Company extends Model implements Auditable
         'chainio_api_key',
         'sync_addresses',
         't_fieldmap_id',
-        'deactivated_at'
+        'deactivated_at',
+        'notes',
     ];
 
     protected $encryptable = [
@@ -94,23 +94,12 @@ class Company extends Model implements Auditable
      * The attributes that should be casted to native types.
      */
     protected $casts = [
-        'id' => 'integer',
-        't_address_id' => 'integer',
         'automatic_address_verification_threshold' => 'integer',
         'sync_addresses' => 'boolean',
-        'name' => 'string',
         'refs_custom_mapping' => 'json',
         'configuration' => 'json',
         'company_config' => 'json',
         'deactivated_at' => 'datetime',
-    ];
-
-    /**
-     * Validation rules
-     */
-    public static $rules = [
-        't_address_id' => 'required',
-        'refs_custom_mapping' => 'required'
     ];
 
     protected static function booted()
@@ -165,16 +154,5 @@ class Company extends Model implements Auditable
     public function fieldMap()
     {
         return $this->belongsTo(FieldMap::class, 't_fieldmap_id');
-    }
-
-    public static function withTemplates()
-    {
-        return static::query()
-            ->select([
-                'id',
-                DB::raw("json_extract(configuration, '$.profit_tools_template_list') as profit_tools_template_list")
-            ])
-            ->where('configuration->profit_tools_enable_templates', true)
-            ->get();
     }
 }

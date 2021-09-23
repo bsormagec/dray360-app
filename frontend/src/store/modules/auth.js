@@ -2,7 +2,7 @@ import { getCsrfCookie, postLogin, getUser, postLogout, postLeaveImpersonation, 
 import { reqStatus } from '@/enums/req_status'
 import get from 'lodash/get'
 import { actionTypes as utilsActionTypes } from './utils'
-import requestsList, { types as requestsListTypes } from './requests-list'
+import requestsList, { actionTypes as requestsListActionTypes } from './requests-list'
 
 const initialState = {
   frontendLogout: false,
@@ -62,7 +62,7 @@ const actions = {
     const [error] = await postLogout()
     if (!error) {
       dispatch(
-        `${requestsList.moduleName}/${requestsListTypes.setSupervise}`,
+        `${requestsList.moduleName}/${requestsListActionTypes.setSupervise}`,
         false,
         { root: true }
       )
