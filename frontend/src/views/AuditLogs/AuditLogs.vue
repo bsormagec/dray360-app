@@ -12,7 +12,9 @@
               { text: 'ID', value: 'id' },
               { text: 'Request ID', value: 'request_id' },
               { text: 'Company', value: 'company.name' },
-              { text: 'Variant Name', value: 'variant_name' },
+              { text: 'Variant ID', value: 'variant_id' },
+              { text: 'Verifier', value: 'verifier'},
+              { text: 'Reviewers', value: 'admin_reviewers', sortable: false},
               { text: 'Created At', value: 'created_at' },
               { text: 'Updated At', value: 'updated_at' },
               { text: 'Changes', value: 'changes_count' },
@@ -66,6 +68,9 @@
             <template v-slot:[`item.created_at`]="{ item }">
               {{ formatDate(item.created_at, { timeZone: false, withSeconds: true }) }}
             </template>
+            <template v-slot:[`item.admin_reviewers`]="{ item }">
+              {{ item.admin_reviewers.join(', ') }}
+            </template>
             <template v-slot:[`item.updated_at`]="{ item }">
               {{ formatDate(item.updated_at, { timeZone: false, withSeconds: true }) }}
             </template>
@@ -99,6 +104,7 @@
 import permissions from '@/mixins/permissions'
 import { flatMapAudits } from '@/utils/flatmap_audits'
 import { formatDate } from '@/utils/dates'
+import uniq from 'lodash/uniq'
 
 import { mapActions } from 'vuex'
 import utils, { actionTypes } from '@/store/modules/utils'
@@ -126,7 +132,7 @@ export default {
       timeRange: 1,
       dateRange: [],
       companyId: null,
-      variantName: null,
+      variantId: null,
       userId: null,
     },
     orders: [],
@@ -193,7 +199,7 @@ export default {
     },
 
     async searchAudits () {
-      const { timeRange, dateRange, userId, companyId, variantName } = this.filters
+      const { timeRange, dateRange, userId, companyId, variantId } = this.filters
 
       if (!timeRange || (timeRange === -1 && dateRange.length !== 2)) {
         this.setSnackbar({ message: 'Please select a date range.' })
@@ -206,7 +212,7 @@ export default {
         end_date: timeRange === -1 ? dateRange[1] : null,
         user_id: userId ? userId.join(',') : null,
         'filter[company_id]': companyId ? companyId.join(',') : null,
-        'filter[variant_name]': variantName ? variantName.join(',') : null,
+        'filter[variant_id]': variantId ? variantId.join(',') : null,
         page: this.page,
         sort: this.sort,
         per_page: this.userOptions.itemsPerPageSelected
@@ -235,8 +241,24 @@ export default {
             }).filter(item => item.length > 0).flat()
           )
 
-        return { ...order.model, audits }
+        return { ...order.model, audits, admin_reviewers: this.getAdminReviewers(order.model) }
       })
+    },
+
+    getAdminReviewers (order) {
+      const reviewers = order.audits
+        .filter(audit => audit.user.t_company_id === 2)
+        .map(audit => audit.user.name)
+      const related = ['order_line_items', 'order_address_events']
+      for (let index = 0; index < related.length; index++) {
+        order[related[index]].forEach(related => {
+          related.audits
+            .filter(audit => audit.user.t_company_id === 2)
+            .forEach(audit => reviewers.push(audit.user.name))
+        })
+      }
+
+      return uniq(reviewers)
     },
 
     onPageChange (newPage) {

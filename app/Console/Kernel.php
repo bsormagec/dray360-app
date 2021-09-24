@@ -46,6 +46,11 @@ class Kernel extends ConsoleKernel
             ->weeklyOn(6, '03:00')
             ->onOneServer();
 
+        $schedule
+            ->command('import:compcare-addresses', ['--insert-only'])
+            ->hourlyAt(30)
+            ->onOneServer();
+
         // Metrics
         $schedule
             ->command('metrics:companies-daily')
@@ -56,12 +61,12 @@ class Kernel extends ConsoleKernel
                 '--from' => now()->toDateString(),
                 '--to' => now()->toDateString(),
             ])
-            ->hourly()
+            ->hourlyAt(10)
             ->onOneServer();
 
         // Dictionary Items Sync
         $schedule->command('import:dictionary-items')
-            ->hourly()
+            ->hourlyAt(45)
             ->onOneServer();
 
         $schedule->command('horizon:snapshot')

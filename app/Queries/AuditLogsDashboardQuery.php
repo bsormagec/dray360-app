@@ -28,6 +28,8 @@ class AuditLogsDashboardQuery extends QueryBuilder
                 't_orders.t_company_id',
                 't_orders.created_at',
                 't_orders.updated_at',
+                DB::raw("json_extract(ocr_data, '$.fields.last_editor.value') as verifier"),
+                DB::raw('if(t_orders.variant_id = -1 or t_orders.variant_id is null, t_orders.variant_name, t_orders.variant_id) as variant_id')
             ])
             ->addSelect([
                 'changes_count' => DB::raw("
@@ -134,6 +136,7 @@ class AuditLogsDashboardQuery extends QueryBuilder
                     ->withTrashed()
                     ->with('audits.user');
             })
+            ->where($this->getDateRangeFilterQuery($filters))
             ->where(function ($where) use ($auditsFilterQuery) {
                 $where->orWhereHas('audits', $auditsFilterQuery)
                     ->orWhereHas('orderAddressEvents.audits', $auditsFilterQuery)
@@ -148,6 +151,7 @@ class AuditLogsDashboardQuery extends QueryBuilder
 
         $this->allowedFilters([
             AllowedFilter::partial('variant_name', 't_orders.variant_name'),
+            AllowedFilter::exact('variant_id'),
             AllowedFilter::exact('company_id', 't_orders.t_company_id', false),
         ])
         ->defaultSort('-t_orders.id')
@@ -156,19 +160,20 @@ class AuditLogsDashboardQuery extends QueryBuilder
             AllowedSort::field('request_id', 't_orders.request_id'),
             AllowedSort::field('company.name', 'c.name'),
             AllowedSort::field('variant_name', 't_orders.variant_name'),
+            AllowedSort::field('variant_id', 't_orders.variant_id'),
             AllowedSort::field('created_at', 't_orders.created_at'),
             AllowedSort::field('updated_at', 't_orders.updated_at'),
             AllowedSort::field('changes_count'),
             AllowedSort::field('client_changes_count'),
             AllowedSort::field('t_companies_changes_count'),
+            AllowedSort::field('verifier'),
         ])
         ;
     }
 
-    protected function getAuditsFilterQuery(array $filters): Closure
+    protected function getDateRangeFilterQuery(array $filters): Closure
     {
         $timeRange = $filters['time_range'] ?? null;
-        $userId = isset($filters['user_id']) ? explode(',', $filters['user_id']) : null;
 
         if ($timeRange && $timeRange != -1) {
             $startDate = now()->subHours($filters['time_range'])->toDateTimeString();
@@ -182,10 +187,16 @@ class AuditLogsDashboardQuery extends QueryBuilder
                 ->toDateTimeString();
         }
 
-        return function ($query) use ($userId, $startDate, $endDate) {
-            $query->where('created_at', '>=', $startDate)
-                ->where('created_at', '<=', $endDate)
-                ->when($userId, fn ($q) => $q->whereIn('user_id', $userId));
+        return function ($query) use ($startDate, $endDate) {
+            $query->where('t_orders.created_at', '>=', $startDate)
+                ->where('t_orders.created_at', '<=', $endDate);
         };
+    }
+
+    protected function getAuditsFilterQuery(array $filters): Closure
+    {
+        $userId = isset($filters['user_id']) ? explode(',', $filters['user_id']) : null;
+
+        return fn ($query) => $query->when($userId, fn ($q) => $q->whereIn('user_id', $userId));
     }
 }
