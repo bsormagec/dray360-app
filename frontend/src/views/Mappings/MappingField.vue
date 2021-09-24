@@ -177,11 +177,9 @@
 </template>
 
 <script>
-import { mapActions, mapState } from 'vuex'
-import companies, { types } from '@/store/modules/companies'
-import { reqStatus } from '@/enums/req_status'
+import { mapActions } from 'vuex'
 import utils, { actionTypes as utilsActionTypes } from '@/store/modules/utils'
-import { getCompanies } from '@/store/api_calls/companies'
+import { getCompanies, getCompany, updateCompanies } from '@/store/api_calls/companies'
 
 export default {
   data () {
@@ -254,9 +252,6 @@ export default {
       companyId: undefined
     }
   },
-  computed: {
-    ...mapState(companies.moduleName, { company: state => state.company })
-  },
   created () {
     this.clearFields()
   },
@@ -265,7 +260,6 @@ export default {
     this.getCompanyList()
   },
   methods: {
-    ...mapActions(companies.moduleName, [types.updateCompaniesMappingField, types.getCompany]),
     ...mapActions(utils.moduleName, [utilsActionTypes.setSnackbar]),
     getNames () {
       Object.values(this.mappings).forEach(key => {
@@ -285,7 +279,7 @@ export default {
     companySelect (value) {
       if (value !== undefined) {
         this.companyId = value
-        this.getCompanybyId()
+        this.getCompany()
       } else {
         this.clearFields()
       }
@@ -336,22 +330,20 @@ export default {
           jsondata[`custom${i + 1}`] = { source: value }
         }
       })
-      const status = await this[types.updateCompaniesMappingField]({ id: this.companyId, changes: { refs_custom_mapping: jsondata } })
-      if (status === reqStatus.success) {
+      const [error] = await updateCompanies({ id: this.companyId, changes: { refs_custom_mapping: jsondata } })
+      if (error === undefined) {
         await this.setSnackbar({ message: 'Mappings updated' })
       } else {
         await this.setSnackbar({ message: 'Error' })
       }
     },
-    async getCompanybyId () {
-      const status = await this[types.getCompany]({ id: this.companyId })
-      if (status === reqStatus.success) {
-        if (this.company.refs_custom_mapping !== null) {
-          this.getJsonValues(this.company.refs_custom_mapping)
-        } else {
-          this.clearFields()
-        }
+    async getCompany () {
+      const [error, data] = await getCompany(this.companyId)
+      if (error !== undefined || data.refs_custom_mapping === null) {
+        this.clearFields()
+        return
       }
+      this.getJsonValues(data.refs_custom_mapping)
     },
     getJsonValues (val) {
       Object.entries(val).forEach(([key, value]) => {
