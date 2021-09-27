@@ -153,6 +153,7 @@ class Address extends Model
                 ];
             case 'compcare':
                 $entityTypes = collect(Arr::get($data, 'Entity.EntityTypes'))->pluck('EntityType');
+                $locationNamePrefix = empty(trim($data['ExternalSystemAddressId'])) ? '' : ('(' . $data['ExternalSystemAddressId']  . ') ');
                 return [
                     'address_line_1' => $data['AddressLine1'],
                     'address_line_2' => $data['AddressLine2'],
@@ -160,7 +161,7 @@ class Address extends Model
                     'state' => Arr::get($data, 'State.StateCode'),
                     'postal_code' => Arr::get($data, 'PostalCodeNavigation.PostalCode') ?? $data['PostalCode'],
                     'country' => Arr::get($data, 'Country.CountryCode'),
-                    'location_name' => Arr::get($data, 'Entity.EntityName'),
+                    'location_name' => $locationNamePrefix . Arr::get($data, 'Entity.EntityName'),
                     'location_phone' => null,
                     'is_billable' => 0,
                     'is_terminal' => 0,
@@ -204,6 +205,7 @@ class Address extends Model
                 $this->is_billable == (strtoupper($address['co_allow_billing']) == 'T') &&
                 $this->is_terminal == (strtoupper($address['co_allow_billing']) == 'T');
             case 'compcare':
+                $locationNamePrefix = empty(trim($address['ExternalSystemAddressId'])) ? '' : ('(' . $address['ExternalSystemAddressId']  . ') ');
                 $entityTypes = collect(Arr::get($address, 'Entity.EntityTypes'))->pluck('EntityType');
                 return $this->address_line_1 == $address['AddressLine1'] &&
                 $this->address_line_2 == $address['AddressLine2'] &&
@@ -211,7 +213,7 @@ class Address extends Model
                 $this->state == Arr::get($address, 'State.StateCode') &&
                 $this->postal_code == (Arr::get($address, 'PostalCodeNavigation.PostalCode') ?? $address['PostalCode']) &&
                 $this->country == Arr::get($address, 'Country.CountryCode') &&
-                $this->location_name == Arr::get($address, 'Entity.EntityName') &&
+                $this->location_name == $locationNamePrefix . Arr::get($address, 'Entity.EntityName') &&
                 $this->location_phone == null &&
                 $this->is_billable == 0 &&
                 $this->is_terminal == 0 &&
