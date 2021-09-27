@@ -28,7 +28,7 @@ class CompcareTradelinkAddressesSeeder extends Seeder
             'state' => $baseAddress['State']['StateCode'],
             'postal_code' => $baseAddress['PostalCode'],
             'country' => $baseAddress['Country']['CountryCode'],
-            'location_name' => $baseAddress['Entity']['EntityName'],
+            'location_name' => "({$baseAddress['ExternalSystemAddressId']}) ".$baseAddress['Entity']['EntityName'],
             'location_phone' => null,
             'is_terminal' => 0,
             'is_billable' => 0,
