@@ -98,7 +98,7 @@
         <div class="address-book-modal__footer">
           <v-btn
             v-if="!verified && addressFound"
-            :disabled="isLocked"
+            :disabled="isLocked ||readonly"
             color="primary"
             outlined
             small
@@ -109,7 +109,7 @@
           </v-btn>
 
           <v-btn
-            :disabled="isLocked"
+            :disabled="isLocked ||readonly"
             class="mr-2"
             color="primary"
             outlined
@@ -193,7 +193,8 @@ export default {
     isFirst: { type: Boolean, required: true },
     isLast: { type: Boolean, required: true },
     enableAddressFilters: { type: Boolean, required: false, default: true },
-    enableSearch: { type: Boolean, required: false, default: false }
+    enableSearch: { type: Boolean, required: false, default: false },
+    readonly: { type: Boolean, required: false, default: false },
   },
 
   data: (vm) => ({

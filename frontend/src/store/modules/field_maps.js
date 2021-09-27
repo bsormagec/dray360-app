@@ -2,6 +2,7 @@
 import cloneDeep from 'lodash/cloneDeep'
 import { getFieldMaps, createFieldMaps } from '../api_calls/field_maps'
 import deepDiff from 'deep-diff'
+import { getRoles } from '../api_calls/users'
 
 export const types = {
   SET_FIELD_MAPS: 'SET_FIELD_MAPS',
@@ -12,9 +13,12 @@ export const types = {
   SET_FIELD_MAPS_FILTERS: 'SET_FIELD_MAPS_FILTERS',
   SAVE_FIELD_MAPS: 'SAVE_FIELD_MAPS',
   UPDATE_DEFAULT_FIELD_MAPS: 'UPDATE_DEFAULT_FIELD_MAPS',
+  SET_ROLES: 'SET_ROLES',
+  GET_ROLES: 'GET_ROLES',
 }
 
 const initialState = {
+  roles: [],
   fieldMaps: null,
   previousLevelFieldMaps: null,
   defaultFieldMaps: null,
@@ -55,7 +59,11 @@ const mutations = {
 
   [types.UPDATE_DEFAULT_FIELD_MAPS] (state, { fieldMaps }) {
     state.defaultFieldMaps = { ...cloneDeep(fieldMaps) }
-  }
+  },
+
+  [types.SET_ROLES] (state, { roles }) {
+    state.roles = [...roles]
+  },
 }
 
 const actions = {
@@ -124,6 +132,20 @@ const actions = {
     }
 
     return await createFieldMaps(createData)
+  },
+
+  async [types.GET_ROLES] ({ commit, state }) {
+    if (state.roles.length > 0) {
+      return
+    }
+
+    const [error, data] = await getRoles()
+
+    if (error !== undefined) {
+      return error
+    }
+
+    commit(types.SET_ROLES, { roles: data.data })
   },
 }
 

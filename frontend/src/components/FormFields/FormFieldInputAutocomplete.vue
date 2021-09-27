@@ -6,6 +6,7 @@
       :label="label"
       :value="displayName"
       :managed-by-template="managedByTemplate"
+      :readonly="readonly"
       @accept="handleAccept"
       @accept-all="() => handleAccept(true)"
     >
@@ -52,6 +53,7 @@ export default {
     editMode: { type: Boolean, required: true },
     displayValue: { type: Function, required: false, default: undefined },
     managedByTemplate: { type: Boolean, required: false, default: false },
+    readonly: { type: Boolean, required: false, default: false },
   },
 
   data: (vm) => ({

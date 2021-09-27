@@ -5,6 +5,7 @@
       :references="references"
       :label="label"
       :value="value"
+      :readonly="readonly"
       :managed-by-template="managedByTemplate"
       @accept="handleAccept"
       @accept-all="() => handleAccept(true)"
@@ -52,6 +53,7 @@ export default {
     editMode: { required: true, type: Boolean },
     placeholder: { required: false, type: String, default: '' },
     managedByTemplate: { type: Boolean, required: false, default: false },
+    readonly: { type: Boolean, required: false, default: false },
   },
 
   data: (vm) => ({

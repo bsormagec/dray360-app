@@ -93,7 +93,8 @@ const defaultFormOptions = {
   hidden: [],
   address_search: {},
   extra: {},
-  labels: {}
+  labels: {},
+  readonly: [],
 }
 
 export default {
@@ -444,8 +445,13 @@ export default {
         if (bestFieldMap.screen_hide) {
           newFormOptions.hidden.push(d3CanonName)
         }
+
         if (bestFieldMap.screen_name) {
           newFormOptions.labels[d3CanonName] = bestFieldMap.screen_name
+        }
+
+        if (bestFieldMap.readonly_roles?.length > 0 && this.hasRoles(bestFieldMap.readonly_roles)) {
+          newFormOptions.readonly.push(d3CanonName)
         }
       }
 

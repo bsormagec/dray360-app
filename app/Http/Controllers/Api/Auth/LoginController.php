@@ -85,7 +85,7 @@ class LoginController extends Controller
         if (! is_object($user) || ! $user->isActive()) {
             return response()->json(['message' => 'Not authorized'], 401);
         } else {
-            $userData = $user->load('company')
+            $userData = $user->load(['company', 'roles'])
                 ->setRelation('permissions', $user->allPermissions())
                 ->toArray();
             $userData['is_superadmin'] = $user->isSuperadmin();

@@ -148,6 +148,7 @@ export default {
       shipment_direction_filter: null,
       use_template_value: true,
       use_constant_as_default_only: false,
+      readonly_roles: [],
     },
     formChanged: false,
     customMapping: false,

@@ -183,6 +183,20 @@
         clearable
         v-bind="fieldChangedAttributes('abbyy_source_field')"
       />
+      <v-autocomplete
+        v-model="formFieldMap.readonly_roles"
+        :class="{'field-mapping-form-field__changed': hasChanged('readonly_roles')}"
+        :disabled="viewOnly"
+        :items="roles"
+        item-text="display_name"
+        item-value="name"
+        label="Read Only Roles"
+        chips
+        multiple
+        clearable
+        deletable-chips
+        v-bind="fieldChangedAttributes('readonly_roles')"
+      />
       <v-text-field
         v-model="formFieldMap.profittools_destination"
         :class="{'field-mapping-form-field__changed': hasChanged('profittools_profittools_destinationdestination')}"
@@ -294,8 +308,8 @@
 </template>
 
 <script>
-import { mapState, mapGetters } from 'vuex'
-import fieldMaps from '@/store/modules/field_maps'
+import { mapState, mapGetters, mapActions } from 'vuex'
+import fieldMaps, { types as fieldMapsTypes } from '@/store/modules/field_maps'
 import deepDiff from 'deep-diff'
 import cloneDeep from 'lodash/cloneDeep'
 import { abbySourceFileds } from '@/enums/app_objects_types'
@@ -332,6 +346,7 @@ export default {
       shipment_direction_filter: null,
       use_template_value: true,
       use_constant_as_default_only: false,
+      readonly_roles: [],
     },
     abbySourceFieldFilter: {
       old: false,
@@ -344,6 +359,7 @@ export default {
     ...mapGetters(fieldMaps.moduleName, ['fieldMapsChanges']),
 
     ...mapState(fieldMaps.moduleName, {
+      roles: state => state.roles,
       fieldMaps: state => state.fieldMaps,
       defaultFieldMaps: state => state.defaultFieldMaps,
     }),
@@ -391,9 +407,12 @@ export default {
 
   beforeMount () {
     this.selectedFieldUpdated()
+    this.getRoles()
   },
 
   methods: {
+    ...mapActions(fieldMaps.moduleName, { getRoles: fieldMapsTypes.GET_ROLES }),
+
     selectedFieldUpdated () {
       this.formFieldMap = { ...cloneDeep(this.fieldMaps[this.selectedField]) }
       if (abbySourceFileds.old_fields.indexOf(this.selectedField) > -1) {
@@ -459,7 +478,7 @@ export default {
       if (value === undefined) {
         this.formFieldMap[field] = null
       }
-    }
+    },
   }
 }
 </script>
