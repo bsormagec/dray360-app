@@ -77,7 +77,7 @@
               {{ `Variant: ${historyLabels.variantName}` }}
             </div>
             <div class="caption mb-3">
-              {{ `Last edited by: ${historyLabels.lastEditor}` }}
+              {{ `Abbyy Verifier: ${historyLabels.lastEditor}` }}
             </div>
           </div>
           <ul
