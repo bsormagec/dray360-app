@@ -5,7 +5,7 @@ use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\Facades\DB;
 
-class CreateAddressView extends Migration
+class AddDeletedatToVAddresses extends Migration
 {
     /**
      * Run the migrations.
