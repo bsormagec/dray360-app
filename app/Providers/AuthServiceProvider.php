@@ -33,6 +33,7 @@ class AuthServiceProvider extends ServiceProvider
         \App\Models\ObjectLock::class => \App\Policies\ObjectLockPolicy::class,
         \App\Models\FieldMap::class => \App\Policies\FieldMapPolicy::class,
         \App\Models\FeedbackComment::class => \App\Policies\FeedbackCommentPolicy::class,
+        \App\Models\VAddress::class => \App\Policies\VAddressPolicy::class,
     ];
 
     /**
