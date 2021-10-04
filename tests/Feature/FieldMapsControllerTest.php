@@ -195,34 +195,31 @@ class FieldMapsControllerTest extends TestCase
     }
 
     /** @test */
-    public function it_saves_a_new_default_when_nothing_provided()
+    public function it_updates_the_default_when_nothing_provided()
     {
         $initialFieldMap = FieldMap::getSystemDefault();
         $this->postJson(route('field-maps.store'), [
                 'fieldmap_config' => ['main' => ['something' => false, 'newdefault' => 1]],
             ])
-            ->assertStatus(Response::HTTP_CREATED)
+            ->assertStatus(Response::HTTP_OK)
             ->assertJsonStructure([
-                'created_at',
-                'fieldmap_config' => [
-                    'main' => ['something', 'newdefault'],
+                'fieldmap' => [
+                    'created_at',
+                    'fieldmap_config' => [
+                        'main' => ['something', 'newdefault'],
+                    ],
                 ],
+                'changes',
             ]);
 
         $finalFieldMap = FieldMap::getSystemDefault();
         $this->assertDatabaseHas('t_fieldmaps', [
             'id' => $finalFieldMap->id,
-            'replaces_id' => $initialFieldMap->id,
+            'replacedby_id' => null,
             'system_default' => true,
         ]);
         $this->assertEquals(json_encode($finalFieldMap->fieldmap_config), json_encode(['main' => ['something' => false, 'newdefault' => 1]]));
-
-        $initialFieldMap->refresh();
-        $this->assertNotNull($initialFieldMap->replaced_at);
-        $this->assertDatabaseHas('t_fieldmaps', [
-            'id' => $initialFieldMap->id,
-            'replacedby_id' => $finalFieldMap->id,
-        ]);
+        $this->assertEquals($initialFieldMap->id, $finalFieldMap->id);
     }
 
     /** @test */
@@ -234,28 +231,25 @@ class FieldMapsControllerTest extends TestCase
                 'tms_provider_id' => $this->tmsProvider->id,
                 'fieldmap_config' => ['main' => ['another' => 2, 'something' => false]],
             ])
-            ->assertStatus(Response::HTTP_CREATED)
+            ->assertStatus(Response::HTTP_OK)
             ->assertJsonStructure([
-                'created_at',
-                'fieldmap_config' => [
-                    'main' => ['another'],
+                'fieldmap' => [
+                    'created_at',
+                    'fieldmap_config' => [
+                        'main' => ['another'],
+                    ],
                 ],
+                'changes',
             ]);
 
         $this->tmsProvider->refresh();
         $finalFieldMap = $this->tmsProvider->fieldMap;
         $this->assertDatabaseHas('t_fieldmaps', [
             'id' => $finalFieldMap->id,
-            'replaces_id' => $initialFieldMapId,
+            'replacedby_id' => null,
         ]);
         $this->assertEquals(json_encode($finalFieldMap->fieldmap_config), json_encode(['main' => ['another' => 2]]));
-
-        $fieldMap = FieldMap::find($initialFieldMapId);
-        $this->assertNotNull($fieldMap->replaced_at);
-        $this->assertDatabaseHas('t_fieldmaps', [
-            'id' => $initialFieldMapId,
-            'replacedby_id' => $finalFieldMap->id,
-        ]);
+        $this->assertEquals($initialFieldMapId, $finalFieldMap->id);
     }
 
     /** @test */
@@ -267,27 +261,24 @@ class FieldMapsControllerTest extends TestCase
                 'company_id' => $this->company->id,
                 'fieldmap_config' => FieldMap::getFrom(['tms_provider_id' => $this->company->default_tms_provider_id]),
             ])
-            ->assertStatus(Response::HTTP_CREATED)
+            ->assertStatus(Response::HTTP_OK)
             ->assertJsonFragment(['fieldmap_config' => []])
             ->assertJsonStructure([
-                'created_at',
-                'fieldmap_config',
+                'fieldmap' => [
+                    'created_at',
+                    'fieldmap_config',
+                ],
+                'changes',
             ]);
 
         $this->company->refresh();
         $finalFieldMap = $this->company->fieldMap;
         $this->assertDatabaseHas('t_fieldmaps', [
             'id' => $finalFieldMap->id,
-            'replaces_id' => $initialFieldMapId,
+            'replacedby_id' => null,
         ]);
         $this->assertEquals(json_encode($finalFieldMap->fieldmap_config), '[]');
-
-        $fieldMap = FieldMap::find($initialFieldMapId);
-        $this->assertNotNull($fieldMap->replaced_at);
-        $this->assertDatabaseHas('t_fieldmaps', [
-            'id' => $initialFieldMapId,
-            'replacedby_id' => $finalFieldMap->id,
-        ]);
+        $this->assertEquals($initialFieldMapId, $finalFieldMap->id);
     }
 
     /** @test */
@@ -299,11 +290,14 @@ class FieldMapsControllerTest extends TestCase
                 'company_id' => $this->company->id,
                 'fieldmap_config' => FieldMap::getFrom(['tms_provider_id' => $this->company->default_tms_provider_id]),
             ])
-            ->assertStatus(Response::HTTP_CREATED)
+            ->assertStatus(Response::HTTP_OK)
             ->assertJsonFragment(['fieldmap_config' => []])
             ->assertJsonStructure([
-                'created_at',
-                'fieldmap_config',
+                'fieldmap' => [
+                    'created_at',
+                    'fieldmap_config',
+                ],
+                'changes',
             ]);
 
         $this->company->refresh();
@@ -319,27 +313,24 @@ class FieldMapsControllerTest extends TestCase
                 'variant_id' => $this->ocrVariant->id,
                 'fieldmap_config' => FieldMap::getFrom([]),
             ])
-            ->assertStatus(Response::HTTP_CREATED)
+            ->assertStatus(Response::HTTP_OK)
             ->assertJsonFragment(['fieldmap_config' => []])
             ->assertJsonStructure([
-                'created_at',
-                'fieldmap_config',
+                'fieldmap' => [
+                    'created_at',
+                    'fieldmap_config',
+                ],
+                'changes',
             ]);
 
         $this->ocrVariant->refresh();
         $finalFieldMap = $this->ocrVariant->fieldMap;
         $this->assertDatabaseHas('t_fieldmaps', [
             'id' => $finalFieldMap->id,
-            'replaces_id' => $initialFieldMapId,
+            'replacedby_id' => null,
         ]);
         $this->assertEquals(json_encode($finalFieldMap->fieldmap_config), '[]');
-
-        $fieldMap = FieldMap::find($initialFieldMapId);
-        $this->assertNotNull($fieldMap->replaced_at);
-        $this->assertDatabaseHas('t_fieldmaps', [
-            'id' => $initialFieldMapId,
-            'replacedby_id' => $finalFieldMap->id,
-        ]);
+        $this->assertEquals($initialFieldMapId, $finalFieldMap->id);
     }
 
     /** @test */
@@ -355,26 +346,23 @@ class FieldMapsControllerTest extends TestCase
                     'variant_id' => $this->ocrVariant->id,
                 ], false),
             ])
-            ->assertStatus(Response::HTTP_CREATED)
+            ->assertStatus(Response::HTTP_OK)
             ->assertJsonFragment(['fieldmap_config' => []])
             ->assertJsonStructure([
-                'created_at',
-                'fieldmap_config',
+                'fieldmap' => [
+                    'created_at',
+                    'fieldmap_config',
+                ],
+                'changes',
             ]);
 
         $companyOcrVariant->refresh();
         $finalFieldMap = $companyOcrVariant->fieldMap;
         $this->assertDatabaseHas('t_fieldmaps', [
             'id' => $finalFieldMap->id,
-            'replaces_id' => $initialFieldMapId,
+            'replacedby_id' => null,
         ]);
         $this->assertEquals(json_encode($finalFieldMap->fieldmap_config), '[]');
-
-        $fieldMap = FieldMap::find($initialFieldMapId);
-        $this->assertNotNull($fieldMap->replaced_at);
-        $this->assertDatabaseHas('t_fieldmaps', [
-            'id' => $initialFieldMapId,
-            'replacedby_id' => $finalFieldMap->id,
-        ]);
+        $this->assertEquals($initialFieldMapId, $finalFieldMap->id);
     }
 }

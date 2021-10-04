@@ -58,7 +58,7 @@ import ContentLoading from '@/components/ContentLoading'
 
 import { mapActions, mapGetters } from 'vuex'
 import utils, { actionTypes as utilsActionTypes } from '@/store/modules/utils'
-import fieldMaps, { types as fieldMapsTypes } from '@/store/modules/field_maps'
+import fieldMaps, { actionTypes as fieldMapsActionTypes } from '@/store/modules/field_maps'
 
 export default {
   name: 'FieldMappingList',
@@ -94,11 +94,11 @@ export default {
   },
 
   methods: {
-    ...mapActions(fieldMaps.moduleName, {
-      getFieldMaps: fieldMapsTypes.GET_FIELD_MAPS,
-      setFieldMap: fieldMapsTypes.SET_FIELD_MAP,
-      resetFieldMap: fieldMapsTypes.RESET_FIELD_MAP,
-    }),
+    ...mapActions(fieldMaps.moduleName, [
+      fieldMapsActionTypes.getFieldMaps,
+      fieldMapsActionTypes.setFieldMap,
+      fieldMapsActionTypes.resetFieldMap,
+    ]),
 
     ...mapActions(utils.moduleName, [
       utilsActionTypes.setConfirmationDialog,

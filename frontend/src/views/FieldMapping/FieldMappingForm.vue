@@ -2,30 +2,45 @@
   <div
     v-if="selectedField"
   >
-    <h3 class="h6 d-flex ma-3 primary--text">
-      Mapping Options for "{{ selectedField }}"
-      <v-spacer />
-      <v-btn
-        v-if="!viewOnly"
-        text
-        small
-        :loading="loading"
-        :disabled="!formIsDirty"
-        @click="resetFieldMaps"
+    <div class="ma-3">
+      <div class="d-flex">
+        <h3 class="h6 primary--text">
+          Mapping Options for "{{ selectedField }}"
+        </h3>
+        <v-spacer />
+        <v-btn
+          v-if="!viewOnly"
+          text
+          small
+          :loading="loading"
+          :disabled="!formIsDirty"
+          @click="resetFieldMaps"
+        >
+          Reset
+        </v-btn>
+        <v-btn
+          v-if="!viewOnly"
+          small
+          color="primary"
+          :loading="loading"
+          :disabled="!formIsDirty"
+          @click="saveFieldMap"
+        >
+          Save
+        </v-btn>
+      </div>
+      <a
+        class="caption text-uppercase text-decoration-underline slate-gray--text"
+        @click.prevent="openAuditDialog = true"
       >
-        Reset
-      </v-btn>
-      <v-btn
-        v-if="!viewOnly"
-        small
-        color="primary"
-        :loading="loading"
-        :disabled="!formIsDirty"
-        @click="saveFieldMap"
-      >
-        Save
-      </v-btn>
-    </h3>
+        History
+      </a>
+      <FieldMapAuditDialog
+        :open="openAuditDialog"
+        :selected-field="selectedField"
+        @close="openAuditDialog = false"
+      />
+    </div>
     <div class="field-mapping-form px-3 pb-3">
       <v-container class="pa-0">
         <v-row no-gutters>
@@ -309,14 +324,18 @@
 
 <script>
 import { mapState, mapGetters, mapActions } from 'vuex'
-import fieldMaps, { types as fieldMapsTypes } from '@/store/modules/field_maps'
+import fieldMaps, { actionTypes as fieldMapsActionTypes } from '@/store/modules/field_maps'
 import deepDiff from 'deep-diff'
 import cloneDeep from 'lodash/cloneDeep'
 import { abbySourceFileds } from '@/enums/app_objects_types'
 import { eventTypes, shipmentDirection, booleanFields } from '@/enums/field_type'
 
+import FieldMapAuditDialog from './FieldMapAuditDialog'
+
 export default {
   name: 'FieldMappingForm',
+
+  components: { FieldMapAuditDialog },
 
   props: {
     viewOnly: { type: Boolean, required: false, default: false },
@@ -353,6 +372,7 @@ export default {
       new: false
     },
     formIsDirty: false,
+    openAuditDialog: false,
   }),
 
   computed: {
@@ -378,7 +398,7 @@ export default {
         shipmentDirection,
         booleanFields,
       }
-    }
+    },
   },
 
   watch: {
@@ -411,7 +431,7 @@ export default {
   },
 
   methods: {
-    ...mapActions(fieldMaps.moduleName, { getRoles: fieldMapsTypes.GET_ROLES }),
+    ...mapActions(fieldMaps.moduleName, [fieldMapsActionTypes.getRoles]),
 
     selectedFieldUpdated () {
       this.formFieldMap = { ...cloneDeep(this.fieldMaps[this.selectedField]) }

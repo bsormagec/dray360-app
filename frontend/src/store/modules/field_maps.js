@@ -4,23 +4,31 @@ import { getFieldMaps, createFieldMaps } from '../api_calls/field_maps'
 import deepDiff from 'deep-diff'
 import { getRoles } from '../api_calls/users'
 
-export const types = {
-  SET_FIELD_MAPS: 'SET_FIELD_MAPS',
-  SET_FIELD_MAP: 'SET_FIELD_MAP',
-  DELETE_FIELD_MAP: 'DELETE_FIELD_MAP',
-  GET_FIELD_MAPS: 'GET_FIELD_MAPS',
-  RESET_FIELD_MAP: 'RESET_FIELD_MAP',
-  SET_FIELD_MAPS_FILTERS: 'SET_FIELD_MAPS_FILTERS',
-  SAVE_FIELD_MAPS: 'SAVE_FIELD_MAPS',
-  UPDATE_DEFAULT_FIELD_MAPS: 'UPDATE_DEFAULT_FIELD_MAPS',
-  SET_ROLES: 'SET_ROLES',
-  GET_ROLES: 'GET_ROLES',
+const mutationTypes = {
+  setFieldMaps: 'SET_FIELD_MAPS',
+  setFieldMap: 'SET_FIELD_MAP',
+  deleteFieldMap: 'DELETE_FIELD_MAP',
+  setFieldMapsFilters: 'SET_FIELD_MAPS_FILTERS',
+  updateDefaultFieldMaps: 'UPDATE_DEFAULT_FIELD_MAPS',
+  setRoles: 'SET_ROLES',
+  setAudits: 'SET_AUDITS',
+}
+
+export const actionTypes = {
+  getFieldMaps: 'getFieldMaps',
+  setFieldMap: 'setFieldMap',
+  deleteFieldMap: 'deleteFieldMap',
+  resetFieldMap: 'resetFieldMap',
+  setFieldMapsFilters: 'setFieldMapsFilters',
+  saveFieldMaps: 'saveFieldMaps',
+  getRoles: 'getRoles',
 }
 
 const initialState = {
   roles: [],
   fieldMaps: null,
   previousLevelFieldMaps: null,
+  audits: [],
   defaultFieldMaps: null,
   filters: {
     companyId: null,
@@ -30,7 +38,7 @@ const initialState = {
 }
 
 const mutations = {
-  [types.SET_FIELD_MAPS] (state, { fieldMaps, systemDefault = false }) {
+  [mutationTypes.setFieldMaps] (state, { fieldMaps, systemDefault = false }) {
     if (systemDefault) {
       state.defaultFieldMaps = { ...cloneDeep(fieldMaps.current) }
     }
@@ -39,7 +47,7 @@ const mutations = {
     state.previousLevelFieldMaps = { ...(fieldMaps.previous) }
   },
 
-  [types.SET_FIELD_MAP] (state, { field, fieldMap }) {
+  [mutationTypes.setFieldMap] (state, { field, fieldMap }) {
     const newFieldMaps = { ...cloneDeep(state.fieldMaps) }
 
     newFieldMaps[field] = cloneDeep(fieldMap)
@@ -47,27 +55,31 @@ const mutations = {
     state.fieldMaps = newFieldMaps
   },
 
-  [types.DELETE_FIELD_MAP] (state, { field }) {
+  [mutationTypes.deleteFieldMap] (state, { field }) {
     const newFieldMaps = { ...cloneDeep(state.fieldMaps) }
     delete newFieldMaps[field]
     state.fieldMaps = newFieldMaps
   },
 
-  [types.SET_FIELD_MAPS_FILTERS] (state, { filters = {} }) {
+  [mutationTypes.setFieldMapsFilters] (state, { filters = {} }) {
     state.filters = { ...cloneDeep(filters) }
   },
 
-  [types.UPDATE_DEFAULT_FIELD_MAPS] (state, { fieldMaps }) {
+  [mutationTypes.updateDefaultFieldMaps] (state, { fieldMaps }) {
     state.defaultFieldMaps = { ...cloneDeep(fieldMaps) }
   },
 
-  [types.SET_ROLES] (state, { roles }) {
+  [mutationTypes.setRoles] (state, { roles }) {
     state.roles = [...roles]
+  },
+
+  [mutationTypes.setAudits] (state, { audits }) {
+    state.audits = [...audits.fieldmap_config]
   },
 }
 
 const actions = {
-  async [types.GET_FIELD_MAPS] ({ commit }, params) {
+  async [actionTypes.getFieldMaps] ({ commit }, params) {
     const {
       companyId: company_id = null,
       tmsProviderId: tms_provider_id = null,
@@ -80,30 +92,31 @@ const actions = {
       return error
     }
 
-    commit(types.SET_FIELD_MAPS, {
+    commit(mutationTypes.setFieldMaps, {
       fieldMaps: data.data,
       systemDefault: !company_id && !variant_id && !tms_provider_id,
     })
+    commit(mutationTypes.setAudits, { audits: data.data.changes })
   },
 
-  [types.SET_FIELD_MAP] ({ commit }, { field, fieldMap }) {
-    commit(types.SET_FIELD_MAP, { field, fieldMap })
+  [actionTypes.setFieldMap] ({ commit }, { field, fieldMap }) {
+    commit(mutationTypes.setFieldMap, { field, fieldMap })
   },
 
-  [types.DELETE_FIELD_MAP] ({ commit }, { field }) {
-    commit(types.DELETE_FIELD_MAP, { field })
+  [actionTypes.deleteFieldMap] ({ commit }, { field }) {
+    commit(mutationTypes.deleteFieldMap, { field })
   },
 
-  [types.RESET_FIELD_MAP] ({ commit, state }, { field }) {
+  [actionTypes.resetFieldMap] ({ commit, state }, { field }) {
     const fieldMap = { ...cloneDeep(state.defaultFieldMaps[field]) }
-    commit(types.SET_FIELD_MAP, { field, fieldMap })
+    commit(mutationTypes.setFieldMap, { field, fieldMap })
   },
 
-  [types.SET_FIELD_MAPS_FILTERS] ({ commit, state }, { filters }) {
-    commit(types.SET_FIELD_MAPS_FILTERS, { filters })
+  [actionTypes.setFieldMapsFilters] ({ commit, state }, { filters }) {
+    commit(mutationTypes.setFieldMapsFilters, { filters })
   },
 
-  async [types.SAVE_FIELD_MAPS] ({ commit, state }) {
+  async [actionTypes.saveFieldMaps] ({ commit, state }) {
     const {
       companyId: company_id = null,
       tmsProviderId: tms_provider_id = null,
@@ -126,15 +139,21 @@ const actions = {
       delete createData.tms_provider_id
     }
     if (!tms_provider_id && !company_id && !variant_id) {
-      commit(types.UPDATE_DEFAULT_FIELD_MAPS, {
+      commit(mutationTypes.updateDefaultFieldMaps, {
         fieldMaps: createData.fieldmap_config
       })
     }
 
-    return await createFieldMaps(createData)
+    const [error, data] = await createFieldMaps(createData)
+
+    if (!error) {
+      commit(mutationTypes.setAudits, { audits: data.changes })
+    }
+
+    return [error, data]
   },
 
-  async [types.GET_ROLES] ({ commit, state }) {
+  async [actionTypes.getRoles] ({ commit, state }) {
     if (state.roles.length > 0) {
       return
     }
@@ -145,7 +164,7 @@ const actions = {
       return error
     }
 
-    commit(types.SET_ROLES, { roles: data.data })
+    commit(mutationTypes.setRoles, { roles: data.data })
   },
 }
 
@@ -180,7 +199,7 @@ const getters = {
         }
         return change.kind !== 'D'
       })
-  }
+  },
 }
 
 export default {
