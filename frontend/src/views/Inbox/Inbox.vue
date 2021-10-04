@@ -238,15 +238,18 @@ export default {
 
       switch (requestStatus) {
         case statuses.intakeRejected:
-        case statuses.ocrPostProcessingError:
         case statuses.ocrTimedout:
           return {
             text: 'The request has been rejected',
             errorMessage: get(this.selectedRequest, 'latest_ocr_request_status.display_message'),
           }
         case statuses.intakeException:
+        case statuses.ocrPostProcessingError:
         case statuses.processOcrOutputFileError:
-          return { text: 'There was an error processing the request' }
+          return {
+            text: 'An error occurred while processing this request. Please, try uploading the document again',
+            errorMessage: get(this.selectedRequest, 'latest_ocr_request_status.display_message'),
+          }
         default:
           return { text: 'The request is being processed' }
       }
