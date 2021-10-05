@@ -24,6 +24,39 @@ class EquipmentTypesSeeder extends Seeder
      * add the specific companies to actually import.
      */
     const ALL_COMPANIES = [
+        'ApexFreight' => [
+            'file' => 'seeders/ApexFreight_EquipmentLeaseTypes.20211001.xlsx',
+            'columns' => [
+                'tms_equipment_id' => 'id',
+                'equipment_owner' => 'line',
+                'equipment_type_and_size' => 'type',
+                'equipment_size' => 'equipmentlength',
+                'scac' => 'scac',
+                'line_prefix_list' => 'lineprefix',
+            ],
+        ],
+        'STG' => [
+            'file' => 'seeders/STG_EquipmentLeaseTypes.20210927.xlsx',
+            'columns' => [
+                'tms_equipment_id' => 'id',
+                'equipment_owner' => 'line',
+                'equipment_type_and_size' => 'type',
+                'equipment_size' => 'equipmentlength',
+                'scac' => 'scac',
+                'line_prefix_list' => 'lineprefix',
+            ],
+        ],
+        'SchmuhlBrothers' => [
+            'file' => 'seeders/SchmuhlBrothers_EquipmentLeaseTypes.20210924.xlsx',
+            'columns' => [
+                'tms_equipment_id' => 'id',
+                'equipment_owner' => 'line',
+                'equipment_type_and_size' => 'type',
+                'equipment_size' => 'equipmentlength',
+                'scac' => 'scac',
+                'line_prefix_list' => 'lineprefix',
+            ],
+        ],
         'LockeTransportation' => [
             'file' => 'seeders/LockeTransportation_EquipmentLeaseTypes.20210914.xlsx',
             'columns' => [
@@ -336,7 +369,7 @@ class EquipmentTypesSeeder extends Seeder
      * there is usually no reason to re-import more than once.
      */
     const TO_BE_IMPORTED = [
-        'Zariz' => self::ALL_COMPANIES['Zariz']
+        'ApexFreight' => self::ALL_COMPANIES['ApexFreight']
     ];
 
     /**

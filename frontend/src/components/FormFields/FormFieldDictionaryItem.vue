@@ -9,6 +9,7 @@
     :edit-mode="editMode"
     :display-value="displayValue"
     :managed-by-template="managedByTemplate"
+    :readonly="readonly"
     @change="event => $emit('change', event)"
   />
 </template>
@@ -37,6 +38,7 @@ export default {
     editMode: { type: Boolean, required: true },
     displayKeyValue: { type: Boolean, required: false, default: false },
     managedByTemplate: { type: Boolean, required: false, default: false },
+    readonly: { type: Boolean, required: false, default: false },
   },
 
   data: () => ({

@@ -49,7 +49,9 @@ class BelongsTo extends Filter
      */
     public function options(Request $request)
     {
-        return $this->optionsModel::pluck('id', $this->displayColumn);
+        return $this->optionsModel::query()
+            ->orderBy($this->displayColumn)
+            ->pluck('id', $this->displayColumn);
     }
 
     /**

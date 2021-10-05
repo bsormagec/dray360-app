@@ -2,29 +2,28 @@
 
 namespace App\Models;
 
+use App\Models\Traits\MapsAudits;
+use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Database\Eloquent\Model;
 use OwenIt\Auditing\Contracts\Auditable;
 
 class FieldMap extends Model implements Auditable
 {
+    use MapsAudits;
     use \OwenIt\Auditing\Auditable;
-
-    public $timestamps = false;
 
     public $table = 't_fieldmaps';
 
     public $fillable = [
         'system_default',
         'fieldmap_config',
-        'created_at',
         'replaced_at',
         'replacedby_id',
         'replaces_id',
     ];
 
     protected $casts = [
-        'created_at' => 'datetime',
         'replaced_at' => 'datetime',
         'system_default' => 'bool',
         'fieldmap_config' => 'json',
@@ -100,35 +99,78 @@ class FieldMap extends Model implements Auditable
         return [];
     }
 
-    public static function createFrom(array $params, FieldMap $replaces = null): self
+    public static function getAuditsFor(array $data): Collection
+    {
+        $companyId = $data['company_id'] ?? null;
+        $variantId = $data['variant_id'] ?? null;
+        $tmsProviderId = $data['tms_provider_id'] ?? null;
+
+        if (! $companyId && ! $variantId && ! $tmsProviderId) {
+            return FieldMap::getSystemDefault()
+                ->load('audits.user')
+                ->getAttributesChanges();
+        }
+
+        if ($variantId && $companyId) {
+            $relatedObject = CompanyOcrVariant::query()
+                ->with('fieldMap.audits.user')
+                ->where([
+                    't_company_id' => $data['company_id'],
+                    't_ocrvariant_id' => $data['variant_id'],
+                ])
+                ->first();
+        } elseif ($companyId) {
+            $relatedObject = Company::query()
+                ->with('fieldMap.audits.user')
+                ->find($data['company_id'], ['id', 't_fieldmap_id']);
+        } elseif ($variantId) {
+            $relatedObject = OCRVariant::query()
+                ->with('fieldMap.audits.user')
+                ->find($data['variant_id'], ['id', 't_fieldmap_id']);
+        } elseif ($tmsProviderId) {
+            $relatedObject = TMSProvider::query()
+                ->with('fieldMap.audits.user')
+                ->find($data['tms_provider_id'], ['id', 't_fieldmap_id']);
+        }
+
+        if (! $relatedObject) {
+            return collect([]);
+        }
+
+        return $relatedObject->fieldMap->getAttributesChanges();
+    }
+
+    public static function createFrom(array $params): self
+    {
+        $mapDiff = array_diff_assoc_recursive(
+            $params['fieldmap_config'],
+            static::getPreviousLevelFrom($params)
+        );
+
+        $data = [
+            'system_default' => false,
+            'fieldmap_config' => empty($mapDiff) ? new \stdClass() : $mapDiff,
+            'replaces_id' => null,
+        ];
+
+        return static::create($data);
+    }
+
+    public function updateFrom(array $data): self
     {
         $mapDiff = [];
-        if ($replaces && $replaces->system_default) {
-            $mapDiff = $params['fieldmap_config'];
+        if ($this->system_default) {
+            $mapDiff = $data['fieldmap_config'];
         } else {
             $mapDiff = array_diff_assoc_recursive(
-                $params['fieldmap_config'],
-                static::getPreviousLevelFrom($params)
+                $data['fieldmap_config'],
+                static::getPreviousLevelFrom($data)
             );
         }
 
-        $data = [
-            'system_default' => $replaces && $replaces->system_default,
-            'fieldmap_config' => empty($mapDiff) ? new \stdClass() : $mapDiff,
-            'created_at' => now(),
-            'replaces_id' => $replaces ? $replaces->id : null,
-        ];
+        $this->update(['fieldmap_config' => empty($mapDiff) ? new \stdClass() : $mapDiff]);
 
-        $newModel = static::create($data);
-
-        if ($replaces) {
-            $replaces->update([
-                'replaced_at' => now(),
-                'replacedby_id' => $newModel->id,
-            ]);
-        }
-
-        return $newModel;
+        return $this;
     }
 
     public static function getSystemDefault(): self

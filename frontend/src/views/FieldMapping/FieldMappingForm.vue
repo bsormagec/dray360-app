@@ -2,30 +2,45 @@
   <div
     v-if="selectedField"
   >
-    <h3 class="h6 d-flex ma-3 primary--text">
-      Mapping Options for "{{ selectedField }}"
-      <v-spacer />
-      <v-btn
-        v-if="!viewOnly"
-        text
-        small
-        :loading="loading"
-        :disabled="!formIsDirty"
-        @click="resetFieldMaps"
+    <div class="ma-3">
+      <div class="d-flex">
+        <h3 class="h6 primary--text">
+          Mapping Options for "{{ selectedField }}"
+        </h3>
+        <v-spacer />
+        <v-btn
+          v-if="!viewOnly"
+          text
+          small
+          :loading="loading"
+          :disabled="!formIsDirty"
+          @click="resetFieldMaps"
+        >
+          Reset
+        </v-btn>
+        <v-btn
+          v-if="!viewOnly"
+          small
+          color="primary"
+          :loading="loading"
+          :disabled="!formIsDirty"
+          @click="saveFieldMap"
+        >
+          Save
+        </v-btn>
+      </div>
+      <a
+        class="caption text-uppercase text-decoration-underline slate-gray--text"
+        @click.prevent="openAuditDialog = true"
       >
-        Reset
-      </v-btn>
-      <v-btn
-        v-if="!viewOnly"
-        small
-        color="primary"
-        :loading="loading"
-        :disabled="!formIsDirty"
-        @click="saveFieldMap"
-      >
-        Save
-      </v-btn>
-    </h3>
+        History
+      </a>
+      <FieldMapAuditDialog
+        :open="openAuditDialog"
+        :selected-field="selectedField"
+        @close="openAuditDialog = false"
+      />
+    </div>
     <div class="field-mapping-form px-3 pb-3">
       <v-container class="pa-0">
         <v-row no-gutters>
@@ -183,6 +198,20 @@
         clearable
         v-bind="fieldChangedAttributes('abbyy_source_field')"
       />
+      <v-autocomplete
+        v-model="formFieldMap.readonly_roles"
+        :class="{'field-mapping-form-field__changed': hasChanged('readonly_roles')}"
+        :disabled="viewOnly"
+        :items="roles"
+        item-text="display_name"
+        item-value="name"
+        label="Read Only Roles"
+        chips
+        multiple
+        clearable
+        deletable-chips
+        v-bind="fieldChangedAttributes('readonly_roles')"
+      />
       <v-text-field
         v-model="formFieldMap.profittools_destination"
         :class="{'field-mapping-form-field__changed': hasChanged('profittools_profittools_destinationdestination')}"
@@ -294,15 +323,19 @@
 </template>
 
 <script>
-import { mapState, mapGetters } from 'vuex'
-import fieldMaps from '@/store/modules/field_maps'
+import { mapState, mapGetters, mapActions } from 'vuex'
+import fieldMaps, { actionTypes as fieldMapsActionTypes } from '@/store/modules/field_maps'
 import deepDiff from 'deep-diff'
 import cloneDeep from 'lodash/cloneDeep'
 import { abbySourceFileds } from '@/enums/app_objects_types'
 import { eventTypes, shipmentDirection, booleanFields } from '@/enums/field_type'
 
+import FieldMapAuditDialog from './FieldMapAuditDialog'
+
 export default {
   name: 'FieldMappingForm',
+
+  components: { FieldMapAuditDialog },
 
   props: {
     viewOnly: { type: Boolean, required: false, default: false },
@@ -332,18 +365,21 @@ export default {
       shipment_direction_filter: null,
       use_template_value: true,
       use_constant_as_default_only: false,
+      readonly_roles: [],
     },
     abbySourceFieldFilter: {
       old: false,
       new: false
     },
     formIsDirty: false,
+    openAuditDialog: false,
   }),
 
   computed: {
     ...mapGetters(fieldMaps.moduleName, ['fieldMapsChanges']),
 
     ...mapState(fieldMaps.moduleName, {
+      roles: state => state.roles,
       fieldMaps: state => state.fieldMaps,
       defaultFieldMaps: state => state.defaultFieldMaps,
     }),
@@ -362,7 +398,7 @@ export default {
         shipmentDirection,
         booleanFields,
       }
-    }
+    },
   },
 
   watch: {
@@ -391,9 +427,12 @@ export default {
 
   beforeMount () {
     this.selectedFieldUpdated()
+    this.getRoles()
   },
 
   methods: {
+    ...mapActions(fieldMaps.moduleName, [fieldMapsActionTypes.getRoles]),
+
     selectedFieldUpdated () {
       this.formFieldMap = { ...cloneDeep(this.fieldMaps[this.selectedField]) }
       if (abbySourceFileds.old_fields.indexOf(this.selectedField) > -1) {
@@ -459,7 +498,7 @@ export default {
       if (value === undefined) {
         this.formFieldMap[field] = null
       }
-    }
+    },
   }
 }
 </script>

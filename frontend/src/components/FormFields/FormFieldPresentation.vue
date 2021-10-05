@@ -75,6 +75,7 @@
           :edit-mode="isEditing"
           :save-for-all="saveForAll"
           :locked="isLocked"
+          :readonly="readonly"
           @accept="handleAccept"
           @accept-all="() => handleAccept(true)"
           @cancel="handleCancel"
@@ -131,6 +132,7 @@ export default {
     label: { type: String, required: true },
     value: { required: true, default: '' },
     onlyHover: { type: Boolean, required: false, default: false },
+    readonly: { type: Boolean, required: false, default: false },
     managedByTemplate: { type: Boolean, required: false, default: false },
   },
 
@@ -198,7 +200,7 @@ export default {
     },
 
     handleStartEdit () {
-      if (this.isLocked || this.onlyHover) {
+      if (this.isLocked || this.onlyHover || this.readonly) {
         return
       }
 

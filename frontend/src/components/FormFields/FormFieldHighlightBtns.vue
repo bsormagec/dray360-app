@@ -28,7 +28,7 @@
     class="action-btns"
   >
     <div class="btn">
-      <v-icon>{{ !locked ? 'mdi-pencil-outline' : 'mdi-lock' }}</v-icon>
+      <v-icon>{{ iconClass }}</v-icon>
     </div>
   </div>
 </template>
@@ -42,6 +42,11 @@ export default {
       type: Boolean,
       required: true
     },
+    readonly: {
+      type: Boolean,
+      required: false,
+      default: false
+    },
     editMode: {
       type: Boolean,
       required: true
@@ -50,6 +55,19 @@ export default {
       type: Boolean,
       required: false,
       default: false
+    }
+  },
+  computed: {
+    iconClass () {
+      if (this.locked) {
+        return 'mdi-lock'
+      }
+
+      if (this.readonly) {
+        return 'mdi-eye'
+      }
+
+      return 'mdi-pencil-outline'
     }
   }
 }

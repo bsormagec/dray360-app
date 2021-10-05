@@ -330,6 +330,7 @@
           :item-type="dictionaryItemsTypes.template"
           :company-id="order.t_company_id"
           :edit-mode="editMode"
+          :readonly="fieldShouldBeReadonly('tms_template_dictid')"
           @change="event => handleChange({ path:'tms_template_dictid', ...event })"
         />
         <FormFieldSelectDivisionCodes
@@ -342,6 +343,7 @@
           :t-tms-provider-id="order.t_tms_provider_id"
           :division-code="order.division_code"
           :managed-by-template="managedByTemplate('division_code')"
+          :readonly="fieldShouldBeReadonly('division_code')"
           @change="event => handleChange({ path:'division_code', ...event})"
         />
         <FormFieldSelect
@@ -355,6 +357,7 @@
           item-value="id"
           :edit-mode="editMode"
           :managed-by-template="managedByTemplate('shipment_direction')"
+          :readonly="fieldShouldBeReadonly('shipment_direction')"
           @change="event => handleChange({ path:'shipment_direction', ...event})"
         />
         <FormFieldSwitch
@@ -363,6 +366,7 @@
           :label="options.labels.expedite || 'Expedite'"
           :value="order.expedite"
           :edit-mode="editMode"
+          :readonly="fieldShouldBeReadonly('expedite')"
           @change="event => handleChange({ path:'expedite', ...event})"
         />
         <FormFieldSwitch
@@ -371,6 +375,7 @@
           :label="options.labels.hazardous || 'Hazardous'"
           :value="order.hazardous"
           :edit-mode="editMode"
+          :readonly="fieldShouldBeReadonly('hazardous')"
           @change="event => handleChange({ path:'hazardous', ...event})"
         />
         <FormFieldDictionaryItem
@@ -383,6 +388,7 @@
           :item-type="dictionaryItemsTypes.ccLoadType"
           :company-id="order.t_company_id"
           :edit-mode="editMode"
+          :readonly="fieldShouldBeReadonly('cc_loadtype_dictid')"
           @change="event => handleChange({ path:'cc_loadtype_dictid', ...event })"
         />
         <FormFieldInput
@@ -392,6 +398,7 @@
           :value="order.cc_orderstatus"
           :edit-mode="editMode"
           :managed-by-template="managedByTemplate('cc_orderstatus')"
+          :readonly="fieldShouldBeReadonly('cc_orderstatus')"
           @change="event => handleChange({ path:'cc_orderstatus', ...event})"
         />
         <FormFieldDictionaryItem
@@ -404,6 +411,7 @@
           :item-type="dictionaryItemsTypes.ccHaulClass"
           :company-id="order.t_company_id"
           :edit-mode="editMode"
+          :readonly="fieldShouldBeReadonly('cc_haulclass_dictid')"
           @change="event => handleChange({ path:'cc_haulclass_dictid', ...event })"
         />
         <FormFieldDictionaryItem
@@ -416,6 +424,7 @@
           :item-type="dictionaryItemsTypes.ccOrderClass"
           :company-id="order.t_company_id"
           :edit-mode="editMode"
+          :readonly="fieldShouldBeReadonly('cc_orderclass_dictid')"
           @change="event => handleChange({ path:'cc_orderclass_dictid', ...event })"
         />
         <FormFieldDictionaryItem
@@ -428,6 +437,7 @@
           :item-type="dictionaryItemsTypes.ccLoadedEmpty"
           :tms-provider-id="order.t_tms_provider_id"
           :edit-mode="editMode"
+          :readonly="fieldShouldBeReadonly('cc_loadedempty_dictid')"
           @change="event => handleChange({ path:'cc_loadedempty_dictid', ...event })"
         />
         <FormFieldDictionaryItem
@@ -440,6 +450,7 @@
           :item-type="dictionaryItemsTypes.termdiv"
           :company-id="order.t_company_id"
           :edit-mode="editMode"
+          :readonly="fieldShouldBeReadonly('termdiv_dictid')"
           @change="event => handleChange({ path:'termdiv_dictid', ...event })"
         />
         <FormFieldInput
@@ -448,6 +459,7 @@
           :label="options.labels.custom1 || 'Custom 1'"
           :value="order.custom1"
           :edit-mode="editMode"
+          :readonly="fieldShouldBeReadonly('custom1')"
           @change="event => handleChange({ path:'custom1', ...event})"
         />
         <FormFieldInput
@@ -456,6 +468,7 @@
           :label="options.labels.custom2 || 'Custom 2'"
           :value="order.custom2"
           :edit-mode="editMode"
+          :readonly="fieldShouldBeReadonly('custom2')"
           @change="event => handleChange({ path:'custom2', ...event})"
         />
         <FormFieldInput
@@ -464,6 +477,7 @@
           :label="options.labels.custom3 || 'Custom 3'"
           :value="order.custom3"
           :edit-mode="editMode"
+          :readonly="fieldShouldBeReadonly('custom3')"
           @change="event => handleChange({ path:'custom3', ...event})"
         />
         <FormFieldInput
@@ -472,6 +486,7 @@
           :label="options.labels.custom4 || 'Custom 4'"
           :value="order.custom4"
           :edit-mode="editMode"
+          :readonly="fieldShouldBeReadonly('custom4')"
           @change="event => handleChange({ path:'custom4', ...event})"
         />
         <FormFieldInput
@@ -480,6 +495,7 @@
           :label="options.labels.custom5 || 'Custom 5'"
           :value="order.custom5"
           :edit-mode="editMode"
+          :readonly="fieldShouldBeReadonly('custom5')"
           @change="event => handleChange({ path:'custom5', ...event})"
         />
         <FormFieldInput
@@ -488,6 +504,7 @@
           :label="options.labels.custom6 || 'Custom 6'"
           :value="order.custom6"
           :edit-mode="editMode"
+          :readonly="fieldShouldBeReadonly('custom6')"
           @change="event => handleChange({ path:'custom6', ...event})"
         />
         <FormFieldInput
@@ -496,6 +513,7 @@
           :label="options.labels.custom7 || 'Custom 7'"
           :value="order.custom7"
           :edit-mode="editMode"
+          :readonly="fieldShouldBeReadonly('custom7')"
           @change="event => handleChange({ path:'custom7', ...event})"
         />
         <FormFieldInput
@@ -504,6 +522,7 @@
           :label="options.labels.custom8 || 'Custom 8'"
           :value="order.custom8"
           :edit-mode="editMode"
+          :readonly="fieldShouldBeReadonly('custom8')"
           @change="event => handleChange({ path:'custom8', ...event})"
         />
         <FormFieldInput
@@ -512,6 +531,7 @@
           :label="options.labels.custom9 || 'Custom 9'"
           :value="order.custom9"
           :edit-mode="editMode"
+          :readonly="fieldShouldBeReadonly('custom9')"
           @change="event => handleChange({ path:'custom9', ...event})"
         />
         <FormFieldInput
@@ -520,6 +540,7 @@
           :label="options.labels.custom10 || 'Custom 10'"
           :value="order.custom10"
           :edit-mode="editMode"
+          :readonly="fieldShouldBeReadonly('custom10')"
           @change="event => handleChange({ path:'custom10', ...event})"
         />
         <FormFieldInput
@@ -528,6 +549,7 @@
           :label="options.labels.pt_ref1_text || 'PT ref1 text'"
           :value="order.pt_ref1_text"
           :edit-mode="editMode"
+          :readonly="fieldShouldBeReadonly('pt_ref1_text')"
           @change="event => handleChange({ path:'pt_ref1_text', ...event})"
         />
         <FormFieldInput
@@ -536,6 +558,7 @@
           :label="options.labels.pt_ref1_type || 'Pt ref1 type'"
           :value="order.pt_ref1_type"
           :edit-mode="editMode"
+          :readonly="fieldShouldBeReadonly('pt_ref1_type')"
           @change="event => handleChange({ path:'pt_ref1_type', ...event})"
         />
         <FormFieldInput
@@ -544,6 +567,7 @@
           :label="options.labels.pt_ref2_text || 'PT ref2 text'"
           :value="order.pt_ref2_text"
           :edit-mode="editMode"
+          :readonly="fieldShouldBeReadonly('pt_ref2_text')"
           @change="event => handleChange({ path:'pt_ref2_text', ...event})"
         />
         <FormFieldInput
@@ -552,6 +576,7 @@
           :label="options.labels.pt_ref2_type || 'Pt ref2 type'"
           :value="order.pt_ref2_type"
           :edit-mode="editMode"
+          :readonly="fieldShouldBeReadonly('pt_ref2_type')"
           @change="event => handleChange({ path:'pt_ref2_type', ...event})"
         />
         <FormFieldInput
@@ -560,6 +585,7 @@
           :label="options.labels.pt_ref3_text || 'PT ref3 text'"
           :value="order.pt_ref3_text"
           :edit-mode="editMode"
+          :readonly="fieldShouldBeReadonly('pt_ref3_text')"
           @change="event => handleChange({ path:'pt_ref3_text', ...event})"
         />
         <FormFieldInput
@@ -568,6 +594,7 @@
           :label="options.labels.pt_ref3_type || 'Pt ref3 type'"
           :value="order.pt_ref3_type"
           :edit-mode="editMode"
+          :readonly="fieldShouldBeReadonly('pt_ref3_type')"
           @change="event => handleChange({ path:'pt_ref3_type', ...event})"
         />
       </div>
@@ -589,6 +616,7 @@
             :item-type="dictionaryItemsTypes.itgContainer"
             :company-id="order.t_company_id"
             :edit-mode="editMode"
+            :readonly="fieldShouldBeReadonly('itgcontainer_dictid')"
             display-key-value
             @change="event => handleChange({ path:'itgcontainer_dictid', ...event})"
           />
@@ -604,6 +632,7 @@
             :recognized-text="order.equipment_type_raw_text"
             :unit-number="order.unit_number"
             :verified="order.equipment_type_verified"
+            :readonly="fieldShouldBeReadonly('equipment_type')"
             @change="event => handleChange({ path:'t_equipment_type_id', ...event})"
           />
           <FormFieldEquipmentType
@@ -618,6 +647,7 @@
             :recognized-text="order.equipment_type_raw_text"
             :unit-number="order.unit_number"
             :verified="order.chassis_equipment_type_verified"
+            :readonly="fieldShouldBeReadonly('chassis_equipment_type')"
             @change="event => handleChange({ path:'chassis_equipment_type_id', ...event})"
           />
 
@@ -628,6 +658,7 @@
             :value="order.unit_number"
             :edit-mode="editMode"
             :managed-by-template="managedByTemplate('unit_number')"
+            :readonly="fieldShouldBeReadonly('unit_number')"
             @change="event => handleChange({ path:'unit_number', ...event})"
           />
           <FormFieldInput
@@ -636,6 +667,7 @@
             :label="options.labels.seal_number || 'Seal number'"
             :value="order.seal_number"
             :edit-mode="editMode"
+            :readonly="fieldShouldBeReadonly('seal_number')"
             @change="event => handleChange({ path:'seal_number', ...event})"
           />
           <FormFieldInput
@@ -645,6 +677,7 @@
             :value="order.temperature"
             :edit-mode="editMode"
             type="number"
+            :readonly="fieldShouldBeReadonly('temperature')"
             @change="event => handleChange({ path:'temperature', ...event})"
           />
           <FormFieldInput
@@ -653,6 +686,7 @@
             :label="options.labels.required_equipment || 'Required Equipment'"
             :value="order.required_equipment"
             :edit-mode="editMode"
+            :readonly="fieldShouldBeReadonly('required_equipment')"
             @change="event => handleChange({ path:'required_equipment', ...event})"
           />
           <FormFieldDictionaryItem
@@ -665,6 +699,7 @@
             :item-type="dictionaryItemsTypes.ccContainerSize"
             :company-id="order.t_company_id"
             :edit-mode="editMode"
+            :readonly="fieldShouldBeReadonly('cc_containersize_dictid')"
             @change="event => handleChange({ path:'cc_containersize_dictid', ...event })"
           />
           <FormFieldDictionaryItem
@@ -677,6 +712,7 @@
             :item-type="dictionaryItemsTypes.ccContainerType"
             :company-id="order.t_company_id"
             :edit-mode="editMode"
+            :readonly="fieldShouldBeReadonly('cc_containertype_dictid')"
             @change="event => handleChange({ path:'cc_containertype_dictid', ...event })"
           />
         </div>
@@ -695,6 +731,7 @@
             :label="options.labels.reference_number || 'Reference number'"
             :value="order.reference_number"
             :edit-mode="editMode"
+            :readonly="fieldShouldBeReadonly('reference_number')"
             @change="event => handleChange({ path:'reference_number', ...event})"
           />
           <FormFieldInput
@@ -703,6 +740,7 @@
             :label="options.labels.customer_number || 'Customer number'"
             :value="order.customer_number === null ? '---' : order.customer_number"
             :edit-mode="editMode"
+            :readonly="fieldShouldBeReadonly('customer_number')"
             @change="event => handleChange({ path:'customer_number', ...event})"
           />
           <FormFieldInput
@@ -711,6 +749,7 @@
             :label="options.labels.load_number || 'Load number'"
             :value="order.load_number"
             :edit-mode="editMode"
+            :readonly="fieldShouldBeReadonly('load_number')"
             @change="event => handleChange({ path:'load_number', ...event})"
           />
           <FormFieldInput
@@ -719,6 +758,7 @@
             :label="options.labels.purchase_order_number || 'Purchase Order number'"
             :value="order.purchase_order_number"
             :edit-mode="editMode"
+            :readonly="fieldShouldBeReadonly('purchase_order_number')"
             @change="event => handleChange({ path:'purchase_order_number', ...event})"
           />
           <FormFieldInput
@@ -727,6 +767,7 @@
             :label="options.labels.release_number || 'Release number'"
             :value="order.release_number"
             :edit-mode="editMode"
+            :readonly="fieldShouldBeReadonly('release_number')"
             @change="event => handleChange({ path:'release_number', ...event})"
           />
           <FormFieldInput
@@ -735,6 +776,7 @@
             :label="options.labels.pickup_number || 'Pickup number'"
             :value="order.pickup_number"
             :edit-mode="editMode"
+            :readonly="fieldShouldBeReadonly('pickup_number')"
             @change="event => handleChange({ path:'pickup_number', ...event})"
           />
           <FormFieldDictionaryItem
@@ -748,6 +790,7 @@
             :company-id="order.t_company_id"
             :edit-mode="editMode"
             display-key-value
+            :readonly="fieldShouldBeReadonly('carrier')"
             @change="event => handleChange({ path:'carrier_dictid', ...event})"
           />
           <FormFieldInput
@@ -756,6 +799,7 @@
             :label="options.labels.vessel || 'Vessel'"
             :value="order.vessel"
             :edit-mode="editMode"
+            :readonly="fieldShouldBeReadonly('vessel')"
             @change="event => handleChange({ path:'vessel', ...event})"
           />
           <FormFieldDictionaryItem
@@ -768,6 +812,7 @@
             :item-type="dictionaryItemsTypes.vessel"
             :company-id="order.t_company_id"
             :edit-mode="editMode"
+            :readonly="fieldShouldBeReadonly('vessel_dictid')"
             @change="event => handleChange({ path:'vessel_dictid', ...event})"
           />
           <FormFieldInput
@@ -776,6 +821,7 @@
             :label="options.labels.voyage || 'Voyage'"
             :value="order.voyage"
             :edit-mode="editMode"
+            :readonly="fieldShouldBeReadonly('voyage')"
             @change="event => handleChange({ path:'voyage', ...event})"
           />
           <FormFieldDate
@@ -784,6 +830,7 @@
             :label="options.labels.eta_date || 'ETA Date'"
             :value="order.eta_date"
             :edit-mode="editMode"
+            :readonly="fieldShouldBeReadonly('eta_date')"
             @change="event => handleChange({ path: 'eta_date', ...event })"
           />
           <FormFieldTimeMask
@@ -792,6 +839,7 @@
             :label="options.labels.eta_time || 'ETA Time'"
             :value="order.eta_time"
             :edit-mode="editMode"
+            :readonly="fieldShouldBeReadonly('eta_time')"
             @change="event => handleChange({ path:'eta_time', ...event })"
           />
           <FormFieldDate
@@ -800,6 +848,7 @@
             :label="options.labels.appointment_date || 'Pickup by date'"
             :value="order.pickup_by_date"
             :edit-mode="editMode"
+            :readonly="fieldShouldBeReadonly('appointment_date')"
             @change="event => handleChange({ path:'pickup_by_date', ...event})"
           />
           <FormFieldTimeMask
@@ -808,6 +857,7 @@
             :label="options.labels.appointment_time || 'Pickup by time'"
             :value="order.pickup_by_time"
             :edit-mode="editMode"
+            :readonly="fieldShouldBeReadonly('appointment_time')"
             @change="event => handleChange({ path:'pickup_by_time', ...event})"
           />
           <FormFieldDate
@@ -816,6 +866,7 @@
             :label="options.labels.cutoff_date || 'Cutoff Date'"
             :value="order.cutoff_date"
             :edit-mode="editMode"
+            :readonly="fieldShouldBeReadonly('cutoff_date')"
             @change="event => handleChange({ path:'cutoff_date', ...event})"
           />
           <FormFieldTimeMask
@@ -824,6 +875,7 @@
             :label="options.labels.cutoff_time || 'Cutoff Time'"
             :value="order.cutoff_time"
             :edit-mode="editMode"
+            :readonly="fieldShouldBeReadonly('cutoff_time')"
             @change="event => handleChange({ path:'cutoff_time', ...event})"
           />
           <FormFieldInput
@@ -832,6 +884,7 @@
             :label="options.labels.booking_number || 'Booking number'"
             :value="order.booking_number === null ? '---' : order.booking_number"
             :edit-mode="editMode"
+            :readonly="fieldShouldBeReadonly('booking_number')"
             @change="event => handleChange({ path:'booking_number', ...event})"
           />
           <FormFieldInput
@@ -840,6 +893,7 @@
             :label="options.labels.master_bol_mawb || 'Master BOL MAWB'"
             :value="order.master_bol_mawb"
             :edit-mode="editMode"
+            :readonly="fieldShouldBeReadonly('master_bol_mawb')"
             @change="event => handleChange({ path:'master_bol_mawb', ...event})"
           />
           <FormFieldInput
@@ -848,6 +902,7 @@
             :label="options.labels.house_bol_hawb || 'House BOL MAWB'"
             :value="order.house_bol_hawb"
             :edit-mode="editMode"
+            :readonly="fieldShouldBeReadonly('house_bol_hawb')"
             @change="event => handleChange({ path:'house_bol_hawb', ...event})"
           />
         </div>
@@ -869,6 +924,7 @@
             :matched-address="order.bill_to_address"
             references="bill_to_address"
             :edit-mode="false"
+            :readonly="fieldShouldBeReadonly('bill_to_address')"
             billable
             v-bind="{...addressSearchProps}"
             @change="event => handleChange({ path:'bill_to_address', value: event, saveAll: event.saveAll })"
@@ -879,6 +935,7 @@
             :label="options.labels.bill_comment || 'Billing comments'"
             :value="order.bill_comment"
             :edit-mode="editMode"
+            :readonly="fieldShouldBeReadonly('bill_comment')"
             @change="event => handleChange({ path:'bill_comment', ...event})"
           />
         </div>
@@ -905,6 +962,7 @@
             :matched-address="order.ssrr_location_address"
             references="ssrr_location_address"
             :edit-mode="false"
+            :readonly="fieldShouldBeReadonly('ssrr_location_address')"
             ssrr
             v-bind="{...addressSearchProps}"
             @change="event => handleChange({ path:'ssrr_location_address', value: event, saveAll: event.saveAll })"
@@ -924,6 +982,7 @@
             :label="options.labels.line_haul || 'Line Haul'"
             :value="order.line_haul"
             :edit-mode="editMode"
+            :readonly="fieldShouldBeReadonly('line_haul')"
             @change="event => handleChange({ path:'line_haul', ...event})"
           />
           <FormFieldTextArea
@@ -932,6 +991,7 @@
             :label="options.labels.fuel_surcharge || 'FSC'"
             :value="order.fuel_surcharge"
             :edit-mode="editMode"
+            :readonly="fieldShouldBeReadonly('fuel_surcharge')"
             @change="event => handleChange({ path:'fuel_surcharge', ...event})"
           />
         </div>
@@ -984,6 +1044,7 @@
               :edit-mode="editMode"
               :is-first="index === 0"
               :is-last="index == order.order_address_events.length - 1"
+              :readonly="fieldShouldBeReadonly(`event${index+1}_location`) || fieldShouldBeReadonly(`event${index+1}_note`) || fieldShouldBeReadonly(`event${index+1}_type`)"
               v-bind="{...addressSearchProps}"
               @change="(event) => handleChange({path: `order_address_events.${index}`, value: event, saveAll: event.saveAll})"
               @delete="(e) => handleDelete(index)"
@@ -1011,6 +1072,7 @@
             :label="options.labels.ship_comment || 'Shipment comments'"
             :value="order.ship_comment"
             :edit-mode="editMode"
+            :readonly="fieldShouldBeReadonly('ship_comment')"
             @change="event => handleChange({path: 'ship_comment', ...event})"
           />
         </div>
@@ -1041,6 +1103,7 @@
               :value="item.contents"
               :edit-mode="editMode"
               :managed-by-template="managedByTemplate('contents')"
+              :readonly="fieldShouldBeReadonly('contents')"
               @change="event => handleChange({ path:`order_line_items.${item.real_index}.contents`, ...event})"
             />
             <FormFieldInput
@@ -1051,6 +1114,7 @@
               :value="item.quantity"
               :edit-mode="editMode"
               :managed-by-template="managedByTemplate('quantity')"
+              :readonly="fieldShouldBeReadonly('quantity')"
               @change="event => handleChange({ path:`order_line_items.${item.real_index}.quantity`, ...event})"
             />
             <FormFieldInput
@@ -1061,6 +1125,7 @@
               :value="item.weight"
               :edit-mode="editMode"
               :managed-by-template="managedByTemplate('weight')"
+              :readonly="fieldShouldBeReadonly('weight')"
               @change="event => handleChange({ path:`order_line_items.${item.real_index}.weight`, ...event})"
             />
           </div>
@@ -1363,6 +1428,10 @@ export default {
 
     fieldShouldBeShown (fieldName) {
       return !this.options.hidden.includes(fieldName)
+    },
+
+    fieldShouldBeReadonly (fieldName) {
+      return this.options.readonly.includes(fieldName)
     },
 
     async handleChange (event) {

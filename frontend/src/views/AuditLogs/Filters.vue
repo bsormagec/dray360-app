@@ -33,12 +33,12 @@
       </v-col>
       <v-col cols="2">
         <v-autocomplete
-          v-model="filters.variantName"
+          v-model="filters.variantId"
           :items="variants"
-          item-value="abbyy_variant_name"
-          item-text="abbyy_variant_name"
-          name="variant_name"
-          label="Variant name"
+          item-value="abbyy_variant_id"
+          item-text="abbyy_variant_id"
+          name="abbyy_variant_id"
+          label="Variant Id"
           clearable
           dense
           chips
@@ -52,15 +52,15 @@
               v-if="index === 0"
               close
               small
-              @click:close="handleFilterDeletion(item.abbyy_variant_name, 'variantName')"
+              @click:close="handleFilterDeletion(item.abbyy_variant_id, 'variantId')"
             >
-              <span>{{ item.abbyy_variant_name }}</span>
+              <span>{{ item.abbyy_variant_id }}</span>
             </v-chip>
             <span
               v-if="index === 1"
               class="grey--text caption"
             >
-              (+{{ filters.variantName.length - 1 }} others)
+              (+{{ filters.variantId.length - 1 }} others)
             </span>
           </template>
         </v-autocomplete>
@@ -170,7 +170,7 @@ export default {
         dateRange: [],
         companyId: null,
         userId: null,
-        variantName: null,
+        variantId: null,
       }),
     },
   },
@@ -190,7 +190,7 @@ export default {
       dateRange: vm.initialFilters.dateRange,
       companyId: vm.initialFilters.companyId,
       userId: vm.initialFilters.userId,
-      variantName: vm.initialFilters.variantName,
+      variantId: vm.initialFilters.variantId,
       timeRange: vm.initialFilters.timeRange
     }
   }),
@@ -226,7 +226,8 @@ export default {
 
     async fetchVariants () {
       const [error, data] = await getVariants({
-        'fields[t_ocrvariants]': 'abbyy_variant_name'
+        'fields[t_ocrvariants]': 'abbyy_variant_id',
+        sort: 'abbyy_variant_id'
       })
 
       if (error !== undefined) {
