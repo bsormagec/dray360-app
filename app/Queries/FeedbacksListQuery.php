@@ -23,8 +23,8 @@ class FeedbacksListQuery extends QueryBuilder
             ->with([
                 'user:id,name',
                 'user.roles:id,name',
-                'commentable:id,request_id',
             ])
+            ->with(['commentable' => fn ($q) => $q->select(['id', 'request_id', 'deleted_at'])->withTrashed()])
             ->join('users', 'users.id', '=', 'user_id')
             ->leftJoin('t_orders as o', function ($join) {
                 $join->on('o.id', '=', 't_feedback_comments.commentable_id')
@@ -78,6 +78,7 @@ class FeedbacksListQuery extends QueryBuilder
                 return $query->where('t_feedback_comments.created_at', '<=', $date);
             }),
             AllowedFilter::exact('user_id'),
+            AllowedFilter::partial('comment'),
         ])
         ->defaultSort('-t_feedback_comments.created_at', '-t_feedback_comments.id')
         ->allowedSorts([
@@ -86,7 +87,9 @@ class FeedbacksListQuery extends QueryBuilder
             AllowedSort::field('commentable_type', 't_feedback_comments.commentable_type'),
             AllowedSort::field('created_at', 't_feedback_comments.created_at'),
             AllowedSort::field('updated_at', 't_feedback_comments.updated_at'),
+            AllowedSort::field('order_id', 'o.id'),
             AllowedSort::field('company', 'company_name'),
+            AllowedSort::field('comment', 't_feedback_comments.comment'),
             AllowedSort::field('user', 'users.name'),
         ]);
     }
