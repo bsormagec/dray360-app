@@ -277,11 +277,10 @@ export default {
       }
     },
     companySelect (value) {
+      this.clearFields()
       if (value !== undefined) {
         this.companyId = value
         this.getCompany()
-      } else {
-        this.clearFields()
       }
     },
     clearFields () {
