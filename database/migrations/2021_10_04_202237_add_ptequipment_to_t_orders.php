@@ -90,10 +90,8 @@ class AddPtequipmentToTOrders extends Migration
             $table->foreign('pt_equipmenttype_chassis_dictid')->references('id')->on('t_dictionary_items');
         });
 
-        Schema::table('t_orders', function (Blueprint $table) {
-            DB::unprepared(AddPtequipmentToTOrders::SET_PTEQUIP_CONTAINER_DICTIDS);
-            DB::unprepared(AddPtequipmentToTOrders::SET_PTEQUIP_CHASSIS_DICTIDS);
-        });
+        DB::unprepared(AddPtequipmentToTOrders::SET_PTEQUIP_CONTAINER_DICTIDS);
+        DB::unprepared(AddPtequipmentToTOrders::SET_PTEQUIP_CHASSIS_DICTIDS);
     }
 
     /**
