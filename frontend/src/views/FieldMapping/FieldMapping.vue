@@ -109,7 +109,7 @@ import permissions from '@/mixins/permissions'
 
 import { mapActions, mapState } from 'vuex'
 import utils, { actionTypes as utilsActionTypes } from '@/store/modules/utils'
-import fieldMaps, { types as fieldMapsTypes } from '@/store/modules/field_maps'
+import fieldMaps, { actionTypes as fieldMapsActionTypes } from '@/store/modules/field_maps'
 
 import cloneDeep from 'lodash/cloneDeep'
 
@@ -148,6 +148,7 @@ export default {
       shipment_direction_filter: null,
       use_template_value: true,
       use_constant_as_default_only: false,
+      readonly_roles: [],
     },
     formChanged: false,
     customMapping: false,
@@ -215,13 +216,13 @@ export default {
       utilsActionTypes.setConfirmationDialog,
     ]),
 
-    ...mapActions(fieldMaps.moduleName, {
-      getFieldMaps: fieldMapsTypes.GET_FIELD_MAPS,
-      setFieldMap: fieldMapsTypes.SET_FIELD_MAP,
-      deleteFieldMap: fieldMapsTypes.DELETE_FIELD_MAP,
-      resetFieldMap: fieldMapsTypes.RESET_FIELD_MAP,
-      saveFieldMaps: fieldMapsTypes.SAVE_FIELD_MAPS,
-    }),
+    ...mapActions(fieldMaps.moduleName, [
+      fieldMapsActionTypes.getFieldMaps,
+      fieldMapsActionTypes.setFieldMap,
+      fieldMapsActionTypes.deleteFieldMap,
+      fieldMapsActionTypes.resetFieldMap,
+      fieldMapsActionTypes.saveFieldMaps,
+    ]),
 
     clearSelection () {
       this.loading = false

@@ -1,6 +1,7 @@
 /* eslint-disable camelcase */
 import { mapState } from 'vuex'
 import { has_permissions, has_permission } from '@/utils/has_permissions'
+import { hasRole } from '@/utils/has_role'
 import auth from '@/store/modules/auth'
 
 export default {
@@ -12,6 +13,14 @@ export default {
   },
 
   methods: {
+    hasRole (role) {
+      return hasRole(this.currentUser, role)
+    },
+
+    hasRoles (roles) {
+      return hasRole(this.currentUser, roles)
+    },
+
     hasPermissions (...requestedPermissions) {
       return has_permissions(this.currentUser, ...requestedPermissions)
     },

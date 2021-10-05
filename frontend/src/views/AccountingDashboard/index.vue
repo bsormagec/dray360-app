@@ -211,7 +211,7 @@ export default {
     }
   },
 
-  async beforeMount () {
+  beforeMount () {
     this.filters.dateRange = this.getDefaultDateRange()
   },
 

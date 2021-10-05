@@ -32,6 +32,7 @@ class FieldMapsController extends Controller
         return JsonResource::make([
             'current' => FieldMap::getFrom($params),
             'previous' => FieldMap::getPreviousLevelFrom($params),
+            'changes' => FieldMap::getAuditsFor($params),
         ]);
     }
 
@@ -51,37 +52,45 @@ class FieldMapsController extends Controller
         $tmsProviderId = $data['tms_provider_id'] ?? null;
 
         if (! $companyId && ! $variantId && ! $tmsProviderId) {
-            $defaultFieldMap = FieldMap::getSystemDefault();
-            $newDefaultFieldMap = FieldMap::createFrom($data, $defaultFieldMap);
-            return $newDefaultFieldMap;
+            return [
+                'fieldmap' => FieldMap::getSystemDefault()->updateFrom($data),
+                'changes' => FieldMap::getAuditsFor($data),
+            ];
         }
 
         if ($variantId && $companyId) {
             $relatedObject = CompanyOcrVariant::query()
-                ->with('fieldMap:id')
+                ->with('fieldMap')
                 ->firstOrNew([
                     't_company_id' => $data['company_id'],
                     't_ocrvariant_id' => $data['variant_id'],
                 ]);
         } elseif ($companyId) {
             $relatedObject = Company::query()
-                ->with('fieldMap:id')
+                ->with('fieldMap')
                 ->findOrFail($data['company_id'], ['id', 't_fieldmap_id']);
         } elseif ($variantId) {
             $relatedObject = OCRVariant::query()
-                ->with('fieldMap:id')
+                ->with('fieldMap')
                 ->findOrFail($data['variant_id'], ['id', 't_fieldmap_id']);
         } elseif ($tmsProviderId) {
             $relatedObject = TMSProvider::query()
-                ->with('fieldMap:id')
+                ->with('fieldMap')
                 ->findOrFail($data['tms_provider_id'], ['id', 't_fieldmap_id']);
         }
 
-        $newFieldMap = FieldMap::createFrom($data, $relatedObject->fieldMap);
-        $relatedObject->fieldMap()->associate($newFieldMap);
-        $relatedObject->save();
+        if (! $relatedObject->fieldMap) {
+            $newFieldMap = FieldMap::createFrom($data);
+            $relatedObject->fieldMap()->associate($newFieldMap);
+            $relatedObject->save();
+        } else {
+            $relatedObject->fieldMap->updateFrom($data);
+        }
 
-        return $newFieldMap;
+        return [
+            'fieldmap' => $relatedObject->fieldMap,
+            'changes' => FieldMap::getAuditsFor($data),
+        ];
     }
 
     /**

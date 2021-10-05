@@ -26,6 +26,7 @@ import ResetPassword from '@/views/ResetPassword'
 import AuditLogs from '@/views/AuditLogs/AuditLogs'
 import ApplicationDowntime from '@/views/ApplicationDowntime'
 import AccountingDashboard from '@/views/AccountingDashboard'
+import OrderCommentsDashboard from '@/views/OrderCommentsDashboard'
 
 Vue.use(VueRouter)
 
@@ -192,6 +193,14 @@ const routes = [
     component: AccountingDashboard,
     meta: {
       middleware: [auth]
+    }
+  },
+  {
+    path: '/comments-logs',
+    name: 'Comments Logs',
+    component: OrderCommentsDashboard,
+    meta: {
+      middleware: [auth, permission('orders-view')]
     }
   }
 ]

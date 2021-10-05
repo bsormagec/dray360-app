@@ -92,7 +92,7 @@ import allCompanies from '@/mixins/all_companies'
 
 import { mapActions, mapState } from 'vuex'
 import utils, { actionTypes as utilsActionTypes } from '@/store/modules/utils'
-import fieldMaps, { types as fieldMapsTypes } from '@/store/modules/field_maps'
+import fieldMaps, { actionTypes as fieldMapsActionTypes } from '@/store/modules/field_maps'
 import orders, { types as ordersTypes } from '@/store/modules/orders'
 
 import { getVariants } from '@/store/api_calls/rules_editor'
@@ -136,10 +136,10 @@ export default {
   },
 
   methods: {
-    ...mapActions(fieldMaps.moduleName, {
-      getFieldMaps: fieldMapsTypes.GET_FIELD_MAPS,
-      setFieldMapsFilters: fieldMapsTypes.SET_FIELD_MAPS_FILTERS,
-    }),
+    ...mapActions(fieldMaps.moduleName, [
+      fieldMapsActionTypes.getFieldMaps,
+      fieldMapsActionTypes.setFieldMapsFilters,
+    ]),
 
     ...mapActions(orders.moduleName, {
       getOrders: ordersTypes.getOrders,

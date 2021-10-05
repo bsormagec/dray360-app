@@ -64,7 +64,7 @@
           v-text="'Reimport from Abbyy'"
         />
         <v-list-item
-          v-if="hasPermission('tms-submit') && request.orders_count > 0"
+          v-if="hasPermission('tms-submit') && request.orders_count > 0 && !isProcessing"
           @click="sendRequestOrdersToTms"
           v-text="'Send orders to TMS'"
         />
@@ -114,7 +114,7 @@ import {
 } from '@/store/api_calls/requests'
 import RequestStatusHistoryDialog from './RequestStatusHistoryDialog'
 import RequestEmailDialog from './RequestEmailDialog'
-import { objectLocks, commentableTypes, displayStatuses } from '@/enums/app_objects_types'
+import { objectLocks, commentableTypes, displayStatuses, statuses } from '@/enums/app_objects_types'
 import events from '@/enums/events'
 import { isPtImageUpload } from '@/utils/status_helpers'
 
@@ -150,17 +150,31 @@ export default {
     ...mapState(requestList.moduleName, {
       supervise: state => state.supervise
     }),
+
     doneText () {
       return this.request.done_at === null ? 'complete' : 'not complete'
     },
+
     isLocked () {
       return this.request.is_locked || this.supervise
     },
+
     isPtImageUpload () {
       return isPtImageUpload(this.request.latest_ocr_request_status?.status)
     },
+
     canDownloadSourceFile () {
       return this.request.display_status !== displayStatuses.rejected && this.request.has_upload_requested
+    },
+
+    isProcessing () {
+      return [
+        statuses.intakeAccepted,
+        statuses.intakeAcceptedDatafile,
+        statuses.ocrCompleted,
+        statuses.ocrWaiting,
+        statuses.ocrPostProcessingReview,
+      ].includes(this.request.latest_ocr_request_status?.status)
     }
   },
   methods: {

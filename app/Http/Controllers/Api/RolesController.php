@@ -12,10 +12,11 @@ class RolesController extends Controller
     {
         return JsonResource::collection(
             Role::query()
+                ->orderBy('display_name')
                 ->when(! is_superadmin(), function ($query) {
                     return $query->where('name', '!=', 'superadmin');
                 })
-                ->get(['id', 'display_name'])
+                ->get(['id', 'display_name', 'name'])
         );
     }
 }

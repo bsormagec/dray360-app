@@ -170,5 +170,6 @@ export const commentableTypes = {
 }
 
 export const localStorageTypes = {
-  auditsLogsDashboardOptions: 'audits-logs-dashboard-options'
+  auditsLogsDashboardOptions: 'audits-logs-dashboard-options',
+  commentsLogsOptions: 'comments-logs-options'
 }

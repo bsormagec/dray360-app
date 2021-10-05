@@ -44,7 +44,7 @@
       <div class="d-flex w-full justify-end my-2">
         <v-btn
           v-if="!verified && equipmentType !== null"
-          :disabled="isLocked"
+          :disabled="isLocked || readonly"
           color="primary"
           class="mr-2"
           outlined
@@ -56,7 +56,7 @@
         </v-btn>
         <v-btn
           color="primary"
-          :disabled="isLocked"
+          :disabled="isLocked || readonly"
           outlined
           small
           @click="toggledialg"
@@ -270,6 +270,7 @@ export default {
     verified: { type: Boolean, required: false, default: false },
     references: { type: String, default: null },
     managedByTemplate: { type: Boolean, required: false, default: false },
+    readonly: { type: Boolean, required: false, default: false },
   },
 
   data: (vm) => ({

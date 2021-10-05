@@ -102,14 +102,14 @@ class OCRRequestStatus extends Model
         self::UPLOAD_IMAGE_SUCCEEDED => 'Image Uploaded',
 
         self::INTAKE_EXCEPTION => 'Exception',
+        self::OCR_POST_PROCESSING_ERROR => 'Exception',
+        self::PROCESS_OCR_OUTPUT_FILE_ERROR => 'Exception',
 
         self::INTAKE_STARTED => 'Intake',
         self::UPLOAD_REQUESTED => 'Intake',
 
         self::INTAKE_REJECTED => 'Rejected',
-        self::OCR_POST_PROCESSING_ERROR => 'Rejected',
         self::OCR_TIMEDOUT => 'Rejected',
-        self::PROCESS_OCR_OUTPUT_FILE_ERROR => 'Rejected',
 
         self::OCR_POST_PROCESSING_COMPLETE => 'Processed',
         self::PROCESS_OCR_OUTPUT_FILE_COMPLETE => 'Processed',
