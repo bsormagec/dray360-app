@@ -162,9 +162,6 @@ export default {
       if (this.variantId) {
         data.variantId = this.variantId
       }
-      if (!this.companyId && !this.tmsProviderId && !this.variantId) {
-        this.$emit('set-custom-mapping', false)
-      }
       this.$emit('fetching')
       await this.getFieldMaps(data)
       this.setFieldMapsFilters({ filters: data })
