@@ -11,7 +11,7 @@
             :headers="[
               { text: 'ID', value: 'id' },
               { text: 'Request ID', value: 'request_id' },
-              { text: 'Company', value: 'company.name' },
+              { text: 'Company', value: 'company_name' },
               { text: 'Variant ID', value: 'variant_id' },
               { text: 'Verifier', value: 'verifier'},
               { text: 'Reviewers', value: 'admin_reviewers', sortable: false},
