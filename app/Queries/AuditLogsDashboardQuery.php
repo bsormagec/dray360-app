@@ -17,7 +17,6 @@ class AuditLogsDashboardQuery extends QueryBuilder
 {
     public function __construct(array $filters)
     {
-        $auditsFilterQuery = $this->getAuditsFilterQuery($filters);
         $tcompaniesDemoId = Company::TCOMPANIES_DEMO_ID;
 
         $query = Order::query()
@@ -120,10 +119,13 @@ class AuditLogsDashboardQuery extends QueryBuilder
                     ) as client_changes_count
                 "),
             ])
-            ->with([
-                'audits.user',
-                'company:id,name',
+            ->addSelect([
+                'company_name' => DB::table('t_companies', 'c')
+                    ->select('c.name')
+                    ->whereColumn('c.id', 't_orders.t_company_id')
+                    ->limit(1)
             ])
+            ->with('audits.user')
             ->with('orderAddressEvents', function ($query) {
                 $query
                     ->select(['id', 't_order_id'])
@@ -137,15 +139,19 @@ class AuditLogsDashboardQuery extends QueryBuilder
                     ->with('audits.user');
             })
             ->where($this->getDateRangeFilterQuery($filters))
-            ->where(function ($where) use ($auditsFilterQuery) {
-                $where->orWhereHas('audits', $auditsFilterQuery)
-                    ->orWhereHas('orderAddressEvents.audits', $auditsFilterQuery)
-                    ->orWhereHas('orderLineItems.audits', $auditsFilterQuery);
+            ->when(isset($filters['user_id']), function ($query) use ($filters) {
+                $userId = isset($filters['user_id']) ? explode(',', $filters['user_id']) : null;
+                $usersFilterQuery = fn ($query) => $query->when($userId, fn ($q) => $q->whereIn('user_id', $userId));
+
+                return $query->where(function ($where) use ($usersFilterQuery) {
+                    $where->orWhereHas('audits', $usersFilterQuery)
+                        ->orWhereHas('orderAddressEvents.audits', $usersFilterQuery)
+                        ->orWhereHas('orderLineItems.audits', $usersFilterQuery);
+                });
             })
             ->whereDoesntHave('audits', function ($query) {
                 $query->where('event', 'created');
-            })
-            ->join('t_companies as c', 'c.id', '=', 't_orders.t_company_id');
+            });
 
         parent::__construct($query);
 
@@ -158,7 +164,7 @@ class AuditLogsDashboardQuery extends QueryBuilder
         ->allowedSorts([
             AllowedSort::field('id', 't_orders.id'),
             AllowedSort::field('request_id', 't_orders.request_id'),
-            AllowedSort::field('company.name', 'c.name'),
+            AllowedSort::field('company_name', 'company_name'),
             AllowedSort::field('variant_name', 't_orders.variant_name'),
             AllowedSort::field('variant_id', 't_orders.variant_id'),
             AllowedSort::field('created_at', 't_orders.created_at'),
@@ -191,12 +197,5 @@ class AuditLogsDashboardQuery extends QueryBuilder
             $query->where('t_orders.created_at', '>=', $startDate)
                 ->where('t_orders.created_at', '<=', $endDate);
         };
-    }
-
-    protected function getAuditsFilterQuery(array $filters): Closure
-    {
-        $userId = isset($filters['user_id']) ? explode(',', $filters['user_id']) : null;
-
-        return fn ($query) => $query->when($userId, fn ($q) => $q->whereIn('user_id', $userId));
     }
 }
