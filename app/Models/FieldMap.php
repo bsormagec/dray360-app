@@ -133,11 +133,12 @@ class FieldMap extends Model implements Auditable
                 ->find($data['tms_provider_id'], ['id', 't_fieldmap_id']);
         }
 
-        if (! $relatedObject) {
-            return collect([]);
+        if (! $relatedObject || ! $relatedObject->fieldMap) {
+            return collect(['fieldmap_config' => []]);
         }
 
-        return $relatedObject->fieldMap->getAttributesChanges();
+        $changes = $relatedObject->fieldMap->getAttributesChanges();
+        return $changes->isEmpty() ? collect(['fieldmap_config' => []]) : $changes;
     }
 
     public static function createFrom(array $params): self
