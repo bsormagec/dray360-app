@@ -1,7 +1,6 @@
 set @START_DATE=date_sub(CURRENT_TIMESTAMP, interval 25 hour);
 set @END_DATE=null;
 
-
 select
      ls.request_id
     ,ls.created_at
@@ -57,10 +56,26 @@ select
         ,(select min(created_at) from t_job_state_changes as s where s.request_id = ls.request_id and s.status = 'ocr-waiting')
     ),'') as time_abbyy
 
+    -- # Timestamps for debugging date computations, leave commented out for production
+    -- ,(select min(created_at) from t_job_state_changes as s where s.request_id = ls.request_id and s.status = 'ocr-post-processing-review') as timestamp_admin_review_queued
+    -- ,(select min(a.created_at) from audits as a join t_orders as o on (a.auditable_id = o.id and a.auditable_type = 'App\\Models\\Order' and o.request_id = ls.request_id)) as timestamp_admin_review_edit_started
+    -- ,(select min(created_at) from t_job_state_changes as s where s.request_id = ls.request_id and s.status = 'ocr-post-processing-complete') as timestamp_admin_review_completed
+
+    ,coalesce(TIMEDIFF(
+         (select min(a.created_at) from audits as a join t_orders as o on (a.auditable_id = o.id and a.auditable_type = 'App\\Models\\Order' and o.request_id = ls.request_id))
+        ,(select min(s.created_at) from t_job_state_changes as s where s.request_id = ls.request_id and s.status = 'ocr-post-processing-review')
+    ),'') as time_admin_review_queued
+
+    ,if ((select min(created_at) from t_job_state_changes as s where s.request_id = ls.request_id and s.status = 'ocr-post-processing-review') is null, ''
+        ,coalesce(TIMEDIFF(
+             (select min(created_at) from t_job_state_changes as s where s.request_id = ls.request_id and s.status = 'ocr-post-processing-complete')
+            ,(select min(a.created_at) from audits as a join t_orders as o on (a.auditable_id = o.id and a.auditable_type = 'App\\Models\\Order' and o.request_id = ls.request_id))
+        ),'')) as time_admin_review_editing
+
     ,coalesce(TIMEDIFF(
          (select min(created_at) from t_job_state_changes as s where s.request_id = ls.request_id and s.status = 'ocr-post-processing-complete')
         ,(select min(created_at) from t_job_state_changes as s where s.request_id = ls.request_id and s.status = 'ocr-post-processing-review')
-    ),'') as time_admin_review
+    ),'') as time_admin_review_total
 
     ,coalesce((select group_concat(distinct reviewer) from (
         select u.name as reviewer
@@ -91,7 +106,7 @@ select
     ,left(coalesce(TIMEDIFF(
          (select nullif(max(coalesce(tms_submission_datetime, '1900-12-31')), '1900-12-31') from t_orders as o where o.request_id = ls.request_id and o.deleted_at is null)
         ,(select min(created_at) from t_job_state_changes as s where s.request_id = ls.request_id and s.status = 'ocr-post-processing-complete')
-    ),''), 8) as time_client_review
+    ),''), 8) as time_client_review_total
 
     ,if(exists(select id from t_job_state_changes as s where s.request_id = ls.request_id and s.status = 'intake-rejected'), '', (
         (select coalesce(sum(if(json_length(a.old_values) = 0, json_length(a.new_values), json_length(a.old_values))), 0)
