@@ -17,39 +17,39 @@ select
          ), '')
      ) as document_type
  
---     ,coalesce(nullif((select json_unquote(json_extract(s.status_metadata, '$.pdf_page_count')) from t_job_state_changes as s where ls.request_id = s.request_id and status = 'intake-started' order by s.id asc limit 1), 'null'), '') as pages
--- 
---     ,coalesce((
---         select concat(
---              coalesce(
---                   (select abbyy_variant_name from t_ocrvariants where deleted_at is null and abbyy_variant_id = (select json_unquote(json_extract(s.status_metadata, '$.classified_variantid'))) order by id desc limit 1)
---                  ,(select json_unquote(json_extract(s.status_metadata, '$.variant_name')))
---              )
---             ,if((select json_unquote(json_extract(s.status_metadata, '$.classified_variantid'))) = 'null', '', concat(
---                  ' ('
---                 ,(select json_unquote(json_extract(s.status_metadata, '$.classified_variantid')))
---                 ,')'
---             ))
---         ) as classified_name_id
---         from t_job_state_changes as s where s.request_id = ls.request_id and s.status in ('intake-accepted','intake-accepted-datafile')
---         order by s.id
---         limit 1
---     ), '') as classified_name_id
--- 
---     ,coalesce((select o.variant_name from t_orders as o where o.request_id = ls.request_id order by o.id asc limit 1), '') as verified_name
---     ,exists(select s.id from t_job_state_changes as s where s.request_id = ls.request_id and status = 'ocr-waiting') as sent_to_abbyy
--- 
---     ,not exists(select s.id from t_job_state_changes as s where s.request_id = ls.request_id and status in ('ocr-post-processing-review','process-ocr-output-file-review')) 
---      and not exists(select id from t_job_state_changes as s where s.request_id = ls.request_id and s.status = 'intake-rejected') as skipped_admin_review
--- 
---     ,exists(select s.id from t_job_state_changes as s where s.request_id = ls.request_id and status in ('auto-sending-to-wint','auto-sending-to-chainio','auto-sending-to-compcare')) as auto_send_to_tms
---     ,(select count(id) from t_orders as o where o.request_id = ls.request_id and o.deleted_at is not null) deleted_orders
---     ,(select count(o.id) from t_orders as o where ls.request_id = o.request_id and o.deleted_at is null) as orders
---     ,(select count(o.tms_shipment_id) from t_orders as o where ls.request_id = o.request_id and o.deleted_at is null) as shipments
---     ,(ls.deleted_at is not null) as request_deleted
---     ,exists(select id from t_job_state_changes as s where s.request_id = ls.request_id and s.status = 'intake-rejected') as rejected
---     ,coalesce((select group_concat(o.id) from t_orders as o where ls.request_id = o.request_id and o.deleted_at is null), '') as order_ids
---     ,coalesce((select group_concat(o.tms_shipment_id) from t_orders as o where ls.request_id = o.request_id and o.deleted_at is null), '') as shipment_ids
+    ,coalesce(nullif((select json_unquote(json_extract(s.status_metadata, '$.pdf_page_count')) from t_job_state_changes as s where ls.request_id = s.request_id and status = 'intake-started' order by s.id asc limit 1), 'null'), '') as pages
+
+    ,coalesce((
+        select concat(
+             coalesce(
+                  (select abbyy_variant_name from t_ocrvariants where deleted_at is null and abbyy_variant_id = (select json_unquote(json_extract(s.status_metadata, '$.classified_variantid'))) order by id desc limit 1)
+                 ,(select json_unquote(json_extract(s.status_metadata, '$.variant_name')))
+             )
+            ,if((select json_unquote(json_extract(s.status_metadata, '$.classified_variantid'))) = 'null', '', concat(
+                 ' ('
+                ,(select json_unquote(json_extract(s.status_metadata, '$.classified_variantid')))
+                ,')'
+            ))
+        ) as classified_name_id
+        from t_job_state_changes as s where s.request_id = ls.request_id and s.status in ('intake-accepted','intake-accepted-datafile')
+        order by s.id
+        limit 1
+    ), '') as classified_name_id
+
+    ,coalesce((select o.variant_name from t_orders as o where o.request_id = ls.request_id order by o.id asc limit 1), '') as verified_name
+    ,exists(select s.id from t_job_state_changes as s where s.request_id = ls.request_id and status = 'ocr-waiting') as sent_to_abbyy
+
+    ,not exists(select s.id from t_job_state_changes as s where s.request_id = ls.request_id and status in ('ocr-post-processing-review','process-ocr-output-file-review')) 
+     and not exists(select id from t_job_state_changes as s where s.request_id = ls.request_id and s.status = 'intake-rejected') as skipped_admin_review
+
+    ,exists(select s.id from t_job_state_changes as s where s.request_id = ls.request_id and status in ('auto-sending-to-wint','auto-sending-to-chainio','auto-sending-to-compcare')) as auto_send_to_tms
+    ,(select count(id) from t_orders as o where o.request_id = ls.request_id and o.deleted_at is not null) deleted_orders
+    ,(select count(o.id) from t_orders as o where ls.request_id = o.request_id and o.deleted_at is null) as orders
+    ,(select count(o.tms_shipment_id) from t_orders as o where ls.request_id = o.request_id and o.deleted_at is null) as shipments
+    ,(ls.deleted_at is not null) as request_deleted
+    ,exists(select id from t_job_state_changes as s where s.request_id = ls.request_id and s.status = 'intake-rejected') as rejected
+    ,coalesce((select group_concat(o.id) from t_orders as o where ls.request_id = o.request_id and o.deleted_at is null), '') as order_ids
+    ,coalesce((select group_concat(o.tms_shipment_id) from t_orders as o where ls.request_id = o.request_id and o.deleted_at is null), '') as shipment_ids
 
     ,coalesce(TIMEDIFF(
          (select min(created_at) from t_job_state_changes as s where s.request_id = ls.request_id and s.status = 'ocr-completed')
