@@ -25,7 +25,7 @@ class EquipmentTypesSeeder extends Seeder
      */
     const ALL_COMPANIES = [
         'STGCDC' => [
-            'file' => 'seeders/STGCDC_EquipmentLeaseTypes.20211007.xlsx',
+            'file' => 'seeders/STGCDC_EquipmentLeaseTypes.20211008.xlsx',
             'columns' => [
                 'tms_equipment_id' => 'id',
                 'equipment_owner' => 'line',
@@ -36,7 +36,7 @@ class EquipmentTypesSeeder extends Seeder
             ],
         ],
          'STGEXPRESS' => [
-             'file' => 'seeders/STGEXPRESS_EquipmentLeaseTypes.20211007.xlsx',
+             'file' => 'seeders/STGEXPRESS_EquipmentLeaseTypes.20211008.xlsx',
              'columns' => [
                  'tms_equipment_id' => 'id',
                  'equipment_owner' => 'line',
@@ -47,7 +47,7 @@ class EquipmentTypesSeeder extends Seeder
              ],
          ],
          'STGSUMMIT' => [
-             'file' => 'seeders/STGSUMMIT_EquipmentLeaseTypes.20211007.xlsx',
+             'file' => 'seeders/STGSUMMIT_EquipmentLeaseTypes.20211008.xlsx',
              'columns' => [
                  'tms_equipment_id' => 'id',
                  'equipment_owner' => 'line',
@@ -58,7 +58,7 @@ class EquipmentTypesSeeder extends Seeder
              ],
          ],
          'STGVECCO' => [
-             'file' => 'seeders/STGVECCO_EquipmentLeaseTypes.20211007.xlsx',
+             'file' => 'seeders/STGVECCO_EquipmentLeaseTypes.20211008.xlsx',
              'columns' => [
                  'tms_equipment_id' => 'id',
                  'equipment_owner' => 'line',
