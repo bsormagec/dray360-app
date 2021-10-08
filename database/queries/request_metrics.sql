@@ -1,4 +1,4 @@
-set @START_DATE=date_sub(CURRENT_TIMESTAMP, interval 25 hour);
+set @START_DATE=date_sub(CURRENT_TIMESTAMP, interval 4 day);
 set @END_DATE=null;
 
 select
@@ -56,20 +56,20 @@ select
         ,(select min(created_at) from t_job_state_changes as s where s.request_id = ls.request_id and s.status = 'ocr-waiting')
     ),'') as time_abbyy
 
-    -- -- Timestamps for debugging date computations, leave commented out for production
-    -- ,(select min(created_at) from t_job_state_changes as s where s.request_id = ls.request_id and s.status = 'ocr-post-processing-review') as timestamp_admin_review_queued
-    -- ,(select min(a.created_at) from audits as a join t_orders as o on (a.auditable_id = o.id and a.auditable_type = 'App\\Models\\Order' and o.request_id = ls.request_id)) as timestamp_admin_review_edit_started
-    -- ,(select min(created_at) from t_job_state_changes as s where s.request_id = ls.request_id and s.status = 'ocr-post-processing-complete') as timestamp_admin_review_completed
+    -- -- Timestamps for debugging elapsed_time computations, leave commented out for production
+    ,(select min(s.created_at) from t_job_state_changes as s where s.request_id = ls.request_id and s.status = 'ocr-post-processing-review') as timestamp_admin_review_queued
+    ,(select min(a.created_at) from audits as a join t_orders as o on (a.auditable_id = o.id and a.auditable_type = 'App\\Models\\Order' and o.request_id = ls.request_id) join users as u on u.id = a.user_id join role_user as ru on ru.user_id = u.id join roles as r on (r.id = ru.role_id and r.name = 'order-review')) as timestamp_admin_review_edit_started
+    ,(select min(s.created_at) from t_job_state_changes as s where s.request_id = ls.request_id and s.status = 'ocr-post-processing-complete') as timestamp_admin_review_completed
 
     ,coalesce(TIMEDIFF(
-         (select min(a.created_at) from audits as a join t_orders as o on (a.auditable_id = o.id and a.auditable_type = 'App\\Models\\Order' and o.request_id = ls.request_id))
+         (select min(a.created_at) from audits as a join t_orders as o on (a.auditable_id = o.id and a.auditable_type = 'App\\Models\\Order' and o.request_id = ls.request_id) join users as u on u.id = a.user_id join role_user as ru on ru.user_id = u.id join roles as r on (r.id = ru.role_id and r.name = 'order-review'))
         ,(select min(s.created_at) from t_job_state_changes as s where s.request_id = ls.request_id and s.status = 'ocr-post-processing-review')
     ),'') as time_admin_review_queued
 
     ,if ((select min(created_at) from t_job_state_changes as s where s.request_id = ls.request_id and s.status = 'ocr-post-processing-review') is null, ''
         ,coalesce(TIMEDIFF(
-             (select min(created_at) from t_job_state_changes as s where s.request_id = ls.request_id and s.status = 'ocr-post-processing-complete')
-            ,(select min(a.created_at) from audits as a join t_orders as o on (a.auditable_id = o.id and a.auditable_type = 'App\\Models\\Order' and o.request_id = ls.request_id))
+             (select min(s.created_at) from t_job_state_changes as s where s.request_id = ls.request_id and s.status = 'ocr-post-processing-complete')
+            ,(select min(a.created_at) from audits as a join t_orders as o on (a.auditable_id = o.id and a.auditable_type = 'App\\Models\\Order' and o.request_id = ls.request_id) join users as u on u.id = a.user_id join role_user as ru on ru.user_id = u.id join roles as r on (r.id = ru.role_id and r.name = 'order-review'))
         ),'')) as time_admin_review_editing
 
     ,coalesce(TIMEDIFF(
