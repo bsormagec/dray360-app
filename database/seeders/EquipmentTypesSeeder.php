@@ -24,6 +24,50 @@ class EquipmentTypesSeeder extends Seeder
      * add the specific companies to actually import.
      */
     const ALL_COMPANIES = [
+        'STGCDC' => [
+            'file' => 'seeders/STGCDC_EquipmentLeaseTypes.20211008.xlsx',
+            'columns' => [
+                'tms_equipment_id' => 'id',
+                'equipment_owner' => 'line',
+                'equipment_type_and_size' => 'type',
+                'equipment_size' => 'equipmentlength',
+                'scac' => 'scac',
+                'line_prefix_list' => 'lineprefix',
+            ],
+        ],
+         'STGEXPRESS' => [
+             'file' => 'seeders/STGEXPRESS_EquipmentLeaseTypes.20211008.xlsx',
+             'columns' => [
+                 'tms_equipment_id' => 'id',
+                 'equipment_owner' => 'line',
+                 'equipment_type_and_size' => 'type',
+                 'equipment_size' => 'equipmentlength',
+                 'scac' => 'scac',
+                 'line_prefix_list' => 'lineprefix',
+             ],
+         ],
+         'STGSUMMIT' => [
+             'file' => 'seeders/STGSUMMIT_EquipmentLeaseTypes.20211008.xlsx',
+             'columns' => [
+                 'tms_equipment_id' => 'id',
+                 'equipment_owner' => 'line',
+                 'equipment_type_and_size' => 'type',
+                 'equipment_size' => 'equipmentlength',
+                 'scac' => 'scac',
+                 'line_prefix_list' => 'lineprefix',
+             ],
+         ],
+         'STGVECCO' => [
+             'file' => 'seeders/STGVECCO_EquipmentLeaseTypes.20211008.xlsx',
+             'columns' => [
+                 'tms_equipment_id' => 'id',
+                 'equipment_owner' => 'line',
+                 'equipment_type_and_size' => 'type',
+                 'equipment_size' => 'equipmentlength',
+                 'scac' => 'scac',
+                 'line_prefix_list' => 'lineprefix',
+             ],
+         ],
         'ApexFreight' => [
             'file' => 'seeders/ApexFreight_EquipmentLeaseTypes.20211001.xlsx',
             'columns' => [
@@ -369,7 +413,10 @@ class EquipmentTypesSeeder extends Seeder
      * there is usually no reason to re-import more than once.
      */
     const TO_BE_IMPORTED = [
-        'ApexFreight' => self::ALL_COMPANIES['ApexFreight']
+        'STGCDC' => self::ALL_COMPANIES['STGCDC'],
+        'STGEXPRESS' => self::ALL_COMPANIES['STGEXPRESS'],
+        'STGSUMMIT' => self::ALL_COMPANIES['STGSUMMIT'],
+        'STGVECCO' => self::ALL_COMPANIES['STGVECCO']
     ];
 
     /**
