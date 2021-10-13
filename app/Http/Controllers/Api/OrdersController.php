@@ -59,6 +59,7 @@ class OrdersController extends Controller
         ]);
 
         $order->update($orderData);
+        $order->updateEquipmentTypesDictionaryItems($orderData);
         $order->updateRelatedModels($relatedModels);
 
         $order = Order::getBasicOrderForSideBySide($order->id);

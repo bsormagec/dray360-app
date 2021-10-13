@@ -13,7 +13,7 @@
               { text: 'Request ID', value: 'request_id' },
               { text: 'Company', value: 'company_name' },
               { text: 'Variant ID', value: 'variant_id' },
-              { text: 'Verifier', value: 'verifier'},
+              { text: 'Verifier', value: 'verifier', sortable: false},
               { text: 'Reviewers', value: 'admin_reviewers', sortable: false},
               { text: 'Created At', value: 'created_at' },
               { text: 'Updated At', value: 'updated_at' },

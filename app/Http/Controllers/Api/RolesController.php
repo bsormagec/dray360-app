@@ -14,7 +14,11 @@ class RolesController extends Controller
             Role::query()
                 ->orderBy('display_name')
                 ->when(! is_superadmin(), function ($query) {
-                    return $query->where('name', '!=', 'superadmin');
+                    return $query->whereNotIn('name', [
+                        Role::SUPERADMIN,
+                        Role::OPS_ADMIN,
+                        Role::ORDER_REVIEW,
+                    ]);
                 })
                 ->get(['id', 'display_name', 'name'])
         );
