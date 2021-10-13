@@ -27,7 +27,6 @@ class AuditLogsDashboardQuery extends QueryBuilder
                 't_orders.t_company_id',
                 't_orders.created_at',
                 't_orders.updated_at',
-                DB::raw("json_extract(ocr_data, '$.fields.last_editor.value') as verifier"),
                 DB::raw('if(t_orders.variant_id = -1 or t_orders.variant_id is null, t_orders.variant_name, t_orders.variant_id) as variant_id')
             ])
             ->addSelect([
@@ -172,7 +171,6 @@ class AuditLogsDashboardQuery extends QueryBuilder
             AllowedSort::field('changes_count'),
             AllowedSort::field('client_changes_count'),
             AllowedSort::field('t_companies_changes_count'),
-            AllowedSort::field('verifier'),
         ])
         ;
     }

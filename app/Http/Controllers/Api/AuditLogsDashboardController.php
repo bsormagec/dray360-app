@@ -2,8 +2,10 @@
 
 namespace App\Http\Controllers\Api;
 
+use App\Models\Order;
 use Illuminate\Http\Request;
 use OwenIt\Auditing\Models\Audit;
+use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
 use App\Queries\AuditLogsDashboardQuery;
 use Illuminate\Http\Resources\Json\JsonResource;
@@ -30,8 +32,17 @@ class AuditLogsDashboardController extends Controller
     protected function getAuditLogData(array $filters)
     {
         $paginator = (new AuditLogsDashboardQuery($filters))->paginate($filters['per_page'] ?? null);
+        $orderIds = collect($paginator->items())->pluck('id');
+        $verifiers = Order::query()
+            ->select([
+                'id',
+                DB::raw("json_extract(ocr_data, '$.fields.last_editor.value') as verifier"),
+            ])
+            ->whereIn('id', $orderIds)
+            ->get();
 
-        $items = collect($paginator->items())->map(function ($order) {
+        $items = collect($paginator->items())->map(function ($order) use ($verifiers) {
+            $order->verifier = $verifiers->firstWhere('id', $order->id)->verifier ?? null;
             return [
                     'model' => $order->toArray(),
                     'order' => $order->getAttributesChanges(),

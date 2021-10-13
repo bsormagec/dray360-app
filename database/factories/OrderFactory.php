@@ -5,6 +5,7 @@
 use App\Models\Order;
 use App\Models\Address;
 use Illuminate\Support\Arr;
+use Illuminate\Support\Str;
 use Faker\Generator as Faker;
 
 $factory->define(Order::class, function (Faker $faker) {
@@ -14,7 +15,7 @@ $factory->define(Order::class, function (Faker $faker) {
         'equipment_type_raw_text' => Arr::random(['Container', 'Trailer']),
         'shipment_direction' => Arr::random(['Export', 'Import', 'Domestic']),
         'one_way' => $faker->boolean,
-        'unit_number' => Arr::random(['ACMU8009943', 'HJCU8281988', 'CSQU3054383', 'TOLU4734787', 'LSCU1077379', 'MSKU2666542', 'NYKU3086856', 'BICU1234565']),
+        'unit_number' => Str::random(11),
         'equipment_size' => Arr::random(['20 ft', '40 ft', '45 ft', '48ft']),
         'hazardous' => null, // this should roll up from the line item?
         'reference_number' => $faker->lexify(),

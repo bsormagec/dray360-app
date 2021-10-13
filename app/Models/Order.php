@@ -504,4 +504,39 @@ class Order extends Model implements Auditable
 
         return $status->status_metadata ?? [];
     }
+
+    public function updateEquipmentTypesDictionaryItems(array $data)
+    {
+        if (
+            (
+                ! isset($data['t_equipment_type_id'])
+                && ! isset($data['chassis_equipment_type_id'])
+            )
+            || $this->t_tms_provider_id != 1
+        ) {
+            return;
+        }
+
+        $equipmentTypesQuery = "update t_orders as o
+            left join t_equipment_types as e on (o.t_equipment_type_id = e.id)
+            left join t_dictionary_items as d on (e.tms_equipment_id = d.item_key and o.t_company_id = d.t_company_id and d.item_type='pt-equipmenttype' and d.deleted_at is null)
+            set o.pt_equipmenttype_container_dictid = d.id
+            where o.t_equipment_type_id is not null
+            and o.pt_equipmenttype_container_dictid is null
+            and d.id is not null
+            and o.id = {$this->id}
+        ";
+        $chassisTypesQuery = "update t_orders as o
+            left join t_equipment_types as e on (o.chassis_equipment_type_id = e.id)
+            left join t_dictionary_items as d on (e.tms_equipment_id = d.item_key and o.t_company_id = d.t_company_id and d.item_type='pt-equipmenttype' and d.deleted_at is null)
+            set o.pt_equipmenttype_chassis_dictid = d.id
+            where o.chassis_equipment_type_id is not null
+            and o.pt_equipmenttype_chassis_dictid is null
+            and d.id is not null
+            and o.id = {$this->id}
+        ";
+
+        DB::unprepared($equipmentTypesQuery);
+        DB::unprepared($chassisTypesQuery);
+    }
 }
