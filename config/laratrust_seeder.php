@@ -132,7 +132,7 @@ return [
         'customer-user' => [
             'orders' => 'v,c,e',
             'all-orders' => 'e',
-            'ocr-requests' => 'c,v',
+            'ocr-requests' => 'c,v,e',
             'tms' => 's',
             'ocr-variants' => 'v',
             'dictionary-items' => 'v,c',
