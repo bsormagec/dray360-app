@@ -4,6 +4,7 @@ namespace Tests\Feature;
 
 use Tests\TestCase;
 use App\Models\Order;
+use Illuminate\Http\Response;
 use Tests\Seeds\OrdersTableSeeder;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
 
@@ -50,5 +51,17 @@ class StatusHistoryControllerTest extends TestCase
                     ],
                 ],
             ]);
+    }
+
+    /** @test */
+    public function it_should_return_not_found_if_order_is_deleted()
+    {
+        $this->loginAdmin();
+        (new OrdersTableSeeder())->seedOrderWithPostProcessingComplete();
+        $order = Order::latest()->first();
+        $order->delete();
+
+        $this->getJson(route('status-history.index', ['order_id' => $order->id]))
+            ->assertStatus(Response::HTTP_NOT_FOUND);
     }
 }

@@ -102,7 +102,7 @@ class StatusHistoryController extends Controller
 
     protected function getOrderStatusHistory(Request $request): Collection
     {
-        $order = Order::find($request->get('order_id'));
+        $order = Order::findOrFail($request->get('order_id'));
 
         return OCRRequestStatus::query()
             ->select(['id', 'created_at', 'status', 'status_date', 'company_id'])
