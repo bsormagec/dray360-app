@@ -37,7 +37,7 @@
           </div>
 
           <div class="equipment-type__value">
-            {{ equipmentType ? equipmentType.equipment_display : '---' }}
+            {{ equipmentType ? equipmentType.item_display_name : '---' }}
           </div>
         </div>
       </div>
@@ -59,7 +59,8 @@
           :disabled="isLocked || readonly"
           outlined
           small
-          @click="toggledialg"
+          :loading="isLoading"
+          @click="toggleDialog"
         >
           {{ equipmentType === null ? 'Select' : 'Select Different' }}
         </v-btn>
@@ -68,8 +69,8 @@
         :value="isOpen"
         max-width="56rem"
         scrollable
-        @click:outside="toggledialg"
-        @keydown.esc="toggledialg"
+        @click:outside="toggleDialog"
+        @keydown.esc="toggleDialog"
       >
         <v-card>
           <v-card-title class="pa-0">
@@ -87,7 +88,7 @@
                   text
                   icon
                   color="primary"
-                  @click="toggledialg"
+                  @click="toggleDialog"
                 >
                   <v-icon>mdi-close</v-icon>
                 </v-btn>
@@ -108,8 +109,8 @@
                   <v-row dense>
                     <v-col cols="4">
                       <v-autocomplete
-                        v-model="filters.owner"
-                        :items="equipmentTypeOptions.equipment_owners"
+                        v-model="filters.line"
+                        :items="getOptionsFor('line')"
                         outlined
                         dense
                         clearable
@@ -121,7 +122,7 @@
                     <v-col cols="4">
                       <v-autocomplete
                         v-model="filters.scac"
-                        :items="equipmentTypeOptions.scacs"
+                        :items="getOptionsFor('scac')"
                         dense
                         clearable
                         outlined
@@ -132,8 +133,8 @@
                     </v-col>
                     <v-col cols="4">
                       <v-autocomplete
-                        v-model="filters.prefix"
-                        :items="equipmentTypeOptions.prefix_list"
+                        v-model="filters.lineprefix"
+                        :items="getOptionsFor('lineprefix')"
                         dense
                         clearable
                         outlined
@@ -145,7 +146,7 @@
                     <v-col cols="4">
                       <v-autocomplete
                         v-model="filters.type"
-                        :items="equipmentTypeOptions.equipment_types"
+                        :items="getOptionsFor('type')"
                         dense
                         clearable
                         hide-details
@@ -156,8 +157,8 @@
                     </v-col>
                     <v-col cols="4">
                       <v-autocomplete
-                        v-model="filters.size"
-                        :items="equipmentTypeOptions.equipment_sizes"
+                        v-model="filters.equipmentlength"
+                        :items="getOptionsFor('equipmentlength')"
                         dense
                         clearable
                         outlined
@@ -175,7 +176,7 @@
                   <v-btn
                     text
                     color="primary"
-                    @click="clearSelects"
+                    @click="resetFilters"
                   >
                     Clear
                   </v-btn>
@@ -194,44 +195,39 @@
             </div>
             <v-data-table
               :loading="loading"
-              :headers="headers"
+              :headers="[
+                { text: 'Steamship Line', value: 'item_value.line' },
+                { text: 'Length/Type', value: 'item_value.type' },
+                { text: ' ', value: 'action' }
+              ]"
               fixed-header
-              :items="equipment_matches"
+              :items="fitleredDictionaryItems"
               item-key:item.id
               :hide-default-header="false"
               :hide-default-footer="false"
               scrollable
             >
-              <template
-                slot="item"
-                slot-scope="props"
-              >
-                <tr>
-                  <td>{{ props.item.equipment_owner }}</td>
-                  <td>{{ props.item.equipment_type_and_size }}</td>
-                  <td>
-                    <v-btn
-                      :class="{
-                        'ma-1': hasPermission('all-orders-edit'),
-                        'ma-2': !hasPermission('all-orders-edit')
-                      }"
-                      outlined
-                      color="primary"
-                      @click="() => selectEquipmentType(props.item)"
-                    >
-                      Select
-                    </v-btn>
-                    <v-btn
-                      v-if="isMultiOrderRequest && hasPermission('all-orders-edit')"
-                      class="ma-1"
-                      outlined
-                      color="primary"
-                      @click="() => selectEquipmentType(props.item, true)"
-                    >
-                      Select For All
-                    </v-btn>
-                  </td>
-                </tr>
+              <template v-slot:[`item.action`]="{ item }">
+                <v-btn
+                  :class="{
+                    'ma-1': hasPermission('all-orders-edit'),
+                    'ma-2': !hasPermission('all-orders-edit')
+                  }"
+                  outlined
+                  color="primary"
+                  @click="() => selectEquipmentType(item)"
+                >
+                  Select
+                </v-btn>
+                <v-btn
+                  v-if="isMultiOrderRequest && hasPermission('all-orders-edit')"
+                  class="ma-1"
+                  outlined
+                  color="primary"
+                  @click="() => selectEquipmentType(item, true)"
+                >
+                  Select For All
+                </v-btn>
               </template>
             </v-data-table>
           </v-card-text>
@@ -246,13 +242,16 @@
 
 import FormFieldPresentation from './FormFieldPresentation'
 
-import { getEquipmentTypeOptions, getEquipmentTypes } from '@/store/api_calls/equipment'
+import { getDictionaryItems } from '@/store/api_calls/dictionary_items'
 import { mapState, mapGetters } from 'vuex'
 import orderForm from '@/store/modules/order-form'
 import permissions from '@/mixins/permissions'
+import { dictionaryItemsTypes } from '@/enums/app_objects_types'
+
+import uniq from 'lodash/uniq'
 
 export default {
-  name: 'FormFieldEquipmentType',
+  name: 'FormFieldDictionaryEquipment',
 
   components: { FormFieldPresentation },
 
@@ -260,7 +259,6 @@ export default {
 
   props: {
     companyId: { type: Number, required: true },
-    tmsProviderId: { type: Number, required: true },
     carrier: { type: String, required: false, default: '' },
     label: { type: String, required: false, default: 'SSL Container Type' },
     equipmentSize: { type: String, required: false, default: '' },
@@ -273,101 +271,93 @@ export default {
     readonly: { type: Boolean, required: false, default: false },
   },
 
-  data: (vm) => ({
-
-    equipmentTypeOptions: {
-      equipment_owners: [],
-      equipment_sizes: [],
-      equipment_types: [],
-      scacs: []
-    },
-    equipment_matches: [],
+  data: () => ({
     filters: {
-      display: null,
-      type_and_size: null,
-      type: null,
-      size: null,
-      owner: null,
+      line: null,
       scac: null,
-      prefix: null
+      lineprefix: null,
+      type: null,
+      equipmentlength: null,
     },
+    dictionaryItems: [],
     isOpen: false,
     loading: true,
-    headers: [
-      { text: 'Steamship Line', value: 'equipment_owner' },
-      { text: 'Length/Type', value: 'equipment_type_and_size' },
-      { text: ' ', value: ' ' }
-    ],
-    timerId: null
   }),
 
   computed: {
     ...mapGetters(orderForm.moduleName, ['isMultiOrderRequest', 'isLocked']),
+
+    ...mapState(orderForm.moduleName, {
+      allHighlights: state => state.highlights
+    }),
+
     concatenatedRecognizedText () {
       const scac = (this.unitNumber || '').substring(0, 4)
       const string = `${this.carrier || ''} ${this.equipmentSize || ''} ${this.recognizedText || ''} ${scac}`
 
       return string.trim() === '' ? '--' : string.trim()
     },
-    ...mapState(orderForm.moduleName, {
-      allHighlights: state => state.highlights
-    }),
+
     isLoading () {
       return this.allHighlights[this.references]?.loading || false
+    },
+
+    fitleredDictionaryItems () {
+      return this.dictionaryItems.filter(item => {
+        let pass = true
+        for (const key in this.filters) {
+          if (!this.filters[key]) {
+            continue
+          }
+          if (item.item_value[key] !== this.filters[key]) {
+            pass = false
+          }
+        }
+
+        return pass
+      })
     }
-  },
-  watch: {
-    filters: {
-      handler: function (val) {
-        clearTimeout(this.timerId)
-        this.timerId = setTimeout(() => {
-          this.getMatchingEquipment()
-        }, 250)
-      },
-      deep: true
-    }
-  },
-  async beforeMount () {
-    const [error, response] = await getEquipmentTypeOptions(this.companyId, this.tmsProviderId)
-    if (!error) {
-      this.equipmentTypeOptions = response.data
-    }
-    this.getMatchingEquipment()
-    this.loading = false
   },
 
   methods: {
-    toggledialg () {
-      this.isOpen = !this.isOpen
-    },
-    clearSelects () {
-      this.filters = {
-        display: null,
-        type_and_size: null,
-        type: null,
-        size: null,
-        owner: null,
-        scac: null,
-        prefix: null
-      }
-    },
-    async getMatchingEquipment () {
+    async fetchDictionaryItems () {
       this.loading = true
-      const apiFilters = {}
+      const [error, response] = await getDictionaryItems({
+        'filter[item_type]': dictionaryItemsTypes.ptEquipmenttype,
+        'filter[company_id]': this.companyId,
+      })
 
-      for (const key in this.filters) {
-        if (this.filters[key] === null || this.filters[key] === '') {
-          continue
-        }
-
-        apiFilters[`filter[${key}]`] = this.filters[key]
-      }
-      const [error, response] = await getEquipmentTypes(this.companyId, this.tmsProviderId, apiFilters)
       if (!error) {
-        this.equipment_matches = response.data?.data
-        this.loading = false
+        this.dictionaryItems = response.data
+      }
+      this.loading = false
+    },
+
+    getOptionsFor (key) {
+      return uniq(
+        this.dictionaryItems.map(item => item.item_value[key])
+      )
+        .filter(item => !!item)
+        .sort()
+    },
+
+    async toggleDialog () {
+      this.isOpen = !this.isOpen
+      if (this.dictionaryItems.length === 0 && this.isOpen) {
+        await this.fetchDictionaryItems()
       }
     },
+
+    resetFilters () {
+      this.filters = {
+        line: null,
+        scac: null,
+        lineprefix: null,
+        type: null,
+        equipmentlength: null,
+      }
+    },
+
     selectEquipmentType (e, saveAll = false) {
       this.isOpen = false
       this.$emit('change', { value: e.id, saveAll })

@@ -129,6 +129,10 @@ class UpdateOrderRequest extends FormRequest
             'pt_ref1_type' => 'sometimes|nullable',
             'pt_ref2_type' => 'sometimes|nullable',
             'pt_ref3_type' => 'sometimes|nullable',
+            'pt_equipmenttype_container_dictid' => 'sometimes|nullable',
+            'pt_equipmenttype_container_dictid_verified' => 'sometimes|nullable',
+            'pt_equipmenttype_chassis_dictid' => 'sometimes|nullable',
+            'pt_equipmenttype_chassis_dictid_verified' => 'sometimes|nullable',
         ];
     }
 

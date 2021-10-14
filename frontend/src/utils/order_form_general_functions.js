@@ -57,20 +57,22 @@ export function keyShouldBeParsed (key) {
   const shouldNotBeIgnored = [
     't_equipment_type_id',
     'chassis_equipment_type_id',
-    'tms_template_dictid',
-    'itgcontainer_dictid',
-    'carrier_dictid',
-    'vessel_dictid',
-    'cc_loadtype_dictid',
-    'cc_haulclass_dictid',
-    'cc_orderclass_dictid',
-    'cc_loadedempty_dictid',
-    'termdiv_dictid',
-    'cc_containersize_dictid',
-    'cc_containertype_dictid',
+    // 'tms_template_dictid',
+    // 'itgcontainer_dictid',
+    // 'carrier_dictid',
+    // 'vessel_dictid',
+    // 'cc_loadtype_dictid',
+    // 'cc_haulclass_dictid',
+    // 'cc_orderclass_dictid',
+    // 'cc_loadedempty_dictid',
+    // 'termdiv_dictid',
+    // 'cc_containersize_dictid',
+    // 'cc_containertype_dictid',
+    // 'pt_equipmenttype_container_dictid',
+    // 'pt_equipmenttype_chassis_dictid',
   ]
 
-  if (shouldNotBeIgnored.includes(key)) {
+  if (shouldNotBeIgnored.includes(key) || key.endsWith('_dictid')) {
     return true
   }
 
@@ -183,6 +185,14 @@ export function parseChanges ({ path, value, originalOrder }) {
     {
       field: 'cc_containertype_dictid',
       boolean_field: 'cc_containertype_dictid_verified'
+    },
+    {
+      field: 'pt_equipmenttype_container_dictid',
+      boolean_field: 'pt_equipmenttype_container_dictid_verified'
+    },
+    {
+      field: 'pt_equipmenttype_chassis_dictid',
+      boolean_field: 'pt_equipmenttype_chassis_dictid_verified'
     },
   ]
 

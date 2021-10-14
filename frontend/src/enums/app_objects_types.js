@@ -12,6 +12,7 @@ export const dictionaryItemsTypes = {
   termdiv: 'termdiv',
   ccContainerSize: 'cc-containersize',
   ccContainerType: 'cc-containertype',
+  ptEquipmenttype: 'pt-equipmenttype',
 }
 
 export const objectLocks = {

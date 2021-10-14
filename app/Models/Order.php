@@ -205,6 +205,10 @@ class Order extends Model implements Auditable
         'pt_ref1_type',
         'pt_ref2_type',
         'pt_ref3_type',
+        'pt_equipmenttype_container_dictid',
+        'pt_equipmenttype_container_dictid_verified',
+        'pt_equipmenttype_chassis_dictid',
+        'pt_equipmenttype_chassis_dictid_verified',
     ];
 
     /**
@@ -241,6 +245,8 @@ class Order extends Model implements Auditable
         'cc_containertype_dictid_verified' => 'boolean',
         'eta_date' => 'date:Y-m-d',
         'ssrr_location_address_verified' => 'boolean',
+        'pt_equipmenttype_container_dictid_verified' => 'boolean',
+        'pt_equipmenttype_chassis_dictid_verified' => 'boolean',
     ];
 
     /**
@@ -260,6 +266,8 @@ class Order extends Model implements Auditable
         'cc_containersize_dictid_verified' => AttributeVerified::class,
         'cc_containertype_dictid_verified' => AttributeVerified::class,
         'ssrr_location_address_verified' => AddressVerified::class,
+        'pt_equipmenttype_container_dictid_verified' => AttributeVerified::class,
+        'pt_equipmenttype_chassis_dictid_verified' => AttributeVerified::class,
     ];
 
     protected $objectLockType = ObjectLock::REQUEST_OBJECT;
@@ -313,12 +321,12 @@ class Order extends Model implements Auditable
 
     public function equipmentType()
     {
-        return $this->belongsTo(EquipmentType::class, 't_equipment_type_id');
+        return $this->belongsTo(DictionaryItem::class, 'pt_equipmenttype_container_dictid');
     }
 
     public function chassisEquipmentType()
     {
-        return $this->belongsTo(EquipmentType::class, 'chassis_equipment_type_id');
+        return $this->belongsTo(DictionaryItem::class, 'pt_equipmenttype_chassis_dictid');
     }
 
     public function tmsProvider()
@@ -503,40 +511,5 @@ class Order extends Model implements Auditable
         ])->first(['status', 'status_metadata']);
 
         return $status->status_metadata ?? [];
-    }
-
-    public function updateEquipmentTypesDictionaryItems(array $data)
-    {
-        if (
-            (
-                ! isset($data['t_equipment_type_id'])
-                && ! isset($data['chassis_equipment_type_id'])
-            )
-            || $this->t_tms_provider_id != 1
-        ) {
-            return;
-        }
-
-        $equipmentTypesQuery = "update t_orders as o
-            left join t_equipment_types as e on (o.t_equipment_type_id = e.id)
-            left join t_dictionary_items as d on (e.tms_equipment_id = d.item_key and o.t_company_id = d.t_company_id and d.item_type='pt-equipmenttype' and d.deleted_at is null)
-            set o.pt_equipmenttype_container_dictid = d.id
-            where o.t_equipment_type_id is not null
-            and o.pt_equipmenttype_container_dictid is null
-            and d.id is not null
-            and o.id = {$this->id}
-        ";
-        $chassisTypesQuery = "update t_orders as o
-            left join t_equipment_types as e on (o.chassis_equipment_type_id = e.id)
-            left join t_dictionary_items as d on (e.tms_equipment_id = d.item_key and o.t_company_id = d.t_company_id and d.item_type='pt-equipmenttype' and d.deleted_at is null)
-            set o.pt_equipmenttype_chassis_dictid = d.id
-            where o.chassis_equipment_type_id is not null
-            and o.pt_equipmenttype_chassis_dictid is null
-            and d.id is not null
-            and o.id = {$this->id}
-        ";
-
-        DB::unprepared($equipmentTypesQuery);
-        DB::unprepared($chassisTypesQuery);
     }
 }

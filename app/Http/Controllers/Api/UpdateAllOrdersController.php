@@ -41,7 +41,6 @@ class UpdateAllOrdersController extends Controller
             ->get()
             ->each(function ($order) use ($orderData, $relatedModels, $orderId, $request) {
                 $order->update($orderData);
-                $order->updateEquipmentTypesDictionaryItems($orderData);
 
                 if ($order->id === $orderId) {
                     return;

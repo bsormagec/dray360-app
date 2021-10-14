@@ -25,7 +25,6 @@ use App\Http\Controllers\Api\ImpersonationController;
 use App\Http\Controllers\Api\SearchAddressController;
 use App\Http\Controllers\Api\StatusHistoryController;
 use App\Http\Controllers\Api\ChangePasswordController;
-use App\Http\Controllers\Api\EquipmentTypesController;
 use App\Http\Controllers\Api\MetricsReportsController;
 use App\Http\Controllers\Api\UploadPtImagesController;
 use App\Http\Controllers\Api\DictionaryItemsController;
@@ -42,7 +41,6 @@ use App\Http\Controllers\Api\MetricsReportsExportController;
 use App\Http\Controllers\Api\RequestStatusUpdatesController;
 use App\Http\Controllers\Api\OcrRequestsDoneStatusController;
 use App\Http\Controllers\Api\SendRequestOrdersToTmsController;
-use App\Http\Controllers\Api\EquipmentTypesSelectValuesController;
 use App\Http\Controllers\Api\DownloadOriginalRequestSourceFileController;
 use App\Http\Controllers\Api\DownloadOriginalRequestSourceEmailController;
 
@@ -171,16 +169,8 @@ Route::group(['middleware' => ['auth:sanctum', 'impersonate', 'tenant-aware']], 
         ->name('metrics-export.index');
 
     //companies/1/tms-provider/1/equipment-types
-    Route::get('companies/{company}/tms-provider/{tmsProvider}/equipment-types', EquipmentTypesController::class)
-        ->name('equipment-types.show');
-
-    //companies/1/tms-provider/1/equipment-types
     Route::get('companies/{company}/tms-provider/{tmsProvider}/division-names', DivisionCodesController::class)
         ->name('division-names.show');
-
-    //companies/1/tms-provider/1/equipment-types-options
-    Route::get('companies/{company}/tms-provider/{tmsProvider}/equipment-types-options', EquipmentTypesSelectValuesController::class)
-        ->name('equipment-types-options.show');
 
     // Send all the request orders to the tms
     Route::post('ocr/requests/{request_id}/send-to-tms', SendRequestOrdersToTmsController::class)

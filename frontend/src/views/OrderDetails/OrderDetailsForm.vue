@@ -620,35 +620,33 @@
             display-key-value
             @change="event => handleChange({ path:'itgcontainer_dictid', ...event})"
           />
-          <FormFieldEquipmentType
+          <FormFieldDictionaryEquipment
             v-if="fieldShouldBeShown('equipment_type')"
             :label="options.labels.t_equipment_type || 'SSL Container Type'"
-            references="t_equipment_type_id"
+            references="pt_equipmenttype_container_dictid"
             :company-id="order.t_company_id"
-            :tms-provider-id="order.t_tms_provider_id"
             :carrier="order.carrier"
             :equipment-size="order.equipment_size"
             :equipment-type="order.equipment_type"
             :recognized-text="order.equipment_type_raw_text"
             :unit-number="order.unit_number"
-            :verified="order.equipment_type_verified"
+            :verified="order.pt_equipmenttype_container_dictid_verified"
             :readonly="fieldShouldBeReadonly('equipment_type')"
-            @change="event => handleChange({ path:'t_equipment_type_id', ...event})"
+            @change="event => handleChange({ path:'pt_equipmenttype_container_dictid', ...event})"
           />
-          <FormFieldEquipmentType
+          <FormFieldDictionaryEquipment
             v-if="fieldShouldBeShown('chassis_equipment_type')"
             :label="options.labels.chassis_equipment_type || 'Chassis Equipment Type'"
-            references="chassis_equipment_type_id"
+            references="pt_equipmenttype_chassis_dictid"
             :company-id="order.t_company_id"
-            :tms-provider-id="order.t_tms_provider_id"
             :carrier="order.carrier"
             :equipment-size="order.equipment_size"
             :equipment-type="order.chassis_equipment_type"
             :recognized-text="order.equipment_type_raw_text"
             :unit-number="order.unit_number"
-            :verified="order.chassis_equipment_type_verified"
+            :verified="order.pt_equipmenttype_chassis_dictid_verified"
             :readonly="fieldShouldBeReadonly('chassis_equipment_type')"
-            @change="event => handleChange({ path:'chassis_equipment_type_id', ...event})"
+            @change="event => handleChange({ path:'pt_equipmenttype_chassis_dictid', ...event})"
           />
 
           <FormFieldInput
@@ -1158,7 +1156,7 @@ import FormFieldTextArea from '@/components/FormFields/FormFieldTextArea'
 import FormFieldDictionaryItem from '@/components/FormFields/FormFieldDictionaryItem'
 import FormFieldAddressSwitchVerify from '@/components/FormFields/FormFieldAddressSwitchVerify'
 import FormFieldItineraryEdit from '@/components/FormFields/FormFieldItineraryEdit'
-import FormFieldEquipmentType from '@/components/FormFields/FormFieldEquipmentType'
+import FormFieldDictionaryEquipment from '@/components/FormFields/FormFieldDictionaryEquipment'
 import OutlinedButtonGroup from '@/components/General/OutlinedButtonGroup'
 import FormFieldSelectDivisionCodes from '@/components/FormFields/FormFieldSelectDivisionCodes'
 import FormFieldSelect from '@/components/FormFields/FormFieldSelect'
@@ -1179,7 +1177,7 @@ export default {
     FormFieldTextArea,
     FormFieldAddressSwitchVerify,
     FormFieldItineraryEdit,
-    FormFieldEquipmentType,
+    FormFieldDictionaryEquipment,
     OutlinedButtonGroup,
     FormFieldSelect,
     FormFieldSelectDivisionCodes,
