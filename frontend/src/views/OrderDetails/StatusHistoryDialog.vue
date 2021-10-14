@@ -74,7 +74,7 @@
               {{ `Company: ${historyLabels.companyName}` }}
             </div>
             <div class="caption">
-              {{ `Variant: ${historyLabels.variantName}` }}
+              {{ `Variant: ${historyLabels.variantName} (${historyLabels.variantId})` }}
             </div>
             <div class="caption mb-3">
               {{ `Abbyy Verifier: ${historyLabels.lastEditor}` }}
@@ -184,6 +184,7 @@ export default {
       return {
         companyName: this.order.company?.name || '---',
         variantName: this.order.variant_name || '---',
+        variantId: this.order.variant_id || '---',
         lastEditor: this.order.ocr_data?.fields?.last_editor?.value || '---'
       }
     }
