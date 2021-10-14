@@ -32,7 +32,7 @@
 
           <div class="address-book-modal__body__block">
             <span class="form-field__label block__left">Address as Recognized</span>
-            <span class="block__right">{{ recognizedText }}</span>
+            <span class="block__right fluid-text">{{ recognizedText }}</span>
           </div>
 
           <div class="address-book-modal__body__block">
@@ -245,6 +245,9 @@ export default {
       &:last-child {
         text-align: right;
         width: 60%;
+        &.fluid-text {
+          line-break: anywhere;
+        }
       }
     }
   }

@@ -9,7 +9,7 @@ use Faker\Generator as Faker;
 
 $factory->define(Company::class, function (Faker $faker) {
     return [
-        'name' => $faker->company,
+        'name' => $faker->unique()->company,
         't_address_id' => factory(Address::class),
         'email_intake_address' => $faker->email,
         'email_intake_address_alt' => $faker->email,
