@@ -75,6 +75,41 @@ class CreateOrUpdateVerifiedAddressEntryTest extends TestCase
     }
 
     /** @test */
+    public function it_should_not_create_cache_entry_for_deleted_addresses()
+    {
+        $order = Order::orderByDesc('id')->first();
+        $address = factory(Address::class)->create();
+        $company = factory(Company::class)->create();
+        $tmsProvider = factory(TMSProvider::class)->create();
+        $orderAddressEvent = factory(OrderAddressEvent::class)->create([
+            't_address_verified' => false,
+            't_order_id' => $order->id,
+        ]);
+        $order->update([
+            'bill_to_address_verified' => false,
+            'bill_to_address_id' => $address->id,
+            't_company_id' => $company->id,
+            't_tms_provider_id' => $tmsProvider->id,
+            ]);
+        $tmsCode = CompanyAddressTMSCode::createFrom('1', $address, $company, $tmsProvider);
+        $tmsCode2 = CompanyAddressTMSCode::createFrom('1', $orderAddressEvent->t_address_id, $company, $tmsProvider);
+
+        $tmsCode->delete();
+        $tmsCode2->delete();
+
+        $this->putJson(route('orders.update', $order->id), [
+                'bill_to_address_verified' => true,
+                'order_address_events' => [
+                    $orderAddressEvent->setAttribute('t_address_verified', true)->toArray()
+                ],
+            ])
+            ->assertStatus(Response::HTTP_OK);
+
+
+        $this->assertDatabaseCount('t_verified_addresses', 0);
+    }
+
+    /** @test */
     public function it_should_update_the_verify_count_if_the_address_was_already_verified()
     {
         $order = Order::orderByDesc('id')->first();

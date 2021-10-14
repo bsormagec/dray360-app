@@ -2,6 +2,7 @@
 
 namespace App\Listeners;
 
+use Exception;
 use App\Models\Order;
 use App\Models\Address;
 use App\Events\AddressVerified;
@@ -25,8 +26,12 @@ class CreateOrUpdateVerifiedAddressEntry implements ShouldQueue
             return;
         }
 
-        $address = $this->getAddress($model);
-        $baseData = $this->getBaseData($model, $address);
+        try {
+            $address = $this->getAddress($model);
+            $baseData = $this->getBaseData($model, $address);
+        } catch (Exception $e) {
+            return null;
+        }
 
         $verifiedAddress = VerifiedAddress::firstOrCreate($baseData, [
             'verified_count' => 0,
