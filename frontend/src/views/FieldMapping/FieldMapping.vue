@@ -58,10 +58,27 @@
               Add
             </v-btn>
           </h2>
+          <v-card
+            elevation="0"
+            tile
+            flat
+            class="ma-3"
+          >
+            <v-text-field
+              v-model="searchQuery"
+              hide-details
+              dense
+              clearable
+              prepend-icon="mdi-magnify"
+              placeholder="Search by field name"
+            />
+            <v-divider class="my-2" />
+          </v-card>
           <FieldMappingList
             :selected-field="selectedField"
             :loading="loading"
             :form-changed="formChanged"
+            :query="searchQuery"
             @change="fieldMapSelected"
           />
         </v-col>
@@ -152,6 +169,7 @@ export default {
     },
     formChanged: false,
     customMapping: false,
+    searchQuery: ''
   }),
 
   computed: {
@@ -222,6 +240,7 @@ export default {
       fieldMapsActionTypes.deleteFieldMap,
       fieldMapsActionTypes.resetFieldMap,
       fieldMapsActionTypes.saveFieldMaps,
+      fieldMapsActionTypes.updateFieldMapsNames,
     ]),
 
     clearSelection () {
@@ -321,7 +340,9 @@ export default {
         cancelText: 'Cancel',
         onConfirm: d3CanonName => {
           const fieldMap = cloneDeep({ ...this.emptyFormFieldMap, d3canon_name: d3CanonName })
+          if (this.customMapping) fieldMap.d3canon_name = null
           this.saveFieldMap({ field: d3CanonName, fieldMap, newFieldMap: true })
+          this.updateFieldMapsNames()
         },
         onCancel: () => {}
       })

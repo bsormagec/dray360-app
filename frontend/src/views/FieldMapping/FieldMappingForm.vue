@@ -164,8 +164,11 @@
         clearable
         v-bind="fieldChangedAttributes('shipment_direction_filter')"
       />
-      <v-text-field
+      <v-autocomplete
         v-model="formFieldMap.d3canon_name"
+        :items="fieldMapsNames"
+        item-value="id"
+        item-text="name"
         :class="{'field-mapping-form-field__changed': hasChanged('d3canon_name')}"
         :disabled="viewOnly"
         label="D3canon Name"
@@ -382,6 +385,7 @@ export default {
       roles: state => state.roles,
       fieldMaps: state => state.fieldMaps,
       defaultFieldMaps: state => state.defaultFieldMaps,
+      fieldMapsNames: state => state.fieldMapsNames,
     }),
 
     abbySourceField () {
@@ -428,10 +432,11 @@ export default {
   beforeMount () {
     this.selectedFieldUpdated()
     this.getRoles()
+    this.updateFieldMapsNames()
   },
 
   methods: {
-    ...mapActions(fieldMaps.moduleName, [fieldMapsActionTypes.getRoles]),
+    ...mapActions(fieldMaps.moduleName, [fieldMapsActionTypes.getRoles, fieldMapsActionTypes.updateFieldMapsNames]),
 
     selectedFieldUpdated () {
       this.formFieldMap = { ...cloneDeep(this.fieldMaps[this.selectedField]) }
@@ -514,7 +519,7 @@ export default {
 
 .field-mapping-form {
   height: 100%;
-  max-height: calc(100vh - #{rem(152)});
+  max-height: calc(100vh - #{rem(176)});
   overflow-y: auto;
 }
 

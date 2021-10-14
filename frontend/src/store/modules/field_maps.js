@@ -10,6 +10,7 @@ const mutationTypes = {
   deleteFieldMap: 'DELETE_FIELD_MAP',
   setFieldMapsFilters: 'SET_FIELD_MAPS_FILTERS',
   updateDefaultFieldMaps: 'UPDATE_DEFAULT_FIELD_MAPS',
+  setFieldMapsNames: 'SET_FIELD_MAPS_NAMES',
   setRoles: 'SET_ROLES',
   setAudits: 'SET_AUDITS',
 }
@@ -20,6 +21,7 @@ export const actionTypes = {
   deleteFieldMap: 'deleteFieldMap',
   resetFieldMap: 'resetFieldMap',
   setFieldMapsFilters: 'setFieldMapsFilters',
+  updateFieldMapsNames: 'updateFieldMapsNames',
   saveFieldMaps: 'saveFieldMaps',
   getRoles: 'getRoles',
 }
@@ -27,6 +29,7 @@ export const actionTypes = {
 const initialState = {
   roles: [],
   fieldMaps: null,
+  fieldMapsNames: [],
   previousLevelFieldMaps: null,
   audits: [],
   defaultFieldMaps: null,
@@ -59,6 +62,13 @@ const mutations = {
     const newFieldMaps = { ...cloneDeep(state.fieldMaps) }
     delete newFieldMaps[field]
     state.fieldMaps = newFieldMaps
+  },
+
+  [mutationTypes.setFieldMapsNames] (state) {
+    const newFieldMapsNames = { ...cloneDeep(state.fieldMaps) }
+    state.fieldMapsNames = Object.keys(newFieldMapsNames)
+      .sort()
+      .map(key => ({ id: key, name: newFieldMapsNames[key].d3canon_name }))
   },
 
   [mutationTypes.setFieldMapsFilters] (state, { filters = {} }) {
@@ -151,6 +161,10 @@ const actions = {
     }
 
     return [error, data]
+  },
+
+  [actionTypes.updateFieldMapsNames] ({ commit }) {
+    commit(mutationTypes.setFieldMapsNames)
   },
 
   async [actionTypes.getRoles] ({ commit, state }) {

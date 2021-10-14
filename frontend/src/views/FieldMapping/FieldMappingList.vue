@@ -7,7 +7,7 @@
       nav
       class="px-0 pt-0"
     >
-      <template v-for="(fieldMap, key) in fieldMaps">
+      <template v-for="(fieldMap, key) in computedFieldMaps">
         <v-list-item
           :key="key"
           :value="key"
@@ -81,6 +81,11 @@ export default {
       required: true,
       default: false,
     },
+    query: {
+      type: String,
+      require: true,
+      default: ''
+    }
   },
 
   data: () => ({
@@ -91,6 +96,17 @@ export default {
       fieldMaps: 'sortedFieldMaps',
       fieldMapsChanges: 'fieldMapsChanges',
     }),
+
+    computedFieldMaps () {
+      const queryString = (this.query || '').toLowerCase().trim()
+      if (queryString !== '') {
+        return Object.keys(this.fieldMaps)
+          .filter(k => k.indexOf(queryString) >= 0)
+          .reduce((o, k) => ({ ...o, [k]: this.fieldMaps[k] }), {})
+      } else {
+        return this.fieldMaps
+      }
+    }
   },
 
   methods: {
@@ -134,7 +150,7 @@ export default {
 <style lang="scss" scoped>
 .field-mapping__list-container {
   height: 100%;
-  max-height: calc(100vh - #{rem(152)});
+  max-height: calc(100vh - #{rem(205)});
   overflow-y: auto;
 }
 
