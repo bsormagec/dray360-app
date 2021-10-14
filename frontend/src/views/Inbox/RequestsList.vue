@@ -92,18 +92,28 @@
       />
     </v-overlay>
     <v-snackbar
-      v-model="newRequestsAvailable"
+      v-model="requestsAvailable"
       :timeout="-1"
+      right
+      top
     >
-      <div class="refresh-msg d-flex align-center justify-space-between">
-        New requests available.
+      New requests available
+      <template v-slot:action="{ attrs }">
         <v-btn
           text
+          v-bind="attrs"
           @click="refreshRequests"
         >
           REFRESH
         </v-btn>
-      </div>
+        <v-btn
+          text
+          v-bind="attrs"
+          @click="requestsAvailable = false"
+        >
+          Close
+        </v-btn>
+      </template>
     </v-snackbar>
   </div>
 </template>
@@ -157,6 +167,7 @@ export default {
         updateType: ''
       },
       showRefreshWheel: false,
+      requestsAvailable: false,
     }
   },
 
@@ -185,6 +196,13 @@ export default {
       this.startLoading()
       this.fetchRequests()
     },
+
+    newRequestsAvailable: {
+      handler (newValue) {
+        this.requestsAvailable = newValue
+      },
+      deep: true
+    }
   },
 
   created () {
@@ -292,6 +310,7 @@ export default {
       const currentRequest = cloneDeep(this.items[index])
       this.$root.$emit(events.requestsRefreshed, currentRequest)
       this.handleChange(currentRequest)
+      this.requestsAvailable = false
     },
 
     async requestUploaded (requestsList) {
