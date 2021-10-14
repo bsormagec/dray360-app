@@ -40,8 +40,8 @@
           prepend-icon="mdi-account-circle"
           no-action
           color="white"
-          :value="subMenuOpen"
-          @click.prevent.stop="setShowSubMenu(true)"
+          :value="subMenuOpen && menusOpen.admin"
+          @click.prevent.stop="setShowSubMenu('admin', true)"
         >
           <template v-slot:activator>
             <v-list-item-title>
@@ -49,7 +49,7 @@
             </v-list-item-title>
           </template>
 
-          <v-list-item @click="setShowSubMenu(false)">
+          <v-list-item @click="setShowSubMenu('admin', false)">
             <v-list-item-icon>
               <v-icon>mdi-arrow-left</v-icon>
             </v-list-item-icon>
@@ -58,6 +58,39 @@
 
           <v-list-item
             v-for="(item, i) in adminMenuItems"
+            :key="i"
+            link
+            :to="item.path"
+            :href="item.href"
+            :target="item.target || '_blank'"
+          >
+            <v-list-item-title>{{ item.name }}</v-list-item-title>
+          </v-list-item>
+        </v-list-group>
+
+        <v-list-group
+          v-if="canViewOtherCompanies()"
+          prepend-icon="mdi-view-dashboard"
+          no-action
+          color="white"
+          :value="subMenuOpen && menusOpen.reporting"
+          @click.prevent.stop="setShowSubMenu('reporting', true)"
+        >
+          <template v-slot:activator>
+            <v-list-item-title>
+              Reporting
+            </v-list-item-title>
+          </template>
+
+          <v-list-item @click="setShowSubMenu('reporting', false)">
+            <v-list-item-icon>
+              <v-icon>mdi-arrow-left</v-icon>
+            </v-list-item-icon>
+            <v-list-item-title>Reporting</v-list-item-title>
+          </v-list-item>
+
+          <v-list-item
+            v-for="(item, i) in reportingMenuItems"
             :key="i"
             link
             :to="item.path"
@@ -117,6 +150,10 @@ export default {
 
   data: () => ({
     subMenuOpen: false,
+    menusOpen: {
+      admin: false,
+      reporting: false,
+    },
     loading: false,
   }),
 
@@ -135,21 +172,24 @@ export default {
         { name: 'Nova', href: '/nova', hasPermission: this.hasPermission('nova-view') },
         { name: 'Horizon', href: '/horizon', hasPermission: this.hasPermission('nova-view') },
         { name: 'Websockets', href: '/laravel-websockets', hasPermission: this.hasPermission('nova-view') },
-        { name: 'Telescope', href: '/telescope', hasPermission: this.hasPermission('nova-view') },
         { name: 'Roles and permissions', href: '/authorization', hasPermission: this.hasPermission('nova-view') },
         { name: 'Sentry', href: 'https://sentry.io/organizations/draymaster/issues/?project=5285677', hasPermission: this.hasPermission('nova-view') },
         { name: 'Rules Editor', path: '/rules-editor', target: '_self', hasPermission: this.hasPermission('rules-editor-view') },
-        { name: 'Usage Stats', href: '/nova/usage-metrics', hasPermission: this.hasPermission('nova-view') },
-        { name: 'Audit Logs', path: '/audit-logs', target: '_self', hasPermission: this.hasPermission('audit-logs-view') },
-        { name: 'Comments Logs', path: '/comments-logs', target: '_self', hasPermission: this.hasPermission('orders-view') },
         { name: 'RefsCustoms Mapping', href: '/companies/refs-custom-mapping', hasPermission: this.hasPermission('nova-view') },
         { name: 'Field Mapping Portal', path: '/field-mapping', target: '_self', hasPermission: this.hasPermission('field-maps-view') },
       ].filter((item) => item.hasPermission)
     },
 
+    reportingMenuItems () {
+      return [
+        { name: 'Accounting Dashboard', path: '/accounting-dashboard', target: '_self', hasPermission: this.hasPermission('metrics-view') },
+        { name: 'Audit Logs', path: '/audit-logs', target: '_self', hasPermission: this.hasPermission('audit-logs-view') },
+        { name: 'Comments Logs', path: '/comments-logs', target: '_self', hasPermission: this.hasPermission('orders-view') },
+      ]
+    },
+
     menuItems () {
       return [
-        { name: 'Accounting Dashboard', icon: 'mdi-view-dashboard', path: '/accounting-dashboard', target: '_self', hasPermission: this.hasPermission('metrics-view') },
         { name: 'inbox', path: '/inbox', icon: 'mdi-inbox', hasPermission: this.hasPermission('orders-view') },
         { name: 'upload images', icon: 'mdi-upload', events: { click: this.openUploadImages }, hasPermission: this.hasPermission('pt-images-create') },
         { name: 'search', path: '/search', icon: 'mdi-magnify', hasPermission: this.hasPermission('orders-view') },
@@ -195,7 +235,11 @@ export default {
       this.$root.$emit(events.openPtFileUploadDialog)
     },
 
-    setShowSubMenu (value) {
+    setShowSubMenu (prop, value) {
+      for (const key in this.menusOpen) {
+        this.menusOpen[key] = false
+      }
+      this.menusOpen[prop] = value
       this.subMenuOpen = value
     },
   },
@@ -219,7 +263,7 @@ $sidebarbackground: url("../../assets/images/sidebarbackground.png");
         left: 0;
         height: 100%;
         width: 62px;
-        border-right: 1px solid rgba(255, 255, 255, .2);
+        // border-right: 1px solid rgba(255, 255, 255, .2);
     }
 }
 
@@ -260,16 +304,16 @@ $sidebarbackground: url("../../assets/images/sidebarbackground.png");
       }
     }
 
-    .v-list-item {
-      .v-list-item__icon.v-list-group__header__prepend-icon {
-        border-top: 1px solid rgba(255, 255, 255, .2);
-        border-bottom: none;
-      }
+    // .v-list-item {
+    //   .v-list-item__icon.v-list-group__header__prepend-icon {
+    //     border-top: 1px solid rgba(255, 255, 255, .2);
+    //     border-bottom: none;
+    //   }
 
-      .v-list-item__icon.v-list-group__header__append-icon {
-        border: none;
-      }
-    }
+    //   .v-list-item__icon.v-list-group__header__append-icon {
+    //     border: none;
+    //   }
+    // }
   }
 
   .v-item-group {
@@ -293,16 +337,16 @@ $sidebarbackground: url("../../assets/images/sidebarbackground.png");
       border-radius: 0;
     }
 
-    &:last-child {
-      .v-list-item__icon {
-        border-bottom: 1px solid rgba(255, 255, 255, .2);
-      }
-    }
+    // &:last-child {
+    //   .v-list-item__icon {
+    //     border-bottom: 1px solid rgba(255, 255, 255, .2);
+    //   }
+    // }
 
     &__icon {
       min-width: auto;
       margin: 0;
-      border-top: 1px solid rgba(255, 255, 255, .2);
+      // border-top: 1px solid rgba(255, 255, 255, .2);
       z-index: 2;
 
       .v-icon {
