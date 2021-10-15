@@ -56,8 +56,8 @@ class FeedbacksListQuery extends QueryBuilder
                 if ($class == OCRRequest::class) {
                     return $query->join('t_job_latest_state', function ($join) use ($value) {
                         $join->on('t_job_latest_state.id', '=', 'commentable_id')
-                            ->whereNull('order_id')
-                            ->where('request_id', 'like', "{$value}%");
+                            ->whereNull('t_job_latest_state.order_id')
+                            ->where('t_job_latest_state.request_id', 'like', "{$value}%");
                     });
                 }
 
