@@ -349,7 +349,7 @@
         <FormFieldSelect
           v-if="fieldShouldBeShown('shipment_direction')"
           references="shipment_direction"
-          :label="options.labels.shipment_direction || 'Shipment direction'"
+          :label="options.labels.shipment_direction || 'Shipment Direction'"
           :value="order.shipment_direction"
           :items="shipmentDirectionFromConfig"
           :display-value="shipmentDirectionDisplayValue"
@@ -546,7 +546,7 @@
         <FormFieldInput
           v-if="fieldShouldBeShown('pt_ref1_text')"
           references="pt_ref1_text"
-          :label="options.labels.pt_ref1_text || 'PT ref1 text'"
+          :label="options.labels.pt_ref1_text || 'PT Ref1 Text'"
           :value="order.pt_ref1_text"
           :edit-mode="editMode"
           :readonly="fieldShouldBeReadonly('pt_ref1_text')"
@@ -555,7 +555,7 @@
         <FormFieldInput
           v-if="fieldShouldBeShown('pt_ref1_type')"
           references="pt_ref1_type"
-          :label="options.labels.pt_ref1_type || 'Pt ref1 type'"
+          :label="options.labels.pt_ref1_type || 'Pt Ref1 Type'"
           :value="order.pt_ref1_type"
           :edit-mode="editMode"
           :readonly="fieldShouldBeReadonly('pt_ref1_type')"
@@ -564,7 +564,7 @@
         <FormFieldInput
           v-if="fieldShouldBeShown('pt_ref2_text')"
           references="pt_ref2_text"
-          :label="options.labels.pt_ref2_text || 'PT ref2 text'"
+          :label="options.labels.pt_ref2_text || 'PT Ref2 Text'"
           :value="order.pt_ref2_text"
           :edit-mode="editMode"
           :readonly="fieldShouldBeReadonly('pt_ref2_text')"
@@ -573,7 +573,7 @@
         <FormFieldInput
           v-if="fieldShouldBeShown('pt_ref2_type')"
           references="pt_ref2_type"
-          :label="options.labels.pt_ref2_type || 'Pt ref2 type'"
+          :label="options.labels.pt_ref2_type || 'Pt Ref2 Type'"
           :value="order.pt_ref2_type"
           :edit-mode="editMode"
           :readonly="fieldShouldBeReadonly('pt_ref2_type')"
@@ -582,7 +582,7 @@
         <FormFieldInput
           v-if="fieldShouldBeShown('pt_ref3_text')"
           references="pt_ref3_text"
-          :label="options.labels.pt_ref3_text || 'PT ref3 text'"
+          :label="options.labels.pt_ref3_text || 'PT Ref3 Text'"
           :value="order.pt_ref3_text"
           :edit-mode="editMode"
           :readonly="fieldShouldBeReadonly('pt_ref3_text')"
@@ -591,7 +591,7 @@
         <FormFieldInput
           v-if="fieldShouldBeShown('pt_ref3_type')"
           references="pt_ref3_type"
-          :label="options.labels.pt_ref3_type || 'Pt ref3 type'"
+          :label="options.labels.pt_ref3_type || 'Pt Ref3 Type'"
           :value="order.pt_ref3_type"
           :edit-mode="editMode"
           :readonly="fieldShouldBeReadonly('pt_ref3_type')"
@@ -652,7 +652,7 @@
           <FormFieldInput
             v-if="fieldShouldBeShown('unit_number')"
             references="unit_number"
-            :label="options.labels.unit_number || 'Unit number'"
+            :label="options.labels.unit_number || 'Unit Number'"
             :value="order.unit_number"
             :edit-mode="editMode"
             :managed-by-template="managedByTemplate('unit_number')"
@@ -662,11 +662,20 @@
           <FormFieldInput
             v-if="fieldShouldBeShown('seal_number')"
             references="seal_number"
-            :label="options.labels.seal_number || 'Seal number'"
+            :label="options.labels.seal_number || 'Seal Number'"
             :value="order.seal_number"
             :edit-mode="editMode"
             :readonly="fieldShouldBeReadonly('seal_number')"
             @change="event => handleChange({ path:'seal_number', ...event})"
+          />
+          <FormFieldInput
+            v-if="fieldShouldBeShown('trailer_number')"
+            references="trailer_number"
+            :label="options.labels.trailer_number || 'Trailer Number'"
+            :value="order.trailer_number"
+            :edit-mode="editMode"
+            :readonly="fieldShouldBeReadonly('trailer_number')"
+            @change="event => handleChange({ path:'trailer_number', ...event})"
           />
           <FormFieldInput
             v-if="fieldShouldBeShown('temperature')"
@@ -726,7 +735,7 @@
           <FormFieldInput
             v-if="fieldShouldBeShown('reference_number')"
             references="reference_number"
-            :label="options.labels.reference_number || 'Reference number'"
+            :label="options.labels.reference_number || 'Reference Number'"
             :value="order.reference_number"
             :edit-mode="editMode"
             :readonly="fieldShouldBeReadonly('reference_number')"
@@ -735,7 +744,7 @@
           <FormFieldInput
             v-if="fieldShouldBeShown('customer_number')"
             references="customer_number"
-            :label="options.labels.customer_number || 'Customer number'"
+            :label="options.labels.customer_number || 'Customer Number'"
             :value="order.customer_number === null ? '---' : order.customer_number"
             :edit-mode="editMode"
             :readonly="fieldShouldBeReadonly('customer_number')"
@@ -744,7 +753,7 @@
           <FormFieldInput
             v-if="fieldShouldBeShown('load_number')"
             references="load_number"
-            :label="options.labels.load_number || 'Load number'"
+            :label="options.labels.load_number || 'Load Number'"
             :value="order.load_number"
             :edit-mode="editMode"
             :readonly="fieldShouldBeReadonly('load_number')"
@@ -753,7 +762,7 @@
           <FormFieldInput
             v-if="fieldShouldBeShown('purchase_order_number')"
             references="purchase_order_number"
-            :label="options.labels.purchase_order_number || 'Purchase Order number'"
+            :label="options.labels.purchase_order_number || 'Purchase Order Number'"
             :value="order.purchase_order_number"
             :edit-mode="editMode"
             :readonly="fieldShouldBeReadonly('purchase_order_number')"
@@ -762,7 +771,7 @@
           <FormFieldInput
             v-if="fieldShouldBeShown('release_number')"
             references="release_number"
-            :label="options.labels.release_number || 'Release number'"
+            :label="options.labels.release_number || 'Release Number'"
             :value="order.release_number"
             :edit-mode="editMode"
             :readonly="fieldShouldBeReadonly('release_number')"
@@ -771,7 +780,7 @@
           <FormFieldInput
             v-if="fieldShouldBeShown('pickup_number')"
             references="pickup_number"
-            :label="options.labels.pickup_number || 'Pickup number'"
+            :label="options.labels.pickup_number || 'Pickup Number'"
             :value="order.pickup_number"
             :edit-mode="editMode"
             :readonly="fieldShouldBeReadonly('pickup_number')"
@@ -843,7 +852,7 @@
           <FormFieldDate
             v-if="fieldShouldBeShown('appointment_date')"
             references="pickup_by_date"
-            :label="options.labels.appointment_date || 'Pickup by date'"
+            :label="options.labels.appointment_date || 'Pickup by Date'"
             :value="order.pickup_by_date"
             :edit-mode="editMode"
             :readonly="fieldShouldBeReadonly('appointment_date')"
@@ -852,7 +861,7 @@
           <FormFieldTimeMask
             v-if="fieldShouldBeShown('appointment_time')"
             references="pickup_by_time"
-            :label="options.labels.appointment_time || 'Pickup by time'"
+            :label="options.labels.appointment_time || 'Pickup by Time'"
             :value="order.pickup_by_time"
             :edit-mode="editMode"
             :readonly="fieldShouldBeReadonly('appointment_time')"
@@ -876,10 +885,28 @@
             :readonly="fieldShouldBeReadonly('cutoff_time')"
             @change="event => handleChange({ path:'cutoff_time', ...event})"
           />
+          <FormFieldDate
+            v-if="fieldShouldBeShown('equipment_available_date')"
+            references="equipment_available_date"
+            :label="options.labels.equipment_available_date || 'Equipment Available Date'"
+            :value="order.equipment_available_date"
+            :edit-mode="editMode"
+            :readonly="fieldShouldBeReadonly('equipment_available_date')"
+            @change="event => handleChange({ path: 'equipment_available_date', ...event })"
+          />
+          <FormFieldTimeMask
+            v-if="fieldShouldBeShown('equipment_available_time')"
+            references="equipment_available_time"
+            :label="options.labels.equipment_available_time || 'Equipment Available Time'"
+            :value="order.equipment_available_time"
+            :edit-mode="editMode"
+            :readonly="fieldShouldBeReadonly('equipment_available_time')"
+            @change="event => handleChange({ path:'equipment_available_time', ...event })"
+          />
           <FormFieldInput
             v-if="fieldShouldBeShown('booking_number')"
             references="booking_number"
-            :label="options.labels.booking_number || 'Booking number'"
+            :label="options.labels.booking_number || 'Booking Number'"
             :value="order.booking_number === null ? '---' : order.booking_number"
             :edit-mode="editMode"
             :readonly="fieldShouldBeReadonly('booking_number')"
@@ -930,7 +957,7 @@
           <FormFieldTextArea
             v-if="fieldShouldBeShown('bill_comment')"
             references="bill_comment"
-            :label="options.labels.bill_comment || 'Billing comments'"
+            :label="options.labels.bill_comment || 'Billing Comments'"
             :value="order.bill_comment"
             :edit-mode="editMode"
             :readonly="fieldShouldBeReadonly('bill_comment')"
@@ -1067,7 +1094,7 @@
           <FormFieldTextArea
             v-if="fieldShouldBeShown('ship_comment')"
             references="ship_comment"
-            :label="options.labels.ship_comment || 'Shipment comments'"
+            :label="options.labels.ship_comment || 'Shipment Comments'"
             :value="order.ship_comment"
             :edit-mode="editMode"
             :readonly="fieldShouldBeReadonly('ship_comment')"

@@ -36,7 +36,7 @@ class AuditLogsDashboardController extends Controller
         $verifiers = Order::query()
             ->select([
                 'id',
-                DB::raw("json_extract(ocr_data, '$.fields.last_editor.value') as verifier"),
+                DB::raw("json_unquote(json_extract(ocr_data, '$.fields.last_editor.value')) as verifier"),
             ])
             ->whereIn('id', $orderIds)
             ->get();

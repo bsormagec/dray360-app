@@ -15,59 +15,6 @@ use App\Models\Traits\ValidatesAddresses;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use App\Models\Traits\VerifiesUserSelectedAttributes;
 
-/**
- * @property \Illuminate\Database\Eloquent\Collection $orderAddressEvents
- * @property \Illuminate\Database\Eloquent\Collection $orderLineItems
- * @property \App\Models\OCRRequest $ocrRequest
- * @property \App\Models\Address $billToAddress
- * @property \App\Models\Address $portRampOfOriginAddress
- * @property \App\Models\Address $portRampOfDestinationAddress
- * @property string $id
- * @property string $request_id
- * @property string $shipment_designation
- * @property string $equipment_type_raw_text
- * @property string $shipment_direction
- * @property boolean $one_way
- * @property string $unit_number
- * @property string $equipment_size
- * @property boolean $hazardous
- * @property boolean $expedite
- * @property string $reference_number
- * @property string $seal_number
- * @property string $vessel
- * @property string $voyage
- * @property string $master_bol_mawb
- * @property string $house_bol_hawb
- * @property string $booking_number
- * @property string $bill_of_lading
- * @property string $bill_to_address_id
- * @property string $port_ramp_of_origin_address_id
- * @property string $port_ramp_of_destination_address_id
- * @property array $ocr_data
- * @property string $pickup_number
- * @property \Carbon\Carbon $pickup_by_date
- * @property \Carbon\Carbon $pickup_by_time
- * @property \Carbon\Carbon $cutoff_date
- * @property \Carbon\Carbon $cutofF_time
- * @property boolean $bill_to_address_verified
- * @property string $bill_to_address_raw_text
- * @property boolean $port_ramp_of_origin_address_verified
- * @property string $port_ramp_of_origin_address_raw_text
- * @property boolean $port_ramp_of_destination_address_verified
- * @property string $port_ramp_of_destination_address_raw_text
- * @property string $variant_id
- * @property string $variant_name
- * @property string $t_tms_provider_id
- * @property string $tms_shipment_id
- * @property string $carrier
- * @property string $preceded_by_order_id
- * @property string $succeded_by_order_id
- * @property \Carbon\Carbon $tms_submission_datetime
- * @property \Carbon\Carbon $tms_cancelled_datetime
- * @property integer $interchange_count
- * @property integer $interchange_err_count
- * @property string $tms_template_id
- */
 class Order extends Model implements Auditable
 {
     use \OwenIt\Auditing\Auditable;
@@ -81,135 +28,9 @@ class Order extends Model implements Auditable
 
     public $table = 't_orders';
 
-    const CREATED_AT = 'created_at',
-        UPDATED_AT = 'updated_at';
-
     protected $dates = ['deleted_at'];
 
-    public $fillable = [
-        'request_id',
-        'shipment_designation',
-        'equipment_type_raw_text',
-        'shipment_direction',
-        'one_way',
-        'unit_number',
-        'equipment_size',
-        'hazardous',
-        'reference_number',
-        'seal_number',
-        'vessel',
-        'voyage',
-        'master_bol_mawb',
-        'house_bol_hawb',
-        'booking_number',
-        'bill_of_lading',
-        'bill_to_address_id',
-        'port_ramp_of_origin_address_id',
-        'port_ramp_of_destination_address_id',
-        'ocr_data',
-        'pickup_number',
-        'pickup_by_date',
-        'pickup_by_time',
-        'cutoff_date',
-        'cutoff_time',
-        'bill_to_address_verified',
-        'bill_to_address_raw_text',
-        'port_ramp_of_origin_address_verified',
-        'port_ramp_of_origin_address_raw_text',
-        'port_ramp_of_destination_address_verified',
-        'port_ramp_of_destination_address_raw_text',
-        'variant_id',
-        'variant_name',
-        'tms_shipment_id',
-        'carrier',
-        'bill_charge',
-        'bill_comment',
-        'line_haul',
-        'rate_box',
-        'fuel_surcharge',
-        'total_accessorial_charges',
-        'equipment_provider',
-        'actual_destination',
-        'actual_origin',
-        'customer_number',
-        'expedite',
-        'load_number',
-        'purchase_order_number',
-        'release_number',
-        'ship_comment',
-        't_company_id',
-        't_tms_provider_id',
-        'division_code',
-        't_equipment_type_id',
-        'chassis_equipment_type_id',
-        'equipment_type_verified',
-        'chassis_equipment_type_verified',
-        'preceded_by_order_id',
-        'succeded_by_order_id',
-        'tms_submission_datetime',
-        'tms_cancelled_datetime',
-        'interchange_count',
-        'interchange_err_count',
-        'tms_template_id',
-        'tms_template_dictid',
-        'itgcontainer_dictid',
-        'itgcontainer_dictid_verified',
-        'tms_template_dictid_verified',
-        'is_hidden',
-        'carrier_dictid',
-        'carrier_dictid_verified',
-        'vessel_dictid',
-        'vessel_dictid_verified',
-        'cc_loadtype',
-        'cc_loadtype_dictid',
-        'cc_loadtype_dictid_verified',
-        'cc_orderstatus',
-        'cc_haulclass',
-        'cc_haulclass_dictid',
-        'cc_haulclass_dictid_verified',
-        'cc_orderclass',
-        'cc_orderclass_dictid',
-        'cc_orderclass_dictid_verified',
-        'cc_loadedempty',
-        'cc_loadedempty_dictid',
-        'cc_loadedempty_dictid_verified',
-        'termdiv',
-        'termdiv_dictid',
-        'termdiv_dictid_verified',
-        'cc_containersize',
-        'cc_containersize_dictid',
-        'cc_containersize_dictid_verified',
-        'cc_containertype',
-        'cc_containertype_dictid',
-        'cc_containertype_dictid_verified',
-        'eta_date',
-        'eta_time',
-        'temperature',
-        'required_equipment',
-        'ssrr_location_address_id',
-        'ssrr_location_address_verified',
-        'ssrr_location_address_raw_text',
-        'custom1',
-        'custom2',
-        'custom3',
-        'custom4',
-        'custom5',
-        'custom6',
-        'custom7',
-        'custom8',
-        'custom9',
-        'custom10',
-        'pt_ref1_text',
-        'pt_ref2_text',
-        'pt_ref3_text',
-        'pt_ref1_type',
-        'pt_ref2_type',
-        'pt_ref3_type',
-        'pt_equipmenttype_container_dictid',
-        'pt_equipmenttype_container_dictid_verified',
-        'pt_equipmenttype_chassis_dictid',
-        'pt_equipmenttype_chassis_dictid_verified',
-    ];
+    protected $guarded = [];
 
     /**
      * The attributes that should be casted to native types.
@@ -245,6 +66,7 @@ class Order extends Model implements Auditable
         'cc_containertype_dictid_verified' => 'boolean',
         'eta_date' => 'date:Y-m-d',
         'ssrr_location_address_verified' => 'boolean',
+        'equipment_available_date' => 'date:Y-m-d',
         'pt_equipmenttype_container_dictid_verified' => 'boolean',
         'pt_equipmenttype_chassis_dictid_verified' => 'boolean',
     ];
