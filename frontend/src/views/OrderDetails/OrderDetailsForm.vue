@@ -678,16 +678,6 @@
             @change="event => handleChange({ path:'trailer_number', ...event})"
           />
           <FormFieldInput
-            v-if="fieldShouldBeShown('temperature')"
-            references="temperature"
-            :label="options.labels.temperature || 'Temperature'"
-            :value="order.temperature"
-            :edit-mode="editMode"
-            type="number"
-            :readonly="fieldShouldBeReadonly('temperature')"
-            @change="event => handleChange({ path:'temperature', ...event})"
-          />
-          <FormFieldInput
             v-if="fieldShouldBeShown('required_equipment')"
             references="required_equipment"
             :label="options.labels.required_equipment || 'Required Equipment'"
@@ -932,6 +922,65 @@
           />
         </div>
       </div>
+
+      <div class="form__sub-section">
+        <div
+          :id="sections.inventory.id"
+          class="form__section-title"
+        >
+          <h3>
+            {{ sections.inventory.label }}
+          </h3>
+        </div>
+
+        <div class="form__sub-section">
+          <div class="section__rootfields">
+            <FormFieldTextArea
+              v-if="fieldShouldBeShown('contents')"
+              :references="`order_line_items.${availableLineItem.real_index}.contents`"
+              :label="options.labels.order_line_item_contents || 'Contents'"
+              :value="availableLineItem.contents"
+              :edit-mode="editMode"
+              :managed-by-template="managedByTemplate('contents')"
+              :readonly="fieldShouldBeReadonly('contents')"
+              @change="event => handleChange({ path:`order_line_items.${availableLineItem.real_index}.contents`, ...event})"
+            />
+            <FormFieldInput
+              v-if="fieldShouldBeShown('quantity')"
+              type="number"
+              :references="`order_line_items.${availableLineItem.real_index}.quantity`"
+              :label="options.labels.order_line_item_quantity || 'Quantity'"
+              :value="availableLineItem.quantity"
+              :edit-mode="editMode"
+              :managed-by-template="managedByTemplate('quantity')"
+              :readonly="fieldShouldBeReadonly('quantity')"
+              @change="event => handleChange({ path:`order_line_items.${availableLineItem.real_index}.quantity`, ...event})"
+            />
+            <FormFieldInput
+              v-if="fieldShouldBeShown('weight')"
+              type="number"
+              :references="`order_line_items.${availableLineItem.real_index}.weight`"
+              :label="options.labels.order_line_item_weight || 'Weight'"
+              :value="availableLineItem.weight"
+              :edit-mode="editMode"
+              :managed-by-template="managedByTemplate('weight')"
+              :readonly="fieldShouldBeReadonly('weight')"
+              @change="event => handleChange({ path:`order_line_items.${availableLineItem.real_index}.weight`, ...event})"
+            />
+            <FormFieldInput
+              v-if="fieldShouldBeShown('temperature')"
+              references="temperature"
+              :label="options.labels.temperature || 'Temperature'"
+              :value="order.temperature"
+              :edit-mode="editMode"
+              type="number"
+              :readonly="fieldShouldBeReadonly('temperature')"
+              @change="event => handleChange({ path:'temperature', ...event})"
+            />
+          </div>
+        </div>
+      </div>
+
       <div
         v-if="!managedByTemplate('bill_to_address_code')"
         class="form__sub-section"
@@ -1102,60 +1151,6 @@
           />
         </div>
       </div>
-      <div class="form__section">
-        <div
-          :id="sections.inventory.id"
-          class="form__section-title"
-        >
-          <h3>
-            {{ sections.inventory.label }}
-          </h3>
-        </div>
-
-        <div
-          v-for="(item, index) in availableLineItems"
-          :key="index"
-          class="form__sub-section"
-        >
-          <div class="form__section-title">
-            <h3>Item {{ index + 1 }}</h3>
-          </div>
-          <div class="section__rootfields">
-            <FormFieldTextArea
-              v-if="fieldShouldBeShown('contents')"
-              :references="`order_line_items.${item.real_index}.contents`"
-              :label="options.labels.order_line_item_contents || 'Contents'"
-              :value="item.contents"
-              :edit-mode="editMode"
-              :managed-by-template="managedByTemplate('contents')"
-              :readonly="fieldShouldBeReadonly('contents')"
-              @change="event => handleChange({ path:`order_line_items.${item.real_index}.contents`, ...event})"
-            />
-            <FormFieldInput
-              v-if="fieldShouldBeShown('quantity')"
-              type="number"
-              :references="`order_line_items.${item.real_index}.quantity`"
-              :label="options.labels.order_line_item_quantity || 'Quantity'"
-              :value="item.quantity"
-              :edit-mode="editMode"
-              :managed-by-template="managedByTemplate('quantity')"
-              :readonly="fieldShouldBeReadonly('quantity')"
-              @change="event => handleChange({ path:`order_line_items.${item.real_index}.quantity`, ...event})"
-            />
-            <FormFieldInput
-              v-if="fieldShouldBeShown('weight')"
-              type="number"
-              :references="`order_line_items.${item.real_index}.weight`"
-              :label="options.labels.order_line_item_weight || 'Weight'"
-              :value="item.weight"
-              :edit-mode="editMode"
-              :managed-by-template="managedByTemplate('weight')"
-              :readonly="fieldShouldBeReadonly('weight')"
-              @change="event => handleChange({ path:`order_line_items.${item.real_index}.weight`, ...event})"
-            />
-          </div>
-        </div>
-      </div>
     </div>
   </div>
 </template>
@@ -1296,16 +1291,18 @@ export default {
       }
     },
 
-    availableLineItems () {
+    availableLineItem () {
       return this.order.order_line_items
         .map((item, index) => ({ ...item, real_index: index }))
-        .filter(item => !item.deleted_at)
+        .filter(item => !item.deleted_at)[0]
     },
+
     saveBtnStyles () {
       if (this.isMobile) return 'secondary'
       if (this.editMode) return 'success'
       return 'primary'
     },
+
     sendToTmsDisabled () {
       if (
         this.sentToTms ||
@@ -1825,6 +1822,10 @@ export default {
 
 .section__rootfields {
   margin-bottom: rem(18);
+
+  &:last-of-type {
+    margin-bottom: 0;
+  }
 
   .form-field:nth-child(even),
   & > div:nth-child(even) .form-field-presentation {
