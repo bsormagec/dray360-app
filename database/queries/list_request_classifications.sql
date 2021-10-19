@@ -24,7 +24,7 @@ select
     ,subq.company_name
     ,subq.classified_name_id
     ,if(subq.verified_name = '', '<processing>', subq.verified_name) as verified_name
-    ,if(subq.verified_id = '', '<processing>', subq.verified_id) as verified_id
+    ,if(subq.verified_id   = '', '<processing>', subq.verified_id) as verified_id
     ,if(subq.verified_type = '', '<processing>', subq.verified_type) as verified_type
     ,if(subq.order_id_list = '', '<processing>', if(length(subq.order_id_list) <= @MAX_ORDER_LIST_CHARS, subq.order_id_list, concat(left(subq.order_id_list, @MAX_ORDER_LIST_CHARS), '... (', subq.order_count, ' orders)' ))) as order_ids
     ,if(@SHOW_CMDLINE, subq.download_source, subq.request_id) as download_source

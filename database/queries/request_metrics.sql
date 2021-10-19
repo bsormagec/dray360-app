@@ -1,4 +1,4 @@
-set @START_DATE=date_sub(CURRENT_TIMESTAMP, interval 4 day);
+set @START_DATE=date_sub(CURRENT_TIMESTAMP, interval 1 day);
 set @END_DATE=null;
 
 select
@@ -62,14 +62,14 @@ select
     -- ,(select min(s.created_at) from t_job_state_changes as s where s.request_id = ls.request_id and s.status = 'ocr-post-processing-complete') as timestamp_admin_review_completed
 
     ,coalesce(TIMEDIFF(
-         (select min(a.created_at) from audits as a join t_orders as o on (a.auditable_id = o.id and a.auditable_type = 'App\\Models\\Order' and o.request_id = ls.request_id) join users as u on u.id = a.user_id join role_user as ru on ru.user_id = u.id join roles as r on (r.id = ru.role_id and r.name = 'order-review'))
+         (select min(a.created_at) from audits as a join t_orders as o on (a.auditable_id = o.id and a.auditable_type = 'App\\Models\\Order' and o.request_id = ls.request_id) join users as u on u.id = a.user_id join role_user as ru on ru.user_id = u.id join roles as r on (r.id = ru.role_id and r.name in ('order-review', 'ops-admin', 'superadmin')))
         ,(select min(s.created_at) from t_job_state_changes as s where s.request_id = ls.request_id and s.status = 'ocr-post-processing-review')
     ),'') as time_admin_review_queued
 
     ,if ((select min(created_at) from t_job_state_changes as s where s.request_id = ls.request_id and s.status = 'ocr-post-processing-review') is null, ''
         ,coalesce(TIMEDIFF(
              (select min(s.created_at) from t_job_state_changes as s where s.request_id = ls.request_id and s.status = 'ocr-post-processing-complete')
-            ,(select min(a.created_at) from audits as a join t_orders as o on (a.auditable_id = o.id and a.auditable_type = 'App\\Models\\Order' and o.request_id = ls.request_id) join users as u on u.id = a.user_id join role_user as ru on ru.user_id = u.id join roles as r on (r.id = ru.role_id and r.name = 'order-review'))
+            ,(select min(a.created_at) from audits as a join t_orders as o on (a.auditable_id = o.id and a.auditable_type = 'App\\Models\\Order' and o.request_id = ls.request_id) join users as u on u.id = a.user_id join role_user as ru on ru.user_id = u.id join roles as r on (r.id = ru.role_id and r.name in ('order-review', 'ops-admin', 'superadmin')))
         ),'')) as time_admin_review_editing
 
     ,coalesce(TIMEDIFF(
@@ -83,7 +83,7 @@ select
             join audits as a on a.auditable_id = o.id and a.auditable_type = 'App\\Models\\Order'
             join users as u on u.id = a.user_id
             join role_user as ru on ru.user_id = u.id
-            join roles as r on r.id = ru.role_id and r.name = 'order-review'
+            join roles as r on r.id = ru.role_id and r.name in ('order-review', 'ops-admin', 'superadmin')
             where o.request_id = ls.request_id
         union select u.name as reviewer
             from t_order_address_events as oae
@@ -91,14 +91,14 @@ select
             join t_orders as o on o.id = oae.t_order_id and o.request_id = ls.request_id
             join users as u on u.id = a.user_id
             join role_user as ru on ru.user_id = u.id
-            join roles as r on r.id = ru.role_id and r.name = 'order-review'
+            join roles as r on r.id = ru.role_id and r.name in ('order-review', 'ops-admin', 'superadmin')
         union select u.name as reviewer
             from t_order_line_items as oli
             join audits as a on a.auditable_id = oli.id and a.auditable_type = 'App\\Models\\OrderLineItem'
             join t_orders as o on o.id = oli.t_order_id and o.request_id = ls.request_id
             join users as u on u.id = a.user_id
             join role_user as ru on ru.user_id = u.id
-            join roles as r on r.id = ru.role_id and r.name = 'order-review'
+            join roles as r on r.id = ru.role_id and r.name in ('order-review', 'ops-admin', 'superadmin')
         union select u.name as reviewer
             from users as u where u.id = (select json_extract(s.status_metadata, '$.user_id') as user_id from t_job_state_changes as s where ls.request_id = s.request_id and s.status = 'ocr-post-processing-complete' order by id asc limit 1)
     ) as reviewers), '') as admin_reviewers
@@ -113,7 +113,7 @@ select
             from audits as a
             join users as u on u.id = a.user_id
             join role_user as ru on ru.user_id = u.id
-            join roles as r on r.id = ru.role_id and r.name = 'order-review'
+            join roles as r on r.id = ru.role_id and r.name in ('order-review', 'ops-admin', 'superadmin')
             join t_orders as o on o.id = a.auditable_id and o.request_id = ls.request_id
             where a.auditable_type = 'App\\Models\\Order'
         )
@@ -122,7 +122,7 @@ select
             from audits as a
             join users as u on u.id = a.user_id
             join role_user as ru on ru.user_id = u.id
-            join roles as r on r.id = ru.role_id and r.name = 'order-review'
+            join roles as r on r.id = ru.role_id and r.name in ('order-review', 'ops-admin', 'superadmin')
             join t_order_line_items as oli on a.auditable_id = oli.id
             join t_orders as o on o.id = oli.t_order_id and o.request_id = ls.request_id
             where a.auditable_type = 'App\\Models\\OrderLineItem'
@@ -132,7 +132,7 @@ select
             from audits as a
             join users as u on u.id = a.user_id
             join role_user as ru on ru.user_id = u.id
-            join roles as r on r.id = ru.role_id and r.name = 'order-review'
+            join roles as r on r.id = ru.role_id and r.name in ('order-review', 'ops-admin', 'superadmin')
             join t_order_address_events as oav on a.auditable_id = oav.id
             join t_orders as o on o.id = oav.t_order_id and o.request_id = ls.request_id
             where a.auditable_type = 'App\\Models\\OrderAddressEvent'
@@ -144,6 +144,8 @@ select
             from audits as a
             join t_orders as o on o.id = a.auditable_id and o.request_id = ls.request_id
             join users as u on u.id = a.user_id and u.t_company_id = o.t_company_id
+            join role_user as ru on ru.user_id = u.id
+            join roles as r on r.id = ru.role_id and r.name in ('customer-admin', 'customer-user')
             where a.auditable_type = 'App\\Models\\Order'
         )
         +
@@ -152,6 +154,8 @@ select
             join t_order_line_items as oli on a.auditable_id = oli.id
             join t_orders as o on o.id = oli.t_order_id and o.request_id = ls.request_id
             join users as u on u.id = a.user_id and u.t_company_id = o.t_company_id
+            join role_user as ru on ru.user_id = u.id
+            join roles as r on r.id = ru.role_id and r.name in ('customer-admin', 'customer-user')
             where a.auditable_type = 'App\\Models\\OrderLineItem'
         )
         +
@@ -160,6 +164,8 @@ select
             join t_order_address_events as oav on a.auditable_id = oav.id
             join t_orders as o on o.id = oav.t_order_id and o.request_id = ls.request_id
             join users as u on u.id = a.user_id and u.t_company_id = o.t_company_id
+            join role_user as ru on ru.user_id = u.id
+            join roles as r on r.id = ru.role_id and r.name in ('customer-admin', 'customer-user')
             where a.auditable_type = 'App\\Models\\OrderAddressEvent'
         )
     )) as client_changes
