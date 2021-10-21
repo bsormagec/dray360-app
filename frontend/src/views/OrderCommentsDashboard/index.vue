@@ -193,6 +193,7 @@ export default {
 
     filtersChanged (newFilters) {
       this.filters = { ...newFilters }
+      this.page = 1
       this.searchUserFeedbacks()
     },
 
@@ -205,6 +206,7 @@ export default {
       this.filters.companyId = []
       this.filters.comment = ''
       this.selectedHeaders = this.tableHeaders.map(s => s.value)
+      this.page = 1
       this.searchUserFeedbacks()
     },
 

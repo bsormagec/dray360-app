@@ -185,6 +185,7 @@ export default {
         { name: 'Accounting Dashboard', path: '/accounting-dashboard', target: '_self', hasPermission: this.hasPermission('metrics-view') },
         { name: 'Audit Logs', path: '/audit-logs', target: '_self', hasPermission: this.hasPermission('audit-logs-view') },
         { name: 'Comments Logs', path: '/comments-logs', target: '_self', hasPermission: this.hasPermission('orders-view') },
+        { name: 'Property Logs', path: '/property-logs', target: '_self', hasPermission: this.hasPermission('audit-logs-view') && this.canViewOtherCompanies() },
       ]
     },
 

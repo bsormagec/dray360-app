@@ -9,6 +9,8 @@ export const getAuditLogs = async (filters = {}) => axios.get(`/api/audit-logs?$
 
 export const getAuditLogsDashboard = async (filters = {}) => axios.get(`/api/audit-logs-dashboard?${toParams(filters)}`).then(data => [undefined, data.data]).catch(e => [e])
 
+export const getOrderPropertiesAuditLogs = async (filters = {}) => axios.get(`/api/audit-logs-order-properties?${toParams(filters)}`).then(data => [undefined, data.data]).catch(e => [e])
+
 export const postUploadPtImageFile = async (file, params) => {
   // eslint-disable-next-line camelcase
   const { request_id, order_id, company_id } = params

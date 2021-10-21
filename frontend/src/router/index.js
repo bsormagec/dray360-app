@@ -27,6 +27,7 @@ import AuditLogs from '@/views/AuditLogs/AuditLogs'
 import ApplicationDowntime from '@/views/ApplicationDowntime'
 import AccountingDashboard from '@/views/AccountingDashboard'
 import OrderCommentsDashboard from '@/views/OrderCommentsDashboard'
+import PropertyLogs from '@/views/PropertyLogs'
 
 Vue.use(VueRouter)
 
@@ -202,7 +203,15 @@ const routes = [
     meta: {
       middleware: [auth, permission('orders-view')]
     }
-  }
+  },
+  {
+    path: '/property-logs',
+    name: 'Property Logs',
+    component: PropertyLogs,
+    meta: {
+      middleware: [auth, permission('audit-logs-view'), permission('all-companies-view')]
+    }
+  },
 ]
 
 const router = new VueRouter({

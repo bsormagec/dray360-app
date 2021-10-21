@@ -41,6 +41,7 @@ use App\Http\Controllers\Api\MetricsReportsExportController;
 use App\Http\Controllers\Api\RequestStatusUpdatesController;
 use App\Http\Controllers\Api\OcrRequestsDoneStatusController;
 use App\Http\Controllers\Api\SendRequestOrdersToTmsController;
+use App\Http\Controllers\Api\OrderPropertiesAuditLogsController;
 use App\Http\Controllers\Api\DownloadOriginalRequestSourceFileController;
 use App\Http\Controllers\Api\DownloadOriginalRequestSourceEmailController;
 
@@ -122,6 +123,9 @@ Route::group(['middleware' => ['auth:sanctum', 'impersonate', 'tenant-aware']], 
 
     Route::get('audit-logs-dashboard', AuditLogsDashboardController::class)
         ->name('audit-logs-dashboard.index');
+
+    Route::get('audit-logs-order-properties', OrderPropertiesAuditLogsController::class)
+        ->name('audit-logs-order-properties.index');
 
     // Orders management
     Route::apiResource('orders', OrdersController::class)

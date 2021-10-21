@@ -4144,6 +4144,262 @@
 			]
 		},
 		{
+			"name": "Audits",
+			"item": [
+				{
+					"name": "/api/audit-logs",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"var token1=postman.getResponseCookie('XSRF-TOKEN').value;",
+									"var token2=token1.replace(/%3D/g, '=');",
+									"postman.setEnvironmentVariable('X-XSRF-TOKEN', token2);",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/x-www-form-urlencoded"
+							},
+							{
+								"key": "Referer",
+								"type": "text",
+								"value": "{{server}}"
+							},
+							{
+								"key": "Accept",
+								"type": "text",
+								"value": "application/json, text/plain, */*"
+							},
+							{
+								"key": "X-XSRF-TOKEN",
+								"type": "text",
+								"value": "{{X-XSRF-TOKEN}}"
+							}
+						],
+						"url": {
+							"raw": "{{server}}/api/audit-logs?model_id=23527&model_type=order",
+							"host": [
+								"{{server}}"
+							],
+							"path": [
+								"api",
+								"audit-logs"
+							],
+							"query": [
+								{
+									"key": "model_id",
+									"value": "23527"
+								},
+								{
+									"key": "model_type",
+									"value": "order"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "/api/audit-logs-dashboard",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"var token1=postman.getResponseCookie('XSRF-TOKEN').value;",
+									"var token2=token1.replace(/%3D/g, '=');",
+									"postman.setEnvironmentVariable('X-XSRF-TOKEN', token2);",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/x-www-form-urlencoded"
+							},
+							{
+								"key": "Referer",
+								"type": "text",
+								"value": "{{server}}"
+							},
+							{
+								"key": "Accept",
+								"type": "text",
+								"value": "application/json, text/plain, */*"
+							},
+							{
+								"key": "X-XSRF-TOKEN",
+								"type": "text",
+								"value": "{{X-XSRF-TOKEN}}"
+							}
+						],
+						"url": {
+							"raw": "{{server}}/api/audit-logs-dashboard?start_date=2021-04-07&end_date=2021-04-07",
+							"host": [
+								"{{server}}"
+							],
+							"path": [
+								"api",
+								"audit-logs-dashboard"
+							],
+							"query": [
+								{
+									"key": "start_date",
+									"value": "2021-04-07"
+								},
+								{
+									"key": "end_date",
+									"value": "2021-04-07"
+								},
+								{
+									"key": "company_id",
+									"value": "1",
+									"disabled": true
+								},
+								{
+									"key": "user_id",
+									"value": "29",
+									"disabled": true
+								},
+								{
+									"key": "variant_name",
+									"value": "",
+									"disabled": true
+								},
+								{
+									"key": "per_page",
+									"value": "15",
+									"disabled": true
+								},
+								{
+									"key": "page",
+									"value": "1",
+									"disabled": true
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "/api/audit-logs-order-properties",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"var token1=postman.getResponseCookie('XSRF-TOKEN').value;",
+									"var token2=token1.replace(/%3D/g, '=');",
+									"postman.setEnvironmentVariable('X-XSRF-TOKEN', token2);",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/x-www-form-urlencoded"
+							},
+							{
+								"key": "Referer",
+								"type": "text",
+								"value": "{{server}}"
+							},
+							{
+								"key": "Accept",
+								"type": "text",
+								"value": "application/json, text/plain, */*"
+							},
+							{
+								"key": "X-XSRF-TOKEN",
+								"type": "text",
+								"value": "{{X-XSRF-TOKEN}}"
+							}
+						],
+						"url": {
+							"raw": "{{server}}/api/audit-logs-order-properties?start_date=2021-09-01&end_date=2021-09-30&property=vessel",
+							"host": [
+								"{{server}}"
+							],
+							"path": [
+								"api",
+								"audit-logs-order-properties"
+							],
+							"query": [
+								{
+									"key": "start_date",
+									"value": "2021-09-01"
+								},
+								{
+									"key": "end_date",
+									"value": "2021-09-30"
+								},
+								{
+									"key": "time_range",
+									"value": "12",
+									"description": "In hours",
+									"disabled": true
+								},
+								{
+									"key": "property",
+									"value": "vessel"
+								},
+								{
+									"key": "filter[company_id]",
+									"value": "13",
+									"disabled": true
+								},
+								{
+									"key": "filter[user_id]",
+									"value": "",
+									"disabled": true
+								},
+								{
+									"key": "filter[variant_id]",
+									"value": "",
+									"disabled": true
+								},
+								{
+									"key": "filter[request_id]",
+									"value": "",
+									"disabled": true
+								},
+								{
+									"key": "per_page",
+									"value": "15",
+									"disabled": true
+								},
+								{
+									"key": "page",
+									"value": "1",
+									"disabled": true
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
 			"name": "/api/search-address",
 			"event": [
 				{
@@ -4317,155 +4573,6 @@
 						{
 							"key": "order_id",
 							"value": null
-						}
-					]
-				}
-			},
-			"response": []
-		},
-		{
-			"name": "/api/audit-logs",
-			"event": [
-				{
-					"listen": "test",
-					"script": {
-						"exec": [
-							"var token1=postman.getResponseCookie('XSRF-TOKEN').value;",
-							"var token2=token1.replace(/%3D/g, '=');",
-							"postman.setEnvironmentVariable('X-XSRF-TOKEN', token2);",
-							""
-						],
-						"type": "text/javascript"
-					}
-				}
-			],
-			"request": {
-				"method": "GET",
-				"header": [
-					{
-						"key": "Content-Type",
-						"value": "application/x-www-form-urlencoded"
-					},
-					{
-						"key": "Referer",
-						"type": "text",
-						"value": "{{server}}"
-					},
-					{
-						"key": "Accept",
-						"type": "text",
-						"value": "application/json, text/plain, */*"
-					},
-					{
-						"key": "X-XSRF-TOKEN",
-						"type": "text",
-						"value": "{{X-XSRF-TOKEN}}"
-					}
-				],
-				"url": {
-					"raw": "{{server}}/api/audit-logs?model_id=23527&model_type=order",
-					"host": [
-						"{{server}}"
-					],
-					"path": [
-						"api",
-						"audit-logs"
-					],
-					"query": [
-						{
-							"key": "model_id",
-							"value": "23527"
-						},
-						{
-							"key": "model_type",
-							"value": "order"
-						}
-					]
-				}
-			},
-			"response": []
-		},
-		{
-			"name": "/api/audit-logs-dashboard",
-			"event": [
-				{
-					"listen": "test",
-					"script": {
-						"exec": [
-							"var token1=postman.getResponseCookie('XSRF-TOKEN').value;",
-							"var token2=token1.replace(/%3D/g, '=');",
-							"postman.setEnvironmentVariable('X-XSRF-TOKEN', token2);",
-							""
-						],
-						"type": "text/javascript"
-					}
-				}
-			],
-			"request": {
-				"method": "GET",
-				"header": [
-					{
-						"key": "Content-Type",
-						"value": "application/x-www-form-urlencoded"
-					},
-					{
-						"key": "Referer",
-						"type": "text",
-						"value": "{{server}}"
-					},
-					{
-						"key": "Accept",
-						"type": "text",
-						"value": "application/json, text/plain, */*"
-					},
-					{
-						"key": "X-XSRF-TOKEN",
-						"type": "text",
-						"value": "{{X-XSRF-TOKEN}}"
-					}
-				],
-				"url": {
-					"raw": "{{server}}/api/audit-logs-dashboard?start_date=2021-04-07&end_date=2021-04-07",
-					"host": [
-						"{{server}}"
-					],
-					"path": [
-						"api",
-						"audit-logs-dashboard"
-					],
-					"query": [
-						{
-							"key": "start_date",
-							"value": "2021-04-07"
-						},
-						{
-							"key": "end_date",
-							"value": "2021-04-07"
-						},
-						{
-							"key": "company_id",
-							"value": "1",
-							"disabled": true
-						},
-						{
-							"key": "user_id",
-							"value": "29",
-							"disabled": true
-						},
-						{
-							"key": "variant_name",
-							"value": "",
-							"disabled": true
-						},
-						{
-							"key": "per_page",
-							"value": "15",
-							"disabled": true
-						},
-						{
-							"key": "page",
-							"value": "1",
-							"disabled": true
 						}
 					]
 				}
