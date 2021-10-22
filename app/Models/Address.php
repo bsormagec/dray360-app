@@ -203,7 +203,7 @@ class Address extends Model
                 $this->location_name == $address['name'] &&
                 $this->location_phone == $address['phone'] &&
                 $this->is_billable == (strtoupper($address['co_allow_billing']) == 'T') &&
-                $this->is_terminal == (strtoupper($address['co_allow_billing']) == 'T');
+                $this->is_terminal == (strtoupper($address['terminationlocation']) == 'T');
             case 'compcare':
                 $locationNamePrefix = empty(trim($address['ExternalSystemAddressId'])) ? '' : ('(' . $address['ExternalSystemAddressId']  . ') ');
                 $entityTypes = collect(Arr::get($address, 'Entity.EntityTypes'))->pluck('EntityType');
