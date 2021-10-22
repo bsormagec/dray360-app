@@ -9,6 +9,7 @@
     >
       <template v-for="(fieldMap, key) in computedFieldMaps">
         <v-list-item
+          :id="key"
           :key="key"
           :value="key"
           :class="{
@@ -59,6 +60,7 @@ import ContentLoading from '@/components/ContentLoading'
 import { mapActions, mapGetters } from 'vuex'
 import utils, { actionTypes as utilsActionTypes } from '@/store/modules/utils'
 import fieldMaps, { actionTypes as fieldMapsActionTypes } from '@/store/modules/field_maps'
+import { scrollTo } from '@/utils/scroll_to'
 
 export default {
   name: 'FieldMappingList',
@@ -109,6 +111,18 @@ export default {
     }
   },
 
+  watch: {
+    loading: {
+      handler (loading) {
+        if (!loading && this.selectedField !== null) {
+          setTimeout(() => {
+            scrollTo(this.selectedField, '.field-mapping__list-container', 168)
+          }, 500)
+        }
+      }
+    }
+  },
+
   methods: {
     ...mapActions(fieldMaps.moduleName, [
       fieldMapsActionTypes.getFieldMaps,
@@ -152,6 +166,7 @@ export default {
   height: 100%;
   max-height: calc(100vh - #{rem(205)});
   overflow-y: auto;
+  scroll-behavior: smooth;
 }
 
 .field-mapping__item {
