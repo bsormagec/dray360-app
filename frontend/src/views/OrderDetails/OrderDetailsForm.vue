@@ -967,6 +967,19 @@
               :readonly="fieldShouldBeReadonly('weight')"
               @change="event => handleChange({ path:`order_line_items.${availableLineItem.real_index}.weight`, ...event})"
             />
+            <FormFieldSelect
+              v-if="fieldShouldBeShown('weight_uom')"
+              :references="`order_line_items.${availableLineItem.real_index}.weight_uom`"
+              :label="options.labels.weight_uom || 'Weight UOM'"
+              :value="availableLineItem.weight_uom"
+              :items="unitOfMeasure.weight"
+              item-value="value"
+              item-text="text"
+              :edit-mode="editMode"
+              :managed-by-template="managedByTemplate('weight_uom')"
+              :readonly="fieldShouldBeReadonly('weight_uom')"
+              @change="event => handleChange({ path: `order_line_items.${availableLineItem.real_index}.weight_uom`, ...event})"
+            />
             <FormFieldInput
               v-if="fieldShouldBeShown('temperature')"
               references="temperature"
@@ -976,6 +989,20 @@
               type="number"
               :readonly="fieldShouldBeReadonly('temperature')"
               @change="event => handleChange({ path:'temperature', ...event})"
+            />
+            <FormFieldSelect
+              v-if="fieldShouldBeShown('temperature_uom')"
+              references="temperature_uom"
+              :label="options.labels.temperature_uom || 'Temperature UOM'"
+              :value="order.temperature_uom"
+              :items="unitOfMeasure.temperature"
+              item-value="value"
+              item-text="text"
+              :display-value="value => value ? `${value.toUpperCase()}°` : null"
+              :edit-mode="editMode"
+              :managed-by-template="managedByTemplate('temperature_uom')"
+              :readonly="fieldShouldBeReadonly('temperature_uom')"
+              @change="event => handleChange({ path:'temperature_uom', ...event})"
             />
           </div>
         </div>
@@ -1160,7 +1187,7 @@ import { scrollTo } from '@/utils/scroll_to'
 import permissions from '@/mixins/permissions'
 import { mapState, mapActions, mapGetters } from 'vuex'
 import get from 'lodash/get'
-import { statuses, dictionaryItemsTypes, commentableTypes } from '@/enums/app_objects_types'
+import { statuses, dictionaryItemsTypes, commentableTypes, unitOfMeasureTypes } from '@/enums/app_objects_types'
 import events from '@/enums/events'
 
 import { getOrderDetail, postSendToTms, delDeleteOrder, postSendToClient, replicateOrder } from '@/store/api_calls/orders'
@@ -1190,6 +1217,7 @@ import { formatDate } from '@/utils/dates'
 
 export default {
   name: 'OrderDetailsForm',
+
   components: {
     FormFieldDate,
     FormFieldTimeMask,
@@ -1208,7 +1236,9 @@ export default {
     ManagedByTemplateSection,
     StatusHistoryDialog
   },
+
   mixins: [permissions],
+
   props: {
     backButton: {
       type: Boolean,
@@ -1246,6 +1276,7 @@ export default {
       default: false
     }
   },
+
   data () {
     return {
       loading: false,
@@ -1262,11 +1293,14 @@ export default {
       dictionaryItemsTypes,
     }
   },
+
   computed: {
     ...mapGetters(orderForm.moduleName, ['isMultiOrderRequest', 'isLocked']),
+
     ...mapState(requestsList.moduleName, {
       supervise: state => state.supervise,
     }),
+
     ...mapState(orderForm.moduleName, {
       order: state => state.order,
       editMode: state => state.editMode,
@@ -1398,22 +1432,33 @@ export default {
 
       return changes
     },
+
     isMobile () {
       return this.$vuetify.breakpoint.sm
     },
+
     enablePtTemplates () {
       return this.options.extra.profit_tools_enable_templates ?? false
     },
+
+    unitOfMeasure () {
+      return {
+        temperature: unitOfMeasureTypes.temperature,
+        weight: unitOfMeasureTypes.weight,
+      }
+    }
   },
 
   mounted () {
     if (this.editMode) this.toggleEdit()
   },
+
   methods: {
     ...mapActions(utils.moduleName, [
       utilsActionTypes.setSnackbar,
       utilsActionTypes.setConfirmationDialog,
     ]),
+
     ...mapActions(orderForm.moduleName, [
       orderFormActionTypes.updateOrder,
       orderFormActionTypes.setFormOrder,
@@ -1697,8 +1742,7 @@ export default {
       this.$root.$emit(events.openOrderCommentDialog, {
         commentableType: commentableTypes.order,
         commentableId: this.order.id,
-        label: `Order #${this.order.id} Feedback`
-
+        label: `Order #${this.order.id} Feedback`,
       })
     },
   }

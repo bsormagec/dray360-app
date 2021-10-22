@@ -1,6 +1,5 @@
 import { defaultsTo } from '@/utils/defaults_to'
 import get from 'lodash/get'
-import includes from 'lodash/includes'
 
 export function getHighlights (order) {
   const highlights = {}
@@ -32,6 +31,7 @@ export function getHighlights (order) {
           highlights[`${highlightKey}.contents`] = baseHighlight({ recognizedText: '' })
         }
         highlights[`${highlightKey}.weight`] = baseHighlight({ recognizedText: '' })
+        highlights[`${highlightKey}.weight_uom`] = baseHighlight({ recognizedText: '' })
         highlights[`${highlightKey}.quantity`] = baseHighlight({ recognizedText: '' })
       })
       continue
@@ -220,7 +220,7 @@ export function parseChanges ({ path, value, originalOrder }) {
       order_address_events: order_address_events
     }
   } else if (path.includes('order_line_items.')) {
-    const [key, index, field] = path.split('.')
+    const [, index, field] = path.split('.')
     if (field === undefined || field === null) {
       throw new Error('For order line items the field definition is required')
     }

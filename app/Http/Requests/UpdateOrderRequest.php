@@ -110,6 +110,7 @@ class UpdateOrderRequest extends FormRequest
             'eta_date' => 'sometimes|nullable',
             'eta_time' => 'sometimes|nullable',
             'temperature' => 'sometimes|nullable',
+            'temperature_uom' => 'sometimes|nullable',
             'required_equipment' => 'sometimes|nullable',
             'ssrr_location_address_id' => 'sometimes|nullable',
             'ssrr_location_address_verified' => 'sometimes|nullable',
