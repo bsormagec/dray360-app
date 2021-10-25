@@ -7,6 +7,7 @@
       :value="division_name"
       :managed-by-template="managedByTemplate"
       :readonly="readonly"
+      :admin-notes="adminNotes"
       @accept="handleAccept"
       @accept-all="() => handleAccept(true)"
     >
@@ -35,11 +36,12 @@
 <script>
 import FormFieldPresentation from './FormFieldPresentation'
 import { getDivisionCodes } from '@/store/api_calls/orders'
+
 export default {
   name: 'FormFieldSelectDivisionCodes',
 
   components: {
-    FormFieldPresentation
+    FormFieldPresentation,
   },
 
   props: {
@@ -51,7 +53,9 @@ export default {
     editMode: { required: true, type: Boolean },
     managedByTemplate: { required: false, type: Boolean, default: false },
     readonly: { type: Boolean, required: false, default: false },
+    adminNotes: { type: String, required: false, default: '' },
   },
+
   data: (vm) => ({
     currentValue: vm.value,
     divisionCodes: [],
@@ -75,6 +79,7 @@ export default {
         this.handleAccept()
       }
     },
+
     handleAccept (saveAll = false) {
       this.$emit('change', {
         value: this.currentValue !== undefined ? this.currentValue : ' ',

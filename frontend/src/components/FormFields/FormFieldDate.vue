@@ -7,6 +7,7 @@
       :value="value"
       :managed-by-template="managedByTemplate"
       :readonly="readonly"
+      :admin-notes="adminNotes"
       @accept="handleAccept"
       @accept-all="() => handleAccept(true)"
       @cancel="handleCancel"
@@ -57,7 +58,7 @@ export default {
   name: 'FormFieldDate',
 
   components: {
-    FormFieldPresentation
+    FormFieldPresentation,
   },
 
   props: {
@@ -69,6 +70,7 @@ export default {
     placeholder: { required: false, type: String, default: '' },
     managedByTemplate: { type: Boolean, required: false, default: false },
     readonly: { type: Boolean, required: false, default: false },
+    adminNotes: { type: String, required: false, default: '' },
   },
 
   data: (vm) => ({
@@ -89,9 +91,11 @@ export default {
         this.handleAccept()
       }
     },
+
     handleAccept (saveAll = false) {
       this.$emit('change', { value: this.currentValue, saveAll })
     },
+
     handleCancel () {
       this.currentValue = this.value
     }

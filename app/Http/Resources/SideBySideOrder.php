@@ -214,7 +214,7 @@ class SideBySideOrder extends JsonResource
                 if (in_array($key, ['order_line_items', 'order_address_events'])) {
                     $columnsMap = [
                         'order_address_events' => ['t_address_id'],
-                        'order_line_items' => ['multiline_contents', 'contents', 'quantity', 'weight'],
+                        'order_line_items' => ['multiline_contents', 'contents', 'quantity', 'weight', 'weight_uom'],
                     ];
 
 

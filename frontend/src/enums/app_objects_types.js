@@ -175,3 +175,14 @@ export const localStorageTypes = {
   commentsLogsOptions: 'comments-logs-options',
   propertyLogsOptions: 'property-logs-options',
 }
+
+export const unitOfMeasureTypes = {
+  temperature: [
+    { text: 'F°', value: 'f' },
+    { text: 'C°', value: 'c' },
+  ],
+  weight: [
+    { text: 'Kg', value: 'kg' },
+    { text: 'Lb', value: 'lb' },
+  ]
+}

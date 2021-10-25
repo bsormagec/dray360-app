@@ -7,6 +7,7 @@
       :value="displayName"
       :readonly="readonly"
       :managed-by-template="managedByTemplate"
+      :admin-notes="adminNotes"
       @accept="handleAccept"
       @accept-all="() => handleAccept(true)"
     >
@@ -40,7 +41,7 @@ export default {
   name: 'FormFieldSelect',
 
   components: {
-    FormFieldPresentation
+    FormFieldPresentation,
   },
 
   props: {
@@ -54,16 +55,19 @@ export default {
     displayValue: { type: Function, required: false, default: undefined },
     managedByTemplate: { type: Boolean, required: false, default: false },
     readonly: { type: Boolean, required: false, default: false },
+    adminNotes: { type: String, required: false, default: '' },
   },
 
   data: (vm) => ({
     currentValue: vm.value
   }),
+
   computed: {
     displayName: function () {
       return this.displayValue !== undefined ? this.displayValue(this.value) : this.value
     }
   },
+
   methods: {
     handleChange (e) {
       this.currentValue = e === undefined ? null : e
@@ -72,6 +76,7 @@ export default {
         this.handleAccept()
       }
     },
+
     handleAccept (saveAll = false) {
       this.$emit('change', { value: this.currentValue, saveAll })
     }

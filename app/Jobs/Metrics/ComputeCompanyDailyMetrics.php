@@ -19,7 +19,7 @@ class ComputeCompanyDailyMetrics implements ShouldQueue
     use Queueable;
 
     public $tries = 3;
-    public $timeout = 30;
+    public $timeout = 120;
 
     public string $date;
     public int $companyId;

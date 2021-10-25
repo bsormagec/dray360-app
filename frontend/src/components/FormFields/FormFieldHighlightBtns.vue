@@ -57,15 +57,12 @@ export default {
       default: false
     }
   },
+
   computed: {
     iconClass () {
-      if (this.locked) {
-        return 'mdi-lock'
-      }
+      if (this.locked) return 'mdi-lock'
 
-      if (this.readonly) {
-        return 'mdi-eye'
-      }
+      if (this.readonly) return 'mdi-eye'
 
       return 'mdi-pencil-outline'
     }

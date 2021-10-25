@@ -7,6 +7,7 @@
       :value="value"
       :managed-by-template="managedByTemplate"
       :readonly="readonly"
+      :admin-notes="adminNotes"
       @accept="handleAccept"
       @accept-all="() => handleAccept(true)"
     >
@@ -47,7 +48,7 @@ export default {
   directives: { mask },
 
   components: {
-    FormFieldPresentation
+    FormFieldPresentation,
   },
 
   props: {
@@ -58,6 +59,7 @@ export default {
     placeholder: { required: false, type: String, default: '' },
     managedByTemplate: { type: Boolean, required: false, default: false },
     readonly: { type: Boolean, required: false, default: false },
+    adminNotes: { type: String, required: false, default: '' },
   },
 
   data: (vm) => ({
@@ -66,21 +68,26 @@ export default {
 
   methods: {
     ...mapActions(utils.moduleName, [utilsActionTypes.setSnackbar]),
+
     ...mapActions(orderForm.moduleName, [orderFormActionTypes.stopFieldEdit]),
+
     handleChange (e) {
       this.currentValue = e
       if (this.editMode && this.references) {
         this.handleAccept()
       }
     },
+
     submit () {
       this.stopFieldEdit({ path: this.references })
       this.handleAccept()
     },
+
     cancel () {
       this.stopFieldEdit({ path: this.references })
       this.currentValue = this.value
     },
+
     handleAccept (saveAll = false) {
       if (this.currentValue !== null && this.currentValue !== '' && !this.isValidTime(this.currentValue)) {
         this.setSnackbar({ message: 'Please enter a valid date' })
@@ -88,6 +95,7 @@ export default {
       }
       this.$emit('change', { value: this.currentValue, saveAll })
     },
+
     isValidTime (timeString) {
       const [hour, minute] = timeString.split(':')
 

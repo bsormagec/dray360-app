@@ -7,13 +7,13 @@
     :edit-mode="false"
     only-hover
     :managed-by-template="managedByTemplate"
+    :admin-notes="adminNotes"
   >
     <div class="pa-2">
       <div class="d-flex align-center">
         <div class="form-field__label">
           {{ label }}
         </div>
-
         <div class="ml-auto text-right">
           <div v-if="!verified && equipmentType === null">
             <v-icon color="error">
@@ -269,6 +269,7 @@ export default {
     references: { type: String, default: null },
     managedByTemplate: { type: Boolean, required: false, default: false },
     readonly: { type: Boolean, required: false, default: false },
+    adminNotes: { type: String, required: false, default: '' },
   },
 
   data: () => ({
