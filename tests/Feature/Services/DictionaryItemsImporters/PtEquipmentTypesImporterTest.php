@@ -22,7 +22,12 @@ class PtEquipmentTypesImporterTest extends TestCase
 
         $this->seed(CompaniesSeeder::class);
         $this->company = CompaniesSeeder::getTestCushing();
-        $this->company->update(['blackfly_token' => 'something']);
+        $this->company->update([
+            'blackfly_token' => 'something',
+            'configuration' => [
+                'pt_equipment_chassis_keywords' => ['CHASSIS', 'CH'],
+            ]
+        ]);
     }
 
     /** @test */
@@ -41,7 +46,7 @@ class PtEquipmentTypesImporterTest extends TestCase
                 [
                     'id' => 540,
                     'line' => 'ANL SINGAPORE',
-                    'type' => 'CH 40FT',
+                    'type' => 'ST 40FT',
                     'equipmentlength' => '40FT',
                     'lineprefix' => null,
                     'scac' => 'ANLC',
@@ -53,7 +58,6 @@ class PtEquipmentTypesImporterTest extends TestCase
             'delete_missing' => false,
         ]);
         $importer->run();
-
         $this->assertDatabaseCount('t_dictionary_items', 2);
         $this->assertDatabaseHas('t_dictionary_items', [
             't_company_id' => $this->company->id,
@@ -61,15 +65,19 @@ class PtEquipmentTypesImporterTest extends TestCase
             'item_key' => '539',
             'item_display_name' => 'CH 20FT (ANL SINGAPORE)',
             'item_value->id' => 539,
-            'item_value->type' => 'CH 20FT'
+            'item_value->type' => 'CH 20FT',
+            'item_value->chassis_container_code' => 'CH',
+            'item_value->lineprefix' => '[]',
         ]);
         $this->assertDatabaseHas('t_dictionary_items', [
             't_company_id' => $this->company->id,
             'item_type' => DictionaryItem::PT_EQUIPMENTTYPE_TYPE,
             'item_key' => '540',
-            'item_display_name' => 'CH 40FT (ANL SINGAPORE)',
+            'item_display_name' => 'ST 40FT (ANL SINGAPORE)',
             'item_value->id' => 540,
-            'item_value->type' => 'CH 40FT'
+            'item_value->type' => 'ST 40FT',
+            'item_value->chassis_container_code' => 'CO',
+            'item_value->lineprefix' => '[]',
         ]);
     }
 
@@ -116,7 +124,7 @@ class PtEquipmentTypesImporterTest extends TestCase
             'item_key' => '539',
             'item_display_name' => 'CH 20FT (ANL SINGAPORE UP)',
             'item_value->id' => 539,
-            'item_value->line' => 'ANL SINGAPORE UP'
+            'item_value->line' => 'ANL SINGAPORE UP',
         ]);
     }
 
