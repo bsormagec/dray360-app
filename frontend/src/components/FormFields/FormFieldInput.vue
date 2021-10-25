@@ -7,6 +7,7 @@
       :value="value"
       :readonly="readonly"
       :managed-by-template="managedByTemplate"
+      :admin-notes="adminNotes"
       @accept="handleAccept"
       @accept-all="() => handleAccept(true)"
     >
@@ -42,7 +43,7 @@ export default {
   name: 'FormFieldInput',
 
   components: {
-    FormFieldPresentation
+    FormFieldPresentation,
   },
 
   props: {
@@ -54,6 +55,7 @@ export default {
     placeholder: { required: false, type: String, default: '' },
     managedByTemplate: { type: Boolean, required: false, default: false },
     readonly: { type: Boolean, required: false, default: false },
+    adminNotes: { type: String, required: false, default: '' },
   },
 
   data: (vm) => ({
@@ -62,20 +64,24 @@ export default {
 
   methods: {
     ...mapActions(orderForm.moduleName, [actionTypes.stopFieldEdit]),
+
     handleChange (e) {
       this.currentValue = e
       if (this.editMode && this.references) {
         this.handleAccept()
       }
     },
+
     submit () {
       this.stopFieldEdit({ path: this.references })
       this.handleAccept()
     },
+
     cancel () {
       this.stopFieldEdit({ path: this.references })
       this.currentValue = this.value
     },
+
     handleAccept (saveAll = false) {
       this.$emit('change', { value: this.currentValue, saveAll })
     }

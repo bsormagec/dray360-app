@@ -1,7 +1,7 @@
 <template>
   <div
     :id="`${cleanStrForId(references)}-formfield`"
-    class="form-field-presentation"
+    :class="{'form-field-presentation': true, 'has-notes': !!adminNotes}"
   >
     <div
       v-if="!editMode && !managedByTemplate"
@@ -25,24 +25,12 @@
         <span class="form-field__label">
           {{ label }}
 
-          <v-tooltip
+          <TooltipIcon
             v-if="hasPrecedingOrder"
-            bottom
-            open-on-click
-            :open-on-hover="true"
-          >
-            <template v-slot:activator="{ on, attrs }">
-              <v-icon
-                v-bind="attrs"
-                class="ml-1"
-                color="orange-changes"
-                v-on="on"
-              >
-                mdi-history
-              </v-icon>
-            </template>
-            <span>Order #{{ order.preceded_by_order_id }}</span>
-          </v-tooltip>
+            icon="mdi-history"
+            :text="`Order #${ order.preceded_by_order_id }`"
+            :custom-icon-attrs="{ small: false, color: 'orange-changes', class: 'ml-1' }"
+          />
         </span>
         <span
           v-if="isLoading"
@@ -66,7 +54,7 @@
           'highlight__edit': true,
           'only-hover': onlyHover,
           hover: isHovering,
-          edit: isEditing
+          edit: isEditing,
         }"
       >
         <slot v-if="isEditing || onlyHover" />
@@ -81,15 +69,28 @@
           @cancel="handleCancel"
         />
       </div>
+      <TooltipIcon
+        v-if="!!adminNotes"
+        :text="adminNotes"
+        :custom-icon-attrs="{ small: false, color: 'grey-darken4', class: 'mr-1' }"
+      />
     </div>
     <FormFieldManaged
       v-else-if="managedByTemplate"
       :references="references"
       :label="label"
     />
-    <slot
+    <div
       v-else-if="editMode"
-    />
+      class="slot-container d-flex align-center"
+    >
+      <slot />
+      <TooltipIcon
+        v-if="!!adminNotes"
+        :text="adminNotes"
+        :custom-icon-attrs="{ small: false, color: 'grey-darken4', class: 'mr-1' }"
+      />
+    </div>
     <v-alert
       :value="errors.length > 0"
       dense
@@ -111,6 +112,7 @@
 <script>
 import FormFieldHighlightBtns from './FormFieldHighlightBtns'
 import FormFieldManaged from './FormFieldManaged'
+import TooltipIcon from '@/components/General/TooltipIcon'
 
 import isMobile from '@/mixins/is_mobile'
 import { mapState, mapActions, mapGetters } from 'vuex'
@@ -122,7 +124,11 @@ import { cleanStrForId } from '@/utils/clean_str_for_id.js'
 export default {
   name: 'FormFieldPresentation',
 
-  components: { FormFieldHighlightBtns, FormFieldManaged },
+  components: {
+    FormFieldHighlightBtns,
+    FormFieldManaged,
+    TooltipIcon,
+  },
 
   mixins: [isMobile, permissions],
 
@@ -134,10 +140,12 @@ export default {
     onlyHover: { type: Boolean, required: false, default: false },
     readonly: { type: Boolean, required: false, default: false },
     managedByTemplate: { type: Boolean, required: false, default: false },
+    adminNotes: { type: String, required: false, default: '' },
   },
 
   computed: {
     ...mapGetters(orderForm.moduleName, ['isMultiOrderRequest', 'isLocked']),
+
     ...mapState(orderForm.moduleName, {
       allHighlights: state => state.highlights,
       order: state => state.order,
@@ -226,6 +234,12 @@ export default {
 
 <style lang="scss">
 .form-field-presentation {
+  &:not(.has-notes) {
+    .form-field-highlight.hover:hover {
+      padding-right: rem(12);
+    }
+  }
+
   .form-field-highlight {
     position: relative;
     display: flex;
@@ -238,7 +252,7 @@ export default {
 
       &::after {
         content: " ";
-        position:absolute;
+        position: absolute;
         height: 100%;
         width: rem(4);
         background-color: var(--v-orange-changes-base);
@@ -247,8 +261,6 @@ export default {
 
     &.hover {
       background-color: rgba($blue--lt, 0.4);
-      padding-right: rem(12);
-
     }
 
     &:focus {
@@ -258,6 +270,15 @@ export default {
     &.hover-paddingless {
       background-color: rgba($blue--lt, 0.4);
     }
+
+    &.edit {
+      transition: none;
+      background-color: $blue--lt;
+    }
+  }
+
+  &.has-notes {
+    background-color: rgba(var(--v-success-base-rgb), 0.2) !important;
   }
 
   .only-hover {
@@ -277,6 +298,11 @@ export default {
 
     .v-input__slot {
       border-radius: rem(4) 0 rem(0) rem(4);
+    }
+
+    .v-icon {
+      margin-left: auto;
+      margin-right: rem(8);
     }
   }
 }

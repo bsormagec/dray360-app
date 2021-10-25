@@ -7,6 +7,7 @@
     :edit-mode="editMode"
     only-hover
     :managed-by-template="managedByTemplate"
+    :admin-notes="adminNotes"
   >
     <div class="form-field-element-modal-address">
       <div class="address-book-modal">
@@ -103,7 +104,7 @@ export default {
 
   components: {
     AddressBookModalDialog,
-    FormFieldPresentation
+    FormFieldPresentation,
   },
 
   mixins: [permissions],
@@ -122,6 +123,7 @@ export default {
     enableSearch: { type: Boolean, required: false, default: false },
     managedByTemplate: { type: Boolean, required: false, default: false },
     readonly: { type: Boolean, required: false, default: false },
+    adminNotes: { type: String, required: false, default: '' },
   },
 
   data: (vm) => ({
@@ -139,18 +141,23 @@ export default {
 
   computed: {
     ...mapGetters(orderForm.moduleName, ['isMultiOrderRequest', 'isLocked']),
+
     ...mapState(orders.moduleName, {
       currentOrder: state => state.currentOrder
     }),
+
     ...mapState(orderForm.moduleName, {
       allHighlights: state => state.highlights
     }),
+
     addressFound () {
       return get(this.currentAddress, 'id') !== undefined
     },
+
     textAddressToShow () {
       return formatAddress(this.currentAddress)
     },
+
     isLoading () {
       return this.allHighlights[this.references]?.loading || false
     }
@@ -172,12 +179,15 @@ export default {
 
       this.$emit('change', { ...(this.currentAddress), saveAll })
     },
+
     verifyMatch () {
       this.$emit('change', { ...(this.currentAddress), saveAll: false })
     },
+
     toggleAddressModal () {
       this.addressModalOpen = !this.addressModalOpen
     },
+
     setFilters () {
       /* eslint camelcase: 0 */
       const { t_company_id: company_id, t_tms_provider_id: tms_provider_id } = this.currentOrder

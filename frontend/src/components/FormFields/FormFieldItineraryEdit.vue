@@ -6,6 +6,7 @@
     label=""
     :edit-mode="editMode"
     only-hover
+    :admin-notes="adminNotes"
   >
     <div
       v-show="!(!!orderAddressEvent.deleted_at)"
@@ -14,7 +15,7 @@
       <div class="address-book-modal">
         <div
           v-if="!editMode"
-          class="address-book-modal__title"
+          class="address-book-modal__title d-flex"
         >
           <h3 v-text="selectedEvent" />
         </div>
@@ -24,6 +25,15 @@
             flat
             height="auto"
           >
+            <TooltipIcon
+              v-if="!!adminNotes"
+              :text="adminNotes"
+              :custom-icon-attrs="{
+                small: false,
+                color: 'grey-darken4',
+                class: 'mr-1',
+              }"
+            />
             <div class="event-index">
               {{ currentIndex }}
             </div>
@@ -166,6 +176,7 @@
 /* eslint-disable vue/no-v-html */
 import AddressBookModalDialog from '@/components/Orders/AddressBookModalDialog'
 import FormFieldPresentation from './FormFieldPresentation'
+import TooltipIcon from '@/components/General/TooltipIcon'
 
 import { mapState, mapGetters } from 'vuex'
 import orders from '@/store/modules/orders'
@@ -180,7 +191,8 @@ export default {
 
   components: {
     AddressBookModalDialog,
-    FormFieldPresentation
+    FormFieldPresentation,
+    TooltipIcon,
   },
 
   mixins: [permissions],
@@ -195,6 +207,7 @@ export default {
     enableAddressFilters: { type: Boolean, required: false, default: true },
     enableSearch: { type: Boolean, required: false, default: false },
     readonly: { type: Boolean, required: false, default: false },
+    adminNotes: { type: String, required: false, default: '' },
   },
 
   data: (vm) => ({
@@ -215,15 +228,19 @@ export default {
 
   computed: {
     ...mapGetters(orderForm.moduleName, ['isMultiOrderRequest', 'isLocked']),
+
     addressFound () {
       return get(this.currentAddress, 'id') !== undefined
     },
+
     textAddressToShow () {
       return formatAddress(this.currentAddress)
     },
+
     verified () {
       return this.orderAddressEvent.t_address_verified || false
     },
+
     eventTypeBooleanMap () {
       return {
         is_hook_event: 'Hook',
@@ -234,6 +251,7 @@ export default {
         is_drop_event: 'Drop'
       }
     },
+
     selectedEvent () {
       for (const key in this.eventTypeBooleanMap) {
         if (this.orderAddressEvent[key] === true) {
@@ -257,6 +275,7 @@ export default {
   beforeMount () {
     this.setFilters()
   },
+
   methods: {
     handleAddressChange (value) {
       this.addressModalOpen = false
@@ -278,6 +297,7 @@ export default {
         saveAll
       })
     },
+
     handleEventTypeChange (value) {
       const eventBooleanMap = {
         ...(this.eventTypeBooleanMap)
@@ -292,18 +312,22 @@ export default {
         ...eventBooleanMap
       })
     },
+
     handleNoteChange (value) {
       this.$emit('change', {
         ...(this.orderAddressEvent),
         note: value
       })
     },
+
     verifyMatch () {
       this.$emit('change', { ...(this.orderAddressEvent), t_address_verified: true })
     },
+
     toggleAddressModal () {
       this.addressModalOpen = !this.addressModalOpen
     },
+
     setFilters () {
       /* eslint camelcase: 0 */
       const { t_company_id: company_id, t_tms_provider_id: tms_provider_id } = this.currentOrder()

@@ -95,6 +95,7 @@ const defaultFormOptions = {
   extra: {},
   labels: {},
   readonly: [],
+  adminNotes: {},
 }
 
 export default {
@@ -156,9 +157,11 @@ export default {
     ...mapState(orders.moduleName, {
       currentOrder: state => state.currentOrder
     }),
+
     ...mapState(requestsList.moduleName, {
       supervise: state => state.supervise,
     }),
+
     ...mapState(orderForm.moduleName, {
       order: state => state.order
     }),
@@ -170,19 +173,23 @@ export default {
     companyConfiguration () {
       return get(this.currentOrder, 'company.configuration', {})
     },
+
     orderInReview () {
       return this.loaded &&
         !this.hasPermission('admin-review-view') &&
         isInAdminReview(this.order?.ocr_request?.latest_ocr_request_status?.status)
     },
+
     isMobile () {
       return this.$vuetify.breakpoint.mobile
     },
   },
+
   watch: {
     orderId (newOrderId) {
       this.handleOrderChange(newOrderId)
     },
+
     $route (to, from) {
       this.handleOrderChange(to.params?.id)
     }
@@ -209,7 +216,9 @@ export default {
 
   methods: {
     ...mapActions(utils.moduleName, [utilsActionTypes.setConfirmationDialog]),
+
     ...mapActions(orders.moduleName, [types.getOrderDetail]),
+
     ...mapActions(orderForm.moduleName, [
       orderFormActionTypes.setFormOrder,
       orderFormActionTypes.setOrderLock,
@@ -452,6 +461,10 @@ export default {
 
         if (bestFieldMap.readonly_roles?.length > 0 && this.hasRoles(bestFieldMap.readonly_roles)) {
           newFormOptions.readonly.push(d3CanonName)
+        }
+
+        if ((!!bestFieldMap.notes && bestFieldMap.notes) && this.hasPermission('field-maps-admin-notes-view')) {
+          newFormOptions.adminNotes[d3CanonName] = bestFieldMap.notes
         }
       }
 

@@ -7,6 +7,7 @@
       :value="displayName"
       :managed-by-template="managedByTemplate"
       :readonly="readonly"
+      :admin-notes="adminNotes"
       @accept="handleAccept"
       @accept-all="() => handleAccept(true)"
     >
@@ -40,7 +41,7 @@ export default {
   name: 'FormFieldInputAutocomplete',
 
   components: {
-    FormFieldPresentation
+    FormFieldPresentation,
   },
 
   props: {
@@ -54,6 +55,7 @@ export default {
     displayValue: { type: Function, required: false, default: undefined },
     managedByTemplate: { type: Boolean, required: false, default: false },
     readonly: { type: Boolean, required: false, default: false },
+    adminNotes: { type: String, required: false, default: '' },
   },
 
   data: (vm) => ({
@@ -80,6 +82,7 @@ export default {
         this.handleAccept()
       }
     },
+
     handleAccept (saveAll = false) {
       this.$emit('change', { value: this.currentValue, saveAll })
     }

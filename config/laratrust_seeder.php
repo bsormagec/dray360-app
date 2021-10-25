@@ -44,6 +44,7 @@ return [
             'supervise' => 'v',
             'pt-images' => 'c',
             'field-maps' => 'c,v,r',
+            'field-maps-admin-notes' => 'v',
             'company-field-maps' => 'c,r',
             'tms-field-maps' => 'c,r',
             'variant-field-maps' => 'c,r',
@@ -82,6 +83,7 @@ return [
             'supervise' => 'v',
             'pt-images' => 'c',
             'field-maps' => 'v',
+            'field-maps-admin-notes' => 'v',
             'company-field-maps' => 'c,r',
             'metrics' => 'v',
             'feedbacks' => 'c,v',
@@ -113,6 +115,7 @@ return [
             'supervise' => 'v',
             'pt-images' => 'c',
             'feedbacks' => 'c,v',
+            'field-maps-admin-notes' => 'v',
         ],
         'customer-admin' => [
             'orders' => 'e,v,c,r',

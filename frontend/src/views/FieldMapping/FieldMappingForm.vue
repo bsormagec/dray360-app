@@ -242,7 +242,7 @@
         :class="{'field-mapping-form-field__changed': hasChanged('notes')}"
         :disabled="viewOnly"
         rows="3"
-        label="Notes"
+        label="Admin Review Notes"
         clearable
         v-bind="fieldChangedAttributes('notes')"
       />
