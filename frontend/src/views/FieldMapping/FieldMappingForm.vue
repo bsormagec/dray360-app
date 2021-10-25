@@ -88,7 +88,7 @@
             />
           </v-col>
           <v-col>
-            <v-select
+            <v-autocomplete
               v-if="fieldNameMatch(/event\d+_type/g, true)"
               v-model="formFieldMap.constant_value"
               :items="customFieldInput.eventTypes"
@@ -119,6 +119,19 @@
               v-model="formFieldMap.constant_value"
               :disabled="viewOnly"
               :items="customFieldInput.booleanFields"
+              item-text="name"
+              item-value="value"
+              :class="{'field-mapping-form-field__changed': hasChanged('constant_value')}"
+              label="Constant Value"
+              clearable
+              v-bind="fieldChangedAttributes('constant_value')"
+              @change="value => onCustomInputClear('constant_value', value)"
+            />
+            <v-autocomplete
+              v-else-if="fieldNameMatch(/pt_ref[0-9]_type/, true)"
+              v-model="formFieldMap.constant_value"
+              :disabled="viewOnly"
+              :items="customFieldInput.PTFields"
               item-text="name"
               item-value="value"
               :class="{'field-mapping-form-field__changed': hasChanged('constant_value')}"
@@ -331,7 +344,7 @@ import fieldMaps, { actionTypes as fieldMapsActionTypes } from '@/store/modules/
 import deepDiff from 'deep-diff'
 import cloneDeep from 'lodash/cloneDeep'
 import { abbySourceFileds } from '@/enums/app_objects_types'
-import { eventTypes, shipmentDirection, booleanFields } from '@/enums/field_type'
+import { eventTypes, shipmentDirection, booleanFields, PTFields } from '@/enums/field_type'
 
 import FieldMapAuditDialog from './FieldMapAuditDialog'
 
@@ -401,6 +414,7 @@ export default {
         eventTypes,
         shipmentDirection,
         booleanFields,
+        PTFields,
       }
     },
   },
@@ -492,7 +506,7 @@ export default {
       this.formFieldMap = { ...cloneDeep(this.defaultFieldMaps[this.selectedField]) }
     },
 
-    fieldNameMatch (stringToMatch, isRegEx) {
+    fieldNameMatch (stringToMatch, isRegEx = false) {
       if (isRegEx) {
         return this.selectedField.match(stringToMatch) !== null
       }
