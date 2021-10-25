@@ -73,6 +73,7 @@
         v-if="!!adminNotes"
         :text="adminNotes"
         :custom-icon-attrs="{ small: false, color: 'grey-darken4', class: 'mr-1' }"
+        max-width="300"
       />
     </div>
     <FormFieldManaged
@@ -89,6 +90,7 @@
         v-if="!!adminNotes"
         :text="adminNotes"
         :custom-icon-attrs="{ small: false, color: 'grey-darken4', class: 'mr-1' }"
+        max-width="300"
       />
     </div>
     <v-alert

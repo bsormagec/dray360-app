@@ -1,5 +1,8 @@
 <template>
-  <v-tooltip bottom>
+  <v-tooltip
+    bottom
+    :max-width="maxWidth"
+  >
     <template v-slot:activator="{ on, attrs }">
       <v-icon
         v-bind="[attrs, computedIconAttrs]"
@@ -20,6 +23,7 @@ export default ({
     text: { type: String, required: true, default: '' },
     icon: { type: String, required: false, default: 'mdi-information' },
     customIconAttrs: { type: Object, required: false, default: () => ({}) },
+    maxWidth: { type: String, required: false, default: 'auto' },
   },
 
   data: () => ({
