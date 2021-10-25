@@ -28,7 +28,8 @@ class PtEquipmentTypesImporter extends DictionaryItemsImporter
                     ->trim()
                     ->explode(',')
                     ->map(fn ($string) => trim($string))
-                    ->filter();
+                    ->filter()
+                    ->toArray();
 
                 $dictionaryItem = DictionaryItem::updateOrCreate([
                     't_company_id' => $this->company->id,
