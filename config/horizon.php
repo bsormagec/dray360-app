@@ -103,9 +103,9 @@ return [
         'recent' => 60,
         'pending' => 60,
         'completed' => 60,
-        'recent_failed' => 10080,
-        'failed' => 10080,
-        'monitored' => 10080,
+        'recent_failed' => 5760, // 4 days
+        'failed' => 5760, // 4 days
+        'monitored' => 5760, // 4 days
     ],
 
     /*
