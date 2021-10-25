@@ -249,6 +249,7 @@ import permissions from '@/mixins/permissions'
 import { dictionaryItemsTypes } from '@/enums/app_objects_types'
 
 import uniq from 'lodash/uniq'
+import flatten from 'lodash/flatten'
 
 export default {
   name: 'FormFieldDictionaryEquipment',
@@ -310,6 +311,12 @@ export default {
           if (!this.filters[key]) {
             continue
           }
+
+          if (key === 'lineprefix') {
+            pass = item.item_value[key].includes(this.filters[key])
+            continue
+          }
+
           if (item.item_value[key] !== this.filters[key]) {
             pass = false
           }
@@ -336,7 +343,7 @@ export default {
 
     getOptionsFor (key) {
       return uniq(
-        this.dictionaryItems.map(item => item.item_value[key])
+        flatten(this.dictionaryItems.map(item => item.item_value[key]))
       )
         .filter(item => !!item)
         .sort()
