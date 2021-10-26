@@ -431,7 +431,8 @@ export default {
       const { field_maps: fieldMaps } = this.currentOrder
 
       const getMapForCanonAndDirection = (d3CanonName, shipmentDirection) => {
-        shipmentDirection = (shipmentDirection || '').trim() || 'empty'
+        shipmentDirection = (shipmentDirection || '').trim() || 'empty'  // ASDF CHECK HERE
+        const canonFieldmaps = fieldMaps.filter(item(x) = ASDF
         const fieldmapByShipdir = {}
         for (const key in fieldMaps) {
           if (fieldMaps[key].d3canon_name === d3CanonName) {
