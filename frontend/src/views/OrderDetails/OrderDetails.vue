@@ -88,6 +88,7 @@ import { isInAdminReview } from '@/utils/status_helpers'
 
 import get from 'lodash/get'
 import cloneDeep from 'lodash/cloneDeep'
+import uniq from 'lodash/uniq'
 
 import { getMapForFilters } from './utils'
 
@@ -432,8 +433,9 @@ export default {
       newFormOptions.field_maps = this.currentOrder.field_maps
       const { field_maps: fieldMaps } = this.currentOrder
 
-      for (const key in fieldMaps) {
-        const d3CanonName = fieldMaps[key].d3canon_name
+      const d3CanonNames = uniq(Object.keys(fieldMaps).map(key => fieldMaps[key].d3canon_name))
+      for (const idx in d3CanonNames) {
+        const d3CanonName = d3CanonNames[idx]
         const bestFieldMap = getMapForFilters({
           fieldMaps,
           d3CanonName,
