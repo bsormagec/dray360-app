@@ -10,7 +10,7 @@ export const getMapForFilters = ({ fieldMaps, d3CanonName, shipmentDirection, bi
   const canonFieldmaps = Object.keys(fieldMaps)
     .map(key => fieldMaps[key])
     .filter(fieldMap => fieldMap.d3canon_name === d3CanonName)
-    .sort((a, b) => (countFieldmapFilters(a) - countFieldmapFilters(b)))
+    .sort((a, b) => (countFieldmapFilters(b) - countFieldmapFilters(a)))
 
   for (const i in canonFieldmaps) {
     const {
