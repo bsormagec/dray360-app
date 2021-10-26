@@ -25,7 +25,7 @@ export const getMapForFilters = ({ fieldMaps, d3CanonName, shipmentDirection, bi
     if (!!bill_to_address_filter && !bill_to_address_filter.split('|').some(filter => billToAddress.includes(filter))) {
       continue
     }
-    console.log(canonFieldmaps[i])
+
     return canonFieldmaps[i]
   }
 }
