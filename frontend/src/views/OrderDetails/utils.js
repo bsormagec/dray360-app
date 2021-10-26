@@ -18,7 +18,7 @@ export const getMapForFilters = ({ fieldMaps, d3CanonName, shipmentDirection, bi
       bill_to_address_filter = null
     } = canonFieldmaps[i]
 
-    if (!!shipment_direction_filter && !shipment_direction_filter.includes(shipmentDirection)) {
+    if (!!shipment_direction_filter && (!shipmentDirection || !shipment_direction_filter.includes(shipmentDirection))) {
       continue
     }
 
