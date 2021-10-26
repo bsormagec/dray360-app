@@ -7,7 +7,8 @@ const countFieldmapFilters = fieldMap => {
 export const getMapForFilters = ({ fieldMaps, d3CanonName, shipmentDirection, billToAddress }) => {
   shipmentDirection = (shipmentDirection || '').trim()
   billToAddress = (billToAddress || '').trim()
-  const canonFieldmaps = fieldMaps
+  const canonFieldmaps = Object.keys(fieldMaps)
+    .map(key => fieldMaps[key])
     .filter(fieldMap => fieldMap.d3canon_name === d3CanonName)
     .sort((a, b) => (countFieldmapFilters(a) - countFieldmapFilters(b)))
 
@@ -24,7 +25,7 @@ export const getMapForFilters = ({ fieldMaps, d3CanonName, shipmentDirection, bi
     if (!!bill_to_address_filter && !bill_to_address_filter.split('|').some(filter => billToAddress.includes(filter))) {
       continue
     }
-
+    console.log(canonFieldmaps[i])
     return canonFieldmaps[i]
   }
 }
