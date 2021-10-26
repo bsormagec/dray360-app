@@ -177,6 +177,14 @@
         clearable
         v-bind="fieldChangedAttributes('shipment_direction_filter')"
       />
+      <v-text-field
+        v-model="formFieldMap.bill_to_address_filter"
+        :class="{'field-mapping-form-field__changed': hasChanged('bill_to_address_filter')}"
+        :disabled="viewOnly"
+        label="Bill-To Address Filter"
+        clearable
+        v-bind="fieldChangedAttributes('bill_to_address_filter')"
+      />
       <v-autocomplete
         v-model="formFieldMap.d3canon_name"
         :items="fieldMapsNames"
