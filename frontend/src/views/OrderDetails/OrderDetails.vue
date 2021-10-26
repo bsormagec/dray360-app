@@ -89,6 +89,8 @@ import { isInAdminReview } from '@/utils/status_helpers'
 import get from 'lodash/get'
 import cloneDeep from 'lodash/cloneDeep'
 
+import { getMapForFilters } from './utils'
+
 const defaultFormOptions = {
   hidden: [],
   address_search: {},
@@ -430,28 +432,14 @@ export default {
       newFormOptions.field_maps = this.currentOrder.field_maps
       const { field_maps: fieldMaps } = this.currentOrder
 
-      const getMapForCanonAndDirection = (d3CanonName, shipmentDirection) => {
-        shipmentDirection = (shipmentDirection || '').trim() || 'empty'  // ASDF CHECK HERE
-        const canonFieldmaps = fieldMaps.filter(item(x) = ASDF
-        const fieldmapByShipdir = {}
-        for (const key in fieldMaps) {
-          if (fieldMaps[key].d3canon_name === d3CanonName) {
-            const shipmentDirectionFilter = (fieldMaps[key].shipment_direction_filter || '').trim() || 'empty'
-            fieldmapByShipdir[shipmentDirectionFilter] = fieldMaps[key]
-          }
-        }
-        // get the best fieldmap match for the order's shipmentDirection
-        const shipdirKeys = Object.keys(fieldmapByShipdir)
-        const index = shipdirKeys.findIndex(item => item.includes(shipmentDirection))
-        if (index === -1) {
-          return fieldmapByShipdir.empty
-        }
-        return fieldmapByShipdir[shipdirKeys[index]]
-      }
-
       for (const key in fieldMaps) {
         const d3CanonName = fieldMaps[key].d3canon_name
-        const bestFieldMap = getMapForCanonAndDirection(d3CanonName, this.currentOrder.shipment_direction)
+        const bestFieldMap = getMapForFilters({
+          fieldMaps,
+          d3CanonName,
+          shipmentDirection: this.currentOrder.shipment_direction,
+          billToAddress: this.currentOrder.bill_to_address_raw_text,
+        })
         if (bestFieldMap.screen_hide) {
           newFormOptions.hidden.push(d3CanonName)
         }
